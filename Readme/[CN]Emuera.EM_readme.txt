@@ -6,7 +6,7 @@
 修改者：EvilMask
 联系方式：evilmask.dev@gmail.com
 
-授权许可：请参照licese.txt的[ライセンス]项目。
+授权许可：请参照licese.txt。
 
 [关于修改版]
 
