@@ -7,7 +7,7 @@
 連絡先：evilmask.dev@gmail.com
 連絡先：https://twitter.com/devemera
 
-ライセンス：Emuera_readmeの[ライセンス]の項を参照。
+ライセンス：licese.txtを参照してください。
 
 [改造点について]
 
