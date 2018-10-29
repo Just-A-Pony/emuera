@@ -1,0 +1,96 @@
+﻿名称：Emuera.EM
+
+版本： 1.823
+原作者：MinorShift, 妊）|дﾟ)の中の人
+
+修改者：EvilMask
+联系方式：evilmask.dev@gmail.com
+
+授权许可：请参照Emuera_readme的[ライセンス]项目。
+
+[关于修改版]
+
+现在HTML_PRINT的<space>标签中param参数可以为负数了。
+
+现在程序运行时不会一直占用图片文件了。
+
+追加了3个式中函数。
+
+	int EVAL(str value)
+
+	str EVALS(str value)
+	
+		将字符串内容视为表达式，返回表达式的值。
+
+		例：
+			#DIMS VAR_A,10
+			#DIMS VAR_B
+			
+			VAR_A:1 = 变量A
+			VAR_B = VAR_A
+
+			PRINTSL EVALS(@"%VAR_B%:ABS(-1)")
+
+		结果：
+			变量A
+
+	int VAREXIST(str value)
+	
+		若定义了与字符串的值同名的变量则根据变量特性返回正数值。未定义则返回0。
+		若变量为整数，返回值+1
+		若变量为字符串，返回值+2
+		若变量为常数，返回值+4
+		若变量为二维数组，返回值+8 
+		若变量为三维数组，返回值+16
+		例：
+			#DEFINE VAR_IS_NUM 1
+			#DEFINE VAR_IS_STRING 2
+			#DEFINE VAR_IS_CONST 4
+			#DEFINE VAR_IS_2DARRAY 8
+			#DEFINE VAR_IS_3DARRAT 16
+			#DIM FOO,10,10
+
+			...
+
+			IF VAREXIST("FOO")==(VAR_IS_NUM|VAR_IS_2DARRAY)
+				PRINTL TRUE
+			ELSE
+				PRINTL FALSE
+			ENDIF
+			IF VAREXIST("FOO2")
+				PRINTL TRUE
+			ELSE
+				PRINTL FALSE
+			ENDIF
+		结果：
+			TRUE
+			FALSE
+		
+	int FUNCEXIST(str value)
+	
+		若定义了与字符串的值同名的函数(包括式中函数)则返回1(仅限用户定义的函数)。未定义则返回0。
+
+	int ISDEFINED(str value)
+		若定义了与字符串的值同名的宏(#DEFINE XXX)则返回1。未定义则返回0。	
+		
+	int HTML_STRINGLEN(str value)
+		
+		返回字符串显示之后的宽度(半角字符数)，若结果为多行，只返回第一行的宽度
+		
+		
+追加了一个命令函数。
+
+	SETFORM <FORM字符串>,参数1
+	例：
+	假设已定义
+		#DIM VAR_A,10
+		#DIMS VAR_B = "A"
+	那么
+		SETFORM VAR_%VAR_B%:1, 1
+	与
+		VAR_A:1 = 1
+	的效果相同。
+	
+	若要该函数正确运行，请将"ロード時に引数を解析する"设置为"NO"或"ONCE"。
+	
+	

@@ -4260,7 +4260,18 @@ namespace MinorShift.Emuera.GameData.Function
             }
             public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
             {
-                return (GlobalStatic.IdentifierDictionary.GetVariableToken(arguments[0].GetStrValue(exm), null, true) != null) ? 1 : 0;
+                VariableToken token = GlobalStatic.IdentifierDictionary.GetVariableToken(arguments[0].GetStrValue(exm), null, true);
+                if (token != null)
+                {
+                    Int64 res = 0;
+                    if (token.IsInteger) res |= 1;
+                    if (token.IsString) res |= 2;
+                    if (token.IsConst) res |= 4;
+                    if (token.IsArray2D) res |= 8;
+                    if (token.IsArray3D) res |= 16;
+                    return res;
+                }
+                return 0;
             }
         }
         private sealed class FuncExistMethod : FunctionMethod
@@ -4328,8 +4339,7 @@ namespace MinorShift.Emuera.GameData.Function
                     WordCollection wc = LexicalAnalyzer.Analyse(new StringStream(str), LexEndWith.EoL, LexAnalyzeFlag.None);
                     IOperandTerm term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
                     term.Restructure(exm);
-                    if (term is VariableTerm)
-                        res = term.GetStrValue(exm);
+                    res = term.GetStrValue(exm);
                 }
                 catch (CodeEE e)
                 {

@@ -270,7 +270,6 @@ namespace MinorShift.Emuera.GameProc
 				for (int i = 0; i < count; i++)
 				{
 					DimLineWC dimline = dimlines.Dequeue();
-					dimline.WC = LexicalAnalyzer.expandMacro(dimline.WC);
 					try
 					{
 						UserDefinedVariableData data = UserDefinedVariableData.Create(dimline);
