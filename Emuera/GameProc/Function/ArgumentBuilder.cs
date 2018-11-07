@@ -232,9 +232,6 @@ namespace MinorShift.Emuera.GameProc.Function
 
         private sealed class SP_SETFORM_ArgumentBuilder : ArgumentBuilder
         {
-            public SP_SETFORM_ArgumentBuilder()
-            {
-            }
             public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
             {
                 StringStream st = line.PopArgumentPrimitive();
@@ -242,30 +239,14 @@ namespace MinorShift.Emuera.GameProc.Function
                 StrFormWord sfw = LexicalAnalyzer.AnalyseFormattedString(st, FormStrEndWith.Comma, true);
                 varname = ExpressionParser.ToStrFormTerm(sfw);
                 varname = varname.Restructure(exm);
-
-                char cur = st.Current;
+                st.ShiftNext();
                 WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
-                wc.ShiftNext();
+                st.ShiftNext();
                 
-                IOperandTerm arg = null;
-
-                arg = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
-                if (!wc.EOL)
-                { warn("書式が間違っています", line, 2, false); return null; }
-                if (arg != null)
-                    arg = arg.Restructure(exm);
-                Argument ret = new SpSetFormArgment(varname, arg);
-                if (varname is SingleTerm)
-                {
-                    ret.IsConst = true;
-                    ret.ConstStr = varname.GetStrValue(null);
-                    if (ret.ConstStr == "")
-                    {
-                        warn("関数名が指定されていません", line, 2, false);
-                        return null;
-                    }
-                }
-                return ret;
+                IOperandTerm arg = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
+                if (!st.EOS)
+                { warn("引数が多すぎます", line, 2, false); return null; }
+                return new SpSetFormArgment(varname, arg); ;
             }
         }
 
