@@ -92,11 +92,12 @@ HTML_PRINTの<space>タグにparamが負数になれます。
 	HTML_SUBSTRING <文字列>,<整数>
 	<文字列>を２つ文字列に分けます。一番目の長さは<整数>個半角文字の長さ。結果をRESULTSとRESULTS:1に保存します
 	例：
-		HTML_SUBSTRING　"AB<b>CD</b>EFG",3
+		HTML_SUBSTRING　"AB<b>CD</b>EFG",4
 		PRINTSL RESULTS
 		PRINTSL RESULTS:1
 	結果：
 		AB<b>C</b>
 		<b>D</b>EFG
+	(太字は普通より幅広いからです)
 	
 	
