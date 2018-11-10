@@ -202,7 +202,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			addFunction(FunctionCode.REUSELASTLINE, new REUSELASTLINE_Instruction());
 
             #endregion
-
+            addFunction(FunctionCode.HTML_SUBSTRING, new HTML_SUBSTRING_Instruction());
             addFunction(FunctionCode.SETFORM, new SETFORM_Instruction());
 
 			addFunction(FunctionCode.UPCHECK, argb[FunctionArgType.VOID], METHOD_SAFE);//パラメータの変動

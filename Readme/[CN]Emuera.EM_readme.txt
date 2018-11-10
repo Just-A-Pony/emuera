@@ -78,7 +78,7 @@
 		返回字符串显示之后的宽度(半角字符数)，若结果为多行，只返回第一行的宽度
 		
 		
-追加了一个命令函数。
+追加了2个命令函数。
 
 	SETFORM <FORM字符串>,参数1
 	例：
@@ -90,5 +90,17 @@
 	与
 		VAR_A:1 = 1
 	的效果相同。
+
+	HTML_SUBSTRING <字符串>,<整数>
+	将<字符串>拆分为两个字符串，第一个为<整数>个半角字符长度的字符串，结果保存在RESULTS和RESULTS:1中
+	例：
+		HTML_SUBSTRING　"AB<b>CD</b>EFG",3
+		PRINTSL RESULTS
+		PRINTSL RESULTS:1
+	结果：
+		AB<b>C</b>
+		<b>D</b>EFG
+	
+
 	
 	

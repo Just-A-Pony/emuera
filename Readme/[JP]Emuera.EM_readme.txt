@@ -77,7 +77,7 @@ HTML_PRINTの<space>タグにparamが負数になれます。
 		
 		与えられた文字列の幅を返します(半角文字数)。複数行の場合、一行目の幅を返します。
 		
-命令関数を１つ追加しました。
+命令関数を2つ追加しました。
 
 	SETFORM <FORM文字列>,引数1
 	例：
@@ -88,5 +88,15 @@ HTML_PRINTの<space>タグにparamが負数になれます。
 	は
 		VAR_A:1 = 1
 	と同じです。
+
+	HTML_SUBSTRING <文字列>,<整数>
+	<文字列>を２つ文字列に分けます。一番目の長さは<整数>個半角文字の長さ。結果をRESULTSとRESULTS:1に保存します
+	例：
+		HTML_SUBSTRING　"AB<b>CD</b>EFG",3
+		PRINTSL RESULTS
+		PRINTSL RESULTS:1
+	結果：
+		AB<b>C</b>
+		<b>D</b>EFG
 	
 	

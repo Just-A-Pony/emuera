@@ -227,7 +227,33 @@ namespace MinorShift.Emuera.GameProc.Function
 			argb[FunctionArgType.SP_HTMLSPLIT] = new SP_HTMLSPLIT_ArgumentBuilder();
 
             argb[FunctionArgType.SP_SETFORM] = new SP_SETFORM_ArgumentBuilder();
+            argb[FunctionArgType.SP_HTMLSUBSTRING] = new SP_HTMLSUBSTRING_ArgumentBuilder();
 
+
+        }
+
+        private sealed class SP_HTMLSUBSTRING_ArgumentBuilder : ArgumentBuilder
+        {
+            public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
+            {
+                StringStream st = line.PopArgumentPrimitive();
+                IOperandTerm html, len;
+                WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.Comma, LexAnalyzeFlag.None);
+                st.ShiftNext();
+                html = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
+                if (!html.IsString)
+                { warn("第一引数が文字列ではありません", line, 2, false); return null; }
+                if (st.EOS)
+                { warn("第二引数がありません", line, 2, false); return null; }
+                wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
+                st.ShiftNext();
+                len = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
+                if (!len.IsInteger  )
+                { warn("第二引数が整数型ではありません", line, 2, false); return null; }
+                if (!st.EOS)
+                { warn("引数が多すぎます", line, 2, false); return null; }
+                return new SpHtmlSubStringArgument(html, len); ;
+            }
         }
 
         private sealed class SP_SETFORM_ArgumentBuilder : ArgumentBuilder

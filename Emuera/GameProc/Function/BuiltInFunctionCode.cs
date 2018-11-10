@@ -19,6 +19,7 @@ namespace MinorShift.Emuera.GameProc.Function
 		//SETS,//文字列代入文
 
         SETFORM,
+        HTML_SUBSTRING,
 
 		PRINT,//文字を表示する
 		PRINTL,//改行

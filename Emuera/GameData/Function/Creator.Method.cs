@@ -4446,10 +4446,8 @@ namespace MinorShift.Emuera.GameData.Function
 
             public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
             {
-                ConsoleDisplayLine[] lines = HtmlManager.Html2DisplayLine(arguments[0].GetStrValue(exm), GlobalStatic.Console.StrMeasure, GlobalStatic.Console);
-                int len = 0;
-                if (lines.Length <= 0) return 0;
-                foreach (var btn in lines[0].Buttons) len += btn.Width;
+                int len =  HtmlManager.HtmlLength(arguments[0].GetStrValue(exm));
+
                 if (len >= 0)
                     return 2 * len / Config.FontSize + ((2 * len % Config.FontSize != 0) ? 1 : 0);
                 else
