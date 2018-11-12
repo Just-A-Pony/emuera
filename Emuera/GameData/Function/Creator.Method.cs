@@ -4526,8 +4526,7 @@ namespace MinorShift.Emuera.GameData.Function
                     WordCollection wc = LexicalAnalyzer.Analyse(new StringStream(str), LexEndWith.EoL, LexAnalyzeFlag.None);
                     IOperandTerm term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
                     term.Restructure(exm);
-                    if (term is VariableTerm || term is FunctionMethodTerm)
-                        res = term.GetIntValue(exm);
+                    res = term.GetIntValue(exm);
                 }
                 catch (CodeEE e)
                 {
