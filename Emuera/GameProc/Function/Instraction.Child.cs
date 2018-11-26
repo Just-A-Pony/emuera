@@ -545,15 +545,15 @@ namespace MinorShift.Emuera.GameProc.Function
 		{
 			public CLEARLINE_Instruction()
 			{
-				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_CLEARLINE);
 				flag = METHOD_SAFE | EXTENDED | IS_PRINT;
 			}
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-				ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
-				Int32 delNum = (Int32)intExpArg.Term.GetIntValue(exm);
+                SpClearLineArgment intExpArg = (SpClearLineArgment)func.Argument;
+				Int32 delNum = (Int32)intExpArg.Lines.GetIntValue(exm);
 				exm.Console.deleteLine(delNum);
-				exm.Console.RefreshStrings(false);
+                if (intExpArg.Refresh.GetIntValue(exm)!=0) exm.Console.RefreshStrings(false);
 			}
 		}
 

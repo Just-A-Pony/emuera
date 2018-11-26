@@ -228,6 +228,7 @@ namespace MinorShift.Emuera.GameProc.Function
 
             argb[FunctionArgType.SP_SETFORM] = new SP_SETFORM_ArgumentBuilder();
             argb[FunctionArgType.SP_HTMLSUBSTRING] = new SP_HTMLSUBSTRING_ArgumentBuilder();
+            argb[FunctionArgType.SP_CLEARLINE] = new SP_CLEARLINE_ArgumentBuilder();
 
 
         }
@@ -276,6 +277,30 @@ namespace MinorShift.Emuera.GameProc.Function
             }
         }
 
+        private sealed class SP_CLEARLINE_ArgumentBuilder : ArgumentBuilder
+        {
+            public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
+            {
+                StringStream st = line.PopArgumentPrimitive();
+                if (st.EOS)
+                { warn("引数が足りません", line, 2, false); return null; }
+                WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.Comma, LexAnalyzeFlag.None);
+                st.ShiftNext();
+                IOperandTerm lines = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
+
+                IOperandTerm refresh = null;
+                if (st.EOS)
+                    refresh = new SingleTerm(1);
+                else
+                {
+                    wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
+                    st.ShiftNext();
+                    refresh = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
+
+                }
+                return new SpClearLineArgment(lines, refresh);
+            }
+        }
 
         private sealed class SP_PRINTV_ArgumentBuilder : ArgumentBuilder
 		{

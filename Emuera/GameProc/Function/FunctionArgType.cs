@@ -13,6 +13,7 @@ namespace MinorShift.Emuera.GameProc.Function
 
         SP_SETFORM,
         SP_HTMLSUBSTRING,
+        SP_CLEARLINE,
 
 		VOID,//引数なし
 		INT_EXPRESSION,//数式型。省略可能

@@ -197,6 +197,16 @@ namespace MinorShift.Emuera.GameProc.Function
         readonly public IOperandTerm Varname;
         readonly public IOperandTerm RowArg;
     }
+    internal sealed class SpClearLineArgment : Argument
+    {
+        public SpClearLineArgment(IOperandTerm lines, IOperandTerm refresh)
+        {
+            Lines = lines;
+            Refresh = refresh;
+        }
+        readonly public IOperandTerm Lines;
+        readonly public IOperandTerm Refresh;
+    }
 
     internal sealed class SpCallArgment : Argument
 	{
