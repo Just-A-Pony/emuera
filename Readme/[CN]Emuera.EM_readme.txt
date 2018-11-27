@@ -18,6 +18,13 @@ CLEARLINE追加第二个参数(整数，可省略，默认为1)，
 第二个参数==0时，不会立刻更新屏幕，直到下一次更新屏幕的命令(例如PRINT系指令)
 第二个参数!=0时或省略时，效果和原版相同。
 
+以$开头的标识符会被视为字符串
+    例
+    LOCALS '= $紅魔館
+    与
+    LOCALS '= "紅魔館"
+    相同
+
 追加了6个式中函数。
 
 	int EVAL(str value)
@@ -115,7 +122,7 @@ CLEARLINE追加第二个参数(整数，可省略，默认为1)，
 	ENUMFUNCWITH <字符串>
 	ENUMVARWITH <字符串>
 	ENUMMACROWITH <字符串>
-	返回用户定义的符号，结果保存在RESULTS中，总数保存在RESULT中
+	返回已定义的符号，结果保存在RESULTS中，总数保存在RESULT中
 	FUNC代表函数，VAR代表变量，MACRO代表宏
 	BEGINSWITH代表检查以<字符串>开头的符号
 	ENDSWITH代表检查以<字符串>结尾的符号
