@@ -20,8 +20,17 @@ namespace MinorShift.Emuera.GameProc.Function
 
         SETFORM,
         HTML_SUBSTRING,
+        ENUMFUNCBEGINSWITH,
+        ENUMVARBEGINSWITH,
+        ENUMMACROBEGINSWITH,
+        ENUMFUNCENDSWITH,
+        ENUMVARENDSWITH,
+        ENUMMACROENDSWITH,
+        ENUMFUNCWITH,
+        ENUMVARWITH,
+        ENUMMACROWITH,
 
-		PRINT,//文字を表示する
+        PRINT,//文字を表示する
 		PRINTL,//改行
 		PRINTW,//入力待ち(実質改行)
 

@@ -304,6 +304,76 @@ namespace MinorShift.Emuera.GameProc.Function
             }
         }
 
+        private sealed class ENUMIDS_Instruction : AbstractInstruction
+        {
+            public enum Type
+            {
+                Function,
+                Variable,
+                Macro
+            }
+            public enum Action
+            {
+                BeginsWith,
+                EndsWith,
+                With
+            }
+            public ENUMIDS_Instruction(Type type, Action act)
+            {
+                flag = EXTENDED | METHOD_SAFE;
+                this.type = type;
+                this.action = act;
+                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.STR_EXPRESSION);
+            }
+
+            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+            {
+                string arg = ((ExpressionArgument)func.Argument).Term.GetStrValue(exm);
+                VariableToken destVar = GlobalStatic.VariableData.GetSystemVariableToken("RESULTS");
+                VariableToken count = GlobalStatic.VariableData.GetSystemVariableToken("RESULT");
+                string[] array = null;
+                switch (type)
+                {
+                    case Type.Function:
+                        array = GlobalStatic.Process.LabelDictionary.NoneventKeys;
+                        break;
+                    case Type.Variable:
+                        array = GlobalStatic.IdentifierDictionary.VarKeys;
+                        break;
+                    case Type.Macro:
+                        array = GlobalStatic.IdentifierDictionary.MacroKeys;
+                        break;
+                }
+                List<string> strs = new List<string>();
+                if (arg.Length>0)
+                    foreach ( string item in array)
+                    {
+                        if (item.Length < arg.Length) continue;
+                        switch(action)
+                        {
+                            case Action.BeginsWith:
+                                if (item.IndexOf(arg) == 0) strs.Add(item);
+                                break;
+                            case Action.EndsWith:
+                                if (item.LastIndexOf(arg) == item.Length - arg.Length) strs.Add(item);
+                                break;
+                            case Action.With:
+                                if (item.IndexOf(arg) >= 0) strs.Add(item);
+                                break;
+                        }
+                    }
+                string[] output = (string[])destVar.GetArray();
+                string[] ret = strs.ToArray();
+                int outputlength = Math.Min(output.Length, ret.Length);
+                Int64[] var = (Int64[])count.GetArray();
+                var[0] = outputlength;
+                Array.Copy(ret, output, outputlength);
+            }
+
+            private Type type;
+            private Action action;
+        }
+
 
         private sealed class PRINT_IMG_Instruction : AbstractInstruction
 		{

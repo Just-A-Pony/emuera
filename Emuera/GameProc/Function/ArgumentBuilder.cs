@@ -229,8 +229,6 @@ namespace MinorShift.Emuera.GameProc.Function
             argb[FunctionArgType.SP_SETFORM] = new SP_SETFORM_ArgumentBuilder();
             argb[FunctionArgType.SP_HTMLSUBSTRING] = new SP_HTMLSUBSTRING_ArgumentBuilder();
             argb[FunctionArgType.SP_CLEARLINE] = new SP_CLEARLINE_ArgumentBuilder();
-
-
         }
 
         private sealed class SP_HTMLSUBSTRING_ArgumentBuilder : ArgumentBuilder

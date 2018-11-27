@@ -82,7 +82,7 @@ CLEARLINE追加第二个参数(整数，可省略，默认为1)，
 		返回字符串显示之后的宽度(半角字符数)，若结果为多行，只返回第一行的宽度
 		
 		
-追加了2个命令函数。
+追加了11个命令函数。
 
 	SETFORM <FORM字符串>,参数1
 	例：
@@ -105,7 +105,38 @@ CLEARLINE追加第二个参数(整数，可省略，默认为1)，
 		AB<b>C</b>
 		<b>D</b>EFG
 		(加粗会使字符比普通字符更宽)
-	
+
+	ENUMFUNCBEGINSWITH <字符串>
+	ENUMVARBEGINSWITH <字符串>
+	ENUMMACROBEGINSWITH <字符串>
+	ENUMFUNCENDSWITH <字符串>
+	ENUMVARENDSWITH <字符串>
+	ENUMMACROENDSWITH <字符串>
+	ENUMFUNCWITH <字符串>
+	ENUMVARWITH <字符串>
+	ENUMMACROWITH <字符串>
+	返回用户定义的符号，结果保存在RESULTS中，总数保存在RESULT中
+	FUNC代表函数，VAR代表变量，MACRO代表宏
+	BEGINSWITH代表检查以<字符串>开头的符号
+	ENDSWITH代表检查以<字符串>结尾的符号
+	WITH代表检查包含<字符串>的符号
+	例:
+		#DIM CHAR_NAME
+		#DIM CHAR_AGE
+		#DIM FLAG_CHAR_ALIVE
+		#DIM MAP_TARGET_CHAR
+
+		...
+
+		ENUMVARBEGINSWITH "CHAR"
+		; => RESULT = 3
+		; => RESULTS = ["CHAR_NAME", "CHAR_AGE", "CHAR_SEX"]
+		ENUMVARENDSWITH "CHAR"
+		; => RESULT = 1
+		; => RESULTS = ["MAP_TARGET_CHAR"]
+		ENUMVARWITH "_CHAR_"
+		; => RESULT = 1
+		; => RESULTS = ["FLAG_CHAR_ALIVE"]
 
 	
 	

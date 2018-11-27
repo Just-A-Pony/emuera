@@ -12,116 +12,121 @@ using System.Text.RegularExpressions;
 using MinorShift.Emuera.GameProc.Function;
 using MinorShift.Emuera.GameData.Expression;
 using MinorShift._Library;
+using System.Linq;
 
 namespace MinorShift.Emuera
 {
-	//1756 新設。
-	//また、使用されている名前を記憶し衝突を検出する。
-	internal sealed class IdentifierDictionary
-	{
-		private enum DefinedNameType
-		{
-			None = 0,
-			Reserved,
-			SystemVariable,
-			SystemMethod,
-			SystemInstrument,
-			//UserIdentifier,
-			UserGlobalVariable,
-			UserMacro,
-			UserRefMethod,
-			NameSpace,
-		}
-		readonly static char[] badSymbolAsIdentifier = new char[]
-		{
-			'+', '-', '*', '/', '%', '=', '!', '<', '>', '|', '&', '^', '~',
-			' ', '　', '\t' ,
-			'\"','(', ')', '{', '}', '[', ']', ',', '.', ':',
-			'\\', '@', '$', '#', '?', ';', '\'',
+    //1756 新設。
+    //また、使用されている名前を記憶し衝突を検出する。
+    internal sealed class IdentifierDictionary
+    {
+        private enum DefinedNameType
+        {
+            None = 0,
+            Reserved,
+            SystemVariable,
+            SystemMethod,
+            SystemInstrument,
+            //UserIdentifier,
+            UserGlobalVariable,
+            UserMacro,
+            UserRefMethod,
+            NameSpace,
+        }
+        readonly static char[] badSymbolAsIdentifier = new char[]
+        {
+            '+', '-', '*', '/', '%', '=', '!', '<', '>', '|', '&', '^', '~',
+            ' ', '　', '\t' ,
+            '\"','(', ')', '{', '}', '[', ']', ',', '.', ':',
+            '\\', '@', '$', '#', '?', ';', '\'',
 			//'_'はOK
 		};
-		readonly static Regex regexCom = new Regex("^COM[0-9]+$");
-		readonly static Regex regexComAble = new Regex("^COM_ABLE[0-9]+$");
-		readonly static Regex regexAblup = new Regex("^ABLUP[0-9]+$");
-		#region static
-		
-		public static bool IsEventLabelName(string labelName)
-		{
-			switch (labelName)
-			{
-				case "EVENTFIRST":
-				case "EVENTTRAIN":
-				case "EVENTSHOP":
-				case "EVENTBUY":
-				case "EVENTCOM":
-				case "EVENTTURNEND":
-				case "EVENTCOMEND":
-				case "EVENTEND":
-				case "EVENTLOAD":
-					return true;
-			}
-			return false;
-		}
-		public static bool IsSystemLabelName(string labelName)
-		{
-			switch (labelName)
-			{
-				case "EVENTFIRST":
-				case "EVENTTRAIN":
-				case "EVENTSHOP":
-				case "EVENTBUY":
-				case "EVENTCOM":
-				case "EVENTTURNEND":
-				case "EVENTCOMEND":
-				case "EVENTEND":
-				case "SHOW_STATUS":
-				case "SHOW_USERCOM":
-				case "USERCOM":
-				case "SOURCE_CHECK":
-				case "CALLTRAINEND":
-				case "SHOW_JUEL":
-				case "SHOW_ABLUP_SELECT":
-				case "USERABLUP":
-				case "SHOW_SHOP":
-				case "SAVEINFO":
-				case "USERSHOP":
+        readonly static Regex regexCom = new Regex("^COM[0-9]+$");
+        readonly static Regex regexComAble = new Regex("^COM_ABLE[0-9]+$");
+        readonly static Regex regexAblup = new Regex("^ABLUP[0-9]+$");
+        #region static
 
-				case "EVENTLOAD":
-				case "TITLE_LOADGAME":
-				case "SYSTEM_AUTOSAVE":
-				case "SYSTEM_TITLE":
-				case "SYSTEM_LOADEND":
-					return true;
-			}
+        public static bool IsEventLabelName(string labelName)
+        {
+            switch (labelName)
+            {
+                case "EVENTFIRST":
+                case "EVENTTRAIN":
+                case "EVENTSHOP":
+                case "EVENTBUY":
+                case "EVENTCOM":
+                case "EVENTTURNEND":
+                case "EVENTCOMEND":
+                case "EVENTEND":
+                case "EVENTLOAD":
+                    return true;
+            }
+            return false;
+        }
+        public static bool IsSystemLabelName(string labelName)
+        {
+            switch (labelName)
+            {
+                case "EVENTFIRST":
+                case "EVENTTRAIN":
+                case "EVENTSHOP":
+                case "EVENTBUY":
+                case "EVENTCOM":
+                case "EVENTTURNEND":
+                case "EVENTCOMEND":
+                case "EVENTEND":
+                case "SHOW_STATUS":
+                case "SHOW_USERCOM":
+                case "USERCOM":
+                case "SOURCE_CHECK":
+                case "CALLTRAINEND":
+                case "SHOW_JUEL":
+                case "SHOW_ABLUP_SELECT":
+                case "USERABLUP":
+                case "SHOW_SHOP":
+                case "SAVEINFO":
+                case "USERSHOP":
 
-			if (labelName.StartsWith("COM"))
-			{
-				if (regexCom.IsMatch(labelName))
-					return true;
-				if (regexComAble.IsMatch(labelName))
-					return true;
-			}
-			if (labelName.StartsWith("ABLUP"))
-				if (regexAblup.IsMatch(labelName))
-					return true;
-			return false;
-		}
-		#endregion
+                case "EVENTLOAD":
+                case "TITLE_LOADGAME":
+                case "SYSTEM_AUTOSAVE":
+                case "SYSTEM_TITLE":
+                case "SYSTEM_LOADEND":
+                    return true;
+            }
+
+            if (labelName.StartsWith("COM"))
+            {
+                if (regexCom.IsMatch(labelName))
+                    return true;
+                if (regexComAble.IsMatch(labelName))
+                    return true;
+            }
+            if (labelName.StartsWith("ABLUP"))
+                if (regexAblup.IsMatch(labelName))
+                    return true;
+            return false;
+        }
+        #endregion
 
 
-		Dictionary<string, DefinedNameType> nameDic = new Dictionary<string, DefinedNameType>();
+        Dictionary<string, DefinedNameType> nameDic = new Dictionary<string, DefinedNameType>();
 
-		List<string> privateDimList = new List<string>();
-		List<string> disableList = new List<string>();
-		//Dictionary<string, VariableToken> userDefinedVarDic = new Dictionary<string, VariableToken>();
+        List<string> privateDimList = new List<string>();
+        List<string> disableList = new List<string>();
+        //Dictionary<string, VariableToken> userDefinedVarDic = new Dictionary<string, VariableToken>();
 
-		VariableData varData;
-		Dictionary<string, VariableToken> varTokenDic;
-		Dictionary<string, VariableLocal> localvarTokenDic;
-		Dictionary<string, FunctionIdentifier> instructionDic;
+        VariableData varData;
+        Dictionary<string, VariableToken> varTokenDic;
+        public string[] VarKeys => varTokenDic.Keys.ToArray();
+        Dictionary<string, VariableLocal> localvarTokenDic;
+        Dictionary<string, FunctionIdentifier> instructionDic;
 		Dictionary<string, FunctionMethod> methodDic;
-		Dictionary<string, UserDefinedRefMethod> refmethodDic;
-		public List<UserDefinedCharaVariableToken> CharaDimList = new List<UserDefinedCharaVariableToken>();
+        Dictionary<string, UserDefinedRefMethod> refmethodDic;
+
+
+
+        public List<UserDefinedCharaVariableToken> CharaDimList = new List<UserDefinedCharaVariableToken>();
 		#region initialize
 		public IdentifierDictionary(VariableData varData)
 		{
@@ -420,8 +425,9 @@ namespace MinorShift.Emuera
 		#region header.erb
 		//1807 ErbLoaderに移動
 		Dictionary<string, DefineMacro> macroDic = new Dictionary<string, DefineMacro>();
+        public string[] MacroKeys => macroDic.Keys.ToArray();
 
-		internal void AddUseDefinedVariable(VariableToken var)
+        internal void AddUseDefinedVariable(VariableToken var)
 		{
 			varTokenDic.Add(var.Name, var);
 			if (var.IsCharacterData)

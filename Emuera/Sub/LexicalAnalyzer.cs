@@ -950,7 +950,10 @@ namespace MinorShift.Emuera.Sub
 						break;
 					case '{':
 					case '$':
-						throw new CodeEE("字句解析中に予期しない文字'" + st.Current + "'を発見しました");
+                        st.ShiftNext();
+                        ret.Add(new LiteralStringWord(ReadSingleIdentifier(st)));
+                        break;
+                        //throw new CodeEE("字句解析中に予期しない文字'" + st.Current + "'を発見しました");
 					case ';'://1807 行中コメント
 						if (st.CurrentEqualTo(";#;") && Program.DebugMode)
 						{

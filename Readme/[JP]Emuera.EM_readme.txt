@@ -103,4 +103,34 @@ CLEARLINEに第二引数追加(整数型，省略可，デフォルトは1)，
 		<b>D</b>EFG
 	(太字は普通より幅広いからです)
 	
-	
+	ENUMFUNCBEGINSWITH <文字列>
+	ENUMVARBEGINSWITH <文字列>
+	ENUMMACROBEGINSWITH <文字列>
+	ENUMFUNCENDSWITH <文字列>
+	ENUMVARENDSWITH <文字列>
+	ENUMMACROENDSWITH <文字列>
+	ENUMFUNCWITH <文字列>
+	ENUMVARWITH <文字列>
+	ENUMMACROWITH <文字列>
+	ユーザが定義したシンボルを返す，結果をRESULTSに，総数をRESULTに保存します。
+	FUNCは関数名，VARは変数名，MACROはマクロ名。
+	BEGINSWITHは<文字列>で始まるシンボルです。
+	ENDSWITHは<文字列>で終わるシンボルです。
+	WITHは<文字列>を含まったシンボルです。
+	例:
+		#DIM CHAR_NAME
+		#DIM CHAR_AGE
+		#DIM FLAG_CHAR_ALIVE
+		#DIM MAP_TARGET_CHAR
+
+		...
+
+		ENUMVARBEGINSWITH "CHAR"
+		; => RESULT = 3
+		; => RESULTS = ["CHAR_NAME", "CHAR_AGE", "CHAR_SEX"]
+		ENUMVARENDSWITH "CHAR"
+		; => RESULT = 1
+		; => RESULTS = ["MAP_TARGET_CHAR"]
+		ENUMVARWITH "_CHAR_"
+		; => RESULT = 1
+		; => RESULTS = ["FLAG_CHAR_ALIVE"]

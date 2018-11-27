@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using MinorShift.Emuera.Sub;
 using MinorShift.Emuera.GameData;
 using MinorShift.Emuera.GameData.Variable;
+using System.Linq;
 
 namespace MinorShift.Emuera.GameProc
 {
@@ -54,8 +55,9 @@ namespace MinorShift.Emuera.GameProc
 
 		Dictionary<string, List<FunctionLabelLine>[]> eventLabelDic = new Dictionary<string, List<FunctionLabelLine>[]>();
 		Dictionary<string, FunctionLabelLine> noneventLabelDic = new Dictionary<string, FunctionLabelLine>();
+        public string[] NoneventKeys => noneventLabelDic.Keys.ToArray();
 
-		public void SortLabels()
+        public void SortLabels()
 		{
 			foreach (KeyValuePair<string, List<FunctionLabelLine>[]> pair in eventLabelDic)
 				foreach (List<FunctionLabelLine> list in pair.Value)
