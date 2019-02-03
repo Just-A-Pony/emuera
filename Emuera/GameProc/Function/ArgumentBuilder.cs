@@ -130,7 +130,77 @@ namespace MinorShift.Emuera.GameProc.Function
 
 	internal static partial class ArgumentParser
 	{
-		readonly static Dictionary<FunctionArgType, ArgumentBuilder> argb = new Dictionary<FunctionArgType, ArgumentBuilder>();
+        #region EM_私家版_追加命令
+        private sealed class SP_HTMLSUBSTRING_ArgumentBuilder : ArgumentBuilder
+        {
+            public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
+            {
+                StringStream st = line.PopArgumentPrimitive();
+                IOperandTerm html, len;
+                WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.Comma, LexAnalyzeFlag.None);
+                st.ShiftNext();
+                html = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
+                if (!html.IsString)
+                { warn("第一引数が文字列ではありません", line, 2, false); return null; }
+                if (st.EOS)
+                { warn("第二引数がありません", line, 2, false); return null; }
+                wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
+                st.ShiftNext();
+                len = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
+                if (!len.IsInteger)
+                { warn("第二引数が整数型ではありません", line, 2, false); return null; }
+                if (!st.EOS)
+                { warn("引数が多すぎます", line, 2, false); return null; }
+                return new SpHtmlSubStringArgument(html, len); ;
+            }
+        }
+
+        private sealed class SP_SETFORM_ArgumentBuilder : ArgumentBuilder
+        {
+            public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
+            {
+                StringStream st = line.PopArgumentPrimitive();
+                IOperandTerm varname = null;
+                StrFormWord sfw = LexicalAnalyzer.AnalyseFormattedString(st, FormStrEndWith.Comma, true);
+                varname = ExpressionParser.ToStrFormTerm(sfw);
+                varname = varname.Restructure(exm);
+                st.ShiftNext();
+                WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
+                st.ShiftNext();
+
+                IOperandTerm arg = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
+                if (!st.EOS)
+                { warn("引数が多すぎます", line, 2, false); return null; }
+                return new SpSetFormArgment(varname, arg); ;
+            }
+        }
+
+        private sealed class SP_CLEARLINE_ArgumentBuilder : ArgumentBuilder
+        {
+            public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
+            {
+                StringStream st = line.PopArgumentPrimitive();
+                if (st.EOS)
+                { warn("引数が足りません", line, 2, false); return null; }
+                WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.Comma, LexAnalyzeFlag.None);
+                st.ShiftNext();
+                IOperandTerm lines = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
+
+                IOperandTerm refresh = null;
+                if (st.EOS)
+                    refresh = new SingleTerm(1);
+                else
+                {
+                    wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
+                    st.ShiftNext();
+                    refresh = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
+
+                }
+                return new SpClearLineArgment(lines, refresh);
+            }
+        }
+        #endregion
+        readonly static Dictionary<FunctionArgType, ArgumentBuilder> argb = new Dictionary<FunctionArgType, ArgumentBuilder>();
 		
 		public static Dictionary<FunctionArgType, ArgumentBuilder> GetArgumentBuilderDictionary()
 		{
@@ -171,7 +241,12 @@ namespace MinorShift.Emuera.GameProc.Function
 		}
 		static ArgumentParser()
 		{
-			argb[FunctionArgType.METHOD] = new METHOD_ArgumentBuilder();
+            #region EM_私家版_追加命令
+            argb[FunctionArgType.SP_SETFORM] = new SP_SETFORM_ArgumentBuilder();
+            argb[FunctionArgType.SP_HTMLSUBSTRING] = new SP_HTMLSUBSTRING_ArgumentBuilder();
+            argb[FunctionArgType.SP_CLEARLINE] = new SP_CLEARLINE_ArgumentBuilder();
+            #endregion
+            argb[FunctionArgType.METHOD] = new METHOD_ArgumentBuilder();
 			argb[FunctionArgType.VOID] = new VOID_ArgumentBuilder();
 			argb[FunctionArgType.INT_EXPRESSION] = new INT_EXPRESSION_ArgumentBuilder(false);
 			argb[FunctionArgType.INT_EXPRESSION_NULLABLE] = new INT_EXPRESSION_ArgumentBuilder(true);
@@ -225,82 +300,10 @@ namespace MinorShift.Emuera.GameProc.Function
 			argb[FunctionArgType.SP_REF] = new SP_REF_ArgumentBuilder(false);
 			argb[FunctionArgType.SP_REFBYNAME] = new SP_REF_ArgumentBuilder(true);
 			argb[FunctionArgType.SP_HTMLSPLIT] = new SP_HTMLSPLIT_ArgumentBuilder();
-
-            argb[FunctionArgType.SP_SETFORM] = new SP_SETFORM_ArgumentBuilder();
-            argb[FunctionArgType.SP_HTMLSUBSTRING] = new SP_HTMLSUBSTRING_ArgumentBuilder();
-            argb[FunctionArgType.SP_CLEARLINE] = new SP_CLEARLINE_ArgumentBuilder();
+			
         }
-
-        private sealed class SP_HTMLSUBSTRING_ArgumentBuilder : ArgumentBuilder
-        {
-            public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
-            {
-                StringStream st = line.PopArgumentPrimitive();
-                IOperandTerm html, len;
-                WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.Comma, LexAnalyzeFlag.None);
-                st.ShiftNext();
-                html = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
-                if (!html.IsString)
-                { warn("第一引数が文字列ではありません", line, 2, false); return null; }
-                if (st.EOS)
-                { warn("第二引数がありません", line, 2, false); return null; }
-                wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
-                st.ShiftNext();
-                len = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
-                if (!len.IsInteger  )
-                { warn("第二引数が整数型ではありません", line, 2, false); return null; }
-                if (!st.EOS)
-                { warn("引数が多すぎます", line, 2, false); return null; }
-                return new SpHtmlSubStringArgument(html, len); ;
-            }
-        }
-
-        private sealed class SP_SETFORM_ArgumentBuilder : ArgumentBuilder
-        {
-            public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
-            {
-                StringStream st = line.PopArgumentPrimitive();
-                IOperandTerm varname = null;
-                StrFormWord sfw = LexicalAnalyzer.AnalyseFormattedString(st, FormStrEndWith.Comma, true);
-                varname = ExpressionParser.ToStrFormTerm(sfw);
-                varname = varname.Restructure(exm);
-                st.ShiftNext();
-                WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
-                st.ShiftNext();
-                
-                IOperandTerm arg = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
-                if (!st.EOS)
-                { warn("引数が多すぎます", line, 2, false); return null; }
-                return new SpSetFormArgment(varname, arg); ;
-            }
-        }
-
-        private sealed class SP_CLEARLINE_ArgumentBuilder : ArgumentBuilder
-        {
-            public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
-            {
-                StringStream st = line.PopArgumentPrimitive();
-                if (st.EOS)
-                { warn("引数が足りません", line, 2, false); return null; }
-                WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.Comma, LexAnalyzeFlag.None);
-                st.ShiftNext();
-                IOperandTerm lines = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
-
-                IOperandTerm refresh = null;
-                if (st.EOS)
-                    refresh = new SingleTerm(1);
-                else
-                {
-                    wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
-                    st.ShiftNext();
-                    refresh = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
-
-                }
-                return new SpClearLineArgment(lines, refresh);
-            }
-        }
-
-        private sealed class SP_PRINTV_ArgumentBuilder : ArgumentBuilder
+		
+		private sealed class SP_PRINTV_ArgumentBuilder : ArgumentBuilder
 		{
 			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 			{

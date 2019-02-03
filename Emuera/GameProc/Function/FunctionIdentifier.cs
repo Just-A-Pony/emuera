@@ -81,8 +81,21 @@ namespace MinorShift.Emuera.GameProc.Function
 			methodArgumentBuilder = argb[FunctionArgType.METHOD];
 			methodInstruction = new METHOD_Instruction();
 			setFunc = new FunctionIdentifier("SET", FunctionCode.SET, new SET_Instruction());//代入文
-			#region PRINT or INPUT
-			addPrintFunction(FunctionCode.PRINT);
+            #region EM_私家版_追加命令
+            addFunction(FunctionCode.HTML_SUBSTRING, new HTML_SUBSTRING_Instruction());
+            addFunction(FunctionCode.SETFORM, new SETFORM_Instruction());
+            addFunction(FunctionCode.ENUMFUNCBEGINSWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Function, ENUMIDS_Instruction.Action.BeginsWith));
+            addFunction(FunctionCode.ENUMFUNCENDSWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Function, ENUMIDS_Instruction.Action.EndsWith));
+            addFunction(FunctionCode.ENUMFUNCWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Function, ENUMIDS_Instruction.Action.With));
+            addFunction(FunctionCode.ENUMVARBEGINSWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Variable, ENUMIDS_Instruction.Action.BeginsWith));
+            addFunction(FunctionCode.ENUMVARENDSWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Variable, ENUMIDS_Instruction.Action.EndsWith));
+            addFunction(FunctionCode.ENUMVARWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Variable, ENUMIDS_Instruction.Action.With));
+            addFunction(FunctionCode.ENUMMACROBEGINSWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Macro, ENUMIDS_Instruction.Action.BeginsWith));
+            addFunction(FunctionCode.ENUMMACROENDSWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Macro, ENUMIDS_Instruction.Action.EndsWith));
+            addFunction(FunctionCode.ENUMMACROWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Macro, ENUMIDS_Instruction.Action.With));
+            #endregion
+            #region PRINT or INPUT
+            addPrintFunction(FunctionCode.PRINT);
 			addPrintFunction(FunctionCode.PRINTL);
 			addPrintFunction(FunctionCode.PRINTW);
 			addPrintFunction(FunctionCode.PRINTV);
@@ -201,20 +214,8 @@ namespace MinorShift.Emuera.GameProc.Function
 			addFunction(FunctionCode.CLEARLINE, new CLEARLINE_Instruction());
 			addFunction(FunctionCode.REUSELASTLINE, new REUSELASTLINE_Instruction());
 
-            #endregion
-            addFunction(FunctionCode.HTML_SUBSTRING, new HTML_SUBSTRING_Instruction());
-            addFunction(FunctionCode.SETFORM, new SETFORM_Instruction());
-            addFunction(FunctionCode.ENUMFUNCBEGINSWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Function, ENUMIDS_Instruction.Action.BeginsWith));
-            addFunction(FunctionCode.ENUMFUNCENDSWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Function, ENUMIDS_Instruction.Action.EndsWith));
-            addFunction(FunctionCode.ENUMFUNCWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Function, ENUMIDS_Instruction.Action.With));
-            addFunction(FunctionCode.ENUMVARBEGINSWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Variable, ENUMIDS_Instruction.Action.BeginsWith));
-            addFunction(FunctionCode.ENUMVARENDSWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Variable, ENUMIDS_Instruction.Action.EndsWith));
-            addFunction(FunctionCode.ENUMVARWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Variable, ENUMIDS_Instruction.Action.With));
-            addFunction(FunctionCode.ENUMMACROBEGINSWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Macro, ENUMIDS_Instruction.Action.BeginsWith));
-            addFunction(FunctionCode.ENUMMACROENDSWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Macro, ENUMIDS_Instruction.Action.EndsWith));
-            addFunction(FunctionCode.ENUMMACROWITH, new ENUMIDS_Instruction(ENUMIDS_Instruction.Type.Macro, ENUMIDS_Instruction.Action.With));
-
-            addFunction(FunctionCode.UPCHECK, argb[FunctionArgType.VOID], METHOD_SAFE);//パラメータの変動
+			#endregion
+			addFunction(FunctionCode.UPCHECK, argb[FunctionArgType.VOID], METHOD_SAFE);//パラメータの変動
 			addFunction(FunctionCode.CUPCHECK, argb[FunctionArgType.INT_EXPRESSION], METHOD_SAFE | EXTENDED);
 			addFunction(FunctionCode.ADDCHARA, new ADDCHARA_Instruction(false, false));//(キャラ番号)のキャラクタを追加
 			addFunction(FunctionCode.ADDSPCHARA, new ADDCHARA_Instruction(true, false));//(キャラ番号)のSPキャラクタを追加（フラグ0を1にして作成）

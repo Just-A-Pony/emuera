@@ -48,9 +48,9 @@ namespace MinorShift.Emuera.Sub
 	enum LexAnalyzeFlag
 	{
 		None = 0,
-		AnalyzePrintV = 1,
-		AllowAssignment = 2,
-		AllowSingleQuotationStr = 4,
+		AnalyzePrintV = 1,//PRINTVの引数で'に続けて文字列を書くと数式ではないが文字列として表示される
+		AllowAssignment = 2,//代入演算子が使用できる場面であるFlag。このFlagなしで=が途中に出てきたらエラー
+		AllowSingleQuotationStr = 4,//HTML_PRINT解析用。''で囲まれた文字列を許可する。
 	}
 
 	/// <summary>
@@ -950,11 +950,13 @@ namespace MinorShift.Emuera.Sub
 						break;
 					case '{':
 					case '$':
+                        #region EM_私家版_$文法追加
                         st.ShiftNext();
                         ret.Add(new LiteralStringWord(ReadSingleIdentifier(st)));
                         break;
-                        //throw new CodeEE("字句解析中に予期しない文字'" + st.Current + "'を発見しました");
-					case ';'://1807 行中コメント
+                        #endregion
+                        //本家版 throw new CodeEE("字句解析中に予期しない文字'" + st.Current + "'を発見しました");
+                    case ';'://1807 行中コメント
 						if (st.CurrentEqualTo(";#;") && Program.DebugMode)
 						{
 							st.Jump(3);
@@ -992,7 +994,7 @@ namespace MinorShift.Emuera.Sub
 
 		}
 
-		public static WordCollection expandMacro(WordCollection wc)
+		private static WordCollection expandMacro(WordCollection wc)
 		{
 			//マクロ展開
 			wc.Pointer = 0;

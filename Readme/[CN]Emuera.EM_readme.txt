@@ -1,6 +1,6 @@
 ﻿名称：Emuera.EM
 
-版本： 1.823
+版本： 1.824
 原作者：MinorShift, 妊）|дﾟ)の中の人
 
 修改者：EvilMask

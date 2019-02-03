@@ -20,6 +20,7 @@ namespace MinorShift.Emuera.GameView
 		private readonly PrintStringBuffer printBuffer;
 		readonly StringMeasure stringMeasure = new StringMeasure();
 
+        #region EM_私家版_StringMeasure獲得
         public StringMeasure StrMeasure
         {
             get
@@ -27,6 +28,8 @@ namespace MinorShift.Emuera.GameView
                 return stringMeasure;
             }
         }
+        #endregion
+
         public void ClearDisplay()
 		{
 			displayLineList.Clear();

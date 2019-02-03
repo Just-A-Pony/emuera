@@ -7,7 +7,39 @@ using MinorShift.Emuera.GameData.Function;
 
 namespace MinorShift.Emuera.GameProc.Function
 {
-	internal abstract class Argument
+    #region EM_私家版_追加命令
+    internal sealed class SpSetFormArgment : Argument
+    {
+        public SpSetFormArgment(IOperandTerm varname, IOperandTerm arg)
+        {
+            Varname = varname;
+            RowArg = arg;
+        }
+        readonly public IOperandTerm Varname;
+        readonly public IOperandTerm RowArg;
+    }
+    internal sealed class SpClearLineArgment : Argument
+    {
+        public SpClearLineArgment(IOperandTerm lines, IOperandTerm refresh)
+        {
+            Lines = lines;
+            Refresh = refresh;
+        }
+        readonly public IOperandTerm Lines;
+        readonly public IOperandTerm Refresh;
+    }
+    internal sealed class SpHtmlSubStringArgument : Argument
+    {
+        public SpHtmlSubStringArgument(IOperandTerm s1, IOperandTerm len)
+        {
+            TargetStr = s1;
+            Length = len;
+        }
+        readonly public IOperandTerm TargetStr;
+        readonly public IOperandTerm Length;
+    }
+    #endregion
+    internal abstract class Argument
 	{
 		public bool IsConst;
 		public string ConstStr;
@@ -187,28 +219,7 @@ namespace MinorShift.Emuera.GameProc.Function
 		public IOperandTerm FuncTerm;
 	}
 
-    internal sealed class SpSetFormArgment : Argument
-    {
-        public SpSetFormArgment(IOperandTerm varname, IOperandTerm arg)
-        {
-            Varname = varname;
-            RowArg = arg;
-        }
-        readonly public IOperandTerm Varname;
-        readonly public IOperandTerm RowArg;
-    }
-    internal sealed class SpClearLineArgment : Argument
-    {
-        public SpClearLineArgment(IOperandTerm lines, IOperandTerm refresh)
-        {
-            Lines = lines;
-            Refresh = refresh;
-        }
-        readonly public IOperandTerm Lines;
-        readonly public IOperandTerm Refresh;
-    }
-
-    internal sealed class SpCallArgment : Argument
+	internal sealed class SpCallArgment : Argument
 	{
 		public SpCallArgment(IOperandTerm funcname, IOperandTerm[] subNames, IOperandTerm[] args)
 		{
@@ -388,18 +399,7 @@ namespace MinorShift.Emuera.GameProc.Function
         readonly public VariableTerm Num;
 	}
 
-    internal sealed class SpHtmlSubStringArgument : Argument
-    {
-        public SpHtmlSubStringArgument(IOperandTerm s1,IOperandTerm len)
-        {
-            TargetStr = s1;
-            Length = len;
-        }
-        readonly public IOperandTerm TargetStr;
-        readonly public IOperandTerm Length;
-    }
-
-    internal sealed class SpGetIntArgument : Argument
+	internal sealed class SpGetIntArgument : Argument
 	{
 		public SpGetIntArgument(VariableTerm var)
 		{

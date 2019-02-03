@@ -15,7 +15,11 @@ namespace MinorShift.Emuera.GameProc
 	/// </summary>
 	internal sealed class LabelDictionary
 	{
-		public LabelDictionary()
+        #region EM_私家版_辞書獲得
+        public string[] NoneventKeys => noneventLabelDic.Keys.ToArray();
+        #endregion
+
+        public LabelDictionary()
 		{
 			Initialized = false;
 		}
@@ -55,9 +59,8 @@ namespace MinorShift.Emuera.GameProc
 
 		Dictionary<string, List<FunctionLabelLine>[]> eventLabelDic = new Dictionary<string, List<FunctionLabelLine>[]>();
 		Dictionary<string, FunctionLabelLine> noneventLabelDic = new Dictionary<string, FunctionLabelLine>();
-        public string[] NoneventKeys => noneventLabelDic.Keys.ToArray();
 
-        public void SortLabels()
+		public void SortLabels()
 		{
 			foreach (KeyValuePair<string, List<FunctionLabelLine>[]> pair in eventLabelDic)
 				foreach (List<FunctionLabelLine> list in pair.Value)

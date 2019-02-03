@@ -14,8 +14,168 @@ namespace MinorShift.Emuera.GameProc.Function
 {
 	internal sealed partial class FunctionIdentifier
 	{
-		#region normalFunction
-		private sealed class PRINT_Instruction : AbstractInstruction
+        //本家版
+        //private sealed class CLEARLINE_Instruction : AbstractInstruction
+        //{
+        //	public CLEARLINE_Instruction()
+        //	{
+        //		ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
+        //		flag = METHOD_SAFE | EXTENDED | IS_PRINT;
+        //	}
+        //	public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+        //	{
+        //		ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
+        //		Int32 delNum = (Int32)intExpArg.Term.GetIntValue(exm);
+        //		exm.Console.deleteLine(delNum);
+        //		exm.Console.RefreshStrings(false);
+        //	}
+        //}
+        #region EM_私家版_追加命令
+        private sealed class CLEARLINE_Instruction : AbstractInstruction
+        {
+            public CLEARLINE_Instruction()
+            {
+                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_CLEARLINE);
+                flag = METHOD_SAFE | EXTENDED | IS_PRINT;
+            }
+            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+            {
+                SpClearLineArgment intExpArg = (SpClearLineArgment)func.Argument;
+                Int32 delNum = (Int32)intExpArg.Lines.GetIntValue(exm);
+                exm.Console.deleteLine(delNum);
+                if (intExpArg.Refresh.GetIntValue(exm) != 0) exm.Console.RefreshStrings(false);
+            }
+        }
+
+        private sealed class HTML_SUBSTRING_Instruction : AbstractInstruction
+        {
+            public HTML_SUBSTRING_Instruction()
+            {
+                flag = EXTENDED | METHOD_SAFE;
+                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_HTMLSUBSTRING);
+            }
+
+            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+            {
+                SpHtmlSubStringArgument arg = (SpHtmlSubStringArgument)func.Argument;
+                string str = arg.TargetStr.GetStrValue(exm);
+                VariableToken destVar = GlobalStatic.VariableData.GetSystemVariableToken("RESULTS");
+                string[] strs = MinorShift.Emuera.GameView.HtmlManager.HtmlSubString(str, (int)arg.Length.GetIntValue(exm));
+                string[] output = (string[])destVar.GetArray();
+                int outputlength = Math.Min(output.Length, strs.Length);
+                Array.Copy(strs, output, outputlength);
+            }
+        }
+
+        private sealed class ENUMIDS_Instruction : AbstractInstruction
+        {
+            public enum Type
+            {
+                Function,
+                Variable,
+                Macro
+            }
+            public enum Action
+            {
+                BeginsWith,
+                EndsWith,
+                With
+            }
+            public ENUMIDS_Instruction(Type type, Action act)
+            {
+                flag = EXTENDED | METHOD_SAFE;
+                this.type = type;
+                this.action = act;
+                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.STR_EXPRESSION);
+            }
+
+            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+            {
+                string arg = ((ExpressionArgument)func.Argument).Term.GetStrValue(exm);
+                VariableToken destVar = GlobalStatic.VariableData.GetSystemVariableToken("RESULTS");
+                VariableToken count = GlobalStatic.VariableData.GetSystemVariableToken("RESULT");
+                string[] array = null;
+                switch (type)
+                {
+                    case Type.Function:
+                        array = GlobalStatic.Process.LabelDictionary.NoneventKeys;
+                        break;
+                    case Type.Variable:
+                        array = GlobalStatic.IdentifierDictionary.VarKeys;
+                        break;
+                    case Type.Macro:
+                        array = GlobalStatic.IdentifierDictionary.MacroKeys;
+                        break;
+                }
+                List<string> strs = new List<string>();
+                if (arg.Length > 0)
+                    foreach (string item in array)
+                    {
+                        if (item.Length < arg.Length) continue;
+                        switch (action)
+                        {
+                            case Action.BeginsWith:
+                                if (item.IndexOf(arg) == 0) strs.Add(item);
+                                break;
+                            case Action.EndsWith:
+                                if (item.LastIndexOf(arg) == item.Length - arg.Length) strs.Add(item);
+                                break;
+                            case Action.With:
+                                if (item.IndexOf(arg) >= 0) strs.Add(item);
+                                break;
+                        }
+                    }
+                string[] output = (string[])destVar.GetArray();
+                string[] ret = strs.ToArray();
+                int outputlength = Math.Min(output.Length, ret.Length);
+                Int64[] var = (Int64[])count.GetArray();
+                var[0] = outputlength;
+                Array.Copy(ret, output, outputlength);
+            }
+
+            private Type type;
+            private Action action;
+        }
+
+        private sealed class SETFORM_Instruction : AbstractInstruction
+        {
+            public SETFORM_Instruction()
+            {
+                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_SETFORM);
+                flag = METHOD_SAFE | EXTENDED;
+            }
+            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+            {
+                if (func.Argument is SpSetFormArgment)
+                {
+                    SpSetFormArgment arg = (SpSetFormArgment)func.Argument;
+                    WordCollection wc = LexicalAnalyzer.Analyse(new StringStream(arg.Varname.GetStrValue(exm)), LexEndWith.EoL, LexAnalyzeFlag.None);
+                    IOperandTerm term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
+                    if (term is VariableTerm)
+                    {
+                        VariableTerm var = (VariableTerm)term;
+
+                        if (var.Identifier == null)
+                            throw new CodeEE("第1引数が変数ではありません");
+                        if (var.Identifier.IsConst)
+                            throw new CodeEE("第1引数はCONSTです");
+                        if (arg.RowArg.IsInteger)
+                            var.SetValue(arg.RowArg.GetIntValue(exm), exm);
+                        else
+                            var.SetValue(arg.RowArg.GetStrValue(exm), exm);
+                    }
+                    else
+                        throw new CodeEE("第1引数が変数ではありません");
+
+                    return;
+                }
+
+            }
+        }
+        #endregion
+
+        #region normalFunction
+        private sealed class PRINT_Instruction : AbstractInstruction
 		{
 			public PRINT_Instruction(string name)
 			{
@@ -283,99 +443,9 @@ namespace MinorShift.Emuera.GameProc.Function
 				Array.Copy(strs, output, outputlength);
 			}
 		}
-
-        private sealed class HTML_SUBSTRING_Instruction : AbstractInstruction
-        {
-            public HTML_SUBSTRING_Instruction()
-            {
-                flag = EXTENDED | METHOD_SAFE;
-                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_HTMLSUBSTRING);
-            }
-
-            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-            {
-                SpHtmlSubStringArgument arg = (SpHtmlSubStringArgument)func.Argument;
-                string str = arg.TargetStr.GetStrValue(exm);
-                VariableToken destVar = GlobalStatic.VariableData.GetSystemVariableToken("RESULTS");
-                string[] strs = MinorShift.Emuera.GameView.HtmlManager.HtmlSubString(str, (int)arg.Length.GetIntValue(exm));
-                string[] output = (string[])destVar.GetArray();
-                int outputlength = Math.Min(output.Length, strs.Length);
-                Array.Copy(strs, output, outputlength);
-            }
-        }
-
-        private sealed class ENUMIDS_Instruction : AbstractInstruction
-        {
-            public enum Type
-            {
-                Function,
-                Variable,
-                Macro
-            }
-            public enum Action
-            {
-                BeginsWith,
-                EndsWith,
-                With
-            }
-            public ENUMIDS_Instruction(Type type, Action act)
-            {
-                flag = EXTENDED | METHOD_SAFE;
-                this.type = type;
-                this.action = act;
-                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.STR_EXPRESSION);
-            }
-
-            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-            {
-                string arg = ((ExpressionArgument)func.Argument).Term.GetStrValue(exm);
-                VariableToken destVar = GlobalStatic.VariableData.GetSystemVariableToken("RESULTS");
-                VariableToken count = GlobalStatic.VariableData.GetSystemVariableToken("RESULT");
-                string[] array = null;
-                switch (type)
-                {
-                    case Type.Function:
-                        array = GlobalStatic.Process.LabelDictionary.NoneventKeys;
-                        break;
-                    case Type.Variable:
-                        array = GlobalStatic.IdentifierDictionary.VarKeys;
-                        break;
-                    case Type.Macro:
-                        array = GlobalStatic.IdentifierDictionary.MacroKeys;
-                        break;
-                }
-                List<string> strs = new List<string>();
-                if (arg.Length>0)
-                    foreach ( string item in array)
-                    {
-                        if (item.Length < arg.Length) continue;
-                        switch(action)
-                        {
-                            case Action.BeginsWith:
-                                if (item.IndexOf(arg) == 0) strs.Add(item);
-                                break;
-                            case Action.EndsWith:
-                                if (item.LastIndexOf(arg) == item.Length - arg.Length) strs.Add(item);
-                                break;
-                            case Action.With:
-                                if (item.IndexOf(arg) >= 0) strs.Add(item);
-                                break;
-                        }
-                    }
-                string[] output = (string[])destVar.GetArray();
-                string[] ret = strs.ToArray();
-                int outputlength = Math.Min(output.Length, ret.Length);
-                Int64[] var = (Int64[])count.GetArray();
-                var[0] = outputlength;
-                Array.Copy(ret, output, outputlength);
-            }
-
-            private Type type;
-            private Action action;
-        }
-
-
-        private sealed class PRINT_IMG_Instruction : AbstractInstruction
+		
+		
+		private sealed class PRINT_IMG_Instruction : AbstractInstruction
 		{
 			public PRINT_IMG_Instruction()
 			{
@@ -560,43 +630,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			}
 		}
 
-        private sealed class SETFORM_Instruction : AbstractInstruction
-        {
-            public SETFORM_Instruction()
-            {
-                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_SETFORM);
-                flag = METHOD_SAFE | EXTENDED;
-            }
-            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-            {
-                if (func.Argument is SpSetFormArgment)
-                {
-                    SpSetFormArgment arg = (SpSetFormArgment)func.Argument;
-                    WordCollection wc = LexicalAnalyzer.Analyse(new StringStream(arg.Varname.GetStrValue(exm)), LexEndWith.EoL, LexAnalyzeFlag.None);
-                    IOperandTerm term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
-                    if (term is VariableTerm)
-                    {
-                        VariableTerm var = (VariableTerm)term;
-                  
-                        if (var.Identifier==null)
-                            throw new CodeEE("第1引数が変数ではありません");
-                        if (var.Identifier.IsConst)
-                            throw new CodeEE("第1引数はCONSTです");
-                        if (arg.RowArg.IsInteger)
-                            var.SetValue(arg.RowArg.GetIntValue(exm), exm);
-                        else
-                            var.SetValue(arg.RowArg.GetStrValue(exm), exm);
-                    }
-                    else
-                        throw new CodeEE("第1引数が変数ではありません");
-                   
-                    return;
-                }
-              
-            }
-        }
-
-        private sealed class REUSELASTLINE_Instruction : AbstractInstruction
+		private sealed class REUSELASTLINE_Instruction : AbstractInstruction
 		{
 			public REUSELASTLINE_Instruction()
 			{
@@ -611,21 +645,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			}
 		}
 
-		private sealed class CLEARLINE_Instruction : AbstractInstruction
-		{
-			public CLEARLINE_Instruction()
-			{
-				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_CLEARLINE);
-				flag = METHOD_SAFE | EXTENDED | IS_PRINT;
-			}
-			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-			{
-                SpClearLineArgment intExpArg = (SpClearLineArgment)func.Argument;
-				Int32 delNum = (Int32)intExpArg.Lines.GetIntValue(exm);
-				exm.Console.deleteLine(delNum);
-                if (intExpArg.Refresh.GetIntValue(exm)!=0) exm.Console.RefreshStrings(false);
-			}
-		}
+        
 
 		private sealed class STRLEN_Instruction : AbstractInstruction
 		{

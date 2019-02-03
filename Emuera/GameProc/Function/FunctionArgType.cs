@@ -9,13 +9,16 @@ namespace MinorShift.Emuera.GameProc.Function
 	enum FunctionArgType
 	{//数値不要
 		__NULL__ = 0x0000,//未設定。エラー。引数がないならばVOIDを指定すること。
-		METHOD,//式中関数。
 
+        #region EM_私家版_追加命令
         SP_SETFORM,
         SP_HTMLSUBSTRING,
         SP_CLEARLINE,
+        #endregion
 
-        VOID,//引数なし
+        METHOD,//式中関数。
+
+		VOID,//引数なし
 		INT_EXPRESSION,//数式型。省略可能
 		INT_EXPRESSION_NULLABLE,//数式型
 		STR_EXPRESSION,//文字列式型
