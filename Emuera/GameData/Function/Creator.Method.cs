@@ -3495,8 +3495,24 @@ namespace MinorShift.Emuera.GameData.Function
 						filepath = Program.ContentDir + filename;
 					if (!System.IO.File.Exists(filepath))
 						return 0;
-					bmp = new Bitmap(filepath);
-					if (bmp.Width > AbstractImage.MAX_IMAGESIZE || bmp.Height > AbstractImage.MAX_IMAGESIZE)
+                    //本家版 bmp = new Bitmap(filepath);
+                    #region EM_私家版_ファイル占用解除
+                    System.IO.FileStream fs = null;
+                    try
+                    {
+                        fs = new System.IO.FileStream(filepath, System.IO.FileMode.Open);
+                        bmp = new Bitmap(Image.FromStream(fs));
+                    }
+                    finally
+                    {
+                        if (fs != null)
+                        {
+                            fs.Close();
+                            fs.Dispose();
+                        }
+                    }
+                    #endregion
+                    if (bmp.Width > AbstractImage.MAX_IMAGESIZE || bmp.Height > AbstractImage.MAX_IMAGESIZE)
 						return 0;
 					g.GCreateFromF(bmp, (Config.TextDrawingMode == TextDrawingMode.WINAPI));
 				}
