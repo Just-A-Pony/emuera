@@ -42,7 +42,7 @@ namespace MinorShift.Emuera
             openFileDialog.Multiselect = true;
             openFileDialog.RestoreDirectory = true;
             
-           string Emuera_verInfo = "Emuera" + emueraVer.FileVersion.Remove(5) + ".EM私家版0203";
+           string Emuera_verInfo = "Emuera" + emueraVer.FileVersion.Remove(5) + "(EM0204)";
             if (emueraVer.FileBuildPart > 0)
                 Emuera_verInfo += "+v" + emueraVer.FileBuildPart.ToString() + ((emueraVer.FilePrivatePart > 0) ? "." + emueraVer.FilePrivatePart.ToString() : "");
 			EmuVerToolStripTextBox.Text = Emuera_verInfo;

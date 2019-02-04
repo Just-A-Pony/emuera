@@ -201,8 +201,6 @@ namespace MinorShift.Emuera.Content
                 {
                     fs = new FileStream(filepath, FileMode.Open);
                     bmp = new Bitmap(Image.FromStream(fs));
-                    fs.Close();
-                    fs.Dispose();
                 }
                 finally
                 {
@@ -210,7 +208,6 @@ namespace MinorShift.Emuera.Content
                     {
                         fs.Close();
                         fs.Dispose();
-                        bmp = null;
                     }
                 }
                 #endregion

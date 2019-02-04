@@ -50,7 +50,7 @@ namespace MinorShift.Emuera.GameView
 				case "space":
                     //本家版 if (paramPixel.Length == 1 && paramPixel[0] >= 0)
                     #region EM_私家版_space制限解除
-                    if (paramPixel.Length == 1 && paramPixel[0] >= 0)
+                    if (paramPixel.Length == 1 && paramPixel[0] != 0)
                     #endregion
                     {
                         rectF = new RectangleF(0, 0, paramPixel[0], lineHeight);
