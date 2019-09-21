@@ -59,9 +59,8 @@ namespace MinorShift.Emuera.GameProc.Function
             {
                 SpHtmlSubStringArgument arg = (SpHtmlSubStringArgument)func.Argument;
                 string str = arg.TargetStr.GetStrValue(exm);
-                VariableToken destVar = GlobalStatic.VariableData.GetSystemVariableToken("RESULTS");
                 string[] strs = MinorShift.Emuera.GameView.HtmlManager.HtmlSubString(str, (int)arg.Length.GetIntValue(exm));
-                string[] output = (string[])destVar.GetArray();
+                string[] output = GlobalStatic.Process.VEvaluator.RESULTS_ARRAY;
                 int outputlength = Math.Min(output.Length, strs.Length);
                 Array.Copy(strs, output, outputlength);
             }
@@ -92,8 +91,6 @@ namespace MinorShift.Emuera.GameProc.Function
             public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
             {
                 string arg = ((ExpressionArgument)func.Argument).Term.GetStrValue(exm);
-                VariableToken destVar = GlobalStatic.VariableData.GetSystemVariableToken("RESULTS");
-                VariableToken count = GlobalStatic.VariableData.GetSystemVariableToken("RESULT");
                 string[] array = null;
                 switch (type)
                 {
@@ -125,10 +122,11 @@ namespace MinorShift.Emuera.GameProc.Function
                                 break;
                         }
                     }
-                string[] output = (string[])destVar.GetArray();
+                strs.Sort();
+                string[] output = GlobalStatic.Process.VEvaluator.RESULTS_ARRAY;
                 string[] ret = strs.ToArray();
                 int outputlength = Math.Min(output.Length, ret.Length);
-                Int64[] var = (Int64[])count.GetArray();
+                Int64[] var = GlobalStatic.Process.VEvaluator.RESULT_ARRAY;
                 var[0] = outputlength;
                 Array.Copy(ret, output, outputlength);
             }
@@ -769,20 +767,24 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-				ExpressionArgument arg = (ExpressionArgument)func.Argument;
+                SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();
 				req.InputType = InputType.IntValue;
-				if (arg.Term != null)
+				if (arg.Def != null)
 				{
 					Int64 def;
 					if (arg.IsConst)
 						def = arg.ConstInt;
 					else
-						def = arg.Term.GetIntValue(exm);
+						def = arg.Def.GetIntValue(exm);
 					req.HasDefValue = true;
 					req.DefIntValue = def;
-				}
-				exm.Console.WaitInput(req);
+                }
+                if (arg.Mouse != null)
+                {
+                    req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
+                }
+                exm.Console.WaitInput(req);
 			}
 		}
 		private sealed class INPUTS_Instruction : AbstractInstruction
@@ -795,20 +797,24 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-				ExpressionArgument arg = (ExpressionArgument)func.Argument;
+                SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();
 				req.InputType = InputType.StrValue;
-				if (arg.Term != null)
+				if (arg.Def != null)
 				{
 					string def;
 					if (arg.IsConst)
 						def = arg.ConstStr;
 					else
-						def = arg.Term.GetStrValue(exm);
+						def = arg.Def.GetStrValue(exm);
 					req.HasDefValue = true;
 					req.DefStrValue = def;
-				}
-				exm.Console.WaitInput(req);
+                }
+                if (arg.Mouse != null)
+                {
+                    req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
+                }
+                exm.Console.WaitInput(req);
 			}
 		}
 
@@ -822,11 +828,11 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-				ExpressionArgument arg = (ExpressionArgument)func.Argument;
+                SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();
 				req.InputType = InputType.IntValue;
 				req.OneInput = true;
-				if (arg.Term != null)
+				if (arg.Def != null)
 				{
 					//TODO:二文字以上セットできるようにするかエラー停止するか
 					//少なくともONETINPUTとの仕様を統一すべき
@@ -834,15 +840,22 @@ namespace MinorShift.Emuera.GameProc.Function
 					if (arg.IsConst)
 						def = arg.ConstInt;
 					else
-						def = arg.Term.GetIntValue(exm);
-					if (def > 9)
-						def = Int64.Parse(def.ToString().Remove(1));
-					if (def >= 0)
-					{
-						req.HasDefValue = true;
-						req.DefIntValue = def;
-					}
-				}
+						def = arg.Def.GetIntValue(exm);
+                    //if (def > 9)
+                    //	def = Int64.Parse(def.ToString().Remove(1));
+                    //if (def >= 0)
+                    //{
+                    //	req.HasDefValue = true;
+                    //	req.DefIntValue = def;
+                    //}
+                    req.HasDefValue = true;
+                    req.DefIntValue = def;
+                }
+                if (arg.Mouse != null)
+                {
+                   req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
+                }
+                GlobalStatic.Process.InputInteger(1, 0);
 				exm.Console.WaitInput(req);
 			}
 		}
@@ -857,26 +870,33 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-				ExpressionArgument arg = (ExpressionArgument)func.Argument;
+                SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();
 				req.InputType = InputType.StrValue;
 				req.OneInput = true;
-				if (arg.Term != null)
+				if (arg.Def != null)
 				{
 					string def;
 					if (arg.IsConst)
 						def = arg.ConstStr;
 					else
-						def = arg.Term.GetStrValue(exm);
-					if (def.Length > 1)
-						def = def.Remove(1);
-					if (def.Length > 0)
-					{
-						req.HasDefValue = true;
-						req.DefStrValue = def;
-					}
-				}
-				exm.Console.WaitInput(req);
+						def = arg.Def.GetStrValue(exm);
+                    //if (def.Length > 1)
+                    //	def = def.Remove(1);
+                    //if (def.Length > 0)
+                    //{
+                    //	req.HasDefValue = true;
+                    //	req.DefStrValue = def;
+                    //}
+                    req.HasDefValue = true;
+                    req.DefStrValue = def;
+                }
+                if (arg.Mouse != null)
+                {
+                   req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
+                }
+                GlobalStatic.Process.InputInteger(1, 0);
+                exm.Console.WaitInput(req);
 			}
 		}
 
@@ -900,19 +920,24 @@ namespace MinorShift.Emuera.GameProc.Function
 				Int64 x = tinputarg.Time.GetIntValue(exm);
 				Int64 y = tinputarg.Def.GetIntValue(exm);
 				//TODO:ONEINPUTと標準の値を統一
-				if (isOne)
-				{
-					if (y < 0)
-						y = Math.Abs(y);
-					if (y >= 10)
-						y = y / (long)(Math.Pow(10.0, Math.Log10((double)y)));
-				}
-				Int64 z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
+				//if (isOne)
+				//{
+				//	if (y < 0)
+				//		y = Math.Abs(y);
+				//	if (y >= 10)
+				//		y = y / (long)(Math.Pow(10.0, Math.Log10((double)y)));
+				//}
+                if (tinputarg.Mouse != null)
+                {
+                    req.MouseInput = tinputarg.Mouse.GetIntValue(exm) == 1;
+                }
+                Int64 z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
 				req.Timelimit = x;
 				req.DefIntValue = y;
 				req.DisplayTime = z != 0;
 				req.TimeUpMes = (tinputarg.Timeout != null) ? tinputarg.Timeout.GetStrValue(exm) : Config.TimeupLabel;
-				exm.Console.WaitInput(req);
+                GlobalStatic.Process.InputInteger(1, 0);
+                exm.Console.WaitInput(req);
 			}
 		}
 
@@ -934,14 +959,19 @@ namespace MinorShift.Emuera.GameProc.Function
 				req.OneInput = isOne;
 				Int64 x = tinputarg.Time.GetIntValue(exm);
 				string strs = tinputarg.Def.GetStrValue(exm);
-				if (isOne && strs.Length > 1)
-					strs = strs.Remove(1);
-				Int64 z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
+                //if (isOne && strs.Length > 1)
+                //	strs = strs.Remove(1);
+                if (tinputarg.Mouse != null)
+                {
+                    req.MouseInput = tinputarg.Mouse.GetIntValue(exm) == 1;
+                }
+                Int64 z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
 				req.Timelimit = x;
 				req.DefStrValue = strs;
 				req.DisplayTime = z != 0;
 				req.TimeUpMes = (tinputarg.Timeout != null) ? tinputarg.Timeout.GetStrValue(exm) : Config.TimeupLabel;
-				exm.Console.WaitInput(req);
+                GlobalStatic.Process.InputInteger(1, 0);
+                exm.Console.WaitInput(req);
 			}
 		}
 

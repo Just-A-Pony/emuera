@@ -4283,6 +4283,9 @@ namespace MinorShift.Emuera.GameData.Function
                     if (arguments[i] == null)
                         return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, i + 1);
 
+                    // 指定アドレス
+                    if (i == 1 && arguments[i].GetOperandType() == typeof(string)) continue;
+
                     if (i < argumentTypeArray.Length && argumentTypeArray[i] != arguments[i].GetOperandType())
                         return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentType0, name, i + 1);
                 }
@@ -4290,25 +4293,53 @@ namespace MinorShift.Emuera.GameData.Function
             }
             public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
             {
-                string savText = arguments[0].GetStrValue(exm);
-                Int64 i64 = arguments[1].GetIntValue(exm);
-                if (i64 < 0 || i64 > int.MaxValue)
-                    return 0;
+                string savText = arguments[0].GetStrValue(exm), filepath;
+                Int64 i64 = -1;
                 bool forceSavdir = arguments.Length > 2 && (arguments[2].GetIntValue(exm) != 0);
                 bool forceUTF8 = arguments.Length > 3 && (arguments[3].GetIntValue(exm) != 0);
-                int fileIndex = (int)i64;
-                string filepath = forceSavdir ?
+
+
+                if (arguments[1].GetOperandType() == typeof(Int64))
+                {
+                    i64 = arguments[1].GetIntValue(exm);
+                    if (i64 < 0 || i64 > int.MaxValue)
+                        return 0;
+                    int fileIndex = (int)i64;
+                    filepath = forceSavdir ?
                     getSaveDataPathText(fileIndex, Config.ForceSavDir) :
                     getSaveDataPathText(fileIndex, Config.SavDir);
+                }
+                else
+                {
+                    filepath = arguments[1].GetStrValue(exm);
+                    filepath = filepath.Replace('/', '\\');
+                    filepath = filepath.Replace(":", "");
+                    filepath = filepath.Replace("..", "");
+                    filepath = filepath.Replace("\\\\", "\\");
+                    if (filepath.IndexOf('.')>=0)
+                        filepath = filepath.Substring(0, filepath.IndexOf('.'));
+                    filepath += ".txt"; 
+                    forceUTF8 = forceSavdir;
+                }                
+                
                 Encoding encoding = forceUTF8 ?
                     Encoding.GetEncoding("UTF-8") :
                     Config.SaveEncode;
                 try
                 {
-                    if (forceSavdir)
-                        Config.ForceCreateSavDir();
+                    if (i64>=0)
+                    {
+                        if (forceSavdir)
+                            Config.ForceCreateSavDir();
+                        else
+                            Config.CreateSavDir();
+                    }
                     else
-                        Config.CreateSavDir();
+                    {
+                        if (filepath.LastIndexOf('\\') >= 0)
+                            System.IO.Directory.CreateDirectory(filepath.Substring(0, filepath.LastIndexOf('\\')));
+                    }
+                   
                     System.IO.File.WriteAllText(filepath, savText, encoding);
                 }
                 catch { return 0; }
@@ -4337,6 +4368,8 @@ namespace MinorShift.Emuera.GameData.Function
                 {
                     if (arguments[i] == null)
                         return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, i + 1);
+                    // 指定アドレス
+                    if (i == 0 && arguments[i].GetOperandType() == typeof(string)) continue;
                     if (i < argumentTypeArray.Length && argumentTypeArray[i] != arguments[i].GetOperandType())
                         return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentType0, name, i + 1);
                 }
@@ -4344,16 +4377,33 @@ namespace MinorShift.Emuera.GameData.Function
             }
             public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
             {
-                string ret = "";
-                Int64 i64 = arguments[0].GetIntValue(exm);
-                if (i64 < 0 || i64 > int.MaxValue)
-                    return "";
+                string ret = "", filepath;
+                Int64 i64 = -1;
                 bool forceSavdir = arguments.Length > 1 && (arguments[1].GetIntValue(exm) != 0);
                 bool forceUTF8 = arguments.Length > 2 && (arguments[2].GetIntValue(exm) != 0);
-                int fileIndex = (int)i64;
-                string filepath = forceSavdir ?
+                if (arguments[0].GetOperandType() == typeof(Int64))
+                {
+                    i64 = arguments[0].GetIntValue(exm);
+                    if (i64 < 0 || i64 > int.MaxValue)
+                        return "";
+                    int fileIndex = (int)i64;
+                    filepath = forceSavdir ?
                     getSaveDataPathText(fileIndex, Config.ForceSavDir) :
                     getSaveDataPathText(fileIndex, Config.SavDir);
+                }
+                else
+                {
+                    filepath = arguments[0].GetStrValue(exm);
+                    filepath = filepath.Replace('/', '\\');
+                    filepath = filepath.Replace(":", "");
+                    filepath = filepath.Replace("..", "");
+                    filepath = filepath.Replace("\\\\", "\\");
+                    if (filepath.IndexOf('.') >= 0)
+                        filepath = filepath.Substring(0, filepath.IndexOf('.'));
+                    filepath += ".txt";
+                    forceUTF8 = forceSavdir;
+                }
+
                 Encoding encoding = forceUTF8 ?
                     Encoding.GetEncoding("UTF-8") :
                     Config.SaveEncode;

@@ -1,6 +1,6 @@
 ﻿名称：Emuera.EM
 
-版本： 1.824
+版本： 1.823
 原作者：MinorShift, 妊）|дﾟ)の中の人
 
 修改者：EvilMask
@@ -58,7 +58,7 @@ CLEARLINE追加第二个参数(整数，可省略，默认为1)，
 			#DEFINE VAR_IS_STRING 2
 			#DEFINE VAR_IS_CONST 4
 			#DEFINE VAR_IS_2DARRAY 8
-			#DEFINE VAR_IS_3DARRAT 16
+			#DEFINE VAR_IS_3DARRAY 16
 			#DIM FOO,10,10
 
 			...

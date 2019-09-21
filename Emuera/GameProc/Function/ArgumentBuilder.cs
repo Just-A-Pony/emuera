@@ -929,44 +929,59 @@ namespace MinorShift.Emuera.GameProc.Function
         {
             public SP_INPUTS_ArgumentBuilder()
             {
-                argumentTypeArray = new Type[] { typeof(string) };
+                argumentTypeArray = new Type[] { typeof(string), typeof(Int64) };
                 //if (nullable)妥協
                 minArg = 0;
             }
             public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
             {
                 StringStream st = line.PopArgumentPrimitive();
-                Argument ret = null;
+                SpInputsArgument ret = null;
                 if (st.EOS)
                 {
-                    ret = new ExpressionArgument(null);
+                    ret = new SpInputsArgument(null, null);
                     return ret;
                 }
-                StrFormWord sfwt = LexicalAnalyzer.AnalyseFormattedString(st, FormStrEndWith.EoL, false);
-                if (!st.EOS)
-                {
-                    warn("引数が多すぎます", line, 1, false);
-                }
+                StrFormWord sfwt = LexicalAnalyzer.AnalyseFormattedString(st, FormStrEndWith.Comma, false);
                 IOperandTerm term = ExpressionParser.ToStrFormTerm(sfwt);
                 term = term.Restructure(exm);
-                ret = new ExpressionArgument(term);
+                ret = new SpInputsArgument(term, null);
                 if (term is SingleTerm)
                 {
                     ret.ConstStr = term.GetStrValue(exm);
-                    if (line.FunctionCode == FunctionCode.ONEINPUTS)
-                    {
-                        if (string.IsNullOrEmpty(ret.ConstStr))
-                        {
-                            warn("引数が空文字列なため、引数は無視されます", line, 1, false);
-                            return new ExpressionArgument(null);
-                        }
-                        else if (ret.ConstStr.Length > 1)
-                        {
-                            warn("ONEINPUTSの引数に２文字以上の文字列が渡されています（２文字目以降は無視されます）", line, 1, false);
-                            ret.ConstStr = ret.ConstStr.Remove(1);
-                        }
-                    }
+                    //if (line.FunctionCode == FunctionCode.ONEINPUTS)
+                    //{
+                    //    if (string.IsNullOrEmpty(ret.ConstStr))
+                    //    {
+                    //        warn("引数が空文字列なため、引数は無視されます", line, 1, false);
+                    //        return new ExpressionArgument(null);
+                    //    }
+                    //    else if (ret.ConstStr.Length > 1)
+                    //    {
+                    //        warn("ONEINPUTSの引数に２文字以上の文字列が渡されています（２文字目以降は無視されます）", line, 1, false);
+                    //        ret.ConstStr = ret.ConstStr.Remove(1);
+                    //    }
+                    //}
                     ret.IsConst = true;
+                }
+                if (st.EOS)
+                    return ret;
+                st.ShiftNext();
+                WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
+
+                IOperandTerm[] terms = ExpressionParser.ReduceArguments(wc, ArgsEndWith.EoL, false);
+                if (!st.EOS || terms.Length > 1)
+                {
+                    warn("引数が多すぎます", line, 1, false);
+                }
+                if (terms.Length>0)
+                {
+                    if (!terms[0].IsInteger)
+                    {
+                        warn("第2引数が整数型でははいため、第2引数は無視されます", line, 1, false);
+                        ret = new SpInputsArgument(term, null);
+                    }
+                    else ret = new SpInputsArgument(term, terms[0]);
                 }
                 return ret;
             }
@@ -1201,21 +1216,23 @@ namespace MinorShift.Emuera.GameProc.Function
         {
             public SP_TINPUT_ArgumentBuilder()
             {
-                argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64), typeof(string) };
+                argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64), typeof(string), typeof(Int64) };
                 minArg = 2;
             }
             public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
             {
                 IOperandTerm[] terms = popTerms(line);
-                IOperandTerm term3 = null, term4 = null;
+                IOperandTerm term3 = null, term4 = null, term5 = null;
                 if (!checkArgumentType(line, exm, terms))
                     return null;
                 if (terms.Length > 2)
                     term3 = terms[2];
                 if (terms.Length > 3)
                     term4 = terms[3];
+                if (terms.Length > 4)
+                    term5 = terms[4];
 
-                return new SpTInputsArgument(terms[0], terms[1], term3, term4);
+                return new SpTInputsArgument(terms[0], terms[1], term3, term4, term5);
             }
         }
         
@@ -1223,20 +1240,22 @@ namespace MinorShift.Emuera.GameProc.Function
 		{
 			public SP_TINPUTS_ArgumentBuilder()
 			{
-				argumentTypeArray = new Type[] { typeof(Int64), typeof(string), typeof(Int64), typeof(string) };
+				argumentTypeArray = new Type[] { typeof(Int64), typeof(string), typeof(Int64), typeof(string), typeof(Int64) };
 				minArg = 2;
 			}
 			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 			{
 				IOperandTerm[] terms = popTerms(line);
-                IOperandTerm term3 = null, term4 = null;
+                IOperandTerm term3 = null, term4 = null, term5 = null;
                 if (!checkArgumentType(line, exm, terms))
 					return null;
                 if (terms.Length > 2)
                     term3 = terms[2];
                 if (terms.Length > 3)
                     term4 = terms[3];
-                return new SpTInputsArgument(terms[0], terms[1], term3, term4);
+                if (terms.Length > 4)
+                    term5 = terms[4];
+                return new SpTInputsArgument(terms[0], terms[1], term3, term4, term5);
 			}
 		}
 
@@ -1867,7 +1886,7 @@ namespace MinorShift.Emuera.GameProc.Function
         {
             public SP_INPUT_ArgumentBuilder()
             {
-                argumentTypeArray = new Type[] { typeof(Int64) };
+                argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64) };
                 //if (nullable)妥協
                 minArg = 0;
             }
@@ -1877,35 +1896,40 @@ namespace MinorShift.Emuera.GameProc.Function
                 if (!checkArgumentType(line, exm, terms))
                     return null;
                 IOperandTerm term = null;
-                ExpressionArgument ret;
+                SpInputsArgument ret;
                 if (terms.Length == 0)
                 {
-                    ret = new ExpressionArgument(term);
+                    ret = new SpInputsArgument(null, null);
                     return ret;
+                }
+                else if (terms.Length == 1)
+                {
+                    term = terms[0];
+                    ret = new SpInputsArgument(term, null);
                 }
                 else
                 {
                     term = terms[0];
-                    ret = new ExpressionArgument(term);
+                    ret = new SpInputsArgument(terms[0], terms[1]);
                 }
 
                 if (term is SingleTerm)
                 {
                     Int64 i = term.GetIntValue(null);
-                    if (line.FunctionCode == FunctionCode.ONEINPUT)
-                    {
-                        if (i < 0)
-                        {
-                            warn("ONEINPUTの引数にONEINPUTが受け取れない負の数数が指定されています（引数を無効とします）", line, 1, false);
-                            ret = new ExpressionArgument(null);
-                            return ret;
-                        }
-                        else if (i > 9)
-                        {
-                            warn("ONEINPUTの引数にONEINPUTが受け取れない2桁以上の数数が指定されています（最初の桁を引数と見なします）", line, 1, false);
-                            i = Int64.Parse(i.ToString().Remove(1));
-                        }
-                    }
+                    //if (line.FunctionCode == FunctionCode.ONEINPUT)
+                    //{
+                    //    if (i < 0)
+                    //    {
+                    //        warn("ONEINPUTの引数にONEINPUTが受け取れない負の数数が指定されています（引数を無効とします）", line, 1, false);
+                    //        ret = new SpInputsArgument(null, null);
+                    //        return ret;
+                    //    }
+                    //    else if (i > 9)
+                    //    {
+                    //        warn("ONEINPUTの引数にONEINPUTが受け取れない2桁以上の数数が指定されています（最初の桁を引数と見なします）", line, 1, false);
+                    //        i = Int64.Parse(i.ToString().Remove(1));
+                    //    }
+                    //}
                     ret.ConstInt = i;
                     ret.IsConst = true;
                 }

@@ -172,21 +172,33 @@ namespace MinorShift.Emuera.GameProc.Function
 
 	internal sealed class SpTInputsArgument : Argument
 	{
-		public SpTInputsArgument(IOperandTerm time, IOperandTerm def, IOperandTerm disp, IOperandTerm timeout)
+		public SpTInputsArgument(IOperandTerm time, IOperandTerm def, IOperandTerm disp, IOperandTerm timeout, IOperandTerm mouse)
 		{
 			Time = time;
 			Def = def;
 			Disp = disp;
             Timeout = timeout;
+            Mouse = mouse;
 		}
 		readonly public IOperandTerm Time;
 		readonly public IOperandTerm Def;
 		readonly public IOperandTerm Disp;
         readonly public IOperandTerm Timeout;
-	}
+        readonly public IOperandTerm Mouse;
+    }
+    internal sealed class SpInputsArgument : Argument
+    {
+        public SpInputsArgument(IOperandTerm def, IOperandTerm mouse)
+        {
+            Def = def;
+            Mouse = mouse;
+        }
+        readonly public IOperandTerm Def;
+        readonly public IOperandTerm Mouse;
+    }
 
-	//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
-	[global::System.Reflection.Obfuscation(Exclude = false)]
+    //難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
+    [global::System.Reflection.Obfuscation(Exclude = false)]
 	internal enum SortOrder
 	{
 		UNDEF = 0,

@@ -38,15 +38,16 @@ namespace MinorShift.Emuera.GameProc
 					|| InputType == InputType.PrimitiveMouseKey); 
 			} 
 		}
+        public bool MouseInput = false;
 		public bool OneInput = false;
 		public bool StopMesskip = false;
 		public bool IsSystemInput = false;
 
 		public bool HasDefValue = false;
-		public long DefIntValue;
-		public string DefStrValue;
+        public long DefIntValue;
+        public string DefStrValue;
 
-		public long Timelimit = -1;
+        public long Timelimit = -1;
 		public bool DisplayTime;
 		public string TimeUpMes;
 

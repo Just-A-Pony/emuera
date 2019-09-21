@@ -1,6 +1,6 @@
 タイトル：Emuera.EM
 
-バージョン： 1.824
+バージョン： 1.823
 元作者：MinorShift, 妊）|дﾟ)の中の人
 
 改造者：EvilMask
@@ -18,6 +18,13 @@ HTML_PRINTの<space>タグにparamが負数になれます。
 CLEARLINEに第二引数追加(整数型，省略可，デフォルトは1)，
 第二引数==0時、次のスクリン更新命令(PRINT系など)までに、画面を更新しません。
 第二引数!=0時または省略した時、元と同じです。
+
+INPUT, INPUTS, ONEINPUT, ONEINPUTS に第二引数追加(整数型，省略可，デフォルトは0)
+TINPUT, TINPUTS, TONEINPUT, TONEINPUTS に第五引数追加(整数型，省略可，デフォルトは0)
+追加引数==0時、本家版と同じです。
+追加引数!=0時または省略した時、マウスクリックをエンターキーにみなす、左クリニックの時RESULT:1を1、右クリニックの時RESULT:1を2にします。
+
+ONEINPUT, ONEINPUTS, TONEINPUT, TONEINPUTS デフォルト値が1桁/文字以上になれます
 
 $で始まる識別子を文字列とみなす
     例
@@ -58,7 +65,7 @@ $で始まる識別子を文字列とみなす
 			#DEFINE VAR_IS_STRING 2
 			#DEFINE VAR_IS_CONST 4
 			#DEFINE VAR_IS_2DARRAY 8
-			#DEFINE VAR_IS_3DARRAT 16
+			#DEFINE VAR_IS_3DARRAY 16
 			#DIM FOO,10,10
 
 			...

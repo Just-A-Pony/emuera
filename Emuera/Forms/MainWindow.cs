@@ -42,7 +42,7 @@ namespace MinorShift.Emuera
             openFileDialog.Multiselect = true;
             openFileDialog.RestoreDirectory = true;
             
-           string Emuera_verInfo = "Emuera" + emueraVer.FileVersion.Remove(5) + "(EM190204)";
+           string Emuera_verInfo = "Emuera" + emueraVer.FileVersion.Remove(5) + "(EM190913)";
             if (emueraVer.FileBuildPart > 0)
                 Emuera_verInfo += "+v" + emueraVer.FileBuildPart.ToString() + ((emueraVer.FilePrivatePart > 0) ? "." + emueraVer.FilePrivatePart.ToString() : "");
 			EmuVerToolStripTextBox.Text = Emuera_verInfo;
@@ -348,26 +348,43 @@ namespace MinorShift.Emuera
 			string str = console.SelectedString;
 
 			if (isBacklog)
-				if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
-				{
-					vScrollBar.Value = vScrollBar.Maximum;
-					console.RefreshStrings(true);
-				}
-			if (console.IsWaitingEnterKey && (!console.IsError&&str == null))
-			{
-				if (isBacklog)
-					return;
-				if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
-				{
-					if (e.Button == MouseButtons.Right)
-						PressEnterKey(true,true);
-					else
-						PressEnterKey(false, true);
-					return;
-				}
-			}
-			//左が押されたなら選択。
-			if (str != null && ((e.Button & MouseButtons.Left) == MouseButtons.Left))
+            {
+                if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
+                {
+                    vScrollBar.Value = vScrollBar.Maximum;
+                    console.RefreshStrings(true);
+                }
+            }
+            else if (console.IsWaitingEnterKey && (!console.IsError && str == null))
+            {
+                if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
+                {
+                    if (e.Button == MouseButtons.Right)
+                        PressEnterKey(true, true);
+                    else
+                        PressEnterKey(false, true);
+                    return;
+                }
+            }
+            else if (console.IsWaintingInputWithMouse && (!console.IsError && str == null))
+            {
+                if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
+                {
+                    if (e.Button == MouseButtons.Right)
+                    {
+                        GlobalStatic.Process.InputInteger(1, 2);
+                        PressEnterKey(true, true);
+                    }
+                    else
+                    {
+                        GlobalStatic.Process.InputInteger(1, 1);
+                        PressEnterKey(false, true);
+                    }
+                    return;
+                }
+            }
+            //左が押されたなら選択。
+            if (str != null && ((e.Button & MouseButtons.Left) == MouseButtons.Left))
 			{ 
 				changeTextbyMouse = console.IsWaintingOnePhrase;
 				richTextBox1.Text = str;

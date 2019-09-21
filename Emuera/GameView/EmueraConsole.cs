@@ -298,7 +298,15 @@ namespace MinorShift.Emuera.GameView
             }
         }
 
-		internal bool IsRunningTimer
+        internal bool IsWaintingInputWithMouse
+        {
+            get
+            {
+                return (state == ConsoleState.WaitInput && inputReq.MouseInput);
+            }
+        }
+
+        internal bool IsRunningTimer
 		{
 			get
 			{
