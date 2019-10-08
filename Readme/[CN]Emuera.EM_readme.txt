@@ -18,6 +18,16 @@ CLEARLINE追加第二个参数(整数，可省略，默认为1)，
 第二个参数==0时，不会立刻更新屏幕，直到下一次更新屏幕的命令(例如PRINT系指令)
 第二个参数!=0时或省略时，效果和原版相同。
 
+INPUT, INPUTS, ONEINPUT, ONEINPUTS 追加第二参数(整数型，可省略，默认为0)
+TINPUT, TINPUTS, TONEINPUT, TONEINPUTS 追加第五参数(整数型，省略可，默认为0)
+追加参数==0时，和原版作用相同。
+追加参数!=0时或省略时，鼠标点击视作按下回车键，左键时RESULT:1被设为1，右击时RESULT:1被设为2。
+
+ONEINPUT, ONEINPUTS, TONEINPUT, TONEINPUTS 的默认值可以为1位以上数字/字符串
+
+LOADTEXT, SAVETEXT 的第一参数为字符串时，以该参数作为路径读取/保存文件。出于安全考虑，该参数将被强制只能访问Emuera.exe所在文件夹及其子文件夹下面的文件。另外config中「LOADTEXTとSAVETEXTで使える拡張子」的设置项用于决定可以访问具有哪些扩展名的文件。若不符合设置，扩展名将强制变为txt(默认设置只能访问txt文件)
+可以以「LOADTEXTとSAVETEXTで使える拡張子:txt,csv,xml」这种方式设置扩展名。
+
 以$开头的标识符会被视为字符串
     例
     LOCALS '= $紅魔館

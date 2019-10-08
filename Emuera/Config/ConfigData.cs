@@ -27,7 +27,7 @@ namespace MinorShift.Emuera
 		private ConfigData() { setDefault(); }
 
 		//適当に大き目の配列を作っておく。
-		private AConfigItem[] configArray = new AConfigItem[70];
+		private AConfigItem[] configArray = new AConfigItem[71];
 		private AConfigItem[] replaceArray = new AConfigItem[50];
 		private AConfigItem[] debugArray = new AConfigItem[20];
 
@@ -110,8 +110,9 @@ namespace MinorShift.Emuera
 			//configArray[i++] = new ConfigItem<bool>(ConfigCode.ForbidOneCodeVariable, "一文字変数の使用を禁止する", false);
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.SystemNoTarget, "キャラクタ変数の引数を補完しない", false);
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.SystemIgnoreStringSet, "文字列変数の代入に文字列式を強制する", false);
+            configArray[i++] = new ConfigItem<List<string>>(ConfigCode.ValidExtension, "LOADTEXTとSAVETEXTで使える拡張子", new List<string>(new string[] { "txt" }));
 
-			i = 0;
+            i = 0;
 			debugArray[i++] = new ConfigItem<bool>(ConfigCode.DebugShowWindow, "起動時にデバッグウインドウを表示する", true);
 			debugArray[i++] = new ConfigItem<bool>(ConfigCode.DebugWindowTopMost, "デバッグウインドウを最前面に表示する", true);
 			debugArray[i++] = new ConfigItem<int>(ConfigCode.DebugWindowWidth, "デバッグウィンドウ幅", 400);
@@ -137,7 +138,7 @@ namespace MinorShift.Emuera
 			replaceArray[i++] = new ConfigItem<List<Int64>>(ConfigCode.PalamLvDef, "PALAMLVの初期値", new List<long>(new Int64[] { 0, 100, 500, 3000, 10000, 30000, 60000, 100000, 150000, 250000 }));
 			replaceArray[i++] = new ConfigItem<Int64>(ConfigCode.pbandDef, "PBANDの初期値", 4);
             replaceArray[i++] = new ConfigItem<Int64>(ConfigCode.RelationDef, "RELATIONの初期値", 0);
-		}
+        }
         
 		public ConfigData Copy()
 		{
@@ -458,9 +459,15 @@ namespace MinorShift.Emuera
 					string[] tokens = line.Split(new char[] { ':' });
 					if (tokens.Length < 2)
 						continue;
-					AConfigItem item = GetConfigItem(tokens[0].Trim());
+                    AConfigItem item = GetConfigItem(tokens[0].Trim());
 					if (item != null)
 					{
+                        if(item.Code == ConfigCode.ValidExtension)
+                        {
+                            string[] exts = tokens[1].Split(new char[]{ ',' });
+                            for (int i=0;i< exts.Length;i++) exts[i] = exts[i].Trim().ToLower();
+                            item.SetValue(new List<string>(exts));
+                        }
 						//1806beta001 CompatiDRAWLINEの廃止、CompatiLinefeedAs1739へ移行
 						if(item.Code == ConfigCode.CompatiDRAWLINE)
 						{
@@ -502,7 +509,7 @@ namespace MinorShift.Emuera
                             //解析モード時はここを上書きして十分な長さを確保する
                             tokens[1] = "10000";
                         }
-						if ((item.TryParse(tokens[1])) && (fix))
+						if (item.Code != ConfigCode.ValidExtension && (item.TryParse(tokens[1])) && (fix))
 							item.Fixed = true;
 					}
 #if DEBUG

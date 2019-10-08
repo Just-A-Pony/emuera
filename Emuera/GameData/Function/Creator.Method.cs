@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.Content;
 using System.Xml;
+using System.IO;
 
 namespace MinorShift.Emuera.GameData.Function
 {
@@ -4347,12 +4348,14 @@ namespace MinorShift.Emuera.GameData.Function
                 {
                     filepath = arguments[1].GetStrValue(exm);
                     filepath = filepath.Replace('/', '\\');
-                    filepath = filepath.Replace(":", "");
                     filepath = filepath.Replace("..", "");
                     filepath = filepath.Replace("\\\\", "\\");
-                    if (filepath.IndexOf('.')>=0)
-                        filepath = filepath.Substring(0, filepath.IndexOf('.'));
-                    filepath += ".txt"; 
+                    string tmp = Path.GetPathRoot(filepath);
+                    filepath = filepath.Substring(tmp.Length);
+                    tmp = Path.HasExtension(filepath)?Path.GetExtension(filepath).ToLower().Substring(1):"";
+                    List<string> ext = Config.ValidExtension;
+                    if (!ext.Contains(tmp))
+                        filepath = Path.ChangeExtension(filepath, "txt");
                     forceUTF8 = forceSavdir;
                 }                
                 
@@ -4429,12 +4432,14 @@ namespace MinorShift.Emuera.GameData.Function
                 {
                     filepath = arguments[0].GetStrValue(exm);
                     filepath = filepath.Replace('/', '\\');
-                    filepath = filepath.Replace(":", "");
                     filepath = filepath.Replace("..", "");
                     filepath = filepath.Replace("\\\\", "\\");
-                    if (filepath.IndexOf('.') >= 0)
-                        filepath = filepath.Substring(0, filepath.IndexOf('.'));
-                    filepath += ".txt";
+                    string tmp = Path.GetPathRoot(filepath);
+                    filepath = filepath.Substring(tmp.Length);
+                    tmp = Path.HasExtension(filepath) ? Path.GetExtension(filepath).ToLower().Substring(1) : "";
+                    List<string> ext = Config.ValidExtension;
+                    if (!ext.Contains(tmp))
+                        filepath = Path.ChangeExtension(filepath, "txt");
                     forceUTF8 = forceSavdir;
                 }
 

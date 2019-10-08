@@ -126,7 +126,8 @@ namespace MinorShift.Emuera
             //一文字変数の禁止オプションを考えた名残
 		   //ForbidOneCodeVariable = instance.GetConfigValue<bool>(ConfigCode.ForbidOneCodeVariable);
 		   SystemNoTarget = instance.GetConfigValue<bool>(ConfigCode.SystemNoTarget);
-			
+            ValidExtension = instance.GetConfigValue<List<string>>(ConfigCode.ValidExtension);
+
             UseLanguage lang = instance.GetConfigValue<UseLanguage>(ConfigCode.useLanguage);
             switch (lang)
             {
@@ -556,7 +557,8 @@ namespace MinorShift.Emuera
 			PalamLvDef = instance.GetConfigValue<List<Int64>>(ConfigCode.PalamLvDef);
 			PbandDef = instance.GetConfigValue<Int64>(ConfigCode.pbandDef);
             RelationDef = instance.GetConfigValue<Int64>(ConfigCode.RelationDef);
-		}
+            ValidExtension = instance.GetConfigValue<List<string>>(ConfigCode.ValidExtension);
+        }
 
 		public static string MoneyLabel { get; private set; }
 		public static bool MoneyFirst { get; private set; }
@@ -574,6 +576,7 @@ namespace MinorShift.Emuera
 		public static List<Int64> PalamLvDef { get; private set; }
 		public static Int64 PbandDef { get; private set; }
         public static Int64 RelationDef { get; private set; }
+        public static List<string> ValidExtension { get; private set; }
 		#endregion
 		
 		

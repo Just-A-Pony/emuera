@@ -94,6 +94,13 @@ namespace MinorShift.Emuera
 				Color c = ((ConfigItem<Color>)(AConfigItem)this).Value;
 				return string.Format("{0},{1},{2}", c.R, c.G, c.B);
 			}
+            if (this is ConfigItem<List<string>>)
+            {
+                string ret = "";
+                foreach (string ext in ((ConfigItem<List<string>>)(AConfigItem)this).Value)
+                    ret += (ret.Length > 0 ? "," : "") + ext;
+                return ret;
+            }
 			return val.ToString();
 		}
 		

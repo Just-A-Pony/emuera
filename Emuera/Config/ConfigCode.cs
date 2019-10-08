@@ -149,5 +149,7 @@ namespace MinorShift.Emuera
         RelationDef = 115,
 
 		UseKeyMacro = 162,
-	}
+
+        ValidExtension = 200,
+    }
 }
