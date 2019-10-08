@@ -21,6 +21,7 @@ namespace MinorShift.Emuera.GameData.Function
             methodList["FUNCEXIST"] = new FuncExistMethod();
             methodList["ISDEFINED"] = new IsDefinedMethod();
             methodList["HTML_STRINGLEN"] = new HtmlStringLenMethod();
+            methodList["XML_GET"] = new XmlGetMethod();
             #endregion
 
             //キャラクタデータ系

@@ -25,14 +25,10 @@ CLEARLINE追加第二个参数(整数，可省略，默认为1)，
     LOCALS '= "紅魔館"
     相同
 
-追加了6个式中函数。
-
+追加的式中函数：
 	int EVAL(str value)
-
-	str EVALS(str value)
-	
+	str EVALS(str value)	
 		将字符串内容视为表达式，返回表达式的值。
-
 		例：
 			#DIMS VAR_A,10
 			#DIMS VAR_B
@@ -41,12 +37,10 @@ CLEARLINE追加第二个参数(整数，可省略，默认为1)，
 			VAR_B = VAR_A
 
 			PRINTSL EVALS(@"%VAR_B%:ABS(-1)")
-
 		结果：
 			变量A
 
-	int VAREXIST(str value)
-	
+	int VAREXIST(str value)	
 		若定义了与字符串的值同名的变量则根据变量特性返回正数值。未定义则返回0。
 		若变量为整数，返回值+1
 		若变量为字符串，返回值+2
@@ -77,20 +71,18 @@ CLEARLINE追加第二个参数(整数，可省略，默认为1)，
 			TRUE
 			FALSE
 		
-	int FUNCEXIST(str value)
-	
+	int FUNCEXIST(str value)	
 		若定义了与字符串的值同名的函数(包括式中函数)则返回1(仅限用户定义的函数)。未定义则返回0。
 
 	int ISDEFINED(str value)
 		若定义了与字符串的值同名的宏(#DEFINE XXX)则返回1。未定义则返回0。	
 		
-	int HTML_STRINGLEN(str value)
-		
+	int HTML_STRINGLEN(str value)		
 		返回字符串显示之后的宽度(半角字符数)，若结果为多行，只返回第一行的宽度
 		
-		
-追加了11个命令函数。
-
+	str XML_GET(str xml, str xpath)
+		返回xml中对应xpath的字符串。如果有多个符合xpath的结果则只返回第一个。如果没有则返回空字符串。详细请参考XML和XPath的相关说明文档。	
+追加的命令函数：
 	SETFORM <FORM字符串>,参数1
 	例：
 	假设已定义

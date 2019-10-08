@@ -12,6 +12,7 @@ using Microsoft.VisualBasic;
 using System.Windows.Forms;
 using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.Content;
+using System.Xml;
 
 namespace MinorShift.Emuera.GameData.Function
 {
@@ -94,6 +95,39 @@ namespace MinorShift.Emuera.GameData.Function
             public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
             {
                 return (GlobalStatic.Process.LabelDictionary.GetNonEventLabel(arguments[0].GetStrValue(exm)) != null) ? 1 : 0;
+            }
+        }
+
+        private sealed class XmlGetMethod : FunctionMethod
+        {
+            public XmlGetMethod()
+            {
+                ReturnType = typeof(string);
+                argumentTypeArray = new Type[] { typeof(string), typeof(string) };
+                CanRestructure = true;
+            }
+
+            public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
+            {
+                string xml = arguments[0].GetStrValue(exm);
+                string path = arguments[1].GetStrValue(exm);
+                XmlDocument doc = new XmlDocument();
+                XmlNodeList nodes = null;
+                try
+                {
+                    doc.LoadXml(xml);
+                    nodes = doc.SelectNodes(path);
+                }
+                catch (XmlException e)
+                {
+                    throw new CodeEE( "XML_GET関数:\"" + xml + "\"の解析エラー:" + e.Message);
+                }
+                catch (System.Xml.XPath.XPathException e)
+                {
+                    throw new CodeEE("XML_GET関数:\"" + path + "\"の解析エラー:" + e.Message);
+                }
+                if (nodes.Count>0) return nodes[0].InnerXml;
+                else return "";
             }
         }
 

@@ -33,14 +33,10 @@ $で始まる識別子を文字列とみなす
     LOCALS '= "紅魔館"
     は同じです
 
-式中で使える関数を6つ追加しました。
-
+追加された式中で使える関数：
 	int EVAL(str value)
-
-	str EVALS(str value)
-	
+	str EVALS(str value)	
 		文字列を式とみなし、その式の値を返します。
-
 		例：
 			#DIMS VAR_A,10
 			#DIMS VAR_B
@@ -49,7 +45,6 @@ $で始まる識別子を文字列とみなす
 			VAR_B = VAR_A
 
 			PRINTSL EVALS(@"%VAR_B%:ABS(-1)")
-
 		結果：
 			変数A
 
@@ -90,12 +85,13 @@ $で始まる識別子を文字列とみなす
 	int ISDEFINED(str value)
 		与えられた文字列と同名なマクロ(#DEFINE XXX)が定義されたら1を返します。定義されていない場合0を返します。
 		
-	int HTML_STRINGLEN(str value)
-		
+	int HTML_STRINGLEN(str value)		
 		与えられた文字列の幅を返します(半角文字数)。複数行の場合、一行目の幅を返します。
-		
-命令関数を2つ追加しました。
 
+	str XML_GET(str xml, str xpath)
+		xmlのxpathに応じた文字列を返します。ただし、複数結果がある場合、一番目の結果だけが返されます。結果がない時、空文字列を返します。XMLとXPath説明文書に参照してください。
+		
+追加された関数：
 	SETFORM <FORM文字列>,引数1
 	例：
 		#DIM VAR_A,10
