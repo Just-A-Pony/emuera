@@ -26,6 +26,10 @@ TINPUT, TINPUTS, TONEINPUT, TONEINPUTS に第五引数追加(整数型，省略�
 
 ONEINPUT, ONEINPUTS, TONEINPUT, TONEINPUTS デフォルト値が1桁/文字以上になれます
 
+LOADTEXT, SAVETEXT の第一引数が文字列の場合、第一引数をパスとすてファイルをロード/セーブします。安全のため、このパスは強制的に、Emuera.exeの所在フォルダーとその
+サブフォルダーのファイルしかアクセスできません。更に、configにで「LOADTEXTとSAVETEXTで使える拡張子」が決められた拡張子しか使えません。使えない拡張子は強制的にtxtにします。(デフォルトはtxtのみ)
+「LOADTEXTとSAVETEXTで使える拡張子:txt,csv,xml」という形で設定可能です。
+
 $で始まる識別子を文字列とみなす
     例
     LOCALS '= $紅魔館
