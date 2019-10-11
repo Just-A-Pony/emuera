@@ -91,7 +91,9 @@ LOADTEXT, SAVETEXT 的第一参数为字符串时，以该参数作为路径读�
 		返回字符串显示之后的宽度(半角字符数)，若结果为多行，只返回第一行的宽度
 		
 	str XML_GET(str xml, str xpath)
-		返回xml中对应xpath的字符串。如果有多个符合xpath的结果则只返回第一个。如果没有则返回空字符串。详细请参考XML和XPath的相关说明文档。	
+		返回xml中对应xpath的InnerXml。如果有多个符合xpath的结果则只返回第一个结果。如果没有则返回空字符串。
+		结果的总数将被赋值给RESULT，所有结果的OuterXml将被赋值给RESULTS。
+		详细请参考XML和XPath的相关说明文档。	
 追加的命令函数：
 	SETFORM <FORM字符串>,参数1
 	例：

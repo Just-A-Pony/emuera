@@ -127,6 +127,9 @@ namespace MinorShift.Emuera.GameData.Function
                 {
                     throw new CodeEE("XML_GET関数:\"" + path + "\"の解析エラー:" + e.Message);
                 }
+                exm.VEvaluator.RESULT = nodes.Count;
+                for (int i=0;i<nodes.Count;i++)
+                    exm.VEvaluator.RESULTS_ARRAY[i] = nodes[i].OuterXml;
                 if (nodes.Count>0) return nodes[0].InnerXml;
                 else return "";
             }
