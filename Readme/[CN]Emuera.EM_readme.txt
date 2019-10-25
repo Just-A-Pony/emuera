@@ -28,6 +28,13 @@ ONEINPUT, ONEINPUTS, TONEINPUT, TONEINPUTS 的默认值可以为1位以上数字
 LOADTEXT, SAVETEXT 的第一参数为字符串时，以该参数作为路径读取/保存文件。出于安全考虑，该参数将被强制只能访问Emuera.exe所在文件夹及其子文件夹下面的文件。另外config中「LOADTEXTとSAVETEXTで使える拡張子」的设置项用于决定可以访问具有哪些扩展名的文件。若不符合设置，扩展名将强制变为txt(默认设置只能访问txt文件)
 可以以「LOADTEXTとSAVETEXTで使える拡張子:txt,csv,xml」这种方式设置扩展名。
 
+VARSET 现在能改变指定坐标的2、3维数组的对应元素。
+	例
+	#DIM FOO, 10, 10
+	VARSET FOO:3:0, 10, 3, 5
+	
+	FOO:3:3和FOO:3:4将被赋值为10。
+
 以$开头的标识符会被视为字符串
     例
     LOCALS '= $紅魔館

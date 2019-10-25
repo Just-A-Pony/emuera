@@ -1313,21 +1313,27 @@ namespace MinorShift.Emuera.GameProc.Function
 				FixedVariableTerm p = var.GetFixedVariableTerm(exm);
 				int start = 0;
 				int end = 0;
-				//endを先に取って判定の処理変更
-				if (spvarsetarg.End != null)
-					end = (int)spvarsetarg.End.GetIntValue(exm);
-				else if (var.Identifier.IsArray1D)
-					end = (int)var.GetLength();
-				if (spvarsetarg.Start != null)
-				{
-					start = (int)spvarsetarg.Start.GetIntValue(exm);
-					if (start > end)
-					{
-						int temp = start;
-						start = end;
-						end = start;
-					}
-				}
+                //endを先に取って判定の処理変更
+                if (spvarsetarg.End != null)
+                    end = (int)spvarsetarg.End.GetIntValue(exm);
+                else if (var.Identifier.IsArray1D)
+                    end = (int)var.GetLength();
+                else if (var.Identifier.IsArray2D)
+                    end = (int)var.GetLength(1);
+                else if (var.Identifier.IsArray3D)
+                    end = (int)var.GetLength(2);
+                if (spvarsetarg.Start != null)
+                {
+                    start = (int)spvarsetarg.Start.GetIntValue(exm);
+                    if (start > end)
+                    {
+                        int temp = start;
+                        start = end;
+                        end = start;
+                    }
+                }
+                else if (var.Identifier.IsArray3D || var.Identifier.IsArray2D)
+                    start = -1;
 				if (var.IsString)
 				{
 					string src = spvarsetarg.Term.GetStrValue(exm);

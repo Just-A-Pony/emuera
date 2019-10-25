@@ -81,9 +81,8 @@ namespace MinorShift.Emuera.GameData.Variable
 			//    throw new CodeEE("読み取り専用の変数" + p.Identifier.Name + "に代入しようとしました");
 			if (p.Identifier.IsCalc)
 				return;
-			//一応チェック済み
-			//throw new ExeEE("READONLYでないCALC変数の代入処理が設定されていない");
-
+            //一応チェック済み
+            //throw new ExeEE("READONLYでないCALC変数の代入処理が設定されていない");
 			else
 			{
 				if (p.Identifier.IsArray1D)
@@ -93,11 +92,16 @@ namespace MinorShift.Emuera.GameData.Variable
 					else if (p.Identifier.IsCharacterData)
 						p.Identifier.CheckElement(new Int64[] { p.Index1, p.Index2 });
 				}
-				else if (p.Identifier.IsCharacterData)
+				else if (p.Identifier.IsCharacterData|| p.Identifier.IsArray2D|| p.Identifier.IsArray3D)
 				{
                     p.Identifier.CheckElement(new Int64[] { p.Index1, p.Index2, p.Index3 });
-				}
-				p.Identifier.SetValueAll(srcValue, start, end, (int)p.Index1);
+                }
+                if (p.Identifier.IsArray2D)
+                    p.Identifier.SetValueAll(srcValue, start, end, new int[] { (int)p.Index1 });
+                else if (p.Identifier.IsArray3D)
+                    p.Identifier.SetValueAll(srcValue, start, end, new int[] { (int)p.Index1, (int)p.Index2 });
+                else
+                    p.Identifier.SetValueAll(srcValue, start, end, (int)p.Index1);
 				return;
 			}
 		}
