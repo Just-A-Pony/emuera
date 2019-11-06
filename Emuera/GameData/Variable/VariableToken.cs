@@ -1937,13 +1937,13 @@ namespace MinorShift.Emuera.GameData.Variable
             {
                 if (dims.Length != 1) return;
                 if (start == -1)
-                {
                     SetValueAll(value, 0, 0, 0);
-                    return;
+                else
+                {
+                    if (end > array.GetLength(1)) end = array.GetLength(1);
+                    for (int i = start; i < end; i++)
+                        array[dims[0], i] = value;
                 }
-                if (end > array.GetLength(1)) end = array.GetLength(1);
-                for (int i = start; i < end; i++)
-                    array[dims[0], i] = value;
             }
             public override void SetValueAll(long value, int start, int end, int charaPos)
 			{
@@ -1998,9 +1998,12 @@ namespace MinorShift.Emuera.GameData.Variable
             {
                 if (dims.Length != 2) return;
                 if (start == -1) SetValueAll(value, 0, 0, 0);
-                if (end > array.GetLength(2)) end = array.GetLength(2);
-                for (int i = start; i < end; i++)
-                    array[dims[0], dims[1], i] = value;
+                else
+                {
+                    if (end > array.GetLength(2)) end = array.GetLength(2);
+                    for (int i = start; i < end; i++)
+                        array[dims[0], dims[1], i] = value;
+                }
             }
             public override void SetValueAll(long value, int start, int end, int charaPos)
 			{
