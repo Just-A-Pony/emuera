@@ -55,7 +55,7 @@ $で始まる識別子を文字列とみなす
 			VAR_A:1 = 変数A
 			VAR_B = VAR_A
 
-			PRINTSL EVALS(@"%VAR_B%:ABS(-1)")
+			PRINTSL EVALS(@"%VAR_B%:{ABS(-1)}")
 		結果：
 			変数A
 

@@ -53,7 +53,7 @@ VARSET 现在能改变指定坐标的2、3维数组的对应元素。
 			VAR_A:1 = 变量A
 			VAR_B = VAR_A
 
-			PRINTSL EVALS(@"%VAR_B%:ABS(-1)")
+			PRINTSL EVALS(@"%VAR_B%:{ABS(-1)}")
 		结果：
 			变量A
 
