@@ -1,5 +1,5 @@
 ﻿#region EM_私家版_space制限解除
-◆ HTML_PRINTの<space>タグにparamが負数になれます
+◆ HTML_PRINTの<space>タグでparaに負数を指定できます
 
 #region EM_私家版_ファイル占用解除
 ◆ プログラム動作中Resourceフォルダーの画像ファイルを常時占用しないようにしました
@@ -7,14 +7,15 @@
 #region EM_私家版_INPUT系機能拡張
 ◆ INPUT, INPUTS, ONEINPUT, ONEINPUTS に第二引数追加(整数型，省略可，デフォルトは0)
 TINPUT, TINPUTS, TONEINPUT, TONEINPUTS に第五引数追加(整数型，省略可，デフォルトは0)
-追加引数==0時、本家版と同じです。
-追加引数!=0時または省略した時、マウスクリックをエンターキーにみなす、左クリニックの時RESULT:1を1、右クリニックの時RESULT:1を2にします。また、同時にShift Ctrl Altを押した場合、そのキー状態をRESULT:2に保存しました。(bit 16 17 18)
+追加引数==0時、または省略した時 本家版と同じです。
+追加引数!=0時 マウスクリックをエンターキーにみなす、左クリックの時RESULT:1を1、右クリックの時RESULT:1を2にします。また、同時にShift Ctrl Altを押した場合、そのキー状態をRESULT:2に保存します。(bit 17 18 19)
 
 #region EM_私家版_INPUT系機能拡張＆ONEINPUT系制限解除
-◆ ONEINPUT, ONEINPUTS, TONEINPUT, TONEINPUTS デフォルト値が1桁/文字以上になれます
+◆ ONEINPUT, ONEINPUTS, TONEINPUT, TONEINPUTS デフォルト値に2桁以上/2文字以上を指定できます
 
 #region EM_私家版_LoadText＆SaveText機能拡張
-◆ LOADTEXT, SAVETEXT の第一引数が文字列の場合、第一引数をパスとすてファイルをロード/セーブします。Emuera.exeを相対パスで指定(".."は無効)。更に、configにで「LOADTEXTとSAVETEXTで使える拡張子」が決められた拡張子しか使えません。(デフォルトはtxtのみ)
+◆ LOADTEXT, SAVETEXT の第一引数が文字列の場合、第一引数をパスとしてファイルをロード/セーブします。Emuera.exeを相対パスで指定(".."は無効)。更に、configにで「LOADTEXTとSAVETEXTで使える拡張子」が決められた拡張子しか使えません。(デフォルトはtxtのみ)
+例文:LOADTEXTとSAVETEXTで使える拡張子:txt,(任意の拡張子),(任意の拡張子)
 
 #region EM_私家版_StringMeasure獲得
 #region EM_私家版_HtmlManager機能拡張
@@ -35,9 +36,9 @@ strを2つに分ける
 
 #region EM_私家版_辞書獲得
 ◆ int FUNCEXIST str
-	与えられた文字列と同名な関数(式中で使える関数も含め)が定義されたら1を返します(ユーザが定義した関数のみ)。定義されていない場合0を返します。
+	与えられた文字列と同名な関数(式中で使える関数も含め)が定義されていたら1を返します(ユーザが定義した関数のみ)。定義されていない場合0を返します。
 ◆ int ISDEFINED str
-	与えられた文字列と同名なマクロ(#DEFINE XXX)が定義されたら1を返します。定義されていない場合0を返します。
+	与えられた文字列と同名なマクロ(#DEFINE XXX)が定義されていたら1を返します。定義されていない場合0を返します。
 ◆ int VAREXIST str
 	与えられた文字列と同名な変数が定義されたら変数の性質によって正数を返します。定義されていない場合0を返します。
 	変数が整数型の場合、返り値 setbit 1
@@ -83,7 +84,7 @@ strを2つに分ける
 	FUNCは関数名，VARは変数名，MACROはマクロ名。
 	BEGINSWITHはstrで始まるシンボルです。
 	ENDSWITHはstrで終わるシンボルです。
-	WITHはstrを含まったシンボルです。
+	WITHはstrを含むシンボルです。
 
 ◆ int GETVAR str
 	str GETVARS str
@@ -98,7 +99,7 @@ strを2つに分ける
 		10 5 5
 
 ◆ int(1) VARSETEX str, value(, int, int, int)
-	VARSETと似たいます，第1引数は変数名の代わりに文字列で表した変数名に変更しました
+	VARSETと似ています，第1引数は変数名の代わりに文字列で表した変数名に変更します
 	第3引数は0以外または省略した場合、配列の全てにvalueを代入、そうでない場合，最低次元の配列に代入
 	例：
 		#DIM FOO,2,3
@@ -112,9 +113,9 @@ strを2つに分ける
 		10 10
 
 ◆ int(1) ARRAYMSORTEX str/intArray, strArray(, int)
-	ARRAYMSORTと似たいます，第1引数は文字列の場合，変数名の代わりに文字列で表した変数配列名に変更しました
+	ARRAYMSORTと似ています，第1引数は文字列の場合，変数名の代わりに文字列で表した変数配列名に変更します
 	第2引数は文字列配列，それぞれの要素は並び替えたい配列の変数名を表す
-	第2引数は0以外または省略した場合順逆、0の場合逆順
+	第2引数は0以外または省略した場合正順、0の場合逆順
 	例：
 		#DIM IDX = 4,2,3,1
 		#DIM AA = 1,2,3,4
@@ -141,7 +142,7 @@ strを2つに分ける
 		> BB == 5,1,3,2
 
 ◆ int REGEXPMATCH str, patter
-	strが正規表現パターンpatterに合うなら1を返す，そうしない場合0を返す
+	strが正規表現パターンpatterに合うなら1を返す，そうでない場合0を返す
 
 ◆ int XML_GET xml, xpath(, strArray/int, int)
 	xpathの規則でxmlを解析します、結果数を返す
