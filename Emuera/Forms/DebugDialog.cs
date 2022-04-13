@@ -218,7 +218,7 @@ namespace MinorShift.Emuera.Forms
 			//    if (writer != null)
 			//        writer.Close();
 			//}
-			writer = null;
+			//writer = null;
 			try
 			{
 				writer = new StreamWriter(consoleFilepath, false, Config.Encode);

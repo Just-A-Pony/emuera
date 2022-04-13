@@ -22,7 +22,7 @@ namespace MinorShift.Emuera.Forms
             textBox1.Font = Config.Font;
         }
 
-        public void Setup(MainWindow mainWindow, EmueraConsole console)
+        public void Setup(EmueraConsole console)
         {
             StringBuilder builder = new StringBuilder();
             console.GetDisplayStrings(builder);

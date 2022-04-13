@@ -331,7 +331,7 @@ namespace MinorShift.Emuera.GameView
 			}
 			List<ButtonPrimitive> bpList = ButtonStringCreator.SplitButton(buf.ToString());
 			ConsoleButtonString[] ret = new ConsoleButtonString[bpList.Count];
-			AConsoleDisplayPart[] cssArray = null;
+			AConsoleDisplayPart[] cssArray;
 			if (ret.Length == 1)
 			{
 				cssArray = new AConsoleDisplayPart[cssList.Count];
@@ -395,7 +395,7 @@ namespace MinorShift.Emuera.GameView
 		private static void setWidthToButtonList(List<ConsoleButtonString> buttonList, StringMeasure stringMeasure, bool nobr)
 		{
 			int pointX = 0;
-			int count = buttonList.Count;
+			//int count = buttonList.Count;
 			//1.824 修正。サブピクセルの初期値を0から0.5fにすることで端数処理吸収
 			float subPixel = 0.5f;
 			for (int i = 0; i < buttonList.Count; i++)
@@ -409,6 +409,7 @@ namespace MinorShift.Emuera.GameView
 				button.CalcWidth(stringMeasure, subPixel);
 				button.CalcPointX(pointX);
 				pointX = button.PointX + button.Width;
+				//これは何がしたいんだろう…
 				if (button.PointXisLocked)
 					subPixel = 0;
 				//pointX += button.Width;
@@ -510,20 +511,18 @@ namespace MinorShift.Emuera.GameView
 			int widthLimit = Config.DrawableWidth - css.PointX;
 			string str = css.Str;
 			Font font = css.Font;
-			int point = 0;
-			int highLength = str.Length;//widthLimitを超える最低の文字index(文字数-1)。
+            int highLength = str.Length;//widthLimitを超える最低の文字index(文字数-1)。
 			int lowLength = 0;//超えない最大の文字index。
 			//int i = (int)(widthLimit / fontDisplaySize);//およその文字数を推定
 			//if (i > str.Length - 1)//配列の外を参照しないように。
 			//	i = str.Length - 1;
 			int i = lowLength;//およその文字数を推定←やめた
 
-			string test = null;
+			string test;
 			while ((highLength - lowLength) > 1)//差が一文字以下になるまで繰り返す。
 			{
 				test = str.Substring(0, i);
-				point = sm.GetDisplayLength(test, font);
-				if (point <= widthLimit)//サイズ内ならlowLengthを更新。文字数を増やす。
+                if (sm.GetDisplayLength(test, font) <= widthLimit)//サイズ内ならlowLengthを更新。文字数を増やす。
 				{
 					lowLength = i;
 					i++;

@@ -29,7 +29,6 @@ namespace MinorShift.Emuera.GameView
 			}
 		}
 		#endregion
-
 		public void ClearDisplay()
 		{
 			displayLineList.Clear();
@@ -238,8 +237,7 @@ namespace MinorShift.Emuera.GameView
 				if (position.LineNo >= 0)
 				{
 					PrintErrorButton(string.Format("警告Lv{0}:{1}:{2}行目:{3}", level, position.Filename, position.LineNo, str), position);
-					if (position.RowLine != null)
-						PrintError(position.RowLine);
+					GlobalStatic.Process.printRawLine(position);
 				}
 				else
 					PrintErrorButton(string.Format("警告Lv{0}:{1}:{2}", level, position.Filename, str), position);
@@ -395,11 +393,11 @@ namespace MinorShift.Emuera.GameView
 			if (printCWidth == -1)
 				calcPrintCWidth(stringMeasure);
 			int length = 0;
-			int width = 0;
+			int width;
 			if (str != null)
 				length = Config.Encode.GetByteCount(str);
 			int printcLength = Config.PrintCLength;
-			Font font = null;
+			Font font;
 			try
 			{
 				font = new Font(Style.Fontname, Config.Font.Size, Style.FontStyle, GraphicsUnit.Pixel);
@@ -600,17 +598,47 @@ namespace MinorShift.Emuera.GameView
 			return true;
 		}
 
-
-		public bool OutputLog(string filename)
+        #region EE_OUTPUTLOG
+        public bool OutputLog(string filename)
 		{
-            if (filename == null)
-                filename = Program.ExeDir + "emuera.log";
+			if (filename == "" || filename == null)
+				filename = Program.ExeDir + "emuera.log";
+			else
+				filename = Program.ExeDir + filename;
+			if (filename.IndexOf("../") >= 0)
+			{
+				MessageBox.Show("ログ出力先に親ディレクトリは指定できません", "ログ出力失敗");
+				return false;
+			}
+			if (!filename.StartsWith(Program.ExeDir, StringComparison.CurrentCultureIgnoreCase))
+			{
+				MessageBox.Show("ログファイルは実行ファイル以下のディレクトリにのみ保存できます", "ログ出力失敗");
+				return false;
+			}
 
-            if (!filename.StartsWith(Program.ExeDir, StringComparison.CurrentCultureIgnoreCase))
-            {
-                MessageBox.Show("ログファイルは実行ファイル以下のディレクトリにのみ保存できます", "ログ出力失敗");
-                return false;
-            }
+			if (outputLog(filename))
+			{
+				if (window.Created)
+				{
+					PrintSystemLine("※※※ログファイルを" + filename.Replace(Program.ExeDir, "") + "に出力しました※※※");
+					RefreshStrings(true);
+				}
+				return true;
+			}
+			else
+				return false;
+		}
+        #endregion
+
+        public bool OutputSystemLog(string filename)
+		{
+			if (filename == "" || filename == null)
+				filename = Program.ExeDir + "emuera.log";
+			if (!filename.StartsWith(Program.ExeDir, StringComparison.CurrentCultureIgnoreCase))
+			{
+				MessageBox.Show("ログファイルは実行ファイル以下のディレクトリにのみ保存できます", "ログ出力失敗");
+				return false;
+			}
 
 			if (outputLog(filename))
 			{

@@ -5,12 +5,10 @@ using System.Windows.Forms;
 using MinorShift._Library;
 using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.GameData.Expression;
-using System.Security;
 using System.IO;
 
 namespace MinorShift.Emuera
 {
-	[System.Reflection.Obfuscation(Exclude = false)]
 	static class Program
 	{
 		/*
@@ -38,30 +36,25 @@ namespace MinorShift.Emuera
 		/// <summary>
 		/// アプリケーションのメイン エントリ ポイントです。
 		/// </summary>
-		[System.Reflection.Obfuscation(Exclude = true)]
 		[STAThread]
 		static void Main(string[] args)
 		{
 
 			ExeDir = Sys.ExeDir;
-			// すべての読み書きを禁じられているので何もせず終了 (リターンコードなし)
-			if (Sys.AclAccessDeny)
-				return;
 #if DEBUG
 			//debugMode = true;
 
 			//ExeDirにバリアントのパスを代入することでテスト実行するためのコード。
 			//ローカルパスの末尾には\必須。
-			/// WARNING: ローカルパスを記載した場合は頒布前に削除すること。
-			if (debugMode)
-				ExeDir = @"";
+			//ローカルパスを記載した場合は頒布前に削除すること。
+			ExeDir = @"";
 			
 #endif
-			CsvDir = ExeDir + "csv" + Path.DirectorySeparatorChar;
-			ErbDir = ExeDir + "erb" + Path.DirectorySeparatorChar;
-			DebugDir = ExeDir + "debug" + Path.DirectorySeparatorChar;
-			DatDir = ExeDir + "dat" + Path.DirectorySeparatorChar;
-			ContentDir = ExeDir + "resources" + Path.DirectorySeparatorChar;
+			CsvDir = ExeDir + "csv\\";
+			ErbDir = ExeDir + "erb\\";
+			DebugDir = ExeDir + "debug\\";
+			DatDir = ExeDir + "dat\\";
+			ContentDir = ExeDir + "resources\\";
 			//エラー出力用
 			//1815 .exeが東方板のNGワードに引っかかるそうなので除去
 			ExeName = Path.GetFileNameWithoutExtension(Sys.ExeName);
@@ -72,30 +65,15 @@ namespace MinorShift.Emuera
 			{
 				argsStart = 1;//デバッグモードかつ解析モード時に最初の1っこ(-DEBUG)を飛ばす
 				debugMode = true;
-				Sys.WriteEnable = true; //  デバッグモードは出力許可あり 2021/03/08 M
 			}
 			if (args.Length > argsStart)
 			{
 				//必要なファイルのチェックにはConfig読み込みが必須なので、ここではフラグだけ立てておく
 				AnalysisMode = true;
-				Sys.WriteEnable = true;	// AnalysysMode の時も出力許可ありとする  2021/03/08 M
 			}
 
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			if (!Directory.Exists(CsvDir))
-			{
-				if (Sys.WriteEnable)
-					MessageBox.Show("csvフォルダが見つかりません", "フォルダなし");
-				return;
-			}
-			if (!Directory.Exists(ErbDir))
-			{
-				if (Sys.WriteEnable)
-					MessageBox.Show("erbフォルダが見つかりません", "フォルダなし");
-				return;
-			}
-			Sys.WriteEnable = true; //  CSV と ERB dir があったので、ここで仮に書き込み許可 2021/03/08 M
 			ConfigData.Instance.LoadConfig();
 			//二重起動の禁止かつ二重起動
 			if ((!Config.AllowMultipleInstances) && (Sys.PrevInstance()))
@@ -103,26 +81,31 @@ namespace MinorShift.Emuera
 				MessageBox.Show("多重起動を許可する場合、emuera.configを書き換えて下さい", "既に起動しています");
 				return;
 			}
+			if (!Directory.Exists(CsvDir))
+			{
+				MessageBox.Show("csvフォルダが見つかりません", "フォルダなし");
+				return;
+			}
+			if (!Directory.Exists(ErbDir))
+			{
+				MessageBox.Show("erbフォルダが見つかりません", "フォルダなし");
+				return;
+			}
 			if (debugMode)
 			{
 				ConfigData.Instance.LoadDebugConfig();
 				if (!Directory.Exists(DebugDir))
 				{
-					// 2021/03/08: アクセス権で禁じられているとき、CSV・ERBがないときは、debugDirを無理に作ろうとしない
-					if (!Sys.AclWriteDeny)
-						return;
 					try
 					{
 						Directory.CreateDirectory(DebugDir);
 					}
-					catch(Exception e)
+					catch
 					{
-						if(!(e is SecurityException))
-							MessageBox.Show("debugフォルダの作成に失敗しました", "フォルダなし");
+						MessageBox.Show("debugフォルダの作成に失敗しました", "フォルダなし");
 						return;
 					}
 				}
-				Sys.WriteEnable = true; //  CSV と ERB dir があったので、ここでEraバリアント環境であると認識する 2021/03/08 M
 			}
 			if (AnalysisMode)
 			{
@@ -136,7 +119,7 @@ namespace MinorShift.Emuera
 					}
 					if ((File.GetAttributes(args[i]) & FileAttributes.Directory) == FileAttributes.Directory)
 					{
-						List<KeyValuePair<string, string>> fnames = Config.GetFiles(args[i] + Path.DirectorySeparatorChar, "*.ERB");
+						List<KeyValuePair<string, string>> fnames = Config.GetFiles(args[i] + "\\", "*.ERB");
 						for (int j = 0; j < fnames.Count; j++)
 						{
 							AnalysisFiles.Add(fnames[j].Value);
@@ -195,8 +178,11 @@ namespace MinorShift.Emuera
 		public static string DatDir { get; private set; }
 		public static string ContentDir { get; private set; }
 		public static string ExeName { get; private set; }
+        #region EE_PLAYSOUND系
+        public static string MusicDir {get; private set; }
+        #endregion
 
-		public static bool Reboot = false;
+        public static bool Reboot = false;
 		//public static int RebootClientX = 0;
 		public static int RebootClientY = 0;
 		public static FormWindowState RebootWinState = FormWindowState.Normal;

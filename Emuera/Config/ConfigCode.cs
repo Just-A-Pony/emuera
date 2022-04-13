@@ -131,6 +131,10 @@ namespace MinorShift.Emuera
 		SystemNoTarget,
 		SystemIgnoreStringSet,
 
+        #region EE_UPDATECHECK
+        ForbidUpdateCheck,
+		#endregion
+
 		MoneyLabel = 100,
 		MoneyFirst = 101,
 		LoadLabel = 102,

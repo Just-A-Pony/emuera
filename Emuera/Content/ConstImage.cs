@@ -71,7 +71,7 @@ namespace MinorShift.Emuera.Content
 		//	}
 		//	return;
 		//}
-		[System.Reflection.Obfuscation(Exclude = true)]
+
 		public override void Dispose()
 		{
 			if (Bitmap == null)

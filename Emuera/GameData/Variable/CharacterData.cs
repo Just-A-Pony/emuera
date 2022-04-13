@@ -173,8 +173,8 @@ namespace MinorShift.Emuera.GameData.Variable
 			int i = (int)(code & VariableCode.__LOWERCASE__);
 			if (i >= 0xF0)
 				return null;
-			Int64 length64 = 0;
-			switch (type)
+            long length64;
+            switch (type)
 			{
 				case VariableCode.__STRING__:
 				case VariableCode.__INTEGER__:
@@ -313,7 +313,7 @@ namespace MinorShift.Emuera.GameData.Variable
 		}
 		public void SaveToStreamExtended(EraDataWriter writer)
 		{
-			List<VariableCode> codeList = null;
+			List<VariableCode> codeList;
 
 			//dataString
 			codeList = VariableIdentifier.GetExtSaveList(VariableCode.__CHARACTER_DATA__ | VariableCode.__STRING__);
@@ -361,7 +361,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			Dictionary<string, List<string[]>> str2DListDic = reader.ReadStringArray2DExtended();
 			Dictionary<string, List<Int64[]>> int2DListDic = reader.ReadInt64Array2DExtended();
 
-			List<VariableCode> codeList = null;
+			List<VariableCode> codeList;
 
 			codeList = VariableIdentifier.GetExtSaveList(VariableCode.__CHARACTER_DATA__ | VariableCode.__STRING__);
 			foreach (VariableCode code in codeList)
@@ -404,7 +404,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			Dictionary<string, List<string>> strListDic = reader.ReadStringArrayExtended();
 			Dictionary<string, List<Int64>> intListDic = reader.ReadInt64ArrayExtended();
 
-			List<VariableCode> codeList = null;
+			List<VariableCode> codeList;
 
 			codeList = VariableIdentifier.GetExtSaveList(VariableCode.__CHARACTER_DATA__ | VariableCode.__STRING__);
 			foreach (VariableCode code in codeList)
@@ -500,11 +500,10 @@ namespace MinorShift.Emuera.GameData.Variable
                         vToken = GlobalStatic.IdentifierDictionary.GetVariableToken(nameAndType.Key, null, false);
 					if (userDefineData)
 					{
-						if (vToken == null || !vToken.IsSavedata || !vToken.IsCharacterData || !(vToken is UserDefinedCharaVariableToken))
-							array = null;
-						else
-							array = UserDefCVarDataList[((UserDefinedCharaVariableToken)vToken).ArrayIndex];
-						vToken = null;
+						array = vToken == null || !vToken.IsSavedata || !vToken.IsCharacterData || !(vToken is UserDefinedCharaVariableToken token)
+                            ? null
+                            : UserDefCVarDataList[token.ArrayIndex];
+                        vToken = null;
 					}
 					else
 					{
@@ -656,7 +655,6 @@ namespace MinorShift.Emuera.GameData.Variable
 
 		#region IDisposable メンバ
 
-		[System.Reflection.Obfuscation(Exclude = true)]
 		public void Dispose()
 		{
 			for (int i = 0; i < dataIntegerArray.Length; i++)
@@ -705,11 +703,9 @@ namespace MinorShift.Emuera.GameData.Variable
 			{
                 if (sortkey.IsArray2D)
                 {
-                    string[,] array;
-                    if (sortkey is UserDefinedCharaVariableToken)
-                        array = (string[,])UserDefCVarDataList[((UserDefinedCharaVariableToken)sortkey).ArrayIndex];
-                    else
-                        array = dataStringArray2D[sortkey.CodeInt];
+                    string[,] array = sortkey is UserDefinedCharaVariableToken token
+                        ? (string[,])UserDefCVarDataList[token.ArrayIndex]
+                        : dataStringArray2D[sortkey.CodeInt];
                     int elem1 = (int)(elem64 >> 32);
                     int elem2 = (int)(elem64 & 0x7FFFFFFF);
                     if (elem1 < 0 || elem1 >= array.GetLength(0) || elem2 < 0 || elem2 >= array.GetLength(1))
@@ -718,11 +714,9 @@ namespace MinorShift.Emuera.GameData.Variable
                 }
                 else if (sortkey.IsArray1D)
                 {
-                    string[] array;
-                    if (sortkey is UserDefinedCharaVariableToken)
-                        array = (string[])UserDefCVarDataList[((UserDefinedCharaVariableToken)sortkey).ArrayIndex];
-                    else
-                        array = dataStringArray[sortkey.CodeInt];
+                    string[] array = sortkey is UserDefinedCharaVariableToken token
+                        ? (string[])UserDefCVarDataList[token.ArrayIndex]
+                        : dataStringArray[sortkey.CodeInt];
                     if (elem64 < 0 || elem64 >= array.Length)
                         throw new CodeEE("ソートキーが配列外を参照しています");
                     if (array[(int)elem64] != null)
@@ -743,12 +737,10 @@ namespace MinorShift.Emuera.GameData.Variable
 			{
 				if (sortkey.IsArray2D)
 				{
-                    Int64[,] array;
-                    if (sortkey is UserDefinedCharaVariableToken)
-                        array = (Int64[,])UserDefCVarDataList[((UserDefinedCharaVariableToken)sortkey).ArrayIndex];
-                    else
-                        array = dataIntegerArray2D[sortkey.CodeInt];
-					int elem1 = (int)(elem64 >> 32);
+                    long[,] array = sortkey is UserDefinedCharaVariableToken token
+                        ? (Int64[,])UserDefCVarDataList[token.ArrayIndex]
+                        : dataIntegerArray2D[sortkey.CodeInt];
+                    int elem1 = (int)(elem64 >> 32);
 					int elem2 = (int)(elem64 & 0x7FFFFFFF);
 					if (elem1 < 0 || elem1 >= array.GetLength(0) || elem2 < 0 || elem2 >= array.GetLength(1))
 						throw new CodeEE("ソートキーが配列外を参照しています");
@@ -756,12 +748,10 @@ namespace MinorShift.Emuera.GameData.Variable
 				}
 				else if (sortkey.IsArray1D)
 				{
-                    Int64[] array;
-                    if (sortkey is UserDefinedCharaVariableToken)
-                        array = (Int64[])UserDefCVarDataList[((UserDefinedCharaVariableToken)sortkey).ArrayIndex];
-                    else
-                        array = dataIntegerArray[sortkey.CodeInt];
-					if (elem64 < 0 || elem64 >= array.Length)
+                    long[] array = sortkey is UserDefinedCharaVariableToken token
+                        ? (Int64[])UserDefCVarDataList[token.ArrayIndex]
+                        : dataIntegerArray[sortkey.CodeInt];
+                    if (elem64 < 0 || elem64 >= array.Length)
 						throw new CodeEE("ソートキーが配列外を参照しています");
 					temp_SortKey = array[(int)elem64];
 				}

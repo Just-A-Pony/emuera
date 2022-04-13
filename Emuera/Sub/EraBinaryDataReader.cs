@@ -125,7 +125,6 @@ namespace MinorShift.Emuera.Sub
 		public abstract KeyValuePair<string, EraSaveDataType> ReadVariableCode();
 		#region IDisposable メンバ
 
-		[System.Reflection.Obfuscation(Exclude = true)]
 		public void Dispose()
 		{
 			if (reader != null)

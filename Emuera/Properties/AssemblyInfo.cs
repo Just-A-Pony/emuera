@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 // アセンブリに関連付けられている情報を変更するには、
 // これらの属性値を変更してください。
 [assembly: AssemblyTitle("Emuera")]
-[assembly: AssemblyDescription("v11+webp+Secure")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Emuera")]
@@ -32,4 +32,4 @@ using System.Runtime.InteropServices;
 //      Revision
 //
 [assembly: AssemblyVersion("1.824.*")]
-[assembly: AssemblyFileVersion("1.824.0.11")]
+[assembly: AssemblyFileVersion("1.824.0.0")]

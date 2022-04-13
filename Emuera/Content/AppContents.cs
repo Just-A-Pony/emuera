@@ -14,20 +14,21 @@ namespace MinorShift.Emuera.Content
 		{
 			gList = new Dictionary<int, GraphicsImage>();
 		}
-		static Dictionary<string, AContentFile> resourceDic = new Dictionary<string, AContentFile>();
-		static Dictionary<string, ASprite> imageDictionary = new Dictionary<string, ASprite>();
-		static Dictionary<int, GraphicsImage> gList;
+		static readonly Dictionary<string, AContentFile> resourceDic = new Dictionary<string, AContentFile>();
+		static readonly Dictionary<string, ASprite> imageDictionary = new Dictionary<string, ASprite>();
+		static readonly Dictionary<int, GraphicsImage> gList;
+        //private static Bitmap bmp;
 
-		//static public T GetContent<T>(string name)where T :AContentItem
-		//{
-		//	if (name == null)
-		//		return null;
-		//	name = name.ToUpper();
-		//	if (!itemDic.ContainsKey(name))
-		//		return null;
-		//	return itemDic[name] as T;
-		//}
-		static public GraphicsImage GetGraphics(int i)
+        //static public T GetContent<T>(string name)where T :AContentItem
+        //{
+        //	if (name == null)
+        //		return null;
+        //	name = name.ToUpper();
+        //	if (!itemDic.ContainsKey(name))
+        //		return null;
+        //	return itemDic[name] as T;
+        //}
+        static public GraphicsImage GetGraphics(int i)
 		{
 			if (gList.ContainsKey(i))
 				return gList[i];
@@ -79,16 +80,17 @@ namespace MinorShift.Emuera.Content
 		{
 			if (!Directory.Exists(Program.ContentDir))
 				return true;
-			ScriptPosition sp = default;
 			try
 			{
 				//resourcesフォルダ内の全てのcsvファイルを探索する
 				string[] csvFiles = Directory.GetFiles(Program.ContentDir, "*.csv", SearchOption.AllDirectories);
 				foreach (var filepath in csvFiles)
 				{
-					//アニメスプライト宣言。nullでないとき、フレーム追加モード
+					//".csv"のみを拾うように
+					if (0 != ".csv".CompareTo(Path.GetExtension(filepath).ToLower()))
+						continue;                       //アニメスプライト宣言。nullでないとき、フレーム追加モード
 					SpriteAnime currentAnime = null;
-					string directory = Path.GetDirectoryName(filepath).ToUpper() + Path.DirectorySeparatorChar;
+					string directory = Path.GetDirectoryName(filepath).ToUpper() + "\\";
 					string filename = Path.GetFileName(filepath);
 					string[] lines = File.ReadAllLines(filepath, Config.Encode);
 					int lineNo = 0;
@@ -102,9 +104,8 @@ namespace MinorShift.Emuera.Content
 							continue;
 						string[] tokens = str.Split(',');
 						//AContentItem item = CreateFromCsv(tokens);
-						sp = new ScriptPosition(filename, lineNo, line);
-						ASprite item = CreateFromCsv(tokens, directory, currentAnime, sp) as ASprite;
-						if (item != null)
+						ScriptPosition sp = new ScriptPosition(filename, lineNo);
+						if (CreateFromCsv(tokens, directory, currentAnime, sp) is ASprite item)
 						{
 							//アニメスプライト宣言ならcurrentAnime上書きしてフレーム追加モードにする。そうでないならnull
 							currentAnime = item as SpriteAnime;
@@ -114,22 +115,12 @@ namespace MinorShift.Emuera.Content
 							}
 							else
 							{
-								ParserMediator.Warn("同名のリソースがすでに作成されています:"+item.Name, sp, 0);
+								ParserMediator.Warn("同名のリソースがすでに作成されています:" + item.Name, sp, 0);
 								item.Dispose();
 							}
 						}
 					}
 				}
-			}
-			catch (Exception e) when (e is WebPDllNotFoundException || e is DllNotFoundException || e is EntryPointNotFoundException) {
-				ParserMediator.Warn("WebP画像の読み込み時にエラーが発生しました。"
-#if DEBUG
-									+ e.Message
-									+ (e.InnerException != null ?  "(" + e.InnerException?.Message + ")" : "")
-#endif
-
-									+ "適切な libwebp_" + (IntPtr.Size == 4 ? "x86" : "x64") + ".dll が exe と同じフォルダにあるか確認してください。", sp, 3);
-				return false;
 			}
 			catch
 			{
@@ -216,71 +207,17 @@ namespace MinorShift.Emuera.Content
 					return null;
 				}
 				Bitmap bmp = null;
+				using (WebP webp = new WebP())
 				if (Path.GetExtension(filepath).ToUpperInvariant() == ".WEBP")
-				{
-					try
-					{
-						using (WebP webp = new WebP())
-							bmp = webp.Load(filepath);
-					}
-					catch (WebPDllNotFoundException) { throw; }
-					catch (DllNotFoundException) { throw; }
-					catch (EntryPointNotFoundException) { throw; }
-#pragma warning disable CS0168
-					catch (WebPLibException e)
-#pragma warning restore
-					{
-						ParserMediator.Warn("WebP画像の読み込み時にエラーが発生しました。"
-#if DEBUG
-											+ e.Message + "(" + e.InnerException.Message + ")"
-#endif
-											+ "適切な libwebp_" + (IntPtr.Size == 4 ? "x86" : "x64") + ".dll が exe と同じフォルダにあるか確認してください。", sp, 3);
-					}
-					catch (Exception e) when (	e is IOException || e?.InnerException is IOException || 
-												e is UnauthorizedAccessException || e?.InnerException is UnauthorizedAccessException || 
-												e is System.Security.SecurityException || e?.InnerException is System.Security.SecurityException)
-					{
-						ParserMediator.Warn("WebP ファイルの読み込みに失敗しました。"
-#if debug
-											e.Message + " " + 
-#endif
-											+ "Webp画像とcsvを確認してください。", sp, 1);
-					}
-					catch (WebPException e) { ParserMediator.Warn("WebP ファイルの読み込み時にエラーが発生しました。" + e.Message, sp, 1);	}
-					catch (Exception) {	ParserMediator.Warn("指定されたファイルの読み込みに失敗しました:" + arg2, sp, 1);	}
-					if (bmp == null)
-					{
-						return null;
-					}
-				}
+					bmp = webp.Load(filepath);
 				else
+					bmp = new Bitmap(filepath);
+				
+				if (bmp == null)
 				{
-					#region EM_私家版_ファイル占用解除
-					//bmp = new Bitmap(filepath);
-					bmp = null;
-					FileStream fs = null;
-					try
-					{
-						fs = new FileStream(filepath, FileMode.Open);
-						bmp = new Bitmap(Image.FromStream(fs));
-					}
-					finally
-					{
-						if (fs != null)
-						{
-							fs.Close();
-							fs.Dispose();
-						}
-					}
-					#endregion
-
-					if (bmp == null)
-					{
-						ParserMediator.Warn("指定されたファイルの読み込みに失敗しました:" + arg2, sp, 1);
-						return null;
-					}
+					ParserMediator.Warn("指定されたファイルの読み込みに失敗しました:" + arg2, sp, 1);
+					return null;
 				}
-
 				if (bmp.Width > AbstractImage.MAX_IMAGESIZE || bmp.Height > AbstractImage.MAX_IMAGESIZE)
 				{
 					//1824-2 すでに8192以上の幅を持つ画像を利用したバリアントが存在してしまっていたため、警告しつつ許容するように変更
@@ -297,13 +234,12 @@ namespace MinorShift.Emuera.Content
 				}
 				resourceDic.Add(parentName, img);
 			}
-			ConstImage parentImage = resourceDic[parentName] as ConstImage;
-			if (parentImage == null || !parentImage.IsCreated)
-			{
-				ParserMediator.Warn("作成に失敗したリソースを元にスプライトを作成しようとしました:" + arg2, sp, 1);
-				return null;
-			}
-			Rectangle rect = new Rectangle(new Point(0, 0), parentImage.Bitmap.Size);
+            if (!(resourceDic[parentName] is ConstImage parentImage) || !parentImage.IsCreated)
+            {
+                ParserMediator.Warn("作成に失敗したリソースを元にスプライトを作成しようとしました:" + arg2, sp, 1);
+                return null;
+            }
+            Rectangle rect = new Rectangle(new Point(0, 0), parentImage.Bitmap.Size);
 			Point pos = new Point();
 			int delay = 1000;
 			//name,parentname, x,y,w,h ,offset_x,offset_y, delayTime

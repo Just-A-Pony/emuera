@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Reflection;
 
 namespace MinorShift.Emuera.Sub
 {
-	[Obfuscation(Exclude = true)]
 	[Serializable]
     internal abstract class EmueraException : ApplicationException
 	{
@@ -25,8 +23,7 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// emuera本体に起因すると思われるエラー
 	/// </summary>
-	[Obfuscation(Exclude = true)]
-	[Serializable]
+    [Serializable]
     internal sealed class ExeEE : EmueraException
 	{
 		public ExeEE(string errormes)
@@ -42,8 +39,7 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// スクリプト側に起因すると思われるエラー
 	/// </summary>
-	[Obfuscation(Exclude = true)]
-	[Serializable]
+    [Serializable]
     internal class CodeEE : EmueraException
 	{
 		public CodeEE(string errormes, ScriptPosition position)
@@ -59,7 +55,6 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// スクリプト側に起因すると思われるエラーのうち、未定義の識別子に関連するもの
 	/// </summary>
-	[Obfuscation(Exclude = true)]
 	[Serializable]
 	internal class IdentifierNotFoundCodeEE : CodeEE
 	{
@@ -76,8 +71,7 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// 未実装エラー
 	/// </summary>
-	[Obfuscation(Exclude = true)]
-	[Serializable]
+    [Serializable]
     internal sealed class NotImplCodeEE : CodeEE
 	{
 		public NotImplCodeEE(ScriptPosition position)
@@ -93,8 +87,7 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// Save, Load中のエラー
 	/// </summary>
-	[Obfuscation(Exclude = true)]
-	[Serializable]
+    [Serializable]
     internal sealed class FileEE : EmueraException
 	{
 		public FileEE(string errormes)
@@ -105,27 +98,24 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// エラー箇所を表示するための位置データ。整形前のデータなのでエラー表示以外の理由で参照するべきではない。
 	/// </summary>
-	[Obfuscation(Exclude = true)]
 	internal sealed class ScriptPosition : IEquatable<ScriptPosition>, IEqualityComparer<ScriptPosition>
 	{
-		public ScriptPosition(string srcLine)
+		public ScriptPosition()
 		{
 			LineNo = -1;
-            RowLine = srcLine;
 			Filename = "";
 		}
-		public ScriptPosition(string srcFile, int srcLineNo, string srcLine)
+		public ScriptPosition(string srcFile, int srcLineNo)
 		{
 			LineNo = srcLineNo;
-            RowLine = srcLine;
             if (srcFile == null)
 				Filename = "";
             else
                 Filename = srcFile;
 		}
 		public readonly int LineNo;
-		public readonly string RowLine;
 		public readonly string Filename;
+
 		public override string ToString()
 		{
 			if(LineNo == -1)

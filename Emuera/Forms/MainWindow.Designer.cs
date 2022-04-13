@@ -12,7 +12,6 @@ namespace MinorShift.Emuera
 		/// 使用中のリソースをすべてクリーンアップします。
 		/// </summary>
 		/// <param name="disposing">マネージ リソースが破棄される場合 true、破棄されない場合は false です。</param>
-		[System.Reflection.Obfuscation(Exclude = true)]
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing && (components != null))

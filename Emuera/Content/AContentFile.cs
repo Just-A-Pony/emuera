@@ -10,7 +10,6 @@ namespace MinorShift.Emuera.Content
 		//public bool Enabled { get; protected set; }
 		public abstract bool IsCreated { get; }
 
-		[System.Reflection.Obfuscation(Exclude = true)]
 		public abstract void Dispose();
 	}
 }

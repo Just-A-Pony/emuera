@@ -151,7 +151,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			if (varData.CharacterList.Count == 0)
 				return;
 
-			CharacterData chara = varData.CharacterList[0];
+			//CharacterData chara = varData.CharacterList[0];
 			Int64 indexNum = -1;
 
 			if (p.Identifier.IsArray1D)
@@ -891,9 +891,9 @@ namespace MinorShift.Emuera.GameData.Variable
 			if ((target < 0) || (target >= varData.CharacterList.Count))
 				throw new CodeEE("存在しない登録キャラクタを参照しようとしました");
 			CharacterData chara = varData.CharacterList[(int)target];
-			Int64[] array = null;
-			string[] arrayName = null;
-			int i = 0;
+			Int64[] array;
+			string[] arrayName;
+			int i;
 			switch (func)
 			{
 				case FunctionCode.PRINT_ABL:
@@ -1237,7 +1237,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				fvp.Index2 = elem64 >> 32;
 				fvp.Index3 = elem64 & 0x7FFFFFFF;
 			}
-			int count = varData.CharacterList.Count;
+			//int count = varData.CharacterList.Count;
 			if (isLast)
 			{
 				for (Int64 i = lastIndex - 1; i >= startIndex; i--)
@@ -1271,7 +1271,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				fvp.Index2 = elem64 >> 32;
 				fvp.Index3 = elem64 & 0x7FFFFFFF;
 			}
-			int count = varData.CharacterList.Count;
+			//int count = varData.CharacterList.Count;
 			if (isLast)
 			{
 				for (Int64 i = lastIndex - 1; i >= startIndex; i--)
@@ -1365,10 +1365,9 @@ namespace MinorShift.Emuera.GameData.Variable
 				case CharacterStrData.CSTR:
 					if (tmpl.CStr != null)
 					{
-						string ret = null;
-						if (arg2 >= tmpl.ArrayStrLength(CharacterStrData.CSTR) || arg2 < 0)
-							throw new CodeEE("CSTRの参照可能範囲外を参照しました");
-						if (tmpl.CStr.TryGetValue(arg2, out ret))
+                        if (arg2 >= tmpl.ArrayStrLength(CharacterStrData.CSTR) || arg2 < 0)
+                            throw new CodeEE("CSTRの参照可能範囲外を参照しました");
+                        if (tmpl.CStr.TryGetValue(arg2, out string ret))
 							return ret;
 						else
 							return "";
@@ -1389,7 +1388,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			if (arg2Long >= tmpl.ArrayLength(type) || arg2Long < 0)
 				throw new CodeEE("参照可能範囲外を参照しました");
 			int arg2 = (int)arg2Long;
-			Dictionary<int, Int64> intDic = null;
+			Dictionary<int, Int64> intDic;
 			switch (type)
 			{
 				case CharacterIntData.BASE:
@@ -1855,7 +1854,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			FileStream fs = null;
 			EraBinaryDataReader bReader = null;
 			EraDataReader reader = null;
-			Int64 version = 0;
+			Int64 version;
 			try
 			{
 				fs = new FileStream(filename, FileMode.Open, FileAccess.Read);
@@ -2447,7 +2446,6 @@ namespace MinorShift.Emuera.GameData.Variable
 		#endregion
 		#region IDisposable メンバ
 
-		[System.Reflection.Obfuscation(Exclude = true)]
 		public void Dispose()
 		{
 			varData.Dispose();

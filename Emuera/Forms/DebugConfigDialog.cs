@@ -70,7 +70,7 @@ namespace MinorShift.Emuera.Forms
 		public void SetConfig(DebugDialog debugDialog)
 		{
 			dd = debugDialog;
-			ConfigData config = ConfigData.Instance;
+			//ConfigData config = ConfigData.Instance;
 
 			setCheckBox(checkBoxShowDW, ConfigCode.DebugShowWindow);
 			setCheckBox(checkBoxDWTM, ConfigCode.DebugWindowTopMost);
@@ -83,7 +83,6 @@ namespace MinorShift.Emuera.Forms
 
 		private void SaveConfig()
 		{
-			_Library.Sys.WriteEnable = true;
 
 			//ConfigData config = ConfigData.Instance.Copy();
 			ConfigData config = ConfigData.Instance;

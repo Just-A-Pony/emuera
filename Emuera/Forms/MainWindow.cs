@@ -100,7 +100,7 @@ namespace MinorShift.Emuera
 				{
 					ClipBoardDialog dialog = new ClipBoardDialog();
 					dialog.StartPosition = FormStartPosition.CenterParent;
-					dialog.Setup(this, console);
+					dialog.Setup(console);
 					dialog.ShowDialog();
 					return true;
 				}
@@ -267,7 +267,7 @@ namespace MinorShift.Emuera
 				this.MaximizeBox = false;
 			}
 
-			int menuHeight = 0;
+			int menuHeight;
 			if (Config.UseMenu)
 			{
 				menuStrip.Enabled = true;
@@ -371,8 +371,8 @@ namespace MinorShift.Emuera
 			{
 				if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
 				{
-					if (modifiersWhileWaintingInputWithMouse!=null)
-                    {
+					if (modifiersWhileWaintingInputWithMouse != null)
+					{
 						GlobalStatic.Process.InputInteger(2, (long)modifiersWhileWaintingInputWithMouse);
 					}
 					GlobalStatic.Process.InputString(1, str);
@@ -637,7 +637,9 @@ namespace MinorShift.Emuera
 			DialogResult result = saveFileDialog.ShowDialog();
 			if (result == DialogResult.OK)
 			{
-				console.OutputLog(Path.GetFullPath(saveFileDialog.FileName));
+                #region EE_OUTPUTLOG
+                console.OutputSystemLog(Path.GetFullPath(saveFileDialog.FileName));
+				#endregion
 			}
 		}
 
@@ -646,7 +648,7 @@ namespace MinorShift.Emuera
             try
             {
                 ClipBoardDialog dialog = new ClipBoardDialog();
-                dialog.Setup(this, console);
+                dialog.Setup(console);
                 dialog.ShowDialog();
             }
             catch (Exception)
@@ -713,7 +715,7 @@ namespace MinorShift.Emuera
                 MessageBox.Show("スクリプト動作中には使用できません");
                 return;
             }
-            List<KeyValuePair<string, string>> filepath = new List<KeyValuePair<string, string>>();
+            //List<KeyValuePair<string, string>> filepath = new List<KeyValuePair<string, string>>();
 			if (folderSelectDialog.ShowDialog() == DialogResult.OK)
 			{
 				console.ReloadFolder(folderSelectDialog.SelectedPath);
@@ -764,9 +766,9 @@ namespace MinorShift.Emuera
             richTextBox1.TextChanged -= new EventHandler(richTextBox1_TextChanged);
             richTextBox1.KeyDown -= new KeyEventHandler(richTextBox1_KeyDown);
             System.Windows.Forms.Application.DoEvents();
-			richTextBox1.TextChanged += new EventHandler(richTextBox1_TextChanged);
+            richTextBox1.TextChanged += new EventHandler(richTextBox1_TextChanged);
             richTextBox1.KeyDown += new KeyEventHandler(richTextBox1_KeyDown);
-			last_inputed = richTextBox1.Text;
+            last_inputed = richTextBox1.Text;
         }
 
         public void clear_richText()
@@ -802,7 +804,7 @@ namespace MinorShift.Emuera
             //    richTextBox1.Text = richTextBox1.Text.Remove(1);
             PressEnterKey(false, false);
             textBox_flag = true;
-		}
+        }
 		#region EM_私家版_INPUT系機能拡張
 		Keys? modifiersWhileWaintingInputWithMouse = null;
 		private void richTextBox1_ModifierRecorder_KeyUp(object sender, KeyEventArgs e)
@@ -818,6 +820,7 @@ namespace MinorShift.Emuera
 			modifiersWhileWaintingInputWithMouse = e.Modifiers;
 		}
 		#endregion
+
 		private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (console == null)

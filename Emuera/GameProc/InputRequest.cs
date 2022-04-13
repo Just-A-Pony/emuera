@@ -38,7 +38,6 @@ namespace MinorShift.Emuera.GameProc
 					|| InputType == InputType.PrimitiveMouseKey); 
 			} 
 		}
-
 		#region EM_私家版_INPUT系機能拡張
 		public bool MouseInput = false;
 		#endregion

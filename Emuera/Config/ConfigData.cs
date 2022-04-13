@@ -27,9 +27,8 @@ namespace MinorShift.Emuera
 		private ConfigData() { setDefault(); }
 
 		//適当に大き目の配列を作っておく。
-		#region EM_私家版_LoadText＆SaveText機能拡張
-		//private AConfigItem[] configArray = new AConfigItem[70];
-		private AConfigItem[] configArray = new AConfigItem[71];
+		#region EE_configArrayの拡張
+		private AConfigItem[] configArray = new AConfigItem[80];
 		#endregion
 		private AConfigItem[] replaceArray = new AConfigItem[50];
 		private AConfigItem[] debugArray = new AConfigItem[20];
@@ -113,9 +112,11 @@ namespace MinorShift.Emuera
 			//configArray[i++] = new ConfigItem<bool>(ConfigCode.ForbidOneCodeVariable, "一文字変数の使用を禁止する", false);
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.SystemNoTarget, "キャラクタ変数の引数を補完しない", false);
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.SystemIgnoreStringSet, "文字列変数の代入に文字列式を強制する", false);
-
+            #region EE_UPDATECHECK
+            configArray[i++] = new ConfigItem<bool>(ConfigCode.ForbidUpdateCheck, "UPDATECHECKを許可しない", false);
+			#endregion
 			#region EM_私家版_LoadText＆SaveText機能拡張
-			configArray[i++] = new ConfigItem<List<string>>(ConfigCode.ValidExtension, "LOADTEXTとSAVETEXTで使える拡張子", new List<string>{ "txt" });
+			configArray[i++] = new ConfigItem<List<string>>(ConfigCode.ValidExtension, "LOADTEXTとSAVETEXTで使える拡張子", new List<string> { "txt" });
 			#endregion
 
 			i = 0;
@@ -363,8 +364,6 @@ namespace MinorShift.Emuera
 
 		public bool SaveConfig()
 		{
-			if (!_Library.Sys.WriteEnable)
-				return false;
 			StreamWriter writer = null;
 
 			try
@@ -385,14 +384,14 @@ namespace MinorShift.Emuera
 						continue;
 					#region EM_私家版_LoadText＆SaveText機能拡張
 					if ((item.Code == ConfigCode.ValidExtension))
-                    {
+					{
 						var ex = (ConfigItem<List<string>>)item;
 						var sb = new System.Text.StringBuilder();
 						sb.Append(ex.Text).Append(":");
-						foreach(var str in ex.Value)
-                        {
-							sb.Append(str).Append(","); 
-                        }
+						foreach (var str in ex.Value)
+						{
+							sb.Append(str).Append(",");
+						}
 						sb.Remove(sb.Length - 1, 1);
 						writer.WriteLine(sb.ToString());
 						continue;
@@ -478,7 +477,7 @@ namespace MinorShift.Emuera
 				{
 					if ((line.Length == 0) || (line[0] == ';'))
 						continue;
-					pos = new ScriptPosition(eReader.Filename, eReader.LineNo, line);
+					pos = new ScriptPosition(eReader.Filename, eReader.LineNo);
 					string[] tokens = line.Split(new char[] { ':' });
 					if (tokens.Length < 2)
 						continue;
@@ -504,7 +503,7 @@ namespace MinorShift.Emuera
 							//パスの関係上tokens[2]は使わないといけない
 							if (tokens.Length > 2)
 							{
-								if (tokens[2][0] == Path.DirectorySeparatorChar || tokens[2][0] == Path.AltDirectorySeparatorChar)
+								if (tokens[2].StartsWith("\\"))
 									tokens[1] += ":" + tokens[2];
 								if (tokens.Length > 3)
 								{
@@ -562,7 +561,7 @@ namespace MinorShift.Emuera
 				{
 					if ((line.Length == 0) || (line[0] == ';'))
 						continue;
-					pos = new ScriptPosition(eReader.Filename, eReader.LineNo, line);
+					pos = new ScriptPosition(eReader.Filename, eReader.LineNo);
                     string[] tokens = line.Split(new char[] { ',', ':' });
 					if (tokens.Length < 2)
 						continue;
@@ -632,7 +631,7 @@ namespace MinorShift.Emuera
 				{
 					if ((line.Length == 0) || (line[0] == ';'))
 						continue;
-					pos = new ScriptPosition(eReader.Filename, eReader.LineNo, line);
+					pos = new ScriptPosition(eReader.Filename, eReader.LineNo);
 					string[] tokens = line.Split(new char[] { ':' });
 					if (tokens.Length < 2)
 						continue;

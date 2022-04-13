@@ -295,7 +295,7 @@ namespace MinorShift.Emuera.GameData.Expression
 				ret.LeftTerm = reduceTerm(wc, false, TermEndWith.Comma, VariableCode.__NULL__);
 				if (ret.LeftTerm == null)
 					throw new CodeEE("ISキーワードの後に式がありません");
-				Type type = ret.LeftTerm.GetOperandType();
+				//Type type = ret.LeftTerm.GetOperandType();
 				return ret;
 			}
 			ret.LeftTerm = reduceTerm(wc, true, TermEndWith.Comma, VariableCode.__NULL__);
@@ -596,7 +596,7 @@ namespace MinorShift.Emuera.GameData.Expression
                 {
                     if (stack.Count > 1)
                     {
-                        reduceTernary(left, right, op);
+                        reduceTernary(left, right);
                         return;
                     }
                     throw new CodeEE("式の数が不足しています");
@@ -606,20 +606,20 @@ namespace MinorShift.Emuera.GameData.Expression
                 stack.Push(newTerm);
 			}
 
-            private void reduceTernary(IOperandTerm left, IOperandTerm right, OperatorCode op)
+            private void reduceTernary(IOperandTerm left, IOperandTerm right)
             {
-                OperatorCode newOp = (OperatorCode)stack.Pop();
+                _ = (OperatorCode)stack.Pop();
 				IOperandTerm newLeft = (IOperandTerm)stack.Pop();
 				
-                IOperandTerm newTerm = OperatorMethodManager.ReduceTernaryTerm(newOp, newLeft, left, right);
+                IOperandTerm newTerm = OperatorMethodManager.ReduceTernaryTerm(newLeft, left, right);
                 stack.Push(newTerm);
             }
 
-			SingleTerm GetSingle(IOperandTerm oprand)
+/*			SingleTerm GetSingle(IOperandTerm oprand)
 			{
 				return (SingleTerm)oprand;
 			}
-        }
+*/        }
 
     }
 }

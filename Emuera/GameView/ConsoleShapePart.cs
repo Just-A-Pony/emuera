@@ -48,7 +48,6 @@ namespace MinorShift.Emuera.GameView
 			switch (type)
 			{
 				case "space":
-					
 					#region EM_私家版_space制限解除
 					// if (paramPixel.Length == 1 && paramPixel[0] >= 0)
 					if (paramPixel.Length == 1)

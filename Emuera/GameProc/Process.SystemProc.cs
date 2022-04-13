@@ -111,7 +111,7 @@ namespace MinorShift.Emuera.GameProc
 
 		private bool callFunction(string functionName, bool force, bool isEvent)
 		{
-			CalledFunction call = null;
+			CalledFunction call;
 			if (isEvent)
 				call = CalledFunction.CallEventFunction(this, functionName, null);
 			else
@@ -142,8 +142,10 @@ namespace MinorShift.Emuera.GameProc
 			if (Program.AnalysisMode)
 			{
 				console.PrintSystemLine("ファイル解析終了：Analysis.logに出力します");
-				console.OutputLog(Program.ExeDir + "Analysis.log");
-				console.noOutputLog = true;
+                #region EE_OUTPUTLOG
+                console.OutputSystemLog(Program.ExeDir + "Analysis.log");
+                #endregion
+                console.noOutputLog = true;
 				console.PrintSystemLine("エンターキーもしくはクリックで終了します");
 				System.Media.SystemSounds.Asterisk.Play();
 				console.ThrowTitleError(false);
@@ -154,8 +156,10 @@ namespace MinorShift.Emuera.GameProc
 				console.PrintSystemLine("ERBコードに解釈不可能な行があるためEmueraを終了します");
 				console.PrintSystemLine("※互換性オプション「" + Config.GetConfigName(ConfigCode.CompatiErrorLine) + "」により強制的に動作させることができます");
 				console.PrintSystemLine("emuera.logにログを出力します");
-				console.OutputLog(Program.ExeDir + "emuera.log");
-				console.noOutputLog = true;
+                #region EE_OUTPUTLOG
+                console.OutputSystemLog(Program.ExeDir + "emuera.log");
+                #endregion
+                console.noOutputLog = true;
 				console.PrintSystemLine("エンターキーもしくはクリックで終了します");
 				//System.Media.SystemSounds.Asterisk.Play();
 				console.ThrowTitleError(true);
@@ -811,7 +815,7 @@ namespace MinorShift.Emuera.GameProc
 				isFirstTime = false;
 				dataIsAvailable = new bool[Config.SaveDataNos + 1];
 			}
-			int dataNo = 0;
+			int dataNo;
 			for (int i = 0; i < page; i++)
 			{
 				console.PrintFlush(false);
@@ -875,7 +879,7 @@ namespace MinorShift.Emuera.GameProc
 				printSaveDataText();
 				return;
 			}
-			bool available = false;
+			bool available;
 			if ((systemResult >= 0) && (systemResult < dataIsAvailable.Length - 1))
 				available = dataIsAvailable[systemResult];
 			else
@@ -957,7 +961,7 @@ namespace MinorShift.Emuera.GameProc
 				printSaveDataText();
 				return;
 			}
-			bool available = false;
+			bool available;
 			if ((systemResult >= 0) && (systemResult < dataIsAvailable.Length - 1))
 				available = dataIsAvailable[systemResult];
 			else if (systemResult == AutoSaveIndex)

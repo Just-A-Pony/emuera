@@ -15,7 +15,6 @@ using MinorShift.Emuera.Content;
 using System.Linq;
 using System.Drawing;
 using WebPWrapper;
-using System.Xml;
 using System.IO;
 
 
@@ -24,653 +23,6 @@ namespace MinorShift.Emuera.GameData.Function
 
     internal static partial class FunctionMethodCreator
     {
-        #region EM_私家版_追加関数
-        private sealed class HtmlStringLenMethod : FunctionMethod
-        {
-            public HtmlStringLenMethod()
-            {
-                ReturnType = typeof(Int64);
-                argumentTypeArray = new Type[] { typeof(string) };
-                CanRestructure = false;
-            }
-
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                int len = HtmlManager.HtmlLength(arguments[0].GetStrValue(exm));
-
-                if (len >= 0)
-                    return 2 * len / Config.FontSize + ((2 * len % Config.FontSize != 0) ? 1 : 0);
-                else
-                    return 2 * len / Config.FontSize - ((2 * len % Config.FontSize != 0) ? 1 : 0);
-            }
-        }
-        private sealed class XmlGetMethod : FunctionMethod
-        {
-            public XmlGetMethod()
-            {
-                ReturnType = typeof(Int64);
-                argumentTypeArray = null;
-                CanRestructure = false;
-            }
-            public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-            {
-                if (arguments.Length < 2)
-                    return string.Format("{0}関数:少なくとも2の引数が必要です", name);
-                if (arguments.Length > 4)
-                    return string.Format("{0}関数:引数が多すぎます", name);
-                if (arguments[0].GetOperandType() != typeof(string))
-                    return string.Format("{0}関数:1番目の引数が文字列ではありません", name);
-                if (arguments[1].GetOperandType() != typeof(string))
-                    return string.Format("{0}関数:2番目の引数が文字列ではありません", name);
-                if (arguments.Length >= 3)
-                {
-                    if (arguments[2].GetOperandType() != typeof(Int64) && (!(arguments[2] is VariableTerm varTerm) || varTerm.Identifier.IsCalc || !varTerm.Identifier.IsArray1D || !varTerm.Identifier.IsString || varTerm.Identifier.IsConst))
-                        return string.Format("{0}関数:3番目の引数が一次元文字列配列変数でも整数でもありません", name);
-                }
-                if (arguments.Length == 4 && arguments[3].GetOperandType() != typeof(Int64))
-                    return string.Format("{0}関数:4番目の引数が整数ではありません", name);
-                return null;
-            }
-            private void OutPutNode(XmlNode node, string[] array, int i, Int64 style)
-            {
-                switch (style)
-                {
-                    case 1: array[i] = node.InnerText; break;
-                    case 2: array[i] = node.InnerXml; break;
-                    case 3: array[i] = node.OuterXml; break;
-                    default: array[i] = node.Value; break;
-                }
-            }
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                string xml = arguments[0].GetStrValue(exm);
-                string path = arguments[1].GetStrValue(exm);
-                long outputStyle = arguments.Length == 4 ? arguments[3].GetIntValue(exm) : 0;
-                XmlDocument doc = new XmlDocument();
-                XmlNodeList nodes = null;
-                try
-                {
-                    doc.LoadXml(xml);
-                    nodes = doc.SelectNodes(path);
-                }
-                catch (XmlException e)
-                {
-                    throw new CodeEE("XML_GET関数:\"" + xml + "\"の解析エラー:" + e.Message);
-                }
-                catch (System.Xml.XPath.XPathException e)
-                {
-                    throw new CodeEE("XML_GET関数:\"" + path + "\"の解析エラー:" + e.Message);
-                }
-                if (arguments.Length >= 3)
-                {
-                    if (arguments[2].GetOperandType() == typeof(Int64) && arguments[2].GetIntValue(exm) != 0)
-                    {
-                        for (int i = 0; i < Math.Min(nodes.Count, exm.VEvaluator.RESULTS_ARRAY.Length); i++)
-                            OutPutNode(nodes[i], exm.VEvaluator.RESULTS_ARRAY, i, outputStyle);
-                    }
-                    else
-                    {
-                        var arr = (arguments[2] as VariableTerm).Identifier.GetArray() as string[];
-                        for (int i = 0; i < Math.Min(nodes.Count, arr.Length); i++)
-                            OutPutNode(nodes[i], arr, i, outputStyle);
-                    }
-                }
-                return nodes.Count;
-            }
-        }
-        private sealed class FuncExistMethod : FunctionMethod
-        {
-            public FuncExistMethod()
-            {
-                ReturnType = typeof(Int64);
-                argumentTypeArray = new Type[] { typeof(string) };
-                CanRestructure = false;
-            }
-
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                var item = GlobalStatic.Process.LabelDictionary.GetNonEventLabel(arguments[0].GetStrValue(exm));
-                if (item != null)
-                    return item.IsMethod ? 1 : 2;
-                return 0;
-            }
-        }
-        private sealed class IsDefinedMethod : FunctionMethod
-        {
-            public IsDefinedMethod()
-            {
-                ReturnType = typeof(Int64);
-                argumentTypeArray = new Type[] { typeof(string) };
-                CanRestructure = true;
-            }
-
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                return (GlobalStatic.IdentifierDictionary.GetMacro(arguments[0].GetStrValue(exm)) != null) ? 1 : 0;
-            }
-        }
-        private sealed class EnumNameMethod : FunctionMethod
-        {
-            public enum EType
-            {
-                Function,
-                Variable,
-                Macro
-            }
-            public enum EAction
-            {
-                BeginsWith,
-                EndsWith,
-                With
-            }
-            private EType type;
-            private EAction action;
-            public EnumNameMethod(EType type, EAction act)
-            {
-                ReturnType = typeof(Int64);
-                CanRestructure = false;
-                this.type = type;
-                this.action = act;
-            }
-            public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-            {
-                //通常２つ、１つ省略可能で１～２の引数が必要。
-                if (arguments.Length < 1)
-                    return name + "関数には少なくとも1つの引数が必要です";
-                if (arguments.Length > 2)
-                    return name + "関数の引数が多すぎます";
-                if (arguments[0] == null)
-                    return name + "関数の1番目の引数は省略できません";
-                if (arguments[0].GetOperandType() != typeof(string))
-                    return name + "関数の1番目の引数が文字列ではありません";
-                if (arguments.Length == 2)
-                {
-                    if (!(arguments[1] is VariableTerm varTerm) || varTerm.Identifier.IsCalc || !varTerm.Identifier.IsArray1D || !varTerm.Identifier.IsString || varTerm.Identifier.IsConst)
-                        return string.Format("{0}関数:2番目の引数が一次元文字列配列変数ではありません", name);
-                }
-                return null;
-            }
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                string arg = arguments[0].GetStrValue(exm);
-                string[] array = null;
-                switch (type)
-                {
-                    case EType.Function:
-                        array = GlobalStatic.Process.LabelDictionary.NoneventKeys;
-                        break;
-                    case EType.Variable:
-                        array = GlobalStatic.IdentifierDictionary.VarKeys;
-                        break;
-                    case EType.Macro:
-                        array = GlobalStatic.IdentifierDictionary.MacroKeys;
-                        break;
-                }
-                List<string> strs = new List<string>();
-                if (arg.Length > 0)
-                    foreach (string item in array)
-                    {
-                        if (item.Length < arg.Length) continue;
-                        switch (action)
-                        {
-                            case EAction.BeginsWith:
-                                if (item.IndexOf(arg) == 0) strs.Add(item);
-                                break;
-                            case EAction.EndsWith:
-                                if (item.LastIndexOf(arg) == item.Length - arg.Length) strs.Add(item);
-                                break;
-                            case EAction.With:
-                                if (item.IndexOf(arg) >= 0) strs.Add(item);
-                                break;
-                        }
-                    }
-                // strs.Sort();
-                string[] output;
-                if (arguments.Length == 2)
-                    output = (arguments[1] as VariableTerm).Identifier.GetArray() as string[];
-                else
-                    output = exm.VEvaluator.RESULTS_ARRAY;
-                string[] ret = strs.ToArray();
-                int outputlength = Math.Min(output.Length, ret.Length);
-                Array.Copy(ret, output, outputlength);
-                return outputlength;
-            }
-        }
-        private sealed class GetVarMethod : FunctionMethod
-        {
-            public GetVarMethod()
-            {
-                ReturnType = typeof(Int64);
-                argumentTypeArray = new Type[] { typeof(string) };
-                CanRestructure = true;
-            }
-
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                string name = arguments[0].GetStrValue(exm);
-                WordCollection wc = LexicalAnalyzer.Analyse(new StringStream(arguments[0].GetStrValue(exm)), LexEndWith.EoL, LexAnalyzeFlag.None);
-                IOperandTerm term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
-
-                if (term is VariableTerm)
-                {
-                    VariableTerm var = (VariableTerm)term;
-
-                    if (var.Identifier == null)
-                        throw new CodeEE(name + "が変数ではありません");
-                    if (!var.IsInteger)
-                        throw new CodeEE(name + "が整数型ではありません");
-                    return var.GetIntValue(exm);
-                }
-                else
-                    throw new CodeEE(name + "が変数ではありません");
-            }
-        }
-        private sealed class GetVarsMethod : FunctionMethod
-        {
-            public GetVarsMethod()
-            {
-                ReturnType = typeof(string);
-                argumentTypeArray = new Type[] { typeof(string) };
-                CanRestructure = true;
-            }
-            public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                string name = arguments[0].GetStrValue(exm);
-                WordCollection wc = LexicalAnalyzer.Analyse(new StringStream(arguments[0].GetStrValue(exm)), LexEndWith.EoL, LexAnalyzeFlag.None);
-                IOperandTerm term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
-
-                if (term is VariableTerm)
-                {
-                    VariableTerm var = (VariableTerm)term;
-
-                    if (var.Identifier == null)
-                        throw new CodeEE(name + "が変数ではありません");
-                    if (!var.IsString)
-                        throw new CodeEE(name + "が文字列型ではありません");
-                    return var.GetStrValue(exm);
-                }
-                else
-                    throw new CodeEE(name + "が変数ではありません");
-            }
-        }
-        private sealed class VarExistMethod : FunctionMethod
-        {
-            public VarExistMethod()
-            {
-                ReturnType = typeof(Int64);
-                argumentTypeArray = new Type[] { typeof(string) };
-                CanRestructure = true;
-            }
-
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                VariableToken token = GlobalStatic.IdentifierDictionary.GetVariableToken(arguments[0].GetStrValue(exm), null, true);
-                if (token != null)
-                {
-                    Int64 res = 0;
-                    if (token.IsInteger) res |= 1;
-                    if (token.IsString) res |= 2;
-                    if (token.IsConst) res |= 4;
-                    if (token.IsArray2D) res |= 8;
-                    if (token.IsArray3D) res |= 16;
-                    return res;
-                }
-                return 0;
-            }
-        }
-        private sealed class ArrayMultiSortExMethod : FunctionMethod
-        {
-            public ArrayMultiSortExMethod()
-            {
-                ReturnType = typeof(Int64);
-                argumentTypeArray = null;
-                CanRestructure = false;
-            }
-            public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-            {
-                if (arguments.Length < 2)
-                    return string.Format("{0}関数:少なくとも2の引数が必要です", name);
-                if (arguments.Length > 3)
-                    return string.Format("{0}関数:引数が多すぎます", name);
-                if (arguments[0].GetOperandType() != typeof(string))
-                    return CheckVariableTerm(arguments[0], name, null);
-                if (!(arguments[1] is VariableTerm varTerm) || varTerm.Identifier.IsCalc || !varTerm.Identifier.IsArray1D || !varTerm.Identifier.IsString || varTerm.Identifier.IsConst)
-                    return string.Format("{0}関数:2番目の引数が一次元文字列配列変数ではありません", name);
-                if (arguments.Length == 3 && arguments[2].GetOperandType() != typeof(Int64))
-                    return string.Format("{0}関数:3番目の引数が整数ではありません", name);
-                return null;
-            }
-            private string CheckVariableTerm(IOperandTerm arg, string name, string v)
-            {
-                var vname = v == null ? "1番目の引数" : v;
-                if (!(arg is VariableTerm varTerm) || varTerm.Identifier.IsCalc || varTerm.Identifier.IsConst)
-                    return string.Format("{0}関数:{1}が変数ではありません", name, vname);
-                if (v == null && !varTerm.Identifier.IsArray1D)
-                    return string.Format("{0}関数:1番目の引数が一次元配列ではありません", name);
-                if (varTerm.Identifier.IsCharacterData)
-                    return string.Format("{0}関数:{1}がキャラクタ変数です", name, vname);
-                if (!varTerm.Identifier.IsArray1D && !varTerm.Identifier.IsArray2D && !varTerm.Identifier.IsArray3D)
-                    return string.Format("{0}関数:{1}が配列変数ではありません", name, vname);
-                return null;
-            }
-            private VariableTerm GetConvertedTerm(ExpressionMediator exm, string name)
-            {
-                WordCollection wc = LexicalAnalyzer.Analyse(new StringStream(name), LexEndWith.EoL, LexAnalyzeFlag.None);
-                var term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
-                var err = CheckVariableTerm(term, "ARRAYMSORTEX", name);
-                if (err != null)
-                    throw new CodeEE(err);
-                return term as VariableTerm;
-            }
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                bool isAscending = arguments.Length < 3 || arguments[2].GetIntValue(exm) != 0;
-                VariableTerm varTerm = arguments[0] is VariableTerm ? arguments[0] as VariableTerm : GetConvertedTerm(exm, arguments[0].GetStrValue(exm));
-                int[] sortedArray;
-                if (varTerm.Identifier.IsInteger)
-                {
-                    List<KeyValuePair<Int64, int>> sortList = new List<KeyValuePair<long, int>>();
-                    Int64[] array = (Int64[])varTerm.Identifier.GetArray();
-                    for (int i = 0; i < array.Length; i++)
-                    {
-                        if (array[i] == 0)
-                            break;
-                        if (array[i] < Int64.MinValue || array[i] > Int64.MaxValue)
-                            return 0;
-                        sortList.Add(new KeyValuePair<long, int>(array[i], i));
-                    }
-                    //素ではintの範囲しか扱えないので一工夫
-                    sortList.Sort((a, b) => { return (isAscending ? 1 : -1) * Math.Sign(a.Key - b.Key); });
-                    sortedArray = new int[sortList.Count];
-                    for (int i = 0; i < sortedArray.Length; i++)
-                        sortedArray[i] = sortList[i].Value;
-                }
-                else
-                {
-                    List<KeyValuePair<string, int>> sortList = new List<KeyValuePair<string, int>>();
-                    string[] array = (string[])varTerm.Identifier.GetArray();
-                    for (int i = 0; i < array.Length; i++)
-                    {
-                        if (string.IsNullOrEmpty(array[i]))
-                            return 0;
-                        sortList.Add(new KeyValuePair<string, int>(array[i], i));
-                    }
-                    sortList.Sort((a, b) => { return (isAscending ? 1 : -1) * a.Key.CompareTo(b.Key); });
-                    sortedArray = new int[sortList.Count];
-                    for (int i = 0; i < sortedArray.Length; i++)
-                        sortedArray[i] = sortList[i].Value;
-                }
-                List<VariableTerm> varTerms = new List<VariableTerm>();
-                foreach (var nTerm in (string[])(arguments[1] as VariableTerm).Identifier.GetArray())
-                    varTerms.Add(GetConvertedTerm(exm, nTerm));
-                foreach (var term in varTerms)
-                {
-                    if (term.Identifier.IsArray1D)
-                    {
-                        if (term.IsInteger)
-                        {
-                            var array = (Int64[])term.Identifier.GetArray();
-                            var clone = (Int64[])array.Clone();
-                            if (array.Length < sortedArray.Length)
-                                return 0;
-                            for (int i = 0; i < sortedArray.Length; i++)
-                                array[i] = clone[sortedArray[i]];
-                        }
-                        else
-                        {
-                            var array = (string[])term.Identifier.GetArray();
-                            var clone = (string[])array.Clone();
-                            if (array.Length < sortedArray.Length)
-                                return 0;
-                            for (int i = 0; i < sortedArray.Length; i++)
-                                array[i] = clone[sortedArray[i]];
-                        }
-                    }
-                    else if (term.Identifier.IsArray2D)
-                    {
-                        if (term.IsInteger)
-                        {
-                            var array = (Int64[,])term.Identifier.GetArray();
-                            var clone = (Int64[,])array.Clone();
-                            if (array.GetLength(0) < sortedArray.Length)
-                                return 0;
-                            for (int i = 0; i < sortedArray.Length; i++)
-                                for (int x = 0; x < array.GetLength(1); x++)
-                                    array[i, x] = clone[sortedArray[i], x];
-                        }
-                        else
-                        {
-                            var array = (string[,])term.Identifier.GetArray();
-                            var clone = (string[,])array.Clone();
-                            if (array.GetLength(0) < sortedArray.Length)
-                                return 0;
-                            for (int i = 0; i < sortedArray.Length; i++)
-                                for (int x = 0; x < array.GetLength(1); x++)
-                                    array[i, x] = clone[sortedArray[i], x];
-                        }
-                    }
-                    else if (term.Identifier.IsArray3D)
-                    {
-                        if (term.IsInteger)
-                        {
-                            var array = (Int64[,,])term.Identifier.GetArray();
-                            var clone = (Int64[,,])array.Clone();
-                            if (array.GetLength(0) < sortedArray.Length)
-                                return 0;
-                            for (int i = 0; i < sortedArray.Length; i++)
-                                for (int x = 0; x < array.GetLength(1); x++)
-                                    for (int y = 0; y < array.GetLength(2); y++)
-                                        array[i, x, y] = clone[sortedArray[i], x, y];
-                        }
-                        else
-                        {
-                            var array = (string[,,])term.Identifier.GetArray();
-                            var clone = (string[,,])array.Clone();
-                            if (array.GetLength(0) < sortedArray.Length)
-                                return 0;
-                            for (int i = 0; i < sortedArray.Length; i++)
-                                for (int x = 0; x < array.GetLength(1); x++)
-                                    for (int y = 0; y < array.GetLength(2); y++)
-                                        array[i, x, y] = clone[sortedArray[i], x, y];
-                        }
-                    }
-                    else { throw new ExeEE("異常な配列"); }
-                }
-                return 1;
-            }
-            public override bool UniqueRestructure(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                for (int i = 0; i < arguments.Length; i++)
-                    arguments[i] = arguments[i].Restructure(exm);
-                return false;
-            }
-        }
-        private sealed class SetVarMethod : FunctionMethod
-        {
-            public SetVarMethod()
-            {
-                ReturnType = typeof(Int64);
-                argumentTypeArray = null;
-                CanRestructure = false;
-            }
-            public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-            {
-                if (arguments.Length < 2)
-                    return string.Format("{0}関数:少なくとも2の引数が必要です", name);
-                if (arguments.Length > 2)
-                    return string.Format("{0}関数:引数が多すぎます", name);
-                if (arguments[0].GetOperandType() != typeof(string))
-                    return string.Format("{0}関数:1番目の引数が文字列ではありません", name);
-                return null;
-            }
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                string name = arguments[0].GetStrValue(exm);
-                WordCollection wc = LexicalAnalyzer.Analyse(new StringStream(arguments[0].GetStrValue(exm)), LexEndWith.EoL, LexAnalyzeFlag.None);
-                IOperandTerm term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
-
-                if (term is VariableTerm var)
-                {
-                    if (var.Identifier == null || var.Identifier.IsConst)
-                        throw new CodeEE(name + "が変数ではありません");
-                    if (var.IsString)
-                    {
-                        if (arguments[1].GetOperandType() != typeof(string))
-                            throw new CodeEE(name + "が整数型ではありません");
-                        var.SetValue(arguments[1].GetStrValue(exm), exm);
-                    }
-                    else
-                    {
-                        if (arguments[1].GetOperandType() != typeof(Int64))
-                            throw new CodeEE(name + "が文字列型ではありません");
-                        var.SetValue(arguments[1].GetIntValue(exm), exm);
-                    }
-                    return 1;
-                }
-                else
-                    throw new CodeEE(name + "が変数ではありません");
-            }
-        }
-        private sealed class VarSetExMethod : FunctionMethod
-        {
-            public VarSetExMethod()
-            {
-                ReturnType = typeof(Int64);
-                argumentTypeArray = null;
-                CanRestructure = false;
-            }
-            public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-            {
-                if (arguments.Length < 2)
-                    return string.Format("{0}関数:少なくとも2の引数が必要です", name);
-                if (arguments.Length > 5)
-                    return string.Format("{0}関数:引数が多すぎます", name);
-                if (arguments[0].GetOperandType() != typeof(string))
-                    return string.Format("{0}関数:1番目の引数が文字列ではありません", name);
-                for (int i = 2; i < arguments.Length; i++)
-                {
-                    if (arguments[i].GetOperandType() != typeof(Int64))
-                        return string.Format("{0}関数:{1}番目の引数が整数ではありません", name, i + 1);
-                }
-                return null;
-            }
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                string name = arguments[0].GetStrValue(exm);
-                WordCollection wc = LexicalAnalyzer.Analyse(new StringStream(arguments[0].GetStrValue(exm)), LexEndWith.EoL, LexAnalyzeFlag.None);
-                IOperandTerm term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
-
-                if (term is VariableTerm var)
-                {
-                    if (var.Identifier == null || var.Identifier.IsConst)
-                        throw new CodeEE(name + "が変数ではありません");
-
-                    int start = (int)(arguments.Length >= 4 ? arguments[3].GetIntValue(exm) : 0);
-                    int end = (int)(arguments.Length == 5 ? arguments[4].GetIntValue(exm)
-                        : (var.Identifier.IsArray1D ? var.Identifier.GetLength()
-                        : (var.Identifier.IsArray2D ? var.Identifier.GetLength(1)
-                        : (var.Identifier.IsArray2D ? var.Identifier.GetLength(2) : 0))));
-                    bool setAllDims = arguments.Length >= 3 ? arguments[2].GetIntValue(exm) != 0 : true;
-                    if (var.IsString)
-                    {
-                        if (arguments[1].GetOperandType() != typeof(string))
-                            throw new CodeEE("文字列型でない変数" + name + "に文字列型を代入しようとしました");
-                        var val = arguments[1].GetStrValue(exm);
-                        if (setAllDims || var.Identifier.IsArray1D)
-                            var.Identifier.SetValueAll(val, start, end, 0);
-                        else if (var.Identifier.IsArray2D)
-                        {
-                            var array = var.Identifier.GetArray() as string[,];
-                            var idx1 = var.GetElementInt(0, exm);
-                            var idx2 = var.GetElementInt(1, exm);
-                            for (int i = Math.Max(start, (int)idx2); i < end; i++)
-                                array[idx1, i] = val;
-                        }
-                        if (var.Identifier.IsArray3D)
-                        {
-                            var idx1 = var.GetElementInt(0, exm);
-                            var idx2 = var.GetElementInt(1, exm);
-                            var idx3 = var.GetElementInt(2, exm);
-                            var array = var.Identifier.GetArray() as string[,,];
-                            for (int i = Math.Max(start, (int)idx3); i < end; i++)
-                                array[idx2, idx1, i] = val;
-                        }
-                    }
-                    else
-                    {
-                        if (arguments[1].GetOperandType() != typeof(Int64))
-                            throw new CodeEE("整数型でない変数" + name + "に整数値を代入しようとしました");
-                        var val = arguments[1].GetIntValue(exm);
-                        if (setAllDims || var.Identifier.IsArray1D)
-                            var.Identifier.SetValueAll(val, start, end, 0);
-                        else if (var.Identifier.IsArray2D)
-                        {
-                            var array = var.Identifier.GetArray() as Int64[,];
-                            var idx1 = var.GetElementInt(0, exm);
-                            var idx2 = var.GetElementInt(1, exm);
-                            for (int i = Math.Max(start, (int)idx2); i < end; i++)
-                                array[idx1, i] = val;
-                        }
-                        if (var.Identifier.IsArray3D)
-                        {
-                            var idx1 = var.GetElementInt(0, exm);
-                            var idx2 = var.GetElementInt(1, exm);
-                            var idx3 = var.GetElementInt(2, exm);
-                            var array = var.Identifier.GetArray() as Int64[,,];
-                            for (int i = Math.Max(start, (int)idx3); i < end; i++)
-                                array[idx2, idx1, i] = val;
-                        }
-                    }
-                    return 1;
-                }
-                else
-                    throw new CodeEE(name + "が変数ではありません");
-            }
-        }
-        private sealed class HtmlSubStringMethod : FunctionMethod
-        {
-            public HtmlSubStringMethod()
-            {
-                ReturnType = typeof(Int64);
-                argumentTypeArray = new Type[] { typeof(string), typeof(Int64) };
-                CanRestructure = false;
-            }
-
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                string str = arguments[0].GetStrValue(exm);
-                string[] strs = MinorShift.Emuera.GameView.HtmlManager.HtmlSubString(str, (int)arguments[1].GetIntValue(exm));
-                string[] output = GlobalStatic.Process.VEvaluator.RESULTS_ARRAY;
-                int outputlength = Math.Min(output.Length, strs.Length);
-                Array.Copy(strs, output, outputlength);
-                return 1;
-            }
-        }
-        private sealed class RegexpMatchMethod : FunctionMethod
-        {
-            public RegexpMatchMethod()
-            {
-                ReturnType = typeof(Int64);
-                argumentTypeArray = new Type[] { typeof(string), typeof(string) };
-                CanRestructure = true;
-            }
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                string baseString = arguments[0].GetStrValue(exm);
-                Regex reg;
-                try
-                {
-                    reg = new Regex(arguments[1].GetStrValue(exm));
-                }
-                catch (ArgumentException e)
-                {
-                    throw new CodeEE("第２引数が正規表現として不正です：" + e.Message);
-                }
-                return (reg.Match(baseString).Success ? 1 : 0);
-            }
-        }
-        #endregion
-
         #region CSVデータ関係
         private sealed class GetcharaMethod : FunctionMethod
         {
@@ -2611,13 +1963,10 @@ namespace MinorShift.Emuera.GameData.Function
 						return string.Format("{0}関数:{1}番目の引数がキャラクタ変数です", name, i + 1);
 					if (i == 0 && !varTerm.Identifier.IsArray1D)
 						return string.Format("{0}関数:{1}番目の引数が一次元配列ではありません", name, i + 1);
-                    #region EM_私家版_ARRAYMSORT_三次元配列修正
-                    //if (!varTerm.Identifier.IsArray1D && !varTerm.Identifier.IsArray2D && !varTerm.Identifier.IsArray2D)
-                    if (!varTerm.Identifier.IsArray1D && !varTerm.Identifier.IsArray2D && !varTerm.Identifier.IsArray3D)
-                        return string.Format("{0}関数:{1}番目の引数が配列変数ではありません", name, i + 1);
-                    #endregion
-                }
-                return null;
+					if (!varTerm.Identifier.IsArray1D && !varTerm.Identifier.IsArray2D && !varTerm.Identifier.IsArray2D)
+						return string.Format("{0}関数:{1}番目の引数が配列変数ではありません", name, i + 1);
+				}
+				return null;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
@@ -3718,17 +3067,14 @@ namespace MinorShift.Emuera.GameData.Function
 						return g.Width;
 					case "GHEIGHT":
 						return g.Height;
-                    #region EE_GDRAWTEXTに付随する要素
                     case "GGETFONTSIZE":
                         return g.Fontsize;
                     case "GGETFONTSTYLE":
                         return g.Fontstyle;
-                    #endregion
-                }
+				}
 				throw new ExeEE("GraphicsState:" + Name + ":異常な分岐");
 			}
 		}
-        #region EE_GGETFONT
         public sealed class GraphicsStateStrMethod : FunctionMethod
         {
             public GraphicsStateStrMethod()
@@ -3749,10 +3095,9 @@ namespace MinorShift.Emuera.GameData.Function
                     case "GGETFONT":
                         return g.Fontname;
                 }
-                throw new ExeEE("GraphicsState:" + Name + ":Abnormal branching");
+                throw new ExeEE("GraphicsState:" + Name + ":異常な分岐");
             }
         }
-        #endregion
 
         public sealed class GraphicsGetColorMethod : FunctionMethod
 		{
@@ -3823,8 +3168,7 @@ namespace MinorShift.Emuera.GameData.Function
 				return 1;
 			}
 		}
-        #region EE_GDRAWTEXT追加に伴いGSETFONTを改良
-        public sealed class GraphicsSetFontMethod : FunctionMethod
+		public sealed class GraphicsSetFontMethod : FunctionMethod
 		{
 			public GraphicsSetFontMethod()
 			{
@@ -3836,7 +3180,7 @@ namespace MinorShift.Emuera.GameData.Function
             {
                 if (arguments.Length > 2)
                     return null;
-                return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 2);
+                return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 3);
             }
             public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
@@ -3875,9 +3219,8 @@ namespace MinorShift.Emuera.GameData.Function
 				return 1;
 			}
 		}
-        #endregion
-
-        public sealed class GraphicsSetPenMethod : FunctionMethod
+		
+		public sealed class GraphicsSetPenMethod : FunctionMethod
 		{
 			public GraphicsSetPenMethod()
 			{
@@ -3898,7 +3241,6 @@ namespace MinorShift.Emuera.GameData.Function
 				return 1;
 			}
 		}
-        #region EE_GDRAWTEXT
         public sealed class GraphicsDrawStringMethod : FunctionMethod
         {
             public GraphicsDrawStringMethod()
@@ -3963,8 +3305,6 @@ namespace MinorShift.Emuera.GameData.Function
                 return 1;
             }
         }
-        #endregion
-        #region EE_GGETTEXTSIZE
         public sealed class GraphicsGetTextSizeMethod : FunctionMethod
         {
             public GraphicsGetTextSizeMethod()
@@ -3977,7 +3317,7 @@ namespace MinorShift.Emuera.GameData.Function
             {
                 if (arguments.Length > 2)
                     return null;
-                return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 2);
+                return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 3);
             }
             public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
             {
@@ -4015,93 +3355,6 @@ namespace MinorShift.Emuera.GameData.Function
                 return (Int64)size.Width;
             }
         }
-        #endregion
-        #region EE_GDRAWGWITHROTATE
-        public sealed class GraphicsRotateMethod : FunctionMethod
-        {
-            public GraphicsRotateMethod()
-            {
-                ReturnType = typeof(Int64);
-                argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64) };
-                CanRestructure = false;
-            }
-            public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-            {
-                if (arguments.Length < 2)
-                    return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 2);
-                if (arguments.Length > 4)
-                    return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum2, name);
-                if (arguments.Length != 2 && arguments.Length != 4)
-                    return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum0, name);
-                return null;
-            }
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
-                    throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
-                GraphicsImage g = ReadGraphics(Name, exm, arguments, 0);
-                if (!g.IsCreated)
-                    return 0;
-                Int64 angle = arguments[1].GetIntValue(exm);
-
-                //座標省略してたらx/2,y/2で渡す
-                if (arguments.Length == 2)
-                {
-                    g.GRotate(angle, g.Width/2, g.Height/2);
-                }
-                else
-                {
-                    Point p = ReadPoint(Name, exm, arguments, 2);
-                    g.GRotate(angle, p.X, p.Y);
-                }
-                return 1;
-            }
-        }
-        public sealed class GraphicsDrawGWithRotateMethod : FunctionMethod
-        {
-            public GraphicsDrawGWithRotateMethod()
-            {
-                ReturnType = typeof(Int64);
-                argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64) };
-                CanRestructure = false;
-            }
-            public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-            {
-                if (arguments.Length < 3)
-                    return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 3);
-                if (arguments.Length > 5)
-                    return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum2, name);
-                if (arguments.Length != 3 && arguments.Length != 5)
-                    return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum0, name);
-                return null;
-            }
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
-                    throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
-                GraphicsImage dest = ReadGraphics(Name, exm, arguments, 0);
-                if (!dest.IsCreated)
-                    return 0;
-                GraphicsImage src = ReadGraphics(Name, exm, arguments, 1);
-                if (!src.IsCreated)
-                    return 0;
-                Int64 angle = arguments[2].GetIntValue(exm);
-
-                //座標省略してたらx/2,y/2で渡す
-                if (arguments.Length == 3)
-                {
-                    dest.GDrawGWithRotate(src, angle, src.Width/2, src.Height/2);
-                }
-                else
-                {
-                    Point p = ReadPoint(Name, exm, arguments, 3);
-                    dest.GDrawGWithRotate(src, angle, p.X, p.Y);
-                }
-                return 1;
-            }
-        }
-        #endregion
-        #region EE_失敗作
         //brushの参照がうまくいかないので保留
         /**
         public sealed class GraphicsGetBrushMethod : FunctionMethod
@@ -4120,7 +3373,6 @@ namespace MinorShift.Emuera.GameData.Function
             }
         }
         **/
-        #endregion
 
         public sealed class SpriteStateMethod : FunctionMethod
 		{
@@ -5074,91 +4326,37 @@ namespace MinorShift.Emuera.GameData.Function
 				{
 					if (arguments[i] == null)
 						return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, i + 1);
-                    #region EM_私家版_LoadText＆SaveText機能拡張
-                    if (i == 1 && arguments[i].GetOperandType() == typeof(string)) continue;
-                    #endregion
 
-                    if (i < argumentTypeArray.Length && argumentTypeArray[i] != arguments[i].GetOperandType())
+					if (i < argumentTypeArray.Length && argumentTypeArray[i] != arguments[i].GetOperandType())
 						return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentType0, name, i + 1);
 				}
 				return null;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
-                #region EM_私家版_LoadText＆SaveText機能拡張
-                //string savText = arguments[0].GetStrValue(exm);
-                //Int64 i64 = arguments[1].GetIntValue(exm);
-                //if (i64 < 0 || i64 > int.MaxValue)
-                //	return 0;
-                //bool forceSavdir = arguments.Length > 2 && (arguments[2].GetIntValue(exm) != 0);
-                //bool forceUTF8 = arguments.Length > 3 && (arguments[3].GetIntValue(exm) != 0);
-                //int fileIndex = (int)i64;
-                //string filepath = forceSavdir ?
-                //	GetSaveDataPathText(fileIndex, Config.ForceSavDir) :
-                //	GetSaveDataPathText(fileIndex, Config.SavDir);
-                //Encoding encoding = forceUTF8 ?
-                //	Encoding.GetEncoding("UTF-8") :
-                //	Config.SaveEncode;
-                //try
-                //{
-                //	if (forceSavdir)
-                //		Config.ForceCreateSavDir();
-                //	else
-                //		Config.CreateSavDir();
-                //	System.IO.File.WriteAllText(filepath, savText, encoding);
-                //}
-                //catch { return 0; }
-                string savText = arguments[0].GetStrValue(exm), filepath;
-                Int64 i64 = -1;
-                bool forceSavdir = arguments.Length > 2 && (arguments[2].GetIntValue(exm) != 0);
-                bool forceUTF8 = arguments.Length > 3 && (arguments[3].GetIntValue(exm) != 0);
-
-
-                if (arguments[1].GetOperandType() == typeof(Int64))
-                {
-                    i64 = arguments[1].GetIntValue(exm);
-                    if (i64 < 0 || i64 > int.MaxValue)
-                        return 0;
-                    int fileIndex = (int)i64;
-                    filepath = forceSavdir ?
-                    GetSaveDataPathText(fileIndex, Config.ForceSavDir) :
-                    GetSaveDataPathText(fileIndex, Config.SavDir);
-                }
-                else
-                {
-                    filepath = arguments[1].GetStrValue(exm);
-                    filepath = filepath.Replace('/', '\\');
-                    filepath = filepath.Replace("..\\", "");
-                    if (Path.GetPathRoot(filepath) != string.Empty) return 0;
-                    string tmp = Path.HasExtension(filepath) ? Path.GetExtension(filepath).ToLower().Substring(1) : "";
-                    if (!Config.ValidExtension.Contains(tmp))
-                        filepath = Path.ChangeExtension(filepath, "txt");
-                    forceUTF8 = true;
-                }
-
-                Encoding encoding = forceUTF8 ?
-                    Encoding.GetEncoding("UTF-8") :
-                    Config.SaveEncode;
-                try
-                {
-                    if (i64 >= 0)
-                    {
-                        if (forceSavdir)
-                            Config.ForceCreateSavDir();
-                        else
-                            Config.CreateSavDir();
-                    }
-                    else
-                    {
-                        if (filepath.LastIndexOf('\\') >= 0)
-                            System.IO.Directory.CreateDirectory(filepath.Substring(0, filepath.LastIndexOf('\\')));
-                    }
-
-                    System.IO.File.WriteAllText(filepath, savText, encoding);
-                }
-                catch { return 0; }
-                #endregion
-                return 1;
+				string savText = arguments[0].GetStrValue(exm);
+				Int64 i64 = arguments[1].GetIntValue(exm);
+				if (i64 < 0 || i64 > int.MaxValue)
+					return 0;
+				bool forceSavdir = arguments.Length > 2 && (arguments[2].GetIntValue(exm) != 0);
+				bool forceUTF8 = arguments.Length > 3 && (arguments[3].GetIntValue(exm) != 0);
+				int fileIndex = (int)i64;
+				string filepath = forceSavdir ?
+					GetSaveDataPathText(fileIndex, Config.ForceSavDir) :
+					GetSaveDataPathText(fileIndex, Config.SavDir);
+				Encoding encoding = forceUTF8 ?
+					Encoding.GetEncoding("UTF-8") :
+					Config.SaveEncode;
+				try
+				{
+					if (forceSavdir)
+						Config.ForceCreateSavDir();
+					else
+						Config.CreateSavDir();
+					System.IO.File.WriteAllText(filepath, savText, encoding);
+				}
+				catch { return 0; }
+				return 1;
 			}
 		}
 		/// <summary>
@@ -5183,79 +4381,36 @@ namespace MinorShift.Emuera.GameData.Function
 				{
 					if (arguments[i] == null)
 						return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, i + 1);
-                    #region EM_私家版_LoadText＆SaveText機能拡張
-                    if (i == 0 && arguments[i].GetOperandType() == typeof(string)) continue;
-                    #endregion
-                    if (i < argumentTypeArray.Length && argumentTypeArray[i] != arguments[i].GetOperandType())
+					if (i < argumentTypeArray.Length && argumentTypeArray[i] != arguments[i].GetOperandType())
 						return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentType0, name, i + 1);
 				}
 				return null;
 			}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
-                #region EM_私家版_LoadText＆SaveText機能拡張
-                //Int64 i64 = arguments[0].GetIntValue(exm);
-                //if (i64 < 0 || i64 > int.MaxValue)
-                //	return "";
-                //bool forceSavdir = arguments.Length > 1 && (arguments[1].GetIntValue(exm) != 0);
-                //bool forceUTF8 = arguments.Length > 2 && (arguments[2].GetIntValue(exm) != 0);
-                //int fileIndex = (int)i64;
-                //string filepath = forceSavdir ?
-                //	GetSaveDataPathText(fileIndex, Config.ForceSavDir) :
-                //	GetSaveDataPathText(fileIndex, Config.SavDir);
-                //Encoding encoding = forceUTF8 ?
-                //	Encoding.GetEncoding("UTF-8") :
-                //	Config.SaveEncode;
-                //if (!System.IO.File.Exists(filepath))
-                //	return "";
-                //string ret;
-                //try
-                //{
-                //	ret = System.IO.File.ReadAllText(filepath, encoding);
-                //}
-                //catch { return ""; }
-                //return ret;
-                string ret = "", filepath;
-                Int64 i64 = -1;
-                bool forceSavdir = arguments.Length > 1 && (arguments[1].GetIntValue(exm) != 0);
-                bool forceUTF8 = arguments.Length > 2 && (arguments[2].GetIntValue(exm) != 0);
-                if (arguments[0].GetOperandType() == typeof(Int64))
-                {
-                    i64 = arguments[0].GetIntValue(exm);
-                    if (i64 < 0 || i64 > int.MaxValue)
-                        return "";
-                    int fileIndex = (int)i64;
-                    filepath = forceSavdir ?
-                    GetSaveDataPathText(fileIndex, Config.ForceSavDir) :
-                    GetSaveDataPathText(fileIndex, Config.SavDir);
-                }
-                else
-                {
-                    filepath = arguments[0].GetStrValue(exm);
-                    filepath = filepath.Replace('/', '\\');
-                    filepath = filepath.Replace("..\\", "");
-                    if (Path.GetPathRoot(filepath) != string.Empty) return string.Empty;
-                    string tmp = Path.HasExtension(filepath) ? Path.GetExtension(filepath).ToLower().Substring(1) : "";
-                    if (!Config.ValidExtension.Contains(tmp))
-                        return "";
-                    forceUTF8 = true;
-                }
-
-                Encoding encoding = forceUTF8 ?
-                    Encoding.GetEncoding("UTF-8") :
-                    Config.SaveEncode;
-                if (!System.IO.File.Exists(filepath))
-                    return "";
+                Int64 i64 = arguments[0].GetIntValue(exm);
+                if (i64 < 0 || i64 > int.MaxValue)
+					return "";
+				bool forceSavdir = arguments.Length > 1 && (arguments[1].GetIntValue(exm) != 0);
+				bool forceUTF8 = arguments.Length > 2 && (arguments[2].GetIntValue(exm) != 0);
+				int fileIndex = (int)i64;
+				string filepath = forceSavdir ?
+					GetSaveDataPathText(fileIndex, Config.ForceSavDir) :
+					GetSaveDataPathText(fileIndex, Config.SavDir);
+				Encoding encoding = forceUTF8 ?
+					Encoding.GetEncoding("UTF-8") :
+					Config.SaveEncode;
+				if (!System.IO.File.Exists(filepath))
+					return "";
+                string ret;
                 try
                 {
                     ret = System.IO.File.ReadAllText(filepath, encoding);
                 }
                 catch { return ""; }
-                //一貫性の観点で\rには死んでもらう
-                return ret.Replace("\r", "");
-                #endregion
-            }
-        }
+                return ret;
+			}
+		}
 
 
 
@@ -5352,7 +4507,7 @@ namespace MinorShift.Emuera.GameData.Function
 				return 1;
 			}
 		}
-        #region EE_EXISTSOUND
+
         private sealed class ExistSoundMethod : FunctionMethod
         {
 			public ExistSoundMethod()
@@ -5370,8 +4525,6 @@ namespace MinorShift.Emuera.GameData.Function
                 return 0;
             }
         }
-        #endregion
-        #region EE_EXISTFUNCTION
 
         public sealed class ExistFunctionMethod : FunctionMethod
         {
@@ -5399,7 +4552,6 @@ namespace MinorShift.Emuera.GameData.Function
                 return 1;
             }
         }
-        #endregion
 
         #endregion
     }

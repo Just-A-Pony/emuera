@@ -7,7 +7,6 @@ using MinorShift.Emuera.GameData.Function;
 
 namespace MinorShift.Emuera.GameProc.Function
 {
-
 	#region EM_私家版_INPUT系機能拡張
 	internal sealed class SpInputsArgument : Argument
 	{
@@ -20,7 +19,6 @@ namespace MinorShift.Emuera.GameProc.Function
 		readonly public IOperandTerm Mouse;
 	}
 	#endregion
-
 	internal abstract class Argument
 	{
 		public bool IsConst;
@@ -162,7 +160,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			Time = time;
 			Def = def;
 			Disp = disp;
-			Timeout = timeout;
+            Timeout = timeout;
 			#region EM_私家版_INPUT系機能拡張
 			Mouse = mouse;
 			#endregion
@@ -170,7 +168,7 @@ namespace MinorShift.Emuera.GameProc.Function
 		readonly public IOperandTerm Time;
 		readonly public IOperandTerm Def;
 		readonly public IOperandTerm Disp;
-		readonly public IOperandTerm Timeout;
+        readonly public IOperandTerm Timeout;
 		#region EM_私家版_INPUT系機能拡張
 		readonly public IOperandTerm Mouse;
 		#endregion
@@ -271,14 +269,14 @@ namespace MinorShift.Emuera.GameProc.Function
 		readonly public VariableTerm Var;
 	}
 
-	internal sealed class StrDataArgument : Argument
-	{
-		public StrDataArgument(VariableTerm var)
-		{
-			Var = var;
-		}
-		readonly public VariableTerm Var;
-	}
+    internal sealed class StrDataArgument : Argument
+    {
+        public StrDataArgument(VariableTerm var)
+        {
+            Var = var;
+        }
+        readonly public VariableTerm Var;
+    }
 
 	internal sealed class MethodArgument : Argument
 	{
@@ -369,12 +367,12 @@ namespace MinorShift.Emuera.GameProc.Function
 			TargetStr = s1;
 			Split = s2;
 			Var = varId;
-			Num = num;
+            Num = num;
 		}
 		readonly public IOperandTerm TargetStr;
 		readonly public IOperandTerm Split;
 		readonly public VariableToken Var;
-		readonly public VariableTerm Num;
+        readonly public VariableTerm Num;
 	}
 	
 	internal sealed class SpHtmlSplitArgument : Argument
@@ -383,11 +381,11 @@ namespace MinorShift.Emuera.GameProc.Function
 		{
 			TargetStr = s1;
 			Var = varId;
-			Num = num;
+            Num = num;
 		}
 		readonly public IOperandTerm TargetStr;
 		readonly public VariableToken Var;
-		readonly public VariableTerm Num;
+        readonly public VariableTerm Num;
 	}
 
 	internal sealed class SpGetIntArgument : Argument
@@ -429,31 +427,31 @@ namespace MinorShift.Emuera.GameProc.Function
 		readonly public IOperandTerm Num4;
 	}
 
-	internal sealed class SpArraySortArgument : Argument
-	{
-		public SpArraySortArgument(VariableTerm var, SortOrder order, IOperandTerm num1, IOperandTerm num2)
-		{
-			VarToken = var;
-			Order = order;
-			Num1 = num1;
-			Num2 = num2;
-		}
-		readonly public VariableTerm VarToken;
-		readonly public SortOrder Order;
-		readonly public IOperandTerm Num1;
-		readonly public IOperandTerm Num2;
-	}
+    internal sealed class SpArraySortArgument : Argument
+    {
+        public SpArraySortArgument(VariableTerm var, SortOrder order, IOperandTerm num1, IOperandTerm num2)
+        {
+            VarToken = var;
+            Order = order;
+            Num1 = num1;
+            Num2 = num2;
+        }
+        readonly public VariableTerm VarToken;
+        readonly public SortOrder Order;
+        readonly public IOperandTerm Num1;
+        readonly public IOperandTerm Num2;
+    }
 
-	internal sealed class SpCopyArrayArgument : Argument
-	{
-		public SpCopyArrayArgument(IOperandTerm str1, IOperandTerm str2)
-		{
-			VarName1 = str1;
-			VarName2 = str2;
-		}
-		readonly public IOperandTerm VarName1;
-		readonly public IOperandTerm VarName2;
-	}
+    internal sealed class SpCopyArrayArgument : Argument
+    {
+        public SpCopyArrayArgument(IOperandTerm str1, IOperandTerm str2)
+        {
+            VarName1 = str1;
+            VarName2 = str2;
+        }
+        readonly public IOperandTerm VarName1;
+        readonly public IOperandTerm VarName2;
+    }
 
 	internal sealed class SpSaveVarArgument : Argument
 	{
@@ -505,28 +503,43 @@ namespace MinorShift.Emuera.GameProc.Function
 		readonly public IOperandTerm SrcTerm = null;
 	}
 
-	internal sealed class OneInputArgument : Argument
-	{
-		public OneInputArgument(IOperandTerm term, IOperandTerm flag)
-		{
-			Term = term;
-			Flag = flag;
-		}
-		readonly public IOperandTerm Term;
-		readonly public IOperandTerm Flag;
-	}
+    internal sealed class OneInputArgument : Argument
+    {
+        public OneInputArgument(IOperandTerm term, IOperandTerm flag)
+        {
+            Term = term;
+            Flag = flag;
+        }
+        readonly public IOperandTerm Term;
+        readonly public IOperandTerm Flag;
+    }
 
-	internal sealed class OneInputsArgument : Argument
-	{
-		public OneInputsArgument(IOperandTerm term, IOperandTerm flag)
-		{
-			Term = term;
-			Flag = flag;
-		}
-		readonly public IOperandTerm Term;
-		readonly public IOperandTerm Flag;
-	}
-	
+    internal sealed class OneInputsArgument : Argument
+    {
+        public OneInputsArgument(IOperandTerm term, IOperandTerm flag)
+        {
+            Term = term;
+            Flag = flag;
+        }
+        readonly public IOperandTerm Term;
+        readonly public IOperandTerm Flag;
+    }
+
+
+    #region EE
+    internal sealed class StrDoubleArgument : Argument
+    {
+        public StrDoubleArgument(IOperandTerm term, double doublevalue)
+        {
+            Term = term;
+            DoubleValue = doublevalue;
+        }
+        readonly public IOperandTerm Term;
+        readonly public double DoubleValue;
+    }
+	#endregion
+
+
 	#region set系
 	internal sealed class SpSetArgument : Argument
 	{

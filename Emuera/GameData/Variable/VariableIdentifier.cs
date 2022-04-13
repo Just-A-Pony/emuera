@@ -277,7 +277,7 @@ namespace MinorShift.Emuera.GameData.Variable
 		}
 		public static VariableIdentifier GetVariableId(string key, string subStr)
 		{
-			VariableCode ret = VariableCode.__NULL__;
+			VariableCode ret;
 			if (string.IsNullOrEmpty(key))
 				return null;
 			if (Config.ICVariable)
@@ -292,8 +292,10 @@ namespace MinorShift.Emuera.GameData.Variable
 					throw new CodeEE("ローカル変数でない変数" + key + "に対して@が使われました");
 				throw new CodeEE("@の使い方が不正です");
 			}
-			nameDic.TryGetValue(key, out ret);
-			return new VariableIdentifier(ret);
+			if (nameDic.TryGetValue(key, out ret))
+				return new VariableIdentifier(ret);
+			else
+				return null;
 		}
 		public override string ToString()
 		{

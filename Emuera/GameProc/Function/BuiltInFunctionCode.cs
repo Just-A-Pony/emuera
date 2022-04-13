@@ -15,7 +15,6 @@ namespace MinorShift.Emuera.GameProc.Function
 		//ただし、式中関数バージョンと命令バージョンで動作が違うなら追加する必要がある。
 
 		__NULL__ = 0x0000,
-
 		SET,//数値代入文 or 文字列代入文
 		//SETS,//文字列代入文
 		PRINT,//文字を表示する
@@ -356,5 +355,21 @@ namespace MinorShift.Emuera.GameProc.Function
 		PRINT_SPACE,
 
 		INPUTMOUSEKEY,
+
+        #region EE
+        PLAYSOUND,
+		STOPSOUND,
+		PLAYBGM,
+        STOPBGM,
+        SETSOUNDVOLUME,
+        SETBGMVOLUME,
+		TRYCALLF,
+		TRYCALLFORMF,
+		UPDATECHECK,
+		QUIT_AND_RESTART,
+		FORCE_QUIT,
+		FORCE_QUIT_AND_RESTART,
+		FORCE_BEGIN,
+		#endregion
 	}
 }

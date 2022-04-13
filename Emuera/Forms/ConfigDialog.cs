@@ -51,8 +51,6 @@ namespace MinorShift.Emuera.Forms
 
 		private void buttonSave_Click(object sender, EventArgs e)
 		{
-			_Library.Sys.WriteEnable = true;
-
 			SaveConfig();
 			Result = ConfigDialogResult.Save;
 			this.Close();
@@ -60,8 +58,6 @@ namespace MinorShift.Emuera.Forms
 
 		private void buttonReboot_Click(object sender, EventArgs e)
 		{
-			_Library.Sys.WriteEnable = true;
-
 			SaveConfig();
 			Result = ConfigDialogResult.SaveReboot;
 			this.Close();
@@ -98,18 +94,18 @@ namespace MinorShift.Emuera.Forms
 			colorBox.SelectingColor = item.Value;
 			colorBox.Enabled = !item.Fixed;
 		}
-		void setTextBox(TextBox textBox, ConfigCode code)
+/*		void setTextBox(TextBox textBox, ConfigCode code)
 		{
 			ConfigItem<string> item = (ConfigItem<string>)ConfigData.Instance.GetConfigItem(code);
 			textBox.Text = item.Value;
 			textBox.Enabled = !item.Fixed;
 		}
-
+*/
 		MainWindow parent = null;
 		public void SetConfig(MainWindow mainWindow)
 		{
 			parent = mainWindow;
-			ConfigData config = ConfigData.Instance;
+			//ConfigData config = ConfigData.Instance;
 			setCheckBox(checkBox1, ConfigCode.IgnoreCase);
 			setCheckBox(checkBox2, ConfigCode.UseRenameFile);
 			setCheckBox(checkBox3, ConfigCode.UseMouse);
@@ -148,6 +144,7 @@ namespace MinorShift.Emuera.Forms
 			setCheckBox(checkBoxCompatiSP, ConfigCode.CompatiSPChara);
 			setCheckBox(checkBox9, ConfigCode.TimesNotRigorousCalculation);
 			setCheckBox(checkBox29, ConfigCode.SystemNoTarget);
+			setCheckBox(checkBox30, ConfigCode.ForbidUpdateCheck);
 			setNumericUpDown(numericUpDown2, ConfigCode.WindowX);
 			setNumericUpDown(numericUpDown3, ConfigCode.WindowY);
 			setNumericUpDown(numericUpDown4, ConfigCode.MaxLog);
@@ -322,6 +319,7 @@ namespace MinorShift.Emuera.Forms
 			config.GetConfigItem(ConfigCode.CompatiSPChara).SetValue<bool>(checkBoxCompatiSP.Checked);
 			config.GetConfigItem(ConfigCode.TimesNotRigorousCalculation).SetValue<bool>(checkBox9.Checked);
 			config.GetConfigItem(ConfigCode.SystemNoTarget).SetValue<bool>(checkBox29.Checked);
+			config.GetConfigItem(ConfigCode.ForbidUpdateCheck).SetValue<bool>(checkBox30.Checked);
 
 
 			config.GetConfigItem(ConfigCode.WindowX).SetValue<int>((int)numericUpDown2.Value);
@@ -610,5 +608,10 @@ namespace MinorShift.Emuera.Forms
         {
             textBox2.Enabled = ((ComboBox)sender).SelectedIndex == 3;
         }
-	}
+
+        private void tabPageSystem2_Click(object sender, EventArgs e)
+        {
+
+        }
+    }
 }
