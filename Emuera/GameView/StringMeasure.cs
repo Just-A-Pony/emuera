@@ -72,6 +72,7 @@ namespace MinorShift.Emuera.GameView
 
 
 		bool disposed = false;
+		[System.Reflection.Obfuscation(Exclude = true)]
 		public void Dispose()
 		{
 			if (disposed)

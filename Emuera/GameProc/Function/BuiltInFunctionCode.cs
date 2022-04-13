@@ -15,20 +15,8 @@ namespace MinorShift.Emuera.GameProc.Function
 		//ただし、式中関数バージョンと命令バージョンで動作が違うなら追加する必要がある。
 
 		__NULL__ = 0x0000,
-        #region EM_私家版_追加命令
-        SETFORM,
-        HTML_SUBSTRING,
-        ENUMFUNCBEGINSWITH,
-        ENUMVARBEGINSWITH,
-        ENUMMACROBEGINSWITH,
-        ENUMFUNCENDSWITH,
-        ENUMVARENDSWITH,
-        ENUMMACROENDSWITH,
-        ENUMFUNCWITH,
-        ENUMVARWITH,
-        ENUMMACROWITH,
-        #endregion
-        SET,//数値代入文 or 文字列代入文
+
+		SET,//数値代入文 or 文字列代入文
 		//SETS,//文字列代入文
 		PRINT,//文字を表示する
 		PRINTL,//改行

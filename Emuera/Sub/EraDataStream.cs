@@ -447,6 +447,7 @@ namespace MinorShift.Emuera.Sub
 		#endregion
 		#region IDisposable メンバ
 
+		[System.Reflection.Obfuscation(Exclude = true)]
 		public void Dispose()
 		{
 			if (reader != null)
@@ -733,6 +734,7 @@ namespace MinorShift.Emuera.Sub
 
 		#region IDisposable メンバ
 
+		[System.Reflection.Obfuscation(Exclude = true)]
 		public void Dispose()
 		{
 			if (writer != null)

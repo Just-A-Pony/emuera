@@ -476,6 +476,7 @@ namespace MinorShift.Emuera.Content
 			font = null;
 		}
 
+		[System.Reflection.Obfuscation(Exclude = true)]
 		public override void Dispose()
 		{
 			this.GDispose();

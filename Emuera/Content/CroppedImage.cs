@@ -41,6 +41,7 @@ namespace MinorShift.Emuera.Content
 		public abstract void GraphicsDraw(Graphics g, Point offset);
 		public abstract void GraphicsDraw(Graphics g, Rectangle destRect);
 		public abstract void GraphicsDraw(Graphics g, Rectangle destRect, ImageAttributes attr);
+		[System.Reflection.Obfuscation(Exclude = true)]
 		public abstract void Dispose();
 		public void Move(Point point){ DestBasePosition.Offset(point); }
 	}
@@ -86,6 +87,7 @@ namespace MinorShift.Emuera.Content
 
 			return bmp.GetPixel(bmpX, bmpY);
 		}
+		[System.Reflection.Obfuscation(Exclude = true)]
 		public override void Dispose()
 		{
 			BaseImage = null;
@@ -175,6 +177,7 @@ namespace MinorShift.Emuera.Content
 				SrcRectangle.Width = rect.Width;
 				SrcRectangle.Height = rect.Height;
 			}
+			[System.Reflection.Obfuscation(Exclude = true)]
 			public void Dispose()
 			{
 				BaseImage = null;
@@ -258,6 +261,7 @@ namespace MinorShift.Emuera.Content
 			get { return true; }
 		}
 
+		[System.Reflection.Obfuscation(Exclude = true)]
 		public override void Dispose()
 		{
 			foreach (var frame in FrameList)

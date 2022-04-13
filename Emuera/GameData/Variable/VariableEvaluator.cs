@@ -81,8 +81,9 @@ namespace MinorShift.Emuera.GameData.Variable
 			//    throw new CodeEE("読み取り専用の変数" + p.Identifier.Name + "に代入しようとしました");
 			if (p.Identifier.IsCalc)
 				return;
-            //一応チェック済み
-            //throw new ExeEE("READONLYでないCALC変数の代入処理が設定されていない");
+			//一応チェック済み
+			//throw new ExeEE("READONLYでないCALC変数の代入処理が設定されていない");
+
 			else
 			{
 				if (p.Identifier.IsArray1D)
@@ -92,16 +93,11 @@ namespace MinorShift.Emuera.GameData.Variable
 					else if (p.Identifier.IsCharacterData)
 						p.Identifier.CheckElement(new Int64[] { p.Index1, p.Index2 });
 				}
-				else if (p.Identifier.IsCharacterData|| p.Identifier.IsArray2D|| p.Identifier.IsArray3D)
+				else if (p.Identifier.IsCharacterData)
 				{
                     p.Identifier.CheckElement(new Int64[] { p.Index1, p.Index2, p.Index3 });
-                }
-                if (p.Identifier.IsArray2D)
-                    p.Identifier.SetValueAll(srcValue, start, end, new int[] { (int)p.Index1 });
-                else if (p.Identifier.IsArray3D)
-                    p.Identifier.SetValueAll(srcValue, start, end, new int[] { (int)p.Index1, (int)p.Index2 });
-                else
-                    p.Identifier.SetValueAll(srcValue, start, end, (int)p.Index1);
+				}
+				p.Identifier.SetValueAll(srcValue, start, end, (int)p.Index1);
 				return;
 			}
 		}
@@ -262,7 +258,7 @@ namespace MinorShift.Emuera.GameData.Variable
             return sum;
 		}
 
-        public string GetJoinedStr(FixedVariableTerm p, string delimiter, Int64 index1, Int64 index2)
+        public string GetJoinedStr(FixedVariableTerm p, string delimiter, Int64 index1, Int64 length)
         {
             string sum = "";
 
@@ -270,35 +266,35 @@ namespace MinorShift.Emuera.GameData.Variable
             {
                 if (p.Identifier.IsArray1D)
                 {
-                    return string.Join(delimiter, (string[])p.Identifier.GetArray(), (int)index1, (int)index2);
+                    return string.Join(delimiter, (string[])p.Identifier.GetArray(), (int)index1, (int)length);
                 }
                 else if (p.Identifier.IsArray2D)
                 {
-                    for (int i = (int)index1; i < (int)index2; i++)
-                        sum += p.Identifier.GetStrValue(GlobalStatic.EMediator, new long[] { p.Index1, i }) + ((i + 1 < (int)index2) ? delimiter : "");
+                    for (int i = 0; i < (int)length; i++)
+                        sum += p.Identifier.GetStrValue(GlobalStatic.EMediator, new long[] { p.Index1, index1 + i }) + ((i < ((int)length - 1)) ? delimiter : "");
                 }
                 else
                 {
-                    for (int i = (int)index1; i < (int)index2; i++)
-                        sum += p.Identifier.GetStrValue(GlobalStatic.EMediator, new long[] { p.Index1, p.Index2, i }) + ((i + 1 < (int)index2) ? delimiter : "");
+                    for (int i = 0; i < (int)length; i++)
+                        sum += p.Identifier.GetStrValue(GlobalStatic.EMediator, new long[] { p.Index1, p.Index2, index1 + i }) + ((i < ((int)length - 1)) ? delimiter : "");
                 }
             }
             else
             {
                 if (p.Identifier.IsArray1D)
                 {
-                    for (int i = (int)index1; i < (int)index2; i++)
-                        sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] {  i })).ToString() + ((i + 1 < (int)index2) ? delimiter : "");
+                    for (int i = 0; i < (int)length; i++)
+                        sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] {  index1 + i })).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
                 }
                 else if (p.Identifier.IsArray2D)
                 {
-                    for (int i = (int)index1; i < (int)index2; i++)
-                        sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { p.Index1, i })).ToString() + ((i + 1 < (int)index2) ? delimiter : "");
+                    for (int i = 0; i < (int)length; i++)
+                        sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { p.Index1, index1 + i })).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
                 }
                 else
                 {
-                    for (int i = (int)index1; i < (int)index2; i++)
-                        sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { p.Index1, p.Index2, i })).ToString() + ((i + 1 < (int)index2) ? delimiter : "");
+                    for (int i = 0; i < (int)length; i++)
+                        sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { p.Index1, p.Index2, index1 + i })).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
                 }
             }
             return sum;
@@ -2451,6 +2447,7 @@ namespace MinorShift.Emuera.GameData.Variable
 		#endregion
 		#region IDisposable メンバ
 
+		[System.Reflection.Obfuscation(Exclude = true)]
 		public void Dispose()
 		{
 			varData.Dispose();

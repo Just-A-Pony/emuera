@@ -48,12 +48,13 @@ namespace MinorShift.Emuera.GameView
 			switch (type)
 			{
 				case "space":
-                    //本家版 if (paramPixel.Length == 1 && paramPixel[0] >= 0)
-                    #region EM_私家版_space制限解除
-                    if (paramPixel.Length == 1 && paramPixel[0] != 0)
-                    #endregion
-                    {
-                        rectF = new RectangleF(0, 0, paramPixel[0], lineHeight);
+					
+					#region EM_私家版_space制限解除
+					// if (paramPixel.Length == 1 && paramPixel[0] >= 0)
+					if (paramPixel.Length == 1)
+					#endregion
+					{
+						rectF = new RectangleF(0, 0, paramPixel[0], lineHeight);
 						ret = new ConsoleSpacePart(rectF);
 					}
 					break;

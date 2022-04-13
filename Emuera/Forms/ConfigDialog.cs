@@ -51,6 +51,8 @@ namespace MinorShift.Emuera.Forms
 
 		private void buttonSave_Click(object sender, EventArgs e)
 		{
+			_Library.Sys.WriteEnable = true;
+
 			SaveConfig();
 			Result = ConfigDialogResult.Save;
 			this.Close();
@@ -58,6 +60,8 @@ namespace MinorShift.Emuera.Forms
 
 		private void buttonReboot_Click(object sender, EventArgs e)
 		{
+			_Library.Sys.WriteEnable = true;
+
 			SaveConfig();
 			Result = ConfigDialogResult.SaveReboot;
 			this.Close();

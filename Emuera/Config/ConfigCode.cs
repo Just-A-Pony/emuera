@@ -150,6 +150,8 @@ namespace MinorShift.Emuera
 
 		UseKeyMacro = 162,
 
-        ValidExtension = 200,
-    }
+		#region EM_私家版_LoadText＆SaveText機能拡張
+		ValidExtension = 200,
+		#endregion
+	}
 }

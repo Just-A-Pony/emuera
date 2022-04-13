@@ -83,6 +83,7 @@ namespace MinorShift.Emuera.Forms
 
 		private void SaveConfig()
 		{
+			_Library.Sys.WriteEnable = true;
 
 			//ConfigData config = ConfigData.Instance.Copy();
 			ConfigData config = ConfigData.Instance;

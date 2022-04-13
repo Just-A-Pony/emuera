@@ -126,9 +126,12 @@ namespace MinorShift.Emuera
             //一文字変数の禁止オプションを考えた名残
 		   //ForbidOneCodeVariable = instance.GetConfigValue<bool>(ConfigCode.ForbidOneCodeVariable);
 		   SystemNoTarget = instance.GetConfigValue<bool>(ConfigCode.SystemNoTarget);
-            ValidExtension = instance.GetConfigValue<List<string>>(ConfigCode.ValidExtension);
 
-            UseLanguage lang = instance.GetConfigValue<UseLanguage>(ConfigCode.useLanguage);
+			#region EM_私家版_LoadText＆SaveText機能拡張
+			ValidExtension = instance.GetConfigValue<List<string>>(ConfigCode.ValidExtension);
+			#endregion
+
+			UseLanguage lang = instance.GetConfigValue<UseLanguage>(ConfigCode.useLanguage);
             switch (lang)
             {
                 case UseLanguage.JAPANESE:
@@ -171,9 +174,9 @@ namespace MinorShift.Emuera
 			if (TextDrawingMode != TextDrawingMode.WINAPI)
 				DrawingParam_ShapePositionShift = Math.Max(2, FontSize / 6);
 			DrawableWidth = WindowX - DrawingParam_ShapePositionShift;
-			ForceSavDir = Program.ExeDir + "sav\\";
+			ForceSavDir = Program.ExeDir + "sav" + Path.DirectorySeparatorChar;
 			if (UseSaveFolder)
-				SavDir = Program.ExeDir + "sav\\";
+				SavDir = Program.ExeDir + "sav" + Path.DirectorySeparatorChar;
 			else
 				SavDir = Program.ExeDir;
 			if (UseSaveFolder && !Directory.Exists(SavDir))
@@ -246,6 +249,11 @@ namespace MinorShift.Emuera
 
 		private static void createSavDirAndMoveFiles()
 		{
+			if (!Sys.WriteEnable)
+			{
+				MessageBox.Show("savフォルダの作成に失敗しました (書き込み禁止)", "フォルダ作成失敗");
+				return;
+			}
 			try
 			{
 				Directory.CreateDirectory(SavDir);
@@ -263,9 +271,10 @@ namespace MinorShift.Emuera
 			if (result != DialogResult.Yes)
 				return;
 			//ダイアログが開いている間にフォルダを消してしまうような邪悪なユーザーがいるかもしれない
+			// 2021/03/08 by M: セキュリティチェックに引っかかったかもね
 			if (!Directory.Exists(SavDir))
 			{
-				MessageBox.Show("savフォルダの作成が見当たりません", "フォルダ作成失敗");
+				MessageBox.Show("作成したsavフォルダが見当たりません", "フォルダ作成失敗");
 				return;
 			}
 			//ダイアログが開いている間にファイルを変更するような邪悪なユーザーがいるかもしれない
@@ -367,8 +376,8 @@ namespace MinorShift.Emuera
 					RelativePath = dir;
 				else
 					RelativePath = dir.Substring(rootdir.Length);//前方が検索ルートパスと一致するならその部分を切り取る
-				if (!RelativePath.EndsWith("\\") && !RelativePath.EndsWith("/"))
-					RelativePath += "\\";//末尾が\又は/で終わるように。後でFile名を直接加算できるようにしておく
+				if (RelativePath[RelativePath.Length-1] != Path.DirectorySeparatorChar && RelativePath[RelativePath.Length-1] != Path.AltDirectorySeparatorChar)
+					RelativePath += Path.DirectorySeparatorChar;//末尾が\又は/で終わるように。後でFile名を直接加算できるようにしておく
 			}
 			//filepathsは完全パスである
 			string[] filepaths = Directory.GetFiles(dir, pattern, SearchOption.TopDirectoryOnly);
@@ -557,8 +566,7 @@ namespace MinorShift.Emuera
 			PalamLvDef = instance.GetConfigValue<List<Int64>>(ConfigCode.PalamLvDef);
 			PbandDef = instance.GetConfigValue<Int64>(ConfigCode.pbandDef);
             RelationDef = instance.GetConfigValue<Int64>(ConfigCode.RelationDef);
-            ValidExtension = instance.GetConfigValue<List<string>>(ConfigCode.ValidExtension);
-        }
+		}
 
 		public static string MoneyLabel { get; private set; }
 		public static bool MoneyFirst { get; private set; }
@@ -576,10 +584,11 @@ namespace MinorShift.Emuera
 		public static List<Int64> PalamLvDef { get; private set; }
 		public static Int64 PbandDef { get; private set; }
         public static Int64 RelationDef { get; private set; }
-        public static List<string> ValidExtension { get; private set; }
 		#endregion
-		
-		
-		
+
+		#region EM_私家版_LoadText＆SaveText機能拡張
+		public static List<string> ValidExtension { get; private set; }
+		#endregion
+
 	}
 }

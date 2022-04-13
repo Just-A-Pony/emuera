@@ -20,17 +20,17 @@ namespace MinorShift.Emuera.GameView
 		private readonly PrintStringBuffer printBuffer;
 		readonly StringMeasure stringMeasure = new StringMeasure();
 
-        #region EM_私家版_StringMeasure獲得
-        public StringMeasure StrMeasure
-        {
-            get
-            {
-                return stringMeasure;
-            }
-        }
-        #endregion
+		#region EM_私家版_StringMeasure獲得
+		public StringMeasure StrMeasure
+		{
+			get
+			{
+				return stringMeasure;
+			}
+		}
+		#endregion
 
-        public void ClearDisplay()
+		public void ClearDisplay()
 		{
 			displayLineList.Clear();
 			logicalLineCount = 0;
@@ -616,7 +616,7 @@ namespace MinorShift.Emuera.GameView
 			{
 				if (window.Created)
 				{
-					PrintSystemLine("※※※ログファイルを" + filename + "に出力しました※※※");
+					PrintSystemLine("※※※ログファイルを" + filename.Replace(Program.ExeDir, "") + "に出力しました※※※");
 					RefreshStrings(true);
 				}
 				return true;

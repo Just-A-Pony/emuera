@@ -248,6 +248,16 @@ namespace MinorShift.Emuera.GameView
 			}
 		}
 
+		#region EM_私家版_INPUT系機能拡張
+		internal bool IsWaintingInputWithMouse
+		{
+			get
+			{
+				return (state == ConsoleState.WaitInput && inputReq.MouseInput);
+			}
+		}
+		#endregion
+
 		internal bool IsInProcess
 		{
 			get
@@ -298,15 +308,7 @@ namespace MinorShift.Emuera.GameView
             }
         }
 
-        internal bool IsWaintingInputWithMouse
-        {
-            get
-            {
-                return (state == ConsoleState.WaitInput && inputReq.MouseInput);
-            }
-        }
-
-        internal bool IsRunningTimer
+		internal bool IsRunningTimer
 		{
 			get
 			{
@@ -1328,9 +1330,30 @@ namespace MinorShift.Emuera.GameView
 						window.ToolTip.SetToolTip(window.MainPicBox, title);
                     else
                     {
-                        Point mousePos = window.MainPicBox.PointToClient(MainWindow.MousePosition);
-						window.ToolTip.Show(title, window.MainPicBox, new Point(mousePos.X, mousePos.Y + 18), tooltip_duration);
-                    }
+						if (window.ToolTip.InitialDelay == 0)
+						{
+							Point mousePos = window.MainPicBox.PointToClient(MainWindow.MousePosition);
+							window.ToolTip.Show(title, window.MainPicBox, new Point(mousePos.X, mousePos.Y + 18), tooltip_duration);
+						}
+						else
+						{
+							System.Threading.SynchronizationContext context = System.Threading.SynchronizationContext.Current;
+							System.Threading.Tasks.Task.Run(async () =>
+							{
+								ConsoleButtonString savedPointingString = pointingString;
+								await System.Threading.Tasks.Task.Delay(window.ToolTip.InitialDelay);
+								context.Post((state) =>
+								{
+									MoveMouse(GetMousePosition());
+									if (lastPointingString == savedPointingString)
+									{
+										Point mousePos = window.MainPicBox.PointToClient(MainWindow.MousePosition);
+										window.ToolTip.Show(title, window.MainPicBox, new Point(mousePos.X, mousePos.Y + 18), tooltip_duration);
+									}
+								}, null);
+							});
+						}
+					}
 					tooltipUsed = true;
 				}
 				lastPointingString = pointingString;
@@ -1585,7 +1608,7 @@ namespace MinorShift.Emuera.GameView
 			//クライアント左上基準の座標取得
 			Point pos = window.MainPicBox.PointToClient(Cursor.Position);
 			//クライアント左下基準の座標に置き換え
-			pos.Y = pos.Y - ClientHeight;
+			pos.Y -= ClientHeight;
 			return pos;
 		}
 
@@ -1765,6 +1788,8 @@ namespace MinorShift.Emuera.GameView
 			//}
             forceStopTimer();
 			ClearDisplay();
+			//動的作成の分だけは削除する
+			AppContents.UnloadGraphicList();
             redraw = ConsoleRedraw.Normal;
             UseUserStyle = false;
             userStyle = new StringStyle(Config.ForeColor, FontStyle.Regular, null);
@@ -1914,6 +1939,7 @@ namespace MinorShift.Emuera.GameView
                 redraw = ConsoleRedraw.None;
         }
 
+		[System.Reflection.Obfuscation(Exclude = true)]
 		public void Dispose()
 		{
 			if(timer != null)

@@ -14,166 +14,8 @@ namespace MinorShift.Emuera.GameProc.Function
 {
 	internal sealed partial class FunctionIdentifier
 	{
-        //本家版
-        //private sealed class CLEARLINE_Instruction : AbstractInstruction
-        //{
-        //	public CLEARLINE_Instruction()
-        //	{
-        //		ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
-        //		flag = METHOD_SAFE | EXTENDED | IS_PRINT;
-        //	}
-        //	public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-        //	{
-        //		ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
-        //		Int32 delNum = (Int32)intExpArg.Term.GetIntValue(exm);
-        //		exm.Console.deleteLine(delNum);
-        //		exm.Console.RefreshStrings(false);
-        //	}
-        //}
-        #region EM_私家版_追加命令
-        private sealed class CLEARLINE_Instruction : AbstractInstruction
-        {
-            public CLEARLINE_Instruction()
-            {
-                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_CLEARLINE);
-                flag = METHOD_SAFE | EXTENDED | IS_PRINT;
-            }
-            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-            {
-                SpClearLineArgment intExpArg = (SpClearLineArgment)func.Argument;
-                Int32 delNum = (Int32)intExpArg.Lines.GetIntValue(exm);
-                exm.Console.deleteLine(delNum);
-                if (intExpArg.Refresh.GetIntValue(exm) != 0) exm.Console.RefreshStrings(false);
-            }
-        }
-
-        private sealed class HTML_SUBSTRING_Instruction : AbstractInstruction
-        {
-            public HTML_SUBSTRING_Instruction()
-            {
-                flag = EXTENDED | METHOD_SAFE;
-                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_HTMLSUBSTRING);
-            }
-
-            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-            {
-                SpHtmlSubStringArgument arg = (SpHtmlSubStringArgument)func.Argument;
-                string str = arg.TargetStr.GetStrValue(exm);
-                string[] strs = MinorShift.Emuera.GameView.HtmlManager.HtmlSubString(str, (int)arg.Length.GetIntValue(exm));
-                string[] output = GlobalStatic.Process.VEvaluator.RESULTS_ARRAY;
-                int outputlength = Math.Min(output.Length, strs.Length);
-                Array.Copy(strs, output, outputlength);
-            }
-        }
-
-        private sealed class ENUMIDS_Instruction : AbstractInstruction
-        {
-            public enum Type
-            {
-                Function,
-                Variable,
-                Macro
-            }
-            public enum Action
-            {
-                BeginsWith,
-                EndsWith,
-                With
-            }
-            public ENUMIDS_Instruction(Type type, Action act)
-            {
-                flag = EXTENDED | METHOD_SAFE;
-                this.type = type;
-                this.action = act;
-                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.STR_EXPRESSION);
-            }
-
-            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-            {
-                string arg = ((ExpressionArgument)func.Argument).Term.GetStrValue(exm);
-                string[] array = null;
-                switch (type)
-                {
-                    case Type.Function:
-                        array = GlobalStatic.Process.LabelDictionary.NoneventKeys;
-                        break;
-                    case Type.Variable:
-                        array = GlobalStatic.IdentifierDictionary.VarKeys;
-                        break;
-                    case Type.Macro:
-                        array = GlobalStatic.IdentifierDictionary.MacroKeys;
-                        break;
-                }
-                List<string> strs = new List<string>();
-                if (arg.Length > 0)
-                    foreach (string item in array)
-                    {
-                        if (item.Length < arg.Length) continue;
-                        switch (action)
-                        {
-                            case Action.BeginsWith:
-                                if (item.IndexOf(arg) == 0) strs.Add(item);
-                                break;
-                            case Action.EndsWith:
-                                if (item.LastIndexOf(arg) == item.Length - arg.Length) strs.Add(item);
-                                break;
-                            case Action.With:
-                                if (item.IndexOf(arg) >= 0) strs.Add(item);
-                                break;
-                        }
-                    }
-                strs.Sort();
-                string[] output = GlobalStatic.Process.VEvaluator.RESULTS_ARRAY;
-                string[] ret = strs.ToArray();
-                int outputlength = Math.Min(output.Length, ret.Length);
-                Int64[] var = GlobalStatic.Process.VEvaluator.RESULT_ARRAY;
-                var[0] = outputlength;
-                Array.Copy(ret, output, outputlength);
-            }
-
-            private Type type;
-            private Action action;
-        }
-
-        private sealed class SETFORM_Instruction : AbstractInstruction
-        {
-            public SETFORM_Instruction()
-            {
-                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_SETFORM);
-                flag = METHOD_SAFE | EXTENDED;
-            }
-            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-            {
-                if (func.Argument is SpSetFormArgment)
-                {
-                    SpSetFormArgment arg = (SpSetFormArgment)func.Argument;
-                    WordCollection wc = LexicalAnalyzer.Analyse(new StringStream(arg.Varname.GetStrValue(exm)), LexEndWith.EoL, LexAnalyzeFlag.None);
-                    IOperandTerm term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
-                    if (term is VariableTerm)
-                    {
-                        VariableTerm var = (VariableTerm)term;
-
-                        if (var.Identifier == null)
-                            throw new CodeEE("第1引数が変数ではありません");
-                        if (var.Identifier.IsConst)
-                            throw new CodeEE("第1引数はCONSTです");
-                        if (arg.RowArg.IsInteger)
-                            var.SetValue(arg.RowArg.GetIntValue(exm), exm);
-                        else
-                            var.SetValue(arg.RowArg.GetStrValue(exm), exm);
-                    }
-                    else
-                        throw new CodeEE("第1引数が変数ではありません");
-
-                    return;
-                }
-
-            }
-        }
-        #endregion
-
-        #region normalFunction
-        private sealed class PRINT_Instruction : AbstractInstruction
+		#region normalFunction
+		private sealed class PRINT_Instruction : AbstractInstruction
 		{
 			public PRINT_Instruction(string name)
 			{
@@ -264,8 +106,8 @@ namespace MinorShift.Emuera.GameProc.Function
 			readonly bool isForms;
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                if (GlobalStatic.Process.SkipPrint)
-                    return;
+				if (GlobalStatic.Process.SkipPrint)
+					return;
 				exm.Console.UseUserStyle = true;
 				exm.Console.UseSetColorStyle = !func.Function.IsPrintDFunction();
 				string str = null;
@@ -347,9 +189,9 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                if (GlobalStatic.Process.SkipPrint)
-                    return;
-                exm.Console.UseUserStyle = true;
+				if (GlobalStatic.Process.SkipPrint)
+					return;
+				exm.Console.UseUserStyle = true;
 				exm.Console.UseSetColorStyle = !func.Function.IsPrintDFunction();
 				//表示データが空なら何もしないで飛ぶ
 				if (func.dataList.Count == 0)
@@ -404,9 +246,9 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                if (GlobalStatic.Process.SkipPrint)
-                    return;
-                string str = null;
+				if (GlobalStatic.Process.SkipPrint)
+					return;
+				string str = null;
 				if (func.Argument.IsConst)
 					str = func.Argument.ConstStr;
 				else
@@ -453,9 +295,9 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                if (GlobalStatic.Process.SkipPrint)
-                    return;
-                string str = null;
+				if (GlobalStatic.Process.SkipPrint)
+					return;
+				string str = null;
 				if (func.Argument.IsConst)
 					str = func.Argument.ConstStr;
 				else
@@ -474,9 +316,9 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                if (GlobalStatic.Process.SkipPrint)
-                    return;
-                ExpressionArrayArgument intExpArg = (ExpressionArrayArgument)func.Argument;
+				if (GlobalStatic.Process.SkipPrint)
+					return;
+				ExpressionArrayArgument intExpArg = (ExpressionArrayArgument)func.Argument;
 				int[] param = new int[intExpArg.TermList.Length];
 				for (int i = 0; i < intExpArg.TermList.Length; i++)
 					param[i] = FunctionIdentifier.toUInt32inArg(intExpArg.TermList[i].GetIntValue(exm), "PRINT_RECT", i + 1);
@@ -495,9 +337,9 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                if (GlobalStatic.Process.SkipPrint)
-                    return;
-                Int64 param;
+				if (GlobalStatic.Process.SkipPrint)
+					return;
+				Int64 param;
 				if (func.Argument.IsConst)
 					param = func.Argument.ConstInt;
 				else
@@ -643,9 +485,23 @@ namespace MinorShift.Emuera.GameProc.Function
 			}
 		}
 
-        
+        private sealed class CLEARLINE_Instruction : AbstractInstruction
+        {
+            public CLEARLINE_Instruction()
+            {
+                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
+                flag = METHOD_SAFE | EXTENDED | IS_PRINT;
+            }
+            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+            {
+                ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
+                Int32 delNum = (Int32)intExpArg.Term.GetIntValue(exm);
+                exm.Console.deleteLine(delNum);
+                exm.Console.RefreshStrings(false);
+            }
+        }
 
-		private sealed class STRLEN_Instruction : AbstractInstruction
+        private sealed class STRLEN_Instruction : AbstractInstruction
 		{
 			public STRLEN_Instruction(bool argisform, bool unicode)
 			{
@@ -767,24 +623,36 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                SpInputsArgument arg = (SpInputsArgument)func.Argument;
+				#region EM_私家版_INPUT系機能拡張
+				//ExpressionArgument arg = (ExpressionArgument)func.Argument;
+				//InputRequest req = new InputRequest();
+				//req.InputType = InputType.IntValue;
+				//if (arg.Term != null)
+				//{
+				//	Int64 def;
+				//	if (arg.IsConst)
+				//		def = arg.ConstInt;
+				//	else
+				//		def = arg.Term.GetIntValue(exm);
+				//	req.HasDefValue = true;
+				//	req.DefIntValue = def;
+				//}
+				SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();
 				req.InputType = InputType.IntValue;
 				if (arg.Def != null)
 				{
 					Int64 def;
-					if (arg.IsConst)
-						def = arg.ConstInt;
-					else
-						def = arg.Def.GetIntValue(exm);
+					def = arg.Def.GetIntValue(exm);
 					req.HasDefValue = true;
 					req.DefIntValue = def;
-                }
-                if (arg.Mouse != null)
-                {
-                    req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
-                }
-                exm.Console.WaitInput(req);
+				}
+				if (arg.Mouse != null)
+				{
+					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
+				}
+				#endregion
+				exm.Console.WaitInput(req);
 			}
 		}
 		private sealed class INPUTS_Instruction : AbstractInstruction
@@ -797,24 +665,36 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                SpInputsArgument arg = (SpInputsArgument)func.Argument;
+				//ExpressionArgument arg = (ExpressionArgument)func.Argument;
+				//InputRequest req = new InputRequest();
+				//req.InputType = InputType.StrValue;
+				//if (arg.Term != null)
+				//{
+				//	string def;
+				//	if (arg.IsConst)
+				//		def = arg.ConstStr;
+				//	else
+				//		def = arg.Term.GetStrValue(exm);
+				//	req.HasDefValue = true;
+				//	req.DefStrValue = def;
+				//}
+				#region EM_私家版_INPUT系機能拡張
+				SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();
 				req.InputType = InputType.StrValue;
 				if (arg.Def != null)
 				{
 					string def;
-					if (arg.IsConst)
-						def = arg.ConstStr;
-					else
-						def = arg.Def.GetStrValue(exm);
+					def = arg.Def.GetStrValue(exm);
 					req.HasDefValue = true;
 					req.DefStrValue = def;
-                }
-                if (arg.Mouse != null)
-                {
-                    req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
-                }
-                exm.Console.WaitInput(req);
+				}
+				if (arg.Mouse != null)
+				{
+					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
+				}
+				#endregion
+				exm.Console.WaitInput(req);
 			}
 		}
 
@@ -828,34 +708,45 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                SpInputsArgument arg = (SpInputsArgument)func.Argument;
+				#region EM_私家版_INPUT系機能拡張＆ONEINPUT系制限解除
+				//ExpressionArgument arg = (ExpressionArgument)func.Argument;
+				//InputRequest req = new InputRequest();
+				//req.InputType = InputType.IntValue;
+				//req.OneInput = true;
+				//if (arg.Term != null)
+				//{
+				//	//TODO:二文字以上セットできるようにするかエラー停止するか
+				//	//少なくともONETINPUTとの仕様を統一すべき
+				//	Int64 def;
+				//	if (arg.IsConst)
+				//		def = arg.ConstInt;
+				//	else
+				//		def = arg.Term.GetIntValue(exm);
+				//	if (def > 9)
+				//		def = Int64.Parse(def.ToString().Remove(1));
+				//	if (def >= 0)
+				//	{
+				//		req.HasDefValue = true;
+				//		req.DefIntValue = def;
+				//	}
+				//}
+				SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();
 				req.InputType = InputType.IntValue;
 				req.OneInput = true;
 				if (arg.Def != null)
 				{
-					//TODO:二文字以上セットできるようにするかエラー停止するか
-					//少なくともONETINPUTとの仕様を統一すべき
 					Int64 def;
-					if (arg.IsConst)
-						def = arg.ConstInt;
-					else
-						def = arg.Def.GetIntValue(exm);
-                    //if (def > 9)
-                    //	def = Int64.Parse(def.ToString().Remove(1));
-                    //if (def >= 0)
-                    //{
-                    //	req.HasDefValue = true;
-                    //	req.DefIntValue = def;
-                    //}
-                    req.HasDefValue = true;
-                    req.DefIntValue = def;
-                }
-                if (arg.Mouse != null)
-                {
-                   req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
-                }
-                GlobalStatic.Process.InputInteger(1, 0);
+					def = arg.Def.GetIntValue(exm);
+					req.HasDefValue = true;
+					req.DefIntValue = def;
+				}
+				if (arg.Mouse != null)
+				{
+					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
+				}
+				GlobalStatic.Process.InputInteger(1, 0);
+				#endregion
 				exm.Console.WaitInput(req);
 			}
 		}
@@ -870,33 +761,44 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                SpInputsArgument arg = (SpInputsArgument)func.Argument;
+				#region EM_私家版_INPUT系機能拡張＆ONEINPUT系制限解除
+				//ExpressionArgument arg = (ExpressionArgument)func.Argument;
+				//InputRequest req = new InputRequest();
+				//req.InputType = InputType.StrValue;
+				//req.OneInput = true;
+				//if (arg.Term != null)
+				//{
+				//	string def;
+				//	if (arg.IsConst)
+				//		def = arg.ConstStr;
+				//	else
+				//		def = arg.Term.GetStrValue(exm);
+				//	if (def.Length > 1)
+				//		def = def.Remove(1);
+				//	if (def.Length > 0)
+				//	{
+				//		req.HasDefValue = true;
+				//		req.DefStrValue = def;
+				//	}
+				//}
+				SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();
 				req.InputType = InputType.StrValue;
 				req.OneInput = true;
 				if (arg.Def != null)
 				{
 					string def;
-					if (arg.IsConst)
-						def = arg.ConstStr;
-					else
-						def = arg.Def.GetStrValue(exm);
-                    //if (def.Length > 1)
-                    //	def = def.Remove(1);
-                    //if (def.Length > 0)
-                    //{
-                    //	req.HasDefValue = true;
-                    //	req.DefStrValue = def;
-                    //}
-                    req.HasDefValue = true;
-                    req.DefStrValue = def;
-                }
-                if (arg.Mouse != null)
-                {
-                   req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
-                }
-                GlobalStatic.Process.InputInteger(1, 0);
-                exm.Console.WaitInput(req);
+					def = arg.Def.GetStrValue(exm);
+					req.HasDefValue = true;
+					req.DefStrValue = def;
+				}
+				if (arg.Mouse != null)
+				{
+					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
+				}
+				GlobalStatic.Process.InputInteger(1, 0);
+				#endregion
+				exm.Console.WaitInput(req);
 			}
 		}
 
@@ -920,6 +822,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				Int64 x = tinputarg.Time.GetIntValue(exm);
 				Int64 y = tinputarg.Def.GetIntValue(exm);
 				//TODO:ONEINPUTと標準の値を統一
+				#region EM_私家版_INPUT系機能拡張
 				//if (isOne)
 				//{
 				//	if (y < 0)
@@ -927,17 +830,20 @@ namespace MinorShift.Emuera.GameProc.Function
 				//	if (y >= 10)
 				//		y = y / (long)(Math.Pow(10.0, Math.Log10((double)y)));
 				//}
-                if (tinputarg.Mouse != null)
-                {
-                    req.MouseInput = tinputarg.Mouse.GetIntValue(exm) == 1;
-                }
-                Int64 z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
+				if (tinputarg.Mouse != null)
+				{
+					req.MouseInput = tinputarg.Mouse.GetIntValue(exm) == 1;
+				}
+				#endregion
+				Int64 z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
 				req.Timelimit = x;
 				req.DefIntValue = y;
 				req.DisplayTime = z != 0;
 				req.TimeUpMes = (tinputarg.Timeout != null) ? tinputarg.Timeout.GetStrValue(exm) : Config.TimeupLabel;
-                GlobalStatic.Process.InputInteger(1, 0);
-                exm.Console.WaitInput(req);
+				#region EM_私家版_INPUT系機能拡張
+				GlobalStatic.Process.InputInteger(1, 0);
+				#endregion
+				exm.Console.WaitInput(req);
 			}
 		}
 
@@ -959,19 +865,23 @@ namespace MinorShift.Emuera.GameProc.Function
 				req.OneInput = isOne;
 				Int64 x = tinputarg.Time.GetIntValue(exm);
 				string strs = tinputarg.Def.GetStrValue(exm);
-                //if (isOne && strs.Length > 1)
-                //	strs = strs.Remove(1);
-                if (tinputarg.Mouse != null)
-                {
-                    req.MouseInput = tinputarg.Mouse.GetIntValue(exm) == 1;
-                }
-                Int64 z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
+				#region EM_私家版_INPUT系機能拡張
+				//if (isOne && strs.Length > 1)
+				//	strs = strs.Remove(1);
+				if (tinputarg.Mouse != null)
+				{
+					req.MouseInput = tinputarg.Mouse.GetIntValue(exm) == 1;
+				}
+				#endregion
+				Int64 z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
 				req.Timelimit = x;
 				req.DefStrValue = strs;
 				req.DisplayTime = z != 0;
 				req.TimeUpMes = (tinputarg.Timeout != null) ? tinputarg.Timeout.GetStrValue(exm) : Config.TimeupLabel;
-                GlobalStatic.Process.InputInteger(1, 0);
-                exm.Console.WaitInput(req);
+				#region EM_私家版_INPUT系機能拡張
+				GlobalStatic.Process.InputInteger(1, 0);
+				#endregion
+				exm.Console.WaitInput(req);
 			}
 		}
 
@@ -1070,27 +980,27 @@ namespace MinorShift.Emuera.GameProc.Function
 			{
 				SpTimesArgument timesArg = (SpTimesArgument)func.Argument;
 				VariableTerm var = timesArg.VariableDest;
-                if (Config.TimesNotRigorousCalculation)
-                {
-                    double d = (double)var.GetIntValue(exm) * timesArg.DoubleValue;
-                    unchecked
-                    {
-                        var.SetValue((Int64)d, exm);
-                    }
-                }
-                else
-                {
-                    decimal d = var.GetIntValue(exm) * (decimal)timesArg.DoubleValue;
-                    unchecked
-                    {
-                        //decimal型は強制的にOverFlowExceptionを投げるので対策が必要
-                        //OverFlowの場合は昔の挙動に近づけてみる
-                        if (d <= Int64.MaxValue && d >= Int64.MinValue)
-                            var.SetValue((Int64)d, exm);
-                        else
-                            var.SetValue((Int64)((double)d), exm);
-                    }
-                }
+				if (Config.TimesNotRigorousCalculation)
+				{
+					double d = (double)var.GetIntValue(exm) * timesArg.DoubleValue;
+					unchecked
+					{
+						var.SetValue((Int64)d, exm);
+					}
+				}
+				else
+				{
+					decimal d = var.GetIntValue(exm) * (decimal)timesArg.DoubleValue;
+					unchecked
+					{
+						//decimal型は強制的にOverFlowExceptionを投げるので対策が必要
+						//OverFlowの場合は昔の挙動に近づけてみる
+						if (d <= Int64.MaxValue && d >= Int64.MinValue)
+							var.SetValue((Int64)d, exm);
+						else
+							var.SetValue((Int64)((double)d), exm);
+					}
+				}
 			}
 		}
 
@@ -1313,27 +1223,21 @@ namespace MinorShift.Emuera.GameProc.Function
 				FixedVariableTerm p = var.GetFixedVariableTerm(exm);
 				int start = 0;
 				int end = 0;
-                //endを先に取って判定の処理変更
-                if (spvarsetarg.End != null)
-                    end = (int)spvarsetarg.End.GetIntValue(exm);
-                else if (var.Identifier.IsArray1D)
-                    end = (int)var.GetLength();
-                else if (var.Identifier.IsArray2D)
-                    end = (int)var.GetLength(1);
-                else if (var.Identifier.IsArray3D)
-                    end = (int)var.GetLength(2);
-                if (spvarsetarg.Start != null)
-                {
-                    start = (int)spvarsetarg.Start.GetIntValue(exm);
-                    if (start > end)
-                    {
-                        int temp = start;
-                        start = end;
-                        end = start;
-                    }
-                }
-                else if (var.Identifier.IsArray3D || var.Identifier.IsArray2D)
-                    start = -1;
+				//endを先に取って判定の処理変更
+				if (spvarsetarg.End != null)
+					end = (int)spvarsetarg.End.GetIntValue(exm);
+				else if (var.Identifier.IsArray1D)
+					end = (int)var.GetLength();
+				if (spvarsetarg.Start != null)
+				{
+					start = (int)spvarsetarg.Start.GetIntValue(exm);
+					if (start > end)
+					{
+						int temp = start;
+						start = end;
+						end = temp;
+					}
+				}
 				if (var.IsString)
 				{
 					string src = spvarsetarg.Term.GetStrValue(exm);
@@ -1381,7 +1285,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				{
 					int temp = start;
 					start = end;
-					end = start;
+					end = temp;
 				}
 				if (!p.Identifier.IsCharacterData)
 					throw new CodeEE("命令CVARSETにキャラクタ変数でない変数" + p.Identifier.Name + "が渡されました");
@@ -1775,29 +1679,29 @@ namespace MinorShift.Emuera.GameProc.Function
 			}
 		}
 
-        private sealed class TOOLTIP_SETDURATION_Instruction : AbstractInstruction
-        {
-            public TOOLTIP_SETDURATION_Instruction()
-            {
-                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
-                flag = METHOD_SAFE | EXTENDED;
-            }
-            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-            {
-                ExpressionArgument arg = (ExpressionArgument)func.Argument;
-                long duration = 0;
-                if (arg.IsConst)
-                    duration = arg.ConstInt;
-                else
-                    duration = arg.Term.GetIntValue(exm);
-                if (duration < 0 || duration > int.MaxValue)
-                    throw new CodeEE("引数の値が適切な範囲外です");
-                if (duration > short.MaxValue)
-                    duration = short.MaxValue;
-                exm.Console.SetToolTipDuration((int)duration);
-                return;
-            }
-        }
+		private sealed class TOOLTIP_SETDURATION_Instruction : AbstractInstruction
+		{
+			public TOOLTIP_SETDURATION_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
+				flag = METHOD_SAFE | EXTENDED;
+			}
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				ExpressionArgument arg = (ExpressionArgument)func.Argument;
+				long duration = 0;
+				if (arg.IsConst)
+					duration = arg.ConstInt;
+				else
+					duration = arg.Term.GetIntValue(exm);
+				if (duration < 0 || duration > int.MaxValue)
+					throw new CodeEE("引数の値が適切な範囲外です");
+				if (duration > short.MaxValue)
+					duration = short.MaxValue;
+				exm.Console.SetToolTipDuration((int)duration);
+				return;
+			}
+		}
 		
 		private sealed class INPUTMOUSEKEY_Instruction : AbstractInstruction
 		{
@@ -1849,11 +1753,11 @@ namespace MinorShift.Emuera.GameProc.Function
 				exm.Console.Await((int)waittime);
 			}
 		}
-        #endregion
+		#endregion
 
-        #region flowControlFunction
+		#region flowControlFunction
 
-        private sealed class BEGIN_Instruction : AbstractInstruction
+		private sealed class BEGIN_Instruction : AbstractInstruction
 		{
 			public BEGIN_Instruction()
 			{

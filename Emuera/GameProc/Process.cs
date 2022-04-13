@@ -182,7 +182,7 @@ namespace MinorShift.Emuera.GameProc
             }
 			catch (Exception e)
 			{
-				handleException(e, null, true);
+                handleException(e, null, true);
 				console.PrintSystemLine("初期化中に致命的なエラーが発生したため処理を終了しました");
 				return false;
 			}
@@ -250,26 +250,28 @@ namespace MinorShift.Emuera.GameProc
 		{
 			vEvaluator.RESULT = i;
 		}
-        public void InputInteger(Int64 idx, Int64 i)
-        {
-            if (idx < vEvaluator.RESULT_ARRAY.Length)
-                vEvaluator.RESULT_ARRAY[idx] = i;
-        }
-        public void InputSystemInteger(Int64 i)
+		#region EM_私家版_INPUT系機能拡張
+		public void InputInteger(Int64 idx, Int64 i)
+		{
+			if (idx < vEvaluator.RESULT_ARRAY.Length)
+				vEvaluator.RESULT_ARRAY[idx] = i;
+		}
+		public void InputString(Int64 idx, string i)
+		{
+			if (idx < vEvaluator.RESULT_ARRAY.Length)
+				vEvaluator.RESULTS_ARRAY[idx] = i;
+		}
+		#endregion
+		public void InputSystemInteger(Int64 i)
 		{
 			systemResult = i;
 		}
-        public void InputString(string s)
-        {
-            vEvaluator.RESULTS = s;
-        }
-        public void InputString(Int64 idx, string s)
-        {
-            if (idx < vEvaluator.RESULTS_ARRAY.Length)
-                vEvaluator.RESULTS_ARRAY[idx] = s;
-        }
+		public void InputString(string s)
+		{
+			vEvaluator.RESULTS = s;
+		}
 
-        private uint startTime = 0;
+		private uint startTime = 0;
 		
 		public void DoScript()
 		{

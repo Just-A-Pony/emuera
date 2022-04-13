@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using WebPWrapper;
 
 namespace MinorShift.Emuera.Content
 {
@@ -78,6 +79,7 @@ namespace MinorShift.Emuera.Content
 		{
 			if (!Directory.Exists(Program.ContentDir))
 				return true;
+			ScriptPosition sp = default;
 			try
 			{
 				//resourcesフォルダ内の全てのcsvファイルを探索する
@@ -86,7 +88,7 @@ namespace MinorShift.Emuera.Content
 				{
 					//アニメスプライト宣言。nullでないとき、フレーム追加モード
 					SpriteAnime currentAnime = null;
-					string directory = Path.GetDirectoryName(filepath).ToUpper() + "\\";
+					string directory = Path.GetDirectoryName(filepath).ToUpper() + Path.DirectorySeparatorChar;
 					string filename = Path.GetFileName(filepath);
 					string[] lines = File.ReadAllLines(filepath, Config.Encode);
 					int lineNo = 0;
@@ -100,7 +102,7 @@ namespace MinorShift.Emuera.Content
 							continue;
 						string[] tokens = str.Split(',');
 						//AContentItem item = CreateFromCsv(tokens);
-						ScriptPosition sp = new ScriptPosition(filename, lineNo, line);
+						sp = new ScriptPosition(filename, lineNo, line);
 						ASprite item = CreateFromCsv(tokens, directory, currentAnime, sp) as ASprite;
 						if (item != null)
 						{
@@ -119,6 +121,16 @@ namespace MinorShift.Emuera.Content
 					}
 				}
 			}
+			catch (Exception e) when (e is WebPDllNotFoundException || e is DllNotFoundException || e is EntryPointNotFoundException) {
+				ParserMediator.Warn("WebP画像の読み込み時にエラーが発生しました。"
+#if DEBUG
+									+ e.Message
+									+ (e.InnerException != null ?  "(" + e.InnerException?.Message + ")" : "")
+#endif
+
+									+ "適切な libwebp_" + (IntPtr.Size == 4 ? "x86" : "x64") + ".dll が exe と同じフォルダにあるか確認してください。", sp, 3);
+				return false;
+			}
 			catch
 			{
 				return false;
@@ -133,6 +145,17 @@ namespace MinorShift.Emuera.Content
 				img.Dispose();
 			resourceDic.Clear();
 			imageDictionary.Clear();
+			foreach (var graph in gList.Values)
+				graph.GDispose();
+			gList.Clear();
+		}
+
+		//タイトルに戻る時用（コードの変更はないので、動的に作られた分だけ削除）
+		static public void UnloadGraphicList()
+		{
+			foreach (var graph in gList.Values)
+				graph.GDispose();
+			gList.Clear();
 		}
 
 		/// <summary>
@@ -192,31 +215,72 @@ namespace MinorShift.Emuera.Content
 					ParserMediator.Warn("指定された画像ファイルが見つかりませんでした:" + arg2, sp, 1);
 					return null;
 				}
-
-                //本家版 Bitmap bmp = new Bitmap(filepath);
-                #region EM_私家版_ファイル占用解除
-                Bitmap bmp = null;
-                FileStream fs = null;
-                try
-                {
-                    fs = new FileStream(filepath, FileMode.Open);
-                    bmp = new Bitmap(Image.FromStream(fs));
-                }
-                finally
-                {
-                    if (fs != null)
-                    {
-                        fs.Close();
-                        fs.Dispose();
-                    }
-                }
-                #endregion
-
-                if (bmp == null)
+				Bitmap bmp = null;
+				if (Path.GetExtension(filepath).ToUpperInvariant() == ".WEBP")
 				{
-					ParserMediator.Warn("指定されたファイルの読み込みに失敗しました:" + arg2, sp, 1);
-					return null;
+					try
+					{
+						using (WebP webp = new WebP())
+							bmp = webp.Load(filepath);
+					}
+					catch (WebPDllNotFoundException) { throw; }
+					catch (DllNotFoundException) { throw; }
+					catch (EntryPointNotFoundException) { throw; }
+#pragma warning disable CS0168
+					catch (WebPLibException e)
+#pragma warning restore
+					{
+						ParserMediator.Warn("WebP画像の読み込み時にエラーが発生しました。"
+#if DEBUG
+											+ e.Message + "(" + e.InnerException.Message + ")"
+#endif
+											+ "適切な libwebp_" + (IntPtr.Size == 4 ? "x86" : "x64") + ".dll が exe と同じフォルダにあるか確認してください。", sp, 3);
+					}
+					catch (Exception e) when (	e is IOException || e?.InnerException is IOException || 
+												e is UnauthorizedAccessException || e?.InnerException is UnauthorizedAccessException || 
+												e is System.Security.SecurityException || e?.InnerException is System.Security.SecurityException)
+					{
+						ParserMediator.Warn("WebP ファイルの読み込みに失敗しました。"
+#if debug
+											e.Message + " " + 
+#endif
+											+ "Webp画像とcsvを確認してください。", sp, 1);
+					}
+					catch (WebPException e) { ParserMediator.Warn("WebP ファイルの読み込み時にエラーが発生しました。" + e.Message, sp, 1);	}
+					catch (Exception) {	ParserMediator.Warn("指定されたファイルの読み込みに失敗しました:" + arg2, sp, 1);	}
+					if (bmp == null)
+					{
+						return null;
+					}
 				}
+				else
+				{
+					#region EM_私家版_ファイル占用解除
+					//bmp = new Bitmap(filepath);
+					bmp = null;
+					FileStream fs = null;
+					try
+					{
+						fs = new FileStream(filepath, FileMode.Open);
+						bmp = new Bitmap(Image.FromStream(fs));
+					}
+					finally
+					{
+						if (fs != null)
+						{
+							fs.Close();
+							fs.Dispose();
+						}
+					}
+					#endregion
+
+					if (bmp == null)
+					{
+						ParserMediator.Warn("指定されたファイルの読み込みに失敗しました:" + arg2, sp, 1);
+						return null;
+					}
+				}
+
 				if (bmp.Width > AbstractImage.MAX_IMAGESIZE || bmp.Height > AbstractImage.MAX_IMAGESIZE)
 				{
 					//1824-2 すでに8192以上の幅を持つ画像を利用したバリアントが存在してしまっていたため、警告しつつ許容するように変更

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using System.Windows.Forms;
 
 namespace MinorShift.Emuera.Content
 {
@@ -70,7 +71,7 @@ namespace MinorShift.Emuera.Content
 		//	}
 		//	return;
 		//}
-
+		[System.Reflection.Obfuscation(Exclude = true)]
 		public override void Dispose()
 		{
 			if (Bitmap == null)
@@ -79,7 +80,9 @@ namespace MinorShift.Emuera.Content
 			{
 				GDI.SelectObject(GDIhDC, hDefaultImg);
 				GDI.DeleteObject(hBitmap);
-				g.ReleaseHdc(GDIhDC);
+				//gがすでに死んでると例外になる
+				if(g != null)
+					g.ReleaseHdc(GDIhDC);
 			}
 			if (g != null)
 			{

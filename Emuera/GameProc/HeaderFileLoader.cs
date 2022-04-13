@@ -48,10 +48,12 @@ namespace MinorShift.Emuera.GameProc
 					if (!noError)
 						break;
 					System.Windows.Forms.Application.DoEvents();
-				}
+				}	
+				//エラーが起きてる場合でも読み込めてる分だけはチェックする
 				if (dimlines.Count > 0)
 				{
-					noError |= analyzeSharpDimLines();
+					//&=でないと、ここで起きたエラーをキャッチできない
+					noError &= analyzeSharpDimLines();
 				}
 
 				dimlines.Clear();

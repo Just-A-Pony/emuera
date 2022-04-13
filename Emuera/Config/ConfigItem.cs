@@ -94,13 +94,6 @@ namespace MinorShift.Emuera
 				Color c = ((ConfigItem<Color>)(AConfigItem)this).Value;
 				return string.Format("{0},{1},{2}", c.R, c.G, c.B);
 			}
-            if (this is ConfigItem<List<string>>)
-            {
-                string ret = "";
-                foreach (string ext in ((ConfigItem<List<string>>)(AConfigItem)this).Value)
-                    ret += (ret.Length > 0 ? "," : "") + ext;
-                return ret;
-            }
 			return val.ToString();
 		}
 		
@@ -184,11 +177,15 @@ namespace MinorShift.Emuera
                 ((ConfigItem<string>)(AConfigItem)this).Value = str;
             }
             else if (this is ConfigItem<List<string>>)
-            {
-                ret = true;
-                ((ConfigItem<List<string>>)(AConfigItem)this).Value.Add(str);
-            }
-            else if (this is ConfigItem<TextDrawingMode>)
+			{
+				#region EM_私家版_LoadText＆SaveText機能拡張
+				ret = true;
+				var list = ((ConfigItem<List<string>>)(AConfigItem)this).Value;
+				tryStringToStringList(str, ref list);
+				((ConfigItem<List<string>>)(AConfigItem)this).Value = list;
+				#endregion
+			}
+			else if (this is ConfigItem<TextDrawingMode>)
             {
                 str = str.ToUpper();
                 ret = Enum.IsDefined(typeof(TextDrawingMode), str);
@@ -252,8 +249,19 @@ namespace MinorShift.Emuera
             //    throw new ExeEE("型不明なコンフィグ");
 			return ret;
 		}
-		
-		
+
+		#region EM_私家版_LoadText＆SaveText機能拡張
+		private bool tryStringToStringList(string arg, ref List<string> vs)
+        {
+			string[] tokens = arg.Split(',');
+			vs.Clear();
+			foreach (var token in tokens)
+            {
+				vs.Add(token.Trim());
+            }
+			return true;
+		}
+		#endregion
 
 		private bool tryStringToBool(string arg, ref bool p)
 		{

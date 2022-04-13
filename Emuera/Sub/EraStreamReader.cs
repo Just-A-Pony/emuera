@@ -84,11 +84,11 @@ namespace MinorShift.Emuera.Sub
 				if (st.EOS)
 					continue;
 				if (st.Current == '}')
-					throw new CodeEE("予期しない行連結終端記号'}'が見つかりました");
+					throw new CodeEE("予期しない行連結終端記号'}'が見つかりました", new ScriptPosition(filename, curNo, line));
 				if (st.Current == '{')
 				{
 					if (line.Trim() != "{")
-						throw new CodeEE("行連結始端記号'{'の行に'{'以外の文字を含めることはできません");
+						throw new CodeEE("行連結始端記号'{'の行に'{'以外の文字を含めることはできません", new ScriptPosition(filename, curNo, line));
 					break;
 				}
 				return st;
@@ -101,7 +101,7 @@ namespace MinorShift.Emuera.Sub
 				nextNo++;
 				if (line == null)
 				{
-					throw new CodeEE("行連結始端記号'{'が使われましたが終端記号'}'が見つかりません");
+					throw new CodeEE("行連結始端記号'{'が使われましたが終端記号'}'が見つかりません", new ScriptPosition(filename, curNo, line));
 				}
 
 				if (useRename && (line.IndexOf("[[") >= 0) && (line.IndexOf("]]") >= 0))
@@ -115,11 +115,15 @@ namespace MinorShift.Emuera.Sub
 					if (test[0] == '}')
 					{
 						if (test.Trim() != "}")
-							throw new CodeEE("行連結終端記号'}'の行に'}'以外の文字を含めることはできません");
+							throw new CodeEE("行連結終端記号'}'の行に'}'以外の文字を含めることはできません", new ScriptPosition(filename, nextNo, line));
 						break;
 					}
-					if (test[0] == '{')
-						throw new CodeEE("予期しない行連結始端記号'{'が見つかりました");
+                    //行連結文字なら1字でないとおかしい、というか、こうしないとFORMの数値変数処理が誤爆する。
+                    //{
+                    //A}
+                    //みたいなどうしようもないコードは知ったこっちゃない
+					if (test[0] == '{' && test.Length == 1)
+						throw new CodeEE("予期しない行連結始端記号'{'が見つかりました", new ScriptPosition(filename, nextNo, line));
 				}
 				b.Append(line);
 				b.Append(" ");
@@ -153,6 +157,7 @@ namespace MinorShift.Emuera.Sub
 		bool disposed = false;
 		#region IDisposable メンバ
 
+		[System.Reflection.Obfuscation(Exclude = true)]
 		public void Dispose()
 		{
 			if (disposed)

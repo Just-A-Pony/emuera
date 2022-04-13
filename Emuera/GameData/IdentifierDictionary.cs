@@ -20,11 +20,13 @@ namespace MinorShift.Emuera
 	//また、使用されている名前を記憶し衝突を検出する。
 	internal sealed class IdentifierDictionary
 	{
-        #region EM_私家版_辞書獲得
-        public string[] VarKeys => varTokenDic.Keys.ToArray();
-        public string[] MacroKeys => macroDic.Keys.ToArray();
-        #endregion
-        private enum DefinedNameType
+
+		#region EM_私家版_辞書獲得
+		public string[] VarKeys => varTokenDic.Keys.ToArray();
+		public string[] MacroKeys => macroDic.Keys.ToArray();
+		#endregion
+
+		private enum DefinedNameType
 		{
 			None = 0,
 			Reserved,
@@ -118,11 +120,11 @@ namespace MinorShift.Emuera
 
 		List<string> privateDimList = new List<string>();
 		List<string> disableList = new List<string>();
-        //Dictionary<string, VariableToken> userDefinedVarDic = new Dictionary<string, VariableToken>();
+		//Dictionary<string, VariableToken> userDefinedVarDic = new Dictionary<string, VariableToken>();
 
-        VariableData varData;
+		VariableData varData;
 		Dictionary<string, VariableToken> varTokenDic;
-        Dictionary<string, VariableLocal> localvarTokenDic;
+		Dictionary<string, VariableLocal> localvarTokenDic;
 		Dictionary<string, FunctionIdentifier> instructionDic;
 		Dictionary<string, FunctionMethod> methodDic;
 		Dictionary<string, UserDefinedRefMethod> refmethodDic;

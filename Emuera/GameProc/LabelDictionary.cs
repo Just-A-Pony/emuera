@@ -15,11 +15,11 @@ namespace MinorShift.Emuera.GameProc
 	/// </summary>
 	internal sealed class LabelDictionary
 	{
-        #region EM_私家版_辞書獲得
-        public string[] NoneventKeys => noneventLabelDic.Keys.ToArray();
-        #endregion
 
-        public LabelDictionary()
+		#region EM_私家版_辞書獲得
+		public string[] NoneventKeys => noneventLabelDic.Keys.ToArray();
+		#endregion
+		public LabelDictionary()
 		{
 			Initialized = false;
 		}

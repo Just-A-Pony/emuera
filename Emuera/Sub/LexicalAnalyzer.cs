@@ -950,13 +950,8 @@ namespace MinorShift.Emuera.Sub
 						break;
 					case '{':
 					case '$':
-                        #region EM_私家版_$文法追加
-                        st.ShiftNext();
-                        ret.Add(new LiteralStringWord(ReadSingleIdentifier(st)));
-                        break;
-                        #endregion
-                        //本家版 throw new CodeEE("字句解析中に予期しない文字'" + st.Current + "'を発見しました");
-                    case ';'://1807 行中コメント
+						throw new CodeEE("字句解析中に予期しない文字'" + st.Current + "'を発見しました");
+					case ';'://1807 行中コメント
 						if (st.CurrentEqualTo(";#;") && Program.DebugMode)
 						{
 							st.Jump(3);

@@ -33,6 +33,8 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -52,6 +54,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
@@ -152,6 +157,7 @@
     <Compile Include="GameView\StringStyle.cs" />
     <Compile Include="GlobalStatic.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Properties\Obfuscation.cs" />
     <Compile Include="Sub\EmueraException.cs" />
     <Compile Include="GameProc\Function\BuiltInFunctionCode.cs" />
     <Compile Include="GameProc\Function\FunctionIdentifier.cs" />
@@ -238,6 +244,7 @@
     <Compile Include="_Library\GDI.cs" />
     <Compile Include="_Library\SFMT.cs" />
     <Compile Include="_Library\LangManager.cs" />
+    <Compile Include="_Library\WebPWrapper.cs" />
     <Compile Include="_Library\WinInput.cs" />
     <Compile Include="_Library\WinmmTimer.cs" />
     <Compile Include="_Library\Sys.cs" />

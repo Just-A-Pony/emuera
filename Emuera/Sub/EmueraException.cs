@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Reflection;
 
 namespace MinorShift.Emuera.Sub
 {
+	[Obfuscation(Exclude = true)]
 	[Serializable]
     internal abstract class EmueraException : ApplicationException
 	{
@@ -23,7 +25,8 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// emuera本体に起因すると思われるエラー
 	/// </summary>
-    [Serializable]
+	[Obfuscation(Exclude = true)]
+	[Serializable]
     internal sealed class ExeEE : EmueraException
 	{
 		public ExeEE(string errormes)
@@ -39,7 +42,8 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// スクリプト側に起因すると思われるエラー
 	/// </summary>
-    [Serializable]
+	[Obfuscation(Exclude = true)]
+	[Serializable]
     internal class CodeEE : EmueraException
 	{
 		public CodeEE(string errormes, ScriptPosition position)
@@ -55,6 +59,7 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// スクリプト側に起因すると思われるエラーのうち、未定義の識別子に関連するもの
 	/// </summary>
+	[Obfuscation(Exclude = true)]
 	[Serializable]
 	internal class IdentifierNotFoundCodeEE : CodeEE
 	{
@@ -71,7 +76,8 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// 未実装エラー
 	/// </summary>
-    [Serializable]
+	[Obfuscation(Exclude = true)]
+	[Serializable]
     internal sealed class NotImplCodeEE : CodeEE
 	{
 		public NotImplCodeEE(ScriptPosition position)
@@ -87,7 +93,8 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// Save, Load中のエラー
 	/// </summary>
-    [Serializable]
+	[Obfuscation(Exclude = true)]
+	[Serializable]
     internal sealed class FileEE : EmueraException
 	{
 		public FileEE(string errormes)
@@ -98,6 +105,7 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// エラー箇所を表示するための位置データ。整形前のデータなのでエラー表示以外の理由で参照するべきではない。
 	/// </summary>
+	[Obfuscation(Exclude = true)]
 	internal sealed class ScriptPosition : IEquatable<ScriptPosition>, IEqualityComparer<ScriptPosition>
 	{
 		public ScriptPosition(string srcLine)

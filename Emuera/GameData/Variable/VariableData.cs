@@ -1093,6 +1093,7 @@ namespace MinorShift.Emuera.GameData.Variable
 		}
 		#region IDisposable メンバ
 
+		[System.Reflection.Obfuscation(Exclude = true)]
 		public void Dispose()
 		{
 			ClearLocalValue();

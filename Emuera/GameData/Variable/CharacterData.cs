@@ -656,6 +656,7 @@ namespace MinorShift.Emuera.GameData.Variable
 
 		#region IDisposable メンバ
 
+		[System.Reflection.Obfuscation(Exclude = true)]
 		public void Dispose()
 		{
 			for (int i = 0; i < dataIntegerArray.Length; i++)
