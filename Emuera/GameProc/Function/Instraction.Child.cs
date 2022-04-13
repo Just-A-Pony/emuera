@@ -8,170 +8,17 @@ using MinorShift.Emuera.GameData;
 using MinorShift._Library;
 using MinorShift.Emuera.GameData.Function;
 using System.Drawing;
+using System.Media;
 using System.IO;
+using WMPLib;
+using System.Threading.Tasks;
+using System.Net;
+using System.Windows.Forms;
 
 namespace MinorShift.Emuera.GameProc.Function
 {
-	internal sealed partial class FunctionIdentifier
+    internal sealed partial class FunctionIdentifier
 	{
-        //本家版
-        //private sealed class CLEARLINE_Instruction : AbstractInstruction
-        //{
-        //	public CLEARLINE_Instruction()
-        //	{
-        //		ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
-        //		flag = METHOD_SAFE | EXTENDED | IS_PRINT;
-        //	}
-        //	public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-        //	{
-        //		ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
-        //		Int32 delNum = (Int32)intExpArg.Term.GetIntValue(exm);
-        //		exm.Console.deleteLine(delNum);
-        //		exm.Console.RefreshStrings(false);
-        //	}
-        //}
-        #region EM_私家版_追加命令
-        private sealed class CLEARLINE_Instruction : AbstractInstruction
-        {
-            public CLEARLINE_Instruction()
-            {
-                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_CLEARLINE);
-                flag = METHOD_SAFE | EXTENDED | IS_PRINT;
-            }
-            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-            {
-                SpClearLineArgment intExpArg = (SpClearLineArgment)func.Argument;
-                Int32 delNum = (Int32)intExpArg.Lines.GetIntValue(exm);
-                exm.Console.deleteLine(delNum);
-                if (intExpArg.Refresh.GetIntValue(exm) != 0) exm.Console.RefreshStrings(false);
-            }
-        }
-
-        private sealed class HTML_SUBSTRING_Instruction : AbstractInstruction
-        {
-            public HTML_SUBSTRING_Instruction()
-            {
-                flag = EXTENDED | METHOD_SAFE;
-                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_HTMLSUBSTRING);
-            }
-
-            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-            {
-                SpHtmlSubStringArgument arg = (SpHtmlSubStringArgument)func.Argument;
-                string str = arg.TargetStr.GetStrValue(exm);
-                string[] strs = MinorShift.Emuera.GameView.HtmlManager.HtmlSubString(str, (int)arg.Length.GetIntValue(exm));
-                string[] output = GlobalStatic.Process.VEvaluator.RESULTS_ARRAY;
-                int outputlength = Math.Min(output.Length, strs.Length);
-                Array.Copy(strs, output, outputlength);
-            }
-        }
-
-        private sealed class ENUMIDS_Instruction : AbstractInstruction
-        {
-            public enum Type
-            {
-                Function,
-                Variable,
-                Macro
-            }
-            public enum Action
-            {
-                BeginsWith,
-                EndsWith,
-                With
-            }
-            public ENUMIDS_Instruction(Type type, Action act)
-            {
-                flag = EXTENDED | METHOD_SAFE;
-                this.type = type;
-                this.action = act;
-                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.STR_EXPRESSION);
-            }
-
-            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-            {
-                string arg = ((ExpressionArgument)func.Argument).Term.GetStrValue(exm);
-                string[] array = null;
-                switch (type)
-                {
-                    case Type.Function:
-                        array = GlobalStatic.Process.LabelDictionary.NoneventKeys;
-                        break;
-                    case Type.Variable:
-                        array = GlobalStatic.IdentifierDictionary.VarKeys;
-                        break;
-                    case Type.Macro:
-                        array = GlobalStatic.IdentifierDictionary.MacroKeys;
-                        break;
-                }
-                List<string> strs = new List<string>();
-                if (arg.Length > 0)
-                    foreach (string item in array)
-                    {
-                        if (item.Length < arg.Length) continue;
-                        switch (action)
-                        {
-                            case Action.BeginsWith:
-                                if (item.IndexOf(arg) == 0) strs.Add(item);
-                                break;
-                            case Action.EndsWith:
-                                if (item.LastIndexOf(arg) == item.Length - arg.Length) strs.Add(item);
-                                break;
-                            case Action.With:
-                                if (item.IndexOf(arg) >= 0) strs.Add(item);
-                                break;
-                        }
-                    }
-                strs.Sort();
-                string[] output = GlobalStatic.Process.VEvaluator.RESULTS_ARRAY;
-                string[] ret = strs.ToArray();
-                int outputlength = Math.Min(output.Length, ret.Length);
-                Int64[] var = GlobalStatic.Process.VEvaluator.RESULT_ARRAY;
-                var[0] = outputlength;
-                Array.Copy(ret, output, outputlength);
-            }
-
-            private Type type;
-            private Action action;
-        }
-
-        private sealed class SETFORM_Instruction : AbstractInstruction
-        {
-            public SETFORM_Instruction()
-            {
-                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_SETFORM);
-                flag = METHOD_SAFE | EXTENDED;
-            }
-            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-            {
-                if (func.Argument is SpSetFormArgment)
-                {
-                    SpSetFormArgment arg = (SpSetFormArgment)func.Argument;
-                    WordCollection wc = LexicalAnalyzer.Analyse(new StringStream(arg.Varname.GetStrValue(exm)), LexEndWith.EoL, LexAnalyzeFlag.None);
-                    IOperandTerm term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
-                    if (term is VariableTerm)
-                    {
-                        VariableTerm var = (VariableTerm)term;
-
-                        if (var.Identifier == null)
-                            throw new CodeEE("第1引数が変数ではありません");
-                        if (var.Identifier.IsConst)
-                            throw new CodeEE("第1引数はCONSTです");
-                        if (arg.RowArg.IsInteger)
-                            var.SetValue(arg.RowArg.GetIntValue(exm), exm);
-                        else
-                            var.SetValue(arg.RowArg.GetStrValue(exm), exm);
-                    }
-                    else
-                        throw new CodeEE("第1引数が変数ではありません");
-
-                    return;
-                }
-
-            }
-        }
-        #endregion
-
         #region normalFunction
         private sealed class PRINT_Instruction : AbstractInstruction
 		{
@@ -268,7 +115,7 @@ namespace MinorShift.Emuera.GameProc.Function
                     return;
 				exm.Console.UseUserStyle = true;
 				exm.Console.UseSetColorStyle = !func.Function.IsPrintDFunction();
-				string str = null;
+				string str;
 				if (func.Argument.IsConst)
 					str = func.Argument.ConstStr;
 				else if (isPrintV)
@@ -366,8 +213,8 @@ namespace MinorShift.Emuera.GameProc.Function
 				}
 				List<InstructionLine> iList = func.dataList[choice];
 				int i = 0;
-				IOperandTerm term = null;
-				string str = null;
+				IOperandTerm term;
+				string str;
 				foreach (InstructionLine selectedLine in iList)
 				{
 					state.CurrentLine = selectedLine;
@@ -406,7 +253,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			{
                 if (GlobalStatic.Process.SkipPrint)
                     return;
-                string str = null;
+                string str;
 				if (func.Argument.IsConst)
 					str = func.Argument.ConstStr;
 				else
@@ -455,7 +302,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			{
                 if (GlobalStatic.Process.SkipPrint)
                     return;
-                string str = null;
+                string str;
 				if (func.Argument.IsConst)
 					str = func.Argument.ConstStr;
 				else
@@ -521,7 +368,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			}
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-				string str = null;
+				string str;
 				if (func.Argument.IsConst)
 					str = func.Argument.ConstStr;
 				else
@@ -643,7 +490,21 @@ namespace MinorShift.Emuera.GameProc.Function
 			}
 		}
 
-        
+		private sealed class CLEARLINE_Instruction : AbstractInstruction
+		{
+			public CLEARLINE_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
+				flag = METHOD_SAFE | EXTENDED | IS_PRINT;
+			}
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
+				Int32 delNum = (Int32)intExpArg.Term.GetIntValue(exm);
+				exm.Console.deleteLine(delNum);
+				exm.Console.RefreshStrings(false);
+			}
+		}
 
 		private sealed class STRLEN_Instruction : AbstractInstruction
 		{
@@ -659,7 +520,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			bool unicode;
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-				string str = null;
+				string str;
 				if (func.Argument.IsConst)
 					str = func.Argument.ConstStr;
 				else
@@ -767,24 +628,36 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                SpInputsArgument arg = (SpInputsArgument)func.Argument;
+				#region EM_私家版_INPUT系機能拡張
+				//ExpressionArgument arg = (ExpressionArgument)func.Argument;
+				//InputRequest req = new InputRequest();
+				//req.InputType = InputType.IntValue;
+				//if (arg.Term != null)
+				//{
+				//	Int64 def;
+				//	if (arg.IsConst)
+				//		def = arg.ConstInt;
+				//	else
+				//		def = arg.Term.GetIntValue(exm);
+				//	req.HasDefValue = true;
+				//	req.DefIntValue = def;
+				//}
+				SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();
 				req.InputType = InputType.IntValue;
 				if (arg.Def != null)
 				{
 					Int64 def;
-					if (arg.IsConst)
-						def = arg.ConstInt;
-					else
-						def = arg.Def.GetIntValue(exm);
+					def = arg.Def.GetIntValue(exm);
 					req.HasDefValue = true;
 					req.DefIntValue = def;
-                }
-                if (arg.Mouse != null)
-                {
-                    req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
-                }
-                exm.Console.WaitInput(req);
+				}
+				if (arg.Mouse != null)
+				{
+					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
+				}
+				#endregion
+				exm.Console.WaitInput(req);
 			}
 		}
 		private sealed class INPUTS_Instruction : AbstractInstruction
@@ -797,24 +670,36 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                SpInputsArgument arg = (SpInputsArgument)func.Argument;
+				#region EM_私家版_INPUT系機能拡張
+				//ExpressionArgument arg = (ExpressionArgument)func.Argument;
+				//InputRequest req = new InputRequest();
+				//req.InputType = InputType.StrValue;
+				//if (arg.Term != null)
+				//{
+				//	string def;
+				//	if (arg.IsConst)
+				//		def = arg.ConstStr;
+				//	else
+				//		def = arg.Term.GetStrValue(exm);
+				//	req.HasDefValue = true;
+				//	req.DefStrValue = def;
+				//}
+				SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();
 				req.InputType = InputType.StrValue;
 				if (arg.Def != null)
 				{
 					string def;
-					if (arg.IsConst)
-						def = arg.ConstStr;
-					else
-						def = arg.Def.GetStrValue(exm);
+					def = arg.Def.GetStrValue(exm);
 					req.HasDefValue = true;
 					req.DefStrValue = def;
-                }
-                if (arg.Mouse != null)
-                {
-                    req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
-                }
-                exm.Console.WaitInput(req);
+				}
+				if (arg.Mouse != null)
+				{
+					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
+				}
+				#endregion
+				exm.Console.WaitInput(req);
 			}
 		}
 
@@ -828,34 +713,45 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                SpInputsArgument arg = (SpInputsArgument)func.Argument;
+				#region EM_私家版_INPUT系機能拡張＆ONEINPUT系制限解除
+				//ExpressionArgument arg = (ExpressionArgument)func.Argument;
+				//InputRequest req = new InputRequest();
+				//req.InputType = InputType.IntValue;
+				//req.OneInput = true;
+				//if (arg.Term != null)
+				//{
+				//	//TODO:二文字以上セットできるようにするかエラー停止するか
+				//	//少なくともONETINPUTとの仕様を統一すべき
+				//	Int64 def;
+				//	if (arg.IsConst)
+				//		def = arg.ConstInt;
+				//	else
+				//		def = arg.Term.GetIntValue(exm);
+				//	if (def > 9)
+				//		def = Int64.Parse(def.ToString().Remove(1));
+				//	if (def >= 0)
+				//	{
+				//		req.HasDefValue = true;
+				//		req.DefIntValue = def;
+				//	}
+				//}
+				SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();
 				req.InputType = InputType.IntValue;
 				req.OneInput = true;
 				if (arg.Def != null)
 				{
-					//TODO:二文字以上セットできるようにするかエラー停止するか
-					//少なくともONETINPUTとの仕様を統一すべき
 					Int64 def;
-					if (arg.IsConst)
-						def = arg.ConstInt;
-					else
-						def = arg.Def.GetIntValue(exm);
-                    //if (def > 9)
-                    //	def = Int64.Parse(def.ToString().Remove(1));
-                    //if (def >= 0)
-                    //{
-                    //	req.HasDefValue = true;
-                    //	req.DefIntValue = def;
-                    //}
-                    req.HasDefValue = true;
-                    req.DefIntValue = def;
-                }
-                if (arg.Mouse != null)
-                {
-                   req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
-                }
-                GlobalStatic.Process.InputInteger(1, 0);
+					def = arg.Def.GetIntValue(exm);
+					req.HasDefValue = true;
+					req.DefIntValue = def;
+				}
+				if (arg.Mouse != null)
+				{
+					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
+				}
+				GlobalStatic.Process.InputInteger(1, 0);
+				#endregion
 				exm.Console.WaitInput(req);
 			}
 		}
@@ -870,33 +766,44 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                SpInputsArgument arg = (SpInputsArgument)func.Argument;
+				#region EM_私家版_INPUT系機能拡張＆ONEINPUT系制限解除
+				//ExpressionArgument arg = (ExpressionArgument)func.Argument;
+				//InputRequest req = new InputRequest();
+				//req.InputType = InputType.StrValue;
+				//req.OneInput = true;
+				//if (arg.Term != null)
+				//{
+				//	string def;
+				//	if (arg.IsConst)
+				//		def = arg.ConstStr;
+				//	else
+				//		def = arg.Term.GetStrValue(exm);
+				//	if (def.Length > 1)
+				//		def = def.Remove(1);
+				//	if (def.Length > 0)
+				//	{
+				//		req.HasDefValue = true;
+				//		req.DefStrValue = def;
+				//	}
+				//}
+				SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();
 				req.InputType = InputType.StrValue;
 				req.OneInput = true;
 				if (arg.Def != null)
 				{
 					string def;
-					if (arg.IsConst)
-						def = arg.ConstStr;
-					else
-						def = arg.Def.GetStrValue(exm);
-                    //if (def.Length > 1)
-                    //	def = def.Remove(1);
-                    //if (def.Length > 0)
-                    //{
-                    //	req.HasDefValue = true;
-                    //	req.DefStrValue = def;
-                    //}
-                    req.HasDefValue = true;
-                    req.DefStrValue = def;
-                }
-                if (arg.Mouse != null)
-                {
-                   req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
-                }
-                GlobalStatic.Process.InputInteger(1, 0);
-                exm.Console.WaitInput(req);
+					def = arg.Def.GetStrValue(exm);
+					req.HasDefValue = true;
+					req.DefStrValue = def;
+				}
+				if (arg.Mouse != null)
+				{
+					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
+				}
+				GlobalStatic.Process.InputInteger(1, 0);
+				#endregion
+				exm.Console.WaitInput(req);
 			}
 		}
 
@@ -920,6 +827,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				Int64 x = tinputarg.Time.GetIntValue(exm);
 				Int64 y = tinputarg.Def.GetIntValue(exm);
 				//TODO:ONEINPUTと標準の値を統一
+				#region EM_私家版_INPUT系機能拡張
 				//if (isOne)
 				//{
 				//	if (y < 0)
@@ -927,17 +835,20 @@ namespace MinorShift.Emuera.GameProc.Function
 				//	if (y >= 10)
 				//		y = y / (long)(Math.Pow(10.0, Math.Log10((double)y)));
 				//}
-                if (tinputarg.Mouse != null)
-                {
-                    req.MouseInput = tinputarg.Mouse.GetIntValue(exm) == 1;
-                }
-                Int64 z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
+				if (tinputarg.Mouse != null)
+				{
+					req.MouseInput = tinputarg.Mouse.GetIntValue(exm) == 1;
+				}
+				#endregion
+				Int64 z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
 				req.Timelimit = x;
 				req.DefIntValue = y;
 				req.DisplayTime = z != 0;
 				req.TimeUpMes = (tinputarg.Timeout != null) ? tinputarg.Timeout.GetStrValue(exm) : Config.TimeupLabel;
-                GlobalStatic.Process.InputInteger(1, 0);
-                exm.Console.WaitInput(req);
+				#region EM_私家版_INPUT系機能拡張
+				GlobalStatic.Process.InputInteger(1, 0);
+				#endregion
+				exm.Console.WaitInput(req);
 			}
 		}
 
@@ -959,19 +870,23 @@ namespace MinorShift.Emuera.GameProc.Function
 				req.OneInput = isOne;
 				Int64 x = tinputarg.Time.GetIntValue(exm);
 				string strs = tinputarg.Def.GetStrValue(exm);
-                //if (isOne && strs.Length > 1)
-                //	strs = strs.Remove(1);
-                if (tinputarg.Mouse != null)
-                {
-                    req.MouseInput = tinputarg.Mouse.GetIntValue(exm) == 1;
-                }
-                Int64 z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
+				#region EM_私家版_INPUT系機能拡張
+				//if (isOne && strs.Length > 1)
+				//	strs = strs.Remove(1);
+				if (tinputarg.Mouse != null)
+				{
+					req.MouseInput = tinputarg.Mouse.GetIntValue(exm) == 1;
+				}
+				#endregion
+				Int64 z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
 				req.Timelimit = x;
 				req.DefStrValue = strs;
 				req.DisplayTime = z != 0;
 				req.TimeUpMes = (tinputarg.Timeout != null) ? tinputarg.Timeout.GetStrValue(exm) : Config.TimeupLabel;
-                GlobalStatic.Process.InputInteger(1, 0);
-                exm.Console.WaitInput(req);
+				#region EM_私家版_INPUT系機能拡張
+				GlobalStatic.Process.InputInteger(1, 0);
+				#endregion
+				exm.Console.WaitInput(req);
 			}
 		}
 
@@ -1017,8 +932,8 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-				IOperandTerm mToken = null;
-				string labelName = null;
+				IOperandTerm mToken;
+				string labelName;
 				if ((!func.Argument.IsConst) || (exm.Console.RunERBFromMemory))
 				{
 					SpCallFArgment spCallformArg = (SpCallFArgment)func.Argument;
@@ -1035,8 +950,65 @@ namespace MinorShift.Emuera.GameProc.Function
 				mToken.GetValue(exm);
 			}
 		}
+        #region EE_TRYCALLF
+        private sealed class TRYCALLF_Instruction : AbstractInstruction
+		{
+			public TRYCALLF_Instruction(bool form)
+			{
+				if (form)
+					ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_CALLFORMF);
+				else
+					ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_CALLF);
+				flag = EXTENDED | METHOD_SAFE | FORCE_SETARG;
+			}
 
-		private sealed class BAR_Instruction : AbstractInstruction
+			public override void SetJumpTo(ref bool useCallForm, InstructionLine func, int currentDepth, ref string FunctionoNotFoundName)
+			{
+				if (!func.Argument.IsConst)
+				{
+					useCallForm = true;
+					return;
+				}
+				SpCallFArgment callfArg = (SpCallFArgment)func.Argument;
+				if (Config.ICFunction)
+					callfArg.ConstStr = callfArg.ConstStr.ToUpper();
+				try
+				{
+					callfArg.FuncTerm = GlobalStatic.IdentifierDictionary.GetFunctionMethod(GlobalStatic.LabelDictionary, callfArg.ConstStr, callfArg.RowArgs, true);
+				}
+				catch
+				{
+					return;
+				}
+				if (callfArg.FuncTerm == null)
+				{
+					return;
+				}
+			}
+
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				IOperandTerm mToken;
+				string labelName;
+				if ((!func.Argument.IsConst) || (exm.Console.RunERBFromMemory))
+				{
+					SpCallFArgment spCallformArg = (SpCallFArgment)func.Argument;
+					labelName = spCallformArg.FuncnameTerm.GetStrValue(exm);
+					mToken = GlobalStatic.IdentifierDictionary.GetFunctionMethod(GlobalStatic.LabelDictionary, labelName, spCallformArg.RowArgs, true);
+				}
+				else
+				{
+					labelName = func.Argument.ConstStr;
+					mToken = ((SpCallFArgment)func.Argument).FuncTerm;
+				}
+				if (mToken == null)
+					return;
+				mToken.GetValue(exm);
+			}
+		}
+        #endregion
+
+        private sealed class BAR_Instruction : AbstractInstruction
 		{
 			public BAR_Instruction(bool newline)
 			{
@@ -1112,7 +1084,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				if(!Config.CompatiSPChara && isSp)
 					throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
 				ExpressionArrayArgument intExpArg = (ExpressionArrayArgument)func.Argument;
-				Int64 integer = -1;
+				Int64 integer;
 				Int64[] charaNoList = new Int64[intExpArg.TermList.Length];
 				int i = 0;
 				foreach (IOperandTerm int64Term in intExpArg.TermList)
@@ -1125,7 +1097,7 @@ namespace MinorShift.Emuera.GameProc.Function
 					}
 					else
 					{
-						if(!Config.CompatiSPChara)
+						if(Config.CompatiSPChara)
 							exm.VEvaluator.AddCharacter_UseSp(integer, isSp);
 						else
 							exm.VEvaluator.AddCharacter(integer);
@@ -1313,27 +1285,21 @@ namespace MinorShift.Emuera.GameProc.Function
 				FixedVariableTerm p = var.GetFixedVariableTerm(exm);
 				int start = 0;
 				int end = 0;
-                //endを先に取って判定の処理変更
-                if (spvarsetarg.End != null)
-                    end = (int)spvarsetarg.End.GetIntValue(exm);
-                else if (var.Identifier.IsArray1D)
-                    end = (int)var.GetLength();
-                else if (var.Identifier.IsArray2D)
-                    end = (int)var.GetLength(1);
-                else if (var.Identifier.IsArray3D)
-                    end = (int)var.GetLength(2);
-                if (spvarsetarg.Start != null)
-                {
-                    start = (int)spvarsetarg.Start.GetIntValue(exm);
-                    if (start > end)
-                    {
-                        int temp = start;
-                        start = end;
-                        end = start;
-                    }
-                }
-                else if (var.Identifier.IsArray3D || var.Identifier.IsArray2D)
-                    start = -1;
+				//endを先に取って判定の処理変更
+				if (spvarsetarg.End != null)
+					end = (int)spvarsetarg.End.GetIntValue(exm);
+				else if (var.Identifier.IsArray1D)
+					end = (int)var.GetLength();
+				if (spvarsetarg.Start != null)
+				{
+					start = (int)spvarsetarg.Start.GetIntValue(exm);
+					if (start > end)
+					{
+						int temp = start;
+						start = end;
+						end = temp;
+					}
+				}
 				if (var.IsString)
 				{
 					string src = spvarsetarg.Term.GetStrValue(exm);
@@ -1368,7 +1334,7 @@ namespace MinorShift.Emuera.GameProc.Function
 					if (start < 0 || start >= charaNum)
 						throw new CodeEE("命令CVARSETの第４引数(" + start.ToString() + ")がキャラクタの範囲外です");
 				}
-				int end = 0;
+				int end;
 				if (spvarsetarg.End != null)
 				{
 					end = (int)spvarsetarg.End.GetIntValue(exm);
@@ -1381,7 +1347,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				{
 					int temp = start;
 					start = end;
-					end = start;
+					end = temp;
 				}
 				if (!p.Identifier.IsCharacterData)
 					throw new CodeEE("命令CVARSETにキャラクタ変数でない変数" + p.Identifier.Name + "が渡されました");
@@ -1563,7 +1529,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
 				ExpressionArgument arg = (ExpressionArgument)func.Argument;
-				string datFilename = null;
+				string datFilename;
 				if (arg.IsConst)
 					datFilename = arg.ConstStr;
 				else
@@ -1763,7 +1729,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
 				ExpressionArgument arg = (ExpressionArgument)func.Argument;
-				long delay = 0;
+				long delay;
 				if(arg.IsConst)
 					delay = arg.ConstInt;
 				else
@@ -1785,7 +1751,7 @@ namespace MinorShift.Emuera.GameProc.Function
             public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
             {
                 ExpressionArgument arg = (ExpressionArgument)func.Argument;
-                long duration = 0;
+                long duration;
                 if (arg.IsConst)
                     duration = arg.ConstInt;
                 else
@@ -1849,11 +1815,246 @@ namespace MinorShift.Emuera.GameProc.Function
 				exm.Console.Await((int)waittime);
 			}
 		}
-        #endregion
 
-        #region flowControlFunction
+		//ここからEnter版
+		#region EE
+		static WindowsMediaPlayer[] sound = new WindowsMediaPlayer[10];
+		static WindowsMediaPlayer bgm = new WindowsMediaPlayer();
+        private sealed class PLAYSOUND_Instruction : AbstractInstruction
+        {
 
-        private sealed class BEGIN_Instruction : AbstractInstruction
+            public PLAYSOUND_Instruction()
+            {
+                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.STR_EXPRESSION);
+                flag = METHOD_SAFE | EXTENDED;
+            }
+            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+            {
+                ExpressionArgument soundArg = (ExpressionArgument)func.Argument;
+                string datFilename = null;
+                if (soundArg.IsConst)
+                    datFilename = soundArg.ConstStr;
+                else
+                    datFilename = soundArg.Term.GetStrValue(exm);
+                string filepath = System.IO.Path.GetFullPath(".\\sound\\" + datFilename);
+				if (System.IO.File.Exists(filepath))
+                {
+					for (int i = 0; i < sound.Length; i++)
+					{
+						if (sound[i] == null) sound[i] = new WindowsMediaPlayer();
+						//未使用もしくは再生完了してる要素を使う
+						switch(sound[i].playState)
+                        {
+							case WMPPlayState.wmppsUndefined:
+							case WMPPlayState.wmppsStopped:
+							case WMPPlayState.wmppsMediaEnded:
+								sound[i].URL = filepath;
+								sound[i].controls.play();
+								return;
+						}
+					}
+					//上を抜けてきたら適当に0に入れる
+					sound[0].URL = filepath;
+					sound[0].controls.play();
+					return;
+				}
+			}
+        }
+
+        public sealed class STOPSOUND_Instruction : AbstractInstruction
+        {
+            public STOPSOUND_Instruction()
+            {
+                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.VOID);
+                flag = METHOD_SAFE | EXTENDED;
+            }
+            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+            {
+				for (int i = 0; i < sound.Length; i++)
+				{
+					if (sound[i] == null) sound[i] = new WindowsMediaPlayer();
+					if (sound[i].playState == WMPPlayState.wmppsPlaying) sound[i].controls.stop();
+				}
+                return;
+            }
+        }
+
+        private sealed class PLAYBGM_Instruction : AbstractInstruction
+        {
+
+            public PLAYBGM_Instruction()
+            {
+                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.STR_EXPRESSION);
+                flag = METHOD_SAFE | EXTENDED;
+            }
+            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+            {
+                ExpressionArgument arg = (ExpressionArgument)func.Argument;
+                string datFilename = null;
+                if (arg.IsConst)
+                    datFilename = arg.ConstStr;
+                else
+                    datFilename = arg.Term.GetStrValue(exm);
+                string filepath = System.IO.Path.GetFullPath(".\\sound\\" + datFilename);
+                if (System.IO.File.Exists(filepath))
+                {
+                    bgm.settings.setMode("loop", true);
+                    bgm.URL = filepath;
+                    bgm.controls.play();
+                    return;
+                }
+            }
+        }
+
+        public sealed class STOPBGM_Instruction : AbstractInstruction
+        {
+            public STOPBGM_Instruction()
+            {
+                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.VOID);
+                flag = METHOD_SAFE | EXTENDED;
+            }
+            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+            {
+                bgm.controls.stop();
+                return;
+            }
+        }
+
+        public sealed class SETSOUNDVOLUME_Instruction : AbstractInstruction
+        {
+            public SETSOUNDVOLUME_Instruction()
+            {
+                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
+                flag = METHOD_SAFE | EXTENDED;
+            }
+            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+            {
+                ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
+                Int32 vol = (Int32)intExpArg.Term.GetIntValue(exm);
+				for (int i = 0; i < sound.Length; i++)
+				{
+					if (sound[i] == null) sound[i] = new WindowsMediaPlayer();
+					sound[i].settings.volume = vol;
+				}
+                return;
+            }
+        }
+        public sealed class SETBGMVOLUME_Instruction : AbstractInstruction
+        {
+            public SETBGMVOLUME_Instruction()
+            {
+                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
+                flag = METHOD_SAFE | EXTENDED;
+            }
+            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+            {
+                ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
+                Int32 vol = (Int32)intExpArg.Term.GetIntValue(exm);
+                bgm.settings.volume = vol;
+                return;
+            }
+        }
+
+		public sealed class UPDATECHECK_Instruction : AbstractInstruction
+		{
+			public UPDATECHECK_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.VOID);
+				flag = METHOD_SAFE | EXTENDED;
+			}
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				if (Config.ForbidUpdateCheck == true)
+				{
+					exm.VEvaluator.RESULT = 4;
+					return;
+				}
+
+				if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable() == false)
+				{
+					exm.VEvaluator.RESULT = 5;
+					return;
+				}
+
+				string url = GlobalStatic.GameBaseData.UpdateCheckURL;
+				WebClient wc = new WebClient();
+				if (url == null || url == "")
+				{
+					exm.VEvaluator.RESULT = 3;
+					return;
+				}
+				try
+				{
+					Stream st = wc.OpenRead(url);
+					StreamReader sr = new StreamReader(st, Encoding.GetEncoding("Shift-JIS"));
+					try
+					{
+						var version = sr.ReadLine();
+						var link = sr.ReadLine();
+						if (version == null || version == "")
+						{
+							exm.VEvaluator.RESULT = 3;
+							return;
+						}
+						if (link == null || link == "")
+						{
+							exm.VEvaluator.RESULT = 3;
+							return;
+						}
+						if (version != GlobalStatic.GameBaseData.VersionName)
+						{
+							DialogResult result = MessageBox.Show($"新しいバージョン（{version}）が公開されています。URLを開きますか？\nリンク先:{link}",
+								"アップデートチェック",
+								MessageBoxButtons.YesNo,
+								MessageBoxIcon.None,
+								MessageBoxDefaultButton.Button2
+								);
+							if (result == DialogResult.Yes)
+							{
+								exm.VEvaluator.RESULT = 2;
+								System.Diagnostics.Process.Start(link);
+								st.Close();
+								wc.Dispose();
+								return;
+							}
+							else
+							{
+								exm.VEvaluator.RESULT = 1;
+								st.Close();
+								wc.Dispose();
+								return;
+							}
+						}
+						else
+						{
+							exm.VEvaluator.RESULT = 0;
+							st.Close();
+							wc.Dispose();
+							return;
+						}
+					}
+					catch
+					{
+						exm.VEvaluator.RESULT = 3;
+						st.Close();
+						wc.Dispose();
+						return;
+					}
+				}
+				catch
+				{
+					exm.VEvaluator.RESULT = 3;
+					return;
+				}
+			}
+		}
+	#endregion
+
+	#endregion
+
+	#region flowControlFunction
+
+		private sealed class BEGIN_Instruction : AbstractInstruction
 		{
 			public BEGIN_Instruction()
 			{
@@ -1865,12 +2066,29 @@ namespace MinorShift.Emuera.GameProc.Function
 				string keyword = func.Argument.ConstStr;
 				if (Config.ICFunction)//1756 BEGINのキーワードは関数扱いらしい
 					keyword = keyword.ToUpper();
-				state.SetBegin(keyword);
+				state.SetBegin(keyword, false);
 				state.Return(0);
 				exm.Console.ResetStyle();
 			}
 		}
 
+		private sealed class FORCE_BEGIN_Instruction : AbstractInstruction
+		{
+			public FORCE_BEGIN_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.STR);
+				flag = FLOW_CONTROL;
+			}
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				string keyword = func.Argument.ConstStr;
+				if (Config.ICFunction)//1756 BEGINのキーワードは関数扱いらしい
+					keyword = keyword.ToUpper();
+				state.SetBegin(keyword, true);
+				state.Return(0);
+				exm.Console.ResetStyle();
+			}
+		}
 		private sealed class SAVELOADGAME_Instruction : AbstractInstruction
 		{
 			public SAVELOADGAME_Instruction(bool isSave)
@@ -2029,7 +2247,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				//if (func.JumpTo == null)
 				//	throw new ExeEE("IFに対応するENDIFが設定されていない");
 
-				InstructionLine line = null;
+				InstructionLine line;
 				for (int i = 0; i < func.IfCaseList.Count; i++)
 				{
 					line = func.IfCaseList[i];
@@ -2084,7 +2302,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				//	throw new ExeEE("SELECTCASEのCASEリストが適正に作成されていない");
 				//if (func.JumpTo == null)
 				//	throw new ExeEE("SELECTCASEに対応するENDSELECTが設定されていない");
-				InstructionLine line = null;
+				InstructionLine line;
 				for (int i = 0; i < func.IfCaseList.Count; i++)
 				{
 					line = func.IfCaseList[i];
@@ -2479,8 +2697,8 @@ namespace MinorShift.Emuera.GameProc.Function
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
 				SpCallArgment spCallArg = (SpCallArgment)func.Argument;
-				CalledFunction call = null;
-				string labelName = null;
+				CalledFunction call;
+				string labelName;
 				UserDefinedFunctionArgument arg = null;
 				if (spCallArg.IsConst)
 				{
@@ -2564,7 +2782,7 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void SetJumpTo(ref bool useCallForm, InstructionLine func, int currentDepth, ref string FunctionoNotFoundName)
 			{
-				GotoLabelLine jumpto = null;
+				GotoLabelLine jumpto;
 				func.JumpTo = null;
 				if (func.Argument.IsConst)
 				{
@@ -2589,8 +2807,8 @@ namespace MinorShift.Emuera.GameProc.Function
 			}
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-				string label = null;
-				LogicalLine jumpto = null;
+				string label;
+				LogicalLine jumpto;
 				if (func.Argument.IsConst)
 				{
 					label = func.Argument.ConstStr;

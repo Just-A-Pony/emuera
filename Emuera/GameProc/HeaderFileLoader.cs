@@ -48,10 +48,12 @@ namespace MinorShift.Emuera.GameProc
 					if (!noError)
 						break;
 					System.Windows.Forms.Application.DoEvents();
-				}
+				}	
+				//エラーが起きてる場合でも読み込めてる分だけはチェックする
 				if (dimlines.Count > 0)
 				{
-					noError |= analyzeSharpDimLines();
+					//&=でないと、ここで起きたエラーをキャッチできない
+					noError &= analyzeSharpDimLines();
 				}
 
 				dimlines.Clear();
@@ -66,7 +68,7 @@ namespace MinorShift.Emuera.GameProc
 
 		private bool loadHeaderFile(string filepath, string filename)
 		{
-			StringStream st = null;
+			StringStream st;
 			ScriptPosition position = null;
 			//EraStreamReader eReader = new EraStreamReader(false);
 			//1815修正 _rename.csvの適用
@@ -84,7 +86,7 @@ namespace MinorShift.Emuera.GameProc
 				{
 					if (!noError)
 						return false;
-					position = new ScriptPosition(filename, eReader.LineNo, st.RowString);
+					position = new ScriptPosition(filename, eReader.LineNo);
 					LexicalAnalyzer.SkipWhiteSpace(st);
 					if (st.Current != '#')
 						throw new CodeEE("ヘッダーの中に#で始まらない行があります", position);

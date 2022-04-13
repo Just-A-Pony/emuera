@@ -84,10 +84,9 @@ namespace MinorShift.Emuera.GameData.Expression
             OperatorMethod method = null;
 			if (op == OperatorCode.Increment || op == OperatorCode.Decrement)
 			{
-				VariableTerm var = o1 as VariableTerm;
-				if (var == null)
-					throw new CodeEE("変数以外をインクリメントすることはできません");
-				if (var.Identifier.IsConst)
+                if (!(o1 is VariableTerm var))
+                    throw new CodeEE("変数以外をインクリメントすることはできません");
+                if (var.Identifier.IsConst)
 					throw new CodeEE("変更できない変数をインクリメントすることはできません");
 			}
 			if (o1.GetOperandType() == typeof(Int64))
@@ -115,10 +114,9 @@ namespace MinorShift.Emuera.GameData.Expression
             OperatorMethod method = null;
 			if (op == OperatorCode.Increment || op == OperatorCode.Decrement)
 			{
-				VariableTerm var = o1 as VariableTerm;
-				if (var == null)
-					throw new CodeEE("変数以外をインクリメントすることはできません");
-				if (var.Identifier.IsConst)
+                if (!(o1 is VariableTerm var))
+                    throw new CodeEE("変数以外をインクリメントすることはできません");
+                if (var.Identifier.IsConst)
 					throw new CodeEE("変更できない変数をインクリメントすることはできません");
 			}
 			if (o1.GetOperandType() == typeof(Int64))
@@ -177,7 +175,7 @@ namespace MinorShift.Emuera.GameData.Expression
                 throw new CodeEE(errMes);
 		}
 		
-		public static IOperandTerm ReduceTernaryTerm(OperatorCode op, IOperandTerm o1, IOperandTerm o2, IOperandTerm o3)
+		public static IOperandTerm ReduceTernaryTerm(IOperandTerm o1, IOperandTerm o2, IOperandTerm o3)
 		{
             OperatorMethod method = null;
 			if ((o1.GetOperandType() == typeof(Int64)) && (o2.GetOperandType() == typeof(Int64)) && (o3.GetOperandType() == typeof(Int64)))
@@ -267,27 +265,29 @@ namespace MinorShift.Emuera.GameData.Expression
 			}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
-				Int64 value = 0;
-				string str = null;
-				if (arguments[0].GetOperandType() == typeof(Int64))
-				{
-					value = arguments[0].GetIntValue(exm);
-					str = arguments[1].GetStrValue(exm);
-				}
-				else
-				{
-					str = arguments[0].GetStrValue(exm);
-					value = arguments[1].GetIntValue(exm);
-				}
-				if (value < 0)
+                string str;
+                long value;
+                if (arguments[0].GetOperandType() == typeof(Int64))
+                {
+                    value = arguments[0].GetIntValue(exm);
+                    str = arguments[1].GetStrValue(exm);
+                }
+                else
+                {
+                    str = arguments[0].GetStrValue(exm);
+                    value = arguments[1].GetIntValue(exm);
+                }
+                if (value < 0)
 					throw new CodeEE("文字列に負の値(" + value.ToString() + ")を乗算しようとしました");
 				if (value >= 10000)
 					throw new CodeEE("文字列に10000以上の値(" + value.ToString() + ")を乗算しようとしました");
 				if ((str == "") || (value == 0))
 					return "";
-				StringBuilder builder = new StringBuilder();
-				builder.Capacity = str.Length * (int)value;
-				for (int i = 0; i < value; i++)
+                StringBuilder builder = new StringBuilder
+                {
+                    Capacity = str.Length * (int)value
+                };
+                for (int i = 0; i < value; i++)
 				{
 					builder.Append(str);
 				}

@@ -42,7 +42,7 @@ namespace MinorShift.Emuera
             openFileDialog.Multiselect = true;
             openFileDialog.RestoreDirectory = true;
             
-           string Emuera_verInfo = "Emuera" + emueraVer.FileVersion.Remove(5) + "(EM191106)";
+           string Emuera_verInfo = "Emuera Ver. " + emueraVer.FileVersion.Remove(5);
             if (emueraVer.FileBuildPart > 0)
                 Emuera_verInfo += "+v" + emueraVer.FileBuildPart.ToString() + ((emueraVer.FilePrivatePart > 0) ? "." + emueraVer.FilePrivatePart.ToString() : "");
 			EmuVerToolStripTextBox.Text = Emuera_verInfo;
@@ -100,7 +100,7 @@ namespace MinorShift.Emuera
 				{
 					ClipBoardDialog dialog = new ClipBoardDialog();
 					dialog.StartPosition = FormStartPosition.CenterParent;
-					dialog.Setup(this, console);
+					dialog.Setup(console);
 					dialog.ShowDialog();
 					return true;
 				}
@@ -267,7 +267,7 @@ namespace MinorShift.Emuera
 				this.MaximizeBox = false;
 			}
 
-			int menuHeight = 0;
+			int menuHeight;
 			if (Config.UseMenu)
 			{
 				menuStrip.Enabled = true;
@@ -348,43 +348,50 @@ namespace MinorShift.Emuera
 			string str = console.SelectedString;
 
 			if (isBacklog)
-            {
-                if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
-                {
-                    vScrollBar.Value = vScrollBar.Maximum;
-                    console.RefreshStrings(true);
-                }
-            }
-            else if (console.IsWaitingEnterKey && (!console.IsError && str == null))
-            {
-                if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
-                {
-                    if (e.Button == MouseButtons.Right)
-                        PressEnterKey(true, true);
-                    else
-                        PressEnterKey(false, true);
-                    return;
-                }
-            }
-            else if (console.IsWaintingInputWithMouse && (!console.IsError && str == null))
-            {
-                if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
-                {
-                    if (e.Button == MouseButtons.Right)
-                    {
-                        GlobalStatic.Process.InputInteger(1, 2);
-                        PressEnterKey(true, true);
-                    }
-                    else
-                    {
-                        GlobalStatic.Process.InputInteger(1, 1);
-                        PressEnterKey(false, true);
-                    }
-                    return;
-                }
-            }
-            //左が押されたなら選択。
-            if (str != null && ((e.Button & MouseButtons.Left) == MouseButtons.Left))
+				if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
+				{
+					vScrollBar.Value = vScrollBar.Maximum;
+					console.RefreshStrings(true);
+				}
+			if (console.IsWaitingEnterKey && (!console.IsError&&str == null))
+			{
+				if (isBacklog)
+					return;
+				if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
+				{
+					if (e.Button == MouseButtons.Right)
+						PressEnterKey(true,true);
+					else
+						PressEnterKey(false, true);
+					return;
+				}
+			}
+			#region EM_私家版_INPUT系機能拡張
+			else if (console.IsWaintingInputWithMouse && (!console.IsError && str != null))
+			{
+				if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
+				{
+					if (modifiersWhileWaintingInputWithMouse != null)
+					{
+						GlobalStatic.Process.InputInteger(2, (long)modifiersWhileWaintingInputWithMouse);
+					}
+					GlobalStatic.Process.InputString(1, str);
+					if (e.Button == MouseButtons.Right)
+					{
+						GlobalStatic.Process.InputInteger(1, 2);
+						PressEnterKey(true, true);
+					}
+					else
+					{
+						GlobalStatic.Process.InputInteger(1, 1);
+						PressEnterKey(false, true);
+					}
+					return;
+				}
+			}
+			#endregion
+			//左が押されたなら選択。
+			if (str != null && ((e.Button & MouseButtons.Left) == MouseButtons.Left))
 			{ 
 				changeTextbyMouse = console.IsWaintingOnePhrase;
 				richTextBox1.Text = str;
@@ -630,7 +637,9 @@ namespace MinorShift.Emuera
 			DialogResult result = saveFileDialog.ShowDialog();
 			if (result == DialogResult.OK)
 			{
-				console.OutputLog(Path.GetFullPath(saveFileDialog.FileName));
+                #region EE_OUTPUTLOG
+                console.OutputSystemLog(Path.GetFullPath(saveFileDialog.FileName));
+				#endregion
 			}
 		}
 
@@ -639,7 +648,7 @@ namespace MinorShift.Emuera
             try
             {
                 ClipBoardDialog dialog = new ClipBoardDialog();
-                dialog.Setup(this, console);
+                dialog.Setup(console);
                 dialog.ShowDialog();
             }
             catch (Exception)
@@ -706,7 +715,7 @@ namespace MinorShift.Emuera
                 MessageBox.Show("スクリプト動作中には使用できません");
                 return;
             }
-            List<KeyValuePair<string, string>> filepath = new List<KeyValuePair<string, string>>();
+            //List<KeyValuePair<string, string>> filepath = new List<KeyValuePair<string, string>>();
 			if (folderSelectDialog.ShowDialog() == DialogResult.OK)
 			{
 				console.ReloadFolder(folderSelectDialog.SelectedPath);
@@ -796,8 +805,23 @@ namespace MinorShift.Emuera
             PressEnterKey(false, false);
             textBox_flag = true;
         }
+		#region EM_私家版_INPUT系機能拡張
+		Keys? modifiersWhileWaintingInputWithMouse = null;
+		private void richTextBox1_ModifierRecorder_KeyUp(object sender, KeyEventArgs e)
+		{
+			if (console == null || !console.IsWaintingInputWithMouse)
+				return;
+			modifiersWhileWaintingInputWithMouse = null;
+		}
+		private void richTextBox1_ModifierRecorder_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (console == null || !console.IsWaintingInputWithMouse)
+				return;
+			modifiersWhileWaintingInputWithMouse = e.Modifiers;
+		}
+		#endregion
 
-        private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
+		private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
         {
             if (console == null)
                 return;

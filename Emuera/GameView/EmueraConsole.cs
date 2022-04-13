@@ -247,6 +247,15 @@ namespace MinorShift.Emuera.GameView
 				return (state == ConsoleState.Running || runningERBfromMemory);
 			}
 		}
+		#region EM_私家版_INPUT系機能拡張
+		internal bool IsWaintingInputWithMouse
+		{
+			get
+			{
+				return (state == ConsoleState.WaitInput && inputReq.MouseInput);
+			}
+		}
+		#endregion
 
 		internal bool IsInProcess
 		{
@@ -269,15 +278,21 @@ namespace MinorShift.Emuera.GameView
 				return state == ConsoleState.Error;
 			}
 		}
-
-		internal bool IsWaitingEnterKey
+        #region EE_連続FORCE_QUIT_AND_RESTAR対策
+        internal bool IsWaitingEnterKey
 		{
 			get
 			{
 				if ((state == ConsoleState.Quit) || (state == ConsoleState.Error))
+				{
+					GlobalStatic.ForceQuitAndRestart = false;
 					return true;
+				}
 				if(state == ConsoleState.WaitInput)
+                {
+					GlobalStatic.ForceQuitAndRestart = false;
 					return (inputReq.InputType == InputType.AnyKey || inputReq.InputType == InputType.EnterKey);
+				}
 				return false;
 			}
 		}
@@ -286,23 +301,17 @@ namespace MinorShift.Emuera.GameView
         {
             get
 			{
+				GlobalStatic.ForceQuitAndRestart = false;
 				return (state == ConsoleState.WaitInput && inputReq.InputType == InputType.AnyKey);
             }
         }
+		#endregion
 
-        internal bool IsWaintingOnePhrase
+		internal bool IsWaintingOnePhrase
         {
             get
             {
 				return (state == ConsoleState.WaitInput && inputReq.OneInput);
-            }
-        }
-
-        internal bool IsWaintingInputWithMouse
-        {
-            get
-            {
-                return (state == ConsoleState.WaitInput && inputReq.MouseInput);
             }
         }
 
@@ -368,6 +377,29 @@ namespace MinorShift.Emuera.GameView
 		
 
         public void Quit() { state = ConsoleState.Quit; }
+        #region EE_FORCE_QUIT系
+        public void ForceQuit()
+		{
+			
+			if (GlobalStatic.ForceQuitAndRestart == true)
+			{
+				DialogResult result = MessageBox.Show($"FORCE_QUIT_AND_RESTARTが入力待ちを挟まず連続実行されました。再起動せず終了しますか？",
+					"FORCE_QUIT_AND_RESTART",
+					MessageBoxButtons.YesNo,
+					MessageBoxIcon.None,
+					MessageBoxDefaultButton.Button1
+					);
+				if (result == DialogResult.Yes)
+				{
+					Program.Reboot = false;
+					throw new CodeEE("FORCE_QUIT_AND_RESTARTが連続実行されました");
+				}
+			}
+			GlobalStatic.ForceQuitAndRestart = true;
+			window.Close();
+			return;
+		}
+		#endregion
 		public void ThrowTitleError(bool error)
 		{
 			state = ConsoleState.Error;
@@ -649,8 +681,10 @@ namespace MinorShift.Emuera.GameView
 			if(IsWaitingPrimitive)
 			{
 				//callEmueraProgramは呼び出し先で行う。
-				InputMouseKey(4, 0, 0, 0,0);
-				return;
+				#region EE_INPUTMOUSEKEY拡張
+				InputMouseKey(4, 0, 0, 0, 0, 0);
+                #endregion
+                return;
 			}
 			if (inputReq.DisplayTime)
 				changeLastLine(inputReq.TimeUpMes);
@@ -699,8 +733,10 @@ namespace MinorShift.Emuera.GameView
                 PrintError("emueraのエラー：プログラムの状態を特定できません");
 			}
 			if (state == ConsoleState.Error && !noOutputLog)
-				OutputLog(Program.ExeDir + "emuera.log");
-			PrintFlush(false);
+                #region EE_OUTPUTLOG
+                OutputSystemLog(Program.ExeDir + "emuera.log");
+	            #endregion
+            PrintFlush(false);
 			//1819 Refreshは呼び出し側で行う
 			//RefreshStrings(false);
 			newGeneration();
@@ -759,10 +795,12 @@ namespace MinorShift.Emuera.GameView
 			//clientPointをクライアント左下基準の座標に置き換え
 			Point clientPoint = point;
 			clientPoint.Y = point.Y - ClientHeight;
-			InputMouseKey(2, delta, clientPoint.X, clientPoint.Y, 0);
-		}
+            #region EE_INPUTMOUSEKEY拡張
+            InputMouseKey(2, delta, clientPoint.X, clientPoint.Y, 0, 0);
+            #endregion
+        }
 
-		internal void MouseDown(Point point, MouseButtons button)
+        internal void MouseDown(Point point, MouseButtons button)
 		{
 			if (!IsWaitingPrimitive)
 				return;
@@ -786,20 +824,33 @@ namespace MinorShift.Emuera.GameView
 				}
 
 			}
-			InputMouseKey(1, (int)button, clientPoint.X, clientPoint.Y, buttonNum);
-		}
+			#region EE_INPUTMOUSEKEY拡張
+			//ボタン押された場合にRESULT:5にボタンの値が代入される
+			if (selectingButton != null)
+			{
+				InputMouseKey(1, (int)button, clientPoint.X, clientPoint.Y, buttonNum, selectingButton.Input);
+			}
+			else
+			{
+				InputMouseKey(1, (int)button, clientPoint.X, clientPoint.Y, buttonNum, 0);
+			}
+            #endregion
+        }
 
-		//1823 Key入力を捕まえる
-		internal void PressPrimitiveKey(Keys keycode, Keys keydata, Keys keymod)
+        //1823 Key入力を捕まえる
+        internal void PressPrimitiveKey(Keys keycode, Keys keydata, Keys keymod)
 		{
 			if (IsWaitingPrimitive)
-				InputMouseKey(3, (int)keycode, (int)keydata, 0, 0);
-		}
+				#region EE_INPUTMOUSEKEY拡張
+				InputMouseKey(3, (int)keycode, (int)keydata, 0, 0, 0);
+	            #endregion
+        }
 
 		//1823 Key入力を捕まえる
-		internal void InputMouseKey(int type, int result1, int result2, int result3, int result4)
+		#region EE_INPUTMOUSEKEY拡張
+		internal void InputMouseKey(int type, int result1, int result2, int result3, int result4, long result5)
 		{
-			emuera.InputResult5(type, result1, result2, result3, result4);
+			emuera.InputResult5(type, result1, result2, result3, result4, result5);
 
 			inProcess = true;
 			try
@@ -819,8 +870,8 @@ namespace MinorShift.Emuera.GameView
 			}
 			RefreshStrings(true);
 		}
-
-		public void PressEnterKey(bool keySkip, string str, bool changedByMouse)
+        #endregion
+        public void PressEnterKey(bool keySkip, string str, bool changedByMouse)
 		{
 			MesSkip = keySkip;
 			if ((state == ConsoleState.Running) || (state == ConsoleState.Initializing))
@@ -988,7 +1039,7 @@ namespace MinorShift.Emuera.GameView
             StringBuilder sb = new StringBuilder(20);
             StringBuilder num = new StringBuilder(20);
             bool hasRet = false;
-            int res = 0;
+            int res;
             while (!st.EOS && (!isNest || st.Current != ')'))
             {
                 if (st.Current == '(')
@@ -1094,8 +1145,10 @@ namespace MinorShift.Emuera.GameView
 			}
 			else if (com.Equals("OUTPUT", sc) || com.Equals("OUTPUTLOG", sc))
 			{
-				this.OutputLog(Program.ExeDir + "emuera.log");
-				return;
+				#region EE_OUTPUTLOG
+				this.OutputSystemLog(Program.ExeDir + "emuera.log");
+                #endregion
+                return;
 			}
 			else if ((com.Equals("QUIT", sc)) || (com.Equals("EXIT", sc)))
 			{
@@ -1328,9 +1381,30 @@ namespace MinorShift.Emuera.GameView
 						window.ToolTip.SetToolTip(window.MainPicBox, title);
                     else
                     {
-                        Point mousePos = window.MainPicBox.PointToClient(MainWindow.MousePosition);
-						window.ToolTip.Show(title, window.MainPicBox, new Point(mousePos.X, mousePos.Y + 18), tooltip_duration);
-                    }
+						if (window.ToolTip.InitialDelay == 0)
+						{
+							Point mousePos = window.MainPicBox.PointToClient(MainWindow.MousePosition);
+							window.ToolTip.Show(title, window.MainPicBox, new Point(mousePos.X, mousePos.Y + 18), tooltip_duration);
+						}
+						else
+						{
+							System.Threading.SynchronizationContext context = System.Threading.SynchronizationContext.Current;
+							System.Threading.Tasks.Task.Run(async () =>
+							{
+								ConsoleButtonString savedPointingString = pointingString;
+								await System.Threading.Tasks.Task.Delay(window.ToolTip.InitialDelay);
+								context.Post((state) =>
+								{
+									MoveMouse(GetMousePosition());
+									if (lastPointingString == savedPointingString)
+									{
+										Point mousePos = window.MainPicBox.PointToClient(MainWindow.MousePosition);
+										window.ToolTip.Show(title, window.MainPicBox, new Point(mousePos.X, mousePos.Y + 18), tooltip_duration);
+									}
+								}, null);
+							});
+						}
+					}
 					tooltipUsed = true;
 				}
 				lastPointingString = pointingString;
@@ -1585,7 +1659,7 @@ namespace MinorShift.Emuera.GameView
 			//クライアント左上基準の座標取得
 			Point pos = window.MainPicBox.PointToClient(Cursor.Position);
 			//クライアント左下基準の座標に置き換え
-			pos.Y = pos.Y - ClientHeight;
+			pos.Y -= ClientHeight;
 			return pos;
 		}
 
@@ -1648,7 +1722,7 @@ namespace MinorShift.Emuera.GameView
 			//	goto end;
 			int pointX = point.X;
 			int pointY = point.Y;
-			ConsoleDisplayLine curLine = null;
+			ConsoleDisplayLine curLine;
 
 			int bottomLineNo = window.ScrollBar.Value - 1;
 			if (displayLineList.Count - 1 < bottomLineNo)
@@ -1765,6 +1839,8 @@ namespace MinorShift.Emuera.GameView
 			//}
             forceStopTimer();
 			ClearDisplay();
+			//動的作成の分だけは削除する
+			AppContents.UnloadGraphicList();
             redraw = ConsoleRedraw.Normal;
             UseUserStyle = false;
             userStyle = new StringStyle(Config.ForeColor, FontStyle.Regular, null);

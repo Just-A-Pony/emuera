@@ -37,6 +37,7 @@ namespace MinorShift.Emuera.GameView
 			//parent = parentWindow;
 			if (buttons == null)
 			{
+				//これはthis.buttonの間違い？
 				buttons = new ConsoleButtonString[0];
 				return;
 			}

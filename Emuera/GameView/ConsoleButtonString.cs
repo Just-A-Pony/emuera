@@ -111,7 +111,7 @@ namespace MinorShift.Emuera.GameView
 			List<AConsoleDisplayPart> cssListA = new List<AConsoleDisplayPart>();
 			List<AConsoleDisplayPart> cssListB = new List<AConsoleDisplayPart>();
 			int index = 0;
-			int cssIndex = 0;
+			int cssIndex;
 			bool b = false;
 			for (cssIndex = 0; cssIndex < strArray.Length; cssIndex++)
 			{

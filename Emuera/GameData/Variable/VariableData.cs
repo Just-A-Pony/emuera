@@ -283,6 +283,9 @@ namespace MinorShift.Emuera.GameData.Variable
 			varTokenDic.Add("GAMEBASE_INFO", new StrConstantToken(VariableCode.GAMEBASE_INFO, this, gamebase.ScriptDetail));
 			varTokenDic.Add("GAMEBASE_YEAR", new StrConstantToken(VariableCode.GAMEBASE_YEAR, this, gamebase.ScriptYear));
 			varTokenDic.Add("GAMEBASE_TITLE", new StrConstantToken(VariableCode.GAMEBASE_TITLE, this, gamebase.ScriptTitle));
+            #region EE_UPDATECHECK
+            varTokenDic.Add("GAMEBASE_URL", new StrConstantToken(VariableCode.GAMEBASE_URL, this, gamebase.UpdateCheckURL));
+			#endregion
 
 
 			varTokenDic.Add("GAMEBASE_GAMECODE", new IntConstantToken(VariableCode.GAMEBASE_GAMECODE, this, gamebase.ScriptUniqueCode));
@@ -388,7 +391,7 @@ namespace MinorShift.Emuera.GameData.Variable
 		}
 		public UserDefinedVariableToken CreateUserDefVariable(UserDefinedVariableData data)
 		{
-			UserDefinedVariableToken ret = null;
+			UserDefinedVariableToken ret;
 			if (data.TypeIsStr)
 				switch (data.Dimension)
 				{
@@ -424,7 +427,7 @@ namespace MinorShift.Emuera.GameData.Variable
 
 		public UserDefinedVariableToken CreatePrivateVariable(UserDefinedVariableData data)
 		{
-			UserDefinedVariableToken ret = null;
+			UserDefinedVariableToken ret;
 			if (data.Reference)//参照型
 			{//すべて非Staticなはず
 				if (data.TypeIsStr)
@@ -688,7 +691,7 @@ namespace MinorShift.Emuera.GameData.Variable
 
 		public void SaveToStreamExtended(EraDataWriter writer)
 		{
-			List<VariableCode> codeList = null;
+			List<VariableCode> codeList;
 
 			//dataString
 			codeList = VariableIdentifier.GetExtSaveList(VariableCode.__STRING__);
@@ -770,7 +773,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			Dictionary<string, List<Int64[]>> int2DListDic = reader.ReadInt64Array2DExtended();
 			Dictionary<string, List<List<string[]>>> str3DListDic = reader.ReadStringArray3DExtended();
 			Dictionary<string, List<List<Int64[]>>> int3DListDic = reader.ReadInt64Array3DExtended();
-			List<VariableCode> codeList = null;
+			List<VariableCode> codeList;
 
 			codeList = VariableIdentifier.GetExtSaveList(VariableCode.__STRING__);
 			foreach (VariableCode code in codeList)
@@ -822,7 +825,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			int2DListDic = reader.ReadInt64Array2DExtended();
 			str3DListDic = reader.ReadStringArray3DExtended();
 			int3DListDic = reader.ReadInt64Array3DExtended();
-			List<UserDefinedVariableToken> varList = null;
+			List<UserDefinedVariableToken> varList;
 
 			int i = 0;
 			varList = userDefinedSaveVarList[i]; i++;
@@ -850,7 +853,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				if (str3DListDic.ContainsKey(var.Name))
 					copyListToArray3D(str3DListDic[var.Name], (string[, ,])var.GetArray());
 
-			varList = userDefinedSaveVarList[i]; i++;
+			varList = userDefinedSaveVarList[i];// i++;
 			foreach (UserDefinedVariableToken var in varList)
 				if (int3DListDic.ContainsKey(var.Name))
 					copyListToArray3D(int3DListDic[var.Name], (Int64[, ,])var.GetArray());
@@ -936,19 +939,14 @@ namespace MinorShift.Emuera.GameData.Variable
 
 		public void LoadGlobalFromStream1808(EraDataReader reader)
 		{
-			Dictionary<string, List<string>> strListDic = null;
-			Dictionary<string, List<Int64>> intListDic = null;
-			Dictionary<string, List<string[]>> str2DListDic = null;
-			Dictionary<string, List<Int64[]>> int2DListDic = null;
-			Dictionary<string, List<List<string[]>>> str3DListDic = null;
-			Dictionary<string, List<List<Int64[]>>> int3DListDic = null;
-			strListDic = reader.ReadStringArrayExtended();
-			intListDic = reader.ReadInt64ArrayExtended();
-			str2DListDic = reader.ReadStringArray2DExtended();
-			int2DListDic = reader.ReadInt64Array2DExtended();
-			str3DListDic = reader.ReadStringArray3DExtended();
-			int3DListDic = reader.ReadInt64Array3DExtended();
-			List<UserDefinedVariableToken> varList = null;
+			Dictionary<string, List<string>> strListDic = reader.ReadStringArrayExtended();
+			Dictionary<string, List<Int64>> intListDic = reader.ReadInt64ArrayExtended();
+			Dictionary<string, List<string[]>> str2DListDic = reader.ReadStringArray2DExtended();
+			Dictionary<string, List<Int64[]>> int2DListDic = reader.ReadInt64Array2DExtended();
+			Dictionary<string, List<List<string[]>>> str3DListDic = reader.ReadStringArray3DExtended();
+			Dictionary<string, List<List<Int64[]>>> int3DListDic = reader.ReadInt64Array3DExtended();
+
+			List<UserDefinedVariableToken> varList;
 
 			int i = 0;
 			varList = userDefinedGlobalSaveVarList[i]; i++;
@@ -976,7 +974,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				if (str3DListDic.ContainsKey(var.Name))
 					copyListToArray3D(str3DListDic[var.Name], (string[, ,])var.GetArray());
 
-			varList = userDefinedGlobalSaveVarList[i]; i++;
+			varList = userDefinedGlobalSaveVarList[i];// i++;
 			foreach (UserDefinedVariableToken var in varList)
 				if (int3DListDic.ContainsKey(var.Name))
 					copyListToArray3D(int3DListDic[var.Name], (Int64[, ,])var.GetArray());

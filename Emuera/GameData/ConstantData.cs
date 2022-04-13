@@ -67,7 +67,7 @@ namespace MinorShift.Emuera.GameData
 		private const int countNameCsv = (int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__;
 		
 		public int[] MaxDataList = new int[countNameCsv];
-		List<VariableCode> changedCode = new List<VariableCode>();
+        readonly HashSet<VariableCode> changedCode = new HashSet<VariableCode>();
 		
 		public int[] VariableIntArrayLength;
 		public int[] VariableStrArrayLength;
@@ -80,10 +80,10 @@ namespace MinorShift.Emuera.GameData
 		public Int64[] CharacterIntArray2DLength;
 		public Int64[] CharacterStrArray2DLength;
 
-		private readonly GameBase gamebase;
-		private string[][] names = new string[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__][];
-		private Dictionary<string, int>[] nameToIntDics = new Dictionary<string, int>[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__];
-		private Dictionary<string, int> relationDic = new Dictionary<string, int>();
+		//private readonly GameBase gamebase;
+		private readonly string[][] names = new string[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__][];
+		private readonly Dictionary<string, int>[] nameToIntDics = new Dictionary<string, int>[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__];
+		private readonly Dictionary<string, int> relationDic = new Dictionary<string, int>();
 		public string[] GetCsvNameList(VariableCode code)
 		{
 			return names[(int)(code & VariableCode.__LOWERCASE__)];
@@ -94,9 +94,9 @@ namespace MinorShift.Emuera.GameData
 		private readonly List<CharacterTemplate> CharacterTmplList;
 		private EmueraConsole output;
 		
-		public ConstantData(GameBase gamebase)
+		public ConstantData()
 		{
-			this.gamebase = gamebase;
+			//this.gamebase = gamebase;
 			setDefaultArrayLength();
 
 			CharacterTmplList = new List<CharacterTemplate>();
@@ -199,10 +199,10 @@ namespace MinorShift.Emuera.GameData
 				StringStream st = null;
 				while ((st = eReader.ReadEnabledLine()) != null)
 				{
-					position = new ScriptPosition(eReader.Filename, eReader.LineNo, st.RowString);
+					position = new ScriptPosition(eReader.Filename, eReader.LineNo);
 					changeVariableSizeData(st.Substring(), position);
 				}
-				position = new ScriptPosition(eReader.Filename, -1, null);
+				position = new ScriptPosition(eReader.Filename, -1);
 			}
 			catch
 			{
@@ -246,10 +246,9 @@ namespace MinorShift.Emuera.GameData
 				ParserMediator.Warn(id.ToString() + "のサイズは変更できません", position, 1);
 				return;
 			}
-			int length = 0;
-			int length2 = 0;
-			int length3 = 0;
-			if (!int.TryParse(tokens[1], out length))
+            int length2 = 0;
+            int length3 = 0;
+			if (!int.TryParse(tokens[1], out int length))
 			{
 				ParserMediator.Warn("二つ目の値を整数値として認識できません", position, 1);
 				return;
@@ -454,10 +453,8 @@ check1break:
 					break;
 			}
 			//1803beta004 二重定義を警告対象に
-			if (changedCode.Contains(id.Code))
+			if (!changedCode.Add(id.Code))
 				ParserMediator.Warn(id.Code.ToString() + "の要素数は既に定義されています（上書きします）", position, 1);
-			else
-				changedCode.Add(id.Code);
 		}
 
 		private void _decideActualArraySize_sub(VariableCode mainCode, VariableCode nameCode, int[] arraylength, ScriptPosition position)
@@ -509,19 +506,12 @@ check1break:
 
 
 			//PALAM(JUEL込み)
-			//PALAMNAMEが変わっていてかつPALAMかJUELが変わっているとき、
-			if ((changedCode.Contains(VariableCode.PALAMNAME)) && (changedCode.Contains(VariableCode.PALAM) || changedCode.Contains(VariableCode.JUEL)))
-			{
-				int palamJuelMax = Math.Max(CharacterIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.PALAM)]
-						, CharacterIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.JUEL)]);
-			
-			}
-			//PALAMかJUELが変わっていれば、そのうち大きい方にPALAMNAMEをあわせる
+			//PALAMかJUELが変わっているときは大きい方をとる
 			if (changedCode.Contains(VariableCode.PALAM) || changedCode.Contains(VariableCode.JUEL))
 			{
 				int palamJuelMax = Math.Max(CharacterIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.PALAM)]
 						, CharacterIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.JUEL)]);
-				//PALAMNAMEが変わっている
+				//PALAMNAMEが変わっているなら、それと比較して大きい方を採用
 				if(changedCode.Contains(VariableCode.PALAMNAME))
 				{
 					if (MaxDataList[paramIndex] != palamJuelMax)
@@ -654,18 +644,17 @@ check1break:
 		{
 			if (string.IsNullOrEmpty(str))
 				return false;
-			string errPos = null;
-			Dictionary<string, int> dic = null;
-			if (varCode == VariableCode.CDFLAG)
-			{
-				dic = GetKeywordDictionary(out errPos, VariableCode.CDFLAGNAME1, -1);
-				if ((dic == null)||(!dic.ContainsKey(str)))
-					dic = GetKeywordDictionary(out errPos, VariableCode.CDFLAGNAME2, -1);
-				if (dic == null)
-					return false;
-				return dic.ContainsKey(str);
-			}
-			dic = GetKeywordDictionary(out errPos, varCode, -1);
+            Dictionary<string, int> dic;
+            if (varCode == VariableCode.CDFLAG)
+            {
+                dic = GetKeywordDictionary(out _, VariableCode.CDFLAGNAME1, -1);
+                if ((dic == null) || (!dic.ContainsKey(str)))
+                    dic = GetKeywordDictionary(out _, VariableCode.CDFLAGNAME2, -1);
+                if (dic == null)
+                    return false;
+                return dic.ContainsKey(str);
+            }
+            dic = GetKeywordDictionary(out _, varCode, -1);
 			if (dic == null)
 				return false;
 			return dic.ContainsKey(str);
@@ -677,11 +666,10 @@ check1break:
             ret = 0;
             if (string.IsNullOrEmpty(key))
                 return false;
-            string errPos;
-            Dictionary<string, int> dic = null;
+            Dictionary<string, int> dic;
             try
             {
-                dic = GetKeywordDictionary(out errPos, code, index);
+                dic = GetKeywordDictionary(out string errPos, code, index);
 				if (dic == null)
 					return false;
             }
@@ -693,12 +681,10 @@ check1break:
 		{
 			if (string.IsNullOrEmpty(key))
 				throw new CodeEE("キーワードを空には出来ません");
-			int ret = -1;
-			string errPos;
-            Dictionary<string, int> dic = GetKeywordDictionary(out errPos, code, index);
-			if (dic.TryGetValue(key, out ret))
-				return ret;
-			if (errPos == null)
+            Dictionary<string, int> dic = GetKeywordDictionary(out string errPos, code, index);
+            if (dic.TryGetValue(key, out int ret))
+                return ret;
+            if (errPos == null)
 				throw new CodeEE("配列変数" + code.ToString() + "の要素を文字列で指定することはできません");
 			else
 				throw new CodeEE(errPos + "の中に\"" + key + "\"の定義がありません");
@@ -1004,7 +990,7 @@ check1break:
 				StringStream st = null;
 				while ((st = eReader.ReadEnabledLine()) != null)
 				{
-					position = new ScriptPosition(eReader.Filename, eReader.LineNo, st.RowString);
+					position = new ScriptPosition(eReader.Filename, eReader.LineNo);
 					string[] tokens = st.Substring().Split(',');
 					if (tokens.Length < 2)
 					{
@@ -1052,7 +1038,7 @@ check1break:
 						ParserMediator.Warn("番号が定義される前に他のデータが始まりました", position, 1);
 						continue;
 					}
-					toCharacterTemplate(gamebase, position, tmpl, tokens);
+					toCharacterTemplate(position, tmpl, tokens);
 				}
 			}
 			catch
@@ -1106,7 +1092,7 @@ check1break:
 			try
 			{
 				p = LexicalAnalyzer.ReadInt64(st, false);
-				p = p * sign;
+				p *= sign;
 			}
 			catch
 			{
@@ -1115,16 +1101,14 @@ check1break:
 			return true;
 		}
 
-		private void toCharacterTemplate(GameBase gamebase, ScriptPosition position, CharacterTemplate chara, string[] tokens)
+		private void toCharacterTemplate(ScriptPosition position, CharacterTemplate chara, string[] tokens)
 		{
 			if (chara == null)
 				return;
-			int length = -1;
-			Int64 p1 = -1;
-			Int64 p2 = -1;
-			Dictionary<int, Int64> intArray = null;
-			Dictionary<int, string> strArray = null;
-			Dictionary<string, int> namearray = null;
+			int length;
+            Dictionary<int, Int64> intArray = null;
+            Dictionary<int, string> strArray = null;
+			Dictionary<string, int> namearray;
 
 			string errPos = null;
 			string varname = tokens[0].ToUpper();
@@ -1228,7 +1212,7 @@ check1break:
 				ParserMediator.Warn(varname + "は禁止設定された変数です", position, 2);
 				return;
 			}
-			bool p1isNumeric = tryToInt64(tokens[1].TrimEnd(), out p1);
+			bool p1isNumeric = tryToInt64(tokens[1].TrimEnd(), out long p1);
 			if (p1isNumeric && ((p1 < 0) || (p1 >= length)))
 			{
 				ParserMediator.Warn(p1.ToString() + "は配列の範囲外です", position, 1);
@@ -1270,7 +1254,7 @@ check1break:
 			}
 			else
 			{
-				if ((tokens.Length < 3) || !tryToInt64(tokens[2], out p2))
+				if ((tokens.Length < 3) || !tryToInt64(tokens[2], out long p2))
 					p2 = 1;
 				if (intArray.ContainsKey(index))
 					ParserMediator.Warn(varname + "の" + index.ToString() + "番目の要素は既に定義されています(上書きします)", position, 1);
@@ -1285,7 +1269,7 @@ check1break:
 			if (!File.Exists(csvPath))
 				return;
 			string[] target = names[targetIndex];
-            List<int> defined = new List<int>();
+            HashSet<int> defined = new HashSet<int>();
 			EraStreamReader eReader = new EraStreamReader(false);
 			if (!eReader.Open(csvPath))
 			{
@@ -1301,20 +1285,19 @@ check1break:
 				StringStream st = null;
 				while ((st = eReader.ReadEnabledLine()) != null)
 				{
-					position = new ScriptPosition(eReader.Filename, eReader.LineNo, st.RowString);
+					position = new ScriptPosition(eReader.Filename, eReader.LineNo);
 					string[] tokens = st.Substring().Split(',');
 					if (tokens.Length < 2)
 					{
 						ParserMediator.Warn("\",\"が必要です", position, 1);
 						continue;
 					}
-					int index = 0;
-					if (!Int32.TryParse(tokens[0], out index))
-					{
-						ParserMediator.Warn("一つ目の値を整数値に変換できません", position, 1);
-						continue;
-					}
-					if (target.Length == 0)
+                    if (!Int32.TryParse(tokens[0], out int index))
+                    {
+                        ParserMediator.Warn("一つ目の値を整数値に変換できません", position, 1);
+                        continue;
+                    }
+                    if (target.Length == 0)
 					{
 						ParserMediator.Warn("禁止設定された名前配列です", position, 2);
 						break;
@@ -1324,22 +1307,19 @@ check1break:
 						ParserMediator.Warn(index.ToString() + "は配列の範囲外です", position, 1);
 						continue;
 					}
-                    if (defined.Contains(index))
+                    if (!defined.Add(index))
                         ParserMediator.Warn(index.ToString() + "番目の要素はすでに定義されています（新しい値で上書きします）", position, 1);
-                    else
-                        defined.Add(index);
 					target[index] = tokens[1];
 					if ((targetI != null) && (tokens.Length >= 3))
 					{
-						Int64 price;
 
-						if (!Int64.TryParse(tokens[2].TrimEnd(), out price))
-						{
-							ParserMediator.Warn("金額が読み取れません", position, 1);
-							continue;
-						}
+                        if (!Int64.TryParse(tokens[2].TrimEnd(), out long price))
+                        {
+                            ParserMediator.Warn("金額が読み取れません", position, 1);
+                            continue;
+                        }
 
-						targetI[index] = price;
+                        targetI[index] = price;
 					}
 				}
 			}
@@ -1363,8 +1343,8 @@ check1break:
 
 	internal sealed class CharacterTemplate
 	{
-		int[] arraySize;
-		int cstrSize;
+        readonly int[] arraySize;
+        readonly int cstrSize;
 
 		public string Name;
 		public string Callname;
@@ -1434,6 +1414,7 @@ check1break:
 
 		internal void SetSpFlag()
 		{
+			//bool res;
 			if (CFlag.ContainsKey(0) && CFlag[0] != 0L)
 				IsSpchara = true;
 		}

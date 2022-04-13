@@ -20,11 +20,11 @@ namespace MinorShift.Emuera
 	//また、使用されている名前を記憶し衝突を検出する。
 	internal sealed class IdentifierDictionary
 	{
-        #region EM_私家版_辞書獲得
-        public string[] VarKeys => varTokenDic.Keys.ToArray();
-        public string[] MacroKeys => macroDic.Keys.ToArray();
-        #endregion
-        private enum DefinedNameType
+		#region EM_私家版_辞書獲得
+		public string[] VarKeys => varTokenDic.Keys.ToArray();
+		public string[] MacroKeys => macroDic.Keys.ToArray();
+		#endregion
+		private enum DefinedNameType
 		{
 			None = 0,
 			Reserved,
@@ -118,11 +118,11 @@ namespace MinorShift.Emuera
 
 		List<string> privateDimList = new List<string>();
 		List<string> disableList = new List<string>();
-        //Dictionary<string, VariableToken> userDefinedVarDic = new Dictionary<string, VariableToken>();
+		//Dictionary<string, VariableToken> userDefinedVarDic = new Dictionary<string, VariableToken>();
 
-        VariableData varData;
+		VariableData varData;
 		Dictionary<string, VariableToken> varTokenDic;
-        Dictionary<string, VariableLocal> localvarTokenDic;
+		Dictionary<string, VariableLocal> localvarTokenDic;
 		Dictionary<string, FunctionIdentifier> instructionDic;
 		Dictionary<string, FunctionMethod> methodDic;
 		Dictionary<string, UserDefinedRefMethod> refmethodDic;
@@ -465,7 +465,7 @@ namespace MinorShift.Emuera
 
 		public VariableToken GetVariableToken(string key, string subKey, bool allowPrivate)
 		{
-			VariableToken ret = null;
+			VariableToken ret;
             if (Config.ICVariable)
                 key = key.ToUpper();
             if (allowPrivate)
@@ -530,13 +530,14 @@ namespace MinorShift.Emuera
 		public FunctionIdentifier GetFunctionIdentifier(string str)
 		{
 			string key = str;
-			FunctionIdentifier ret = null;
-			if (string.IsNullOrEmpty(key))
-				return null;
-			if (Config.ICFunction)
+            if (string.IsNullOrEmpty(key))
+                return null;
+            if (Config.ICFunction)
 				key = key.ToUpper();
-			instructionDic.TryGetValue(key, out ret);
-			return ret;
+			if (instructionDic.TryGetValue(key, out FunctionIdentifier ret))
+				return ret;
+			else
+				return null;
 		}
 
 		public List<string> GetOverloadedList(LabelDictionary labelDic)
@@ -599,10 +600,9 @@ namespace MinorShift.Emuera
 			}
 			if (userDefinedOnly)
 				return null;
-			FunctionMethod method = null;
-			if (!methodDic.TryGetValue(codeStr, out method))
-				return null;
-			string errmes = method.CheckArgumentType(codeStr, arguments);
+            if (!methodDic.TryGetValue(codeStr, out FunctionMethod method))
+                return null;
+            string errmes = method.CheckArgumentType(codeStr, arguments);
 			if (errmes != null)
 				throw new CodeEE(errmes);
 			return new FunctionMethodTerm(method, arguments);
@@ -670,10 +670,9 @@ namespace MinorShift.Emuera
         {
             if (localvarTokenDic.ContainsKey(key))
                 return localvarTokenDic[key].IsForbid;
-            VariableToken var = null;
-            varTokenDic.TryGetValue(key, out var);
+			varTokenDic.TryGetValue(key, out VariableToken var);
             if (var != null)
-                return var.IsForbid;
+                    return var.IsForbid;
             return true;
         }
         #endregion

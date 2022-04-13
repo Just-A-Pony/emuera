@@ -236,6 +236,9 @@ namespace MinorShift.Emuera.GameData.Variable
 		GAMEBASE_INFO = 0x01 | __STRING__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//文字列型。追加情報
 		GAMEBASE_YEAR = 0x02 | __STRING__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//文字列型。製作年
 		GAMEBASE_TITLE = 0x03 | __STRING__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//文字列型。タイトル
+        #region EE_UPDATECHECK
+        GAMEBASE_URL = 0x03 | __STRING__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//文字列型。URL
+		#endregion
 		WINDOW_TITLE = 0x05 | __STRING__ | __CALC__ | __EXTENDED__,//文字列型。ウインドウのタイトル。変更可能。
 		//アンダースコア2つで囲まれた変数を追加したらVariableTokenに特別な処理が必要。
 		__FILE__ = 0x06 | __STRING__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//現在実行中のファイル名
@@ -256,7 +259,7 @@ namespace MinorShift.Emuera.GameData.Variable
 		LASTLOAD_NO = 0x06 | __INTEGER__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//数値型。
 		__LINE__ = 0x07 | __INTEGER__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//現在実行中の行番号
 		LINECOUNT = 0x08 | __INTEGER__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//描画した行の総数。CLEARで減少
-        ISTIMEOUT = 0x0B | __INT_MAX__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//TINPUT系等がTIMEOUTしたか？
+        ISTIMEOUT = 0x0B | __INTEGER__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//TINPUT系等がTIMEOUTしたか？
 
         __INT_MAX__ = 0x09 | __INTEGER__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//Int64最大値
         __INT_MIN__ = 0x0A | __INTEGER__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//Int64最小値

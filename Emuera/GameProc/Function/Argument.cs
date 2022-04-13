@@ -7,39 +7,19 @@ using MinorShift.Emuera.GameData.Function;
 
 namespace MinorShift.Emuera.GameProc.Function
 {
-    #region EM_私家版_追加命令
-    internal sealed class SpSetFormArgment : Argument
-    {
-        public SpSetFormArgment(IOperandTerm varname, IOperandTerm arg)
-        {
-            Varname = varname;
-            RowArg = arg;
-        }
-        readonly public IOperandTerm Varname;
-        readonly public IOperandTerm RowArg;
-    }
-    internal sealed class SpClearLineArgment : Argument
-    {
-        public SpClearLineArgment(IOperandTerm lines, IOperandTerm refresh)
-        {
-            Lines = lines;
-            Refresh = refresh;
-        }
-        readonly public IOperandTerm Lines;
-        readonly public IOperandTerm Refresh;
-    }
-    internal sealed class SpHtmlSubStringArgument : Argument
-    {
-        public SpHtmlSubStringArgument(IOperandTerm s1, IOperandTerm len)
-        {
-            TargetStr = s1;
-            Length = len;
-        }
-        readonly public IOperandTerm TargetStr;
-        readonly public IOperandTerm Length;
-    }
-    #endregion
-    internal abstract class Argument
+	#region EM_私家版_INPUT系機能拡張
+	internal sealed class SpInputsArgument : Argument
+	{
+		public SpInputsArgument(IOperandTerm def, IOperandTerm mouse)
+		{
+			Def = def;
+			Mouse = mouse;
+		}
+		readonly public IOperandTerm Def;
+		readonly public IOperandTerm Mouse;
+	}
+	#endregion
+	internal abstract class Argument
 	{
 		public bool IsConst;
 		public string ConstStr;
@@ -172,33 +152,30 @@ namespace MinorShift.Emuera.GameProc.Function
 
 	internal sealed class SpTInputsArgument : Argument
 	{
+		#region EM_私家版_INPUT系機能拡張
+		//public SpTInputsArgument(IOperandTerm time, IOperandTerm def, IOperandTerm disp, IOperandTerm timeout)
 		public SpTInputsArgument(IOperandTerm time, IOperandTerm def, IOperandTerm disp, IOperandTerm timeout, IOperandTerm mouse)
+		#endregion
 		{
 			Time = time;
 			Def = def;
 			Disp = disp;
             Timeout = timeout;
-            Mouse = mouse;
+			#region EM_私家版_INPUT系機能拡張
+			Mouse = mouse;
+			#endregion
 		}
 		readonly public IOperandTerm Time;
 		readonly public IOperandTerm Def;
 		readonly public IOperandTerm Disp;
         readonly public IOperandTerm Timeout;
-        readonly public IOperandTerm Mouse;
-    }
-    internal sealed class SpInputsArgument : Argument
-    {
-        public SpInputsArgument(IOperandTerm def, IOperandTerm mouse)
-        {
-            Def = def;
-            Mouse = mouse;
-        }
-        readonly public IOperandTerm Def;
-        readonly public IOperandTerm Mouse;
-    }
+		#region EM_私家版_INPUT系機能拡張
+		readonly public IOperandTerm Mouse;
+		#endregion
+	}
 
-    //難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
-    [global::System.Reflection.Obfuscation(Exclude = false)]
+	//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
+	[global::System.Reflection.Obfuscation(Exclude = false)]
 	internal enum SortOrder
 	{
 		UNDEF = 0,
@@ -547,7 +524,22 @@ namespace MinorShift.Emuera.GameProc.Function
         readonly public IOperandTerm Term;
         readonly public IOperandTerm Flag;
     }
-    
+
+
+    #region EE
+    internal sealed class StrDoubleArgument : Argument
+    {
+        public StrDoubleArgument(IOperandTerm term, double doublevalue)
+        {
+            Term = term;
+            DoubleValue = doublevalue;
+        }
+        readonly public IOperandTerm Term;
+        readonly public double DoubleValue;
+    }
+	#endregion
+
+
 	#region set系
 	internal sealed class SpSetArgument : Argument
 	{

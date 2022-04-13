@@ -131,6 +131,10 @@ namespace MinorShift.Emuera
 		SystemNoTarget,
 		SystemIgnoreStringSet,
 
+        #region EE_UPDATECHECK
+        ForbidUpdateCheck,
+		#endregion
+
 		MoneyLabel = 100,
 		MoneyFirst = 101,
 		LoadLabel = 102,
@@ -150,6 +154,8 @@ namespace MinorShift.Emuera
 
 		UseKeyMacro = 162,
 
-        ValidExtension = 200,
-    }
+		#region EM_私家版_LoadText＆SaveText機能拡張
+		ValidExtension = 200,
+		#endregion
+	}
 }

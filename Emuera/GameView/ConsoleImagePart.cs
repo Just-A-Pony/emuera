@@ -33,12 +33,12 @@ namespace MinorShift.Emuera.GameView
 			if(raw_width != 0)
 			{
 				sb.Append("' width='");
-				sb.Append(raw_height.ToString());
+				sb.Append(raw_width.ToString());
 			}
 			if(raw_ypos != 0)
 			{
 				sb.Append("' ypos='");
-				sb.Append(raw_height.ToString());
+				sb.Append(raw_ypos.ToString());
 			}
 			sb.Append("'>");
 			AltText = sb.ToString();
@@ -50,7 +50,7 @@ namespace MinorShift.Emuera.GameView
 				Str = AltText;
 				return;
 			}
-			int height = 0;
+			int height;
 			if (raw_height == 0)//HTMLで高さが指定されていない又は0が指定された場合、フォントサイズをそのまま高さ(px単位)として使用する。
 				height = Config.FontSize;
 			else//HTMLで高さが指定された場合、フォントサイズの100分率と解釈する。

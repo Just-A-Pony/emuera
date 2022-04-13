@@ -36,102 +36,101 @@ namespace MinorShift.Emuera.GameView
 	/// </summary>
 	internal static class HtmlManager
 	{
-        #region EM_私家版_HtmlManager機能追加
-        public static int HtmlLength(string s)
-        {
-            ConsoleDisplayLine[] lines = HtmlManager.Html2DisplayLine(s, GlobalStatic.Console.StrMeasure, GlobalStatic.Console);
-            int len = 0;
-            if (lines.Length <= 0) return 0;
-            foreach (var btn in lines[0].Buttons) len += btn.Width;
-            return len;
-        }
-        private static int GetSubStr(string pref, string suff, string s, ref int lmax)
-        {
-            int len = 0, i;
-            for (i = 0; i < s.Length; i++)
-            {
-                int t = HtmlLength(pref + s.Substring(i, 1) + suff);
-                if (len + t > lmax)
-                {
-                    i--;
-                    break;
-                }
-                len += t;
-            }
-            if (i == s.Length) i--;
-            lmax -= len;
-            return i + 1;
-        }
-        private struct HTMLI
-        {
-            public string tag;
-            public bool isStyleTag;
+		#region EM_私家版_HtmlManager機能拡張
+		public static int HtmlLength(string s)
+		{
+			ConsoleDisplayLine[] lines = HtmlManager.Html2DisplayLine(s, GlobalStatic.Console.StrMeasure, GlobalStatic.Console);
+			int len = 0;
+			if (lines.Length <= 0) return 0;
+			foreach (var btn in lines[0].Buttons) len += btn.Width;
+			return len;
+		}
+		private static int GetSubStr(string pref, string suff, string s, ref int lmax)
+		{
+			int len = 0, i;
+			for (i = 0; i < s.Length; i++)
+			{
+				int t = HtmlLength(pref + s.Substring(i, 1) + suff);
+				if (len + t > lmax)
+				{
+					i--;
+					break;
+				}
+				len += t;
+			}
+			if (i == s.Length) i--;
+			lmax -= len;
+			return i + 1;
+		}
+		private struct HTMLI
+		{
+			public string tag;
+			public bool isStyleTag;
 
-            public HTMLI(string v1, bool v2) : this()
-            {
-                this.tag = v1;
-                this.isStyleTag = v2;
-            }
-        };
-        public static string[] HtmlSubString(string str, int length)
-        {
-            Stack<HTMLI> beginStack = new Stack<HTMLI>(), endStack = new Stack<HTMLI>();
+			public HTMLI(string v1, bool v2) : this()
+			{
+				this.tag = v1;
+				this.isStyleTag = v2;
+			}
+		};
+		public static string[] HtmlSubString(string str, int length)
+		{
+			Stack<HTMLI> beginStack = new Stack<HTMLI>(), endStack = new Stack<HTMLI>();
 
-            length = length * Config.FontSize / 2;
+			length = length * Config.FontSize / 2;
 
-            int found = -1, last = 0, delbr = 0;
-            while (true)
-            {
-                found = str.IndexOf('<', last);
-                if (found != last)
-                {
-                    string pref = "", suff = "";
-                    foreach (HTMLI s in beginStack) if (s.isStyleTag) pref += s.tag;
-                    Stack<HTMLI> arr = new Stack<HTMLI>(endStack);
-                    while (arr.Count > 0)
-                        if (arr.Peek().isStyleTag) suff += arr.Pop().tag;
-                        else arr.Pop();
-                    int tmp;
-                    string tstr;
-                    if (found < 0)
-                        tstr = str.Substring(last, str.Length - last);
-                    else
-                        tstr = str.Substring(last, found - last);
-                    tmp = GetSubStr(pref, suff, tstr, ref length);
-                    last += tmp + 1;
-                    if (found < 0 || tmp < tstr.Length) break;
-                }
-                else last++;
-                found = str.IndexOf('>', last);
-                if (found <= 0) break;
-                if (str[last] == '/')
-                {
-                    beginStack.Pop();
-                    endStack.Pop();
-                }
-                else
-                {
-                    int fspace = str.IndexOf(' ', last, found - last);
-                    if (fspace < 0) fspace = found;
-                    string tag = str.Substring(last, fspace - last);
-                    if (tag == "br") { delbr = 1; break; }
-                    bool ist = (tag == "b" || tag == "i" || tag == "s");
-                    beginStack.Push(new HTMLI('<' + str.Substring(last, found - last) + '>', ist));
-                    endStack.Push(new HTMLI("</" + tag + '>', ist));
-                }
-                last = found + 1;
-            }
-            string[] ret = new string[2];
-            if (last == 0) return new string[] { "", str };
-            ret[0] = str.Substring(0, last - 1);
-            while (endStack.Count > 0) ret[0] += endStack.Pop().tag;
-            while (beginStack.Count > 0) ret[1] = beginStack.Pop().tag + ret[1];
-            ret[1] += str.Substring(last - 1 + delbr * 4, str.Length - last + 1 - delbr * 4);
-            return ret;
-        }
-        #endregion
-
-        static HtmlManager()
+			int found = -1, last = 0, delbr = 0;
+			while (true)
+			{
+				found = str.IndexOf('<', last);
+				if (found != last)
+				{
+					string pref = "", suff = "";
+					foreach (HTMLI s in beginStack) if (s.isStyleTag) pref += s.tag;
+					Stack<HTMLI> arr = new Stack<HTMLI>(endStack);
+					while (arr.Count > 0)
+						if (arr.Peek().isStyleTag) suff += arr.Pop().tag;
+						else arr.Pop();
+					int tmp;
+					string tstr;
+					if (found < 0)
+						tstr = str.Substring(last, str.Length - last);
+					else
+						tstr = str.Substring(last, found - last);
+					tmp = GetSubStr(pref, suff, tstr, ref length);
+					last += tmp + 1;
+					if (found < 0 || tmp < tstr.Length) break;
+				}
+				else last++;
+				found = str.IndexOf('>', last);
+				if (found <= 0) break;
+				if (str[last] == '/')
+				{
+					beginStack.Pop();
+					endStack.Pop();
+				}
+				else
+				{
+					int fspace = str.IndexOf(' ', last, found - last);
+					if (fspace < 0) fspace = found;
+					string tag = str.Substring(last, fspace - last);
+					if (tag == "br") { delbr = 1; break; }
+					bool ist = (tag == "b" || tag == "i" || tag == "s");
+					beginStack.Push(new HTMLI('<' + str.Substring(last, found - last) + '>', ist));
+					endStack.Push(new HTMLI("</" + tag + '>', ist));
+				}
+				last = found + 1;
+			}
+			string[] ret = new string[2];
+			if (last == 0) return new string[] { "", str };
+			ret[0] = str.Substring(0, last - 1);
+			while (endStack.Count > 0) ret[0] += endStack.Pop().tag;
+			while (beginStack.Count > 0) ret[1] = beginStack.Pop().tag + ret[1];
+			ret[1] += str.Substring(last - 1 + delbr * 4, str.Length - last + 1 - delbr * 4);
+			return ret;
+		}
+		#endregion
+		static HtmlManager()
 		{
 			repDic.Add('&', "&amp;");
 			repDic.Add('>', "&gt;");
@@ -154,7 +153,7 @@ namespace MinorShift.Emuera.GameView
 		{
 			public bool IsButton = true;
 			public bool IsButtonTag = true;
-			public int ButtonValueInt = 0;
+			public Int64 ButtonValueInt = 0;
 			public string ButtonValueStr = null;
 			public string ButtonTitle = null;
 			public bool ButtonIsInteger = false;
@@ -325,7 +324,7 @@ namespace MinorShift.Emuera.GameView
 		{
 			List<string> strList = new List<string>();
 			StringStream st = new StringStream(str);
-			int found = -1;
+			int found;
 			while (!st.EOS)
 			{
 				found = st.Find('<');
@@ -472,7 +471,7 @@ namespace MinorShift.Emuera.GameView
 			//return System.Web.HttpUtility.HtmlEncode(str);
 
 			int index = 0;
-			int found = 0;
+			int found;
 			StringBuilder b = new StringBuilder();
 			while (index < str.Length)
 			{
@@ -520,7 +519,7 @@ namespace MinorShift.Emuera.GameView
 				string escWordRow = str.Substring(index + 1, found - index - 1);
 				index = found + 1;
 				string escWord = escWordRow.ToLower();
-				int unicode = 0;
+				int unicode;
 				switch (escWord)
 				{
 					case "nbsp": b.Append(" "); break;
@@ -574,7 +573,7 @@ namespace MinorShift.Emuera.GameView
 			AConsoleDisplayPart[] css = new AConsoleDisplayPart[cssList.Count];
 			cssList.CopyTo(css);
 			cssList.Clear();
-			ConsoleButtonString ret = null;
+			ConsoleButtonString ret;
 			if (state.LastButtonTag != null && state.LastButtonTag.IsButton)
 			{
 				if (state.LastButtonTag.ButtonIsInteger)
@@ -818,7 +817,7 @@ namespace MinorShift.Emuera.GameView
 					{
 						if (wc == null)
 							throw new CodeEE("<" + tag + ">タグに属性が設定されていません");
-						string attrValue = null;
+						string attrValue;
 						string src = null;
 						string srcb = null;
 						int height = 0;
@@ -952,7 +951,7 @@ namespace MinorShift.Emuera.GameView
 							throw new CodeEE("<button>又は<nonbutton>が入れ子にされています");
 						HtmlAnalzeStateButtonTag buttonTag = new HtmlAnalzeStateButtonTag();
 						bool isButton = tag.ToLower() == "button";
-						string attrValue = null;
+						string attrValue;
 						string value = null;
 						//if (wc == null)
 						//	throw new CodeEE("<" + tag + ">タグに属性が設定されていません");
@@ -972,7 +971,7 @@ namespace MinorShift.Emuera.GameView
 								if (!isButton)
 									throw new CodeEE("<" + tag + ">タグにvalue属性が設定されています");
 								if (value != null)
-										throw new CodeEE("<" + tag + ">タグに" + word.Code + "属性が2度以上指定されています");
+                                    throw new CodeEE("<" + tag + ">タグに" + word.Code + "属性が2度以上指定されています");
 								value = attrValue;
 							}
 							else if (word.Code.Equals("title", StringComparison.OrdinalIgnoreCase))
@@ -983,11 +982,10 @@ namespace MinorShift.Emuera.GameView
 							}
 							else if (word.Code.Equals("pos", StringComparison.OrdinalIgnoreCase))
 							{
-								//throw new NotImplCodeEE();
-								int pos = 0;
-								if (buttonTag.PointXisLocked)
-										throw new CodeEE("<" + tag + ">タグに" + word.Code + "属性が2度以上指定されています");
-								if (!int.TryParse(attrValue, out pos))
+                                //throw new NotImplCodeEE();
+                                if (buttonTag.PointXisLocked)
+                                    throw new CodeEE("<" + tag + ">タグに" + word.Code + "属性が2度以上指定されています");
+                                if (!int.TryParse(attrValue, out int pos))
 									throw new CodeEE("<" + tag + ">タグのpos属性の属性値が数値として解釈できません");
 								buttonTag.PointX = pos;
 								buttonTag.PointXisLocked = true;
@@ -997,11 +995,10 @@ namespace MinorShift.Emuera.GameView
 						}
 						if (isButton)
 						{
-							//if (value == null)
-							//	throw new CodeEE("<" + tag + ">タグにvalue属性が設定されていません");
-							int intValue = 0;
-							buttonTag.ButtonIsInteger = (int.TryParse(value, out intValue));
-							buttonTag.ButtonValueInt = intValue;
+                            //if (value == null)
+                            //	throw new CodeEE("<" + tag + ">タグにvalue属性が設定されていません");
+                            buttonTag.ButtonIsInteger = (Int64.TryParse(value, out long intValue));
+                            buttonTag.ButtonValueInt = intValue;
 							buttonTag.ButtonValueStr = value;
 						}
 						buttonTag.IsButton = value != null;
@@ -1086,7 +1083,7 @@ namespace MinorShift.Emuera.GameView
 		{
 			if(str.Length == 0)
 				throw new CodeEE("色を表す単語又は#RRGGBB値が必要です");
-			int i = 0;
+			int i;
 			if (str[0] == '#')
 			{
 				string colorvalue = str.Substring(1);

@@ -210,7 +210,7 @@ namespace MinorShift._Library
 		{
 			if (lastBrushColor == color)
 				return;
-			IntPtr hBrush = IntPtr.Zero;
+			IntPtr hBrush;
 			if (color.A == 0)
 				hBrush = GetStockObject(StockObjects.NULL_BRUSH);
 			else

@@ -122,13 +122,19 @@ namespace MinorShift.Emuera
 
             AllowLongInputByMouse = instance.GetConfigValue<bool>(ConfigCode.AllowLongInputByMouse);
 
-           TimesNotRigorousCalculation = instance.GetConfigValue<bool>(ConfigCode.TimesNotRigorousCalculation);
+            TimesNotRigorousCalculation = instance.GetConfigValue<bool>(ConfigCode.TimesNotRigorousCalculation);
             //一文字変数の禁止オプションを考えた名残
-		   //ForbidOneCodeVariable = instance.GetConfigValue<bool>(ConfigCode.ForbidOneCodeVariable);
-		   SystemNoTarget = instance.GetConfigValue<bool>(ConfigCode.SystemNoTarget);
-            ValidExtension = instance.GetConfigValue<List<string>>(ConfigCode.ValidExtension);
+		    //ForbidOneCodeVariable = instance.GetConfigValue<bool>(ConfigCode.ForbidOneCodeVariable);
+		    SystemNoTarget = instance.GetConfigValue<bool>(ConfigCode.SystemNoTarget);
+            #region EE版_UPDATECHECK
+            ForbidUpdateCheck = instance.GetConfigValue<bool>(ConfigCode.ForbidUpdateCheck);
+			#endregion
 
-            UseLanguage lang = instance.GetConfigValue<UseLanguage>(ConfigCode.useLanguage);
+			#region EM_私家版_LoadText＆SaveText機能拡張
+			ValidExtension = instance.GetConfigValue<List<string>>(ConfigCode.ValidExtension);
+			#endregion
+
+			UseLanguage lang = instance.GetConfigValue<UseLanguage>(ConfigCode.useLanguage);
             switch (lang)
             {
                 case UseLanguage.JAPANESE:
@@ -181,7 +187,7 @@ namespace MinorShift.Emuera
 		}
 
 
-		static Dictionary<string, Dictionary<FontStyle, Font>> fontDic = new Dictionary<string, Dictionary<FontStyle, Font>>();
+		static readonly Dictionary<string, Dictionary<FontStyle, Font>> fontDic = new Dictionary<string, Dictionary<FontStyle, Font>>();
 		public static Font Font { get { return GetFont(null, FontStyle.Regular); } }
 
 		public static Font GetFont(string theFontname, FontStyle style)
@@ -195,8 +201,8 @@ namespace MinorShift.Emuera
 			if (!fontStyleDic.ContainsKey(style))
 			{
 				int fontsize = FontSize;
-				Font styledFont = null;
-				try
+                Font styledFont;
+                try
 				{
 					styledFont = new Font(fn, fontsize, style, GraphicsUnit.Pixel);
 				}
@@ -295,10 +301,9 @@ namespace MinorShift.Emuera
 				return false;
 			}
 
-			bool updated = true;
-			long key = getUpdateKey();
-			updated = LastKey != key;
-			LastKey = key;
+            long key = getUpdateKey();
+            bool updated = LastKey != key;
+            LastKey = key;
 			return updated;
 		}
 
@@ -340,7 +345,7 @@ namespace MinorShift.Emuera
 				return string.Compare(x, y, StringComparison.OrdinalIgnoreCase);
 			}
 		}
-		static StrIgnoreCaseComparer ignoreCaseComparer = new StrIgnoreCaseComparer();
+		static readonly StrIgnoreCaseComparer ignoreCaseComparer = new StrIgnoreCaseComparer();
 
 		//KeyValuePair<相対パス, 完全パス>のリストを返す。
 		private static List<KeyValuePair<string, string>> getFiles(string dir, string rootdir, string pattern, bool toponly, bool sort)
@@ -358,7 +363,7 @@ namespace MinorShift.Emuera
 						retList.AddRange(getFiles(dirList[i], rootdir, pattern, toponly, sort));
 				}
 			}
-			string RelativePath = "";//相対ディレクトリ名
+			string RelativePath;//相対ディレクトリ名
 			if (string.Equals(dir, rootdir, strComp))//現在のパスが検索ルートパスに等しい
 				RelativePath = "";
 			else
@@ -499,6 +504,7 @@ namespace MinorShift.Emuera
 		public static bool SystemIgnoreTripleSymbol { get; private set; }
 		public static bool SystemNoTarget { get; private set; }
 		public static bool SystemIgnoreStringSet { get; private set; }
+		public static bool ForbidUpdateCheck { get; private set; }
 
 		public static int Language { get; private set; }
 
@@ -557,8 +563,7 @@ namespace MinorShift.Emuera
 			PalamLvDef = instance.GetConfigValue<List<Int64>>(ConfigCode.PalamLvDef);
 			PbandDef = instance.GetConfigValue<Int64>(ConfigCode.pbandDef);
             RelationDef = instance.GetConfigValue<Int64>(ConfigCode.RelationDef);
-            ValidExtension = instance.GetConfigValue<List<string>>(ConfigCode.ValidExtension);
-        }
+		}
 
 		public static string MoneyLabel { get; private set; }
 		public static bool MoneyFirst { get; private set; }
@@ -576,10 +581,11 @@ namespace MinorShift.Emuera
 		public static List<Int64> PalamLvDef { get; private set; }
 		public static Int64 PbandDef { get; private set; }
         public static Int64 RelationDef { get; private set; }
-        public static List<string> ValidExtension { get; private set; }
 		#endregion
-		
-		
-		
+
+		#region EM_私家版_LoadText＆SaveText機能拡張
+		public static List<string> ValidExtension { get; private set; }
+		#endregion
+
 	}
 }

@@ -105,15 +105,11 @@ namespace MinorShift.Emuera.GameData.Variable
 		{ throw new CodeEE("整数型配列でない変数" + varName + "を整数型配列として呼び出しました"); }
 		public virtual void SetValue(string[] values, Int64[] arguments)
 		{ throw new CodeEE("文字列型配列でない変数" + varName + "を文字列型配列として呼び出しました"); }
-        public virtual void SetValueAll(Int64 value, int start, int end, int charaPos)
-        { throw new CodeEE("整数型配列でない変数" + varName + "を整数型配列として呼び出しました"); }
-        public virtual void SetValueAll(Int64 value, int start, int end, int[] dims)
-        { throw new CodeEE("整数型配列でない変数" + varName + "を整数型配列として呼び出しました"); }
-        public virtual void SetValueAll(string value, int start, int end, int charaPos)
-        { throw new CodeEE("文字列型配列でない変数" + varName + "を文字列型配列として呼び出しました"); }
-        public virtual void SetValueAll(string value, int start, int end, int[] dims)
-        { throw new CodeEE("文字列型配列でない変数" + varName + "を文字列型配列として呼び出しました"); }
-        public virtual Int64 PlusValue(Int64 value, Int64[] arguments)
+		public virtual void SetValueAll(Int64 value, int start, int end, int charaPos)
+		{ throw new CodeEE("整数型配列でない変数" + varName + "を整数型配列として呼び出しました"); }
+		public virtual void SetValueAll(string value, int start, int end, int charaPos)
+		{ throw new CodeEE("文字列型配列でない変数" + varName + "を文字列型配列として呼び出しました"); }
+		public virtual Int64 PlusValue(Int64 value, Int64[] arguments)
 		{ throw new CodeEE("整数型でない変数" + varName + "を整数型として呼び出しました"); }
 		public virtual Int32 GetLength()
 		{ throw new CodeEE("配列型でない変数" + varName + "の長さを取得しようとしました"); }
@@ -289,7 +285,7 @@ namespace MinorShift.Emuera.GameData.Variable
 		public override void IsArrayRangeValid(Int64[] arguments, Int64 index1, Int64 index2, string funcName, Int64 i1, Int64 i2)
 		{
 			CheckElement(arguments);
-			CharacterData chara = varData.CharacterList[(int)arguments[0]];
+			//CharacterData chara = varData.CharacterList[(int)arguments[0]];
 			if ((index1 < 0) || (index1 > sizes[0]))
 				throw new CodeEE(funcName + "命令の第" + i1.ToString() + "引数(" + index1.ToString() + ")は配列" + varName + "の範囲外です");
 			if ((index2 < 0) || (index2 > sizes[0]))
@@ -1933,19 +1929,8 @@ namespace MinorShift.Emuera.GameData.Variable
 				for (int i = start; i < end; i++)
 					array[arguments[0], i] = values[i - start];
 			}
-            public override void SetValueAll(long value, int start, int end, int[] dims)
-            {
-                if (dims.Length != 1) return;
-                if (start == -1)
-                    SetValueAll(value, 0, 0, 0);
-                else
-                {
-                    if (end > array.GetLength(1)) end = array.GetLength(1);
-                    for (int i = start; i < end; i++)
-                        array[dims[0], i] = value;
-                }
-            }
-            public override void SetValueAll(long value, int start, int end, int charaPos)
+
+			public override void SetValueAll(long value, int start, int end, int charaPos)
 			{
 				int a1 = array.GetLength(0);
 				int a2 = array.GetLength(1);
@@ -1994,18 +1979,7 @@ namespace MinorShift.Emuera.GameData.Variable
 					array[arguments[0], arguments[1], i] = values[i - start];
 			}
 
-            public override void SetValueAll(long value, int start, int end, int[] dims)
-            {
-                if (dims.Length != 2) return;
-                if (start == -1) SetValueAll(value, 0, 0, 0);
-                else
-                {
-                    if (end > array.GetLength(2)) end = array.GetLength(2);
-                    for (int i = start; i < end; i++)
-                        array[dims[0], dims[1], i] = value;
-                }
-            }
-            public override void SetValueAll(long value, int start, int end, int charaPos)
+			public override void SetValueAll(long value, int start, int end, int charaPos)
 			{
 				int a1 = array.GetLength(0);
 				int a2 = array.GetLength(1);
@@ -2103,15 +2077,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				for (int i = start; i < end; i++)
 					array[arguments[0], i] = values[i - start];
 			}
-            public override void SetValueAll(string value, int start, int end, int[] dims)
-            {
-                if (dims.Length != 1) return;
-                if (start == -1) SetValueAll(value, 0, 0, 0);
-                if (end > array.GetLength(1)) end = array.GetLength(1);
-                for (int i = start; i < end; i++)
-                    array[dims[0], i] = value;
-            }
-            public override void SetValueAll(string value, int start, int end, int charaPos)
+			public override void SetValueAll(string value, int start, int end, int charaPos)
 			{
 				int a1 = array.GetLength(0);
 				int a2 = array.GetLength(1);
@@ -2155,16 +2121,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				for (int i = start; i < end; i++)
 					array[arguments[0], arguments[1], i] = values[i - start];
 			}
-
-            public override void SetValueAll(string value, int start, int end, int[] dims)
-            {
-                if (dims.Length != 2) return;
-                if (start == -1) SetValueAll(value, 0, 0, 0);
-                if (end > array.GetLength(2)) end = array.GetLength(2);
-                for (int i = start; i < end; i++)
-                    array[dims[0], dims[1], i] = value;
-            }
-            public override void SetValueAll(string value, int start, int end, int charaPos)
+			public override void SetValueAll(string value, int start, int end, int charaPos)
 			{
 				int a1 = array.GetLength(0);
 				int a2 = array.GetLength(1);
