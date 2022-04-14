@@ -828,6 +828,169 @@ namespace MinorShift.Emuera.GameData.Function
                 return xmlDict[idx].OuterXml;
             }
         }
+        private sealed class ExistFileMethod : FunctionMethod
+        {
+            public ExistFileMethod()
+            {
+                ReturnType = typeof(Int64);
+                argumentTypeArray = new Type[] { typeof(string) };
+                CanRestructure = false;
+            }
+            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+            {
+                var filepath = arguments[0].GetStrValue(exm);
+                filepath = filepath.Replace('/', '\\');
+                filepath = filepath.Replace("..\\", "");
+                if (File.Exists(filepath)) return 1;
+                return 0;
+            }
+        }
+        private sealed class MapManagementMethod : FunctionMethod
+        {
+            public enum Operation { Create, Check, Release };
+            public MapManagementMethod(Operation type)
+            {
+                ReturnType = typeof(Int64);
+                argumentTypeArray = new Type[] { typeof(string) };
+                CanRestructure = false;
+                op = type;
+            }
+            private Operation op;
+            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+            {
+                string key = arguments[0].GetStrValue(exm);
+                var dict = exm.VEvaluator.VariableData.DataStringMaps;
+                bool contains = dict.ContainsKey(key);
+                switch(op)
+                {
+                    case Operation.Check: { return contains ? 1 : 0; }
+                    case Operation.Release: { if (contains) dict.Remove(key); return 1; }
+                }
+                if (contains) return 0;
+                dict[key] = new Dictionary<string, string>();
+                return 1;
+            }
+        }
+        private sealed class MapDataOperationMethod : FunctionMethod
+        {
+            public enum Operation { Set, Has, Remove };
+            public MapDataOperationMethod(Operation type)
+            {
+                ReturnType = typeof(Int64);
+                argumentTypeArray = null;
+                CanRestructure = false;
+                op = type;
+            }
+            private Operation op;
+            public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+            {
+                int argCount = 2 + (op == Operation.Set ? 1 : 0);
+                if (arguments.Length != argCount)
+                    return string.Format("{0}関数:{1}の引数が必要です", name, argCount);
+                if (arguments[0].GetOperandType() != typeof(string))
+                    return string.Format("{0}関数:1番目の引数が文字列ではありません", name);
+                if (arguments[1].GetOperandType() != typeof(string))
+                    return string.Format("{0}関数:2番目の引数が文字列ではありません", name);
+                if (op == Operation.Set && arguments[2].GetOperandType() != typeof(string))
+                    return string.Format("{0}関数:3番目の引数が文字列ではありません", name);
+                return null;
+            }
+            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+            {
+                var map = arguments[0].GetStrValue(exm);
+                var dict = exm.VEvaluator.VariableData.DataStringMaps;
+                if (!dict.ContainsKey(map)) return -1;
+                var key = arguments[1].GetStrValue(exm);
+                var sMap = dict[map];
+                bool contains = sMap.ContainsKey(key);
+                if (op == Operation.Has) return contains ? 1 : 0;
+                if (op == Operation.Remove)
+                    sMap.Remove(key);
+                else
+                    sMap[key] = arguments[2].GetStrValue(exm);
+                return 1;
+            }
+        }
+        private sealed class MapGetStrMethod : FunctionMethod
+        {
+            public enum Operation { Get, ToXml };
+            public MapGetStrMethod(Operation type)
+            {
+                ReturnType = typeof(string);
+                argumentTypeArray = null;
+                CanRestructure = false;
+                op = type;
+            }
+            private Operation op;
+            public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+            {
+                int argCount = 1 + (op == Operation.Get ? 1 : 0);
+                if (arguments.Length != argCount)
+                    return string.Format("{0}関数:{1}の引数が必要です", name, argCount);
+                if (arguments[0].GetOperandType() != typeof(string))
+                    return string.Format("{0}関数:1番目の引数が文字列ではありません", name);
+                if (op == Operation.Get&&arguments[1].GetOperandType() != typeof(string))
+                    return string.Format("{0}関数:2番目の引数が文字列ではありません", name);
+                return null;
+            }
+            public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
+            {
+                var dict = exm.VEvaluator.VariableData.DataStringMaps;
+                var map = arguments[0].GetStrValue(exm);
+                if (!dict.ContainsKey(map)) return "";
+                var sMap = dict[map];
+                if (op==Operation.Get)
+                {
+                    var key = arguments[1].GetStrValue(exm);
+                    if (sMap.ContainsKey(key)) return sMap[key];
+                    return "";
+                }
+                StringBuilder sb = new StringBuilder();
+                sb.Append("<map>");
+                foreach(var p in sMap)
+                    sb.Append(string.Format("<p><k>{0}</k><v>{1}</v></p>", p.Key, p.Value));
+                sb.Append("</map>");
+                return sb.ToString();
+            }
+        }
+        private sealed class MapFromXmlMethod : FunctionMethod
+        {
+            public MapFromXmlMethod()
+            {
+                ReturnType = typeof(Int64);
+                argumentTypeArray = new Type[] { typeof(string), typeof(string) };
+                CanRestructure = false;
+            }
+            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+            {
+                var map = arguments[0].GetStrValue(exm);
+                var dict = exm.VEvaluator.VariableData.DataStringMaps;
+                if (!dict.ContainsKey(map)) return 0;
+                var xml = arguments[1].GetStrValue(exm);
+                var sMap = dict[map];
+                XmlDocument doc = new XmlDocument();
+                XmlNodeList nodes;
+                try
+                {
+                    doc.LoadXml(xml);
+                    nodes = doc.SelectNodes("/map/p");
+                }
+                catch (XmlException e)
+                {
+                    throw new CodeEE("MAP_FROMXML関数:\"" + xml + "\"の解析エラー:" + e.Message);
+                }
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    XmlNodeList key, val;
+                    var node = nodes[i];
+                    key = node.SelectNodes("./k");
+                    val = node.SelectNodes("./v");
+                    if (key.Count != 1 || val.Count != 1) continue;
+                    sMap[key[0].InnerText] = val[0].InnerText;
+                }
+                return 1;
+            }
+        }
         #endregion
 
         #region CSVデータ関係
