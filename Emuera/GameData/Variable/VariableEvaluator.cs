@@ -1133,6 +1133,10 @@ namespace MinorShift.Emuera.GameData.Variable
 		{
 			//グローバルは初期化しない方が都合がよい。
 			//varData.SetDefaultGlobalValue();
+
+			#region EM_私家版_XMLDocument
+			varData.DataXmlDocument.Clear();
+			#endregion
 			varData.SetDefaultLocalValue();
 			varData.SetDefaultValue(constant);
 			foreach (CharacterData chara in varData.CharacterList)
