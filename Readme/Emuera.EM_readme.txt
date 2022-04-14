@@ -197,6 +197,24 @@ strを2つに分ける
 	第一引数で指定した連想配列(Dictionary<string, string>)に，第二引数のキーとペアした値を削除する。1を返す。
 	連想配列自体が存在しない場合，-1を返す
 
+◆ int MAP_SIZE str
+	第一引数で指定した連想配列(Dictionary<string, string>)に含まったキー-値ペアを返す
+	連想配列自体が存在しない場合，-1を返す
+
+◆ int MAP_CLEAR str
+	第一引数で指定した連想配列(Dictionary<string, string>)に含まったキー-値ペアを全部削除する。1を返す
+	連想配列自体が存在しない場合，-1を返す
+
+◆ <1> str MAP_GEKEYS str
+	<2> str MAP_GEKEYS str, int
+	<3> str MAP_GEKEYS str, strArray, int
+	第一引数で指定した連想配列(Dictionary<string, string>)に:
+	<1> "キー1,キー2,キー3,..."のような形の文字列を返す
+	<2> 第二引数が0ではない場合，RESULTSにキーを順次代入。RESULTS:0を返す
+	<3> 第三引数が0ではない場合，第二引数が指定した文字列配列変数にキーを順次代入。空文字列を返す
+	連想配列自体が存在しない場合，空文字列を返す
+	(キーの数を返さないため，必要があればMAP_SIZEで確認してください)
+
 ◆ str MAP_TOXML str
 	第一引数で指定した連想配列(Dictionary<string, string>)をXML文字列に変換し，XML文字列を返す。
 	連想配列自体が存在しない場合，空文字列を返す

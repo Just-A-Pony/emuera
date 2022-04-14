@@ -248,9 +248,12 @@ namespace MinorShift.Emuera.GameData.Function
                 ["MAP_RELEASE"] = new MapManagementMethod(MapManagementMethod.Operation.Release),
 
                 ["MAP_GET"] = new MapGetStrMethod(MapGetStrMethod.Operation.Get),
+                ["MAP_CLEAR"] = new MapDataOperationMethod(MapDataOperationMethod.Operation.Clear),
+                ["MAP_SIZE"] = new MapDataOperationMethod(MapDataOperationMethod.Operation.Size),
                 ["MAP_HAS"] = new MapDataOperationMethod(MapDataOperationMethod.Operation.Has),
                 ["MAP_SET"]= new MapDataOperationMethod(MapDataOperationMethod.Operation.Set),
                 ["MAP_REMOVE"]= new MapDataOperationMethod(MapDataOperationMethod.Operation.Remove),
+                ["MAP_GETKEYS"]= new MapGetStrMethod(MapGetStrMethod.Operation.GetKeys),
 
                 ["MAP_TOXML"] = new MapGetStrMethod(MapGetStrMethod.Operation.ToXml),
                 ["MAP_FROMXML"] = new MapFromXmlMethod(),
