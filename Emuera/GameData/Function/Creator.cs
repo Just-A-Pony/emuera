@@ -234,9 +234,12 @@ namespace MinorShift.Emuera.GameData.Function
                 ["ARRAYMSORTEX"] = new ArrayMultiSortExMethod(),
 
                 ["REGEXPMATCH"] = new RegexpMatchMethod(),
-                
-                //["XML_DOCUMENT"] = new XmlDocumentMethod(XmlDocumentMethod.OperationType.Create),
-                //["XML_RELEASE"] = new XmlDocumentMethod(XmlDocumentMethod.OperationType.Release),
+
+                ["XML_DOCUMENT"] = new XmlDocumentMethod(XmlDocumentMethod.Operation.Create),
+                ["XML_RELEASE"] = new XmlDocumentMethod(XmlDocumentMethod.Operation.Release),
+                ["XML_SET"] = new XmlSetMethod(),
+                ["XML_EXIST"] = new XmlDocumentMethod(XmlDocumentMethod.Operation.Check),
+                ["XML_TOSTR"] = new XmlToStrMethod(),
                 #endregion
 
 

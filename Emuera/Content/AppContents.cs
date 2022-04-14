@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
-using System.Xml;
 using WebPWrapper;
 
 namespace MinorShift.Emuera.Content
@@ -18,21 +17,18 @@ namespace MinorShift.Emuera.Content
 		static readonly Dictionary<string, AContentFile> resourceDic = new Dictionary<string, AContentFile>();
 		static readonly Dictionary<string, ASprite> imageDictionary = new Dictionary<string, ASprite>();
 		static readonly Dictionary<int, GraphicsImage> gList;
-		#region EM_私家版_v01_XMLDocument
-		//static readonly Dictionary<string, XmlDocument> xmlDict = new Dictionary<string, XmlDocument>();
-		#endregion
-		//private static Bitmap bmp;
+        //private static Bitmap bmp;
 
-		//static public T GetContent<T>(string name)where T :AContentItem
-		//{
-		//	if (name == null)
-		//		return null;
-		//	name = name.ToUpper();
-		//	if (!itemDic.ContainsKey(name))
-		//		return null;
-		//	return itemDic[name] as T;
-		//}
-		static public GraphicsImage GetGraphics(int i)
+        //static public T GetContent<T>(string name)where T :AContentItem
+        //{
+        //	if (name == null)
+        //		return null;
+        //	name = name.ToUpper();
+        //	if (!itemDic.ContainsKey(name))
+        //		return null;
+        //	return itemDic[name] as T;
+        //}
+        static public GraphicsImage GetGraphics(int i)
 		{
 			if (gList.ContainsKey(i))
 				return gList[i];
@@ -138,10 +134,7 @@ namespace MinorShift.Emuera.Content
 		{
 			foreach (var img in resourceDic.Values)
 				img.Dispose();
-			#region EM_私家版_v01_XMLDocument
-			//xmlDict.Clear();
-			#endregion
-			resourceDic.Clear();
+            resourceDic.Clear();
 			imageDictionary.Clear();
 			foreach (var graph in gList.Values)
 				graph.GDispose();
