@@ -9,11 +9,8 @@ using MinorShift._Library;
 using MinorShift.Emuera.GameData.Variable;
 using System.Drawing;
 using Microsoft.VisualBasic;
-using System.Windows.Forms;
 using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.Content;
-using System.Linq;
-using System.Drawing;
 using WebPWrapper;
 using System.Xml;
 using System.IO;
@@ -116,23 +113,6 @@ namespace MinorShift.Emuera.GameData.Function
                     }
                 }
                 return nodes.Count;
-            }
-        }
-        private sealed class FuncExistMethod : FunctionMethod
-        {
-            public FuncExistMethod()
-            {
-                ReturnType = typeof(Int64);
-                argumentTypeArray = new Type[] { typeof(string) };
-                CanRestructure = false;
-            }
-
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                var item = GlobalStatic.Process.LabelDictionary.GetNonEventLabel(arguments[0].GetStrValue(exm));
-                if (item != null)
-                    return item.IsMethod ? 1 : 2;
-                return 0;
             }
         }
         private sealed class IsDefinedMethod : FunctionMethod
@@ -293,9 +273,9 @@ namespace MinorShift.Emuera.GameData.Function
                     throw new CodeEE(name + "が変数ではありません");
             }
         }
-        private sealed class VarExistMethod : FunctionMethod
+        private sealed class ExistVarMethod : FunctionMethod
         {
-            public VarExistMethod()
+            public ExistVarMethod()
             {
                 ReturnType = typeof(Int64);
                 argumentTypeArray = new Type[] { typeof(string) };
@@ -669,6 +649,16 @@ namespace MinorShift.Emuera.GameData.Function
                 return (reg.Match(baseString).Success ? 1 : 0);
             }
         }
+        //private sealed class XmlDocumentMethod : FunctionMethod
+        //{
+        //    public enum OperationType { Create, Release }; 
+        //    public XmlDocumentMethod(OperationType type)
+        //    {
+        //        ReturnType = typeof(Int64);
+        //        argumentTypeArray = new Type[] { typeof(string), typeof(string) };
+        //        CanRestructure = true;
+        //    }
+        //}
         #endregion
 
         #region CSVデータ関係

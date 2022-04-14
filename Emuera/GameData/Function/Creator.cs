@@ -213,8 +213,8 @@ namespace MinorShift.Emuera.GameData.Function
                 ["HTML_STRINGLEN"] = new HtmlStringLenMethod(),
                 ["HTML_SUBSTRING"] = new HtmlSubStringMethod(),
                 ["XML_GET"] = new XmlGetMethod(),
-                ["FUNCEXIST"] = new FuncExistMethod(),
-                ["VAREXIST"] = new VarExistMethod(),
+                //["FUNCEXIST"] = new FuncExistMethod(),
+                ["EXISTVAR"] = new ExistVarMethod(),
                 ["ISDEFINED"] = new IsDefinedMethod(),
                 ["ENUMFUNCBEGINSWITH"] = new EnumNameMethod(EnumNameMethod.EType.Function, EnumNameMethod.EAction.BeginsWith),
                 ["ENUMFUNCENDSWITH"] = new EnumNameMethod(EnumNameMethod.EType.Function, EnumNameMethod.EAction.EndsWith),
@@ -225,12 +225,18 @@ namespace MinorShift.Emuera.GameData.Function
                 ["ENUMMACROBEGINSWITH"] = new EnumNameMethod(EnumNameMethod.EType.Macro, EnumNameMethod.EAction.BeginsWith),
                 ["ENUMMACROENDSWITH"] = new EnumNameMethod(EnumNameMethod.EType.Macro, EnumNameMethod.EAction.EndsWith),
                 ["ENUMMACROWITH"] = new EnumNameMethod(EnumNameMethod.EType.Macro, EnumNameMethod.EAction.With),
+
                 ["GETVAR"] = new GetVarMethod(),
                 ["GETVARS"] = new GetVarsMethod(),
                 ["SETVAR"] = new SetVarMethod(),
+
                 ["VARSETEX"] = new VarSetExMethod(),
                 ["ARRAYMSORTEX"] = new ArrayMultiSortExMethod(),
+
                 ["REGEXPMATCH"] = new RegexpMatchMethod(),
+                
+                //["XML_DOCUMENT"] = new XmlDocumentMethod(XmlDocumentMethod.OperationType.Create),
+                //["XML_RELEASE"] = new XmlDocumentMethod(XmlDocumentMethod.OperationType.Release),
                 #endregion
 
 
