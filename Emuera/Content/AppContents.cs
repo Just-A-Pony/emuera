@@ -134,7 +134,7 @@ namespace MinorShift.Emuera.Content
 		{
 			foreach (var img in resourceDic.Values)
 				img.Dispose();
-            resourceDic.Clear();
+			resourceDic.Clear();
 			imageDictionary.Clear();
 			foreach (var graph in gList.Values)
 				graph.GDispose();
