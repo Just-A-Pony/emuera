@@ -1003,6 +1003,7 @@ namespace MinorShift.Emuera.GameData.Function
                         array[count] = k;
                         count++;
                     }
+                    exm.VEvaluator.RESULT = sMap.Keys.Count;
                     return arguments.Length == 2 ? exm.VEvaluator.RESULTS : "";
                 }
                 StringBuilder sb = new StringBuilder();
