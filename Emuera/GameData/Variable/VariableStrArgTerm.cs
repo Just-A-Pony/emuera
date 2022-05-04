@@ -33,6 +33,9 @@ namespace MinorShift.Emuera.GameData.Variable
 			string key = strTerm.GetStrValue(exm);
 			if (key == "")
 				throw new CodeEE("キーワードを空には出来ません");
+			if (dic == null && key != "")
+				throw new CodeEE("配列変数" + parentCode.ToString() + "に" + key + "の定義はありません");
+
 			if (!dic.TryGetValue(key, out int i))
             {
 				if (errPos == null)
