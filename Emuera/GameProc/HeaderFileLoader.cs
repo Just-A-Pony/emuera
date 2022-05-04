@@ -283,6 +283,9 @@ namespace MinorShift.Emuera.GameProc
 						else
 							var = parentProcess.VEvaluator.VariableData.CreateUserDefVariable(data);
 						idDic.AddUseDefinedVariable(var);
+						//とりあえず一次元配列だけ対応
+						if (data.Dimension == 1)
+							GlobalStatic.ConstantData.UserDefineLoadData(Program.CsvDir, data.Name, data.Lengths[0], Config.DisplayReport) ;
 					}
 					catch (IdentifierNotFoundCodeEE e)
 					{

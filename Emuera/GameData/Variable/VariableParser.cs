@@ -188,7 +188,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				terms = new IOperandTerm[0];
 			for (int i = 0; i < terms.Length; i++)
 				if (terms[i].IsString)
-					terms[i] = new VariableStrArgTerm(id.Code, terms[i], i);
+					terms[i] = new VariableStrArgTerm(id.Code, terms[i], i, id.Name);
 			return new VariableTerm(id, terms);
 		}
 		//public static string ErrorMes = null;
