@@ -254,7 +254,7 @@ namespace MinorShift.Emuera.GameData.Expression
 			else
 			{//変数 or キーワード
 				VariableToken id = ReduceVariableIdentifier(wc, idStr);
-				if (id != null)//idStrが変数名の場合、
+                if (id != null)//idStrが変数名の場合、
 				{
 					if (varCode != VariableCode.__NULL__)//変数の引数が引数を持つことはない
 						return VariableParser.ReduceVariable(id, null, null, null);
@@ -267,6 +267,10 @@ namespace MinorShift.Emuera.GameData.Expression
 					return refToken;
 				if (varCode != VariableCode.__NULL__ && GlobalStatic.ConstantData.isDefined(varCode, idStr))//連想配列的な可能性アリ
 					return new SingleTerm(idStr);
+				//ここだけ抜ける方法が分からない
+				//else if (GlobalStatic.ConstantData.isUserDefined(, idStr))//ユーザー定義変数は名前付けられるようになったので通す
+					return new SingleTerm(idStr);
+
 				GlobalStatic.IdentifierDictionary.ThrowException(idStr, false);
 			}
 			throw new ExeEE("エラー投げ損ねた");//ここまででthrowかreturnのどちらかをするはず。
