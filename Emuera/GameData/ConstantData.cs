@@ -643,14 +643,14 @@ check1break:
                     relationDic.Add(tmpl.Nickname, (int)tmpl.No);
 			}
 		}
-		public void UserDefineLoadData(string csvDir, string varname, int varlength, bool disp)
+		public void UserDefineLoadData(string filepath, string varname, int varlength, bool disp)
 		{
 			int varid = Array.IndexOf(GlobalStatic.IdentifierDictionary.VarKeys, varname);
 			//throw new CodeEE("varid" + varid);
 			names[varid] = new string[varlength];
 			nameToIntDics[varid] = new Dictionary<string, int>();
 
-			loadDataTo(csvDir + varname.ToUpper() + ".CSV", varid, null, disp, true);
+			loadDataTo(filepath, varid, null, disp, true);
 			//逆引き辞書を作成
 			string[] nameArray = names[varid];
 			for (int j = 0; j < nameArray.Length; j++)
