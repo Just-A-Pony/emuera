@@ -66,7 +66,7 @@ namespace MinorShift.Emuera.GameData.Variable
 					throw new CodeEE(id.Code.ToString() + "の引数が多すぎます");
 				wc.ShiftNext();
 
-				operand = ExpressionParser.ReduceVariableArgument(wc, id.Code);
+				operand = ExpressionParser.ReduceVariableArgument(wc, id.Code, id);
 				if (i == 0)
 					op1 = operand;
 				else if (i == 1)

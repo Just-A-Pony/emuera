@@ -189,9 +189,9 @@ namespace MinorShift.Emuera.GameData.Expression
 			return ret;
 		}
 
-		public static IOperandTerm ReduceVariableArgument(WordCollection wc, VariableCode varCode)
+		public static IOperandTerm ReduceVariableArgument(WordCollection wc, VariableCode varCode, VariableToken id)
 		{
-			IOperandTerm ret = reduceTerm(wc, false, TermEndWith.EoL, varCode);
+			IOperandTerm ret = reduceTerm(wc, false, TermEndWith.EoL, varCode, id);
 			if(ret == null)
                 throw new CodeEE("変数の:の後に引数がありません");
 			return ret;
@@ -220,7 +220,7 @@ namespace MinorShift.Emuera.GameData.Expression
 		/// <param name="idStr">識別子文字列</param>
 		/// <param name="varCode">変数の引数の場合はその変数のCode。連想配列的につかう</param>
 		/// <returns></returns>
-		private static IOperandTerm reduceIdentifier(WordCollection wc, string idStr, VariableCode varCode)
+		private static IOperandTerm reduceIdentifier(WordCollection wc, string idStr, VariableCode varCode, VariableToken varId = null)
 		{
 			wc.ShiftNext();
 			SymbolWord symbol = wc.Current as SymbolWord;
@@ -268,7 +268,7 @@ namespace MinorShift.Emuera.GameData.Expression
 				if (varCode != VariableCode.__NULL__ && GlobalStatic.ConstantData.isDefined(varCode, idStr))//連想配列的な可能性アリ
 					return new SingleTerm(idStr);
 				//ここだけ抜ける方法が分からない
-				//else if (GlobalStatic.ConstantData.isUserDefined(, idStr))//ユーザー定義変数は名前付けられるようになったので通す
+				else if (varId != null && GlobalStatic.ConstantData.isUserDefined(varId.Name, idStr))//ユーザー定義変数は名前付けられるようになったので通す
 					return new SingleTerm(idStr);
 
 				GlobalStatic.IdentifierDictionary.ThrowException(idStr, false);
@@ -332,7 +332,7 @@ namespace MinorShift.Emuera.GameData.Expression
 		/// <param name="allowKeywordTo">TOキーワードが見つかっても良いか</param>
 		/// <param name="endWith">終端記号</param>
 		/// <returns></returns>
-        private static IOperandTerm reduceTerm(WordCollection wc, bool allowKeywordTo, TermEndWith endWith, VariableCode varCode)
+        private static IOperandTerm reduceTerm(WordCollection wc, bool allowKeywordTo, TermEndWith endWith, VariableCode varCode, VariableToken varId = null)
         {
             TermStack stack = new TermStack();
             //int termCount = 0;
@@ -367,7 +367,7 @@ namespace MinorShift.Emuera.GameData.Expression
 							}
 							else if (idStr.Equals("IS", Config.SCVariable))
 								throw new CodeEE("ISキーワードはここでは使用できません");
-							stack.Add(reduceIdentifier(wc, idStr, varCode));
+							stack.Add(reduceIdentifier(wc, idStr, varCode, varId));
 							continue;
 						}
 
