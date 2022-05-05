@@ -284,6 +284,7 @@ namespace MinorShift.Emuera.GameProc
 						else
 							var = parentProcess.VEvaluator.VariableData.CreateUserDefVariable(data);
 						idDic.AddUseDefinedVariable(var);
+						#region EE_ERD
 						//とりあえず一次元配列だけ対応
 						if (data.Dimension == 1)
 						{
@@ -299,6 +300,7 @@ namespace MinorShift.Emuera.GameProc
 							else if (erdpath.Length > 0 && !string.IsNullOrEmpty(erdpath[0]))
 								GlobalStatic.ConstantData.UserDefineLoadData(erdpath[0], data.Name, data.Lengths[0], Config.DisplayReport);
 						}
+						#endregion
 					}
 					catch (IdentifierNotFoundCodeEE e)
 					{

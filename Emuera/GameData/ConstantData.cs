@@ -81,10 +81,12 @@ namespace MinorShift.Emuera.GameData
 		public Int64[] CharacterStrArray2DLength;
 
 		//private readonly GameBase gamebase;
+		#region EE_ERD
 		//private readonly string[][] names = new string[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__][];
 		//private readonly Dictionary<string, int>[] nameToIntDics = new Dictionary<string, int>[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__];
 		private readonly string[][] names = new string[10000][];
 		private readonly Dictionary<string, int>[] nameToIntDics = new Dictionary<string, int>[10000];
+		#endregion
 		private readonly Dictionary<string, int> relationDic = new Dictionary<string, int>();
 		public string[] GetCsvNameList(VariableCode code)
 		{
@@ -587,6 +589,7 @@ check1break:
 				nameToIntDics[i] = new Dictionary<string, int>();
 			}
 			ItemPrice = new Int64[MaxDataList[itemIndex]];
+			#region EE_ERD
 			loadDataTo(csvDir + "ABL.CSV", ablIndex, null, disp, false);
 			loadDataTo(csvDir + "EXP.CSV", expIndex, null, disp, false);
 			loadDataTo(csvDir + "TALENT.CSV", talentIndex, null, disp, false);
@@ -614,6 +617,7 @@ check1break:
 			loadDataTo(csvDir + "SAVESTR.CSV", savestrnameIndex, null, disp, false);
 			loadDataTo(csvDir + "GLOBAL.CSV", globalIndex, null, disp, false);
 			loadDataTo(csvDir + "GLOBALS.CSV", globalsIndex, null, disp, false);
+			#endregion
 			//逆引き辞書を作成
 			for (int i = 0; i < names.Length; i++)
 			{
@@ -643,6 +647,7 @@ check1break:
                     relationDic.Add(tmpl.Nickname, (int)tmpl.No);
 			}
 		}
+		#region EE_ERD
 		public void UserDefineLoadData(string filepath, string varname, int varlength, bool disp)
 		{
 			int varid = Array.IndexOf(GlobalStatic.IdentifierDictionary.VarKeys, varname);
@@ -688,23 +693,40 @@ check1break:
 			Dictionary<string, int> dic = nameToIntDics[varindex];
 			return dic.ContainsKey(str);
 		}
+		#endregion
 
 
-		public bool TryKeywordToInteger(out int ret, VariableCode code, string key, int index)
+		#region EE_ERD
+		public bool TryKeywordToInteger(out int ret, VariableCode code, string key, int index, string varname)
         {
             ret = 0;
             if (string.IsNullOrEmpty(key))
                 return false;
             Dictionary<string, int> dic;
-            try
+
+			try
             {
                 dic = GetKeywordDictionary(out string errPos, code, index, null);
-				if (dic == null)
-					return false;
-            }
-            catch { return false; }
-            return (dic.TryGetValue(key, out ret));
-        }
+				//ここで見つからなかったら下の処理でも通す
+				if (dic.TryGetValue(key, out ret))
+					return (dic.TryGetValue(key, out ret));
+			}
+            catch { }
+			if (!string.IsNullOrEmpty(varname))
+			{
+				try
+				{
+					int varindex = Array.IndexOf(GlobalStatic.IdentifierDictionary.VarKeys, varname);
+					dic = nameToIntDics[varindex];
+					if (dic == null)
+						return false;
+				}
+				catch { return false; }
+				return (dic.TryGetValue(key, out ret));
+			}
+			return false;
+		}
+		#endregion
 
 		public int KeywordToInteger(VariableCode code, string key, int index)
 		{
@@ -904,6 +926,7 @@ check1break:
 					allowIndex = -1;
 					break;
 			}
+			#region EE_ERD
 			int varindex = Array.IndexOf(GlobalStatic.IdentifierDictionary.VarKeys, varname);
 			if (varindex < 0 || string.IsNullOrEmpty(varname))
 				return ret;
@@ -912,7 +935,10 @@ check1break:
 				ret = nameToIntDics[varindex];
 				errPos = varname + ".csv";
 				allowIndex = 0;
+				if (code == VariableCode.CVAR)
+					allowIndex = 1;
 			}
+			#endregion
 
 			if (index < 0)
 				return ret;
@@ -1301,21 +1327,26 @@ check1break:
 		}
 
 
+		#region EE_ERD
 		private void loadDataTo(string csvPath, int targetIndex, Int64[] targetI, bool disp, bool userdef)
+		#endregion
 		{
 			if (!File.Exists(csvPath))
 				return;
 			string[] target = names[targetIndex];
             HashSet<int> defined = new HashSet<int>();
 			EraStreamReader eReader = new EraStreamReader(false);
+			#region EE_ERD
 			if (!eReader.Open(csvPath) && output != null)
+			#endregion
 			{
 				output.PrintError(eReader.Filename + "のオープンに失敗しました");
 				return;
 			}
 			ScriptPosition position = null;
-
+			#region EE_ERD
 			if ((disp || Program.AnalysisMode) && output != null)
+			#endregion
 				output.PrintSystemLine(eReader.Filename + "読み込み中・・・");
 			try
 			{
