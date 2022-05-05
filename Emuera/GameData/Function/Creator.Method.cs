@@ -3099,8 +3099,13 @@ namespace MinorShift.Emuera.GameData.Function
             {
                 VariableTerm vToken = (VariableTerm)arguments[0];
                 VariableCode varCode = vToken.Identifier.Code;
+                #region EE_ERD
+                string varname = vToken.Identifier.Name;
+                #endregion
                 string key = arguments[1].GetStrValue(exm);
-                if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, varCode, key, -1))
+                #region EE_ERD
+                if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, varCode, key, -1, varname))
+                #endregion
                     return ret;
                 else
                     return -1;
@@ -3141,7 +3146,10 @@ namespace MinorShift.Emuera.GameData.Function
 				if (var == null)
 					throw new CodeEE("GETNUMBの1番目の引数(\"" + arguments[0].GetStrValue(exm) + "\")が変数名ではありません");
 				string key = arguments[1].GetStrValue(exm);
-                if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, var.Code, key, -1))
+                #region EE_ERD
+                //GETNUMBは使ってないのでテストしていない
+                if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, var.Code, key, -1, arguments[0].GetStrValue(exm)))
+                #endregion
                     return ret;
                 else
                     return -1;
