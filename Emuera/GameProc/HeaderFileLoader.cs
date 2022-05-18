@@ -299,6 +299,7 @@ namespace MinorShift.Emuera.GameProc
 								GlobalStatic.ConstantData.UserDefineLoadData(csvpath, data.Name, data.Lengths[0], Config.DisplayReport);
 							else if (erdpath.Length > 0 && !string.IsNullOrEmpty(erdpath[0]))
 								GlobalStatic.ConstantData.UserDefineLoadData(erdpath[0], data.Name, data.Lengths[0], Config.DisplayReport);
+							System.Windows.Forms.Application.DoEvents();
 						}
 						#endregion
 
