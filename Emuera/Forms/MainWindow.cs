@@ -637,7 +637,11 @@ namespace MinorShift.Emuera
 			DialogResult result = saveFileDialog.ShowDialog();
 			if (result == DialogResult.OK)
 			{
-				console.OutputLog(Path.GetFullPath(saveFileDialog.FileName));
+				#region EE_OUTPUTLOG
+				// console.OutputLog(Path.GetFullPath(saveFileDialog.FileName));
+				console.OutputSystemLog(Path.GetFullPath(saveFileDialog.FileName));
+				#endregion
+
 			}
 		}
 

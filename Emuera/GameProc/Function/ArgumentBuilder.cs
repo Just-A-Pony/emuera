@@ -2038,5 +2038,45 @@ namespace MinorShift.Emuera.GameProc.Function
 				return new ExpressionsArgument(argumentTypeArray, terms);
 			}
 		}
-	}
+
+        #region EE版
+        private sealed class STR_DOUBLE_ArgumentBuilder : ArgumentBuilder
+		{
+			public STR_DOUBLE_ArgumentBuilder()
+			{
+				argumentTypeArray = new Type[] { typeof(string), typeof(double) };
+				minArg = 1;
+			}
+			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
+			{
+				//TIMES_Argからの引用 きたない
+				StringStream st = line.PopArgumentPrimitive();
+				WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.Comma, LexAnalyzeFlag.None);
+				st.ShiftNext();
+
+				double d = 0.0;
+				if (st != null)
+				{
+					try
+					{
+						LexicalAnalyzer.SkipWhiteSpace(st);
+						d = LexicalAnalyzer.ReadDouble(st);
+						LexicalAnalyzer.SkipWhiteSpace(st);
+						if (!st.EOS)
+							warn("引数が多すぎます", line, 1, false);
+					}
+					catch
+					{
+						d = 0.0;
+					}
+				}
+				IOperandTerm term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
+				if (term == null)
+				{ warn("書式が間違っています", line, 2, false); return null; }
+				return new StrDoubleArgument(term, d);
+			}
+
+		}
+		#endregion
+    }
 }

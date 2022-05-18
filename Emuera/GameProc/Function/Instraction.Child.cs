@@ -9,6 +9,9 @@ using MinorShift._Library;
 using MinorShift.Emuera.GameData.Function;
 using System.Drawing;
 using System.IO;
+using WMPLib;
+using System.Net;
+using System.Windows.Forms;
 
 namespace MinorShift.Emuera.GameProc.Function
 {
@@ -946,6 +949,64 @@ namespace MinorShift.Emuera.GameProc.Function
 			}
 		}
 
+		#region EE_TRYCALLF
+		private sealed class TRYCALLF_Instruction : AbstractInstruction
+		{
+			public TRYCALLF_Instruction(bool form)
+			{
+				if (form)
+					ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_CALLFORMF);
+				else
+					ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_CALLF);
+				flag = EXTENDED | METHOD_SAFE | FORCE_SETARG;
+			}
+
+			public override void SetJumpTo(ref bool useCallForm, InstructionLine func, int currentDepth, ref string FunctionoNotFoundName)
+			{
+				if (!func.Argument.IsConst)
+				{
+					useCallForm = true;
+					return;
+				}
+				SpCallFArgment callfArg = (SpCallFArgment)func.Argument;
+				if (Config.ICFunction)
+					callfArg.ConstStr = callfArg.ConstStr.ToUpper();
+				try
+				{
+					callfArg.FuncTerm = GlobalStatic.IdentifierDictionary.GetFunctionMethod(GlobalStatic.LabelDictionary, callfArg.ConstStr, callfArg.RowArgs, true);
+				}
+				catch
+				{
+					return;
+				}
+				if (callfArg.FuncTerm == null)
+				{
+					return;
+				}
+			}
+
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				IOperandTerm mToken;
+				string labelName;
+				if ((!func.Argument.IsConst) || (exm.Console.RunERBFromMemory))
+				{
+					SpCallFArgment spCallformArg = (SpCallFArgment)func.Argument;
+					labelName = spCallformArg.FuncnameTerm.GetStrValue(exm);
+					mToken = GlobalStatic.IdentifierDictionary.GetFunctionMethod(GlobalStatic.LabelDictionary, labelName, spCallformArg.RowArgs, true);
+				}
+				else
+				{
+					labelName = func.Argument.ConstStr;
+					mToken = ((SpCallFArgment)func.Argument).FuncTerm;
+				}
+				if (mToken == null)
+					return;
+				mToken.GetValue(exm);
+			}
+		}
+		#endregion
+
 		private sealed class BAR_Instruction : AbstractInstruction
 		{
 			public BAR_Instruction(bool newline)
@@ -1753,11 +1814,244 @@ namespace MinorShift.Emuera.GameProc.Function
 				exm.Console.Await((int)waittime);
 			}
 		}
-        #endregion
+		//ここからEnter版
+		#region EE
+		static WindowsMediaPlayer[] sound = new WindowsMediaPlayer[10];
+		static WindowsMediaPlayer bgm = new WindowsMediaPlayer();
+		private sealed class PLAYSOUND_Instruction : AbstractInstruction
+		{
 
-        #region flowControlFunction
+			public PLAYSOUND_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.STR_EXPRESSION);
+				flag = METHOD_SAFE | EXTENDED;
+			}
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				ExpressionArgument soundArg = (ExpressionArgument)func.Argument;
+				string datFilename = null;
+				if (soundArg.IsConst)
+					datFilename = soundArg.ConstStr;
+				else
+					datFilename = soundArg.Term.GetStrValue(exm);
+				string filepath = System.IO.Path.GetFullPath(".\\sound\\" + datFilename);
+				if (System.IO.File.Exists(filepath))
+				{
+					for (int i = 0; i < sound.Length; i++)
+					{
+						if (sound[i] == null) sound[i] = new WindowsMediaPlayer();
+						//未使用もしくは再生完了してる要素を使う
+						switch (sound[i].playState)
+						{
+							case WMPPlayState.wmppsUndefined:
+							case WMPPlayState.wmppsStopped:
+							case WMPPlayState.wmppsMediaEnded:
+								sound[i].URL = filepath;
+								sound[i].controls.play();
+								return;
+						}
+					}
+					//上を抜けてきたら適当に0に入れる
+					sound[0].URL = filepath;
+					sound[0].controls.play();
+					return;
+				}
+			}
+		}
 
-        private sealed class BEGIN_Instruction : AbstractInstruction
+		public sealed class STOPSOUND_Instruction : AbstractInstruction
+		{
+			public STOPSOUND_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.VOID);
+				flag = METHOD_SAFE | EXTENDED;
+			}
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				for (int i = 0; i < sound.Length; i++)
+				{
+					if (sound[i] == null) sound[i] = new WindowsMediaPlayer();
+					if (sound[i].playState == WMPPlayState.wmppsPlaying) sound[i].controls.stop();
+				}
+				return;
+			}
+		}
+
+		private sealed class PLAYBGM_Instruction : AbstractInstruction
+		{
+
+			public PLAYBGM_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.STR_EXPRESSION);
+				flag = METHOD_SAFE | EXTENDED;
+			}
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				ExpressionArgument arg = (ExpressionArgument)func.Argument;
+				string datFilename = null;
+				if (arg.IsConst)
+					datFilename = arg.ConstStr;
+				else
+					datFilename = arg.Term.GetStrValue(exm);
+				string filepath = System.IO.Path.GetFullPath(".\\sound\\" + datFilename);
+				if (System.IO.File.Exists(filepath))
+				{
+					bgm.settings.setMode("loop", true);
+					bgm.URL = filepath;
+					bgm.controls.play();
+					return;
+				}
+			}
+		}
+
+		public sealed class STOPBGM_Instruction : AbstractInstruction
+		{
+			public STOPBGM_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.VOID);
+				flag = METHOD_SAFE | EXTENDED;
+			}
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				bgm.controls.stop();
+				return;
+			}
+		}
+
+		public sealed class SETSOUNDVOLUME_Instruction : AbstractInstruction
+		{
+			public SETSOUNDVOLUME_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
+				flag = METHOD_SAFE | EXTENDED;
+			}
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
+				Int32 vol = (Int32)intExpArg.Term.GetIntValue(exm);
+				for (int i = 0; i < sound.Length; i++)
+				{
+					if (sound[i] == null) sound[i] = new WindowsMediaPlayer();
+					sound[i].settings.volume = vol;
+				}
+				return;
+			}
+		}
+		public sealed class SETBGMVOLUME_Instruction : AbstractInstruction
+		{
+			public SETBGMVOLUME_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
+				flag = METHOD_SAFE | EXTENDED;
+			}
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
+				Int32 vol = (Int32)intExpArg.Term.GetIntValue(exm);
+				bgm.settings.volume = vol;
+				return;
+			}
+		}
+
+		public sealed class UPDATECHECK_Instruction : AbstractInstruction
+		{
+			public UPDATECHECK_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.VOID);
+				flag = METHOD_SAFE | EXTENDED;
+			}
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				if (Config.ForbidUpdateCheck == true)
+				{
+					exm.VEvaluator.RESULT = 4;
+					return;
+				}
+
+				if (System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable() == false)
+				{
+					exm.VEvaluator.RESULT = 5;
+					return;
+				}
+
+				string url = GlobalStatic.GameBaseData.UpdateCheckURL;
+				WebClient wc = new WebClient();
+				if (url == null || url == "")
+				{
+					exm.VEvaluator.RESULT = 3;
+					return;
+				}
+				try
+				{
+					Stream st = wc.OpenRead(url);
+					StreamReader sr = new StreamReader(st, Encoding.GetEncoding("Shift-JIS"));
+					try
+					{
+						var version = sr.ReadLine();
+						var link = sr.ReadLine();
+						if (version == null || version == "")
+						{
+							exm.VEvaluator.RESULT = 3;
+							return;
+						}
+						if (link == null || link == "")
+						{
+							exm.VEvaluator.RESULT = 3;
+							return;
+						}
+						if (version != GlobalStatic.GameBaseData.VersionName)
+						{
+							DialogResult result = MessageBox.Show($"新しいバージョン（{version}）が公開されています。URLを開きますか？\nリンク先:{link}",
+								"アップデートチェック",
+								MessageBoxButtons.YesNo,
+								MessageBoxIcon.None,
+								MessageBoxDefaultButton.Button2
+								);
+							if (result == DialogResult.Yes)
+							{
+								exm.VEvaluator.RESULT = 2;
+								System.Diagnostics.Process.Start(link);
+								st.Close();
+								wc.Dispose();
+								return;
+							}
+							else
+							{
+								exm.VEvaluator.RESULT = 1;
+								st.Close();
+								wc.Dispose();
+								return;
+							}
+						}
+						else
+						{
+							exm.VEvaluator.RESULT = 0;
+							st.Close();
+							wc.Dispose();
+							return;
+						}
+					}
+					catch
+					{
+						exm.VEvaluator.RESULT = 3;
+						st.Close();
+						wc.Dispose();
+						return;
+					}
+				}
+				catch
+				{
+					exm.VEvaluator.RESULT = 3;
+					return;
+				}
+			}
+		}
+		#endregion
+		#endregion
+
+		#region flowControlFunction
+
+		private sealed class BEGIN_Instruction : AbstractInstruction
 		{
 			public BEGIN_Instruction()
 			{
@@ -1769,12 +2063,33 @@ namespace MinorShift.Emuera.GameProc.Function
 				string keyword = func.Argument.ConstStr;
 				if (Config.ICFunction)//1756 BEGINのキーワードは関数扱いらしい
 					keyword = keyword.ToUpper();
-				state.SetBegin(keyword);
+				#region EE
+				// state.SetBegin(keyword);
+				state.SetBegin(keyword, true);
+				#endregion
 				state.Return(0);
 				exm.Console.ResetStyle();
 			}
 		}
-
+		#region EE
+		private sealed class FORCE_BEGIN_Instruction : AbstractInstruction
+		{
+			public FORCE_BEGIN_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.STR);
+				flag = FLOW_CONTROL;
+			}
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				string keyword = func.Argument.ConstStr;
+				if (Config.ICFunction)//1756 BEGINのキーワードは関数扱いらしい
+					keyword = keyword.ToUpper();
+				state.SetBegin(keyword, true);
+				state.Return(0);
+				exm.Console.ResetStyle();
+			}
+		}
+		#endregion
 		private sealed class SAVELOADGAME_Instruction : AbstractInstruction
 		{
 			public SAVELOADGAME_Instruction(bool isSave)

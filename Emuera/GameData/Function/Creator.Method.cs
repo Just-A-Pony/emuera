@@ -3099,8 +3099,14 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				VariableTerm vToken = (VariableTerm)arguments[0];
 				VariableCode varCode = vToken.Identifier.Code;
+				#region EE_ERD
+				string varname = vToken.Identifier.Name;
+				#endregion
 				string key = arguments[1].GetStrValue(exm);
-				if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, varCode, key, -1))
+				#region EE_ERD
+				// if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, varCode, key, -1))
+				if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, varCode, key, -1, varname))
+				#endregion
 					return ret;
 				else
 					return -1;
@@ -3141,7 +3147,11 @@ namespace MinorShift.Emuera.GameData.Function
 				if (var == null)
 					throw new CodeEE("GETNUMBの1番目の引数(\"" + arguments[0].GetStrValue(exm) + "\")が変数名ではありません");
 				string key = arguments[1].GetStrValue(exm);
-				if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, var.Code, key, -1))
+				#region EE_ERD
+				//GETNUMBは使ってないのでテストしていない
+				// if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, var.Code, key, -1))
+				if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, var.Code, key, -1, arguments[0].GetStrValue(exm)))
+				#endregion
 					return ret;
 				else
 					return -1;
@@ -4515,10 +4525,41 @@ namespace MinorShift.Emuera.GameData.Function
 						return g.Width;
 					case "GHEIGHT":
 						return g.Height;
+					#region EE_GDRAWTEXTに付随する要素
+					case "GGETFONTSIZE":
+						return g.Fontsize;
+					case "GGETFONTSTYLE":
+						return g.Fontstyle;
+					#endregion
 				}
 				throw new ExeEE("GraphicsState:" + Name + ":異常な分岐");
 			}
 		}
+		#region EE_GGETFONT
+		public sealed class GraphicsStateStrMethod : FunctionMethod
+		{
+			public GraphicsStateStrMethod()
+			{
+				ReturnType = typeof(string);
+				argumentTypeArray = new Type[] { typeof(Int64) };
+				CanRestructure = false;
+			}
+			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
+					throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
+				GraphicsImage g = ReadGraphics(Name, exm, arguments, 0);
+				if (!g.IsCreated)
+					return "";
+				switch (Name)
+				{
+					case "GGETFONT":
+						return g.Fontname;
+				}
+				throw new ExeEE("GraphicsState:" + Name + ":Abnormal branching");
+			}
+		}
+		#endregion
 
 		public sealed class GraphicsGetColorMethod : FunctionMethod
 		{
@@ -4589,13 +4630,22 @@ namespace MinorShift.Emuera.GameData.Function
 				return 1;
 			}
 		}
+
+		#region EE_GDRAWTEXT追加に伴いGSETFONTを改良
 		public sealed class GraphicsSetFontMethod : FunctionMethod
 		{
 			public GraphicsSetFontMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = new Type[] { typeof(Int64), typeof(string), typeof(Int64) };
+				// argumentTypeArray = new Type[] { typeof(Int64), typeof(string), typeof(Int64) };
+				argumentTypeArray = new Type[] { typeof(Int64), typeof(string), typeof(Int64), typeof(Int64) };
 				CanRestructure = false;
+			}
+			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			{
+				if (arguments.Length > 2)
+					return null;
+				return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 2);
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
@@ -4606,27 +4656,46 @@ namespace MinorShift.Emuera.GameData.Function
 					return 0;
 				string fontname = arguments[1].GetStrValue(exm);
 				Int64 fontsize = arguments[2].GetIntValue(exm);
+				FontStyle fs = FontStyle.Regular;
+				if (arguments.Length > 3)
+				{
+					Int64 style = arguments[3].GetIntValue(exm);
+
+					if ((style & 1) != 0)
+						fs |= FontStyle.Bold;
+					if ((style & 2) != 0)
+						fs |= FontStyle.Italic;
+					if ((style & 4) != 0)
+						fs |= FontStyle.Strikeout;
+					if ((style & 8) != 0)
+						fs |= FontStyle.Underline;
+				}
 
 				Font styledFont;
 				try
 				{
-					styledFont = new Font(fontname, fontsize, FontStyle.Regular, GraphicsUnit.Pixel);
+					// styledFont = new Font(fontname, fontsize, FontStyle.Regular, GraphicsUnit.Pixel);
+					styledFont = new Font(fontname, fontsize, fs, GraphicsUnit.Pixel);
 				}
 				catch
 				{
 					return 0;
 				}
-				g.GSetFont(styledFont);
+				// g.GSetFont(styledFont);
+				g.GSetFont(styledFont, fs);
 				return 1;
 			}
 		}
-		
-		public sealed class GraphicsSetPenMethod : FunctionMethod
+		#endregion
+
+        public sealed class GraphicsSetPenMethod : FunctionMethod
 		{
 			public GraphicsSetPenMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64) };
+				// 私家版のバグだと思う
+				// argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64) };
+				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64) };
 				CanRestructure = false;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
@@ -4642,6 +4711,230 @@ namespace MinorShift.Emuera.GameData.Function
 				return 1;
 			}
 		}
+
+		#region EE_GDRAWTEXT
+		public sealed class GraphicsDrawStringMethod : FunctionMethod
+		{
+			public GraphicsDrawStringMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(Int64), typeof(string), typeof(Int64), typeof(Int64) };
+				CanRestructure = false;
+			}
+
+			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			{
+				if (arguments.Length < 2)
+					return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 2);
+				if (arguments.Length > 4)
+					return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum2, name);
+				if (arguments.Length != 2 && arguments.Length != 4)
+					return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum0, name);
+
+				for (int i = 0; i < arguments.Length; i++)
+				{
+					if (arguments[i] == null)
+						return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, i + 1);
+
+					if (i < argumentTypeArray.Length && argumentTypeArray[i] != arguments[i].GetOperandType())
+						return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentType0, name, i + 1);
+				}
+				if (arguments.Length <= 4)
+					return null;
+				return null;
+			}
+
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
+					throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
+				GraphicsImage g = ReadGraphics(Name, exm, arguments, 0);
+				if (!g.IsCreated)
+					return 0;
+				string text = arguments[1].GetStrValue(exm);
+				if (arguments.Length == 2)
+				{
+					g.GDrawString(text, 0, 0);
+				}
+				else if (arguments.Length == 4)
+				{
+					Point p = ReadPoint(Name, exm, arguments, 2);
+					g.GDrawString(text, p.X, p.Y);
+				}
+				//生成する画像のサイズを取得
+				var bitmap = new Bitmap(16, 16);
+				//Graphics canvas = Graphics.FromImage(bitmap);
+				var graphics = Graphics.FromImage(bitmap);
+				var size = graphics.MeasureString(text, g.Fnt, int.MaxValue, StringFormat.GenericTypographic);
+
+				//TextRenderer
+				//Size tsize = TextRenderer.MeasureText(canvas, text, g.Fnt,
+				//    new Size(2000, 2000), TextFormatFlags.NoPadding);
+				//test用
+				Int64[] resultArray = exm.VEvaluator.RESULT_ARRAY;
+				resultArray[1] = (Int64)size.Width;
+				resultArray[2] = (Int64)size.Height;
+				return 1;
+			}
+		}
+		#endregion
+		#region EE_GGETTEXTSIZE
+		public sealed class GraphicsGetTextSizeMethod : FunctionMethod
+		{
+			public GraphicsGetTextSizeMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(string), typeof(string), typeof(Int64), typeof(Int64) };
+				CanRestructure = false;
+			}
+			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			{
+				if (arguments.Length > 2)
+					return null;
+				return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 2);
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
+					throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
+				string text = arguments[0].GetStrValue(exm);
+				//生成する画像のサイズを取得
+				string fontname = arguments[1].GetStrValue(exm);
+				Int64 fontsize = arguments[2].GetIntValue(exm);
+				FontStyle fs = FontStyle.Regular;
+				if (arguments.Length > 3)
+				{
+					Int64 style = arguments[3].GetIntValue(exm);
+					if ((style & 1) != 0)
+						fs |= FontStyle.Bold;
+					if ((style & 2) != 0)
+						fs |= FontStyle.Italic;
+					if ((style & 4) != 0)
+						fs |= FontStyle.Strikeout;
+					if ((style & 8) != 0)
+						fs |= FontStyle.Underline;
+				}
+				Font fnt = new Font(fontname, fontsize, fs, GraphicsUnit.Pixel);
+				var bitmap = new Bitmap(16, 16);
+				//Graphics canvas = Graphics.FromImage(bitmap);
+				var graphics = Graphics.FromImage(bitmap);
+				var size = graphics.MeasureString(text, fnt, int.MaxValue, StringFormat.GenericTypographic);
+
+				//TextRenderer
+				//Size tsize = TextRenderer.MeasureText(canvas, text, fnt,
+				//    new Size(2000, 2000), TextFormatFlags.NoPadding);
+				Int64[] resultArray = exm.VEvaluator.RESULT_ARRAY;
+				//resultArray[1] = (Int64)tsize.Width;
+				resultArray[1] = (Int64)size.Height;
+				return (Int64)size.Width;
+			}
+		}
+		#endregion
+		#region EE_GDRAWGWITHROTATE
+		public sealed class GraphicsRotateMethod : FunctionMethod
+		{
+			public GraphicsRotateMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64) };
+				CanRestructure = false;
+			}
+			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			{
+				if (arguments.Length < 2)
+					return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 2);
+				if (arguments.Length > 4)
+					return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum2, name);
+				if (arguments.Length != 2 && arguments.Length != 4)
+					return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum0, name);
+				return null;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
+					throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
+				GraphicsImage g = ReadGraphics(Name, exm, arguments, 0);
+				if (!g.IsCreated)
+					return 0;
+				Int64 angle = arguments[1].GetIntValue(exm);
+
+				//座標省略してたらx/2,y/2で渡す
+				if (arguments.Length == 2)
+				{
+					g.GRotate(angle, g.Width / 2, g.Height / 2);
+				}
+				else
+				{
+					Point p = ReadPoint(Name, exm, arguments, 2);
+					g.GRotate(angle, p.X, p.Y);
+				}
+				return 1;
+			}
+		}
+		public sealed class GraphicsDrawGWithRotateMethod : FunctionMethod
+		{
+			public GraphicsDrawGWithRotateMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64) };
+				CanRestructure = false;
+			}
+			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			{
+				if (arguments.Length < 3)
+					return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 3);
+				if (arguments.Length > 5)
+					return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum2, name);
+				if (arguments.Length != 3 && arguments.Length != 5)
+					return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum0, name);
+				return null;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
+					throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
+				GraphicsImage dest = ReadGraphics(Name, exm, arguments, 0);
+				if (!dest.IsCreated)
+					return 0;
+				GraphicsImage src = ReadGraphics(Name, exm, arguments, 1);
+				if (!src.IsCreated)
+					return 0;
+				Int64 angle = arguments[2].GetIntValue(exm);
+
+				//座標省略してたらx/2,y/2で渡す
+				if (arguments.Length == 3)
+				{
+					dest.GDrawGWithRotate(src, angle, src.Width / 2, src.Height / 2);
+				}
+				else
+				{
+					Point p = ReadPoint(Name, exm, arguments, 3);
+					dest.GDrawGWithRotate(src, angle, p.X, p.Y);
+				}
+				return 1;
+			}
+		}
+		#endregion
+		#region EE_失敗作
+		//brushの参照がうまくいかないので保留
+		/**
+        public sealed class GraphicsGetBrushMethod : FunctionMethod
+        {
+            public GraphicsGetBrushMethod()
+            {
+                ReturnType = typeof(Int64);
+                argumentTypeArray = new Type[] { typeof(Int64) };
+                CanRestructure = false;
+            }
+            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+            {
+                Color c = 
+                GraphicsImage g = ReadGraphics(Name, exm, arguments, 0);
+                return (SolidBrush());
+            }
+        }
+        **/
+		#endregion
 
 		public sealed class SpriteStateMethod : FunctionMethod
 		{
@@ -5871,6 +6164,26 @@ namespace MinorShift.Emuera.GameData.Function
 			}
 		}
 
+		#endregion
+
+		#region EE_EXISTSOUND
+		private sealed class ExistSoundMethod : FunctionMethod
+		{
+			public ExistSoundMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(string) };
+				CanRestructure = false;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				string str = arguments[0].GetStrValue(exm);
+				string filepath = System.IO.Path.GetFullPath(".\\sound\\" + str);
+				if (System.IO.File.Exists(filepath))
+					return 1;
+				return 0;
+			}
+		}
 		#endregion
 
 		#region EE_EXISTFUNCTION

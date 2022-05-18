@@ -127,6 +127,10 @@ namespace MinorShift.Emuera
 			//ForbidOneCodeVariable = instance.GetConfigValue<bool>(ConfigCode.ForbidOneCodeVariable);
 			SystemNoTarget = instance.GetConfigValue<bool>(ConfigCode.SystemNoTarget);
 
+			#region EE版_UPDATECHECK
+			ForbidUpdateCheck = instance.GetConfigValue<bool>(ConfigCode.ForbidUpdateCheck);
+			#endregion
+
 			#region EM_私家版_LoadText＆SaveText機能拡張
 			ValidExtension = instance.GetConfigValue<List<string>>(ConfigCode.ValidExtension);
 			#endregion
@@ -579,9 +583,11 @@ namespace MinorShift.Emuera
 		public static Int64 RelationDef { get; private set; }
 		#endregion
 
-
-		#region EM_私家版_LoadText＆SaveText機能拡張
-		public static List<string> ValidExtension { get; private set; }
+		#region EE版_UPDATECHECK
+		public static bool ForbidUpdateCheck { get; private set; }
+        #endregion
+        #region EM_私家版_LoadText＆SaveText機能拡張
+        public static List<string> ValidExtension { get; private set; }
 		#endregion
 
 	}

@@ -598,13 +598,44 @@ namespace MinorShift.Emuera.GameView
 			return true;
 		}
 
-
+		#region EE_OUTPUTLOG
 		public bool OutputLog(string filename)
 		{
-            if (filename == null)
-                filename = Program.ExeDir + "emuera.log";
+			// if (filename == null)
+			if (filename == "" || filename == null)
+				filename = Program.ExeDir + "emuera.log";
+			else
+				filename = Program.ExeDir + filename;
+			if (filename.IndexOf("../") >= 0)
+			{
+				MessageBox.Show("ログ出力先に親ディレクトリは指定できません", "ログ出力失敗");
+				return false;
+			}
+			if (!filename.StartsWith(Program.ExeDir, StringComparison.CurrentCultureIgnoreCase))
+			{
+				MessageBox.Show("ログファイルは実行ファイル以下のディレクトリにのみ保存できます", "ログ出力失敗");
+				return false;
+			}
 
-            if (!filename.StartsWith(Program.ExeDir, StringComparison.CurrentCultureIgnoreCase))
+			if (outputLog(filename))
+			{
+				if (window.Created)
+				{
+					PrintSystemLine("※※※ログファイルを" + filename.Replace(Program.ExeDir, "") + "に出力しました※※※");
+					RefreshStrings(true);
+				}
+				return true;
+			}
+			else
+				return false;
+		}
+
+		public bool OutputSystemLog(string filename)
+		{
+			if (filename == "" || filename == null)
+				filename = Program.ExeDir + "emuera.log";
+
+			if (!filename.StartsWith(Program.ExeDir, StringComparison.CurrentCultureIgnoreCase))
             {
                 MessageBox.Show("ログファイルは実行ファイル以下のディレクトリにのみ保存できます", "ログ出力失敗");
                 return false;
@@ -623,6 +654,7 @@ namespace MinorShift.Emuera.GameView
 				return false;
 		}
 
+		#endregion
 		public void GetDisplayStrings(StringBuilder builder)
 		{
 			if (displayLineList.Count == 0)

@@ -265,7 +265,16 @@ namespace MinorShift.Emuera.GameData.Function
                 #endregion
 
                 #region EEで追加されたやつ
+                ["EXISTSOUND"] = new ExistSoundMethod(),
                 ["EXISTFUNCTION"] = new ExistFunctionMethod(),
+                //["GROTATE"] = new GraphicsRotateMethod(),
+                ["GDRAWGWITHROTATE"] = new GraphicsDrawGWithRotateMethod(),
+                ["GDRAWTEXT"] = new GraphicsDrawStringMethod(),
+                ["GGETFONT"] = new GraphicsStateStrMethod(),//("GGETFONT")
+                ["GGETFONTSIZE"] = new GraphicsStateMethod(),//("GGETFONTSIZE")
+                ["GGETFONTSTYLE"] = new GraphicsStateMethod(),
+                ["GGETTEXTSIZE"] = new GraphicsGetTextSizeMethod(),
+                //["GGETBRUSH"] = new GraphicsGetBrushMethod(),
                 #endregion
             };
 

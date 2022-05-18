@@ -150,6 +150,9 @@ namespace MinorShift.Emuera
 
 		UseKeyMacro = 162,
 
+		#region EE_UPDATECHECK
+		ForbidUpdateCheck,
+		#endregion
 
 		#region EM_私家版_LoadText＆SaveText機能拡張
 		ValidExtension = 200,
