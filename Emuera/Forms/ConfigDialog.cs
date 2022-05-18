@@ -144,7 +144,6 @@ namespace MinorShift.Emuera.Forms
 			setCheckBox(checkBoxCompatiSP, ConfigCode.CompatiSPChara);
 			setCheckBox(checkBox9, ConfigCode.TimesNotRigorousCalculation);
 			setCheckBox(checkBox29, ConfigCode.SystemNoTarget);
-			setCheckBox(checkBox30, ConfigCode.ForbidUpdateCheck);
 			setNumericUpDown(numericUpDown2, ConfigCode.WindowX);
 			setNumericUpDown(numericUpDown3, ConfigCode.WindowY);
 			setNumericUpDown(numericUpDown4, ConfigCode.MaxLog);
@@ -319,7 +318,6 @@ namespace MinorShift.Emuera.Forms
 			config.GetConfigItem(ConfigCode.CompatiSPChara).SetValue<bool>(checkBoxCompatiSP.Checked);
 			config.GetConfigItem(ConfigCode.TimesNotRigorousCalculation).SetValue<bool>(checkBox9.Checked);
 			config.GetConfigItem(ConfigCode.SystemNoTarget).SetValue<bool>(checkBox29.Checked);
-			config.GetConfigItem(ConfigCode.ForbidUpdateCheck).SetValue<bool>(checkBox30.Checked);
 
 
 			config.GetConfigItem(ConfigCode.WindowX).SetValue<int>((int)numericUpDown2.Value);
@@ -608,10 +606,5 @@ namespace MinorShift.Emuera.Forms
         {
             textBox2.Enabled = ((ComboBox)sender).SelectedIndex == 3;
         }
-
-        private void tabPageSystem2_Click(object sender, EventArgs e)
-        {
-
-        }
-    }
+	}
 }

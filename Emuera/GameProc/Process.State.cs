@@ -177,30 +177,30 @@ namespace MinorShift.Emuera.GameProc
             //sequential = false;
 			//ShfitNextLine();
 		}
-        #region EE_FORCE_QUIT系
-        public void SetBegin(string keyword, bool force)
+
+		public void SetBegin(string keyword)
 		{//TrimとToUpper済みのはず
 			switch (keyword)
 			{
 				case "SHOP":
-					SetBegin(BeginType.SHOP, force); return;
+					SetBegin(BeginType.SHOP); return;
 				case "TRAIN":
-					SetBegin(BeginType.TRAIN, force); return;
+					SetBegin(BeginType.TRAIN); return;
 				case "AFTERTRAIN":
-					SetBegin(BeginType.AFTERTRAIN, force); return;
+					SetBegin(BeginType.AFTERTRAIN); return;
 				case "ABLUP":
-					SetBegin(BeginType.ABLUP, force); return;
+					SetBegin(BeginType.ABLUP); return;
 				case "TURNEND":
-					SetBegin(BeginType.TURNEND, force); return;
+					SetBegin(BeginType.TURNEND); return;
 				case "FIRST":
-					SetBegin(BeginType.FIRST, force); return;
+					SetBegin(BeginType.FIRST); return;
 				case "TITLE":
-					SetBegin(BeginType.TITLE, force); return;
+					SetBegin(BeginType.TITLE); return;
 			}
 			throw new CodeEE("BEGINのキーワード\"" + keyword + "\"は未定義です");
 		}
 
-		public void SetBegin(BeginType type, bool force)
+		public void SetBegin(BeginType type)
 		{
 			string errmes;
 			switch (type)
@@ -211,7 +211,6 @@ namespace MinorShift.Emuera.GameProc
 				case BeginType.ABLUP:
 				case BeginType.TURNEND:
 				case BeginType.FIRST:
-					if (force == true) break;
 					if ((sysStateCode & SystemStateCode.__CAN_BEGIN__) != SystemStateCode.__CAN_BEGIN__)
 					{
 						errmes = "BEGIN";
@@ -232,8 +231,8 @@ namespace MinorShift.Emuera.GameProc
 			string funcName = func.FunctionName;
 			throw new CodeEE("@" + funcName + "中で" + errmes + "命令を実行することはできません");
 		}
-        #endregion
-        public void SaveLoadData(bool saveData)
+
+		public void SaveLoadData(bool saveData)
 		{
 
 			if (saveData)

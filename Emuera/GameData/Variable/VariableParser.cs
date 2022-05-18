@@ -66,9 +66,7 @@ namespace MinorShift.Emuera.GameData.Variable
 					throw new CodeEE(id.Code.ToString() + "の引数が多すぎます");
 				wc.ShiftNext();
 
-				#region EE_ERD
-				operand = ExpressionParser.ReduceVariableArgument(wc, id.Code, id);
-				#endregion
+				operand = ExpressionParser.ReduceVariableArgument(wc, id.Code);
 				if (i == 0)
 					op1 = operand;
 				else if (i == 1)
@@ -190,9 +188,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				terms = new IOperandTerm[0];
 			for (int i = 0; i < terms.Length; i++)
 				if (terms[i].IsString)
-					#region EE_ERD
-					terms[i] = new VariableStrArgTerm(id.Code, terms[i], i, id.Name);
-					#endregion
+					terms[i] = new VariableStrArgTerm(id.Code, terms[i], i);
 			return new VariableTerm(id, terms);
 		}
 		//public static string ErrorMes = null;
