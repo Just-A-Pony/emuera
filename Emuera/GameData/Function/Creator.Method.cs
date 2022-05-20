@@ -27,18 +27,32 @@ namespace MinorShift.Emuera.GameData.Function
 			public HtmlStringLenMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = new Type[] { typeof(string) };
+				argumentTypeArray = null;
 				CanRestructure = false;
 			}
-
+			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			{
+				if (arguments.Length < 1)
+					return string.Format("{0}関数:少なくとも1の引数が必要です", name);
+				if (arguments.Length > 2)
+					return string.Format("{0}関数:引数が多すぎます", name);
+				if (arguments[0].GetOperandType() != typeof(string))
+					return string.Format("{0}関数:1番目の引数が文字列ではありません", name);
+				if (arguments.Length ==2 && arguments[1].GetOperandType() != typeof(Int64))
+					return string.Format("{0}関数:2番目の引数が整数ではありません", name);
+				return null;
+			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				int len = HtmlManager.HtmlLength(arguments[0].GetStrValue(exm));
-
-				if (len >= 0)
-					return 2 * len / Config.FontSize + ((2 * len % Config.FontSize != 0) ? 1 : 0);
-				else
-					return 2 * len / Config.FontSize - ((2 * len % Config.FontSize != 0) ? 1 : 0);
+				if (arguments.Length == 1 || arguments[1].GetIntValue(exm) == 0)
+                {
+					if (len >= 0)
+						return 2 * len / Config.FontSize + ((2 * len % Config.FontSize != 0) ? 1 : 0);
+					else
+						return 2 * len / Config.FontSize - ((2 * len % Config.FontSize != 0) ? 1 : 0);
+				}
+				return len;
 			}
 		}
 		private sealed class XmlGetMethod : FunctionMethod
@@ -75,6 +89,7 @@ namespace MinorShift.Emuera.GameData.Function
 					case 1: array[i] = node.InnerText; break;
 					case 2: array[i] = node.InnerXml; break;
 					case 3: array[i] = node.OuterXml; break;
+					case 4: array[i] = node.Name; break;
 					default: array[i] = node.Value; break;
 				}
 			}
@@ -639,9 +654,44 @@ namespace MinorShift.Emuera.GameData.Function
 			public RegexpMatchMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = new Type[] { typeof(string), typeof(string) };
-				CanRestructure = true;
+				argumentTypeArray = null;
+				CanRestructure = false;
 			}
+			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			{
+				if (arguments.Length < 2)
+					return string.Format("{0}関数:少なくとも2の引数が必要です", name);
+				if (arguments.Length > 4)
+					return string.Format("{0}関数:引数が多すぎます", name);
+				if (arguments[0].GetOperandType() != typeof(string))
+					return string.Format("{0}関数:1番目の引数が文字列ではありません", name);
+				if (arguments[1].GetOperandType() != typeof(string))
+					return string.Format("{0}関数:2番目の引数が文字列ではありません", name);
+				if (arguments.Length == 3)
+                {
+					if (arguments[2].GetOperandType() != typeof(Int64))
+						return string.Format("{0}関数:3番目の引数が整数ではありません", name);
+				}
+				if (arguments.Length == 4)
+				{
+					if (!(arguments[2] is VariableTerm varTerm) || varTerm.Identifier.IsCalc || !varTerm.Identifier.IsArray1D || !varTerm.Identifier.IsInteger || varTerm.Identifier.IsConst)
+						return string.Format("{0}関数:3番目の引数が整数型変数ではありません", name);
+					if (!(arguments[3] is VariableTerm varTerm2) || varTerm2.Identifier.IsCalc || !varTerm2.Identifier.IsArray1D || !varTerm2.Identifier.IsString || varTerm2.Identifier.IsConst)
+						return string.Format("{0}関数:3番目の引数が一次元文字列型変数ではありません", name);
+				}
+				return null;
+			}
+			void Output(MatchCollection matches, Regex reg, string[] values)
+            {
+				var idx = 0;
+				foreach (Match match in matches)
+					foreach (var name in reg.GetGroupNames())
+					{
+						if (idx >= values.Length) return;
+						values[idx] = match.Groups[name].Value;
+						idx++;
+                    }
+            }
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				string baseString = arguments[0].GetStrValue(exm);
@@ -654,7 +704,19 @@ namespace MinorShift.Emuera.GameData.Function
 				{
 					throw new CodeEE("第２引数が正規表現として不正です：" + e.Message);
 				}
-				return (reg.Match(baseString).Success ? 1 : 0);
+				var matches = reg.Matches(baseString);
+				var ret = matches.Count;
+				if (arguments.Length == 3 && arguments[2].GetIntValue(exm) != 0)
+                {
+					exm.VEvaluator.RESULT_ARRAY[1] = reg.GetGroupNumbers().Length;
+					if (ret > 0) Output(matches, reg, exm.VEvaluator.RESULTS_ARRAY);
+				}
+				if (arguments.Length == 4)
+				{
+					(arguments[2] as VariableTerm).SetValue(reg.GetGroupNumbers().Length, exm);
+					if (ret > 0) Output(matches, reg, (arguments[3] as VariableTerm).Identifier.GetArray() as string[]);
+				}
+				return ret;
 			}
 		}
 		private sealed class XmlDocumentMethod : FunctionMethod
