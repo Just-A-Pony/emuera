@@ -6277,5 +6277,47 @@ namespace MinorShift.Emuera.GameData.Function
 			}
 		}
 		#endregion
+
+		#region EE_GETUSINGMEMORY
+		private sealed class GetUsingMemoryMethod : FunctionMethod
+		{
+			public GetUsingMemoryMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { };
+				CanRestructure = false;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				using (System.Diagnostics.Process memory = System.Diagnostics.Process.GetCurrentProcess())
+                {
+					return memory.WorkingSet64;
+				}
+			}
+		}
+		#endregion
+		#region EE_CLEARMEMORY
+		private sealed class ClearMemoryMethod : FunctionMethod
+		{
+			public ClearMemoryMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { };
+				CanRestructure = false;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				using (System.Diagnostics.Process destmemory = System.Diagnostics.Process.GetCurrentProcess())
+				{
+					long destmemorysize = destmemory.WorkingSet64;
+					GC.Collect();
+					using (System.Diagnostics.Process memory = System.Diagnostics.Process.GetCurrentProcess())
+                    {
+						return destmemorysize-memory.WorkingSet64;
+					}
+				}
+			}
+		}
+		#endregion
 	}
 }

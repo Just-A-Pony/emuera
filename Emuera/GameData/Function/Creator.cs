@@ -275,6 +275,8 @@ namespace MinorShift.Emuera.GameData.Function
                 ["GGETFONTSTYLE"] = new GraphicsStateMethod(),
                 ["GGETTEXTSIZE"] = new GraphicsGetTextSizeMethod(),
                 //["GGETBRUSH"] = new GraphicsGetBrushMethod(),
+                ["GETUSINGMEMORY"] = new GetUsingMemoryMethod(),
+                ["CLEARMEMORY"] = new ClearMemoryMethod(),
                 #endregion
             };
 
