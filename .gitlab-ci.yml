@@ -20,6 +20,12 @@
 # and the Docker itself: https://opensource.com/resources/what-docker
 image: mcr.microsoft.com/dotnet/sdk:latest
 
+# Use shared windows runner
+.shared_windows_runners:
+  tags:
+    - shared-windows
+    - windows
+    - windows-1809
 # ### Define variables
 #
 variables:
