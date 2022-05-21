@@ -6278,7 +6278,7 @@ namespace MinorShift.Emuera.GameData.Function
 		}
 		#endregion
 
-		#region EE_GETUSINGMEMORY
+		#region EE_GETMEMORYUSAGE
 		private sealed class GetUsingMemoryMethod : FunctionMethod
 		{
 			public GetUsingMemoryMethod()
