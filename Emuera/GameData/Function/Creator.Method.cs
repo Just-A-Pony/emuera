@@ -515,17 +515,17 @@ namespace MinorShift.Emuera.GameData.Function
 				if (term is VariableTerm var)
 				{
 					if (var.Identifier == null || var.Identifier.IsConst)
-						throw new CodeEE(name + "が変数ではありません");
+						throw new CodeEE(string.Format("\"{0}\"が変数ではありません", name));
 					if (var.IsString)
 					{
 						if (arguments[1].GetOperandType() != typeof(string))
-							throw new CodeEE(name + "が整数型ではありません");
+							throw new CodeEE(string.Format("\"{0}\"が整数型ではありません", name));
 						var.SetValue(arguments[1].GetStrValue(exm), exm);
 					}
 					else
 					{
 						if (arguments[1].GetOperandType() != typeof(Int64))
-							throw new CodeEE(name + "が文字列型ではありません");
+							throw new CodeEE(string.Format("\"{0}\"が文字列型ではありません", name));
 						var.SetValue(arguments[1].GetIntValue(exm), exm);
 					}
 					return 1;
@@ -544,7 +544,7 @@ namespace MinorShift.Emuera.GameData.Function
 			}
 			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 			{
-				if (arguments.Length < 2)
+				if (arguments.Length < 1)
 					return string.Format("{0}関数:少なくとも2の引数が必要です", name);
 				if (arguments.Length > 5)
 					return string.Format("{0}関数:引数が多すぎます", name);
@@ -576,9 +576,11 @@ namespace MinorShift.Emuera.GameData.Function
 					bool setAllDims = arguments.Length >= 3 ? arguments[2].GetIntValue(exm) != 0 : true;
 					if (var.IsString)
 					{
-						if (arguments[1].GetOperandType() != typeof(string))
+						var val = string.Empty;
+						if (arguments.Length > 1 && arguments[1].GetOperandType() != typeof(string))
 							throw new CodeEE("文字列型でない変数" + name + "に文字列型を代入しようとしました");
-						var val = arguments[1].GetStrValue(exm);
+						if (arguments.Length > 1)
+							val = arguments[1].GetStrValue(exm);
 						if (setAllDims || var.Identifier.IsArray1D)
 							var.Identifier.SetValueAll(val, start, end, 0);
 						else if (var.Identifier.IsArray2D)
@@ -601,9 +603,11 @@ namespace MinorShift.Emuera.GameData.Function
 					}
 					else
 					{
-						if (arguments[1].GetOperandType() != typeof(Int64))
+						Int64 val = 0;
+						if (arguments.Length > 1 && arguments[1].GetOperandType() != typeof(Int64))
 							throw new CodeEE("整数型でない変数" + name + "に整数値を代入しようとしました");
-						var val = arguments[1].GetIntValue(exm);
+						if (arguments.Length > 1)
+							val = arguments[1].GetIntValue(exm);
 						if (setAllDims || var.Identifier.IsArray1D)
 							var.Identifier.SetValueAll(val, start, end, 0);
 						else if (var.Identifier.IsArray2D)
