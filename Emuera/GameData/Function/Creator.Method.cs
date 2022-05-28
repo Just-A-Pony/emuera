@@ -4881,7 +4881,10 @@ namespace MinorShift.Emuera.GameData.Function
 				var bitmap = new Bitmap(16, 16);
 				//Graphics canvas = Graphics.FromImage(bitmap);
 				var graphics = Graphics.FromImage(bitmap);
-				var size = graphics.MeasureString(text, g.Fnt, int.MaxValue, StringFormat.GenericTypographic);
+				Font font = g.Fnt;
+				if (font == null)
+					font = new Font(Config.FontName, 100, GlobalStatic.Console.StringStyle.FontStyle, GraphicsUnit.Pixel);
+				var size = graphics.MeasureString(text, font, int.MaxValue, StringFormat.GenericTypographic);
 
 				//TextRenderer
 				//Size tsize = TextRenderer.MeasureText(canvas, text, g.Fnt,
