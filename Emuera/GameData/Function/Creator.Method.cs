@@ -1189,7 +1189,7 @@ namespace MinorShift.Emuera.GameData.Function
 			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 			{
 				if (arguments.Length < 2)
-					return string.Format("{0}関数:少なくとも3の引数が必要です", name);
+					return string.Format("{0}関数:少なくとも2の引数が必要です", name);
 				if (arguments.Length > 4)
 					return string.Format("{0}関数:引数が多すぎます", name);
 				if (arguments.Length == 2 && arguments[0].GetOperandType() != typeof(Int64))
