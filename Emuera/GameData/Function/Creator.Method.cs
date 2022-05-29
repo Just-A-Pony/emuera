@@ -1099,7 +1099,7 @@ namespace MinorShift.Emuera.GameData.Function
 				{
 					if (node is XmlAttribute attr)
 					{
-						attr.Attributes.Remove(attr);
+						attr.OwnerElement.Attributes.Remove(attr);
 						return true;
 					}
 				}
