@@ -581,7 +581,7 @@ namespace MinorShift.Emuera.GameData.Function
 							throw new CodeEE("文字列型でない変数" + name + "に文字列型を代入しようとしました");
 						if (arguments.Length > 1)
 							val = arguments[1].GetStrValue(exm);
-						if (setAllDims || var.Identifier.IsArray1D)
+						if (var.Identifier.IsArray1D)
 							var.Identifier.SetValueAll(val, start, end, 0);
 						else if (var.Identifier.IsArray2D)
 						{
@@ -608,15 +608,24 @@ namespace MinorShift.Emuera.GameData.Function
 							throw new CodeEE("整数型でない変数" + name + "に整数値を代入しようとしました");
 						if (arguments.Length > 1)
 							val = arguments[1].GetIntValue(exm);
-						if (setAllDims || var.Identifier.IsArray1D)
+						if (var.Identifier.IsArray1D)
 							var.Identifier.SetValueAll(val, start, end, 0);
 						else if (var.Identifier.IsArray2D)
 						{
 							var array = var.Identifier.GetArray() as Int64[,];
 							var idx1 = var.GetElementInt(0, exm);
 							var idx2 = var.GetElementInt(1, exm);
-							for (int i = Math.Max(start, (int)idx2); i < end; i++)
-								array[idx1, i] = val;
+							if (setAllDims)
+                            {
+								for (int j = 0; j < array.GetLength(0); j++)
+									for (int i = Math.Max(start, (int)idx2); i < end; i++)
+										array[j, i] = val;
+							}
+							else
+                            {
+								for (int i = Math.Max(start, (int)idx2); i < end; i++)
+									array[idx1, i] = val;
+							}
 						}
 						if (var.Identifier.IsArray3D)
 						{
@@ -624,8 +633,18 @@ namespace MinorShift.Emuera.GameData.Function
 							var idx2 = var.GetElementInt(1, exm);
 							var idx3 = var.GetElementInt(2, exm);
 							var array = var.Identifier.GetArray() as Int64[,,];
-							for (int i = Math.Max(start, (int)idx3); i < end; i++)
-								array[idx2, idx1, i] = val;
+							if (setAllDims)
+							{
+								for (int k = 0; k < array.GetLength(0); k++)
+									for (int j = 0; j < array.GetLength(1); j++)
+										for (int i = Math.Max(start, (int)idx3); i < end; i++)
+											array[k, j, i] = val;
+							}
+							else
+							{
+								for (int i = Math.Max(start, (int)idx3); i < end; i++)
+									array[idx2, idx1, i] = val;
+							}
 						}
 					}
 					return 1;
