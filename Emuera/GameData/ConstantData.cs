@@ -951,16 +951,19 @@ check1break:
 			}
 
 			#region EE_ERD
-			int varindex = Array.IndexOf(GlobalStatic.IdentifierDictionary.VarKeys, varname);
-			if (varindex < 0 || string.IsNullOrEmpty(varname))
-				return ret;
-			else
+			if (ret == null)
 			{
-				ret = nameToIntDics[varindex];
-				errPos = varname + ".csv";
-				allowIndex = 0;
-				if (code == VariableCode.CVAR)
-					allowIndex = 1;
+				int varindex = Array.IndexOf(GlobalStatic.IdentifierDictionary.VarKeys, varname);
+				if (varindex < 0 || string.IsNullOrEmpty(varname))
+					return ret;
+				else
+				{
+					ret = nameToIntDics[varindex];
+					errPos = varname + ".csv";
+					allowIndex = 0;
+					if (code == VariableCode.CVAR)
+						allowIndex = 1;
+				}
 			}
 			#endregion
 			if (index < 0)
