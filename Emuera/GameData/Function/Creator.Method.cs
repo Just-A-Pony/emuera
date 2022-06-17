@@ -3999,7 +3999,7 @@ namespace MinorShift.Emuera.GameData.Function
 				// argumentTypeArray = new Type[] { typeof(string), typeof(string), typeof(string) };
 				argumentTypeArray = null;
 				HasUniqueRestructure = true;
-				CanRestructure = true;
+				CanRestructure = false;
 			}
 
 			public override bool UniqueRestructure(ExpressionMediator exm, IOperandTerm[] arguments)
