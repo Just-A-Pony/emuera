@@ -286,7 +286,7 @@ namespace MinorShift.Emuera.GameProc
 						idDic.AddUseDefinedVariable(var);
 						#region EE_ERD
 						//とりあえず一次元配列だけ対応
-						if (data.Dimension == 1)
+						if (data.Dimension == 1 && Config.UseERD)
 						{
 
 							string csvpath = (Program.CsvDir + data.Name.ToUpper() + ".CSV");

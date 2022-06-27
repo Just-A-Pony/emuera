@@ -951,7 +951,7 @@ check1break:
 			}
 
 			#region EE_ERD
-			if (ret == null)
+			if (ret == null && Config.UseERD)
 			{
 				int varindex = Array.IndexOf(GlobalStatic.IdentifierDictionary.VarKeys, varname);
 				if (varindex < 0 || string.IsNullOrEmpty(varname))
