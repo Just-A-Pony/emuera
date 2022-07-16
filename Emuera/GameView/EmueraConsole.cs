@@ -683,6 +683,13 @@ namespace MinorShift.Emuera.GameView
 				#region EE_INPUTMOUSEKEY拡張
 				// InputMouseKey(4, 0, 0, 0, 0);
 				InputMouseKey(4, 0, 0, 0, 0, 0);
+				if (state == ConsoleState.WaitInput && inputReq.NeedValue)
+				{
+					Point point = window.MainPicBox.PointToClient(Control.MousePosition);
+					if (window.MainPicBox.ClientRectangle.Contains(point))
+						MoveMouse(point);
+				}
+				RefreshStrings(true);
 				#endregion
 				return;
 			}
@@ -832,7 +839,15 @@ namespace MinorShift.Emuera.GameView
 			//ボタン押された場合にRESULT:5にボタンの値が代入される
 			if (selectingButton != null)
 			{
-				InputMouseKey(1, (int)button, clientPoint.X, clientPoint.Y, buttonNum, selectingButton.Input);
+				if (!selectingButton.IsInteger)
+                {
+					GlobalStatic.VEvaluator.RESULTS = selectingButton.Inputs;
+					InputMouseKey(1, (int)button, clientPoint.X, clientPoint.Y, buttonNum, 0);
+				}
+                else
+                {
+					InputMouseKey(1, (int)button, clientPoint.X, clientPoint.Y, buttonNum, selectingButton.Input);
+				}
 			}
 			else
 			{
