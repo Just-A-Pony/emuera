@@ -239,6 +239,56 @@ namespace MinorShift.Emuera.GameData.Function
 				return outputlength;
 			}
 		}
+		private sealed class EnumFilesMethod : FunctionMethod
+		{
+			public EnumFilesMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = null;
+				CanRestructure = false;
+			}
+			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			{
+				if (arguments.Length < 1)
+					return string.Format("{0}関数:少なくとも1の引数が必要です", name);
+				if (arguments.Length > 3)
+					return string.Format("{0}関数:引数が多すぎます", name);
+				for (int i = 0; i < arguments.Length; i++)
+				{
+					if (i == 2)
+					{
+						if (arguments[2].GetOperandType() != typeof(Int64))
+							return string.Format("{0}関数:3番目の引数が整数ではありません", name);
+					}
+					else if (arguments[i].GetOperandType() != typeof(string))
+						return string.Format("{0}関数:{1}番目の引数が文字列ではありません", name, i + 1);
+				}
+				return null;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				var dir = arguments[0].GetStrValue(exm);
+				dir = dir.Replace('/', '\\');
+				dir = dir.Replace("..\\", "");
+				if (Path.GetPathRoot(dir) != string.Empty || !Directory.Exists(dir)) return -1;
+				var pattern = arguments.Length > 1 ? arguments[1].GetStrValue(exm) : "*";
+				var option = arguments.Length > 2
+					? (arguments[2].GetIntValue(exm) == 0 ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories)
+					: SearchOption.TopDirectoryOnly;
+				string[] files;
+				try
+				{
+					files = Directory.EnumerateFiles(dir, pattern, option).ToArray();
+				}
+				catch
+				{
+					return -1;
+				}
+				var ret = Math.Min(files.Length, GlobalStatic.VEvaluator.RESULTS_ARRAY.Length);
+				Array.Copy(files, 0, GlobalStatic.VEvaluator.RESULTS_ARRAY, 0, ret);
+				return ret;
+			}
+		}
 		private sealed class GetVarMethod : FunctionMethod
 		{
 			public GetVarMethod()
