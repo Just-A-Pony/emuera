@@ -369,7 +369,7 @@ namespace MinorShift.Emuera.GameData
 					return;
 				}
 			}
-check1break:
+			check1break:
 			switch (id.Code)
 			{
 				//1753a PALAMだけ仕様が違うのはかえって問題なので、変数と要素文字列配列数の同期は全部バックアウト
