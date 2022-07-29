@@ -1590,6 +1590,12 @@ namespace MinorShift.Emuera.GameView
             GlobalStatic.Process.saveCurrentState(false);
             try
 			{
+				//デバッグコマンドはReadEnabledLineを通してないのでRename変換を入れる
+				if (Config.UseRenameFile && (com.IndexOf("[[") >= 0) && (com.IndexOf("]]") >= 0))
+				{
+					foreach (KeyValuePair<string, string> pair in ParserMediator.RenameDic)
+						com = com.Replace(pair.Key, pair.Value);
+				}
 				LogicalLine line = null;
 				if (!com.StartsWith("@") && !com.StartsWith("\"") && !com.StartsWith("\\"))
 					line = LogicalLineParser.ParseLine(com, null);
