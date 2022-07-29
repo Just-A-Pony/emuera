@@ -55,6 +55,9 @@ namespace MinorShift.Emuera.GameProc
 				{
 					//&=でないと、ここで起きたエラーをキャッチできない
 					noError &= analyzeSharpDimLines();
+					//ERD読み込み
+					if (Config.UseERD)
+						LoadERDFiles();
 				}
 
 				dimlines.Clear();
@@ -288,18 +291,10 @@ namespace MinorShift.Emuera.GameProc
 						//とりあえず一次元配列だけ対応
 						if (data.Dimension == 1 && Config.UseERD)
 						{
-
-							string csvpath = (Program.CsvDir + data.Name.ToUpper() + ".CSV");
-							string[] erdpath = Directory.GetFiles(Program.ErbDir, data.Name.ToUpper() + ".ERD", SearchOption.AllDirectories);
-							if (File.Exists(csvpath) && erdpath.Length > 0)
-								throw new CodeEE("変数" + data.Name + "用の定義ファイルがCSVとERD両方で存在します。どちらかに統一してください");
-							if (erdpath != null && erdpath.Length >= 2)
-								throw new CodeEE("変数" + data.Name + "用のERDファイルが2つ以上存在します。どちらかに統一してください");
-							if (File.Exists(csvpath))
-								GlobalStatic.ConstantData.UserDefineLoadData(csvpath, data.Name, data.Lengths[0], Config.DisplayReport);
-							else if (erdpath.Length > 0 && !string.IsNullOrEmpty(erdpath[0]))
-								GlobalStatic.ConstantData.UserDefineLoadData(erdpath[0], data.Name, data.Lengths[0], Config.DisplayReport);
-							System.Windows.Forms.Application.DoEvents();
+							//HashSetに変数情報入れておく
+							if (ERDVariables == null)
+								ERDVariables = new HashSet<UserDefinedVariableData>();
+							ERDVariables.Add(data);
 						}
 						#endregion
 
@@ -329,6 +324,33 @@ namespace MinorShift.Emuera.GameProc
 			}
 			return noError;
 		}
+		public HashSet<UserDefinedVariableData> ERDVariables { get; set; }
+		private void LoadERDFiles()
+        {
+			if (ERDVariables == null)
+				return;
+			string csvpath;
+			string[] erdpath;
+			foreach (var data in ERDVariables)
+			{
+				csvpath = (Program.CsvDir + data.Name.ToUpper() + ".CSV");
+				erdpath = Directory.GetFiles(Program.ErbDir, data.Name.ToUpper() + ".ERD", SearchOption.AllDirectories);
+				if (File.Exists(csvpath) && erdpath.Length > 0)
+				{
+					throw new CodeEE("変数" + data.Name + "用の定義ファイルがCSVとERD両方で存在します。どちらかに統一してください");
+				}
+				if (erdpath != null && erdpath.Length >= 2)
+				{
+					throw new CodeEE("変数" + data.Name + "用のERDファイルが2つ以上存在します。どちらかに統一してください");
+				}
+				if (File.Exists(csvpath))
+					GlobalStatic.ConstantData.UserDefineLoadData(csvpath, data.Name, data.Lengths[0], Config.DisplayReport);
+				else if (erdpath.Length > 0 && !string.IsNullOrEmpty(erdpath[0]))
+					GlobalStatic.ConstantData.UserDefineLoadData(erdpath[0], data.Name, data.Lengths[0], Config.DisplayReport);
+				System.Windows.Forms.Application.DoEvents();
+			}
+		}
+
 
 		private void analyzeSharpFunction(StringStream st, ScriptPosition position, bool funcs)
 		{
