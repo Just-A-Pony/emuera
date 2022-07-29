@@ -95,32 +95,39 @@ namespace MinorShift.Emuera.GameData.Function
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
-				string xml;
+				XmlDocument doc = null;
+				XmlNodeList nodes = null;
 				if (arguments[0].GetOperandType() == typeof(Int64))
 				{
 					var idx = arguments[0].GetIntValue(exm);
 					var dict = exm.VEvaluator.VariableData.DataXmlDocument;
-					if (dict.ContainsKey(idx)) xml = dict[idx].OuterXml;
+					if (dict.ContainsKey(idx)) doc = dict[idx];
 					else return -1;
 				}
-				else xml = arguments[0].GetStrValue(exm);
+				else
+				{
+					doc = new XmlDocument();
+					var xml = arguments[0].GetStrValue(exm);
+					try
+					{
+						doc.LoadXml(xml);
+					}
+					catch (XmlException e)
+					{
+						throw new CodeEE("XML_GET関数:\"" + xml + "\"の解析エラー:" + e.Message);
+					}
+				}
 				string path = arguments[1].GetStrValue(exm);
-				long outputStyle = arguments.Length == 4 ? arguments[3].GetIntValue(exm) : 0;
-				XmlDocument doc = new XmlDocument();
-				XmlNodeList nodes = null;
 				try
 				{
-					doc.LoadXml(xml);
 					nodes = doc.SelectNodes(path);
-				}
-				catch (XmlException e)
-				{
-					throw new CodeEE("XML_GET関数:\"" + xml + "\"の解析エラー:" + e.Message);
 				}
 				catch (System.Xml.XPath.XPathException e)
 				{
 					throw new CodeEE("XML_GET関数:XPath\"" + path + "\"の解析エラー:" + e.Message);
 				}
+				long outputStyle = arguments.Length == 4 ? arguments[3].GetIntValue(exm) : 0;
+				
 				if (arguments.Length >= 3)
 				{
 					if (arguments[2].GetOperandType() == typeof(Int64) && arguments[2].GetIntValue(exm) != 0)
