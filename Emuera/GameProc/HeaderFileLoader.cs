@@ -300,10 +300,12 @@ namespace MinorShift.Emuera.GameProc
 							if (erdFileNames.ContainsKey(key))
 							{
 								var info = erdFileNames[key];
-								if (info.duplicatedErd)
+								if (info.duplicatedBoth)
 									throw new CodeEE("変数" + data.Name + "用の定義ファイルがCSVとERD両方で存在します。どちらかに統一してください");
-								if (info.duplicatedCsv)
+								if (info.duplicatedErd)
 									throw new CodeEE("変数" + data.Name + "用のERDファイルが2つ以上存在します。どちらかに統一してください");
+								if (info.duplicatedCsv)
+									throw new CodeEE("変数" + data.Name + "用のCSVファイルが2つ以上存在します。どちらかに統一してください");
 								GlobalStatic.ConstantData.UserDefineLoadData(info.path, data.Name, data.Lengths[0], Config.DisplayReport);
 							}
 							System.Windows.Forms.Application.DoEvents();
@@ -342,6 +344,7 @@ namespace MinorShift.Emuera.GameProc
 			public string path;
 			public bool duplicatedErd;
 			public bool duplicatedCsv;
+			public bool duplicatedBoth;
 		}
 		private Dictionary<string, ERDPath> erdFileNames;
 
@@ -361,8 +364,9 @@ namespace MinorShift.Emuera.GameProc
 				var key = Path.GetFileNameWithoutExtension(path).ToUpper();
 				if (!erdFileNames.ContainsKey(key))
 					erdFileNames[key] = new ERDPath() { path = path, duplicatedCsv = false, duplicatedErd = false };
-				else
-					erdFileNames[key].duplicatedCsv = true;
+				else if (Path.GetExtension(path).ToLower()==".erd")
+					erdFileNames[key].duplicatedBoth = true;
+				else erdFileNames[key].duplicatedCsv = true;
 			}
 		}
 		#endregion
