@@ -183,6 +183,7 @@ namespace MinorShift.Emuera.GameView
 
 			#region EM_私家版_clearbutton
 			public bool FlagClearButton = false;//falseの時に</clearbutton>するとエラー,trueの時ボタン化が無効とする
+			public bool FlagClearButtonTooltip = false;//tureの時にボタンのツールチップ属性を無効とする
 			#endregion
 
 			public bool FlagBr = false;//<br>による強制改行の予約
@@ -735,6 +736,7 @@ namespace MinorShift.Emuera.GameView
 						if (!state.FlagClearButton)
 							throw new CodeEE("</clearbutton>の前に<clearbutton>がありません");
 						state.FlagClearButton = false;
+						state.FlagClearButtonTooltip = false;
 						return null;
 					#endregion
 					default:
@@ -1029,6 +1031,8 @@ namespace MinorShift.Emuera.GameView
 						else
 						{
 							buttonTag.IsButton = false;
+							if (state.FlagClearButtonTooltip)
+								buttonTag.ButtonTitle = null;
 						}
 						#endregion
 						buttonTag.IsButtonTag = isButton;
@@ -1038,9 +1042,31 @@ namespace MinorShift.Emuera.GameView
 					}
 				#region EM_私家版_clearbutton
 				case "clearbutton":
-                    {
+					{
 						if (state.FlagClearButton)
 							throw new CodeEE("<clearbutton>が入れ子にされています");
+						if (wc!=null)
+							while (!wc.EOL)
+							{
+								word = wc.Current as IdentifierWord;
+								wc.ShiftNext();
+								OperatorWord op = wc.Current as OperatorWord;
+								wc.ShiftNext();
+								LiteralStringWord attr = wc.Current as LiteralStringWord;
+								wc.ShiftNext();
+								if (word == null || op == null || op.Code != OperatorCode.Assignment || attr == null)
+									goto error;
+								if (word.Code.ToLower()=="notooltip")
+								{
+									var val = attr.Str.ToLower();
+									if (val == "true")
+										state.FlagClearButtonTooltip = true;
+									else if (val != "false")
+										throw new CodeEE("<" + tag + ">タグに" + word.Code + "属性の値\"" + attr.Str + "\"は解釈できません");
+								}
+								else
+									throw new CodeEE("<" + tag + ">タグの属性名" + word.Code + "は解釈できません");
+							}
 						state.FlagClearButton = true;
 						return null;
 					}
