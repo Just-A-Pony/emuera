@@ -283,6 +283,12 @@ namespace MinorShift.Emuera.GameData.Variable
 			varTokenDic.Add("GLOBALNAME", new Str1DConstantToken(VariableCode.GLOBALNAME, this));
 			varTokenDic.Add("GLOBALSNAME", new Str1DConstantToken(VariableCode.GLOBALSNAME, this));
 
+			#region EE_CSV機能拡張
+			varTokenDic.Add("DAYNAME", new Str1DConstantToken(VariableCode.DAYNAME, this));
+			varTokenDic.Add("TIMENAME", new Str1DConstantToken(VariableCode.TIMENAME, this));
+			varTokenDic.Add("MONEYNAME", new Str1DConstantToken(VariableCode.MONEYNAME, this));
+			#endregion
+
 			StrConstantToken token = new StrConstantToken(VariableCode.GAMEBASE_AUTHOR, this, gamebase.ScriptAutherName);
 			varTokenDic.Add("GAMEBASE_AUTHER", token);
 			varTokenDic.Add("GAMEBASE_AUTHOR", token);
@@ -291,6 +297,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			varTokenDic.Add("GAMEBASE_TITLE", new StrConstantToken(VariableCode.GAMEBASE_TITLE, this, gamebase.ScriptTitle));
 			#region EE_UPDATECHECK
 			varTokenDic.Add("GAMEBASE_URL", new StrConstantToken(VariableCode.GAMEBASE_URL, this, gamebase.UpdateCheckURL));
+			varTokenDic.Add("GAMEBASE_VERSIONNAME", new StrConstantToken(VariableCode.GAMEBASE_URL, this, gamebase.VersionName));
 			#endregion
 
 

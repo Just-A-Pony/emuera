@@ -6452,5 +6452,35 @@ namespace MinorShift.Emuera.GameData.Function
 			}
 		}
 		#endregion
-	}
+		#region EE_textbox拡張
+		private sealed class GetTextBoxMethod : FunctionMethod
+		{
+			public GetTextBoxMethod()
+			{
+				ReturnType = typeof(string);
+				argumentTypeArray = new Type[] { };
+				CanRestructure = false;
+			}
+			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				return GlobalStatic.MainWindow.TextBox.Text;
+			}
+		}
+		private sealed class ChangeTextBoxMethod : FunctionMethod
+		{
+			public ChangeTextBoxMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(string) };
+				CanRestructure = true;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				GlobalStatic.MainWindow.ChangeTextBox(arguments[0].GetStrValue(exm));
+				return 1;
+			}
+		}
+        #endregion
+
+    }
 }

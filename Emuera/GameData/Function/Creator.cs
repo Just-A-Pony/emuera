@@ -278,6 +278,8 @@ namespace MinorShift.Emuera.GameData.Function
                 //["GGETBRUSH"] = new GraphicsGetBrushMethod(),
                 ["GETMEMORYUSAGE"] = new GetUsingMemoryMethod(),
                 ["CLEARMEMORY"] = new ClearMemoryMethod(),
+                ["GETTEXTBOX"] = new GetTextBoxMethod(),
+                ["CHANGETEXTBOX"] = new ChangeTextBoxMethod(),
                 #endregion
             };
 
