@@ -286,7 +286,7 @@ namespace MinorShift.Emuera.GameData.Function
                 ["GETMEMORYUSAGE"] = new GetUsingMemoryMethod(),
                 ["CLEARMEMORY"] = new ClearMemoryMethod(),
                 ["GETTEXTBOX"] = new GetTextBoxMethod(),
-                ["CHANGETEXTBOX"] = new ChangeTextBoxMethod(),
+                ["SETTEXTBOX"] = new ChangeTextBoxMethod(),
                 #endregion
             };
 
