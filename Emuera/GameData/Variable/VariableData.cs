@@ -993,6 +993,43 @@ namespace MinorShift.Emuera.GameData.Variable
 					copyListToArray3D(int3DListDic[var.Name], (Int64[, ,])var.GetArray());
 		}
 
+		#region EM_私家版_セーブ拡張
+		public void SaveGlobalEMDataToStreamBinary(EraBinaryDataWriter writer)
+		{
+			foreach (var key in GlobalStatic.ConstantData.GlobalSaveMaps)
+			{
+				if (mapDict.ContainsKey(key))
+				{
+					writer.WriteWithKey(key, mapDict[key]);
+				}
+			}
+			foreach (var key in GlobalStatic.ConstantData.GlobalSaveXmls)
+			{
+				if (xmlDict.ContainsKey(key))
+				{
+					writer.WriteWithKey(key, xmlDict[key]);
+				}
+			}
+		}
+		public void SaveEMDataToStreamBinary(EraBinaryDataWriter writer)
+		{
+			foreach (var key in GlobalStatic.ConstantData.SaveMaps)
+			{
+				if (mapDict.ContainsKey(key))
+				{
+					writer.WriteWithKey(key, mapDict[key]);
+				}
+			}
+			foreach (var key in GlobalStatic.ConstantData.SaveXmls)
+			{
+				if (xmlDict.ContainsKey(key))
+				{
+					writer.WriteWithKey(key, xmlDict[key]);
+				}
+			}
+		}
+		#endregion
+
 		public void SaveGlobalToStreamBinary(EraBinaryDataWriter writer)
 		{
 			foreach (KeyValuePair<string, VariableToken> pair in varTokenDic)
@@ -1009,7 +1046,7 @@ namespace MinorShift.Emuera.GameData.Variable
 					writer.WriteWithKey(var.Name, var.GetArray());
 			}
 		}
-
+		
 		public void SaveToStreamBinary(EraBinaryDataWriter writer)
 		{
 			foreach (KeyValuePair<string, VariableToken> pair in varTokenDic)
@@ -1047,6 +1084,28 @@ namespace MinorShift.Emuera.GameData.Variable
 				vToken = null;
 			switch (nameAndType.Value)
 			{
+				#region EM_私家版_セーブ拡張
+				case EraSaveDataType.Map:
+					{
+						var key = reader.ReadString();
+						var dict = reader.ReadMap();
+						if (GlobalStatic.ConstantData.SaveMaps.Contains(key) || GlobalStatic.ConstantData.GlobalSaveMaps.Contains(key))
+						{
+							mapDict[key] = dict;
+						}
+						break;
+					}
+				case EraSaveDataType.Xml:
+					{
+						var key = reader.ReadString();
+						var doc = reader.ReadXml();
+						if (GlobalStatic.ConstantData.SaveXmls.Contains(key) || GlobalStatic.ConstantData.GlobalSaveXmls.Contains(key))
+						{
+							xmlDict[key] = doc;
+						}
+						break;
+					}
+				#endregion
 				case EraSaveDataType.EOF:
 					return false;
 				case EraSaveDataType.Int:

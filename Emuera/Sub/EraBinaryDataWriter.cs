@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.IO.Compression;
+using System.Xml;
 
 namespace MinorShift.Emuera.Sub
 {
@@ -151,6 +152,25 @@ namespace MinorShift.Emuera.Sub
 				writer.Write(key);
 				writeData((string[, ,])v);
 			}
+			#region EM_私家版_セーブ拡張
+			else if (v is Dictionary<string, string> map)
+			{
+				writer.Write((byte)EraSaveDataType.Map);
+				writer.Write(key);
+				writer.Write(map.Count);
+				foreach (var pair in map)
+				{
+					writer.Write(pair.Key);
+					writer.Write(pair.Value);
+				}
+			}
+			else if (v is XmlDocument doc)
+			{
+				writer.Write((byte)EraSaveDataType.Xml);
+				writer.Write(key);
+				writer.Write(doc.OuterXml);
+			}
+			#endregion
 		}
 
 		#region private

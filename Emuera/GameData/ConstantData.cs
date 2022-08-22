@@ -87,6 +87,13 @@ namespace MinorShift.Emuera.GameData
 		public Int64[] CharacterIntArray2DLength;
 		public Int64[] CharacterStrArray2DLength;
 
+		#region EM_私家版_セーブ拡張
+		public HashSet<string> GlobalSaveMaps { get; private set; } = new HashSet<string>();
+		public HashSet<string> SaveMaps { get; private set; } = new HashSet<string>();
+		public HashSet<string> GlobalSaveXmls { get; private set; } = new HashSet<string>();
+		public HashSet<string> SaveXmls { get; private set; } = new HashSet<string>();
+		#endregion
+
 		//private readonly GameBase gamebase;
 		#region EE_ERD
 		//private readonly string[][] names = new string[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__][];
@@ -664,7 +671,10 @@ namespace MinorShift.Emuera.GameData
 			}
 			//if (!Program.AnalysisMode)
 			loadCharacterData(csvDir, disp);
-
+			
+			#region EM_私家版_セーブ拡張
+			loadGlobalVarExSetting(csvDir, disp);
+			#endregion
 			//逆引き辞書を作成2 (RELATION)
 			for (int i = 0; i < CharacterTmplList.Count; i++)
 			{
@@ -1107,6 +1117,83 @@ namespace MinorShift.Emuera.GameData
 			}
 		}
 
+		#region EM_私家版_セーブ拡張
+		private void loadGlobalVarExSetting(string csvPath, bool disp)
+		{
+			GlobalSaveXmls.Clear();
+			SaveXmls.Clear();
+			GlobalSaveMaps.Clear();
+			SaveMaps.Clear();
+			foreach (var path in Directory.GetFiles(csvPath, "VarExt*.csv", SearchOption.AllDirectories))
+			{
+				EraStreamReader eReader = new EraStreamReader(false);
+				if (!eReader.Open(path))
+				{
+					output.PrintError(eReader.Filename + "のオープンに失敗しました");
+					return;
+				}
+				ScriptPosition position = null;
+				if (disp)
+					output.PrintSystemLine(eReader.Filename + "読み込み中・・・");
+				try
+				{
+					StringStream st = null;
+					while ((st = eReader.ReadEnabledLine()) != null)
+					{
+						position = new ScriptPosition(eReader.Filename, eReader.LineNo);
+						string[] tokens = st.Substring().Split(',');
+						if (tokens.Length < 2)
+						{
+							ParserMediator.Warn("\",\"が必要です", position, 1);
+							continue;
+						}
+						if (tokens[0].Length == 0)
+						{
+							ParserMediator.Warn("\",\"で始まっています", position, 1);
+							continue;
+						}
+						if (tokens[0].Equals("GLOBAL_MAPS", Config.SCVariable))
+						{
+							for (int i = 1; i < tokens.Length; i++)
+								GlobalSaveMaps.Add(tokens[i].Trim());
+							continue;
+						}
+						if (tokens[0].Equals("SAVE_MAPS", Config.SCVariable))
+						{
+							for (int i = 1; i < tokens.Length; i++)
+								SaveMaps.Add(tokens[i].Trim());
+							continue;
+						}
+						if (tokens[0].Equals("GLOBAL_XMLS", Config.SCVariable))
+						{
+							for (int i = 1; i < tokens.Length; i++)
+								GlobalSaveXmls.Add(tokens[i].Trim());
+							continue;
+						}
+						if (tokens[0].Equals("SAVE_XMLS", Config.SCVariable))
+						{
+							for (int i = 1; i < tokens.Length; i++)
+								SaveXmls.Add(tokens[i].Trim());
+							continue;
+						}
+					}
+				}
+				catch
+				{
+					System.Media.SystemSounds.Hand.Play();
+					if (position != null)
+						ParserMediator.Warn("予期しないエラーが発生しました", position, 3);
+					else
+						output.PrintError("予期しないエラーが発生しました");
+					return;
+				}
+				finally
+				{
+					eReader.Dispose();
+				}
+			}
+		}
+		#endregion
 		private void loadCharacterDataFile(string csvPath, string csvName, bool disp)
 		{
 			CharacterTemplate tmpl = null;

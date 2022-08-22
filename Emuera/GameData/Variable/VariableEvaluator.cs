@@ -2223,6 +2223,10 @@ namespace MinorShift.Emuera.GameData.Variable
 							bWriter.WriteString("");//saveMes
 							varData.SaveGlobalToStreamBinary(bWriter);
 							bWriter.WriteEOF();
+							#region EM_私家版_セーブ拡張
+							varData.SaveGlobalEMDataToStreamBinary(bWriter);
+							bWriter.WriteEOF();
+							#endregion
 							bWriter.Close();
 						}
 					}
@@ -2283,6 +2287,10 @@ namespace MinorShift.Emuera.GameData.Variable
 						return false;
 					bReader.ReadString();//saveMes
 					varData.LoadFromStreamBinary(bReader);
+					#region EM_私家版_セーブ拡張
+					if (!bReader.EOF())
+						varData.LoadFromStreamBinary(bReader);
+					#endregion
 				}
 				else
 				{
@@ -2329,6 +2337,10 @@ namespace MinorShift.Emuera.GameData.Variable
 			}
 			varData.SaveToStreamBinary(bWriter);
 			bWriter.WriteEOF();
+			#region EM_私家版_セーブ拡張
+			varData.SaveEMDataToStreamBinary(bWriter);
+			bWriter.WriteEOF();
+			#endregion
 		}
 
 		public void LoadFromStreamBinary(EraBinaryDataReader bReader)
@@ -2357,6 +2369,10 @@ namespace MinorShift.Emuera.GameData.Variable
 				chara.LoadFromStreamBinary(bReader);
 			}
 			varData.LoadFromStreamBinary(bReader);
+			#region EM_私家版_セーブ拡張
+			if (!bReader.EOF())
+				varData.LoadFromStreamBinary(bReader);
+			#endregion
 		}
 
 		public bool SaveTo(int saveIndex, string saveText)
