@@ -1301,8 +1301,8 @@ namespace MinorShift.Emuera.GameData.Function
 					return string.Format("{0}関数:少なくとも2の引数が必要です", name);
 				if (arguments.Length > 4)
 					return string.Format("{0}関数:引数が多すぎます", name);
-				if (arguments.Length == 2 && arguments[0].GetOperandType() != typeof(Int64))
-					return string.Format("{0}関数:1番目の引数が整数ではありません", name);
+				//if (arguments.Length == 2 && arguments[0].GetOperandType() != typeof(Int64))
+				//	return string.Format("{0}関数:1番目の引数が整数ではありません", name);
 				if (!byName && arguments.Length > 2 && arguments[0].GetOperandType() != typeof(Int64)
 					&& (!(arguments[0] is VariableTerm varTerm)
 					|| varTerm.Identifier.IsCalc
@@ -1310,7 +1310,7 @@ namespace MinorShift.Emuera.GameData.Function
 					|| !varTerm.Identifier.IsString
 					|| varTerm.Identifier.IsConst))
 					return string.Format("{0}関数:1番目の引数が一次元文字列配列変数でも整数でもありません", name);
-				if (byName && arguments[0].GetOperandType() != typeof(string))
+				if (byName && arguments.Length > 2 && arguments[0].GetOperandType() != typeof(string))
 					return string.Format("{0}関数:1番目の引数が文字列型ではありません", name);
 				for (int i = 1; i < arguments.Length; i++)
 				{
