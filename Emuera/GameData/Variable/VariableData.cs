@@ -15,8 +15,8 @@ namespace MinorShift.Emuera.GameData.Variable
 	internal sealed partial class VariableData : IDisposable
 	{
 		#region EM_私家版_XMLDocument_連想配列
-		readonly Dictionary<Int64, XmlDocument> xmlDict = new Dictionary<Int64, XmlDocument>();
-		public Dictionary<Int64, XmlDocument> DataXmlDocument { get { return xmlDict; } }
+		readonly Dictionary<string, XmlDocument> xmlDict = new Dictionary<string, XmlDocument>();
+		public Dictionary<string, XmlDocument> DataXmlDocument { get { return xmlDict; } }
 		readonly Dictionary<string, Dictionary<string, string>> mapDict = new Dictionary<string, Dictionary<string, string>>();
 		public Dictionary<string, Dictionary<string, string>> DataStringMaps { get { return mapDict; } }
 		#endregion
