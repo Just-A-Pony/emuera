@@ -95,12 +95,13 @@ namespace MinorShift.Emuera.GameData
 		#endregion
 
 		//private readonly GameBase gamebase;
-		#region EE_ERD
 		//private readonly string[][] names = new string[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__][];
-		//private readonly Dictionary<string, int>[] nameToIntDics = new Dictionary<string, int>[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__];
-		private readonly string[][] names = new string[10000][];
-		private readonly Dictionary<string, int>[] nameToIntDics = new Dictionary<string, int>[10000];
+		#region EE_ERD
+		private const int ERD_NAMES_INDEX = (int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__; 
+		private readonly string[][] names = new string[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__ + 1][]; // 元より1増やす
+		private readonly Dictionary<string, Dictionary<string, int>> erdNameToIntDics = new Dictionary<string, Dictionary<string, int>>();
 		#endregion
+		private readonly Dictionary<string, int>[] nameToIntDics = new Dictionary<string, int>[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__];
 		private readonly Dictionary<string, int> relationDic = new Dictionary<string, int>();
 		public string[] GetCsvNameList(VariableCode code)
 		{
@@ -620,38 +621,38 @@ namespace MinorShift.Emuera.GameData
 			}
 			ItemPrice = new Int64[MaxDataList[itemIndex]];
 			#region EE_ERD
-			loadDataTo(csvDir + "ABL.CSV", ablIndex, null, disp, false);
-			loadDataTo(csvDir + "EXP.CSV", expIndex, null, disp, false);
-			loadDataTo(csvDir + "TALENT.CSV", talentIndex, null, disp, false);
-			loadDataTo(csvDir + "PALAM.CSV", paramIndex, null, disp, false);
-			loadDataTo(csvDir + "TRAIN.CSV", trainIndex, null, disp, false);
-			loadDataTo(csvDir + "MARK.CSV", markIndex, null, disp, false);
-			loadDataTo(csvDir + "ITEM.CSV", itemIndex, ItemPrice, disp, false);
-			loadDataTo(csvDir + "BASE.CSV", baseIndex, null, disp, false);
-			loadDataTo(csvDir + "SOURCE.CSV", sourceIndex, null, disp, false);
-			loadDataTo(csvDir + "EX.CSV", exIndex, null, disp, false);
-			loadDataTo(csvDir + "STR.CSV", strIndex, null, disp, false);
-			loadDataTo(csvDir + "EQUIP.CSV", equipIndex, null, disp, false);
-			loadDataTo(csvDir + "TEQUIP.CSV", tequipIndex, null, disp, false);
-			loadDataTo(csvDir + "FLAG.CSV", flagIndex, null, disp, false);
-			loadDataTo(csvDir + "TFLAG.CSV", tflagIndex, null, disp, false);
-			loadDataTo(csvDir + "CFLAG.CSV", cflagIndex, null, disp, false);
-			loadDataTo(csvDir + "TCVAR.CSV", tcvarIndex, null, disp, false);
-			loadDataTo(csvDir + "CSTR.CSV", cstrIndex, null, disp, false);
-			loadDataTo(csvDir + "STAIN.CSV", stainIndex, null, disp, false);
-			loadDataTo(csvDir + "CDFLAG1.CSV", cdflag1Index, null, disp, false);
-			loadDataTo(csvDir + "CDFLAG2.CSV", cdflag2Index, null, disp, false);
+			loadDataTo(csvDir + "ABL.CSV", ablIndex, null, disp);
+			loadDataTo(csvDir + "EXP.CSV", expIndex, null, disp);
+			loadDataTo(csvDir + "TALENT.CSV", talentIndex, null, disp);
+			loadDataTo(csvDir + "PALAM.CSV", paramIndex, null,  disp);
+			loadDataTo(csvDir + "TRAIN.CSV", trainIndex, null,  disp);
+			loadDataTo(csvDir + "MARK.CSV", markIndex, null,  disp);
+			loadDataTo(csvDir + "ITEM.CSV", itemIndex, ItemPrice,  disp);
+			loadDataTo(csvDir + "BASE.CSV", baseIndex, null,  disp);
+			loadDataTo(csvDir + "SOURCE.CSV", sourceIndex, null,  disp);
+			loadDataTo(csvDir + "EX.CSV", exIndex, null,  disp);
+			loadDataTo(csvDir + "STR.CSV", strIndex, null,  disp);
+			loadDataTo(csvDir + "EQUIP.CSV", equipIndex, null,  disp);
+			loadDataTo(csvDir + "TEQUIP.CSV", tequipIndex, null,  disp);
+			loadDataTo(csvDir + "FLAG.CSV", flagIndex, null,  disp);
+			loadDataTo(csvDir + "TFLAG.CSV", tflagIndex, null,  disp);
+			loadDataTo(csvDir + "CFLAG.CSV", cflagIndex, null,  disp);
+			loadDataTo(csvDir + "TCVAR.CSV", tcvarIndex, null,  disp);
+			loadDataTo(csvDir + "CSTR.CSV", cstrIndex, null,  disp);
+			loadDataTo(csvDir + "STAIN.CSV", stainIndex, null,  disp);
+			loadDataTo(csvDir + "CDFLAG1.CSV", cdflag1Index, null,  disp);
+			loadDataTo(csvDir + "CDFLAG2.CSV", cdflag2Index, null,  disp);
 			
-			loadDataTo(csvDir + "STRNAME.CSV", strnameIndex, null, disp, false);
-			loadDataTo(csvDir + "TSTR.CSV", tstrnameIndex, null, disp, false);
-			loadDataTo(csvDir + "SAVESTR.CSV", savestrnameIndex, null, disp, false);
-			loadDataTo(csvDir + "GLOBAL.CSV", globalIndex, null, disp, false);
-			loadDataTo(csvDir + "GLOBALS.CSV", globalsIndex, null, disp, false);
+			loadDataTo(csvDir + "STRNAME.CSV", strnameIndex, null,  disp);
+			loadDataTo(csvDir + "TSTR.CSV", tstrnameIndex, null,  disp);
+			loadDataTo(csvDir + "SAVESTR.CSV", savestrnameIndex, null,  disp);
+			loadDataTo(csvDir + "GLOBAL.CSV", globalIndex, null,  disp);
+			loadDataTo(csvDir + "GLOBALS.CSV", globalsIndex, null,  disp);
 			#endregion
 			#region EE_CSV機能拡張
-			loadDataTo(csvDir + "DAY.CSV", dayIndex, null, disp, false);
-			loadDataTo(csvDir + "TIME.CSV", timeIndex, null, disp, false);
-			loadDataTo(csvDir + "MONEY.CSV", moneyIndex, null, disp, false);
+			loadDataTo(csvDir + "DAY.CSV", dayIndex, null,  disp);
+			loadDataTo(csvDir + "TIME.CSV", timeIndex, null,  disp);
+			loadDataTo(csvDir + "MONEY.CSV", moneyIndex, null,  disp);
 			#endregion
 			//逆引き辞書を作成
 			for (int i = 0; i < names.Length; i++)
@@ -688,21 +689,47 @@ namespace MinorShift.Emuera.GameData
 			}
 		}
 		#region EE_ERD
-		public void UserDefineLoadData(string filepath, string varname, int varlength, bool disp)
+		private struct ErdDictInfo 
 		{
-			int varid = Array.IndexOf(GlobalStatic.IdentifierDictionary.VarKeys, varname);
-			//throw new CodeEE("varid" + varid);
-			names[varid] = new string[varlength];
-			nameToIntDics[varid] = new Dictionary<string, int>();
+			public int num;
+			public string path;
+		};
+		public void UserDefineLoadData(List<string> filepaths, string varname, int varlength, bool disp, ScriptPosition sc)
+		{
 
-			loadDataTo(filepath, varid, null, disp, true);
-			//逆引き辞書を作成
-			string[] nameArray = names[varid];
-			for (int j = 0; j < nameArray.Length; j++)
+			Dictionary<string, ErdDictInfo> preDict = new Dictionary<string, ErdDictInfo>();
+
+			foreach (var filepath in filepaths)
 			{
-				if (!string.IsNullOrEmpty(nameArray[j]) && !nameToIntDics[varid].ContainsKey(nameArray[j]))
-					nameToIntDics[varid].Add(nameArray[j], j);
+				string[] nameArray = new string[varlength];
+				names[ERD_NAMES_INDEX] = nameArray;
+				loadDataTo(filepath, ERD_NAMES_INDEX, null, disp);
+				names[ERD_NAMES_INDEX] = null;
+				//逆引き辞書を作成
+				for (int j = 0; j < nameArray.Length; j++)
+				{
+					if (!string.IsNullOrEmpty(nameArray[j]))
+					{
+						if (!preDict.ContainsKey(nameArray[j]))
+						{ 
+							preDict[nameArray[j]] = new ErdDictInfo() { num = j, path = filepath };
+						}
+						else
+						{
+							throw new CodeEE(string.Format("変数\"{0}\"の置き換え名前\"{1}\"の定義が重複しています。（ファイル1 - {2}）（ファイル2 - {3}）",
+								varname, nameArray[j], preDict[nameArray[j]].path, filepath));
+						}
+					}
+				}
 			}
+			// ここで発生しないと思うが一応書いておく
+			if (erdNameToIntDics.ContainsKey(varname))
+				throw new CodeEE("変数{0}の定義が重複しています。", sc);
+
+			var dict = new Dictionary<string, int>();
+			foreach(var pair in preDict)
+				dict.Add(pair.Key, pair.Value.num);
+			erdNameToIntDics.Add(varname, dict);
 		}
 
 		public bool isDefined(VariableCode varCode, string str)
@@ -732,16 +759,9 @@ namespace MinorShift.Emuera.GameData
 		{
 			if (string.IsNullOrEmpty(str))
 				return false;
-			int varindex = Array.IndexOf(GlobalStatic.IdentifierDictionary.VarKeys, varname);
-            try
-            {
-				Dictionary<string, int> dic = nameToIntDics[varindex];
-				return dic.ContainsKey(str);
-			}
-            catch
-            {
+			if (!erdNameToIntDics.ContainsKey(varname) || !erdNameToIntDics[varname].ContainsKey(str))
 				throw new CodeEE("変数\"" + varname + "\"には\"" + str + "\"の定義がありません");
-            }
+			return true;
 		}
 		#endregion
 
@@ -766,16 +786,9 @@ namespace MinorShift.Emuera.GameData
 			catch { }
 			if (!string.IsNullOrEmpty(varname))
 			{
-				try
-				{
-					int varindex = Array.IndexOf(GlobalStatic.IdentifierDictionary.VarKeys, varname);
-					dic = nameToIntDics[varindex];
-
-					if (dic == null)
-						return false;
-				}
-				catch { return false; }
-				return (dic.TryGetValue(key, out ret));
+				if (!erdNameToIntDics.ContainsKey(varname))
+					return false;
+				return erdNameToIntDics[varname].TryGetValue(key, out ret);
 			}
 			return false;
 		}
@@ -1008,12 +1021,11 @@ namespace MinorShift.Emuera.GameData
 			#region EE_ERD
 			if (ret == null && Config.UseERD)
 			{
-				int varindex = Array.IndexOf(GlobalStatic.IdentifierDictionary.VarKeys, varname);
-				if (varindex < 0 || string.IsNullOrEmpty(varname))
+				if (string.IsNullOrEmpty(varname) || !erdNameToIntDics.ContainsKey(varname))
 					return ret;
 				else
 				{
-					ret = nameToIntDics[varindex];
+					ret = erdNameToIntDics[varname];
 					errPos = varname + ".csv";
 					allowIndex = 0;
 					if (code == VariableCode.CVAR)
@@ -1484,11 +1496,7 @@ namespace MinorShift.Emuera.GameData
 			}
 		}
 
-		#region EE_ERD
-		// private void loadDataTo(string csvPath, int targetIndex, Int64[] targetI, bool disp)
-		private void loadDataTo(string csvPath, int targetIndex, Int64[] targetI, bool disp, bool userdef)
-		#endregion
-
+		private void loadDataTo(string csvPath, int targetIndex, Int64[] targetI, bool disp)
 		{
 
 			if (!File.Exists(csvPath))
