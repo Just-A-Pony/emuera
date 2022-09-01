@@ -1828,8 +1828,27 @@ namespace MinorShift.Emuera.GameProc.Function
 				exm.Console.WaitInput(req);
 			}
 		}
-		
-		private sealed class AWAIT_Instruction : AbstractInstruction
+        #region EE_INPUTANY
+		private sealed class INPUTANY_Instruction : AbstractInstruction
+        {
+			public INPUTANY_Instruction()
+            {
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.VOID);
+				//スキップ不可
+				//flag = IS_PRINT | IS_INPUT | EXTENDED;
+				flag = EXTENDED;
+			}
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				InputRequest req = new InputRequest();
+				req.InputType = InputType.AnyValue;
+				exm.Console.WaitInput(req);
+			}
+		}
+        #endregion
+
+
+        private sealed class AWAIT_Instruction : AbstractInstruction
 		{
 			public AWAIT_Instruction()
 			{
