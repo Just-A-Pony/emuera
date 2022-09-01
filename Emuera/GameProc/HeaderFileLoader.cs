@@ -300,11 +300,7 @@ namespace MinorShift.Emuera.GameProc
 							if (erdFileNames.ContainsKey(key))
 							{
 								var info = erdFileNames[key];
-								if (info.duplicatedBoth)
-									throw new CodeEE("変数" + data.Name + "用の定義ファイルがCSVとERD両方で存在します。どちらかに統一してください");
-								if (info.duplicatedErd)
-									throw new CodeEE("変数" + data.Name + "用のERDファイルが2つ以上存在します。どちらかに統一してください");
-								GlobalStatic.ConstantData.UserDefineLoadData(info.path, data.Name, data.Lengths[0], Config.DisplayReport);
+								GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name, data.Lengths[0], Config.DisplayReport, dimline.SC);
 							}
 							System.Windows.Forms.Application.DoEvents();
 						}
@@ -337,31 +333,27 @@ namespace MinorShift.Emuera.GameProc
 			return noError;
 		}
 		#region EE_ERD
-		private class ERDPath
-		{
-			public string path;
-			public bool duplicatedErd;
-			public bool duplicatedBoth;
-		}
-		private Dictionary<string, ERDPath> erdFileNames;
+
+		private Dictionary<string, List<string>> erdFileNames;
 
 		private void PrepareERDFileNames()
 		{
-			if (erdFileNames == null) erdFileNames = new Dictionary<string, ERDPath>();
+			if (erdFileNames == null) erdFileNames = new Dictionary<string, List<string>>();
 			foreach (var path in Directory.GetFiles(Program.ErbDir, "*.erd", SearchOption.AllDirectories))
 			{
 				var key = Path.GetFileNameWithoutExtension(path).ToUpper();
 				if (!erdFileNames.ContainsKey(key))
-					erdFileNames[key] = new ERDPath() { path = path, duplicatedBoth = false, duplicatedErd = false };
+					erdFileNames[key] = new List<string> { path };
 				else
-					erdFileNames[key].duplicatedErd = true;
+					erdFileNames[key].Add(path);
 			}
 			foreach (var path in Directory.GetFiles(Program.CsvDir, "*.csv", SearchOption.TopDirectoryOnly))
 			{
 				var key = Path.GetFileNameWithoutExtension(path).ToUpper();
 				if (!erdFileNames.ContainsKey(key))
-					erdFileNames[key] = new ERDPath() { path = path, duplicatedBoth = false, duplicatedErd = false };
-				else erdFileNames[key].duplicatedBoth = true;
+					erdFileNames[key] = new List<string> { path };
+				else
+					erdFileNames[key].Add(path);
 			}
 		}
 		#endregion
