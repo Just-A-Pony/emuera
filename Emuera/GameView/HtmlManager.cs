@@ -886,27 +886,27 @@ namespace MinorShift.Emuera.GameView
 								if (attrValue.EndsWith("px", StringComparison.OrdinalIgnoreCase))
 								{
 									if (!int.TryParse(attrValue.Substring(0, attrValue.Length - 2), out width.num))
-										throw new CodeEE("<" + tag + ">タグのheight属性の属性値が数値として解釈できません");
+										throw new CodeEE("<" + tag + ">タグのwidth属性の属性値が数値として解釈できません");
 									width.isPx = true;
 								}
 								//if (!int.TryParse(attrValue, out width))
 								else if (!int.TryParse(attrValue, out width.num))
-									throw new CodeEE("<" + tag + ">タグのheight属性の属性値が数値として解釈できません");
+									throw new CodeEE("<" + tag + ">タグのwidth属性の属性値が数値として解釈できません");
 							}
 							else if (word.Code.Equals("ypos", StringComparison.OrdinalIgnoreCase))
 							{
 								//if (ypos != 0)
-								if (width.num != 0)
+								if (ypos.num != 0)
 									throw new CodeEE("<" + tag + ">タグに" + word.Code + "属性が2度以上指定されています");
 								if (attrValue.EndsWith("px", StringComparison.OrdinalIgnoreCase))
 								{
 									if (!int.TryParse(attrValue.Substring(0, attrValue.Length - 2), out ypos.num))
-										throw new CodeEE("<" + tag + ">タグのheight属性の属性値が数値として解釈できません");
-									width.isPx = true;
+										throw new CodeEE("<" + tag + ">タグのypos属性の属性値が数値として解釈できません");
+									ypos.isPx = true;
 								}
 								//if (!int.TryParse(attrValue, out ypos))
 								else if (!int.TryParse(attrValue, out ypos.num))
-									throw new CodeEE("<" + tag + ">タグのheight属性の属性値が数値として解釈できません");
+									throw new CodeEE("<" + tag + ">タグのypos属性の属性値が数値として解釈できません");
 							}
 							else
 								throw new CodeEE("<" + tag + ">タグの属性名" + word.Code + "は解釈できません");
