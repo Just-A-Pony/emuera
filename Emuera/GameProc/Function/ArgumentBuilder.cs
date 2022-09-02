@@ -255,7 +255,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				}
 				else
 				{
-					warn("第１引数を省略することはできません", line, 1, false);
+					warn("第１引数を省略することはできません", line, 2, false);
 					return null;
 				}
 				if (!wc.EOL)
@@ -309,13 +309,12 @@ namespace MinorShift.Emuera.GameProc.Function
 					if (param.Count>this.maxArg)
 					{
 						warn("引数が多すぎます", line, 1, false);
-						return null;
 					}
 				}
 
 				if (param.Count != 1 && param.Count != 4)
 				{
-					warn("引数の数が正しくありません", line, 1, false);
+					warn("引数の数が正しくありません", line, 2, false);
 					return null;
 				}
 
@@ -323,7 +322,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				for (int i = 0; i < param.Count; i++) terms[i] = param[i].num;
 				if (!checkArgumentType(line, exm, terms)) return null;
 
-				return new SpPrintShapeArgument(param.Count > 0 ? param.ToArray() : null);
+				return new SpPrintShapeArgument(param.ToArray());
 			}
 		}
 		#endregion
