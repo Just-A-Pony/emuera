@@ -288,17 +288,21 @@ namespace MinorShift.Emuera.GameData.Expression
 						case VariableCode.VARS:
 						case VariableCode.CVAR:
 						case VariableCode.CVARS:
-							if (GlobalStatic.ConstantData.isUserDefined(varId.Name, idStr, false))//ユーザー定義変数は名前付けられるようになったので通す
+							if (GlobalStatic.ConstantData.isUserDefined(varId.Name, idStr, 1))//ユーザー定義変数は名前付けられるようになったので通す
 								return new SingleTerm(idStr);
 							break;
 						case VariableCode.VAR2D:
 						case VariableCode.VARS2D:
 						case VariableCode.CVAR2D:
 						case VariableCode.CVARS2D:
-							if (GlobalStatic.ConstantData.isUserDefined(varId.Name, idStr, true))//ユーザー定義変数は名前付けられるようになったので通す
+							if (GlobalStatic.ConstantData.isUserDefined(varId.Name, idStr, 2))//ユーザー定義変数は名前付けられるようになったので通す
 								return new SingleTerm(idStr);
 							break;
-
+						case VariableCode.VAR3D:
+						case VariableCode.VARS3D:
+							if (GlobalStatic.ConstantData.isUserDefined(varId.Name, idStr, 3))//ユーザー定義変数は名前付けられるようになったので通す
+								return new SingleTerm(idStr);
+							break;
 					}
 				}
 				#endregion

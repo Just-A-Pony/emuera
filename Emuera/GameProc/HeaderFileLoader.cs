@@ -293,8 +293,7 @@ namespace MinorShift.Emuera.GameProc
 							var = parentProcess.VEvaluator.VariableData.CreateUserDefVariable(data);
 						idDic.AddUseDefinedVariable(var);
 						#region EE_ERD
-						//一次元配列と二次元配列だけ対応
-						if ((data.Dimension == 1 || data.Dimension == 2) && Config.UseERD)
+						if (Config.UseERD)
 						{
 							string key;
 							if (data.Dimension == 1)
@@ -307,7 +306,7 @@ namespace MinorShift.Emuera.GameProc
 								}
 								System.Windows.Forms.Application.DoEvents();
 							}
-							else
+							else if (data.Dimension == 2)
                             {
 								for (int dim = 1; dim < 3; dim++)
 								{
@@ -315,7 +314,20 @@ namespace MinorShift.Emuera.GameProc
 									if (erdFileNames.ContainsKey(key))
 									{
 										var info = erdFileNames[key];
-										GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name+"@"+dim, data.Lengths[0], Config.DisplayReport, dimline.SC);
+										GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name + "@" + dim, data.Lengths[0], Config.DisplayReport, dimline.SC);
+									}
+									System.Windows.Forms.Application.DoEvents();
+								}
+							}
+							else if (data.Dimension == 3)
+							{
+								for (int dim = 1; dim < 4; dim++)
+								{
+									key = data.Name.ToUpper() + "@" + dim;
+									if (erdFileNames.ContainsKey(key))
+									{
+										var info = erdFileNames[key];
+										GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name + "@" + dim, data.Lengths[0], Config.DisplayReport, dimline.SC);
 									}
 									System.Windows.Forms.Application.DoEvents();
 								}

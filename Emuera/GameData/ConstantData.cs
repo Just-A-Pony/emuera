@@ -755,19 +755,30 @@ namespace MinorShift.Emuera.GameData
 			return dic.ContainsKey(str);
 		}
 
-		public bool isUserDefined(string varname, string str, bool is2D)
+		public bool isUserDefined(string varname, string str, int dim)
 		{
 			if (string.IsNullOrEmpty(str))
 				return false;
-			if (!is2D && (!erdNameToIntDics.ContainsKey(varname) || !erdNameToIntDics[varname].ContainsKey(str)))
+			if (dim == 1 && (!erdNameToIntDics.ContainsKey(varname) || !erdNameToIntDics[varname].ContainsKey(str)))
 				throw new CodeEE("変数\"" + varname + "\"には\"" + str + "\"の定義がありません");
 			//CDFLAGの判定も割とガバガバなのでこれで良い（暴論）
-			if (is2D)
+			if (dim == 2)
             {
 				if (!erdNameToIntDics.ContainsKey(varname + "@1") || !erdNameToIntDics[varname + "@1"].ContainsKey(str))
                 {
 					if (!erdNameToIntDics.ContainsKey(varname + "@2") || !erdNameToIntDics[varname + "@2"].ContainsKey(str))
 						throw new CodeEE("変数\"" + varname + "\"には\"" + str + "\"の定義がありません");
+				}
+			}
+			if (dim == 3)
+			{
+				if (!erdNameToIntDics.ContainsKey(varname + "@1") || !erdNameToIntDics[varname + "@1"].ContainsKey(str))
+				{
+					if (!erdNameToIntDics.ContainsKey(varname + "@2") || !erdNameToIntDics[varname + "@2"].ContainsKey(str))
+                    {
+						if (!erdNameToIntDics.ContainsKey(varname + "@3") || !erdNameToIntDics[varname + "@3"].ContainsKey(str))
+							throw new CodeEE("変数\"" + varname + "\"には\"" + str + "\"の定義がありません");
+					}
 				}
 			}
 			return true;
@@ -1080,6 +1091,16 @@ namespace MinorShift.Emuera.GameData
 								}
 								break;
 							}
+						case VariableCode.VAR3D:
+						case VariableCode.VARS3D:
+							string varname3d = varname + "@" + (index+1);
+							if (!erdNameToIntDics.ContainsKey(varname3d))
+								return ret;
+
+							ret = erdNameToIntDics[varname3d];
+							errPos = varname3d + ".csv";
+							allowIndex = index;
+							break;
 					}
 				}
 			}
