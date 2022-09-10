@@ -764,9 +764,9 @@ namespace MinorShift.Emuera.GameData
 			//CDFLAGの判定も割とガバガバなのでこれで良い（暴論）
 			if (is2D)
             {
-				if (!erdNameToIntDics.ContainsKey(varname + "1") || !erdNameToIntDics[varname + "1"].ContainsKey(str))
+				if (!erdNameToIntDics.ContainsKey(varname + "@1") || !erdNameToIntDics[varname + "@1"].ContainsKey(str))
                 {
-					if (!erdNameToIntDics.ContainsKey(varname + "2") || !erdNameToIntDics[varname + "2"].ContainsKey(str))
+					if (!erdNameToIntDics.ContainsKey(varname + "@2") || !erdNameToIntDics[varname + "@2"].ContainsKey(str))
 						throw new CodeEE("変数\"" + varname + "\"には\"" + str + "\"の定義がありません");
 				}
 			}
@@ -1055,7 +1055,7 @@ namespace MinorShift.Emuera.GameData
 							{
 								if ((code == VariableCode.VAR2D && index == 0) || (code == VariableCode.CVAR2D && index == 1))
 								{
-									string varnamed = varname + "1";
+									string varnamed = varname + "@1";
 									if (!erdNameToIntDics.ContainsKey(varnamed))
 										return ret;
 
@@ -1068,7 +1068,7 @@ namespace MinorShift.Emuera.GameData
 								//if ((code == VariableCode.VAR2D && index == 1) || (code == VariableCode.CVAR2D && index == 2))
 								else
 								{
-									string varnamed = varname + "2";
+									string varnamed = varname + "@2";
 									if (!erdNameToIntDics.ContainsKey(varnamed))
 										return ret;
 
