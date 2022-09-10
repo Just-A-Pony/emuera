@@ -280,8 +280,27 @@ namespace MinorShift.Emuera.GameData.Expression
 				if (varCode != VariableCode.__NULL__ && GlobalStatic.ConstantData.isDefined(varCode, idStr))//連想配列的な可能性アリ
 					return new SingleTerm(idStr);
 				#region EE_ERD
-				else if (varId != null && GlobalStatic.ConstantData.isUserDefined(varId.Name, idStr))//ユーザー定義変数は名前付けられるようになったので通す
-					return new SingleTerm(idStr);
+				else if (varId != null)
+                {
+					switch (varId.Code)
+                    {
+						case VariableCode.VAR:
+						case VariableCode.VARS:
+						case VariableCode.CVAR:
+						case VariableCode.CVARS:
+							if (GlobalStatic.ConstantData.isUserDefined(varId.Name, idStr, false))//ユーザー定義変数は名前付けられるようになったので通す
+								return new SingleTerm(idStr);
+							break;
+						case VariableCode.VAR2D:
+						case VariableCode.VARS2D:
+						case VariableCode.CVAR2D:
+						case VariableCode.CVARS2D:
+							if (GlobalStatic.ConstantData.isUserDefined(varId.Name, idStr, true))//ユーザー定義変数は名前付けられるようになったので通す
+								return new SingleTerm(idStr);
+							break;
+
+					}
+				}
 				#endregion
 
 				GlobalStatic.IdentifierDictionary.ThrowException(idStr, false);

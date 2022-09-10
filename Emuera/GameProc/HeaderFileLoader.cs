@@ -293,16 +293,33 @@ namespace MinorShift.Emuera.GameProc
 							var = parentProcess.VEvaluator.VariableData.CreateUserDefVariable(data);
 						idDic.AddUseDefinedVariable(var);
 						#region EE_ERD
-						//とりあえず一次元配列だけ対応
-						if (data.Dimension == 1 && Config.UseERD)
+						//一次元配列と二次元配列だけ対応
+						if ((data.Dimension == 1 || data.Dimension == 2) && Config.UseERD)
 						{
-							var key = data.Name.ToUpper();
-							if (erdFileNames.ContainsKey(key))
-							{
-								var info = erdFileNames[key];
-								GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name, data.Lengths[0], Config.DisplayReport, dimline.SC);
+							string key;
+							if (data.Dimension == 1)
+                            {
+								key = data.Name.ToUpper();
+								if (erdFileNames.ContainsKey(key))
+								{
+									var info = erdFileNames[key];
+									GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name, data.Lengths[0], Config.DisplayReport, dimline.SC);
+								}
+								System.Windows.Forms.Application.DoEvents();
 							}
-							System.Windows.Forms.Application.DoEvents();
+							else
+                            {
+								for (int dim = 1; dim < 3; dim++)
+								{
+									key = data.Name.ToUpper() + dim;
+									if (erdFileNames.ContainsKey(key))
+									{
+										var info = erdFileNames[key];
+										GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name+dim, data.Lengths[0], Config.DisplayReport, dimline.SC);
+									}
+									System.Windows.Forms.Application.DoEvents();
+								}
+							}
 						}
 						#endregion
 

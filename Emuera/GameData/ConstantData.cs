@@ -755,12 +755,21 @@ namespace MinorShift.Emuera.GameData
 			return dic.ContainsKey(str);
 		}
 
-		public bool isUserDefined(string varname, string str)
+		public bool isUserDefined(string varname, string str, bool is2D)
 		{
 			if (string.IsNullOrEmpty(str))
 				return false;
-			if (!erdNameToIntDics.ContainsKey(varname) || !erdNameToIntDics[varname].ContainsKey(str))
+			if (!is2D && (!erdNameToIntDics.ContainsKey(varname) || !erdNameToIntDics[varname].ContainsKey(str)))
 				throw new CodeEE("変数\"" + varname + "\"には\"" + str + "\"の定義がありません");
+			//CDFLAGの判定も割とガバガバなのでこれで良い（暴論）
+			if (is2D)
+            {
+				if (!erdNameToIntDics.ContainsKey(varname + "1") || !erdNameToIntDics[varname + "1"].ContainsKey(str))
+                {
+					if (!erdNameToIntDics.ContainsKey(varname + "2") || !erdNameToIntDics[varname + "2"].ContainsKey(str))
+						throw new CodeEE("変数\"" + varname + "\"には\"" + str + "\"の定義がありません");
+				}
+			}
 			return true;
 		}
 		#endregion
@@ -1021,15 +1030,57 @@ namespace MinorShift.Emuera.GameData
 			#region EE_ERD
 			if (ret == null && Config.UseERD)
 			{
-				if (string.IsNullOrEmpty(varname) || !erdNameToIntDics.ContainsKey(varname))
+				if (string.IsNullOrEmpty(varname))
 					return ret;
 				else
 				{
-					ret = erdNameToIntDics[varname];
-					errPos = varname + ".csv";
-					allowIndex = 0;
-					if (code == VariableCode.CVAR)
-						allowIndex = 1;
+					switch (code)
+					{
+						case VariableCode.VAR:
+						case VariableCode.VARS:
+						case VariableCode.CVAR:
+						case VariableCode.CVARS:
+							if (!erdNameToIntDics.ContainsKey(varname))
+								return ret;
+							ret = erdNameToIntDics[varname];
+							errPos = varname + ".csv";
+							allowIndex = 0;
+							if (code == VariableCode.CVAR)
+								allowIndex = 1;
+							break;
+						case VariableCode.VAR2D:
+						case VariableCode.VARS2D:
+						case VariableCode.CVAR2D:
+						case VariableCode.CVARS2D:
+							{
+								if ((code == VariableCode.VAR2D && index == 0) || (code == VariableCode.CVAR2D && index == 1))
+								{
+									string varnamed = varname + "1";
+									if (!erdNameToIntDics.ContainsKey(varnamed))
+										return ret;
+
+									ret = erdNameToIntDics[varnamed];
+									errPos = varnamed + ".csv";
+									allowIndex = 0;
+									if (code == VariableCode.CVAR2D)
+										allowIndex = 1;
+								}
+								//if ((code == VariableCode.VAR2D && index == 1) || (code == VariableCode.CVAR2D && index == 2))
+								else
+								{
+									string varnamed = varname + "2";
+									if (!erdNameToIntDics.ContainsKey(varnamed))
+										return ret;
+
+									ret = erdNameToIntDics[varnamed];
+									errPos = varnamed + ".csv";
+									allowIndex = 1;
+									if (code == VariableCode.CVAR2D)
+										allowIndex = 2;
+								}
+								break;
+							}
+					}
 				}
 			}
 			#endregion
