@@ -311,7 +311,7 @@ namespace MinorShift.Emuera.GameProc
                             {
 								for (int dim = 1; dim < 3; dim++)
 								{
-									key = data.Name.ToUpper() + dim;
+									key = data.Name.ToUpper() + "@" + dim;
 									if (erdFileNames.ContainsKey(key))
 									{
 										var info = erdFileNames[key];
