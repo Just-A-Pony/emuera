@@ -1045,7 +1045,7 @@ namespace MinorShift.Emuera.GameData
 							ret = erdNameToIntDics[varname];
 							errPos = varname + ".csv";
 							allowIndex = 0;
-							if (code == VariableCode.CVAR)
+							if (code == VariableCode.CVAR || code == VariableCode.CVARS)
 								allowIndex = 1;
 							break;
 						case VariableCode.VAR2D:
@@ -1062,7 +1062,7 @@ namespace MinorShift.Emuera.GameData
 									ret = erdNameToIntDics[varnamed];
 									errPos = varnamed + ".csv";
 									allowIndex = 0;
-									if (code == VariableCode.CVAR2D)
+									if (code == VariableCode.CVAR2D || code == VariableCode.CVARS2D)
 										allowIndex = 1;
 								}
 								//if ((code == VariableCode.VAR2D && index == 1) || (code == VariableCode.CVAR2D && index == 2))
@@ -1075,7 +1075,7 @@ namespace MinorShift.Emuera.GameData
 									ret = erdNameToIntDics[varnamed];
 									errPos = varnamed + ".csv";
 									allowIndex = 1;
-									if (code == VariableCode.CVAR2D)
+									if (code == VariableCode.CVAR2D || code == VariableCode.CVARS2D)
 										allowIndex = 2;
 								}
 								break;
