@@ -5466,11 +5466,27 @@ namespace MinorShift.Emuera.GameData.Function
 		/// </summary>
 		public sealed class GraphicsClearMethod : FunctionMethod
 		{
+			#region EM_私家版_GCLEAR拡張
 			public GraphicsClearMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64) };
+				// argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64) };
+				argumentTypeArray = null;
 				CanRestructure = false;
+			}
+			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			{
+
+				if (arguments.Length != 2 && arguments.Length != 6)
+					return string.Format("{0}関数には2つもしくは6つの引数が必要です", name);
+				for (int i = 2; i < arguments.Length; i++)
+				{
+					if (arguments[i] == null)
+						return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, i + 1);
+					if (arguments[i].GetOperandType() != typeof(Int64))
+						return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentType0, name, i + 1);
+				}
+				return null;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
@@ -5480,9 +5496,13 @@ namespace MinorShift.Emuera.GameData.Function
 				Color c = ReadColor(Name, exm, arguments, 1);
 				if (!g.IsCreated)
 					return 0;
-				g.GClear(c);
+				if (arguments.Length == 2)
+					g.GClear(c);
+				else
+					g.GClear(c, (int)arguments[2].GetIntValue(exm), (int)arguments[3].GetIntValue(exm), (int)arguments[4].GetIntValue(exm), (int)arguments[5].GetIntValue(exm));
 				return 1;
 			}
+			#endregion
 		}
 
 		/// <summary>
