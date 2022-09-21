@@ -5479,7 +5479,7 @@ namespace MinorShift.Emuera.GameData.Function
 
 				if (arguments.Length != 2 && arguments.Length != 6)
 					return string.Format("{0}関数には2つもしくは6つの引数が必要です", name);
-				for (int i = 2; i < arguments.Length; i++)
+				for (int i = 0; i < arguments.Length; i++)
 				{
 					if (arguments[i] == null)
 						return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, i + 1);
