@@ -11,6 +11,7 @@ using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameProc;
 using MinorShift._Library;
 using MinorShift.Emuera.GameProc.Function;
+using System.Linq;
 //using System.Windows.Forms;
 
 namespace MinorShift.Emuera.GameData.Variable
@@ -1135,8 +1136,8 @@ namespace MinorShift.Emuera.GameData.Variable
 			//グローバルは初期化しない方が都合がよい。
 			//varData.SetDefaultGlobalValue();
 			#region EM_私家版_XMLDocument_連想配列
-			varData.DataXmlDocument.Clear();
-			varData.DataStringMaps.Clear();
+			varData.DataXmlDocument = varData.DataXmlDocument.Where(p => Constant.StaticXmls.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
+			varData.DataStringMaps = varData.DataStringMaps.Where(p => Constant.StaticMaps.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
 			#endregion
 			varData.SetDefaultLocalValue();
 			varData.SetDefaultValue(constant);

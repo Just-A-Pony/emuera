@@ -5433,8 +5433,13 @@ namespace MinorShift.Emuera.GameData.Function
 				if(arguments.Length == 6)
 				{//四角形は正でも負でもよいが親画像の外を指してはいけない
 					rect = ReadRectangle(Name, exm, arguments, 2);
-					if (rect.X + rect.Width < 0 || rect.X + rect.Width > g.Width || rect.Y + rect.Height < 0 || rect.Y + rect.Height > g.Height)
+					#region EM_私家版_SPRITECREATE範囲制限緩和
+					//if (rect.X + rect.Width < 0 || rect.X + rect.Width > g.Width || rect.Y + rect.Height < 0 || rect.Y + rect.Height > g.Height)
+					//	throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodCIMGCreateOutOfRange0, Name));
+
+					if (!rect.IntersectsWith(new Rectangle(0, 0, g.Width, g.Height)))
 						throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodCIMGCreateOutOfRange0, Name));
+					#endregion
 				}
 				AppContents.CreateSpriteG(imgname, g, rect);
 				return 1;

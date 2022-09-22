@@ -92,6 +92,9 @@ namespace MinorShift.Emuera.GameData
 		public HashSet<string> SaveMaps { get; private set; } = new HashSet<string>();
 		public HashSet<string> GlobalSaveXmls { get; private set; } = new HashSet<string>();
 		public HashSet<string> SaveXmls { get; private set; } = new HashSet<string>();
+
+		public HashSet<string> StaticMaps { get; private set; } = new HashSet<string>();
+		public HashSet<string> StaticXmls { get; private set; } = new HashSet<string>();
 		#endregion
 
 		//private readonly GameBase gamebase;
@@ -1208,6 +1211,8 @@ namespace MinorShift.Emuera.GameData
 			SaveXmls.Clear();
 			GlobalSaveMaps.Clear();
 			SaveMaps.Clear();
+			StaticMaps.Clear();
+			StaticXmls.Clear();
 			foreach (var path in Directory.GetFiles(csvPath, "VarExt*.csv", SearchOption.AllDirectories))
 			{
 				EraStreamReader eReader = new EraStreamReader(false);
@@ -1258,6 +1263,18 @@ namespace MinorShift.Emuera.GameData
 						{
 							for (int i = 1; i < tokens.Length; i++)
 								SaveXmls.Add(tokens[i].Trim());
+							continue;
+						}
+						if (tokens[0].Equals("STATIC_XMLS", Config.SCVariable))
+						{
+							for (int i = 1; i < tokens.Length; i++)
+								StaticXmls.Add(tokens[i].Trim());
+							continue;
+						}
+						if (tokens[0].Equals("STATIC_MAPS", Config.SCVariable))
+						{
+							for (int i = 1; i < tokens.Length; i++)
+								StaticMaps.Add(tokens[i].Trim());
 							continue;
 						}
 					}
