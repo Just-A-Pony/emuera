@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace MinorShift.Emuera.EvilMask
+namespace EvilMask.Emuera
 {
     internal sealed class Utils
     {
@@ -10,9 +10,6 @@ namespace MinorShift.Emuera.EvilMask
             if (Path.GetPathRoot(path) != string.Empty) return null;
             return path;
         }
-        public static void LoadLangFile()
-        {
-
-        }
+        
     }
 }

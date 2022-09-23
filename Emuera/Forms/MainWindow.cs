@@ -12,6 +12,7 @@ using MinorShift.Emuera.GameData;
 using MinorShift.Emuera.GameProc;
 using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.Forms;
+using EvilMask.Emuera;
 
 namespace MinorShift.Emuera
 {
@@ -78,7 +79,29 @@ namespace MinorShift.Emuera
 		public ToolTip ToolTip { get { return toolTipButton; } }
 		private EmueraConsole console = null;
 
-        #region EE_textbox拡張
+
+		#region EM_私家版_Emuera多言語化改造
+		public void TranslateUI()
+		{
+			this.fileToolStripMenuItem.Text = Lang.UI.MainWindow.File.Text;
+			this.rebootToolStripMenuItem.Text = Lang.UI.MainWindow.File.Restart.Text;
+			this.ログをクリップボードにコピーToolStripMenuItem.Text = Lang.UI.MainWindow.File.CopyLogToClipboard.Text;
+			this.タイトルへ戻るTToolStripMenuItem.Text = Lang.UI.MainWindow.File.BackToTitle.Text;
+			this.コードを読み直すcToolStripMenuItem.Text = Lang.UI.MainWindow.File.ReloadAllScripts.Text;
+			this.フォルダを読み直すFToolStripMenuItem.Text = Lang.UI.MainWindow.File.ReloadFolder.Text;
+			this.ファイルを読み直すFToolStripMenuItem.Text = Lang.UI.MainWindow.File.ReloadScriptFile.Text;
+			this.exitToolStripMenuItem.Text = Lang.UI.MainWindow.File.Exit.Text;
+
+			this.デバッグToolStripMenuItem.Text = Lang.UI.MainWindow.Debug.Text;
+			this.デバッグウインドウを開くToolStripMenuItem.Text = Lang.UI.MainWindow.Debug.OpenDebugWindow.Text;
+			this.デバッグ情報の更新ToolStripMenuItem.Text = Lang.UI.MainWindow.Debug.UpdateDebugInfo.Text;
+
+			this.ヘルプHToolStripMenuItem.Text = Lang.UI.MainWindow.Help.Text;
+			this.コンフィグCToolStripMenuItem.Text = Lang.UI.MainWindow.Help.Config.Text;
+		}
+		#endregion
+
+		#region EE_textbox拡張
 		public void ChangeTextBox(string str)
         {
 			this.richTextBox1.Text = str;
