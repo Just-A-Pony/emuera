@@ -58,7 +58,6 @@ namespace EvilMask.Emuera
                 public sealed class File
                 {
                     public static string Text { get { return trClass[typeof(File)].Text; } }
-
                     [Managed] public static TranslatableString Restart { get; } = new TranslatableString("再起動(&R)");
                     [Managed] public static TranslatableString SaveLog { get; } = new TranslatableString("ログを保存する...(&S)");
                     [Managed] public static TranslatableString CopyLogToClipboard { get; } = new TranslatableString("ログをクリップボードにコピー(&C)");
@@ -73,7 +72,6 @@ namespace EvilMask.Emuera
                 public sealed class Debug
                 {
                     public static string Text { get { return trClass[typeof(Debug)].Text; } }
-
                     [Managed] public static TranslatableString OpenDebugWindow { get; } = new TranslatableString("デバッグウインドウを開く");
                     [Managed] public static TranslatableString UpdateDebugInfo { get; } = new TranslatableString("デバッグ情報の更新");
                 }
@@ -82,8 +80,26 @@ namespace EvilMask.Emuera
                 public sealed class Help
                 {
                     public static string Text { get { return trClass[typeof(Help)].Text; } }
-
                     [Managed] public static TranslatableString Config { get; } = new TranslatableString("設定(&C)");
+                }
+
+                [Managed]
+                public sealed class ContextMenu
+                {
+                    [Managed] public static TranslatableString KeyboardMacro { get; } = new TranslatableString("マクロ");
+
+                    [Translate("マクログループ"), Managed]
+                    public sealed class KeyboardMacroGroup
+                    {
+                        public static string Text { get { return trClass[typeof(KeyboardMacroGroup)].Text; } }
+                        [Managed] public static TranslatableString Group { get; } = new TranslatableString("グループ");
+                    }
+
+                    [Managed] public static TranslatableString Cut { get; } = new TranslatableString("切り取り");
+                    [Managed] public static TranslatableString Copy { get; } = new TranslatableString("コピー");
+                    [Managed] public static TranslatableString Paste { get; } = new TranslatableString("貼り付け");
+                    [Managed] public static TranslatableString Delete { get; } = new TranslatableString("削除");
+                    [Managed] public static TranslatableString Execute { get; } = new TranslatableString("実行");
                 }
 
                 [Managed]

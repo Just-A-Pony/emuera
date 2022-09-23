@@ -86,6 +86,7 @@ namespace MinorShift.Emuera
 			this.fileToolStripMenuItem.Text = Lang.UI.MainWindow.File.Text;
 			this.rebootToolStripMenuItem.Text = Lang.UI.MainWindow.File.Restart.Text;
 			this.ログをクリップボードにコピーToolStripMenuItem.Text = Lang.UI.MainWindow.File.CopyLogToClipboard.Text;
+			this.ログを保存するSToolStripMenuItem.Text = Lang.UI.MainWindow.File.SaveLog.Text;
 			this.タイトルへ戻るTToolStripMenuItem.Text = Lang.UI.MainWindow.File.BackToTitle.Text;
 			this.コードを読み直すcToolStripMenuItem.Text = Lang.UI.MainWindow.File.ReloadAllScripts.Text;
 			this.フォルダを読み直すFToolStripMenuItem.Text = Lang.UI.MainWindow.File.ReloadFolder.Text;
@@ -98,6 +99,19 @@ namespace MinorShift.Emuera
 
 			this.ヘルプHToolStripMenuItem.Text = Lang.UI.MainWindow.Help.Text;
 			this.コンフィグCToolStripMenuItem.Text = Lang.UI.MainWindow.Help.Config.Text;
+
+			this.マクロToolStripMenuItem.Text = Lang.UI.MainWindow.ContextMenu.KeyboardMacro.Text;
+			for (int i = 0; i < this.マクロToolStripMenuItem.DropDownItems.Count; i++)
+				this.マクロToolStripMenuItem.DropDownItems[i].Text = Lang.UI.MainWindow.ContextMenu.KeyboardMacro.Text + i.ToString("D2");
+			this.マクログループToolStripMenuItem.Text = Lang.UI.MainWindow.ContextMenu.KeyboardMacroGroup.Text;
+			for (int i = 0; i < this.マクログループToolStripMenuItem.DropDownItems.Count; i++)
+				this.マクログループToolStripMenuItem.DropDownItems[i].Text = Lang.UI.MainWindow.ContextMenu.KeyboardMacroGroup.Group.Text + i;
+
+			this.切り取り.Text = Lang.UI.MainWindow.ContextMenu.Cut.Text;
+			this.コピー.Text = Lang.UI.MainWindow.ContextMenu.Copy.Text;
+			this.貼り付け.Text = Lang.UI.MainWindow.ContextMenu.Paste.Text;
+			this.削除.Text = Lang.UI.MainWindow.ContextMenu.Delete.Text;
+			this.実行.Text = Lang.UI.MainWindow.ContextMenu.Execute.Text;
 		}
 		#endregion
 
