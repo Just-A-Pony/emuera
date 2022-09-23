@@ -140,6 +140,10 @@ namespace MinorShift.Emuera
 			#region EM_私家版_セーブ圧縮
 			ZipSaveData = instance.GetConfigValue<bool>(ConfigCode.ZipSaveData);
 			#endregion
+			#region EM_私家版_Emuera多言語化改造
+			EnglishConfigOutput = instance.GetConfigValue<bool>(ConfigCode.EnglishConfigOutput);
+			EmueraLang = instance.GetConfigValue<string>(ConfigCode.EmueraLang);
+			#endregion
 
 			UseLanguage lang = instance.GetConfigValue<UseLanguage>(ConfigCode.useLanguage);
 			switch (lang)
@@ -600,6 +604,10 @@ namespace MinorShift.Emuera
 		#endregion
 		#region EM_私家版_セーブ圧縮
 		public static bool ZipSaveData { get; private set; }
+		#endregion
+		#region EM_私家版_Emuera多言語化改造
+		public static bool EnglishConfigOutput { get; private set; }
+		public static string EmueraLang { get; private set; }
 		#endregion
 
 	}

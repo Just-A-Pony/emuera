@@ -15,6 +15,7 @@ using MinorShift.Emuera.Content;
 using System.Linq;
 using System.Xml;
 using System.IO;
+using MinorShift.Emuera.EvilMask;
 
 namespace MinorShift.Emuera.GameData.Function
 {
@@ -6298,10 +6299,8 @@ namespace MinorShift.Emuera.GameData.Function
 				}
 				else
 				{
-					filepath = arguments[0].GetStrValue(exm);
-					filepath = filepath.Replace('/', '\\');
-					filepath = filepath.Replace("..\\", "");
-					if (Path.GetPathRoot(filepath) != string.Empty) return string.Empty;
+					filepath = Utils.GetValidPath(arguments[0].GetStrValue(exm));
+					if (filepath==null) return string.Empty;
 					string tmp = Path.HasExtension(filepath) ? Path.GetExtension(filepath).ToLower().Substring(1) : "";
 					if (!Config.ValidExtension.Contains(tmp))
 						return "";

@@ -161,7 +161,11 @@ namespace MinorShift.Emuera
 		ValidExtension = 200,
 		#endregion
 		#region EM_私家版_セーブ圧縮
-		ZipSaveData = 201,
+		ZipSaveData,
+		#endregion
+		#region EM_私家版_Emuera多言語化改造
+		EnglishConfigOutput,
+		EmueraLang,
 		#endregion
 	}
 }

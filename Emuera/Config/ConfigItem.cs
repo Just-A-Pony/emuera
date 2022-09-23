@@ -10,21 +10,28 @@ namespace MinorShift.Emuera
 {
 	internal abstract class AConfigItem
 	{
-		public AConfigItem(ConfigCode code, string text)
+		#region EM_私家版_Emuera多言語化改造
+		// public AConfigItem(ConfigCode code, string text)
+		public AConfigItem(ConfigCode code, string text, string etext)
 		{
 			this.Code = code;
 			this.Name = code.ToString();
 			this.Text = text;
+			this.EngText = etext;
 		}
+		#endregion
 
+		#region EM_私家版_Emuera多言語化改造
 		public static ConfigItem<T> Copy<T>(ConfigItem<T> other)
 		{
 			if(other == null)
 				return null;
-			ConfigItem<T> ret = new ConfigItem<T>(other.Code, other.Text, other.Value);
+			//ConfigItem<T> ret = new ConfigItem<T>(other.Code, other.Text, other.Value);
+			ConfigItem<T> ret = new ConfigItem<T>(other.Code, other.Text, other.EngText, other.Value);
 			ret.Fixed = other.Fixed;
 			return ret;
 		}
+		#endregion
 
 		public abstract void CopyTo(AConfigItem other);
 		public abstract bool TryParse(string tokens);
@@ -34,12 +41,17 @@ namespace MinorShift.Emuera
 		public readonly ConfigCode Code;
 		public readonly string Name;
 		public readonly string Text;
+		#region EM_私家版_Emuera多言語化改造
+		public readonly string EngText;
+		#endregion
 		public bool Fixed;
 	}
 	
 	internal sealed class ConfigItem<T> : AConfigItem
 	{
-		public ConfigItem(ConfigCode code,string text, T t):base(code, text)
+		#region EM_私家版_Emuera多言語化改造
+		public ConfigItem(ConfigCode code,string text, string etext, T t):base(code, text, etext)
+		#endregion
 		{
 			this.val = t;
 		}
@@ -115,7 +127,9 @@ namespace MinorShift.Emuera
 		
 		public override string ToString()
 		{
-			return Text + ":" + ValueToString();
+			#region EM_私家版_Emuera多言語化改造
+			return (Config.EnglishConfigOutput ? EngText : Text) + ":" + ValueToString();
+			#endregion
 		}
 
 

@@ -240,6 +240,7 @@
     <Compile Include="Sub\Word.cs" />
     <Compile Include="Sub\SubWord.cs" />
     <Compile Include="Sub\EraBinaryDataWriter.cs" />
+    <Compile Include="_Library\EMUtils.cs" />
     <Compile Include="_Library\GDI.cs" />
     <Compile Include="_Library\ImageProcessor\BitDepth.cs" />
     <Compile Include="_Library\ImageProcessor\Common\Exceptions\ImageFormatException.cs" />
