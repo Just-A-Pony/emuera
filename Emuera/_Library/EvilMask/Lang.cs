@@ -86,12 +86,12 @@ namespace EvilMask.Emuera
                 [Managed]
                 public sealed class ContextMenu
                 {
-                    [Managed] public static TranslatableString KeyboardMacro { get; } = new TranslatableString("マクロ");
+                    [Managed] public static TranslatableString KeyMacro { get; } = new TranslatableString("マクロ");
 
                     [Translate("マクログループ"), Managed]
-                    public sealed class KeyboardMacroGroup
+                    public sealed class KeyMacroGroup
                     {
-                        public static string Text { get { return trClass[typeof(KeyboardMacroGroup)].Text; } }
+                        public static string Text { get { return trClass[typeof(KeyMacroGroup)].Text; } }
                         [Managed] public static TranslatableString Group { get; } = new TranslatableString("グループ");
                     }
 
@@ -113,34 +113,235 @@ namespace EvilMask.Emuera
                 }
             }
 
+            [Translate("ClipBoardDialog"), Managed]
+            public sealed class ClipBoardDialog
+            {
+                public static string Text { get { return trClass[typeof(ClipBoardDialog)].Text; } }
+            }
+
+            [Translate("ConfigDialog"), Managed]
+            public sealed class ConfigDialog
+            {
+                public static string Text { get { return trClass[typeof(ConfigDialog)].Text; } }
+
+                [Translate("環境"), Managed]
+                public sealed class Environment
+                {
+                    public static string Text { get { return trClass[typeof(Environment)].Text; } }
+                    [Managed] public static TranslatableString UseMouse { get; } = new TranslatableString("マウスを使用する");
+                    [Managed] public static TranslatableString UseMenu { get; } = new TranslatableString("メニューを使用する");
+                    [Managed] public static TranslatableString UseDebugCommand { get; } = new TranslatableString("デバッグコマンドを使用する");
+                    [Managed] public static TranslatableString AllowMultipleInstances { get; } = new TranslatableString("多重起動を許可する");
+                    [Managed] public static TranslatableString UseKeyMacro { get; } = new TranslatableString("キーボードマクロを使用する");
+                    [Managed] public static TranslatableString AutoSave { get; } = new TranslatableString("オートセーブを行なう");
+                    [Managed] public static TranslatableString UseSaveFolder { get; } = new TranslatableString("セーブデータをsavフォルダ内に作成する");
+                    [Managed] public static TranslatableString MaxLog { get; } = new TranslatableString("履歴ログの行数");
+                    [Managed] public static TranslatableString InfiniteLoopAlertTime { get; } = new TranslatableString("無限ループ警告までのミリ秒");
+                    [Managed] public static TranslatableString SaveDataPerPage { get; } = new TranslatableString("使用するセーブデータ数");
+                    [Managed] public static TranslatableString TextEditor { get; } = new TranslatableString("関連づけるテキストエディタ");
+                    [Managed] public static TranslatableString Browse { get; } = new TranslatableString("選択");
+
+                    [Translate("コマンドライン引数"), Managed]
+                    public sealed class TextEditorCommandline
+                    {
+                        public static string Text { get { return trClass[typeof(TextEditorCommandline)].Text; } }
+                        [Managed] public static TranslatableString UserSetting { get; } = new TranslatableString("選択");
+                    }
+                }
+
+
+                [Translate("表示"), Managed]
+                public sealed class Display
+                {
+                    public static string Text { get { return trClass[typeof(Display)].Text; } }
+                    [Managed] public static TranslatableString TextDrawingMode { get; } = new TranslatableString("描画インターフェース");
+                    [Managed] public static TranslatableString FPS { get; } = new TranslatableString("フレーム毎秒");
+                    [Managed] public static TranslatableString PrintCPerLine { get; } = new TranslatableString("PRINTCを並べる数");
+                    [Managed] public static TranslatableString PrintCLength { get; } = new TranslatableString("PRINTCの文字数");
+                    [Managed] public static TranslatableString ButtonWrap { get; } = new TranslatableString("ボタンの途中で行を折りかえさない");
+                }
+
+                [Translate("ウィンドウ"), Managed]
+                public sealed class Window
+                {
+                    public static string Text { get { return trClass[typeof(Window)].Text; } }
+                    [Managed] public static TranslatableString WindowWidth { get; } = new TranslatableString("ウィンドウ幅");
+                    [Managed] public static TranslatableString WindowHeight { get; } = new TranslatableString("ウィンドウ高さ");
+                    [Managed] public static TranslatableString GetWindowSize { get; } = new TranslatableString("現在のウィンドウサイズを取得");
+                    [Managed] public static TranslatableString ChangeableWindowHeight { get; } = new TranslatableString("ウィンドウの高さを可変にする");
+                    [Managed] public static TranslatableString WindowMaximixed { get; } = new TranslatableString("起動時にウィンドウを最大化する");
+                    [Managed] public static TranslatableString SetWindowPos { get; } = new TranslatableString("起動時のウィンドウの位置を固定する");
+                    [Managed] public static TranslatableString WindowX { get; } = new TranslatableString("ウィンドウ位置X");
+                    [Managed] public static TranslatableString WindowY { get; } = new TranslatableString("ウィンドウ位置Y");
+                    [Managed] public static TranslatableString GetWindowPos { get; } = new TranslatableString("現在のウィンドウ位置を取得");
+                    [Managed] public static TranslatableString LinesPerScroll { get; } = new TranslatableString("スクロールの行数");
+                }
+
+                [Translate("フォント"), Managed]
+                public sealed class Font
+                {
+                    public static string Text { get { return trClass[typeof(Font)].Text; } }
+                    [Managed] public static TranslatableString BackgroundColor { get; } = new TranslatableString("背景色");
+                    [Managed] public static TranslatableString TextColor { get; } = new TranslatableString("文字色");
+                    [Managed] public static TranslatableString HighlightColor { get; } = new TranslatableString("選択中文字色");
+                    [Managed] public static TranslatableString LogHistoryColor { get; } = new TranslatableString("履歴文字色");
+                    [Managed] public static TranslatableString FontName { get; } = new TranslatableString("フォント名");
+                    [Managed] public static TranslatableString GetFontNames { get; } = new TranslatableString("フォント名一覧を取得");
+                    [Managed] public static TranslatableString FontSize { get; } = new TranslatableString("フォントサイズ");
+                    [Managed] public static TranslatableString LineHeight { get; } = new TranslatableString("一行の高さ");
+                }
+
+                [Translate("システム"), Managed]
+                public sealed class System
+                {
+                    public static string Text { get { return trClass[typeof(System)].Text; } }
+                    [Managed] public static TranslatableString Warning { get; } = new TranslatableString("※システムの項目を変化させた場合、\nERBスクリプトが正常に動作しないことがあります");
+                    [Managed] public static TranslatableString IgnoreCase { get; } = new TranslatableString("大文字小文字の違いを無視する");
+                    [Managed] public static TranslatableString UseRename { get; } = new TranslatableString("_Rename.csvを利用する");
+                    [Managed] public static TranslatableString UseReplace { get; } = new TranslatableString("_Replace.csvを利用する");
+                    [Managed] public static TranslatableString SearchSubfolder { get; } = new TranslatableString("サブディレクトリを検索する");
+                    [Managed] public static TranslatableString SortFileNames { get; } = new TranslatableString("読み込み順をファイル名順にソートする");
+                    [Managed] public static TranslatableString SystemFuncOverride { get; } = new TranslatableString("システム関数の上書きを許可する");
+                    [Managed] public static TranslatableString SystemFuncOverrideWarn { get; } = new TranslatableString("システム関数が上書きされたとき警告を表示する");
+                    [Managed] public static TranslatableString DuplicateFuncWarn { get; } = new TranslatableString("同名の非イベント関数が複数定義されたとき警告する");
+                    [Managed] public static TranslatableString WSIncludesFullWidth { get; } = new TranslatableString("全角スペースをホワイトスペースに含める");
+                    [Managed] public static TranslatableString ANSI { get; } = new TranslatableString("内部で使用する東アジア言語");
+                }
+
+                [Translate("システム2"), Managed]
+                public sealed class System2
+                {
+                    public static string Text { get { return trClass[typeof(System2)].Text; } }
+                    [Managed] public static TranslatableString IgnoreTripleSymbol { get; } = new TranslatableString("FORM中の三連記号を展開しない");
+                    [Managed] public static TranslatableString SaveInBinary { get; } = new TranslatableString("セーブデータをバイナリ形式で保存する");
+                    [Managed] public static TranslatableString SaveInUTF8 { get; } = new TranslatableString("セーブデータをUTF-8で保存する(非バイナリ時のみ)");
+                    [Managed] public static TranslatableString CompressSave { get; } = new TranslatableString("セーブデータを圧縮して保存する(バイナリ時のみ)");
+                    [Managed] public static TranslatableString NoAutoCompleteCVar { get; } = new TranslatableString("キャラクタ変数の引数を補完しない");
+                    [Managed] public static TranslatableString DisallowUpdateCheck { get; } = new TranslatableString("UPDATECHECKを許可しない");
+                    [Managed] public static TranslatableString UseERD { get; } = new TranslatableString("ERD機能を利用する");
+                    [Managed] public static TranslatableString SaveLoadExt { get; } = new TranslatableString("LOADTEXTとSAVETEXTで使える拡張子");
+                }
+
+                [Translate("互換性"), Managed]
+                public sealed class Compatibility
+                {
+                    public static string Text { get { return trClass[typeof(Compatibility)].Text; } }
+                    [Managed] public static TranslatableString Warning { get; } = new TranslatableString("※eramakerとEmueraで動作が違う、\nEmueraの過去のバージョンで動作したものが動作しない、\nなどの問題を解決するためのオプションです\n標準で問題ない場合は変更しないでください");
+                    [Managed] public static TranslatableString ExecuteErrorLine { get; } = new TranslatableString("解釈不可能な行があっても実行する");
+                    [Managed] public static TranslatableString NameForCallname { get; } = new TranslatableString("CALLNAMEが空文字列の時にNAMEを代入する");
+                    [Managed] public static TranslatableString EramakerRAND { get; } = new TranslatableString("擬似変数RANDの仕様をeramakerに合わせる");
+                    [Managed] public static TranslatableString EramakerTIMES { get; } = new TranslatableString("TIMESの計算をeramakerにあわせる");
+                    [Managed] public static TranslatableString NoIgnoreCase { get; } = new TranslatableString("関数・属性については大文字小文字を無視しない");
+                    [Managed] public static TranslatableString CallEvent { get; } = new TranslatableString("イベント関数のCALLを許可する");
+                    [Managed] public static TranslatableString UseSPCharacters { get; } = new TranslatableString("SPキャラを使用する");
+                    [Managed] public static TranslatableString ButtonWarp { get; } = new TranslatableString("ver1739以前の非ボタン折り返しを再現する");
+                    [Managed] public static TranslatableString OmitArgs { get; } = new TranslatableString("ユーザー関数の全ての引数の省略を許可する");
+                    [Managed] public static TranslatableString AutoTOSTR { get; } = new TranslatableString("ユーザー関数の引数に自動的にTOSTRを補完する");
+                    [Managed] public static TranslatableString EramakerStandard { get; } = new TranslatableString("eramakerの仕様にする");
+                    [Managed] public static TranslatableString EmueraStandard { get; } = new TranslatableString("Emuera標準仕様にする");
+                }
+
+                [Translate("解析"), Managed]
+                public sealed class Debug
+                {
+                    public static string Text { get { return trClass[typeof(Debug)].Text; } }
+                    [Managed] public static TranslatableString CompatibilityWarn { get; } = new TranslatableString("eramaker互換性に関する警告を表示する");
+                    [Managed] public static TranslatableString LoadingReport { get; } = new TranslatableString("ロード時にレポートを表示する");
+
+                    [Translate("ロード時に引数を解析する"), Managed]
+                    public sealed class ReduceArgs
+                    {
+                        public static string Text { get { return trClass[typeof(ReduceArgs)].Text; } }
+                        [Managed] public static TranslatableString Never { get; } = new TranslatableString("常に行わない");
+                        [Managed] public static TranslatableString OnUpdate { get; } = new TranslatableString("更新されていれば行う");
+                        [Managed] public static TranslatableString Always { get; } = new TranslatableString("常に行う");
+                    }
+
+                    [Translate("表示する最低警告レベル"), Managed]
+                    public sealed class WarnLevel
+                    {
+                        public static string Text { get { return trClass[typeof(WarnLevel)].Text; } }
+                        [Managed] public static TranslatableString Level0 { get; } = new TranslatableString("0:標準でない文法");
+                        [Managed] public static TranslatableString Level1 { get; } = new TranslatableString("1:無視可能なエラー");
+                        [Managed] public static TranslatableString Level2 { get; } = new TranslatableString("2:動作しないエラー");
+                        [Managed] public static TranslatableString Level3 { get; } = new TranslatableString("3:致命的エラー");
+                    }
+
+                    [Managed] public static TranslatableString IgnoreUnusedFuncs { get; } = new TranslatableString("呼び出されなかった関数を無視する");
+
+                    [Managed]
+                    public sealed class WarnSetting
+                    {
+                        [Managed] public static TranslatableString Ignore { get; } = new TranslatableString("無視");
+                        [Managed] public static TranslatableString TotalNumber { get; } = new TranslatableString("総数のみ表示する");
+                        [Managed] public static TranslatableString OncePerFile { get; } = new TranslatableString("ファイル毎に一度だけ表示する");
+                        [Managed] public static TranslatableString Always { get; } = new TranslatableString("表示する");
+                    }
+
+                    [Managed] public static TranslatableString FuncNotFoundWarn { get; } = new TranslatableString("関数が見つからない警告の扱い");
+                    [Managed] public static TranslatableString UnusedFuncWarn { get; } = new TranslatableString("関数が呼び出されなかった警告の扱い");
+                    [Managed] public static TranslatableString PlayerStandard { get; } = new TranslatableString("ユーザー向けの設定にする");
+                    [Managed] public static TranslatableString DeveloperStandard { get; } = new TranslatableString("開発者向けの設定にする");
+                }
+
+                [Managed] public static TranslatableString ChangeWontTakeEffectUntilRestart { get; } = new TranslatableString("※変更は再起動するまで反映されません");
+                [Managed] public static TranslatableString Save { get; } = new TranslatableString("保存");
+                [Managed] public static TranslatableString SaveAndRestart { get; } = new TranslatableString("保存して再起動");
+                [Managed] public static TranslatableString Cancel { get; } = new TranslatableString("キャンセル");
+            }
+
+
+            [Translate("ConfigDialog"), Managed]
+            public sealed class DebugConfigDialog
+            {
+                public static string Text { get { return trClass[typeof(DebugConfigDialog)].Text; } }
+                [Managed] public static TranslatableString Name { get; } = new TranslatableString("デバッグ");
+                [Managed] public static TranslatableString Warning { get; } = new TranslatableString("※デバッグ関連のオプションはコマンドライン引数に-Debug\nを指定して起動した時のみ有効です");
+                [Managed] public static TranslatableString OpenDebugWindowOnStartup { get; } = new TranslatableString("起動時にデバッグウインドウを表示する");
+                [Managed] public static TranslatableString AlwaysOnTop { get; } = new TranslatableString("デバッグウインドウを最前面に表示する");
+                [Managed] public static TranslatableString WindowWidth { get; } = new TranslatableString("デバッグウィンドウ幅");
+                [Managed] public static TranslatableString WindowHeight { get; } = new TranslatableString("デバッグウィンドウ高さ");
+                // [Managed] public static TranslatableString GetWindowSize { get; } = new TranslatableString("現在のウィンドウサイズを取得");
+                // Lang.UI.ConfigDialog.Window.GetWindowSize
+                [Managed] public static TranslatableString SetWindowPos { get; } = new TranslatableString("デバッグウィンドウ位置を指定する");
+                [Managed] public static TranslatableString WindowX { get; } = new TranslatableString("デバッグウィンドウ位置X");
+                [Managed] public static TranslatableString WindowY { get; } = new TranslatableString("デバッグウィンドウ位置Y");
+                // [Managed] public static TranslatableString Warning { get; } = new TranslatableString("現在のウィンドウ位置を取得");
+                // Lang.UI.ConfigDialog.Window.GetWindowPos
+            }
+
+
         }
 
         static public void LoadLanguageFile()
         {
             foreach (var pair in trItems) pair.Value.Clear();
-            foreach(var path in Directory.EnumerateFiles(langDir, "emuera.*.xml", SearchOption.AllDirectories))
+            if (Directory.Exists(langDir))
             {
-                XmlDocument xml = new XmlDocument();
-                try
+                foreach (var path in Directory.EnumerateFiles(langDir, "emuera.*.xml", SearchOption.TopDirectoryOnly))
                 {
-                    xml.Load(path);
-                }
-                catch
-                {
-                    continue;
-                }
-                var node = xml.SelectSingleNode("/lang/name");
-                if (node != null)
-                {
-                    langList.Add(node.InnerText, path);
-                    if (Config.EmueraLang == node.InnerText)
+                    XmlDocument xml = new XmlDocument();
+                    try
                     {
-                        var nodes = xml.SelectNodes("/lang/tr");
-                        for (int i = 0; i < nodes.Count; i++)
+                        xml.Load(path);
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                    var node = xml.SelectSingleNode("/lang/name");
+                    if (node != null)
+                    {
+                        langList.Add(node.InnerText, path);
+                        if (Config.EmueraLang == node.InnerText)
                         {
-                            var attr = nodes[i].Attributes["id"];
-                            if (attr != null && trItems.ContainsKey(attr.Value))
-                                trItems[attr.Value].Set(nodes[i].InnerText);
+                            var nodes = xml.SelectNodes("/lang/tr");
+                            for (int i = 0; i < nodes.Count; i++)
+                            {
+                                var attr = nodes[i].Attributes["id"];
+                                if (attr != null && trItems.ContainsKey(attr.Value))
+                                    trItems[attr.Value].Set(nodes[i].InnerText);
+                            }
                         }
                     }
                 }
@@ -149,6 +350,8 @@ namespace EvilMask.Emuera
 
         static public void GenerateDefaultLangFile()
         {
+            if (!Directory.Exists(langDir))
+                Directory.CreateDirectory(langDir);
             FileStream fs = new FileStream(langDir + "emuera.default.xml", FileMode.Create);
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;

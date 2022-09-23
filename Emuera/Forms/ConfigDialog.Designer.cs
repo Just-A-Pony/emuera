@@ -106,10 +106,13 @@
             this.checkBox10 = new System.Windows.Forms.CheckBox();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.tabPageSystem2 = new System.Windows.Forms.TabPage();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
             this.checkBox31 = new System.Windows.Forms.CheckBox();
             this.checkBox30 = new System.Windows.Forms.CheckBox();
             this.checkBox29 = new System.Windows.Forms.CheckBox();
             this.checkBox26 = new System.Windows.Forms.CheckBox();
+            this.checkBox32 = new System.Windows.Forms.CheckBox();
             this.checkBox27 = new System.Windows.Forms.CheckBox();
             this.checkBoxSystemTripleSymbol = new System.Windows.Forms.CheckBox();
             this.label24 = new System.Windows.Forms.Label();
@@ -144,9 +147,6 @@
             this.label16 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label25 = new System.Windows.Forms.Label();
-            this.checkBox32 = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabEnvironment.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown11)).BeginInit();
@@ -220,7 +220,6 @@
             this.tabEnvironment.Controls.Add(this.label17);
             this.tabEnvironment.Controls.Add(this.label6);
             this.tabEnvironment.Controls.Add(this.numericUpDown11);
-            this.tabEnvironment.Controls.Add(this.checkBox18);
             this.tabEnvironment.Controls.Add(this.numericUpDown10);
             this.tabEnvironment.Controls.Add(this.numericUpDown4);
             this.tabEnvironment.Controls.Add(this.checkBox7);
@@ -228,6 +227,7 @@
             this.tabEnvironment.Controls.Add(this.checkBox5);
             this.tabEnvironment.Controls.Add(this.checkBox4);
             this.tabEnvironment.Controls.Add(this.checkBox3);
+            this.tabEnvironment.Controls.Add(this.checkBox18);
             resources.ApplyResources(this.tabEnvironment, "tabEnvironment");
             this.tabEnvironment.Name = "tabEnvironment";
             this.tabEnvironment.UseVisualStyleBackColor = true;
@@ -707,6 +707,16 @@
             this.tabPageSystem2.UseVisualStyleBackColor = true;
             this.tabPageSystem2.Click += new System.EventHandler(this.tabPageSystem2_Click);
             // 
+            // textBox3
+            // 
+            resources.ApplyResources(this.textBox3, "textBox3");
+            this.textBox3.Name = "textBox3";
+            // 
+            // label25
+            // 
+            resources.ApplyResources(this.label25, "label25");
+            this.label25.Name = "label25";
+            // 
             // checkBox31
             // 
             resources.ApplyResources(this.checkBox31, "checkBox31");
@@ -730,6 +740,12 @@
             resources.ApplyResources(this.checkBox26, "checkBox26");
             this.checkBox26.Name = "checkBox26";
             this.checkBox26.UseVisualStyleBackColor = true;
+            // 
+            // checkBox32
+            // 
+            resources.ApplyResources(this.checkBox32, "checkBox32");
+            this.checkBox32.Name = "checkBox32";
+            this.checkBox32.UseVisualStyleBackColor = true;
             // 
             // checkBox27
             // 
@@ -982,22 +998,6 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // textBox3
-            // 
-            resources.ApplyResources(this.textBox3, "textBox3");
-            this.textBox3.Name = "textBox3";
-            // 
-            // label25
-            // 
-            resources.ApplyResources(this.label25, "label25");
-            this.label25.Name = "label25";
-            // 
-            // checkBox32
-            // 
-            resources.ApplyResources(this.checkBox32, "checkBox32");
-            this.checkBox32.Name = "checkBox32";
-            this.checkBox32.UseVisualStyleBackColor = true;
             // 
             // ConfigDialog
             // 

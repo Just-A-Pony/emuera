@@ -117,6 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="buttonSave.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="buttonSave.Location" type="System.Drawing.Point, System.Drawing">
     <value>89, 400</value>
@@ -143,6 +147,9 @@
   <data name="&gt;&gt;buttonSave.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
+  <data name="buttonCancel.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="buttonCancel.Location" type="System.Drawing.Point, System.Drawing">
     <value>250, 400</value>
   </data>
@@ -166,6 +173,9 @@
   </data>
   <data name="&gt;&gt;buttonCancel.ZOrder" xml:space="preserve">
     <value>3</value>
+  </data>
+  <data name="buttonReboot.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="buttonReboot.Location" type="System.Drawing.Point, System.Drawing">
     <value>144, 400</value>
@@ -227,6 +237,9 @@
   <data name="checkBox24.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox24.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox24.Location" type="System.Drawing.Point, System.Drawing">
     <value>13, 86</value>
   </data>
@@ -275,6 +288,9 @@
   <data name="label23.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label23.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label23.Location" type="System.Drawing.Point, System.Drawing">
     <value>11, 250</value>
   </data>
@@ -298,6 +314,9 @@
   </data>
   <data name="&gt;&gt;label23.ZOrder" xml:space="preserve">
     <value>3</value>
+  </data>
+  <data name="button4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="button4.Location" type="System.Drawing.Point, System.Drawing">
     <value>246, 218</value>
@@ -347,6 +366,9 @@
   <data name="label22.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label22.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label22.Location" type="System.Drawing.Point, System.Drawing">
     <value>9, 204</value>
   </data>
@@ -373,6 +395,9 @@
   </data>
   <data name="label20.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="label20.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="label20.Location" type="System.Drawing.Point, System.Drawing">
     <value>144, 163</value>
@@ -401,6 +426,9 @@
   <data name="label17.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label17.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label17.Location" type="System.Drawing.Point, System.Drawing">
     <value>142, 139</value>
   </data>
@@ -427,6 +455,9 @@
   </data>
   <data name="label6.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="label6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="label6.Location" type="System.Drawing.Point, System.Drawing">
     <value>142, 114</value>
@@ -473,33 +504,6 @@
   <data name="&gt;&gt;numericUpDown11.ZOrder" xml:space="preserve">
     <value>10</value>
   </data>
-  <data name="checkBox18.AutoSize" type="System.Boolean, mscorlib">
-    <value>True</value>
-  </data>
-  <data name="checkBox18.Location" type="System.Drawing.Point, System.Drawing">
-    <value>13, 60</value>
-  </data>
-  <data name="checkBox18.Size" type="System.Drawing.Size, System.Drawing">
-    <value>180, 16</value>
-  </data>
-  <data name="checkBox18.TabIndex" type="System.Int32, mscorlib">
-    <value>65</value>
-  </data>
-  <data name="checkBox18.Text" xml:space="preserve">
-    <value>キーボードマクロを使用する</value>
-  </data>
-  <data name="&gt;&gt;checkBox18.Name" xml:space="preserve">
-    <value>checkBox18</value>
-  </data>
-  <data name="&gt;&gt;checkBox18.Type" xml:space="preserve">
-    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;checkBox18.Parent" xml:space="preserve">
-    <value>tabEnvironment</value>
-  </data>
-  <data name="&gt;&gt;checkBox18.ZOrder" xml:space="preserve">
-    <value>11</value>
-  </data>
   <data name="numericUpDown10.Location" type="System.Drawing.Point, System.Drawing">
     <value>13, 137</value>
   </data>
@@ -519,7 +523,7 @@
     <value>tabEnvironment</value>
   </data>
   <data name="&gt;&gt;numericUpDown10.ZOrder" xml:space="preserve">
-    <value>12</value>
+    <value>11</value>
   </data>
   <data name="numericUpDown4.Location" type="System.Drawing.Point, System.Drawing">
     <value>13, 112</value>
@@ -540,10 +544,13 @@
     <value>tabEnvironment</value>
   </data>
   <data name="&gt;&gt;numericUpDown4.ZOrder" xml:space="preserve">
-    <value>13</value>
+    <value>12</value>
   </data>
   <data name="checkBox7.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="checkBox7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="checkBox7.Location" type="System.Drawing.Point, System.Drawing">
     <value>168, 60</value>
@@ -567,10 +574,13 @@
     <value>tabEnvironment</value>
   </data>
   <data name="&gt;&gt;checkBox7.ZOrder" xml:space="preserve">
-    <value>14</value>
+    <value>13</value>
   </data>
   <data name="checkBox6.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="checkBox6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="checkBox6.Location" type="System.Drawing.Point, System.Drawing">
     <value>168, 38</value>
@@ -594,10 +604,13 @@
     <value>tabEnvironment</value>
   </data>
   <data name="&gt;&gt;checkBox6.ZOrder" xml:space="preserve">
-    <value>15</value>
+    <value>14</value>
   </data>
   <data name="checkBox5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="checkBox5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="checkBox5.Location" type="System.Drawing.Point, System.Drawing">
     <value>13, 38</value>
@@ -621,10 +634,13 @@
     <value>tabEnvironment</value>
   </data>
   <data name="&gt;&gt;checkBox5.ZOrder" xml:space="preserve">
-    <value>16</value>
+    <value>15</value>
   </data>
   <data name="checkBox4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="checkBox4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="checkBox4.Location" type="System.Drawing.Point, System.Drawing">
     <value>168, 16</value>
@@ -648,10 +664,13 @@
     <value>tabEnvironment</value>
   </data>
   <data name="&gt;&gt;checkBox4.ZOrder" xml:space="preserve">
-    <value>17</value>
+    <value>16</value>
   </data>
   <data name="checkBox3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="checkBox3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="checkBox3.Location" type="System.Drawing.Point, System.Drawing">
     <value>13, 16</value>
@@ -675,6 +694,36 @@
     <value>tabEnvironment</value>
   </data>
   <data name="&gt;&gt;checkBox3.ZOrder" xml:space="preserve">
+    <value>17</value>
+  </data>
+  <data name="checkBox18.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBox18.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBox18.Location" type="System.Drawing.Point, System.Drawing">
+    <value>13, 60</value>
+  </data>
+  <data name="checkBox18.Size" type="System.Drawing.Size, System.Drawing">
+    <value>180, 16</value>
+  </data>
+  <data name="checkBox18.TabIndex" type="System.Int32, mscorlib">
+    <value>65</value>
+  </data>
+  <data name="checkBox18.Text" xml:space="preserve">
+    <value>キーボードマクロを使用する</value>
+  </data>
+  <data name="&gt;&gt;checkBox18.Name" xml:space="preserve">
+    <value>checkBox18</value>
+  </data>
+  <data name="&gt;&gt;checkBox18.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBox18.Parent" xml:space="preserve">
+    <value>tabEnvironment</value>
+  </data>
+  <data name="&gt;&gt;checkBox18.ZOrder" xml:space="preserve">
     <value>18</value>
   </data>
   <data name="tabEnvironment.Location" type="System.Drawing.Point, System.Drawing">
@@ -704,6 +753,9 @@
   <data name="checkBox14.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox14.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox14.Location" type="System.Drawing.Point, System.Drawing">
     <value>17, 185</value>
   </data>
@@ -730,6 +782,9 @@
   </data>
   <data name="label18.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="label18.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="label18.Location" type="System.Drawing.Point, System.Drawing">
     <value>7, 35</value>
@@ -788,6 +843,9 @@
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
     <value>143, 162</value>
   </data>
@@ -835,6 +893,9 @@
   </data>
   <data name="label5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="label5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="label5.Location" type="System.Drawing.Point, System.Drawing">
     <value>143, 137</value>
@@ -884,6 +945,9 @@
   <data name="label9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label9.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label9.Location" type="System.Drawing.Point, System.Drawing">
     <value>143, 111</value>
   </data>
@@ -932,7 +996,6 @@
   <data name="tabPageView.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 40</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="tabPageView.Padding" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
   </data>
@@ -960,6 +1023,9 @@
   <data name="checkBox21.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox21.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox21.Location" type="System.Drawing.Point, System.Drawing">
     <value>13, 115</value>
   </data>
@@ -986,6 +1052,9 @@
   </data>
   <data name="ScrollRange.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="ScrollRange.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="ScrollRange.Location" type="System.Drawing.Point, System.Drawing">
     <value>139, 249</value>
@@ -1035,6 +1104,9 @@
   <data name="checkBox17.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox17.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox17.Location" type="System.Drawing.Point, System.Drawing">
     <value>13, 136</value>
   </data>
@@ -1058,6 +1130,9 @@
   </data>
   <data name="&gt;&gt;checkBox17.ZOrder" xml:space="preserve">
     <value>3</value>
+  </data>
+  <data name="button3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="button3.Location" type="System.Drawing.Point, System.Drawing">
     <value>59, 208</value>
@@ -1086,6 +1161,9 @@
   <data name="label10.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label10.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label10.Location" type="System.Drawing.Point, System.Drawing">
     <value>139, 185</value>
   </data>
@@ -1112,6 +1190,9 @@
   </data>
   <data name="label19.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="label19.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="label19.Location" type="System.Drawing.Point, System.Drawing">
     <value>139, 160</value>
@@ -1179,6 +1260,9 @@
   <data name="&gt;&gt;numericUpDownPosX.ZOrder" xml:space="preserve">
     <value>8</value>
   </data>
+  <data name="button1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="button1.Location" type="System.Drawing.Point, System.Drawing">
     <value>59, 61</value>
   </data>
@@ -1206,6 +1290,9 @@
   <data name="label3.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label3.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label3.Location" type="System.Drawing.Point, System.Drawing">
     <value>139, 38</value>
   </data>
@@ -1232,6 +1319,9 @@
   </data>
   <data name="label2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="label2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="label2.Location" type="System.Drawing.Point, System.Drawing">
     <value>139, 13</value>
@@ -1302,6 +1392,9 @@
   <data name="checkBox8.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox8.Location" type="System.Drawing.Point, System.Drawing">
     <value>13, 94</value>
   </data>
@@ -1350,6 +1443,9 @@
   <data name="&gt;&gt;tabPageWindow.ZOrder" xml:space="preserve">
     <value>2</value>
   </data>
+  <data name="button2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="button2.Location" type="System.Drawing.Point, System.Drawing">
     <value>57, 187</value>
   </data>
@@ -1377,6 +1473,9 @@
   <data name="label7.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label7.Location" type="System.Drawing.Point, System.Drawing">
     <value>132, 244</value>
   </data>
@@ -1403,6 +1502,9 @@
   </data>
   <data name="label8.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="label8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="label8.Location" type="System.Drawing.Point, System.Drawing">
     <value>132, 219</value>
@@ -1473,6 +1575,9 @@
   <data name="label4.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label4.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label4.Location" type="System.Drawing.Point, System.Drawing">
     <value>132, 164</value>
   </data>
@@ -1531,7 +1636,7 @@
     <value>colorBoxBacklog</value>
   </data>
   <data name="&gt;&gt;colorBoxBacklog.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8251.35785, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8302.1961, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxBacklog.Parent" xml:space="preserve">
     <value>tabPageFont</value>
@@ -1552,7 +1657,7 @@
     <value>colorBoxSelecting</value>
   </data>
   <data name="&gt;&gt;colorBoxSelecting.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8251.35785, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8302.1961, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxSelecting.Parent" xml:space="preserve">
     <value>tabPageFont</value>
@@ -1573,7 +1678,7 @@
     <value>colorBoxFG</value>
   </data>
   <data name="&gt;&gt;colorBoxFG.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8251.35785, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8302.1961, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxFG.Parent" xml:space="preserve">
     <value>tabPageFont</value>
@@ -1594,7 +1699,7 @@
     <value>colorBoxBG</value>
   </data>
   <data name="&gt;&gt;colorBoxBG.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8251.35785, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8302.1961, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxBG.Parent" xml:space="preserve">
     <value>tabPageFont</value>
@@ -1665,6 +1770,9 @@
   <data name="label11.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label11.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label11.Location" type="System.Drawing.Point, System.Drawing">
     <value>10, 274</value>
   </data>
@@ -1691,6 +1799,9 @@
   </data>
   <data name="checkBoxSystemFullSpace.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="checkBoxSystemFullSpace.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="checkBoxSystemFullSpace.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 217</value>
@@ -1719,6 +1830,9 @@
   <data name="checkBox22.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox22.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox22.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 195</value>
   </data>
@@ -1745,6 +1859,9 @@
   </data>
   <data name="label21.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="label21.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="label21.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 8</value>
@@ -1774,6 +1891,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   <data name="checkBox20.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox20.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox20.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 151</value>
   </data>
@@ -1800,6 +1920,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   </data>
   <data name="checkBox19.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="checkBox19.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="checkBox19.Location" type="System.Drawing.Point, System.Drawing">
     <value>18, 173</value>
@@ -1828,6 +1951,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   <data name="checkBox16.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox16.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox16.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 129</value>
   </data>
@@ -1854,6 +1980,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   </data>
   <data name="checkBox15.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="checkBox15.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="checkBox15.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 107</value>
@@ -1882,6 +2011,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   <data name="checkBox1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox1.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 41</value>
   </data>
@@ -1909,6 +2041,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   <data name="checkBox10.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox10.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox10.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 85</value>
   </data>
@@ -1935,6 +2070,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   </data>
   <data name="checkBox2.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="checkBox2.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="checkBox2.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 63</value>
@@ -2071,6 +2209,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   <data name="checkBox30.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox30.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox30.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 149</value>
   </data>
@@ -2098,6 +2239,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   <data name="checkBox29.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox29.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox29.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 127</value>
   </data>
@@ -2124,6 +2268,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   </data>
   <data name="checkBox26.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="checkBox26.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="checkBox26.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 63</value>
@@ -2182,6 +2329,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   <data name="checkBox27.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox27.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox27.Location" type="System.Drawing.Point, System.Drawing">
     <value>16, 85</value>
   </data>
@@ -2209,6 +2359,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   <data name="checkBoxSystemTripleSymbol.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBoxSystemTripleSymbol.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBoxSystemTripleSymbol.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 41</value>
   </data>
@@ -2235,6 +2388,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   </data>
   <data name="label24.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="label24.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="label24.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 8</value>
@@ -2288,6 +2444,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   <data name="checkBox9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox9.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox9.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 129</value>
   </data>
@@ -2314,6 +2473,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   </data>
   <data name="checkBoxCompatiSP.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="checkBoxCompatiSP.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="checkBoxCompatiSP.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 195</value>
@@ -2348,6 +2510,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   <data name="checkBox28.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox28.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox28.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 173</value>
   </data>
@@ -2377,6 +2542,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   </data>
   <data name="checkBox25.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="checkBox25.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="checkBox25.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 275</value>
@@ -2408,6 +2576,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   <data name="checkBox12.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox12.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox12.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 253</value>
   </data>
@@ -2438,6 +2609,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   <data name="checkBoxFuncNoIgnoreCase.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBoxFuncNoIgnoreCase.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBoxFuncNoIgnoreCase.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 151</value>
   </data>
@@ -2465,6 +2639,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   <data name="&gt;&gt;checkBoxFuncNoIgnoreCase.ZOrder" xml:space="preserve">
     <value>5</value>
   </data>
+  <data name="button8.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="button8.Location" type="System.Drawing.Point, System.Drawing">
     <value>150, 297</value>
   </data>
@@ -2488,6 +2665,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   </data>
   <data name="&gt;&gt;button8.ZOrder" xml:space="preserve">
     <value>6</value>
+  </data>
+  <data name="button7.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="button7.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 297</value>
@@ -2515,6 +2695,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   </data>
   <data name="checkBoxCompatiLinefeedAs1739.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="checkBoxCompatiLinefeedAs1739.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="checkBoxCompatiLinefeedAs1739.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 231</value>
@@ -2546,6 +2729,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   <data name="checkBoxCompatiRAND.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBoxCompatiRAND.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBoxCompatiRAND.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 107</value>
   </data>
@@ -2575,6 +2761,9 @@ ERBスクリプトが正常に動作しないことがあります</value>
   </data>
   <data name="label30.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="label30.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="label30.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 3</value>
@@ -2606,6 +2795,9 @@ Emueraの過去のバージョンで動作したものが動作しない、
   <data name="checkBoxCompatiCALLNAME.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBoxCompatiCALLNAME.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBoxCompatiCALLNAME.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 85</value>
   </data>
@@ -2635,6 +2827,9 @@ Emueraの過去のバージョンで動作したものが動作しない、
   </data>
   <data name="checkBoxCompatiErrorLine.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="checkBoxCompatiErrorLine.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="checkBoxCompatiErrorLine.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 63</value>
@@ -2690,6 +2885,9 @@ Emueraの過去のバージョンで動作したものが動作しない、
   <data name="&gt;&gt;tabPageCompati.ZOrder" xml:space="preserve">
     <value>6</value>
   </data>
+  <data name="button6.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="button6.Location" type="System.Drawing.Point, System.Drawing">
     <value>158, 297</value>
   </data>
@@ -2713,6 +2911,9 @@ Emueraの過去のバージョンで動作したものが動作しない、
   </data>
   <data name="&gt;&gt;button6.ZOrder" xml:space="preserve">
     <value>0</value>
+  </data>
+  <data name="button5.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="button5.Location" type="System.Drawing.Point, System.Drawing">
     <value>8, 297</value>
@@ -2741,6 +2942,9 @@ Emueraの過去のバージョンで動作したものが動作しない、
   <data name="checkBox23.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox23.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox23.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 12</value>
   </data>
@@ -2767,6 +2971,9 @@ Emueraの過去のバージョンで動作したものが動作しない、
   </data>
   <data name="label15.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="label15.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="label15.Location" type="System.Drawing.Point, System.Drawing">
     <value>27, 102</value>
@@ -2828,6 +3035,9 @@ Emueraの過去のバージョンで動作したものが動作しない、
   <data name="label14.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label14.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label14.Location" type="System.Drawing.Point, System.Drawing">
     <value>27, 221</value>
   </data>
@@ -2887,6 +3097,9 @@ Emueraの過去のバージョンで動作したものが動作しない、
   </data>
   <data name="label13.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="label13.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="label13.Location" type="System.Drawing.Point, System.Drawing">
     <value>27, 171</value>
@@ -2948,6 +3161,9 @@ Emueraの過去のバージョンで動作したものが動作しない、
   <data name="label12.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="label12.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="label12.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 64</value>
   </data>
@@ -3005,6 +3221,9 @@ Emueraの過去のバージョンで動作したものが動作しない、
   <data name="checkBox11.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
+  <data name="checkBox11.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="checkBox11.Location" type="System.Drawing.Point, System.Drawing">
     <value>29, 152</value>
   </data>
@@ -3031,6 +3250,9 @@ Emueraの過去のバージョンで動作したものが動作しない、
   </data>
   <data name="checkBox13.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="checkBox13.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="checkBox13.Location" type="System.Drawing.Point, System.Drawing">
     <value>6, 34</value>
@@ -3106,6 +3328,9 @@ Emueraの過去のバージョンで動作したものが動作しない、
   </data>
   <data name="label16.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
+  </data>
+  <data name="label16.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
   </data>
   <data name="label16.Location" type="System.Drawing.Point, System.Drawing">
     <value>87, 385</value>

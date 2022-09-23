@@ -100,12 +100,12 @@ namespace MinorShift.Emuera
 			this.ヘルプHToolStripMenuItem.Text = Lang.UI.MainWindow.Help.Text;
 			this.コンフィグCToolStripMenuItem.Text = Lang.UI.MainWindow.Help.Config.Text;
 
-			this.マクロToolStripMenuItem.Text = Lang.UI.MainWindow.ContextMenu.KeyboardMacro.Text;
+			this.マクロToolStripMenuItem.Text = Lang.UI.MainWindow.ContextMenu.KeyMacro.Text;
 			for (int i = 0; i < this.マクロToolStripMenuItem.DropDownItems.Count; i++)
-				this.マクロToolStripMenuItem.DropDownItems[i].Text = Lang.UI.MainWindow.ContextMenu.KeyboardMacro.Text + i.ToString("D2");
-			this.マクログループToolStripMenuItem.Text = Lang.UI.MainWindow.ContextMenu.KeyboardMacroGroup.Text;
+				this.マクロToolStripMenuItem.DropDownItems[i].Text = Lang.UI.MainWindow.ContextMenu.KeyMacro.Text + i.ToString("D2");
+			this.マクログループToolStripMenuItem.Text = Lang.UI.MainWindow.ContextMenu.KeyMacroGroup.Text;
 			for (int i = 0; i < this.マクログループToolStripMenuItem.DropDownItems.Count; i++)
-				this.マクログループToolStripMenuItem.DropDownItems[i].Text = Lang.UI.MainWindow.ContextMenu.KeyboardMacroGroup.Group.Text + i;
+				this.マクログループToolStripMenuItem.DropDownItems[i].Text = Lang.UI.MainWindow.ContextMenu.KeyMacroGroup.Group.Text + i;
 
 			this.切り取り.Text = Lang.UI.MainWindow.ContextMenu.Cut.Text;
 			this.コピー.Text = Lang.UI.MainWindow.ContextMenu.Copy.Text;
@@ -707,6 +707,7 @@ namespace MinorShift.Emuera
 		{
 			
 			ConfigDialog dialog = new ConfigDialog();
+			dialog.TranslateUI();
             dialog.StartPosition = FormStartPosition.CenterParent;
 			dialog.SetConfig(this);
 			dialog.ShowDialog();
@@ -789,6 +790,7 @@ namespace MinorShift.Emuera
             try
             {
                 ClipBoardDialog dialog = new ClipBoardDialog();
+				dialog.Text = Lang.UI.ClipBoardDialog.Text;
                 dialog.Setup(console);
                 dialog.ShowDialog();
             }

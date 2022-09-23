@@ -456,6 +456,7 @@ namespace MinorShift.Emuera.Forms
 			bool tempTopMost = TopMost;
 			this.TopMost = false;
 			DebugConfigDialog dialog = new DebugConfigDialog();
+			dialog.TranslateUI();
             dialog.StartPosition = FormStartPosition.CenterParent;
 			dialog.SetConfig(this);
 			dialog.ShowDialog();
