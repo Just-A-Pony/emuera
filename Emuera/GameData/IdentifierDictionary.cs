@@ -133,8 +133,6 @@ namespace MinorShift.Emuera
 		Dictionary<string, UserDefinedRefMethod> refmethodDic;
 		public List<UserDefinedCharaVariableToken> CharaDimList = new List<UserDefinedCharaVariableToken>();
 
-		public Lang.UI.IdentifierDictionary trid;
-
 		#region initialize
 		public IdentifierDictionary(VariableData varData)
 		{
