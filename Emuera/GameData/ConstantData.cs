@@ -1705,7 +1705,7 @@ namespace MinorShift.Emuera.GameData
 				case CharacterStrData.CSTR:
 					return cstrSize;
 				default:
-					throw new CodeEE("Lang.UI.CodeEE.NotExistKey.Text");
+					throw new CodeEE(Lang.UI.CodeEE.NotExistKey.Text);
 			}
 		}
 
