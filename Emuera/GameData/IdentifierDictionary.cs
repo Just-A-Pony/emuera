@@ -394,7 +394,6 @@ namespace MinorShift.Emuera
 				switch(nameDic[varName])
 				{
 					case DefinedNameType.Reserved:
-						errMes = "変数名" + varName + "はEmueraの予約語です";
 						errMes = string.Format(trid.VarConflictReservedWord.Text, varName);
 						warnLevel = 2;
 						return;
@@ -522,7 +521,7 @@ namespace MinorShift.Emuera
                 if (ret.IsForbid)
                 {
 					if(!ret.CanForbid)
-						throw new ExeEE("CanForbidでない変数\"" + ret.Name +"\"にIsForbidがついている");
+						throw new ExeEE(string.Format(tree.InvalidProhibitedVar.Text, ret.Name));
 					throw new CodeEE(string.Format(tree.UsedProhibitedVar.Text, ret.Name));
                 }
 				if (subKey != null)

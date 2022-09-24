@@ -310,10 +310,9 @@ namespace EvilMask.Emuera
                 // Lang.UI.ConfigDialog.Window.GetWindowPos
             }
 
-            [Translate("CodeEE"), Managed]
+            [Managed]
             public sealed class CodeEE
             {
-                public static string Text { get { return trClass[typeof(CodeEE)].Text; } }
                 [Managed] public static TranslatableString NotExistColorSpecifier { get; } = new TranslatableString("値をColor指定子として認識できません");
                 [Managed] public static TranslatableString ContainsNonNumericCharacters { get; } = new TranslatableString("数字でない文字が含まれています");
                 [Managed] public static TranslatableString InvalidSpecification { get; } = new TranslatableString("不正な指定です");
@@ -329,9 +328,10 @@ namespace EvilMask.Emuera
                 [Managed] public static TranslatableString UseCdflagname { get; } = new TranslatableString("CDFLAGの要素の取得にはCDFLAGNAME1又はCDFLAGNAME2を使用します");
                 [Managed] public static TranslatableString NotExistKey { get; } = new TranslatableString("存在しないキーを参照しました");
                 [Managed] public static TranslatableString UsedAtForPrivVar { get; } = new TranslatableString("プライベート変数\"{0}\"に対して@が使われました");
+                [Managed] public static TranslatableString InvalidProhibitedVar { get; } = new TranslatableString("CanForbidでない変数\"{0}\"にIsForbidがついている");
                 [Managed] public static TranslatableString UsedProhibitedVar { get; } = new TranslatableString("呼び出された変数\"{0}\"は設定により使用が禁止されています");
                 [Managed] public static TranslatableString CannotGetKeyNotExistRunningFunction{ get; } = new TranslatableString("実行中の関数が存在しないため\"{0}\"を取得又は変更できませんでした");
-                [Managed] public static TranslatableString UsedAtForGlobalVar { get; } = new TranslatableString("");
+                [Managed] public static TranslatableString UsedAtForGlobalVar { get; } = new TranslatableString("ローカル変数でない変数{0}に対して@が使われました");
                 [Managed] public static TranslatableString InvalidAt { get; } = new TranslatableString("@の使い方が不正です");
                 [Managed] public static TranslatableString CallfNonMethodFunc { get; } = new TranslatableString("#FUNCTIONが指定されていない関数\"@{0}\"をCALLF系命令で呼び出そうとしました");
                 [Managed] public static TranslatableString UsedNonMethodFunc { get; } = new TranslatableString("#FUNCTIONが定義されていない関数({0}:{1}行目)を式中で呼び出そうとしました");
@@ -346,17 +346,15 @@ namespace EvilMask.Emuera
                 [Managed] public static TranslatableString CannotInterpreted { get; } = new TranslatableString("\"{0}\"は解釈できない識別子です");
 
             }
-            [Translate("Warn"), Managed]
+            [Managed]
             public sealed class Warn
             {
-                public static string Text { get { return trClass[typeof(Warn)].Text; } }
                 [Managed] public static TranslatableString CannotRecommendCallLocalVar { get; } = new TranslatableString("コード中でローカル変数を@付きで呼ぶことは推奨されません(代わりに*.ERHファイルの利用を検討してください)");
 
             }
-            [Translate("IdentifierDictionary"), Managed]
+            [Managed]
             public sealed class IdentifierDictionary
             {
-                public static string Text { get { return trClass[typeof(IdentifierDictionary)].Text; } }
                 [Managed] public static TranslatableString LabelNameMissing { get; } = new TranslatableString("ラベル名がありません");
                 [Managed] public static TranslatableString LabelContainsOtherThanUnderline { get; } = new TranslatableString("ラベル名\"{0}\"に\"_\"以外の記号が含まれています");
                 [Managed] public static TranslatableString LabelStartedHalfDigit { get; } = new TranslatableString("ラベル名\"{0}\"が半角数字から始まっています");
