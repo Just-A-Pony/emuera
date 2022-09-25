@@ -309,104 +309,93 @@ namespace EvilMask.Emuera
                 // [Managed] public static TranslatableString Warning { get; } = new TranslatableString("現在のウィンドウ位置を取得");
                 // Lang.UI.ConfigDialog.Window.GetWindowPos
             }
+        }
 
-            [Translate("CodeEE"), Managed]
-            public sealed class CodeEE
-            {
-                public static string Text { get { return trClass[typeof(CodeEE)].Text; } }
-                [Managed] public static TranslatableString NotExistColorSpecifier { get; } = new TranslatableString("値をColor指定子として認識できません");
-                [Managed] public static TranslatableString ContainsNonNumericCharacters { get; } = new TranslatableString("数字でない文字が含まれています");
-                [Managed] public static TranslatableString InvalidSpecification { get; } = new TranslatableString("不正な指定です");
-                [Managed] public static TranslatableString DoesNotMatchCdflagElements { get; } = new TranslatableString("CDFLAGの要素数とCDFLAGNAME1及びCDFLAGNAME2の要素数が一致していません");
-                [Managed] public static TranslatableString TooManyCdflagElements { get; } = new TranslatableString("CDFLAGの要素数が多すぎます（CDFLAGNAME1とCDFLAGNAME2の要素数の積が100万を超えています）");
-                [Managed] public static TranslatableString DuplicateErdKey { get; } = new TranslatableString("変数\"{0}\"の置き換え名前\"{1}\"の定義が重複しています。（ファイル1 - {2}）（ファイル2 - {3}）");
-                [Managed] public static TranslatableString DuplicateVariableDefine { get; } = new TranslatableString("変数{0}の定義が重複しています。");
-                [Managed] public static TranslatableString NotDefinedErdKey { get; } = new TranslatableString("変数\"{0}\"には\"{1}\"の定義がありません");
-                [Managed] public static TranslatableString KeywordsCannotBeEmpty { get; } = new TranslatableString("キーワードを空には出来ません");
-                [Managed] public static TranslatableString CannotSpecifiedByString { get; } = new TranslatableString("配列変数\"{0}\"の要素を文字列で指定することはできません");
-                [Managed] public static TranslatableString NotDefinedKey { get; } = new TranslatableString("\"{0}\"の中に\"{1}\"の定義がありません");
-                [Managed] public static TranslatableString CannotIndexSpecifiedByString { get; } = new TranslatableString("配列変数\"{0}\"の{1}番目の要素を文字列で指定することはできません");
-                [Managed] public static TranslatableString UseCdflagname { get; } = new TranslatableString("CDFLAGの要素の取得にはCDFLAGNAME1又はCDFLAGNAME2を使用します");
-                [Managed] public static TranslatableString NotExistKey { get; } = new TranslatableString("存在しないキーを参照しました");
-                [Managed] public static TranslatableString UsedAtForPrivVar { get; } = new TranslatableString("プライベート変数\"{0}\"に対して@が使われました");
-                [Managed] public static TranslatableString UsedProhibitedVar { get; } = new TranslatableString("呼び出された変数\"{0}\"は設定により使用が禁止されています");
-                [Managed] public static TranslatableString CannotGetKeyNotExistRunningFunction{ get; } = new TranslatableString("実行中の関数が存在しないため\"{0}\"を取得又は変更できませんでした");
-                [Managed] public static TranslatableString UsedAtForGlobalVar { get; } = new TranslatableString("");
-                [Managed] public static TranslatableString InvalidAt { get; } = new TranslatableString("@の使い方が不正です");
-                [Managed] public static TranslatableString CallfNonMethodFunc { get; } = new TranslatableString("#FUNCTIONが指定されていない関数\"@{0}\"をCALLF系命令で呼び出そうとしました");
-                [Managed] public static TranslatableString UsedNonMethodFunc { get; } = new TranslatableString("#FUNCTIONが定義されていない関数({0}:{1}行目)を式中で呼び出そうとしました");
-                [Managed] public static TranslatableString DeclaringDisable{ get; } = new TranslatableString("\"{0}\"は#DISABLEが宣言されています");
-                [Managed] public static TranslatableString VarNotDefinedThisFunc { get; } = new TranslatableString("変数\"{0}\"はこの関数中では定義されていません");
-                [Managed] public static TranslatableString IllegalUseReservedWord { get; } = new TranslatableString("Emueraの予約語\"{0}\"が不正な使われ方をしています");
-                [Managed] public static TranslatableString UseVarLikeFunc { get; } = new TranslatableString("変数名\"{0}\"が関数のように使われています");
-                [Managed] public static TranslatableString UseFuncLikeVar { get; } = new TranslatableString("関数名\"{0}\"が変数のように使われています");
-                [Managed] public static TranslatableString UnexpectedMacro { get; } = new TranslatableString("予期しないマクロ名\"{0}\"です");
-                [Managed] public static TranslatableString UseInstructionLikeFunc { get; } = new TranslatableString("命令名\"{0}\"が関数のように使われています");
-                [Managed] public static TranslatableString UseInstructionLikeVar { get; } = new TranslatableString("命令名\"{0}\"が変数のように使われています");
-                [Managed] public static TranslatableString CannotInterpreted { get; } = new TranslatableString("\"{0}\"は解釈できない識別子です");
-                [Managed] public static TranslatableString AbnormalFirstOperand { get; } = new TranslatableString("三項演算子\\@の第一オペランドが異常です");
-                [Managed] public static TranslatableString EmptyBrace { get; } = new TranslatableString("{}の中に式が存在しません");
-                [Managed] public static TranslatableString EmptyPer{ get; } = new TranslatableString("%%の中に式が存在しません");
-                [Managed] public static TranslatableString NotSpecifiedLR { get; } = new TranslatableString("','の後にRIGHT又はLEFTがありません");
-                [Managed] public static TranslatableString OtherThanLR { get; } = new TranslatableString("','の後にRIGHT又はLEFT以外の単語があります");
-                [Managed] public static TranslatableString ExtraCharacterLR { get; } = new TranslatableString("RIGHT又はLEFTの後に余分な文字があります");
-                [Managed] public static TranslatableString IsNotNumericBrace { get; } = new TranslatableString("{}の中の式が数式ではありません");
-                [Managed] public static TranslatableString IsNotStringPer { get; } = new TranslatableString("%%の中の式が文字列式ではありません");
-                [Managed] public static TranslatableString OoRForcekanaArg { get; } = new TranslatableString("命令FORCEKANAの引数が指定可能な範囲(0～3)を超えています");
-                [Managed] public static TranslatableString MaxBarNotPositive { get; } = new TranslatableString("BARの最大値が正の値ではありません");
-                [Managed] public static TranslatableString BarNotPositive { get; } = new TranslatableString("BARの長さが正の値ではありません");
-                [Managed] public static TranslatableString TooLongBar { get; } = new TranslatableString("BARが長すぎます");
-                [Managed] public static TranslatableString NotCloseSBrackets { get; } = new TranslatableString("'['に対応する']'が見つかりません");
-                [Managed] public static TranslatableString NotCloseBrackets { get; } = new TranslatableString("'('に対応する')'が見つかりません");
-                [Managed] public static TranslatableString UnexpectedBrackets { get; } = new TranslatableString("構文解析中に予期しない')'を発見しました");
-                [Managed] public static TranslatableString UnexpectedSBrackets { get; } = new TranslatableString("構文解析中に予期しない']'を発見しました");
-                //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-                //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-                //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-                //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+        [Managed]
+        public sealed class Error
+        {
+            public static string Text { get { return trClass[typeof(Error)].Text; } }
+            [Managed] public static TranslatableString NotExistColorSpecifier { get; } = new TranslatableString("値をColor指定子として認識できません");
+            [Managed] public static TranslatableString ContainsNonNumericCharacters { get; } = new TranslatableString("数字でない文字が含まれています");
+            [Managed] public static TranslatableString InvalidSpecification { get; } = new TranslatableString("不正な指定です");
+            [Managed] public static TranslatableString DoesNotMatchCdflagElements { get; } = new TranslatableString("CDFLAGの要素数とCDFLAGNAME1及びCDFLAGNAME2の要素数が一致していません");
+            [Managed] public static TranslatableString TooManyCdflagElements { get; } = new TranslatableString("CDFLAGの要素数が多すぎます（CDFLAGNAME1とCDFLAGNAME2の要素数の積が100万を超えています）");
+            [Managed] public static TranslatableString DuplicateErdKey { get; } = new TranslatableString("変数\"{0}\"の置き換え名前\"{1}\"の定義が重複しています。（ファイル1 - {2}）（ファイル2 - {3}）");
+            [Managed] public static TranslatableString DuplicateVariableDefine { get; } = new TranslatableString("変数{0}の定義が重複しています。");
+            [Managed] public static TranslatableString NotDefinedErdKey { get; } = new TranslatableString("変数\"{0}\"には\"{1}\"の定義がありません");
+            [Managed] public static TranslatableString KeywordsCannotBeEmpty { get; } = new TranslatableString("キーワードを空には出来ません");
+            [Managed] public static TranslatableString CannotSpecifiedByString { get; } = new TranslatableString("配列変数\"{0}\"の要素を文字列で指定することはできません");
+            [Managed] public static TranslatableString NotDefinedKey { get; } = new TranslatableString("\"{0}\"の中に\"{1}\"の定義がありません");
+            [Managed] public static TranslatableString CannotIndexSpecifiedByString { get; } = new TranslatableString("配列変数\"{0}\"の{1}番目の要素を文字列で指定することはできません");
+            [Managed] public static TranslatableString UseCdflagname { get; } = new TranslatableString("CDFLAGの要素の取得にはCDFLAGNAME1又はCDFLAGNAME2を使用します");
+            [Managed] public static TranslatableString NotExistKey { get; } = new TranslatableString("存在しないキーを参照しました");
+            [Managed] public static TranslatableString UsedAtForPrivVar { get; } = new TranslatableString("プライベート変数\"{0}\"に対して@が使われました");
+            [Managed] public static TranslatableString UsedProhibitedVar { get; } = new TranslatableString("呼び出された変数\"{0}\"は設定により使用が禁止されています");
+            [Managed] public static TranslatableString CannotGetKeyNotExistRunningFunction{ get; } = new TranslatableString("実行中の関数が存在しないため\"{0}\"を取得又は変更できませんでした");
+            [Managed] public static TranslatableString UsedAtForGlobalVar { get; } = new TranslatableString("");
+            [Managed] public static TranslatableString InvalidAt { get; } = new TranslatableString("@の使い方が不正です");
+            [Managed] public static TranslatableString CallfNonMethodFunc { get; } = new TranslatableString("#FUNCTIONが指定されていない関数\"@{0}\"をCALLF系命令で呼び出そうとしました");
+            [Managed] public static TranslatableString UsedNonMethodFunc { get; } = new TranslatableString("#FUNCTIONが定義されていない関数({0}:{1}行目)を式中で呼び出そうとしました");
+            [Managed] public static TranslatableString DeclaringDisable{ get; } = new TranslatableString("\"{0}\"は#DISABLEが宣言されています");
+            [Managed] public static TranslatableString VarNotDefinedThisFunc { get; } = new TranslatableString("変数\"{0}\"はこの関数中では定義されていません");
+            [Managed] public static TranslatableString IllegalUseReservedWord { get; } = new TranslatableString("Emueraの予約語\"{0}\"が不正な使われ方をしています");
+            [Managed] public static TranslatableString UseVarLikeFunc { get; } = new TranslatableString("変数名\"{0}\"が関数のように使われています");
+            [Managed] public static TranslatableString UseFuncLikeVar { get; } = new TranslatableString("関数名\"{0}\"が変数のように使われています");
+            [Managed] public static TranslatableString UnexpectedMacro { get; } = new TranslatableString("予期しないマクロ名\"{0}\"です");
+            [Managed] public static TranslatableString UseInstructionLikeFunc { get; } = new TranslatableString("命令名\"{0}\"が関数のように使われています");
+            [Managed] public static TranslatableString UseInstructionLikeVar { get; } = new TranslatableString("命令名\"{0}\"が変数のように使われています");
+            [Managed] public static TranslatableString CannotInterpreted { get; } = new TranslatableString("\"{0}\"は解釈できない識別子です");
+            [Managed] public static TranslatableString AbnormalFirstOperand { get; } = new TranslatableString("三項演算子\\@の第一オペランドが異常です");
+            [Managed] public static TranslatableString EmptyBrace { get; } = new TranslatableString("{}の中に式が存在しません");
+            [Managed] public static TranslatableString EmptyPer{ get; } = new TranslatableString("%%の中に式が存在しません");
+            [Managed] public static TranslatableString NotSpecifiedLR { get; } = new TranslatableString("','の後にRIGHT又はLEFTがありません");
+            [Managed] public static TranslatableString OtherThanLR { get; } = new TranslatableString("','の後にRIGHT又はLEFT以外の単語があります");
+            [Managed] public static TranslatableString ExtraCharacterLR { get; } = new TranslatableString("RIGHT又はLEFTの後に余分な文字があります");
+            [Managed] public static TranslatableString IsNotNumericBrace { get; } = new TranslatableString("{}の中の式が数式ではありません");
+            [Managed] public static TranslatableString IsNotStringPer { get; } = new TranslatableString("%%の中の式が文字列式ではありません");
+            [Managed] public static TranslatableString OoRForcekanaArg { get; } = new TranslatableString("命令FORCEKANAの引数が指定可能な範囲(0～3)を超えています");
+            [Managed] public static TranslatableString MaxBarNotPositive { get; } = new TranslatableString("BARの最大値が正の値ではありません");
+            [Managed] public static TranslatableString BarNotPositive { get; } = new TranslatableString("BARの長さが正の値ではありません");
+            [Managed] public static TranslatableString TooLongBar { get; } = new TranslatableString("BARが長すぎます");
+            [Managed] public static TranslatableString NotCloseSBrackets { get; } = new TranslatableString("'['に対応する']'が見つかりません");
+            [Managed] public static TranslatableString NotCloseBrackets { get; } = new TranslatableString("'('に対応する')'が見つかりません");
+            [Managed] public static TranslatableString UnexpectedBrackets { get; } = new TranslatableString("構文解析中に予期しない')'を発見しました");
+            [Managed] public static TranslatableString UnexpectedSBrackets { get; } = new TranslatableString("構文解析中に予期しない']'を発見しました");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
 
-            }
-            [Translate("Warn"), Managed]
-            public sealed class Warn
-            {
-                public static string Text { get { return trClass[typeof(Warn)].Text; } }
-                [Managed] public static TranslatableString CannotRecommendCallLocalVar { get; } = new TranslatableString("コード中でローカル変数を@付きで呼ぶことは推奨されません(代わりに*.ERHファイルの利用を検討してください)");
+            [Managed] public static TranslatableString CannotRecommendCallLocalVar { get; } = new TranslatableString("コード中でローカル変数を@付きで呼ぶことは推奨されません(代わりに*.ERHファイルの利用を検討してください)");
 
-            }
-            [Translate("IdentifierDictionary"), Managed]
-            public sealed class IdentifierDictionary
-            {
-                public static string Text { get { return trClass[typeof(IdentifierDictionary)].Text; } }
-                [Managed] public static TranslatableString LabelNameMissing { get; } = new TranslatableString("ラベル名がありません");
-                [Managed] public static TranslatableString LabelContainsOtherThanUnderline { get; } = new TranslatableString("ラベル名\"{0}\"に\"_\"以外の記号が含まれています");
-                [Managed] public static TranslatableString LabelStartedHalfDigit { get; } = new TranslatableString("ラベル名\"{0}\"が半角数字から始まっています");
-                [Managed] public static TranslatableString LabelConflictReservedWord1 { get; } = new TranslatableString("関数名\"{0}\"はEmueraの予約語と衝突しています。Emuera専用構文の構文解析に支障をきたす恐れがあります");
-                [Managed] public static TranslatableString LabelConflictReservedWord2 { get; } = new TranslatableString("関数名\"{0}\"はEmueraの予約語です");
-                [Managed] public static TranslatableString LabelOverwriteInternalExpression { get; } = new TranslatableString("関数名\"{0}\"はEmueraの式中関数を上書きします");
-                [Managed] public static TranslatableString LabelNameAlreadyUsedInternalExpression { get; } = new TranslatableString("関数名\"{0}\"はEmueraの式中関数名として使われています");
-                [Managed] public static TranslatableString LabelNameAlreadyUsedInternalVariable { get; } = new TranslatableString("関数名\"{0}\"はEmueraの変数で使われています");
-                [Managed] public static TranslatableString LabelNameAlreadyUsedInternalInstruction { get; } = new TranslatableString("関数名\"{0}\"はEmueraの変数もしくは命令で使われています");
-                [Managed] public static TranslatableString LabelNameAlreadyUsedMacro { get; } = new TranslatableString("関数名\"{0}\"はマクロに使用されています");
-                [Managed] public static TranslatableString LabelNameAlreadyUsedRefFunction { get; } = new TranslatableString("関数名\"{0}\"は参照型関数の名称に使用されています");
+            [Managed] public static TranslatableString LabelNameMissing { get; } = new TranslatableString("ラベル名がありません");
+            [Managed] public static TranslatableString LabelContainsOtherThanUnderline { get; } = new TranslatableString("ラベル名\"{0}\"に\"_\"以外の記号が含まれています");
+            [Managed] public static TranslatableString LabelStartedHalfDigit { get; } = new TranslatableString("ラベル名\"{0}\"が半角数字から始まっています");
+            [Managed] public static TranslatableString LabelConflictReservedWord1 { get; } = new TranslatableString("関数名\"{0}\"はEmueraの予約語と衝突しています。Emuera専用構文の構文解析に支障をきたす恐れがあります");
+            [Managed] public static TranslatableString LabelConflictReservedWord2 { get; } = new TranslatableString("関数名\"{0}\"はEmueraの予約語です");
+            [Managed] public static TranslatableString LabelOverwriteInternalExpression { get; } = new TranslatableString("関数名\"{0}\"はEmueraの式中関数を上書きします");
+            [Managed] public static TranslatableString LabelNameAlreadyUsedInternalExpression { get; } = new TranslatableString("関数名\"{0}\"はEmueraの式中関数名として使われています");
+            [Managed] public static TranslatableString LabelNameAlreadyUsedInternalVariable { get; } = new TranslatableString("関数名\"{0}\"はEmueraの変数で使われています");
+            [Managed] public static TranslatableString LabelNameAlreadyUsedInternalInstruction { get; } = new TranslatableString("関数名\"{0}\"はEmueraの変数もしくは命令で使われています");
+            [Managed] public static TranslatableString LabelNameAlreadyUsedMacro { get; } = new TranslatableString("関数名\"{0}\"はマクロに使用されています");
+            [Managed] public static TranslatableString LabelNameAlreadyUsedRefFunction { get; } = new TranslatableString("関数名\"{0}\"は参照型関数の名称に使用されています");
 
-                [Managed] public static TranslatableString VarContainsOtherThanUnderline { get; } = new TranslatableString("変数名\"{0}\"に\"_\"以外の記号が含まれています");
-                [Managed] public static TranslatableString VarConflictReservedWord { get; } = new TranslatableString("変数名\"{0}\"はEmueraの予約語です");
-                [Managed] public static TranslatableString VarNameAlreadyUsedInternalInstruction { get; } = new TranslatableString("変数目\"{0}\"はEmueraの変数もしくは命令で使われています");
-                [Managed] public static TranslatableString VarNameAlreadyUsedInternalVariable { get; } = new TranslatableString("変数名\"{0}\"はEmueraの変数名として使われています");
-                [Managed] public static TranslatableString VarNameAlreadyUsedMacro { get; } = new TranslatableString("変数名\"{0}\"はマクロに使用されています");
-                [Managed] public static TranslatableString VarNameAlreadyUsedGlobalVariable { get; } = new TranslatableString("変数名\"{0}\"はユーザー定義の広域変数名に使用されています");
-                [Managed] public static TranslatableString VarNameAlreadyUsedRefFunction { get; } = new TranslatableString("変数名\"{0}\"は参照型関数の名称に使用されています");
-                [Managed] public static TranslatableString VarStartedHalfDigit { get; } = new TranslatableString("変数名\"{0}\"が半角数字から始まっています");
+            [Managed] public static TranslatableString VarContainsOtherThanUnderline { get; } = new TranslatableString("変数名\"{0}\"に\"_\"以外の記号が含まれています");
+            [Managed] public static TranslatableString VarConflictReservedWord { get; } = new TranslatableString("変数名\"{0}\"はEmueraの予約語です");
+            [Managed] public static TranslatableString VarNameAlreadyUsedInternalInstruction { get; } = new TranslatableString("変数目\"{0}\"はEmueraの変数もしくは命令で使われています");
+            [Managed] public static TranslatableString VarNameAlreadyUsedInternalVariable { get; } = new TranslatableString("変数名\"{0}\"はEmueraの変数名として使われています");
+            [Managed] public static TranslatableString VarNameAlreadyUsedMacro { get; } = new TranslatableString("変数名\"{0}\"はマクロに使用されています");
+            [Managed] public static TranslatableString VarNameAlreadyUsedGlobalVariable { get; } = new TranslatableString("変数名\"{0}\"はユーザー定義の広域変数名に使用されています");
+            [Managed] public static TranslatableString VarNameAlreadyUsedRefFunction { get; } = new TranslatableString("変数名\"{0}\"は参照型関数の名称に使用されています");
+            [Managed] public static TranslatableString VarStartedHalfDigit { get; } = new TranslatableString("変数名\"{0}\"が半角数字から始まっています");
 
-                [Managed] public static TranslatableString MacroContainsOtherThanUnderline { get; } = new TranslatableString("マクロ名\"{0}\"に\"_\"以外の記号が含まれています");
-                [Managed] public static TranslatableString MacroConflictReservedWord { get; } = new TranslatableString("マクロ名\"{0}\"はEmueraの予約語です");
-                [Managed] public static TranslatableString MacroNameAlreadyUsedInternalInstruction { get; } = new TranslatableString("マクロ名\"{0}\"はEmueraの変数もしくは命令で使われています");
-                [Managed] public static TranslatableString MacroNameAlreadyUsedInternalVariable { get; } = new TranslatableString("マクロ名\"{0}\"はEmueraの変数名として使われています");
-                [Managed] public static TranslatableString MacroNameAlreadyUsedMacro { get; } = new TranslatableString("マクロ名\"{0}\"はマクロに使用されています");
-                [Managed] public static TranslatableString MacroNameAlreadyUsedGlobalVariable { get; } = new TranslatableString("マクロ名\"{0}\"はユーザー定義の広域変数名に使用されています");
-                [Managed] public static TranslatableString MacroNameAlreadyUsedRefFunction { get; } = new TranslatableString("マクロ名\"{0}\"は参照型関数の名称に使用されています");
-			}
-
+            [Managed] public static TranslatableString MacroContainsOtherThanUnderline { get; } = new TranslatableString("マクロ名\"{0}\"に\"_\"以外の記号が含まれています");
+            [Managed] public static TranslatableString MacroConflictReservedWord { get; } = new TranslatableString("マクロ名\"{0}\"はEmueraの予約語です");
+            [Managed] public static TranslatableString MacroNameAlreadyUsedInternalInstruction { get; } = new TranslatableString("マクロ名\"{0}\"はEmueraの変数もしくは命令で使われています");
+            [Managed] public static TranslatableString MacroNameAlreadyUsedInternalVariable { get; } = new TranslatableString("マクロ名\"{0}\"はEmueraの変数名として使われています");
+            [Managed] public static TranslatableString MacroNameAlreadyUsedMacro { get; } = new TranslatableString("マクロ名\"{0}\"はマクロに使用されています");
+            [Managed] public static TranslatableString MacroNameAlreadyUsedGlobalVariable { get; } = new TranslatableString("マクロ名\"{0}\"はユーザー定義の広域変数名に使用されています");
+            [Managed] public static TranslatableString MacroNameAlreadyUsedRefFunction { get; } = new TranslatableString("マクロ名\"{0}\"は参照型関数の名称に使用されています");
         }
 
         static public void LoadLanguageFile()

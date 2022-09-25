@@ -159,7 +159,7 @@ namespace MinorShift.Emuera
 				if (ret)
 					((ConfigItem<Color>)(AConfigItem)this).Value = c;
                 else
-                    throw new CodeEE(Lang.UI.CodeEE.NotExistColorSpecifier.Text);
+                    throw new CodeEE(Lang.Error.NotExistColorSpecifier.Text);
             }
 			else if (this is ConfigItem<char>)
 			{
@@ -175,7 +175,7 @@ namespace MinorShift.Emuera
 				if (ret)
 					((ConfigItem<Int32>)(AConfigItem)this).Value = i;
                 else
-                    throw new CodeEE(Lang.UI.CodeEE.ContainsNonNumericCharacters.Text);
+                    throw new CodeEE(Lang.Error.ContainsNonNumericCharacters.Text);
             }
 			else if (this is ConfigItem<Int64>)
 			{
@@ -184,7 +184,7 @@ namespace MinorShift.Emuera
                 if (ret)
                     ((ConfigItem<Int64>)(AConfigItem)this).Value = i;
                 else
-                    throw new CodeEE(Lang.UI.CodeEE.ContainsNonNumericCharacters.Text);
+                    throw new CodeEE(Lang.Error.ContainsNonNumericCharacters.Text);
 			}
             else if (this is ConfigItem<List<Int64>>)
             {
@@ -198,7 +198,7 @@ namespace MinorShift.Emuera
                         ((ConfigItem<List<Int64>>)(AConfigItem)this).Value.Add(i);
                     else
                     {
-                        throw new CodeEE(Lang.UI.CodeEE.ContainsNonNumericCharacters.Text);
+                        throw new CodeEE(Lang.Error.ContainsNonNumericCharacters.Text);
                     }
                 }
             }
@@ -228,7 +228,7 @@ namespace MinorShift.Emuera
                      = (TextDrawingMode)Enum.Parse(typeof(TextDrawingMode), str);
                 }
                 else
-                    throw new CodeEE(Lang.UI.CodeEE.InvalidSpecification.Text);
+                    throw new CodeEE(Lang.Error.InvalidSpecification.Text);
             }
             else if (this is ConfigItem<ReduceArgumentOnLoadFlag>)
             {
@@ -240,7 +240,7 @@ namespace MinorShift.Emuera
                      = (ReduceArgumentOnLoadFlag)Enum.Parse(typeof(ReduceArgumentOnLoadFlag), str);
                 }
                 else
-                    throw new CodeEE(Lang.UI.CodeEE.InvalidSpecification.Text);
+                    throw new CodeEE(Lang.Error.InvalidSpecification.Text);
             }
             else if (this is ConfigItem<DisplayWarningFlag>)
             {
@@ -252,7 +252,7 @@ namespace MinorShift.Emuera
                      = (DisplayWarningFlag)Enum.Parse(typeof(DisplayWarningFlag), str);
                 }
                 else
-                    throw new CodeEE(Lang.UI.CodeEE.InvalidSpecification.Text);
+                    throw new CodeEE(Lang.Error.InvalidSpecification.Text);
             }
             else if (this is ConfigItem<UseLanguage>)
             {
@@ -264,7 +264,7 @@ namespace MinorShift.Emuera
                         = (UseLanguage)Enum.Parse(typeof(UseLanguage), str);
                 }
                 else
-                    throw new CodeEE(Lang.UI.CodeEE.InvalidSpecification.Text);
+                    throw new CodeEE(Lang.Error.InvalidSpecification.Text);
             }
             else if (this is ConfigItem<TextEditorType>)
             {
@@ -276,7 +276,7 @@ namespace MinorShift.Emuera
                         = (TextEditorType)Enum.Parse(typeof(TextEditorType), str);
                 }
                 else
-                    throw new CodeEE(Lang.UI.CodeEE.InvalidSpecification.Text);
+                    throw new CodeEE(Lang.Error.InvalidSpecification.Text);
             }
             //else
             //    throw new ExeEE("型不明なコンフィグ");
@@ -321,7 +321,7 @@ namespace MinorShift.Emuera
 				p = true;
 				return true;
 			}
-			throw new CodeEE(Lang.UI.CodeEE.InvalidSpecification.Text);
+			throw new CodeEE(Lang.Error.InvalidSpecification.Text);
 		}
 
 		private bool tryStringsToColor(string str, out Color c)
