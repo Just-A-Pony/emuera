@@ -591,7 +591,7 @@ namespace MinorShift.Emuera.GameData
 			{
 				//調整が面倒なので投げる
 				if ((length1 != MaxDataList[cdflag1Index]) || (length2 != MaxDataList[cdflag2Index]))
-					throw new CodeEE(Lang.UI.CodeEE.DoesNotMatchCdflagElements.Text, position);
+					throw new CodeEE(Lang.Error.DoesNotMatchCdflagElements.Text, position);
 			}
 			else if (cdflagNameLengthChanged && !changedCode.Contains(VariableCode.CDFLAG))
 			{
@@ -600,7 +600,7 @@ namespace MinorShift.Emuera.GameData
 				if (length1 * length2 > 1000000)
 				{
 					//調整が面倒なので投げる
-					throw new CodeEE(Lang.UI.CodeEE.TooManyCdflagElements.Text, position);
+					throw new CodeEE(Lang.Error.TooManyCdflagElements.Text, position);
 				}
 				CharacterIntArray2DLength[mainLengthIndex] = (((Int64)length1) << 32) + ((Int64)length2);
 			}
@@ -720,7 +720,7 @@ namespace MinorShift.Emuera.GameData
 						}
 						else
 						{
-							throw new CodeEE(string.Format(Lang.UI.CodeEE.DuplicateErdKey.Text,
+							throw new CodeEE(string.Format(Lang.Error.DuplicateErdKey.Text,
 								varname, nameArray[j], preDict[nameArray[j]].path, filepath));
 						}
 					}
@@ -728,7 +728,7 @@ namespace MinorShift.Emuera.GameData
 			}
 			// ここで発生しないと思うが一応書いておく
 			if (erdNameToIntDics.ContainsKey(varname))
-				throw new CodeEE(string.Format(Lang.UI.CodeEE.DuplicateVariableDefine.Text, varname), sc);
+				throw new CodeEE(string.Format(Lang.Error.DuplicateVariableDefine.Text, varname), sc);
 
 			var dict = new Dictionary<string, int>();
 			foreach(var pair in preDict)
@@ -764,14 +764,14 @@ namespace MinorShift.Emuera.GameData
 			if (string.IsNullOrEmpty(str))
 				return false;
 			if (dim == 1 && (!erdNameToIntDics.ContainsKey(varname) || !erdNameToIntDics[varname].ContainsKey(str)))
-				throw new CodeEE(string.Format(Lang.UI.CodeEE.NotDefinedErdKey.Text, varname, str));
+				throw new CodeEE(string.Format(Lang.Error.NotDefinedErdKey.Text, varname, str));
 			//CDFLAGの判定も割とガバガバなのでこれで良い（暴論）
 			if (dim == 2)
             {
 				if (!erdNameToIntDics.ContainsKey(varname + "@1") || !erdNameToIntDics[varname + "@1"].ContainsKey(str))
                 {
 					if (!erdNameToIntDics.ContainsKey(varname + "@2") || !erdNameToIntDics[varname + "@2"].ContainsKey(str))
-						throw new CodeEE(string.Format(Lang.UI.CodeEE.NotDefinedErdKey.Text, varname, str));
+						throw new CodeEE(string.Format(Lang.Error.NotDefinedErdKey.Text, varname, str));
 				}
 			}
 			if (dim == 3)
@@ -781,7 +781,7 @@ namespace MinorShift.Emuera.GameData
 					if (!erdNameToIntDics.ContainsKey(varname + "@2") || !erdNameToIntDics[varname + "@2"].ContainsKey(str))
                     {
 						if (!erdNameToIntDics.ContainsKey(varname + "@3") || !erdNameToIntDics[varname + "@3"].ContainsKey(str))
-							throw new CodeEE(string.Format(Lang.UI.CodeEE.NotDefinedErdKey.Text, varname, str));
+							throw new CodeEE(string.Format(Lang.Error.NotDefinedErdKey.Text, varname, str));
 					}
 				}
 			}
@@ -822,7 +822,7 @@ namespace MinorShift.Emuera.GameData
 		public int KeywordToInteger(VariableCode code, string key, int index)
 		{
 			if (string.IsNullOrEmpty(key))
-				throw new CodeEE(Lang.UI.CodeEE.KeywordsCannotBeEmpty.Text);
+				throw new CodeEE(Lang.Error.KeywordsCannotBeEmpty.Text);
 			#region EE_ERD
 			// Dictionary<string, int> dic = GetKeywordDictionary(out string errPos, code, index);
 			Dictionary<string, int> dic = GetKeywordDictionary(out string errPos, code, index, null);
@@ -830,9 +830,9 @@ namespace MinorShift.Emuera.GameData
 			if (dic.TryGetValue(key, out int ret))
                 return ret;
             if (errPos == null)
-				throw new CodeEE(string.Format(Lang.UI.CodeEE.CannotSpecifiedByString.Text, code.ToString()));
+				throw new CodeEE(string.Format(Lang.Error.CannotSpecifiedByString.Text, code.ToString()));
 			else
-				throw new CodeEE(string.Format(Lang.UI.CodeEE.NotDefinedKey.Text, errPos, key));
+				throw new CodeEE(string.Format(Lang.Error.NotDefinedKey.Text, errPos, key));
 		}
 
 		#region EE_ERD
@@ -982,9 +982,9 @@ namespace MinorShift.Emuera.GameData
 						errPos = "cdflag2.csv";
 					}
 					else if (index >= 0)
-						throw new CodeEE(string.Format(Lang.UI.CodeEE.CannotIndexSpecifiedByString.Text, code.ToString(), (index + 1).ToString()));
+						throw new CodeEE(string.Format(Lang.Error.CannotIndexSpecifiedByString.Text, code.ToString(), (index + 1).ToString()));
 					else
-						throw new CodeEE(Lang.UI.CodeEE.UseCdflagname.Text);
+						throw new CodeEE(Lang.Error.UseCdflagname.Text);
 					return ret;
 				}
 				case VariableCode.STR:
@@ -1112,12 +1112,12 @@ namespace MinorShift.Emuera.GameData
 			if (index < 0)
 				return ret;
 			if (ret == null)
-				throw new CodeEE(string.Format(Lang.UI.CodeEE.CannotSpecifiedByString.Text, code.ToString()));
+				throw new CodeEE(string.Format(Lang.Error.CannotSpecifiedByString.Text, code.ToString()));
 			if ((index != allowIndex))
 			{
 				if (allowIndex < 0)//GETNUM専用
-					throw new CodeEE(string.Format(Lang.UI.CodeEE.CannotSpecifiedByString.Text, code.ToString()));
-				throw new CodeEE(string.Format(Lang.UI.CodeEE.CannotIndexSpecifiedByString.Text, code.ToString(), (index + 1).ToString()));
+					throw new CodeEE(string.Format(Lang.Error.CannotSpecifiedByString.Text, code.ToString()));
+				throw new CodeEE(string.Format(Lang.Error.CannotIndexSpecifiedByString.Text, code.ToString(), (index + 1).ToString()));
 			}
 			return ret;
 		}
@@ -1705,7 +1705,7 @@ namespace MinorShift.Emuera.GameData
 				case CharacterStrData.CSTR:
 					return cstrSize;
 				default:
-					throw new CodeEE(Lang.UI.CodeEE.NotExistKey.Text);
+					throw new CodeEE(Lang.Error.NotExistKey.Text);
 			}
 		}
 
@@ -1736,7 +1736,7 @@ namespace MinorShift.Emuera.GameData
 				case CharacterIntData.JUEL:
 					return arraySize[(int)(VariableCode.__LOWERCASE__ & VariableCode.JUEL)];
 				default:
-					throw new CodeEE("Lang.UI.CodeEE.NotExistKey.Text");
+					throw new CodeEE("Lang.Error.NotExistKey.Text");
 			}
 		}
 
