@@ -6,6 +6,8 @@ using MinorShift.Emuera.Sub;
 using MinorShift._Library;
 using MinorShift.Emuera.GameData.Function;
 using System.Collections.Generic;
+using EvilMask.Emuera;
+using tree = EvilMask.Emuera.Lang.UI.CodeEE;
 
 namespace MinorShift.Emuera.GameData
 {
@@ -90,7 +92,7 @@ namespace MinorShift.Emuera.GameData
                     {
                         operand = ExpressionParser.ReduceIntegerTerm(wc, TermEndWith.EoL);
                         if (!wc.EOL)
-                            throw new CodeEE("三項演算子\\@の第一オペランドが異常です");
+                            throw new CodeEE(tree.AbnormalFirstOperand.Text);
                     }
                     else
                         operand = new SingleTerm(0);
@@ -108,9 +110,9 @@ namespace MinorShift.Emuera.GameData
                 if (operand == null)
                 {
                     if (SWT is CurlyBraceSubWord)
-                        throw new CodeEE("{}の中に式が存在しません");
+                        throw new CodeEE(tree.EmptyBrace.Text);
                     else
-                        throw new CodeEE("%%の中に式が存在しません");
+                        throw new CodeEE(tree.EmptyPer.Text);
                 }
                 IOperandTerm second = null;
 				SingleTerm third = null;
@@ -124,25 +126,25 @@ namespace MinorShift.Emuera.GameData
                     {
                         IdentifierWord id = wc.Current as IdentifierWord;
                         if (id == null)
-                            throw new CodeEE("','の後にRIGHT又はLEFTがありません");
+                            throw new CodeEE(tree.NotSpecifiedLR.Text);
                         if (string.Equals(id.Code, "LEFT", Config.SCVariable))//標準RIGHT
                             third = new SingleTerm(1);
                         else if (!string.Equals(id.Code, "RIGHT", Config.SCVariable))
-                            throw new CodeEE("','の後にRIGHT又はLEFT以外の単語があります");
+                            throw new CodeEE(tree.OtherThanLR.Text);
                         wc.ShiftNext();
                     }
                     if (!wc.EOL)
-                        throw new CodeEE("RIGHT又はLEFTの後に余分な文字があります");
+                        throw new CodeEE(tree.ExtraCharacterLR.Text);
                 }
 				if (SWT is CurlyBraceSubWord)
 				{
 					if (operand.GetOperandType() != typeof(Int64))
-						throw new CodeEE("{}の中の式が数式ではありません");
+						throw new CodeEE(tree.IsNotNumericBrace.Text);
 					termArray[i] = new FunctionMethodTerm(formatCurlyBrace, new IOperandTerm[] { operand, second, third });
 					continue;
 				}
 				if (operand.GetOperandType() != typeof(string))
-					throw new CodeEE("%%の中の式が文字列式ではありません");
+					throw new CodeEE(tree.IsNotStringPer.Text);
 				termArray[i] = new FunctionMethodTerm(formatPercent, new IOperandTerm[] { operand, second, third });
 			}
             ret.terms = termArray;

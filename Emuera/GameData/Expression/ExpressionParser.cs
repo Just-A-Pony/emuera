@@ -4,6 +4,7 @@ using MinorShift.Emuera.Sub;
 using MinorShift.Emuera.GameData.Variable;
 using MinorShift.Emuera.GameData.Function;
 using System.Windows.Forms;
+using tree = EvilMask.Emuera.Lang.UI.CodeEE;
 
 namespace MinorShift.Emuera.GameData.Expression
 {
@@ -72,9 +73,9 @@ namespace MinorShift.Emuera.GameData.Expression
 				{
 					case '\0':
                         if (endWith == ArgsEndWith.RightBracket)
-                            throw new CodeEE("'['に対応する']'が見つかりません");
+                            throw new CodeEE(tree.NotCloseSBrackets.Text);
 						if (endWith == ArgsEndWith.RightParenthesis)
-							throw new CodeEE("'('に対応する')'が見つかりません");
+							throw new CodeEE(tree.NotCloseBrackets.Text);
 						goto end;
 					case ')':
 						if (endWith == ArgsEndWith.RightParenthesis)
@@ -82,14 +83,14 @@ namespace MinorShift.Emuera.GameData.Expression
 							wc.ShiftNext();
 							goto end;
 						}
-						throw new CodeEE("構文解析中に予期しない')'を発見しました");
+						throw new CodeEE(tree.UnexpectedBrackets.Text);
                     case ']':
                         if (endWith == ArgsEndWith.RightBracket)
                         {
                             wc.ShiftNext();
                             goto end;
                         }
-                        throw new CodeEE("構文解析中に予期しない']'を発見しました");
+                        throw new CodeEE(tree.UnexpectedSBrackets.Text);
 				}
 				if(!isDefine)
 					terms.Add(ReduceExpressionTerm(wc, termEndWith));

@@ -9,6 +9,7 @@ using Microsoft.VisualBasic;
 using MinorShift.Emuera.GameProc.Function;
 using MinorShift.Emuera.GameView;
 using System.Windows.Forms;
+using tree = EvilMask.Emuera.Lang.UI.CodeEE;
 
 namespace MinorShift.Emuera.GameData.Expression
 {
@@ -36,7 +37,7 @@ namespace MinorShift.Emuera.GameData.Expression
 		public void ForceKana(Int64 flag)
 		{
 			if (flag < 0 || flag > 3)
-				throw new CodeEE("命令FORCEKANAの引数が指定可能な範囲(0～3)を超えています");
+				throw new CodeEE(tree.OoRForcekanaArg.Text);
 			forceKatakana = (flag == 1) ? true : false;
 			forceHiragana = (flag > 1) ? true : false;
 			halftoFull = (flag == 3) ? true : false;
@@ -121,11 +122,11 @@ namespace MinorShift.Emuera.GameData.Expression
 		public string CreateBar(Int64 var, Int64 max, Int64 length)
 		{
 			if (max <= 0)
-				throw new CodeEE("BARの最大値が正の値ではありません");
+				throw new CodeEE(tree.MaxBarNotPositive.Text);
 			if (length <= 0)
-				throw new CodeEE("BARの長さが正の値ではありません");
+				throw new CodeEE(tree.BarNotPositive.Text);
 			if (length >= 100)//暴走を防ぐため。
-				throw new CodeEE("BARが長すぎます");
+				throw new CodeEE(tree.TooLongBar.Text);
 			StringBuilder builder = new StringBuilder();
 			builder.Append('[');
 			int count;
