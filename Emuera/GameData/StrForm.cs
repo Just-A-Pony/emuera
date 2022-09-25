@@ -7,7 +7,7 @@ using MinorShift._Library;
 using MinorShift.Emuera.GameData.Function;
 using System.Collections.Generic;
 using EvilMask.Emuera;
-using tree = EvilMask.Emuera.Lang.UI.CodeEE;
+using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.GameData
 {
@@ -92,7 +92,7 @@ namespace MinorShift.Emuera.GameData
                     {
                         operand = ExpressionParser.ReduceIntegerTerm(wc, TermEndWith.EoL);
                         if (!wc.EOL)
-                            throw new CodeEE(tree.AbnormalFirstOperand.Text);
+                            throw new CodeEE(trerror.AbnormalFirstOperand.Text);
                     }
                     else
                         operand = new SingleTerm(0);
@@ -110,9 +110,9 @@ namespace MinorShift.Emuera.GameData
                 if (operand == null)
                 {
                     if (SWT is CurlyBraceSubWord)
-                        throw new CodeEE(tree.EmptyBrace.Text);
+                        throw new CodeEE(trerror.EmptyBrace.Text);
                     else
-                        throw new CodeEE(tree.EmptyPer.Text);
+                        throw new CodeEE(trerror.EmptyPer.Text);
                 }
                 IOperandTerm second = null;
 				SingleTerm third = null;
@@ -126,25 +126,25 @@ namespace MinorShift.Emuera.GameData
                     {
                         IdentifierWord id = wc.Current as IdentifierWord;
                         if (id == null)
-                            throw new CodeEE(tree.NotSpecifiedLR.Text);
+                            throw new CodeEE(trerror.NotSpecifiedLR.Text);
                         if (string.Equals(id.Code, "LEFT", Config.SCVariable))//標準RIGHT
                             third = new SingleTerm(1);
                         else if (!string.Equals(id.Code, "RIGHT", Config.SCVariable))
-                            throw new CodeEE(tree.OtherThanLR.Text);
+                            throw new CodeEE(trerror.OtherThanLR.Text);
                         wc.ShiftNext();
                     }
                     if (!wc.EOL)
-                        throw new CodeEE(tree.ExtraCharacterLR.Text);
+                        throw new CodeEE(trerror.ExtraCharacterLR.Text);
                 }
 				if (SWT is CurlyBraceSubWord)
 				{
 					if (operand.GetOperandType() != typeof(Int64))
-						throw new CodeEE(tree.IsNotNumericBrace.Text);
+						throw new CodeEE(trerror.IsNotNumericBrace.Text);
 					termArray[i] = new FunctionMethodTerm(formatCurlyBrace, new IOperandTerm[] { operand, second, third });
 					continue;
 				}
 				if (operand.GetOperandType() != typeof(string))
-					throw new CodeEE(tree.IsNotStringPer.Text);
+					throw new CodeEE(trerror.IsNotStringPer.Text);
 				termArray[i] = new FunctionMethodTerm(formatPercent, new IOperandTerm[] { operand, second, third });
 			}
             ret.terms = termArray;
