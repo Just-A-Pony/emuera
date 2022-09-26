@@ -31,9 +31,9 @@ namespace MinorShift.Emuera.GameData.Function
 		protected sealed class _ArgType
 		{
 			public _ArgType(Type t, ArgRefType r)
-            {
+			{
 				Type = t; Ref = r;
-            }
+			}
 			public Type Type { get; set; }
 			public ArgRefType Ref { get; set; } = ArgRefType.None;
 
@@ -121,7 +121,7 @@ namespace MinorShift.Emuera.GameData.Function
 								break;
 							}
 						}
-						else if (rule.Type != typeof(void) && rule.Type != arguments[i].GetOperandType())
+						else if (rule.Ref == ArgRefType.None && rule.Type != typeof(void) && rule.Type != arguments[i].GetOperandType())
 						{
 							// 引数の型が違う
 							errMsg[idx] = rule.Type == typeof(string) ? string.Format(Lang.Error.ArgIsNotStr.Text, name, i + 1)
