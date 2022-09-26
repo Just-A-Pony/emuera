@@ -413,21 +413,6 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString DivideByZero { get; } = new TranslatableString("0による除算が行なわれました");
             [Managed] public static TranslatableString XmlGetError { get; } = new TranslatableString("XML_GET関数:\"{0}\"の解析エラー:{1}");
             [Managed] public static TranslatableString XmlGetPathError { get; } = new TranslatableString("XML_GET関数:XPath\"{0}\"の解析エラー:{1}");
-            //[Managed] public static TranslatableString Require1Arg { get; } = new TranslatableString("{0}関数:少なくとも1の引数が必要です");
-            [Managed] public static TranslatableString TooManyFuncArg { get; } = new TranslatableString("{0}関数:引数が多すぎます");
-            //[Managed] public static TranslatableString NotStrFirstArg { get; } = new TranslatableString("{0}関数:1番目の引数が文字列ではありません");
-            //[Managed] public static TranslatableString NotIntSecondArg { get; } = new TranslatableString("{0}関数:2番目の引数が整数ではありません");
-            [Managed] public static TranslatableString RequireFuncArg { get; } = new TranslatableString("{0}関数:少なくとも{1}の引数が必要です");
-            //[Managed] public static TranslatableString NotStrSecondArg { get; } = new TranslatableString("{0}関数:2番目の引数が文字列ではありません");
-            [Managed] public static TranslatableString NotMatchFuncArg { get; } = new TranslatableString("{0}関数:{1}番目の引数が一次元文字列配列変数でも整数でもありません");
-            //[Managed] public static TranslatableString NotIntFourthArg { get; } = new TranslatableString("{0}関数:4番目の引数が整数ではありません");
-            [Managed] public static TranslatableString CanNotOmitFuncArg { get; } = new TranslatableString("{0}関数:{1}番目の引数は省略できません");
-            [Managed] public static TranslatableString Not1DStrFuncArg { get; } = new TranslatableString("{0}関数:{1}番目の引数が一次元文字列配列変数ではありません");
-            [Managed] public static TranslatableString NotIntFuncArg { get; } = new TranslatableString("{0}関数:{1}番目の引数が整数ではありません");
-            [Managed] public static TranslatableString NotStrFuncArg { get; } = new TranslatableString("{0}関数:{1}番目の引数が文字列ではありません");
-            [Managed] public static TranslatableString IsNotVar { get; } = new TranslatableString("\"{0}\"が変数ではありません");
-            [Managed] public static TranslatableString IsNotInt { get; } = new TranslatableString("\"{0}\"が整数型ではありません");
-            [Managed] public static TranslatableString IsNotStr { get; } = new TranslatableString("\"{0}\"が文字列型ではありません");
             [Managed] public static TranslatableString FirstArg { get; } = new TranslatableString("1番目の引数");
             [Managed] public static TranslatableString NotVarFunc { get; } = new TranslatableString("{0}関数:{1}が変数ではありません");
             [Managed] public static TranslatableString IsCharaVarFunc { get; } = new TranslatableString("{0}関数:{1}がキャラクタ変数です");
@@ -439,7 +424,6 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString InvalidRegexArg { get; } = new TranslatableString("第{1}引数が正規表現として不正です：{0}");
             [Managed] public static TranslatableString XmlSetError { get; } = new TranslatableString("XML_SET関数:\"{0}\"の解析エラー:{1}");
             [Managed] public static TranslatableString XmlSetPathError { get; } = new TranslatableString("XML_SET関数:XPath\"{0}\"の解析エラー:{1}");
-            [Managed] public static TranslatableString TooManyFuncArg1 { get; } = new TranslatableString("{0}関数:1の引数が多すぎます");
             [Managed] public static TranslatableString ReturnTypeDefferentOrNotImpelemnt { get; } = new TranslatableString("戻り値の型が違う or 未実装");
             [Managed] public static TranslatableString NotImplement { get; } = new TranslatableString("未実装？");
             [Managed] public static TranslatableString EmptyRefFunc { get; } = new TranslatableString("何も参照していない関数参照\"{0}\"を呼び出しました");
@@ -505,6 +489,28 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString MacroNameAlreadyUsedMacro { get; } = new TranslatableString("マクロ名\"{0}\"はマクロに使用されています");
             [Managed] public static TranslatableString MacroNameAlreadyUsedGlobalVariable { get; } = new TranslatableString("マクロ名\"{0}\"はユーザー定義の広域変数名に使用されています");
             [Managed] public static TranslatableString MacroNameAlreadyUsedRefFunction { get; } = new TranslatableString("マクロ名\"{0}\"は参照型関数の名称に使用されています");
+
+
+            [Managed] public static TranslatableString ArgCanNotBeNull { get; } = new TranslatableString("{0}関数: 第{1}引数は省略できません");
+            [Managed] public static TranslatableString ArgIsNotStr { get; } = new TranslatableString("{0}関数: 第{1}引数は文字列ではありません");
+            [Managed] public static TranslatableString ArgIsNotInt { get; } = new TranslatableString("{0}関数: 第{1}引数は整数ではありません");
+            [Managed] public static TranslatableString ArgIsNotVar { get; } = new TranslatableString("{0}関数: 第{1}引数は変数ではありません");
+            [Managed] public static TranslatableString ArgIsNotStrVar { get; } = new TranslatableString("{0}関数: 第{1}引数は文字列型変数ではありません");
+            [Managed] public static TranslatableString ArgIsNotIntVar { get; } = new TranslatableString("{0}関数: 第{1}引数は整数型変数ではありません");
+            [Managed] public static TranslatableString ArgIsNotNDArray { get; } = new TranslatableString("{0}関数: 第{1}引数は{2}次元配列変数ではありません");
+            [Managed] public static TranslatableString ArgIsNotNDStrArray { get; } = new TranslatableString("{0}関数: 第{1}引数は文字列型{2}次元配列変数ではありません");
+            [Managed] public static TranslatableString ArgIsNotNDIntArray { get; } = new TranslatableString("{0}関数: 第{1}引数は整数型{2}次元配列変数ではありません");
+            [Managed] public static TranslatableString TooManyArgs { get; } = new TranslatableString("{0}関数: 引数が多すぎます");
+            [Managed] public static TranslatableString NotEnoughArgs { get; } = new TranslatableString("{0}関数: 少なくとも{1}つの引数が必要です");
+            [Managed] public static TranslatableString NotValidArgs { get; } = new TranslatableString("{0}関数: 引数がどの書式にも合わせていません | {1}");
+            [Managed] public static TranslatableString NotValidArgsReason { get; } = new TranslatableString("書式{0}: {1}");
+
+            [Managed] public static TranslatableString ErrArgsCount { get; } = new TranslatableString("{0}関数: 引数の数が間違っています");
+
+            [Managed] public static TranslatableString IsNotVar { get; } = new TranslatableString("\"{0}\"が変数ではありません");
+            [Managed] public static TranslatableString IsNotInt { get; } = new TranslatableString("\"{0}\"が整数型ではありません");
+            [Managed] public static TranslatableString IsNotStr { get; } = new TranslatableString("\"{0}\"が文字列型ではありません");
+
         }
 
         static public void LoadLanguageFile()

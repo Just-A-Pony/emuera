@@ -29,20 +29,10 @@ namespace MinorShift.Emuera.GameData.Function
 			public HtmlStringLenMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int}, OmitStart = 1 }
+				};
 				CanRestructure = true;
-			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 1)
-					return string.Format(trerror.RequireFuncArg.Text, name, "1");
-				if (arguments.Length > 2)
-					return string.Format(trerror.TooManyFuncArg.Text, name);
-				if (arguments[0].GetOperandType() != typeof(string))
-					return string.Format(trerror.NotStrFuncArg.Text, name, "1");
-				if (arguments.Length ==2 && arguments[1].GetOperandType() != typeof(Int64))
-					return string.Format(trerror.NotIntFuncArg.Text, name, "2");
-				return null;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
@@ -62,33 +52,21 @@ namespace MinorShift.Emuera.GameData.Function
 			public XmlGetMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.String, ArgType.Int, ArgType.Int}, OmitStart = 2 },
+					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.String, ArgType.RefString1D, ArgType.Int}, OmitStart = 3 },
+				};
 				CanRestructure = false;
 			}
 			public XmlGetMethod(bool byname) : this()
 			{
 				byName = byname;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Int, ArgType.Int}, OmitStart = 2 },
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.RefString1D, ArgType.Int}, OmitStart = 3 },
+				};
 			}
 			private bool byName = false;
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 2)
-					return string.Format(trerror.RequireFuncArg.Text, name, "2");
-				if (arguments.Length > 4)
-					return string.Format(trerror.TooManyFuncArg.Text, name);
-				if (byName && arguments[0].GetOperandType() != typeof(string))
-					return string.Format(trerror.NotStrFuncArg.Text, name, "1");
-				if (arguments[1].GetOperandType() != typeof(string))
-					return string.Format(trerror.NotStrFuncArg.Text, name, "2");
-				if (arguments.Length >= 3)
-				{
-					if (arguments[2].GetOperandType() != typeof(Int64) && (!(arguments[2] is VariableTerm varTerm) || varTerm.Identifier.IsCalc || !varTerm.Identifier.IsArray1D || !varTerm.Identifier.IsString || varTerm.Identifier.IsConst))
-						return string.Format(trerror.NotMatchFuncArg.Text, name, "3");
-				}
-				if (arguments.Length == 4 && arguments[3].GetOperandType() != typeof(Int64))
-					return string.Format(trerror.NotIntFuncArg.Text, name, "4");
-				return null;
-			}
 			private void OutPutNode(XmlNode node, string[] array, int i, Int64 style)
 			{
 				switch (style)
@@ -186,26 +164,11 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				ReturnType = typeof(Int64);
 				CanRestructure = false;
+				argumentTypeArrayEx = new ArgTypeList[] { 
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D }, OmitStart = 1 },
+				};
 				this.type = type;
 				this.action = act;
-			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				//通常２つ、１つ省略可能で１～２の引数が必要。
-				if (arguments.Length < 1)
-					return string.Format(trerror.RequireFuncArg.Text, name, "1");
-				if (arguments.Length > 2)
-					return string.Format(trerror.TooManyFuncArg.Text, name);
-				if (arguments[0] == null)
-					return string.Format(trerror.CanNotOmitFuncArg.Text, name, "1");
-				if (arguments[0].GetOperandType() != typeof(string))
-					return string.Format(trerror.NotStrFuncArg.Text, name, "1");
-				if (arguments.Length == 2)
-				{
-					if (!(arguments[1] is VariableTerm varTerm) || varTerm.Identifier.IsCalc || !varTerm.Identifier.IsArray1D || !varTerm.Identifier.IsString || varTerm.Identifier.IsConst)
-						return string.Format(trerror.Not1DStrFuncArg.Text, name, "2");
-				}
-				return null;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
@@ -258,26 +221,10 @@ namespace MinorShift.Emuera.GameData.Function
 			public EnumFilesMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] { 
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Int, ArgType.RefString1D }, OmitStart = 1 },
+				};
 				CanRestructure = false;
-			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 1)
-					return string.Format(trerror.RequireFuncArg.Text, name, "1");
-				if (arguments.Length > 3)
-					return string.Format(trerror.TooManyFuncArg.Text, name);
-				for (int i = 0; i < arguments.Length; i++)
-				{
-					if (i == 2)
-					{
-						if (arguments[2].GetOperandType() != typeof(Int64))
-							return string.Format(trerror.NotIntFuncArg.Text, name, 3);
-					}
-					else if (arguments[i].GetOperandType() != typeof(string))
-						return string.Format(trerror.NotStrFuncArg.Text, name, i + 1);
-				}
-				return null;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
@@ -296,8 +243,13 @@ namespace MinorShift.Emuera.GameData.Function
 				{
 					return -1;
 				}
-				var ret = Math.Min(files.Length, GlobalStatic.VEvaluator.RESULTS_ARRAY.Length);
-				Array.Copy(files, 0, GlobalStatic.VEvaluator.RESULTS_ARRAY, 0, ret);
+				string[] output;
+				if (arguments.Length == 4)
+					output = (arguments[3] as VariableTerm).Identifier.GetArray() as string[];
+				else
+					output = exm.VEvaluator.RESULTS_ARRAY;
+				var ret = Math.Min(files.Length, output.Length);
+				Array.Copy(files, output, ret);
 				return ret;
 			}
 		}
@@ -388,23 +340,11 @@ namespace MinorShift.Emuera.GameData.Function
 			public ArrayMultiSortExMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D, ArgType.Int }, OmitStart = 2 },
+					new ArgTypeList{ ArgTypes = { ArgType.RefInt, ArgType.RefString1D, ArgType.Int }, OmitStart = 2 },
+				};
 				CanRestructure = false;
-			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 2)
-					return string.Format(trerror.RequireFuncArg.Text, name, "2");
-				if (arguments.Length > 3)
-					return string.Format(trerror.TooManyFuncArg.Text, name);
-				return string.Format(trerror.TooManyFuncArg.Text, name);
-				if (arguments[0].GetOperandType() != typeof(string))
-					return CheckVariableTerm(arguments[0], name, null);
-				if (!(arguments[1] is VariableTerm varTerm) || varTerm.Identifier.IsCalc || !varTerm.Identifier.IsArray1D || !varTerm.Identifier.IsString || varTerm.Identifier.IsConst)
-					return string.Format(trerror.Not1DStrFuncArg.Text, name, "2");
-				if (arguments.Length == 3 && arguments[2].GetOperandType() != typeof(Int64))
-					return string.Format(trerror.NotIntFuncArg.Text, name, "3");
-				return null;
 			}
 			private string CheckVariableTerm(IOperandTerm arg, string name, string v)
 			{
@@ -556,18 +496,10 @@ namespace MinorShift.Emuera.GameData.Function
 			public SetVarMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] { 
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Any } },
+				};
 				CanRestructure = false;
-			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 2)
-					return string.Format(trerror.RequireFuncArg.Text, name, "2");
-				if (arguments.Length > 2)
-					return string.Format(trerror.TooManyFuncArg.Text, name);
-				if (arguments[0].GetOperandType() != typeof(string))
-					return string.Format(trerror.NotStrFuncArg.Text, name, "1");
-				return null;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
@@ -602,23 +534,10 @@ namespace MinorShift.Emuera.GameData.Function
 			public VarSetExMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Any, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+				};
 				CanRestructure = false;
-			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 1)
-					return string.Format(trerror.RequireFuncArg.Text, name, "2");
-				if (arguments.Length > 5)
-					return string.Format(trerror.TooManyFuncArg.Text, name);
-				if (arguments[0].GetOperandType() != typeof(string))
-					return string.Format(trerror.NotStrFuncArg.Text, name, "1");
-				for (int i = 2; i < arguments.Length; i++)
-				{
-					if (arguments[i].GetOperandType() != typeof(Int64))
-						return string.Format(trerror.NotIntFuncArg.Text, name, i + 1);
-				}
-				return null;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
@@ -740,35 +659,14 @@ namespace MinorShift.Emuera.GameData.Function
 			public RegexpMatchMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Int }, OmitStart = 2 },
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.RefInt, ArgType.RefString1D } },
+				};
 				CanRestructure = false;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 2)
-					return string.Format(trerror.RequireFuncArg.Text, name, "2");
-				if (arguments.Length > 4)
-					return string.Format(trerror.TooManyFuncArg.Text, name);
-				if (arguments[0].GetOperandType() != typeof(string))
-					return string.Format(trerror.NotStrFuncArg.Text, name, "1");
-				if (arguments[1].GetOperandType() != typeof(string))
-					return string.Format(trerror.NotStrFuncArg.Text, name, "2");
-				if (arguments.Length == 3)
-                {
-					if (arguments[2].GetOperandType() != typeof(Int64))
-						return string.Format(trerror.NotIntFuncArg.Text, name, "3");
-				}
-				if (arguments.Length == 4)
-				{
-					if (!(arguments[2] is VariableTerm varTerm) || varTerm.Identifier.IsCalc || !varTerm.Identifier.IsArray1D || !varTerm.Identifier.IsInteger || varTerm.Identifier.IsConst)
-						return string.Format(trerror.NotIntFuncArg.Text, name, "3");
-					if (!(arguments[3] is VariableTerm varTerm2) || varTerm2.Identifier.IsCalc || !varTerm2.Identifier.IsArray1D || !varTerm2.Identifier.IsString || varTerm2.Identifier.IsConst)
-						return string.Format(trerror.Not1DFuncArg.Text, name, "3");
-				}
-				return null;
-			}
 			void Output(MatchCollection matches, Regex reg, string[] values)
-            {
+			{
 				var idx = 0;
 				foreach (Match match in matches)
 					foreach (var name in reg.GetGroupNames())
@@ -776,8 +674,8 @@ namespace MinorShift.Emuera.GameData.Function
 						if (idx >= values.Length) return;
 						values[idx] = match.Groups[name].Value;
 						idx++;
-                    }
-            }
+					}
+			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				string baseString = arguments[0].GetStrValue(exm);
@@ -811,23 +709,18 @@ namespace MinorShift.Emuera.GameData.Function
 			public XmlDocumentMethod(Operation type)
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				if (op == Operation.Create)
+					argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.String } },
+					};
+				else
+					argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.Any } },
+					};
 				CanRestructure = false;
 				op = type;
 			}
 			private Operation op;
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < (op == Operation.Create ? 2 : 1))
-					return string.Format(trerror.RequireFuncArg.Text, name, (op == Operation.Create ? 2 : 1));
-				if (arguments.Length > (op == Operation.Create ? 2 : 1))
-					return string.Format(trerror.TooManyFuncArg.Text, name);
-				//if (arguments[0].GetOperandType() != typeof(Int64))
-				//	return string.Format("{0}関数:1番目の引数が整数ではありません", name);
-				if (op == Operation.Create && arguments[1].GetOperandType() != typeof(string))
-					return string.Format(trerror.NotStrFuncArg.Text, name, "2");
-				return null;
-			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				string idx = arguments[0].GetOperandType() == typeof(string) ? arguments[0].GetStrValue(exm) : arguments[0].GetIntValue(exm).ToString();
@@ -867,41 +760,20 @@ namespace MinorShift.Emuera.GameData.Function
 			public XmlSetMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
+					new ArgTypeList{ ArgTypes = { ArgType.RefString, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
+				};
 				CanRestructure = false;
 			}
 			public XmlSetMethod(bool byname) : this()
 			{
 				byName = byname;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
+				};
 			}
 			private bool byName = false;
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 3)
-					return string.Format(trerror.RequireFuncArg.Text, name, "3");
-				if (arguments.Length > 5)
-					return string.Format(trerror.TooManyFuncArg.Text, name);
-				if (!byName && arguments[0].GetOperandType() != typeof(Int64)
-					&& (!(arguments[0] is VariableTerm varTerm)
-					|| varTerm.Identifier.IsCalc
-					|| !varTerm.Identifier.IsArray1D
-					|| !varTerm.Identifier.IsString
-					|| varTerm.Identifier.IsConst))
-					return string.Format(trerror.NotMatchFuncArg.Text, name, "1");
-				if (byName && arguments[0].GetOperandType() != typeof(string))
-					return string.Format(trerror.NotStrFuncArg.Text, name, "1");
-				for (int i = 1; i < arguments.Length; i++)
-				{
-					if (i == 1 || i == 2)
-					{
-						if (arguments[i].GetOperandType() != typeof(string))
-							return string.Format(trerror.NotStrFuncArg.Text, name, i + 1);
-					}
-					else if (arguments[i].GetOperandType() != typeof(Int64))
-						return string.Format(trerror.NotIntFuncArg.Text, name, i + 1);
-				}
-				return null;
-			}
 			private void SetNode(XmlNode node, string val, Int64 style)
 			{
 				switch (style)
@@ -972,16 +844,10 @@ namespace MinorShift.Emuera.GameData.Function
 			public XmlToStrMethod()
 			{
 				ReturnType = typeof(string);
-				argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Any } },
+				};
 				CanRestructure = false;
-			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 1)
-					return string.Format(trerror.TooManyFuncArg1.Text, name);
-				if (arguments.Length > 1)
-					return string.Format(trerror.TooManyFuncArg.Text, name);
-				return null;
 			}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
