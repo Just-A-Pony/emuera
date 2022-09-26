@@ -57,7 +57,7 @@ namespace MinorShift.Emuera.GameData.Function
 		protected sealed class ArgTypeList
 		{
 			public List<_ArgType> ArgTypes { get; set; } = new List<_ArgType>();
-			public int OmitStart { get; set; }
+			public int OmitStart { get; set; } = -1;
 		}
 		protected ArgTypeList[] argumentTypeArrayEx = null;
 
