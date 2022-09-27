@@ -518,9 +518,9 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString FrameTimeIsNegative { get; } = new TranslatableString("フレーム表示時間には正の値のみ指定できます:{0}");
             [Managed] public static TranslatableString FailedAddSpriteFrame { get; } = new TranslatableString("アニメーションスプライトのフレームの追加に失敗しました:{0}");
             [Managed] public static TranslatableString InvalidConfigName { get; } = new TranslatableString("文字列\"{0}\"は適切なコンフィグ名ではありません");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            [Managed] public static TranslatableString NotAllowGetConfigValue { get; } = new TranslatableString("コンフィグ文字列\"{0}\"の値の取得は許可されていません");
+            [Managed] public static TranslatableString UseArgVarInHasNotArgFunc { get; } = new TranslatableString("関数宣言に引数変数\"{0}\"が使われていない関数中で\"{0}\"が使われています(関数の引数以外の用途に使うことは推奨されません。代わりに#DIMの使用を検討してください)");
+            [Managed] public static TranslatableString UseArgVarInSystemFunc { get; } = new TranslatableString("システム関数\"{0}\"中で\"{1}\"が使われています(関数の引数以外の用途に使うことは推奨されません。代わりに#DIMの使用を検討してください)");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
@@ -610,6 +610,15 @@ namespace EvilMask.Emuera
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+
+        }
+        [Managed]
+        public sealed class KeyMacro
+        {
+            public static string Text { get { return trClass[typeof(KeyMacro)].Text; } }
+            [Managed] public static TranslatableString SetMacroGroup { get; } = new TranslatableString("マクログループ{0}に設定");
+            [Managed] public static TranslatableString MacroKeyF { get; } = new TranslatableString("マクロキーF{0}:");
+            [Managed] public static TranslatableString GMacroKeyF { get; } = new TranslatableString("G{0}:マクロキーF{1}:");
 
         }
 

@@ -440,7 +440,7 @@ namespace MinorShift.Emuera
 			AConfigItem item = ConfigData.Instance.GetItem(text);
 			if(item == null)
 			{
-				errMes = string.Format(trerror)"文字列\"" + text + "\"は適切なコンフィグ名ではありません";
+				errMes = string.Format(trerror.InvalidConfigName.Text, text);
 				return null;
 			}
 			SingleTerm term;
@@ -504,7 +504,7 @@ namespace MinorShift.Emuera
 					break;
 				default:
 				{
-					errMes = "コンフィグ文字列\"" + text + "\"の値の取得は許可されていません";
+						errMes = string.Format(trerror.NotAllowGetConfigValue.Text, text);
 					return null;
 				}
 			}
