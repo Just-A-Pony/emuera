@@ -135,7 +135,7 @@ namespace MinorShift.Emuera.GameData.Function
 				else if (arguments.Length > list.ArgTypes.Count)
 				{
 					// 引数が多すぎる
-					errMsg[idx] = string.Format(Lang.Error.TooManyArgs.Text, name);
+					errMsg[idx] = string.Format(Lang.Error.TooManyFuncArgs.Text, name);
 					continue;
 				}
 				else

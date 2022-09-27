@@ -830,7 +830,7 @@ namespace MinorShift.Emuera.GameData
 			if (dic.TryGetValue(key, out int ret))
                 return ret;
             if (errPos == null)
-				throw new CodeEE(string.Format(Lang.Error.CannotSpecifiedByString.Text, code.ToString()));
+				throw new CodeEE(string.Format(Lang.Error.CanNotSpecifiedByString.Text, code.ToString()));
 			else
 				throw new CodeEE(string.Format(Lang.Error.NotDefinedKey.Text, errPos, key));
 		}
@@ -1112,11 +1112,11 @@ namespace MinorShift.Emuera.GameData
 			if (index < 0)
 				return ret;
 			if (ret == null)
-				throw new CodeEE(string.Format(Lang.Error.CannotSpecifiedByString.Text, code.ToString()));
+				throw new CodeEE(string.Format(Lang.Error.CanNotSpecifiedByString.Text, code.ToString()));
 			if ((index != allowIndex))
 			{
 				if (allowIndex < 0)//GETNUM専用
-					throw new CodeEE(string.Format(Lang.Error.CannotSpecifiedByString.Text, code.ToString()));
+					throw new CodeEE(string.Format(Lang.Error.CanNotSpecifiedByString.Text, code.ToString()));
 				throw new CodeEE(string.Format(Lang.Error.CannotIndexSpecifiedByString.Text, code.ToString(), (index + 1).ToString()));
 			}
 			return ret;
