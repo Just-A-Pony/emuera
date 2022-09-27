@@ -145,7 +145,7 @@ namespace EvilMask.Emuera
                     public sealed class TextEditorCommandline
                     {
                         public static string Text { get { return trClass[typeof(TextEditorCommandline)].Text; } }
-                        [Managed] public static TranslatableString UserSetting { get; } = new TranslatableString("選択");
+                        [Managed] public static TranslatableString UserSetting { get; } = new TranslatableString("ユーザー設定");
                     }
                 }
 
@@ -422,8 +422,8 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString SetStrToInt { get; } = new TranslatableString("文字列型でない変数\"{0}\"に文字列型を代入しようとしました");
             [Managed] public static TranslatableString SetIntToStr { get; } = new TranslatableString("整数型でない変数\"{0}\"に整数値を代入しようとしました");
             [Managed] public static TranslatableString InvalidRegexArg { get; } = new TranslatableString("第{1}引数が正規表現として不正です：{0}");
-            [Managed] public static TranslatableString XmlSetError { get; } = new TranslatableString("XML_SET関数:\"{0}\"の解析エラー:{1}");
-            [Managed] public static TranslatableString XmlSetPathError { get; } = new TranslatableString("XML_SET関数:XPath\"{0}\"の解析エラー:{1}");
+            [Managed] public static TranslatableString XmlParseError { get; } = new TranslatableString("{0}関数:\"{1}\"の解析エラー:{2}");
+            [Managed] public static TranslatableString XmlXPathParseError { get; } = new TranslatableString("{0}関数:XPath\"{1}\"の解析エラー:{2}");
             [Managed] public static TranslatableString ReturnTypeDefferentOrNotImpelemnt { get; } = new TranslatableString("戻り値の型が違う or 未実装");
             [Managed] public static TranslatableString NotImplement { get; } = new TranslatableString("未実装？");
             [Managed] public static TranslatableString EmptyRefFunc { get; } = new TranslatableString("何も参照していない関数参照\"{0}\"を呼び出しました");
