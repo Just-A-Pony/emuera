@@ -396,17 +396,13 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString SpriteTimeOut { get; } = new TranslatableString("SpriteAnime:時間外参照");
             [Managed] public static TranslatableString IncrementNonVar { get; } = new TranslatableString("変数以外をインクリメントすることはできません");
             [Managed] public static TranslatableString IncrementConst { get; } = new TranslatableString("変更できない変数をインクリメントすることはできません");
+
             [Managed] public static TranslatableString NumericType { get; } = new TranslatableString("数値型");
             [Managed] public static TranslatableString StringType { get; } = new TranslatableString("文字列型");
             [Managed] public static TranslatableString UnknownType { get; } = new TranslatableString("不定型");
-            [Managed] public static TranslatableString CanNotAppliedUnaryOp { get; } = new TranslatableString("に単項演算子\"{0}\"は適用できません");
-            [Managed] public static TranslatableString NumericTypeAnd { get; } = new TranslatableString("数値型と");
-            [Managed] public static TranslatableString StringTypeAnd { get; } = new TranslatableString("文字列型と");
-            [Managed] public static TranslatableString UnknownTypeAnd { get; } = new TranslatableString("不定型と");
-            [Managed] public static TranslatableString ANumericType { get; } = new TranslatableString("数値型の");
-            [Managed] public static TranslatableString AStringType { get; } = new TranslatableString("文字列型の");
-            [Managed] public static TranslatableString AnUnknownType { get; } = new TranslatableString("不定型の");
-            [Managed] public static TranslatableString CanNotAppliedBinaryOp { get; } = new TranslatableString("演算に二項演算子\"{0}\"は適用できません");
+            [Managed] public static TranslatableString CanNotAppliedUnaryOp { get; } = new TranslatableString("{0}に単項演算子\"{1}\"は適用できません");
+            [Managed] public static TranslatableString CanNotAppliedBinaryOp { get; } = new TranslatableString("{0}と{1}の演算に二項演算子\"{2}\"は適用できません");
+
             [Managed] public static TranslatableString InvalidTernaryOp { get; } = new TranslatableString("三項演算子の使用法が不正です");
             [Managed] public static TranslatableString MultiplyNegativeToStr { get; } = new TranslatableString("文字列に負の値({0})を乗算しようとしました");
             [Managed] public static TranslatableString Multiply10kToStr { get; } = new TranslatableString("文字列に10000以上の値({0})を乗算しようとしました");

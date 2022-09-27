@@ -99,14 +99,14 @@ namespace MinorShift.Emuera.GameData.Expression
 			}
 			if(method != null)
 				return new FunctionMethodTerm(method, new IOperandTerm[] { o1 });
-            string errMes = "";
+            string errMes;
 			if (o1.GetOperandType() == typeof(Int64))
-				errMes += trerror.NumericType.Text;
+				errMes = trerror.NumericType.Text;
 			else if (o1.GetOperandType() == typeof(string))
-				errMes += trerror.StringType.Text;
+				errMes = trerror.StringType.Text;
 			else
-				errMes += trerror.UnknownType.Text;
-            errMes += string.Format(trerror.CanNotAppliedUnaryOp.Text, OperatorManager.ToOperatorString(op));
+				errMes = trerror.UnknownType.Text;
+            errMes = string.Format(trerror.CanNotAppliedUnaryOp.Text, errMes, OperatorManager.ToOperatorString(op));
             throw new CodeEE(errMes);
 		}
 		
@@ -127,14 +127,14 @@ namespace MinorShift.Emuera.GameData.Expression
 			}
 			if (method != null)
 				return new FunctionMethodTerm(method, new IOperandTerm[] { o1 });
-            string errMes = "";
+            string errMes;
             if (o1.GetOperandType() == typeof(Int64))
-                errMes += trerror.NumericType.Text;
+                errMes = trerror.NumericType.Text;
             else if (o1.GetOperandType() == typeof(string))
-                errMes += trerror.StringType.Text;
+                errMes = trerror.StringType.Text;
             else
-                errMes += trerror.UnknownType.Text;
-			errMes += string.Format(trerror.CanNotAppliedUnaryOp.Text, OperatorManager.ToOperatorString(op));
+                errMes = trerror.UnknownType.Text;
+            errMes = string.Format(trerror.CanNotAppliedUnaryOp.Text, errMes, OperatorManager.ToOperatorString(op));
 			throw new CodeEE(errMes);
 		}
 		
@@ -159,21 +159,21 @@ namespace MinorShift.Emuera.GameData.Expression
 			}
 			if (method != null)
 				return new FunctionMethodTerm(method, new IOperandTerm[] { left, right });
-			string errMes = "";
-                if (left.GetOperandType() == typeof(Int64))
-                    errMes += trerror.NumericTypeAnd.Text;
-                else if (left.GetOperandType() == typeof(string))
-                    errMes += trerror.StringTypeAnd.Text;
-                else
-                    errMes += trerror.UnknownTypeAnd.Text;
-                if (right.GetOperandType() == typeof(Int64))
-                    errMes += trerror.ANumericType.Text;
-                else if (right.GetOperandType() == typeof(string))
-                    errMes += trerror.AStringType.Text;
-                else
-                    errMes += trerror.AnUnknownType.Text;
-                errMes += string.Format(trerror.CanNotAppliedBinaryOp.Text, OperatorManager.ToOperatorString(op));
-                throw new CodeEE(errMes);
+			string typeName1, typeName2, errMes;
+			if (left.GetOperandType() == typeof(Int64))
+				typeName1 = trerror.NumericType.Text;
+			else if (left.GetOperandType() == typeof(string))
+				typeName1 = trerror.StringType.Text;
+			else
+				typeName1 = trerror.UnknownType.Text;
+			if (right.GetOperandType() == typeof(Int64))
+				typeName2 = trerror.NumericType.Text;
+			else if (right.GetOperandType() == typeof(string))
+				typeName2 = trerror.StringType.Text;
+			else
+				typeName2 = trerror.UnknownType.Text;
+			errMes = string.Format(trerror.CanNotAppliedBinaryOp.Text, typeName1, typeName2, OperatorManager.ToOperatorString(op));
+			throw new CodeEE(errMes);
 		}
 		
 		public static IOperandTerm ReduceTernaryTerm(IOperandTerm o1, IOperandTerm o2, IOperandTerm o3)
