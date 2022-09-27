@@ -1489,7 +1489,8 @@ namespace MinorShift.Emuera.GameData.Function
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				if(!Config.CompatiSPChara)
-					throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
+					// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
+					throw new CodeEE(Lang.Error.SPCharacterFeatureDisabled.Text);
 				Int64 integer = arguments[0].GetIntValue(exm);
 				return exm.VEvaluator.GetChara_UseSp(integer, true);
 			}
@@ -1503,37 +1504,44 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(string);
 				argumentTypeArray = null;
 				charaStr = CharacterStrData.NAME;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int }, OmitStart = 1 },
+				};
 				CanRestructure = true;
 			}
 			public CsvStrDataMethod(CharacterStrData cStr)
 			{
 				ReturnType = typeof(string);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int }, OmitStart = 1 },
+				};
 				charaStr = cStr;
 				CanRestructure = true;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 1)
-					return name + "関数には少なくとも1つの引数が必要です";
-				if (arguments.Length > 2)
-					return name + "関数の引数が多すぎます";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (!arguments[0].IsInteger)
-					return name + "関数の1番目の引数が数値ではありません";
-				if (arguments.Length == 1)
-					return null;
-				if ((arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
-					return name + "関数の2番目の変数が数値ではありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length < 1)
+			//		return name + "関数には少なくとも1つの引数が必要です";
+			//	if (arguments.Length > 2)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (!arguments[0].IsInteger)
+			//		return name + "関数の1番目の引数が数値ではありません";
+			//	if (arguments.Length == 1)
+			//		return null;
+			//	if ((arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の2番目の変数が数値ではありません";
+			//	return null;
+			//}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				long x = arguments[0].GetIntValue(exm);
 				long y = (arguments.Length > 1 && arguments[1] != null) ? arguments[1].GetIntValue(exm) : 0;
 				if (!Config.CompatiSPChara && y != 0)
-					throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
+					// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
+					throw new CodeEE(Lang.Error.SPCharacterFeatureDisabled.Text);
 				return exm.VEvaluator.GetCharacterStrfromCSVData(x, charaStr, (y != 0), 0);
 			}
 		}
@@ -1543,36 +1551,40 @@ namespace MinorShift.Emuera.GameData.Function
 			public CsvcstrMethod()
 			{
 				ReturnType = typeof(string);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+				};
 				CanRestructure = true;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 2)
-					return name + "関数には少なくとも2つの引数が必要です";
-				if (arguments.Length > 3)
-					return name + "関数の引数が多すぎます";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (!arguments[0].IsInteger)
-					return name + "関数の1番目の引数が数値ではありません";
-				if (arguments[1] == null)
-					return name + "関数の2番目の引数は省略できません";
-				if (arguments[1].GetOperandType() != typeof(Int64))
-					return name + "関数の2番目の変数が数値ではありません";
-				if (arguments.Length == 2)
-					return null;
-				if ((arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
-					return name + "関数の3番目の変数が数値ではありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length < 2)
+			//		return name + "関数には少なくとも2つの引数が必要です";
+			//	if (arguments.Length > 3)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (!arguments[0].IsInteger)
+			//		return name + "関数の1番目の引数が数値ではありません";
+			//	if (arguments[1] == null)
+			//		return name + "関数の2番目の引数は省略できません";
+			//	if (arguments[1].GetOperandType() != typeof(Int64))
+			//		return name + "関数の2番目の変数が数値ではありません";
+			//	if (arguments.Length == 2)
+			//		return null;
+			//	if ((arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の3番目の変数が数値ではありません";
+			//	return null;
+			//}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				long x = arguments[0].GetIntValue(exm);
 				long y = arguments[1].GetIntValue(exm);
 				long z = (arguments.Length == 3 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : 0;
 				if(!Config.CompatiSPChara && z != 0)
-					throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
+					// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
+					throw new CodeEE(Lang.Error.SPCharacterFeatureDisabled.Text);
 				return exm.VEvaluator.GetCharacterStrfromCSVData(x, CharacterStrData.CSTR, (z != 0), y);
 			}
 		}
@@ -1583,44 +1595,51 @@ namespace MinorShift.Emuera.GameData.Function
 			public CsvDataMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+				};
 				charaInt = CharacterIntData.BASE;
 				CanRestructure = true;
 			}
 			public CsvDataMethod(CharacterIntData cInt)
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+				};
 				charaInt = cInt;
 				CanRestructure = true;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 2)
-					return name + "関数には少なくとも2つの引数が必要です";
-				if (arguments.Length > 3)
-					return name + "関数の引数が多すぎます";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (!arguments[0].IsInteger)
-					return name + "関数の1番目の引数が数値ではありません";
-				if (arguments[1] == null)
-					return name + "関数の2番目の引数は省略できません";
-				if (arguments[1].GetOperandType() != typeof(Int64))
-					return name + "関数の2番目の変数が数値ではありません";
-				if (arguments.Length == 2)
-					return null;
-				if ((arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
-					return name + "関数の3番目の変数が数値ではありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length < 2)
+			//		return name + "関数には少なくとも2つの引数が必要です";
+			//	if (arguments.Length > 3)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (!arguments[0].IsInteger)
+			//		return name + "関数の1番目の引数が数値ではありません";
+			//	if (arguments[1] == null)
+			//		return name + "関数の2番目の引数は省略できません";
+			//	if (arguments[1].GetOperandType() != typeof(Int64))
+			//		return name + "関数の2番目の変数が数値ではありません";
+			//	if (arguments.Length == 2)
+			//		return null;
+			//	if ((arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の3番目の変数が数値ではありません";
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				long x = arguments[0].GetIntValue(exm);
 				long y = arguments[1].GetIntValue(exm);
 				long z = (arguments.Length == 3 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : 0;
-				if(!Config.CompatiSPChara && z != 0)
-					throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
+				if (!Config.CompatiSPChara && z != 0)
+					// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
+					throw new CodeEE(Lang.Error.SPCharacterFeatureDisabled.Text);
 				return exm.VEvaluator.GetCharacterIntfromCSVData(x, charaInt, (z != 0), y);
 			}
 		}
@@ -1630,7 +1649,10 @@ namespace MinorShift.Emuera.GameData.Function
 			public FindcharaMethod(bool last)
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+				};
 				CanRestructure = false;
 				isLast = last;
 			}
