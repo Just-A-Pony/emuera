@@ -805,7 +805,7 @@ namespace MinorShift.Emuera.GameData.Function
 					}
 					catch (XmlException e)
 					{
-						throw new CodeEE(string.Format(trerror.XmlSetError.Text, xml, e.Message));
+						throw new CodeEE(string.Format(trerror.XmlParseError.Text, Name, xml, e.Message));
 					}
 				}
 
@@ -817,7 +817,7 @@ namespace MinorShift.Emuera.GameData.Function
 				}
 				catch (System.Xml.XPath.XPathException e)
 				{
-					throw new CodeEE(string.Format(trerror.XmlSetPathError.Text, path, e.Message));
+					throw new CodeEE(string.Format(trerror.XmlXPathParseError.Text, Name, path, e.Message));
 				}
 				bool setAllNodes = arguments.Length >= 4 ? arguments[3].GetIntValue(exm) != 0 : false;
 				var style = arguments.Length == 5 ? arguments[4].GetIntValue(exm) : 0;
@@ -863,44 +863,33 @@ namespace MinorShift.Emuera.GameData.Function
 			public XmlAddNodeMethod(Operation op)
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				if (op == Operation.Node)
+					argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
+						new ArgTypeList{ ArgTypes = { ArgType.RefString, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 }
+					};
+				else
+					argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
+						new ArgTypeList{ ArgTypes = { ArgType.RefString, ArgType.String, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 }
+					};
 				CanRestructure = false;
 				this.op = op;
 			}
 			public XmlAddNodeMethod(Operation op, bool byname) : this(op)
 			{
 				byName = byname;
+				if (op == Operation.Node)
+					argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
+					};
+				else
+					argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
+					};
 			}
 			private bool byName = false;
 			Operation op;
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				int max = op == Operation.Attribute ? 6 : 5;
-				if (arguments.Length < 3)
-					return string.Format("{0}関数:少なくとも3の引数が必要です", name);
-				if (arguments.Length > max)
-					return string.Format("{0}関数:引数が多すぎます", name);
-				if (!byName && arguments[0].GetOperandType() != typeof(Int64)
-					&& (!(arguments[0] is VariableTerm varTerm)
-					|| varTerm.Identifier.IsCalc
-					|| !varTerm.Identifier.IsArray1D
-					|| !varTerm.Identifier.IsString
-					|| varTerm.Identifier.IsConst))
-					return string.Format("{0}関数:1番目の引数が一次元文字列配列変数でも整数でもありません", name);
-				if (byName && arguments[0].GetOperandType() != typeof(string))
-					return string.Format("{0}関数:1番目の引数が文字列型ではありません", name);
-				for (int i = 1; i < arguments.Length; i++)
-				{
-					if (i == 1 || i == 2 || (i == 3 && op == Operation.Attribute))
-					{
-						if (arguments[i].GetOperandType() != typeof(string))
-							return string.Format("{0}関数:{1}番目の引数が文字列ではありません", name, i + 1);
-					}
-					else if (arguments[i].GetOperandType() != typeof(Int64))
-						return string.Format("{0}関数:{1}番目の引数が整数ではありません", name, i + 1);
-				}
-				return null;
-			}
 			bool Insert(XmlNode node, XmlNode child, int method)
 			{
 				if (op == Operation.Node)
@@ -962,7 +951,7 @@ namespace MinorShift.Emuera.GameData.Function
 					}
 					catch (XmlException e)
 					{
-						throw new CodeEE(Name + "関数:\"" + xml + "\"の解析エラー:" + e.Message);
+						throw new CodeEE(string.Format(trerror.XmlParseError.Text, Name, xml, e.Message));
 					}
 				}
 
@@ -974,7 +963,7 @@ namespace MinorShift.Emuera.GameData.Function
 				}
 				catch (System.Xml.XPath.XPathException e)
 				{
-					throw new CodeEE(Name + "関数:XPath\"" + path + "\"の解析エラー:" + e.Message);
+					throw new CodeEE(string.Format(trerror.XmlXPathParseError.Text, Name, path, e.Message));
 				}
 				if (nodes.Count > 0)
 				{
@@ -991,7 +980,7 @@ namespace MinorShift.Emuera.GameData.Function
 						}
 						catch (XmlException e)
 						{
-							throw new CodeEE(Name + "関数:\"" + xml + "\"の解析エラー:" + e.Message);
+							throw new CodeEE(string.Format(trerror.XmlParseError.Text, Name, xml, e.Message));
 						}
 						var newNode = childNode.FirstChild;
 						child = doc.CreateNode(newNode.NodeType, newNode.Name, newNode.NamespaceURI);
@@ -1029,41 +1018,22 @@ namespace MinorShift.Emuera.GameData.Function
 			public XmlRemoveNodeMethod(Operation op)
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.Int }, OmitStart = 2 },
+						new ArgTypeList{ ArgTypes = { ArgType.RefString, ArgType.String, ArgType.Int }, OmitStart = 2 }
+					};
 				CanRestructure = false;
 				this.op = op;
 			}
 			public XmlRemoveNodeMethod(Operation op, bool byname) : this(op)
 			{
 				byName = byname;
+				argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Int }, OmitStart = 2 },
+					};
 			}
 			private bool byName = false;
 			Operation op;
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 2)
-					return string.Format("{0}関数:少なくとも3の引数が必要です", name);
-				if (arguments.Length > 3)
-					return string.Format("{0}関数:引数が多すぎます", name);
-				if (arguments[0].GetOperandType() != typeof(Int64)
-					&& (!(arguments[0] is VariableTerm varTerm)
-					|| varTerm.Identifier.IsCalc
-					|| !varTerm.Identifier.IsArray1D
-					|| !varTerm.Identifier.IsString
-					|| varTerm.Identifier.IsConst))
-					return string.Format("{0}関数:1番目の引数が一次元文字列配列変数でも整数でもありません", name);
-				for (int i = 1; i < arguments.Length; i++)
-				{
-					if (i == 1)
-					{
-						if (arguments[i].GetOperandType() != typeof(string))
-							return string.Format("{0}関数:{1}番目の引数が文字列ではありません", name, i + 1);
-					}
-					else if (arguments[i].GetOperandType() != typeof(Int64))
-						return string.Format("{0}関数:{1}番目の引数が整数ではありません", name, i + 1);
-				}
-				return null;
-			}
 			bool Remove(XmlNode node)
 			{
 				if (op == Operation.Attribute)
@@ -1109,7 +1079,7 @@ namespace MinorShift.Emuera.GameData.Function
 					}
 					catch (XmlException e)
 					{
-						throw new CodeEE(Name + "関数:\"" + xml + "\"の解析エラー:" + e.Message);
+						throw new CodeEE(string.Format(trerror.XmlParseError.Text, Name, xml, e.Message));
 					}
 				}
 
@@ -1121,7 +1091,7 @@ namespace MinorShift.Emuera.GameData.Function
 				}
 				catch (System.Xml.XPath.XPathException e)
 				{
-					throw new CodeEE(Name + "関数:XPath\"" + path + "\"の解析エラー:" + e.Message);
+					throw new CodeEE(string.Format(trerror.XmlXPathParseError.Text, Name, path, e.Message));
 				}
 				if (nodes.Count > 0)
 				{
@@ -1145,12 +1115,19 @@ namespace MinorShift.Emuera.GameData.Function
 			public XmlReplaceMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.String } },
+						new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.String, ArgType.Int }, OmitStart = 3 },
+						new ArgTypeList{ ArgTypes = { ArgType.RefString, ArgType.String, ArgType.String, ArgType.Int }, OmitStart = 3 },
+					};
 				CanRestructure = false;
 			}
 			public XmlReplaceMethod(bool byname) : this()
 			{
 				byName = byname;
+				argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.Int }, OmitStart = 3 },
+					};
 			}
 			private bool byName = false;
 			bool Replace(XmlNode node, XmlNode newNode)
@@ -1161,35 +1138,6 @@ namespace MinorShift.Emuera.GameData.Function
 					return true;
 				}
 				return false;
-			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 2)
-					return string.Format("{0}関数:少なくとも2の引数が必要です", name);
-				if (arguments.Length > 4)
-					return string.Format("{0}関数:引数が多すぎます", name);
-				//if (arguments.Length == 2 && arguments[0].GetOperandType() != typeof(Int64))
-				//	return string.Format("{0}関数:1番目の引数が整数ではありません", name);
-				if (!byName && arguments.Length > 2 && arguments[0].GetOperandType() != typeof(Int64)
-					&& (!(arguments[0] is VariableTerm varTerm)
-					|| varTerm.Identifier.IsCalc
-					|| !varTerm.Identifier.IsArray1D
-					|| !varTerm.Identifier.IsString
-					|| varTerm.Identifier.IsConst))
-					return string.Format("{0}関数:1番目の引数が一次元文字列配列変数でも整数でもありません", name);
-				if (byName && arguments.Length > 2 && arguments[0].GetOperandType() != typeof(string))
-					return string.Format("{0}関数:1番目の引数が文字列型ではありません", name);
-				for (int i = 1; i < arguments.Length; i++)
-				{
-					if (i < 3)
-					{
-						if (arguments[i].GetOperandType() != typeof(string))
-							return string.Format("{0}関数:{1}番目の引数が文字列ではありません", name, i + 1);
-					}
-					else if (arguments[i].GetOperandType() != typeof(Int64))
-						return string.Format("{0}関数:{1}番目の引数が整数ではありません", name, i + 1);
-				}
-				return null;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
@@ -1202,7 +1150,7 @@ namespace MinorShift.Emuera.GameData.Function
 					}
 					catch (XmlException e)
 					{
-						throw new CodeEE("XML_REPLACE関数:\"" + xml + "\"の解析エラー:" + e.Message);
+						throw new CodeEE(string.Format(trerror.XmlParseError.Text, Name, xml, e.Message));
 					}
 				}
 				bool saveToArg0 = true;
@@ -1230,7 +1178,7 @@ namespace MinorShift.Emuera.GameData.Function
 					}
 					catch (XmlException e)
 					{
-						throw new CodeEE("XML_REPLACE関数:\"" + xml + "\"の解析エラー:" + e.Message);
+						throw new CodeEE(string.Format(trerror.XmlParseError.Text, Name, xml, e.Message));
 					}
 				}
 				string path = arguments[1].GetStrValue(exm);
@@ -1241,7 +1189,7 @@ namespace MinorShift.Emuera.GameData.Function
 				}
 				catch (System.Xml.XPath.XPathException e)
 				{
-					throw new CodeEE("XML_REPLACE関数:XPath\"" + path + "\"の解析エラー:" + e.Message);
+					throw new CodeEE(string.Format(trerror.XmlXPathParseError.Text, Name, path, e.Message));
 				}
 				if (nodes.Count > 0)
 				{
@@ -1317,31 +1265,20 @@ namespace MinorShift.Emuera.GameData.Function
 			public MapDataOperationMethod(Operation type)
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				switch (type)
+				{
+					case Operation.Set:
+						argumentTypeArray = new Type[] { typeof(string), typeof(string), typeof(string) };break;
+					case Operation.Has:
+					case Operation.Remove:
+						argumentTypeArray = new Type[] { typeof(string), typeof(string) }; break;
+					default:
+						argumentTypeArray = new Type[] { typeof(string) }; break;
+				}
 				CanRestructure = false;
 				op = type;
 			}
 			private Operation op;
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if ((op == Operation.Clear || op == Operation.Size))
-				{
-					if (arguments.Length != 1) return string.Format("{0}関数:1つの引数だけ受けます", name);
-				}
-				else
-				{
-					int argCount = 2 + (op == Operation.Set ? 1 : 0);
-					if (arguments.Length != argCount)
-						return string.Format("{0}関数:{1}の引数が必要です", name, argCount);
-					if (arguments[1].GetOperandType() != typeof(string))
-						return string.Format("{0}関数:2番目の引数が文字列ではありません", name);
-					if (op == Operation.Set && arguments[2].GetOperandType() != typeof(string))
-						return string.Format("{0}関数:3番目の引数が文字列ではありません", name);
-				}
-				if (arguments[0].GetOperandType() != typeof(string))
-					return string.Format("{0}関数:1番目の引数が文字列ではありません", name);
-				return null;
-			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				var map = arguments[0].GetStrValue(exm);
@@ -1369,46 +1306,22 @@ namespace MinorShift.Emuera.GameData.Function
 			public MapGetStrMethod(Operation type)
 			{
 				ReturnType = typeof(string);
-				argumentTypeArray = null;
+				switch(type)
+				{
+					case Operation.Get:
+						argumentTypeArray = new Type[] { typeof(string), typeof(string) };break;
+					case Operation.ToXml:
+						argumentTypeArray = new Type[] { typeof(string) }; break;
+					case Operation.GetKeys:
+						argumentTypeArrayEx = new ArgTypeList[] {
+							new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int }, OmitStart = 1 },
+							new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D, ArgType.Int } },
+						};break;
+				}
 				CanRestructure = false;
 				op = type;
 			}
 			private Operation op;
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (op == Operation.GetKeys)
-				{
-					if (arguments.Length < 1)
-						return string.Format("{0}関数:少なくとも1の引数が必要です", name);
-					if (arguments.Length > 3)
-						return string.Format("{0}関数:引数が多すぎます", name);
-				}
-				else
-				{
-					int argCount = 1 + (op == Operation.Get ? 1 : 0);
-					if (arguments.Length != argCount)
-						return string.Format("{0}関数:{1}の引数が必要です", name, argCount);
-				}
-				if (arguments[0].GetOperandType() != typeof(string))
-					return string.Format("{0}関数:1番目の引数が文字列ではありません", name);
-				if (op == Operation.GetKeys)
-				{
-					if (arguments.Length == 2 && arguments[1].GetOperandType() != typeof(Int64))
-						return string.Format("{0}関数:2番目の引数が文字列ではありません", name);
-					if (arguments.Length == 3 &&
-						(!(arguments[1] is VariableTerm varTerm)
-						|| varTerm.Identifier.IsCalc
-						|| !varTerm.Identifier.IsArray1D
-						|| !varTerm.Identifier.IsString
-						|| varTerm.Identifier.IsConst))
-						return string.Format("{0}関数:2番目の引数が一次元文字列配列変数ではありません", name);
-					if (arguments.Length == 3 && arguments[2].GetOperandType() != typeof(Int64))
-						return string.Format("{0}関数:3番目の引数が整数ではありません", name);
-				}
-				else if (arguments.Length == 2 && arguments[1].GetOperandType() != typeof(string))
-					return string.Format("{0}関数:2番目の引数が整数ではありません", name);
-				return null;
-			}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				var dict = exm.VEvaluator.VariableData.DataStringMaps;
@@ -1494,7 +1407,7 @@ namespace MinorShift.Emuera.GameData.Function
 				}
 				catch (XmlException e)
 				{
-					throw new CodeEE("MAP_FROMXML関数:\"" + xml + "\"の解析エラー:" + e.Message);
+					throw new CodeEE(string.Format(trerror.XmlParseError.Text, Name, xml, e.Message));
 				}
 				for (int i = 0; i < nodes.Count; i++)
 				{
@@ -1516,27 +1429,30 @@ namespace MinorShift.Emuera.GameData.Function
 			public GetcharaMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int }, OmitStart = 1 },
+				};
 				CanRestructure = false;
 			}
 			
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				//通常２つ、１つ省略可能で１～２の引数が必要。
-				if (arguments.Length < 1)
-					return name + "関数には少なくとも1つの引数が必要です";
-				if (arguments.Length > 2)
-					return name + "関数の引数が多すぎます";
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	//通常２つ、１つ省略可能で１～２の引数が必要。
+			//	if (arguments.Length < 1)
+			//		return name + "関数には少なくとも1つの引数が必要です";
+			//	if (arguments.Length > 2)
+			//		return name + "関数の引数が多すぎます";
 
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (arguments[0].GetOperandType() != typeof(Int64))
-					return name + "関数の1番目の引数の型が正しくありません";
-				//2は省略可能
-				if ((arguments.Length == 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
-					return name + "関数の2番目の引数の型が正しくありません";
-				return null;
-			}
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (arguments[0].GetOperandType() != typeof(Int64))
+			//		return name + "関数の1番目の引数の型が正しくありません";
+			//	//2は省略可能
+			//	if ((arguments.Length == 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の2番目の引数の型が正しくありません";
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				Int64 integer = arguments[0].GetIntValue(exm);
