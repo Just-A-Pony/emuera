@@ -561,6 +561,7 @@ namespace EvilMask.Emuera
 
             [Managed] public static TranslatableString ArgCanNotBeNull { get; } = new TranslatableString("{0}関数: 第{1}引数は省略できません");
             [Managed] public static TranslatableString ArgIsNotCharacterVar { get; } = new TranslatableString("{0}関数: 第{1}引数の変数がキャラクタ変数ではありません");
+            [Managed] public static TranslatableString InvalidArgType { get; } = new TranslatableString("{0}関数: 第{1}引数の型が正しくありません");
             [Managed] public static TranslatableString ArgIsNotStr { get; } = new TranslatableString("{0}関数: 第{1}引数は文字列ではありません");
             [Managed] public static TranslatableString ArgIsNotInt { get; } = new TranslatableString("{0}関数: 第{1}引数は整数ではありません");
             [Managed] public static TranslatableString ArgIsNotVar { get; } = new TranslatableString("{0}関数: 第{1}引数は変数ではありません");
@@ -581,6 +582,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString IsNotStr { get; } = new TranslatableString("\"{0}\"が文字列型ではありません");
 
             [Managed] public static TranslatableString SPCharacterFeatureDisabled { get; } = new TranslatableString("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
+            [Managed] public static TranslatableString CharacterIndexOutOfRange { get; } = new TranslatableString("{0}関数: 第{1}引数(\"{2}\")はキャラクタ位置の範囲外です");
 
 
         }

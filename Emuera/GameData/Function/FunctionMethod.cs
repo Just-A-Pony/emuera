@@ -42,11 +42,14 @@ namespace MinorShift.Emuera.GameData.Function
 			public static implicit operator _ArgType(ArgType value)
 			{
 				Type t = null;
-				switch ((int)value%3)
+				if (value != ArgType.CharacterData)
 				{
-					case 0: t = typeof(void);break;
-					case 1: t = typeof(Int64);break;
-					case 2: t = typeof(string);break;
+					switch ((int)value % 3)
+					{
+						case 0: t = typeof(void); break;
+						case 1: t = typeof(Int64); break;
+						case 2: t = typeof(string); break;
+					}
 				}
 				ArgRefType r = ArgRefType.None;
 				if (value == ArgType.CharacterData) r = ArgRefType.CharacterData;
