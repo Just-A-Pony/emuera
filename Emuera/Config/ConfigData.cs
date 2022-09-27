@@ -7,6 +7,7 @@ using System.Drawing;
 using MinorShift.Emuera.Sub;
 using System.Text.RegularExpressions;
 using MinorShift.Emuera.GameData.Expression;
+using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera
 {
@@ -439,7 +440,7 @@ namespace MinorShift.Emuera
 			AConfigItem item = ConfigData.Instance.GetItem(text);
 			if(item == null)
 			{
-				errMes = "文字列\"" + text + "\"は適切なコンフィグ名ではありません";
+				errMes = string.Format(trerror)"文字列\"" + text + "\"は適切なコンフィグ名ではありません";
 				return null;
 			}
 			SingleTerm term;
