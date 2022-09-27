@@ -651,7 +651,7 @@ namespace MinorShift.Emuera
 
 				}
 			}
-			throw new IdentifierNotFoundCodeEE(string.Format(treer.CannotInterpreted.Text, idStr));
+			throw new IdentifierNotFoundCodeEE(string.Format(treer.CanNotInterpreted.Text, idStr));
 		}
 		#endregion
 
