@@ -21,12 +21,14 @@ namespace MinorShift.Emuera.GameData.Function
 			Array1D,
 			Array2D,
 			Array3D,
+			CharacterData,
 		}
 		protected enum ArgType
 		{
 			Any = 0, Int, String, RefAny, RefInt, RefString,
 			RefAny1D, RefInt1D, RefString1D,
 			RefAny2D, RefInt2D, RefString2D, RefAny3D, RefInt3D, RefString3D,
+			CharacterData,
 		}
 		protected sealed class _ArgType
 		{
@@ -40,14 +42,18 @@ namespace MinorShift.Emuera.GameData.Function
 			public static implicit operator _ArgType(ArgType value)
 			{
 				Type t = null;
-				switch ((int)value%3)
+				if (value != ArgType.CharacterData)
 				{
-					case 0: t = typeof(void);break;
-					case 1: t = typeof(Int64);break;
-					case 2: t = typeof(string);break;
+					switch ((int)value % 3)
+					{
+						case 0: t = typeof(void); break;
+						case 1: t = typeof(Int64); break;
+						case 2: t = typeof(string); break;
+					}
 				}
 				ArgRefType r = ArgRefType.None;
-				if (value > ArgType.RefString2D) r = ArgRefType.Array3D;
+				if (value == ArgType.CharacterData) r = ArgRefType.CharacterData;
+				else if(value > ArgType.RefString2D) r = ArgRefType.Array3D;
 				else if (value > ArgType.RefString1D) r = ArgRefType.Array2D;
 				else if (value > ArgType.RefString) r = ArgRefType.Array1D;
 				else if (value > ArgType.String) r = ArgRefType.Var;
@@ -82,44 +88,71 @@ namespace MinorShift.Emuera.GameData.Function
 							break;
 						}
 						var rule = list.ArgTypes[i];
-						if (rule.Ref != ArgRefType.None && (arguments[i] is VariableTerm varTerm && !(varTerm.Identifier.IsCalc || varTerm.Identifier.IsConst)))
+						if (rule.Ref != ArgRefType.None && rule.Ref != ArgRefType.CharacterData)
 						{
-							// 引数が引用系
 							// 引数の型が違う
+							bool error = false;
 							bool typeNotMatch = rule.Type != typeof(void) && rule.Type != arguments[i].GetOperandType();
-
-							if (rule.Ref == ArgRefType.Var && (!varTerm.Identifier.IsArray1D || typeNotMatch))
+							string errText = null;
+							switch (rule.Ref)
 							{
-								// 普通の場合
-								var err = list.ArgTypes[i].Type == typeof(string) ? Lang.Error.ArgIsNotStrVar
-									: (list.ArgTypes[i].Type == typeof(Int64) ? Lang.Error.ArgIsNotIntVar : Lang.Error.ArgIsNotVar);
-								errMsg[idx] = string.Format(err.Text, name, i + 1);
+								case ArgRefType.Var:
+									{ 
+										// 普通の場合
+										var err = list.ArgTypes[i].Type == typeof(string) ? Lang.Error.ArgIsNotStrVar
+											: (list.ArgTypes[i].Type == typeof(Int64) ? Lang.Error.ArgIsNotIntVar : Lang.Error.ArgIsNotVar);
+										errText = string.Format(err.Text, name, i + 1);
+										break;
+									}
+								case ArgRefType.Array1D:
+									{
+										// 一次元配列の場合
+										var err = list.ArgTypes[i].Type == typeof(string) ? Lang.Error.ArgIsNotNDStrArray
+											: (list.ArgTypes[i].Type == typeof(Int64) ? Lang.Error.ArgIsNotNDIntArray : Lang.Error.ArgIsNotNDArray);
+										errText = string.Format(err.Text, name, i + 1, 1);
+										break;
+									}
+								case ArgRefType.Array2D:
+									{
+										// 二次元配列の場合
+										var err = list.ArgTypes[i].Type == typeof(string) ? Lang.Error.ArgIsNotNDStrArray
+											: (list.ArgTypes[i].Type == typeof(Int64) ? Lang.Error.ArgIsNotNDIntArray : Lang.Error.ArgIsNotNDArray);
+										errText = string.Format(err.Text, name, i + 1, 2);
+										break;
+									}
+								case ArgRefType.Array3D:
+									{
+										// 三次元配列の場合
+										var err = list.ArgTypes[i].Type == typeof(string) ? Lang.Error.ArgIsNotNDStrArray
+											: (list.ArgTypes[i].Type == typeof(Int64) ? Lang.Error.ArgIsNotNDIntArray : Lang.Error.ArgIsNotNDArray);
+										errText = string.Format(err.Text, name, i + 1, 3);
+										break;
+									}
+							}
+							// 引数が引用系
+							if ((arguments[i] is VariableTerm varTerm && !(varTerm.Identifier.IsCalc || varTerm.Identifier.IsConst)))
+							{
+								// 変数の場合
+								switch (rule.Ref)
+								{
+									case ArgRefType.Var: error = !varTerm.Identifier.IsArray1D || typeNotMatch; break;
+									case ArgRefType.Array1D: error = !varTerm.Identifier.IsArray1D || typeNotMatch; break;
+									case ArgRefType.Array2D: error = !varTerm.Identifier.IsArray1D || typeNotMatch; break;
+									case ArgRefType.Array3D: error = !varTerm.Identifier.IsArray1D || typeNotMatch; break;
+								}
+							}
+							else error = true; // 変数ではない
+							if (error)
+							{
+								errMsg[idx] = errText;
 								break;
 							}
-							if (rule.Ref == ArgRefType.Array1D && (!varTerm.Identifier.IsArray1D || typeNotMatch))
-							{
-								// y一次元配列の場合
-								var err = list.ArgTypes[i].Type == typeof(string) ? Lang.Error.ArgIsNotNDStrArray
-									: (list.ArgTypes[i].Type == typeof(Int64) ? Lang.Error.ArgIsNotNDIntArray : Lang.Error.ArgIsNotNDArray);
-								errMsg[idx] = string.Format(err.Text, name, i + 1, 1);
-								break;
-							}
-							if (rule.Ref == ArgRefType.Array2D && (!varTerm.Identifier.IsArray2D || typeNotMatch))
-							{
-								// 二次元配列の場合
-								var err = list.ArgTypes[i].Type == typeof(string) ? Lang.Error.ArgIsNotNDStrArray
-									: (list.ArgTypes[i].Type == typeof(Int64) ? Lang.Error.ArgIsNotNDIntArray : Lang.Error.ArgIsNotNDArray);
-								errMsg[idx] = string.Format(err.Text, name, i + 1, 2);
-								break;
-							}
-							if (rule.Ref == ArgRefType.Array3D && (!varTerm.Identifier.IsArray3D || typeNotMatch))
-							{
-								// 三次元配列の場合
-								var err = list.ArgTypes[i].Type == typeof(string) ? Lang.Error.ArgIsNotNDStrArray
-									: (list.ArgTypes[i].Type == typeof(Int64) ? Lang.Error.ArgIsNotNDIntArray : Lang.Error.ArgIsNotNDArray);
-								errMsg[idx] = string.Format(err.Text, name, i + 1, 3);
-								break;
-							}
+						}
+						else if (rule.Ref == ArgRefType.CharacterData && (!(arguments[i] is VariableTerm cvarTerm) || !cvarTerm.Identifier.IsCharacterData))
+						{
+							// キャラ変数ではない
+							errMsg[idx] = string.Format(Lang.Error.ArgIsNotCharacterVar.Text, name, i + 1);
+							break;
 						}
 						else if (rule.Ref == ArgRefType.None && rule.Type != typeof(void) && rule.Type != arguments[i].GetOperandType())
 						{
