@@ -500,6 +500,24 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString GetSizePseudoVar { get; } = new TranslatableString("擬似変数\"{0}\"の長さを取得しようとしました");
             [Managed] public static TranslatableString GetDimPseudoVar { get; } = new TranslatableString("擬似変数\"{0}\"の配列を取得しようとしました");
             [Managed] public static TranslatableString RandArgIsNegative { get; } = new TranslatableString("RANDの引数に0以下の値({0})が指定されました");
+            [Managed] public static TranslatableString SpriteNameAlreadyUsed { get; } = new TranslatableString("同名のリソースがすでに作成されています:{0}");
+            [Managed] public static TranslatableString NotDeclaredAnimationSpriteSize { get; } = new TranslatableString("アニメーションスプライトのサイズが宣言されていません");
+            [Managed] public static TranslatableString InvalidAnimationSpriteSize { get; } = new TranslatableString("アニメーションスプライトのサイズの指定が適切ではありません");
+            [Managed] public static TranslatableString MissingSecondArgumentExtension { get; } = new TranslatableString("第二引数に拡張子がありません:{0}");
+            [Managed] public static TranslatableString NotExistImageFile { get; } = new TranslatableString("指定された画像ファイルが見つかりませんでした:{0}");
+            [Managed] public static TranslatableString FailedLoadFile { get; } = new TranslatableString("指定されたファイルの読み込みに失敗しました:{0}");
+            [Managed] public static TranslatableString TooLargeImageFile { get; } = new TranslatableString("指定された画像ファイルの大きさが大きすぎます(幅及び高さを{0}px以下にすることを強く推奨します):{1}");
+            [Managed] public static TranslatableString FailedCreateResource { get; } = new TranslatableString("画像リソースの作成に失敗しました:{0}");
+            [Managed] public static TranslatableString SpriteCreateFromFailedResource { get; } = new TranslatableString("作成に失敗したリソースを元にスプライトを作成しようとしました:{0}");
+            [Managed] public static TranslatableString SpriteSizeIsNegatibe { get; } = new TranslatableString("スプライトの高さ又は幅には正の値のみ指定できます:{0}");
+            [Managed] public static TranslatableString OoRParentImage { get; } = new TranslatableString("親画像の範囲外を参照しています:{0}");
+            [Managed] public static TranslatableString FrameTimeIsNegative { get; } = new TranslatableString("フレーム表示時間には正の値のみ指定できます:{0}");
+            [Managed] public static TranslatableString FailedAddSpriteFrame { get; } = new TranslatableString("アニメーションスプライトのフレームの追加に失敗しました:{0}");
+            [Managed] public static TranslatableString InvalidConfigName { get; } = new TranslatableString("文字列\"{0}\"は適切なコンフィグ名ではありません");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
@@ -561,7 +579,36 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString IsNotInt { get; } = new TranslatableString("\"{0}\"が整数型ではありません");
             [Managed] public static TranslatableString IsNotStr { get; } = new TranslatableString("\"{0}\"が文字列型ではありません");
 
+
+
         }
+        [Managed]
+        public sealed class MessageBox
+        {
+            public static string Text { get { return trClass[typeof(MessageBox)].Text; } }
+            [Managed] public static TranslatableString ConfigError { get; } = new TranslatableString("設定のエラー");
+            [Managed] public static TranslatableString TooSmallFontSize { get; } = new TranslatableString("フォントサイズが小さすぎます(8が下限)");
+            [Managed] public static TranslatableString LineHeightLessThanFontSize { get; } = new TranslatableString("行の高さがフォントサイズより小さいため、フォントサイズと同じ高さと解釈されます");
+            [Managed] public static TranslatableString TooSmallDisplaySaveData { get; } = new TranslatableString("表示するセーブデータ数が少なすぎます(20が下限)");
+            [Managed] public static TranslatableString TooLargeDisplaySaveData { get; } = new TranslatableString("表示するセーブデータ数が多すぎます(80が上限)");
+            [Managed] public static TranslatableString TooSmallLogSize { get; } = new TranslatableString("ログ表示行数が少なすぎます(500が下限)");
+            [Managed] public static TranslatableString FolderCreationFailure { get; } = new TranslatableString("フォルダ作成失敗");
+            [Managed] public static TranslatableString FailedCreateSavFolder { get; } = new TranslatableString("savフォルダの作成に失敗しました");
+            [Managed] public static TranslatableString SavFolderCreated { get; } = new TranslatableString("savフォルダを作成しました\n現在のデータをsavフォルダ内に移動しますか？");
+            [Managed] public static TranslatableString DataTransfer { get; } = new TranslatableString("データ移動");
+            [Managed] public static TranslatableString MissingSavFolder { get; } = new TranslatableString("savフォルダは作成されましたが見つかりません\n削除しましたか？");
+            [Managed] public static TranslatableString DataTransferFailure { get; } = new TranslatableString("データ移動失敗");
+            [Managed] public static TranslatableString FailedMoveSavFiles { get; } = new TranslatableString("savファイルの移動に失敗しました");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+
+        }
+
 
         static public void LoadLanguageFile()
         {
