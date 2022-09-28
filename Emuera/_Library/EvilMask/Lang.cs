@@ -632,6 +632,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString FuncDeprecated { get; } = new TranslatableString("関数{0}()は推奨されません。代わりに関数{1}()を使用してください");
             [Managed] public static TranslatableString TransparentUnsupported { get; } = new TranslatableString("無色透明(Transparent)は色として指定できません");
             [Managed] public static TranslatableString ArgIsOutOfRange { get; } = new TranslatableString("{0}関数: 第{1}引数({2})が{3}から{4}の範囲外です");
+            [Managed] public static TranslatableString ArgIsOutOfRangeExcept { get; } = new TranslatableString("{0}関数: 第{1}引数({2})が{3}から{4}({5}を除く)の範囲外です");
             [Managed] public static TranslatableString InvalidFormat { get; } = new TranslatableString("{0}関数: 第{1}引数の書式指定が間違っています");
             [Managed] public static TranslatableString NegativeMaximum { get; } = new TranslatableString("{0}関数: 最大値に0以下の値({1})が指定されました");
             [Managed] public static TranslatableString MaximumLowerThanMinimum { get; } = new TranslatableString("{0}関数: 最大値に最小値以下の値({1})が指定されました");
@@ -641,7 +642,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString ResultIsOutOfTheRangeOfInt64 { get; } = new TranslatableString("{0}関数: 計算結果({1})が64ビット符号付き整数の範囲外です");
 
             [Managed] public static TranslatableString CharacterRangeInvalid { get; } = new TranslatableString("{0}関数: 範囲指定がキャラクタ配列の範囲を超えています({1}～{2})");
-            [Managed] public static TranslatableString InvalidUnicode { get; } = new TranslatableString("{0}関数: 制御文字に対応する値(0x{1})が渡されました");
+            [Managed] public static TranslatableString InvalidUnicode { get; } = new TranslatableString("{0}関数: 制御文字に対応する値(0x{1:X})が渡されました");
             [Managed] public static TranslatableString ArgShouldBeSpecificValue { get; } = new TranslatableString("{0}関数: 第{1}引数は{2}のいずれかでなければなりません");
 
             [Managed] public static TranslatableString EncodeToUni2ndArgError { get; } = new TranslatableString("{0}関数: 第2引数({1})が第1引数の文字列({2})の文字数を超えています");
@@ -651,6 +652,14 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString UnexectedFormStringErr { get; } = new TranslatableString("{0}関数: 文字列\"{1}\"の展開処理中にエラーが発生しました");
 
             [Managed] public static TranslatableString InvalidType { get; } = new TranslatableString("{0}関数: 型が違います ({1}関数を使用してください)");
+            [Managed] public static TranslatableString GIdIsNegative { get; } = new TranslatableString("{0}関数: GraphicsIDに負の値({1})が指定されました");
+            [Managed] public static TranslatableString GIdIsTooLarge { get; } = new TranslatableString("{0}関数: GraphicsIDに負の値({1})が大きすぎます");
+            [Managed] public static TranslatableString InvalidColorARGB { get; } = new TranslatableString("{0}関数: ColorARGB引数に不適切な値(0x{1:X})が指定されました");
+            [Managed] public static TranslatableString InvalidColorMatrix { get; } = new TranslatableString("{0}関数: ColorMatrixの指定された要素({1}, {2})が不適切であるか5x5に足りていません");
+            [Managed] public static TranslatableString GDIPlusOnly { get; } = new TranslatableString("{0}関数: 描画オプションがWINAPIの時には使用できません");
+            [Managed] public static TranslatableString GParamIsNegative { get; } = new TranslatableString("{0}関数: Graphicsの{1}に0以下の値({2})が指定されました");
+            [Managed] public static TranslatableString GParamTooLarge { get; } = new TranslatableString("{0}関数: Graphicsの{1}に{2}以上の値({3})が指定されました");
+            [Managed] public static TranslatableString ImgRefOutOfRange { get; } = new TranslatableString("{0}関数: 画像の範囲外が指定されています");
         }
         [Managed]
         public sealed class MessageBox
