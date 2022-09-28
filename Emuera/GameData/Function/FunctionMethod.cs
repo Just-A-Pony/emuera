@@ -221,8 +221,8 @@ namespace MinorShift.Emuera.GameData.Function
 		public bool HasUniqueRestructure { get; protected set; }
 
 		//実際の計算。
-		public virtual Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments) { throw new ExeEE(trerror.ReturnTypeDefferentOrNotImpelemnt.Text); }
-		public virtual string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments) { throw new ExeEE(trerror.ReturnTypeDefferentOrNotImpelemnt.Text); }
+		public virtual Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments) { throw new ExeEE(trerror.ReturnTypeDifferentOrNotImpelemnt.Text); }
+		public virtual string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments) { throw new ExeEE(trerror.ReturnTypeDifferentOrNotImpelemnt.Text); }
 		public virtual SingleTerm GetReturnValue(ExpressionMediator exm, IOperandTerm[] arguments)
 		{
 			if (ReturnType == typeof(Int64))
