@@ -7,6 +7,7 @@ using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.GameData.Variable;
 using EvilMask.Emuera;
 using trerror = EvilMask.Emuera.Lang.Error;
+using trsl = EvilMask.Emuera.Lang.SystemLine;
 
 namespace MinorShift.Emuera.GameData
 {
@@ -223,7 +224,7 @@ namespace MinorShift.Emuera.GameData
 			}
 			ScriptPosition position = null;
 			if (disp)
-				output.PrintSystemLine(string.Format(trerror.LoadingFile.Text, eReader.Filename));
+				output.PrintSystemLine(string.Format(trsl.LoadingFile.Text, eReader.Filename));
 			try
 			{
 				StringStream st = null;
@@ -1225,7 +1226,7 @@ namespace MinorShift.Emuera.GameData
 				}
 				ScriptPosition position = null;
 				if (disp)
-					output.PrintSystemLine(string.Format(trerror.LoadingFile.Text, eReader.Filename));
+					output.PrintSystemLine(string.Format(trsl.LoadingFile.Text, eReader.Filename));
 				try
 				{
 					StringStream st = null;
@@ -1308,7 +1309,7 @@ namespace MinorShift.Emuera.GameData
 			}
 			ScriptPosition position = null;
 			if (disp)
-				output.PrintSystemLine(string.Format(trerror.LoadingFile.Text, eReader.Filename));
+				output.PrintSystemLine(string.Format(trsl.LoadingFile.Text, eReader.Filename));
 			try
 			{
 				Int64 index = -1;
@@ -1608,7 +1609,7 @@ namespace MinorShift.Emuera.GameData
 			// if (disp || Program.AnalysisMode)
 			if ((disp || Program.AnalysisMode) && output != null)
 			#endregion
-				output.PrintSystemLine(string.Format(trerror.LoadingFile.Text, eReader.Filename));
+				output.PrintSystemLine(string.Format(trsl.LoadingFile.Text, eReader.Filename));
 			try
 			{
 				StringStream st = null;

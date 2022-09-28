@@ -522,7 +522,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString UseArgVarInHasNotArgFunc { get; } = new TranslatableString("関数宣言に引数変数\"{0}\"が使われていない関数中で\"{0}\"が使われています(関数の引数以外の用途に使うことは推奨されません。代わりに#DIMの使用を検討してください)");
             [Managed] public static TranslatableString UseArgVarInSystemFunc { get; } = new TranslatableString("システム関数\"{0}\"中で\"{1}\"が使われています(関数の引数以外の用途に使うことは推奨されません。代わりに#DIMの使用を検討してください)");
             [Managed] public static TranslatableString FailedOpenFile { get; } = new TranslatableString("{0}のオープンに失敗しました");
-            [Managed] public static TranslatableString LoadingFile { get; } = new TranslatableString("{0}読み込み中・・・");//こいつはエラーメッセージじゃないけどここに置いておく
+            //[Managed] public static TranslatableString LoadingFile { get; } = new TranslatableString("{0}読み込み中・・・");//こいつはエラーメッセージじゃないけどここに置いておく
             [Managed] public static TranslatableString UnexpectedError { get; } = new TranslatableString("予期しないエラーが発生しました");
             [Managed] public static TranslatableString MissingComma { get; } = new TranslatableString("\",\"が必要です");
             [Managed] public static TranslatableString CanNotInterpretVarName { get; } = new TranslatableString("{0}つ目の値を変数名として認識できません");
@@ -670,15 +670,15 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString CanNotUseCallevent { get; } = new TranslatableString("EVENT関数中にCALLEVENT命令は使用できません");
             [Managed] public static TranslatableString NotDefinedLabelName { get; } = new TranslatableString("指定されたラベル名\"${0}\"は現在の関数内に存在しません");
             [Managed] public static TranslatableString InvalidLabelName { get; } = new TranslatableString("指定されたラベル名\"${0}\"は無効な$ラベル行です");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            [Managed] public static TranslatableString NotStartedSharpLineInHeader { get; } = new TranslatableString("ヘッダーの中に#で始まらない行があります");
+            [Managed] public static TranslatableString CanNotInterpretSharpLine { get; } = new TranslatableString("解釈できない#行です");
+            [Managed] public static TranslatableString UnknownPreprocessorInSharpLine { get; } = new TranslatableString("\"#{0}\"は解釈できないプリプロセッサです");
+            [Managed] public static TranslatableString MissingReplacementSource { get; } = new TranslatableString("置換元の識別子がありません");
+            [Managed] public static TranslatableString FuncMacroArgIs0 { get; } = new TranslatableString("関数型マクロの引数を0個にすることはできません");
+            [Managed] public static TranslatableString WrongFormatReplacementSource { get; } = new TranslatableString("置換元の引数指定の書式が間違っています");
+            [Managed] public static TranslatableString DuplicateCharacterReplcaementSource { get; } = new TranslatableString("置換元の引数に同じ文字が2回以上使われています");
+            [Managed] public static TranslatableString MissingSubstitution { get; } = new TranslatableString("置換先の式がありません");
+            [Managed] public static TranslatableString CanNotDeclaredFuncMacro { get; } = new TranslatableString("関数型マクロは宣言できません");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
@@ -809,6 +809,25 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString SetMacroGroup { get; } = new TranslatableString("マクログループ{0}に設定");
             [Managed] public static TranslatableString MacroKeyF { get; } = new TranslatableString("マクロキーF{0}:");
             [Managed] public static TranslatableString GMacroKeyF { get; } = new TranslatableString("G{0}:マクロキーF{1}:");
+
+        }
+        [Managed]
+        public sealed class SystemLine
+        {
+            public static string Text { get { return trClass[typeof(SystemLine)].Text; } }
+            [Managed] public static TranslatableString LoadingFile { get; } = new TranslatableString("{0}読み込み中・・・");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
 
         }
 
