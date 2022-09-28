@@ -538,7 +538,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				if (id == null)
 				{ warn(string.Format(trerror.ArgIsNotVariable.Text, "1"), line, 2, false); return null; }
 				else if ((!id.IsArray1D && !id.IsArray2D && !id.IsArray3D) || (id.Code == VariableCode.RAND))
-				{ warn(string.Format(trerror.ArgIsNotArray.Text, "1"), line, 2, false); return null; }
+				{ warn(string.Format(trerror.ArgIsNotArrayVar.Text, "1"), line, 2, false); return null; }
 				LexicalAnalyzer.SkipWhiteSpace(st);
 				if (!st.EOS)
 				{
@@ -1103,7 +1103,7 @@ namespace MinorShift.Emuera.GameProc.Function
 					else if (line.FunctionCode == FunctionCode.FONTSTYLE)
 					{
 						if (i < 0L)
-							warn(trerror.ArgIsNegative.Text, line, 1, false);
+							warn(trerror.ArgIsNegativeValue.Text, line, 1, false);
 					}
 				}
 				return ret;
@@ -1704,7 +1704,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				if (x == null)
 					return null;
 				if (!x.Identifier.IsArray1D && !x.Identifier.IsArray2D && !x.Identifier.IsArray3D)
-				{ warn(string.Format(trerror.ArgIsNotArray.Text, "3"), line, 2, false); return null; }
+				{ warn(string.Format(trerror.ArgIsNotArrayVar.Text, "3"), line, 2, false); return null; }
                 VariableTerm term = (terms.Length >= 4) ? getChangeableVariable(terms, 4, line) : new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("RESULT"), new IOperandTerm[]{new SingleTerm(0)});
 				return new SpSplitArgument(terms[0], terms[1], x.Identifier, term);
 			}

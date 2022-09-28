@@ -580,7 +580,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString ArgIsNotRequired { get; } = new TranslatableString("引数は不要です");
             [Managed] public static TranslatableString CanNotSpecifiedTransparent { get; } = new TranslatableString("無色透明(Transparent)は色として指定できません");
             [Managed] public static TranslatableString InvalidColorName { get; } = new TranslatableString("指定された色名\"{0}\"は無効な色名です");
-            [Managed] public static TranslatableString ArgIsNotArray { get; } = new TranslatableString("第{0}引数に配列でない変数を指定することはできません");
+            [Managed] public static TranslatableString ArgIsNotArrayVar { get; } = new TranslatableString("第{0}引数に配列でない変数を指定することはできません");
             [Managed] public static TranslatableString ExtraCharacterAfterArg { get; } = new TranslatableString("引数の後に余分な文字があります");
             [Managed] public static TranslatableString ArgIsNotCharaVar { get; } = new TranslatableString("第１引数はキャラクタ変数でなければなりません");
             [Managed] public static TranslatableString ArgIsNot1DVar { get; } = new TranslatableString("第{0}引数に１次元配列もしくは配列型キャラクタ変数以外を指定することはできません");
@@ -608,7 +608,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString CanNotUseRepeat { get; } = new TranslatableString("COUNTが使用禁止変数になっているため、REPEATは使用できません");
             [Managed] public static TranslatableString RepeatCountLessthan0 { get; } = new TranslatableString("0回以下のREPEATです。(eramakerではエラーになります)");
             [Managed] public static TranslatableString ArgLessThan0 { get; } = new TranslatableString("引数に0以下の値が渡されています(この行は何もしません)");
-            [Managed] public static TranslatableString ArgIsNegative { get; } = new TranslatableString("引数に負の値が渡されています(結果は不定です)");
+            [Managed] public static TranslatableString ArgIsNegativeValue { get; } = new TranslatableString("引数に負の値が渡されています(結果は不定です)");
             [Managed] public static TranslatableString ReturnArgIsVar { get; } = new TranslatableString("RETURNの引数に変数が渡されています(eramaker：常に0を返します)");
             [Managed] public static TranslatableString ReturnArgIsFormula { get; } = new TranslatableString("RETURNの引数に数式が渡されています(eramaker：Emueraとは異なる値を返します)");
             [Managed] public static TranslatableString ArgIsFormula { get; } = new TranslatableString("\"{0}\"の引数に複数の値が与えられています(eramaker：非対応です)");
