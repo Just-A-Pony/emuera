@@ -3470,7 +3470,8 @@ namespace MinorShift.Emuera.GameData.Function
 				{
 					Int64 charaNum = exm.VEvaluator.CHARANUM;
 					if (start >= charaNum || start < 0 || end > charaNum || end < 0)
-						throw new CodeEE("INRANGECARRAY関数の範囲指定がキャラクタ配列の範囲を超えています(" + start.ToString() + "～" + end.ToString() + ")");
+						// throw new CodeEE("INRANGECARRAY関数の範囲指定がキャラクタ配列の範囲を超えています(" + start.ToString() + "～" + end.ToString() + ")");
+						throw new CodeEE(string.Format(Lang.Error.CharacterRangeInvalid.Text, Name, start, end));
 					return (exm.VEvaluator.GetInRangeArrayChara(p, min, max, start, end));
 				}
 			}
