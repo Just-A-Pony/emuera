@@ -14,56 +14,77 @@ namespace MinorShift.Emuera.GameData.Function
 		protected Type[] argumentTypeArray;
 		protected string Name { get; private set; }
 		#region EM_私家版_Emuera多言語化改造
-		protected enum ArgRefType
-		{
-			None = 0,
-			Var,
-			Array1D,
-			Array2D,
-			Array3D,
-			CharacterData,
-		}
 		protected enum ArgType
-		{
-			Any = 0, Int, String, RefAny, RefInt, RefString,
-			RefAny1D, RefInt1D, RefString1D,
-			RefAny2D, RefInt2D, RefString2D, RefAny3D, RefInt3D, RefString3D,
-			CharacterData,
+		{ 
+			Invalid = 0,
+
+			Any = 1,
+			Int = 1<<1,
+			String = 1<<2,
+			Ref = 1<<3,
+			Array = 1<<4,
+			Array1D = 1<<5,
+			Array2D = 1<<6,
+			Array3D = 1<<7,
+			Variadic = 1<<8,
+			SameAsFirst = 1<<9,
+			CharacterData = Ref | 1 << 10,
+
+			RefInt = Ref | Int,
+			RefAny = Ref | Any,
+			RefString = Ref | String,
+			RefAnyArray = RefAny | Array,
+			RefIntArray = RefInt | Array,
+			RefStringArray = RefString | Array,
+			RefAny1D = RefAny | Array1D,
+			RefInt1D = RefInt | Array1D,
+			RefString1D = RefString | Array1D,
+			RefAny2D = RefAny | Array2D,
+			RefInt2D = RefInt | Array2D,
+			RefString2D = RefString | Array2D,
+			RefAny3D = RefAny | Array3D,
+			RefInt3D = RefInt | Array3D,
+			RefString3D = RefString | Array3D,
+
+			VariadicInt = Variadic | Int,
+			VariadicString = Variadic | String,
+			VariadicSameAsFirst = Variadic | SameAsFirst,
 		}
 		protected sealed class _ArgType
 		{
-			public _ArgType(Type t, ArgRefType r)
+			public _ArgType(ArgType t)
 			{
-				Type = t; Ref = r;
+				type = t;
 			}
-			public Type Type { get; set; }
-			public ArgRefType Ref { get; set; } = ArgRefType.None;
+			public Type Type { get { return this.Int ? typeof(Int64) : typeof(string); } }
+			public ArgType type = ArgType.Invalid;
+			public bool Ref { get { return (type & ArgType.Ref) != 0; } }
+			public bool Any { get { return (type & ArgType.Any) != 0; } }
+			public bool Int { get { return (type & ArgType.Int) != 0; } }
+			public bool Array { get { return (type & ArgType.Array) != 0; } }
+			public bool Array1D { get { return (type & ArgType.Array1D) != 0; } }
+			public bool Array2D { get { return (type & ArgType.Array2D) != 0; } }
+			public bool Array3D { get { return (type & ArgType.Array2D) != 0; } }
+			public bool String { get { return (type & ArgType.String) != 0; } }
+			public bool Variadic { get { return (type & ArgType.Variadic) != 0; } }
+			public bool SameAsFirst { get { return (type & ArgType.SameAsFirst) != 0; } }
+			public bool CharacterData { get { return ((int)type & (1 << 10)) != 0; } }
+			public int ArrayDims { get { return this.Array ? -1 
+						: (this.Array1D ? 1 
+						: (this.Array2D ? 2
+						: (this.Array3D ? 3 : 0))); } }
 
 			public static implicit operator _ArgType(ArgType value)
 			{
-				Type t = null;
-				if (value != ArgType.CharacterData)
-				{
-					switch ((int)value % 3)
-					{
-						case 0: t = typeof(void); break;
-						case 1: t = typeof(Int64); break;
-						case 2: t = typeof(string); break;
-					}
-				}
-				ArgRefType r = ArgRefType.None;
-				if (value == ArgType.CharacterData) r = ArgRefType.CharacterData;
-				else if(value > ArgType.RefString2D) r = ArgRefType.Array3D;
-				else if (value > ArgType.RefString1D) r = ArgRefType.Array2D;
-				else if (value > ArgType.RefString) r = ArgRefType.Array1D;
-				else if (value > ArgType.String) r = ArgRefType.Var;
-				return new _ArgType(t, r);
+				return new _ArgType(value);
 			}
 		}
 		protected sealed class ArgTypeList
 		{
 			public List<_ArgType> ArgTypes { get; set; } = new List<_ArgType>();
 			public int OmitStart { get; set; } = -1;
+
+			public _ArgType Last { get { return ArgTypes.Count > 0 ? ArgTypes[ArgTypes.Count - 1] : null; } }
 		}
 		protected ArgTypeList[] argumentTypeArrayEx = null;
 
@@ -76,56 +97,59 @@ namespace MinorShift.Emuera.GameData.Function
 			for (int idx = 0; idx < argumentTypeArrayEx.Length; idx++)
 			{
 				var list = argumentTypeArrayEx[idx];
-				if ((list.OmitStart > -1 && arguments.Length >= list.OmitStart && arguments.Length <= list.ArgTypes.Count)
-					|| (list.OmitStart < 0 && arguments.Length == list.ArgTypes.Count))
+				bool variadic = list.ArgTypes.Count > 0 && list.Last.Variadic;
+				bool argsNotMoreThanRule = variadic ? true : arguments.Length <= list.ArgTypes.Count;
+				bool argsNotLessThanRule = list.OmitStart > -1 ? arguments.Length >= list.OmitStart : arguments.Length >= list.ArgTypes.Count;
+				if (argsNotMoreThanRule && argsNotLessThanRule)
 				{
 					// 引数の数が有効
-					for (int i = 0; i < Math.Min(arguments.Length, list.ArgTypes.Count); i++)
+					for (int i = 0; i < (variadic ? arguments.Length : Math.Min(arguments.Length, list.ArgTypes.Count)); i++)
 					{
 						if (arguments[i] == null)
 						{
 							errMsg[idx] = string.Format(Lang.Error.ArgCanNotBeNull.Text, name, i + 1);
 							break;
 						}
-						var rule = list.ArgTypes[i];
-						if (rule.Ref != ArgRefType.None && rule.Ref != ArgRefType.CharacterData)
+						var rule = variadic && i + 1 >= list.ArgTypes.Count ? list.Last : list.ArgTypes[i];
+						bool typeNotMatch = rule.SameAsFirst
+							? arguments[0].GetOperandType() != arguments[i].GetOperandType()
+							: !rule.Any && rule.Type != arguments[i].GetOperandType();
+						if (rule.Ref)
 						{
+							if (rule.CharacterData && (!(arguments[i] is VariableTerm cvarTerm) || !cvarTerm.Identifier.IsCharacterData))
+							{
+								// キャラ変数ではない
+								errMsg[idx] = string.Format(Lang.Error.ArgIsNotCharacterVar.Text, name, i + 1);
+								break;
+							}
 							// 引数の型が違う
 							bool error = false;
-							bool typeNotMatch = rule.Type != typeof(void) && rule.Type != arguments[i].GetOperandType();
-							string errText = null;
-							switch (rule.Ref)
+							string errText;
+							var dims = rule.ArrayDims;
+							switch (dims)
 							{
-								case ArgRefType.Var:
+								case 0:
 									{ 
 										// 普通の場合
-										var err = list.ArgTypes[i].Type == typeof(string) ? Lang.Error.ArgIsNotStrVar
-											: (list.ArgTypes[i].Type == typeof(Int64) ? Lang.Error.ArgIsNotIntVar : Lang.Error.ArgIsNotVar);
+										var err = rule.String ? Lang.Error.ArgIsNotStrVar
+											: (rule.Int ? Lang.Error.ArgIsNotIntVar : Lang.Error.ArgIsNotVar);
 										errText = string.Format(err.Text, name, i + 1);
 										break;
 									}
-								case ArgRefType.Array1D:
+								case -1:
 									{
-										// 一次元配列の場合
-										var err = list.ArgTypes[i].Type == typeof(string) ? Lang.Error.ArgIsNotNDStrArray
-											: (list.ArgTypes[i].Type == typeof(Int64) ? Lang.Error.ArgIsNotNDIntArray : Lang.Error.ArgIsNotNDArray);
-										errText = string.Format(err.Text, name, i + 1, 1);
+										// 任意配列の場合
+										var err = rule.String ? Lang.Error.ArgIsNotStrArray
+											: (rule.Int ? Lang.Error.ArgIsNotIntArray : Lang.Error.ArgIsNotArray);
+										errText = string.Format(err.Text, name, i + 1);
 										break;
 									}
-								case ArgRefType.Array2D:
+								default:
 									{
-										// 二次元配列の場合
-										var err = list.ArgTypes[i].Type == typeof(string) ? Lang.Error.ArgIsNotNDStrArray
-											: (list.ArgTypes[i].Type == typeof(Int64) ? Lang.Error.ArgIsNotNDIntArray : Lang.Error.ArgIsNotNDArray);
-										errText = string.Format(err.Text, name, i + 1, 2);
-										break;
-									}
-								case ArgRefType.Array3D:
-									{
-										// 三次元配列の場合
-										var err = list.ArgTypes[i].Type == typeof(string) ? Lang.Error.ArgIsNotNDStrArray
-											: (list.ArgTypes[i].Type == typeof(Int64) ? Lang.Error.ArgIsNotNDIntArray : Lang.Error.ArgIsNotNDArray);
-										errText = string.Format(err.Text, name, i + 1, 3);
+										// 1-3次元配列の場合
+										var err = rule.String ? Lang.Error.ArgIsNotNDStrArray
+											: (rule.Int ? Lang.Error.ArgIsNotNDIntArray : Lang.Error.ArgIsNotNDArray);
+										errText = string.Format(err.Text, name, i + 1, dims);
 										break;
 									}
 							}
@@ -133,12 +157,13 @@ namespace MinorShift.Emuera.GameData.Function
 							if ((arguments[i] is VariableTerm varTerm && !(varTerm.Identifier.IsCalc || varTerm.Identifier.IsConst)))
 							{
 								// 変数の場合
-								switch (rule.Ref)
+								switch (dims)
 								{
-									case ArgRefType.Var: error = !varTerm.Identifier.IsArray1D || typeNotMatch; break;
-									case ArgRefType.Array1D: error = !varTerm.Identifier.IsArray1D || typeNotMatch; break;
-									case ArgRefType.Array2D: error = !varTerm.Identifier.IsArray1D || typeNotMatch; break;
-									case ArgRefType.Array3D: error = !varTerm.Identifier.IsArray1D || typeNotMatch; break;
+									case 0: error = !varTerm.Identifier.IsArray1D || typeNotMatch; break;
+									case -1: error = (!varTerm.Identifier.IsArray1D && !varTerm.Identifier.IsArray2D && !varTerm.Identifier.IsArray3D) || typeNotMatch; break;
+									case 1: error = !varTerm.Identifier.IsArray1D || typeNotMatch; break;
+									case 2: error = !varTerm.Identifier.IsArray2D || typeNotMatch; break;
+									case 3: error = !varTerm.Identifier.IsArray3D || typeNotMatch; break;
 								}
 							}
 							else error = true; // 変数ではない
@@ -148,16 +173,11 @@ namespace MinorShift.Emuera.GameData.Function
 								break;
 							}
 						}
-						else if (rule.Ref == ArgRefType.CharacterData && (!(arguments[i] is VariableTerm cvarTerm) || !cvarTerm.Identifier.IsCharacterData))
+						else if (typeNotMatch)
 						{
-							// キャラ変数ではない
-							errMsg[idx] = string.Format(Lang.Error.ArgIsNotCharacterVar.Text, name, i + 1);
-							break;
-						}
-						else if (rule.Ref == ArgRefType.None && rule.Type != typeof(void) && rule.Type != arguments[i].GetOperandType())
-						{
+							var type = rule.SameAsFirst ? arguments[0].GetOperandType() : rule.Type;
 							// 引数の型が違う
-							errMsg[idx] = rule.Type == typeof(string) ? string.Format(Lang.Error.ArgIsNotStr.Text, name, i + 1)
+							errMsg[idx] = type == typeof(string) ? string.Format(Lang.Error.ArgIsNotStr.Text, name, i + 1)
 								: string.Format(Lang.Error.ArgIsNotInt.Text, name, i + 1);
 							break;
 						}
@@ -165,7 +185,17 @@ namespace MinorShift.Emuera.GameData.Function
 					if (errMsg[idx] == null)
 						return null;
 				}
-				else if (arguments.Length > list.ArgTypes.Count)
+				else if (list.OmitStart == -1 && list.ArgTypes.Count > 0 && !list.Last.Variadic)
+				{
+					// 数固定の引数が必要
+					if (list.ArgTypes.Count > 0)
+						errMsg[idx] = string.Format(Lang.Error.ArgsCountNotMatches.Text, name, list.ArgTypes.Count, arguments.Length);
+					else
+						errMsg[idx] = string.Format(Lang.Error.ArgsNotNeeded.Text, name);
+					continue;
+				}
+				// 可変長引数
+				else if (!argsNotMoreThanRule)
 				{
 					// 引数が多すぎる
 					errMsg[idx] = string.Format(Lang.Error.TooManyFuncArgs.Text, name);
@@ -197,8 +227,13 @@ namespace MinorShift.Emuera.GameData.Function
 			else if (argumentTypeArray!=null)
 			{
 				if (arguments.Length != argumentTypeArray.Length)
-					// return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum0, name);
-					return string.Format(Lang.Error.ErrArgsCount.Text, name);
+				// return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum0, name);
+				{
+					if (argumentTypeArray.Length > 0)
+						return string.Format(Lang.Error.ArgsCountNotMatches.Text, name, argumentTypeArray.Length, arguments.Length);
+					else
+						return string.Format(Lang.Error.ArgsNotNeeded.Text, name);
+				}
 				for (int i = 0; i < argumentTypeArray.Length; i++)
 				{
 					if (arguments[i] == null)
