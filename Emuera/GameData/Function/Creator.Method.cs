@@ -686,7 +686,7 @@ namespace MinorShift.Emuera.GameData.Function
 				}
 				catch (ArgumentException e)
 				{
-					throw new CodeEE(string.Format(trerror.InvalidRegexArg.Text, e.Message, "2"));
+					throw new CodeEE(string.Format(Lang.Error.InvalidRegexArg.Text, Name, 2, e.Message));
 				}
 				var matches = reg.Matches(baseString);
 				var ret = matches.Count;
@@ -1651,45 +1651,39 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(Int64);
 				// argumentTypeArray = null;
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.CharacterData, ArgType.Any, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+					new ArgTypeList{ ArgTypes = { ArgType.CharacterData, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
 				};
 				CanRestructure = false;
 				isLast = last;
 			}
 
 			readonly bool isLast;
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				var res = base.CheckArgumentType(name, arguments);
-				if (res == null && arguments[1].GetOperandType() != arguments[0].GetOperandType())
-				{
-					res = string.Format(Lang.Error.InvalidArgType.Text, name, 2);
-				}
-				return res;
-				////通常3つ、1つ省略可能で2～3の引数が必要。
-				//if (arguments.Length < 2)
-				//	return name + "関数には少なくとも2つの引数が必要です";
-				//if (arguments.Length > 4)
-				//	return name + "関数の引数が多すぎます";
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	//通常3つ、1つ省略可能で2～3の引数が必要。
+			//	if (arguments.Length < 2)
+			//		return name + "関数には少なくとも2つの引数が必要です";
+			//	if (arguments.Length > 4)
+			//		return name + "関数の引数が多すぎます";
 
-				//if (arguments[0] == null)
-				//	return name + "関数の1番目の引数は省略できません";
-				//if (!(arguments[0] is VariableTerm))
-				//	return name + "関数の1番目の引数の型が正しくありません";
-				//if (!(((VariableTerm)arguments[0]).Identifier.IsCharacterData))
-				//	return name + "関数の1番目の引数の変数がキャラクタ変数ではありません";
-				//if (arguments[1] == null)
-				//	return name + "関数の2番目の引数は省略できません";
-				//if (arguments[1].GetOperandType() != arguments[0].GetOperandType())
-				//	return name + "関数の2番目の引数の型が正しくありません";
-				////3番目は省略可能
-				//if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
-				//	return name + "関数の3番目の引数の型が正しくありません";
-				////4番目は省略可能
-				//if ((arguments.Length >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
-				//	return name + "関数の4番目の引数の型が正しくありません";
-				//return null;
-			}
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (!(arguments[0] is VariableTerm))
+			//		return name + "関数の1番目の引数の型が正しくありません";
+			//	if (!(((VariableTerm)arguments[0]).Identifier.IsCharacterData))
+			//		return name + "関数の1番目の引数の変数がキャラクタ変数ではありません";
+			//	if (arguments[1] == null)
+			//		return name + "関数の2番目の引数は省略できません";
+			//	if (arguments[1].GetOperandType() != arguments[0].GetOperandType())
+			//		return name + "関数の2番目の引数の型が正しくありません";
+			//	//3番目は省略可能
+			//	if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の3番目の引数の型が正しくありません";
+			//	//4番目は省略可能
+			//	if ((arguments.Length >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の4番目の引数の型が正しくありません";
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				VariableTerm vTerm = (VariableTerm)arguments[0];
@@ -1776,40 +1770,44 @@ namespace MinorShift.Emuera.GameData.Function
 			public VarsizeMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int }, OmitStart = 1 },
+				};
 				CanRestructure = true;
 				//1808beta009 参照型変数の追加によりちょっと面倒になった
 				HasUniqueRestructure = true;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 1)
-					return name + "関数には少なくとも1つの引数が必要です";
-				if (arguments.Length > 2)
-					return name + "関数の引数が多すぎます";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (!arguments[0].IsString)
-					return name + "関数の1番目の引数が文字列ではありません";
-				if (arguments[0] is SingleTerm)
-				{
-					string varName = ((SingleTerm)arguments[0]).Str;
-					if (GlobalStatic.IdentifierDictionary.GetVariableToken(varName, null, true) == null)
-						return name + "関数の1番目の引数が変数名ではありません";
-				}
-				if (arguments.Length == 1)
-					return null;
-				if ((arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
-					return name + "関数の2番目の変数が数値ではありません";
-				if (arguments.Length == 2)
-					return null;
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length < 1)
+			//		return name + "関数には少なくとも1つの引数が必要です";
+			//	if (arguments.Length > 2)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (!arguments[0].IsString)
+			//		return name + "関数の1番目の引数が文字列ではありません";
+			//	if (arguments[0] is SingleTerm)
+			//	{
+			//		string varName = ((SingleTerm)arguments[0]).Str;
+			//		if (GlobalStatic.IdentifierDictionary.GetVariableToken(varName, null, true) == null)
+			//			return name + "関数の1番目の引数が変数名ではありません";
+			//	}
+			//	if (arguments.Length == 1)
+			//		return null;
+			//	if ((arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の2番目の変数が数値ではありません";
+			//	if (arguments.Length == 2)
+			//		return null;
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				VariableToken var = GlobalStatic.IdentifierDictionary.GetVariableToken(arguments[0].GetStrValue(exm), null, true);
 				if (var == null)
-					throw new CodeEE("VARSIZEの1番目の引数(\"" + arguments[0].GetStrValue(exm) + "\")が変数名ではありません");
+					// throw new CodeEE("VARSIZEの1番目の引数(\"" + arguments[0].GetStrValue(exm) + "\")が変数名ではありません");
+					throw new CodeEE(string.Format(Lang.Error.NotVariableName.Text, Name, 1, arguments[0].GetStrValue(exm)));
 				int dim = 0;
 				if (arguments.Length == 2 && arguments[1] != null)
 					dim = (int)arguments[1].GetIntValue(exm);
@@ -1874,9 +1872,11 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				Int64 target = arguments[0].GetIntValue(exm);
 				if (target < 0)
-					throw new CodeEE(Name + "の引数に負の値(" + target.ToString() + ")が指定されました");
+					// throw new CodeEE(Name + "の引数に負の値(" + target.ToString() + ")が指定されました");
+					throw new CodeEE(string.Format(Lang.Error.ArgIsNegative.Text, Name, 1, target));
 				else if (target > int.MaxValue)
-					throw new CodeEE(Name + "の引数(" + target.ToString() + ")が大きすぎます");
+					// throw new CodeEE(Name + "の引数(" + target.ToString() + ")が大きすぎます");
+					throw new CodeEE(string.Format(Lang.Error.ArgIsTooLarge.Text, Name, 1, target));
 				EraDataResult result = exm.VEvaluator.CheckData((int)target, type);
 				exm.VEvaluator.RESULTS = result.DataMes;
 				return ((long)result.State);
@@ -1914,23 +1914,26 @@ namespace MinorShift.Emuera.GameData.Function
 			public FindFilesMethod(EraSaveFileType type)
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String }, OmitStart = 0 },
+				};
 				CanRestructure = false;
 				this.type = type;
 			}
 
 			readonly EraSaveFileType type;
 
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length > 1)
-					return name + "関数の引数が多すぎます";
-				if (arguments.Length == 0 || arguments[0] == null)
-					return null;
-				if (!arguments[0].IsString)
-					return name + "関数の1番目の引数が文字列ではありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length > 1)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments.Length == 0 || arguments[0] == null)
+			//		return null;
+			//	if (!arguments[0].IsString)
+			//		return name + "関数の1番目の引数が文字列ではありません";
+			//	return null;
+			//}
 
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
@@ -1976,9 +1979,11 @@ namespace MinorShift.Emuera.GameData.Function
 			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 			{
 				if (arguments.Length > 0)
-					return name + "関数の引数が多すぎます";
+					// return name + "関数の引数が多すぎます";
+					return string.Format(Lang.Error.TooManyFuncArgs.Text, name);
 				if (warn)
-					ParserMediator.Warn("関数MOUSESKIP()は推奨されません。代わりに関数MESSKIP()を使用してください", GlobalStatic.Process.GetScaningLine(), 1, false, false, null);
+					// ParserMediator.Warn("関数MOUSESKIP()は推奨されません。代わりに関数MESSKIP()を使用してください", GlobalStatic.Process.GetScaningLine(), 1, false, false, null);
+					ParserMediator.Warn(string.Format(Lang.Error.FuncDeprecated.Text, name, "MESSKIP"), GlobalStatic.Process.GetScaningLine(), 1, false, false, null);
 				return null;
 			}
 			public override long GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
@@ -2145,7 +2150,8 @@ namespace MinorShift.Emuera.GameData.Function
 				else
 				{
 					if (colorName.Equals("transparent", StringComparison.OrdinalIgnoreCase))
-						throw new CodeEE("無色透明(Transparent)は色として指定できません");
+						// throw new CodeEE("無色透明(Transparent)は色として指定できません");
+						throw new CodeEE(Lang.Error.TransparentUnsupported.Text);
 					//throw new CodeEE("指定された色名\"" + colorName + "\"は無効な色名です");
 					i = -1;
 				}
@@ -2165,44 +2171,48 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				long r = arguments[0].GetIntValue(exm);
 				if(r < 0 || r > 255)
-					throw new CodeEE("第１引数が0から255の範囲外です");
+					// throw new CodeEE("第１引数が0から255の範囲外です");
+					throw new CodeEE(string.Format(Lang.Error.ArgIsOutOfRange.Text, Name, 1, r, 0, 255));
 				long g = arguments[1].GetIntValue(exm);
 				if(g< 0 || g > 255)
-					throw new CodeEE("第２引数が0から255の範囲外です");
+					// throw new CodeEE("第２引数が0から255の範囲外です");
+					throw new CodeEE(string.Format(Lang.Error.ArgIsOutOfRange.Text, Name, 2, g, 0, 255));
 				long b = arguments[2].GetIntValue(exm);
-				if(b < 0 || b > 255)
-					throw new CodeEE("第３引数が0から255の範囲外です");
+				if (b < 0 || b > 255)
+					// throw new CodeEE("第３引数が0から255の範囲外です");
+					throw new CodeEE(string.Format(Lang.Error.ArgIsOutOfRange.Text, Name, 3, b, 0, 255));
 				return (r << 16) + (g << 8) + b;
 			}
 		}
 		/// <summary>
 		/// 1810 作ったけど保留
 		/// </summary>
-		private sealed class GetRefMethod : FunctionMethod
-		{
-			public GetRefMethod()
-			{
-				ReturnType = typeof(string);
-				argumentTypeArray = null;
-				CanRestructure = false;
-			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 1)
-					return name + "関数には少なくとも1つの引数が必要です";
-				if (arguments.Length > 1)
-					return name + "関数の引数が多すぎます";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (!(arguments[0] is UserDefinedRefMethodNoArgTerm))
-					return name + "関数の1番目の引数が関数参照ではありません";
-				return null;
-			}
-			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
-			{
-				return ((UserDefinedRefMethodNoArgTerm)arguments[0]).GetRefName();
-			}
-		}
+		// 使われてない
+		//private sealed class GetRefMethod : FunctionMethod
+		//{
+		//	public GetRefMethod()
+		//	{
+		//		ReturnType = typeof(string);
+		//		argumentTypeArray = null;
+		//		CanRestructure = false;
+		//	}
+		//	public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+		//	{
+		//		if (arguments.Length < 1)
+		//			return name + "関数には少なくとも1つの引数が必要です";
+		//		if (arguments.Length > 1)
+		//			return name + "関数の引数が多すぎます";
+		//		if (arguments[0] == null)
+		//			return name + "関数の1番目の引数は省略できません";
+		//		if (!(arguments[0] is UserDefinedRefMethodNoArgTerm))
+		//			return name + "関数の1番目の引数が関数参照ではありません";
+		//		return null;
+		//	}
+		//	public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
+		//	{
+		//		return ((UserDefinedRefMethodNoArgTerm)arguments[0]).GetRefName();
+		//	}
+		//}
 		#endregion
 
 		#region 定数取得
@@ -2211,24 +2221,27 @@ namespace MinorShift.Emuera.GameData.Function
 			public MoneyStrMethod()
 			{
 				ReturnType = typeof(string);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String}, OmitStart = 1 }
+				};
 				CanRestructure = true;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				//通常2つ、1つ省略可能で1～2の引数が必要。
-				if (arguments.Length < 1)
-					return name + "関数には少なくとも1つの引数が必要です";
-				if (arguments.Length > 2)
-					return name + "関数の引数が多すぎます";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (arguments[0].GetOperandType() != typeof(Int64))
-					return name + "関数の1番目の引数の型が正しくありません";
-				if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(string)))
-					return name + "関数の2番目の引数の型が正しくありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	//通常2つ、1つ省略可能で1～2の引数が必要。
+			//	if (arguments.Length < 1)
+			//		return name + "関数には少なくとも1つの引数が必要です";
+			//	if (arguments.Length > 2)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (arguments[0].GetOperandType() != typeof(Int64))
+			//		return name + "関数の1番目の引数の型が正しくありません";
+			//	if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(string)))
+			//		return name + "関数の2番目の引数の型が正しくありません";
+			//	return null;
+			//}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				long money = arguments[0].GetIntValue(exm);
@@ -2242,7 +2255,8 @@ namespace MinorShift.Emuera.GameData.Function
 				}
 				catch (FormatException)
 				{
-					throw new CodeEE("MONEYSTR関数の第2引数の書式指定が間違っています");
+					// throw new CodeEE("MONEYSTR関数の第2引数の書式指定が間違っています");
+					throw new CodeEE(string.Format(Lang.Error.InvalidFormat.Text, Name, 2));
 				}
 				return (Config.MoneyFirst) ? Config.MoneyLabel + ret : ret + Config.MoneyLabel;
 			}
@@ -2364,32 +2378,35 @@ namespace MinorShift.Emuera.GameData.Function
 			public RandMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int}, OmitStart = 1 }
+				};
 				CanRestructure = false;
 			}
 
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				//通常2つ、1つ省略可能で1～2の引数が必要。
-				if (arguments.Length < 1)
-					return name + "関数には少なくとも1つの引数が必要です";
-				if (arguments.Length > 2)
-					return name + "関数の引数が多すぎます";
-				if (arguments.Length == 1)
-				{
-					if (arguments[0] == null)
-						return name + "関数には少なくとも1つの引数が必要です";
-					if ((arguments[0].GetOperandType() != typeof(Int64)))
-						return name + "関数の1番目の引数の型が正しくありません";
-					return null;
-				}
-				//1番目は省略可能
-				if ((arguments[0] != null) && (arguments[0].GetOperandType() != typeof(Int64)))
-					return name + "関数の1番目の引数の型が正しくありません";
-				if ((arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
-					return name + "関数の2番目の引数の型が正しくありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	//通常2つ、1つ省略可能で1～2の引数が必要。
+			//	if (arguments.Length < 1)
+			//		return name + "関数には少なくとも1つの引数が必要です";
+			//	if (arguments.Length > 2)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments.Length == 1)
+			//	{
+			//		if (arguments[0] == null)
+			//			return name + "関数には少なくとも1つの引数が必要です";
+			//		if ((arguments[0].GetOperandType() != typeof(Int64)))
+			//			return name + "関数の1番目の引数の型が正しくありません";
+			//		return null;
+			//	}
+			//	//1番目は省略可能
+			//	if ((arguments[0] != null) && (arguments[0].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の1番目の引数の型が正しくありません";
+			//	if ((arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の2番目の引数の型が正しくありません";
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				Int64 min = 0;
@@ -2405,9 +2422,11 @@ namespace MinorShift.Emuera.GameData.Function
 				if (max <= min)
 				{
 					if (min == 0)
-						throw new CodeEE("RANDの最大値に0以下の値(" + max.ToString() + ")が指定されました");
+						// throw new CodeEE("RANDの最大値に0以下の値(" + max.ToString() + ")が指定されました");
+						throw new CodeEE(string.Format(Lang.Error.NegativeMaximum.Text, Name, max));
 					else
-						throw new CodeEE("RANDの最大値に最小値以下の値(" + max.ToString() + ")が指定されました");
+						// throw new CodeEE("RANDの最大値に最小値以下の値(" + max.ToString() + ")が指定されました");
+						throw new CodeEE(string.Format(Lang.Error.MaximumLowerThanMinimum.Text, Name, max));
 				}
 				return (exm.VEvaluator.GetNextRand(max - min) + min);
 			}
@@ -2419,30 +2438,36 @@ namespace MinorShift.Emuera.GameData.Function
 			public MaxMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.VariadicInt}, OmitStart = 1 }
+				};
 				isMax = true;
 				CanRestructure = true;
 			}
 			public MaxMethod(bool max)
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.VariadicInt}, OmitStart = 1 }
+				};
 				isMax = max;
 				CanRestructure = true;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 1)
-					return name + "関数には少なくとも1つの引数が必要です";
-				for (int i = 0; i < arguments.Length; i++)
-				{
-					if (arguments[i] == null)
-						return name + "関数の" + (i + 1).ToString() + "番目の引数は省略できません";
-					if (arguments[i].GetOperandType() != typeof(Int64))
-						return name + "関数の" + (i + 1).ToString() + "番目の引数の型が正しくありません";
-				}
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length < 1)
+			//		return name + "関数には少なくとも1つの引数が必要です";
+			//	for (int i = 0; i < arguments.Length; i++)
+			//	{
+			//		if (arguments[i] == null)
+			//			return name + "関数の" + (i + 1).ToString() + "番目の引数は省略できません";
+			//		if (arguments[i].GetOperandType() != typeof(Int64))
+			//			return name + "関数の" + (i + 1).ToString() + "番目の引数の型が正しくありません";
+			//	}
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				Int64 ret = arguments[0].GetIntValue(exm);
@@ -2494,11 +2519,14 @@ namespace MinorShift.Emuera.GameData.Function
 				Int64 y = arguments[1].GetIntValue(exm);
 				double pow = Math.Pow(x, y);
 				if (double.IsNaN(pow))
-					throw new CodeEE("累乗結果が非数値です");
+					// throw new CodeEE("累乗結果が非数値です");
+					throw new CodeEE(string.Format(Lang.Error.ResultIsNaN.Text, Name));
 				else if (double.IsInfinity(pow))
-					throw new CodeEE("累乗結果が無限大です");
+					//throw new CodeEE("累乗結果が無限大です");
+					throw new CodeEE(string.Format(Lang.Error.ResultIsInfinity.Text, Name));
 				else if ((pow >= Int64.MaxValue) || (pow <= Int64.MinValue))
-					throw new CodeEE("累乗結果(" + pow.ToString() + ")が64ビット符号付き整数の範囲外です");
+					//throw new CodeEE("累乗結果(" + pow.ToString() + ")が64ビット符号付き整数の範囲外です");
+					throw new CodeEE(string.Format(Lang.Error.ResultIsOutOfTheRangeOfInt64.Text, Name, pow));
 				return ((long)pow);
 			}
 		}
@@ -2515,7 +2543,8 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				Int64 ret = arguments[0].GetIntValue(exm);
 				if (ret < 0)
-					throw new CodeEE("SQRT関数の引数に負の値が指定されました");
+					// throw new CodeEE("SQRT関数の引数に負の値が指定されました");
+					throw new CodeEE(string.Format(Lang.Error.ArgIsNegative.Text, Name, 1, ret));
 				return ((Int64)Math.Sqrt(ret));
 			}
 		}
@@ -2532,7 +2561,8 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				Int64 ret = arguments[0].GetIntValue(exm);
 				if (ret < 0)
-					throw new CodeEE("CBRT関数の引数に負の値が指定されました");
+					// throw new CodeEE("CBRT関数の引数に負の値が指定されました");
+					throw new CodeEE(string.Format(Lang.Error.ArgIsNegative.Text, Name, 1, ret));
 				return ((Int64)Math.Pow((double)ret, 1.0 / 3.0));
 			}
 		}
@@ -2558,20 +2588,25 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				Int64 ret = arguments[0].GetIntValue(exm);
 				if (ret <= 0)
-					throw new CodeEE("対数関数の引数に0以下の値が指定されました");
-				if (Base <= 0.0d)
-					throw new CodeEE("対数関数の底に0以下の値が指定されました");
+					// throw new CodeEE("対数関数の引数に0以下の値が指定されました");
+					throw new CodeEE(string.Format(Lang.Error.ArgIsNegative.Text, Name, 1, ret));
+				//　今の段階は発生しない
+				//if (Base <= 0.0d)
+				//	throw new CodeEE("対数関数の底に0以下の値が指定されました");
 				double dret = (double)ret;
 				if (Base == Math.E)
 					dret = Math.Log(dret);
 				else
 					dret = Math.Log10(dret);
 				if (double.IsNaN(dret))
-					throw new CodeEE("計算値が非数値です");
+					// throw new CodeEE("計算値が非数値です");
+					throw new CodeEE(string.Format(Lang.Error.ResultIsNaN.Text, Name));
 				else if (double.IsInfinity(dret))
-					throw new CodeEE("計算値が無限大です");
+					// throw new CodeEE("計算値が無限大です");
+					throw new CodeEE(string.Format(Lang.Error.ResultIsInfinity.Text, Name));
 				else if ((dret >= Int64.MaxValue) || (dret <= Int64.MinValue))
-					throw new CodeEE("計算結果(" + dret.ToString() + ")が64ビット符号付き整数の範囲外です");
+					// throw new CodeEE("計算結果(" + dret.ToString() + ")が64ビット符号付き整数の範囲外です");
+					throw new CodeEE(string.Format(Lang.Error.ResultIsOutOfTheRangeOfInt64.Text, Name, dret));
 				return ((Int64)dret);
 			}
 		}
@@ -2589,11 +2624,14 @@ namespace MinorShift.Emuera.GameData.Function
 				Int64 ret = arguments[0].GetIntValue(exm);
 				double dret = Math.Exp((double)ret);
 				if (double.IsNaN(dret))
-					throw new CodeEE("計算値が非数値です");
+					// throw new CodeEE("計算値が非数値です");
+					throw new CodeEE(string.Format(Lang.Error.ResultIsNaN.Text, Name));
 				else if (double.IsInfinity(dret))
-					throw new CodeEE("計算値が無限大です");
+					// throw new CodeEE("計算値が無限大です");
+					throw new CodeEE(string.Format(Lang.Error.ResultIsInfinity.Text, Name));
 				else if ((dret >= Int64.MaxValue) || (dret <= Int64.MinValue))
-					throw new CodeEE("計算結果(" + dret.ToString() + ")が64ビット符号付き整数の範囲外です");
+					// throw new CodeEE("計算結果(" + dret.ToString() + ")が64ビット符号付き整数の範囲外です");
+					throw new CodeEE(string.Format(Lang.Error.ResultIsOutOfTheRangeOfInt64.Text, Name, dret));
 
 				return ((Int64)dret);
 			}
@@ -2647,44 +2685,50 @@ namespace MinorShift.Emuera.GameData.Function
 			public SumArrayMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.RefIntArray, ArgType.Int, ArgType.Int }, OmitStart = 1 },
+				};
 				isCharaRange = false;
 				CanRestructure = false;
 			}
 			public SumArrayMethod(bool isChara)
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefIntArray, ArgType.Int, ArgType.Int }, OmitStart = 1 }
+				};
 				isCharaRange = isChara;
 				CanRestructure = false;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 1)
-					return name + "関数には少なくとも1つの引数が必要です";
-				if (arguments.Length > 3)
-					return name + "関数の引数が多すぎます";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (!(arguments[0] is VariableTerm))
-					return name + "関数の1番目の引数が変数ではありません";
-				VariableTerm varToken = (VariableTerm)arguments[0];
-				if (varToken.IsString)
-					return name + "関数の1番目の引数が数値変数ではありません";
-				if (isCharaRange && !varToken.Identifier.IsCharacterData)
-					return name + "関数の1番目の引数がキャラクタ変数ではありません";
-				if (!isCharaRange && !varToken.Identifier.IsArray1D && !varToken.Identifier.IsArray2D && !varToken.Identifier.IsArray3D)
-					return name + "関数の1番目の引数が配列変数ではありません";
-				if (arguments.Length == 1)
-					return null;
-				if ((arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
-					return name + "関数の2番目の変数が数値ではありません";
-				if (arguments.Length == 2)
-					return null;
-				if ((arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
-					return name + "関数の3番目の変数が数値ではありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length < 1)
+			//		return name + "関数には少なくとも1つの引数が必要です";
+			//	if (arguments.Length > 3)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (!(arguments[0] is VariableTerm))
+			//		return name + "関数の1番目の引数が変数ではありません";
+			//	VariableTerm varToken = (VariableTerm)arguments[0];
+			//	if (varToken.IsString)
+			//		return name + "関数の1番目の引数が数値変数ではありません";
+			//	if (isCharaRange && !varToken.Identifier.IsCharacterData)
+			//		return name + "関数の1番目の引数がキャラクタ変数ではありません";
+			//	if (!isCharaRange && !varToken.Identifier.IsArray1D && !varToken.Identifier.IsArray2D && !varToken.Identifier.IsArray3D)
+			//		return name + "関数の1番目の引数が配列変数ではありません";
+			//	if (arguments.Length == 1)
+			//		return null;
+			//	if ((arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の2番目の変数が数値ではありません";
+			//	if (arguments.Length == 2)
+			//		return null;
+			//	if ((arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の3番目の変数が数値ではありません";
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				VariableTerm varTerm = (VariableTerm)arguments[0];
@@ -2701,7 +2745,8 @@ namespace MinorShift.Emuera.GameData.Function
 				{
 					Int64 charaNum = exm.VEvaluator.CHARANUM;
 					if (index1 >= charaNum || index1 < 0 || index2 > charaNum || index2 < 0)
-						throw new CodeEE("SUMCARRAY関数の範囲指定がキャラクタ配列の範囲を超えています(" + index1.ToString() + "～" + index2.ToString() + ")");
+						// throw new CodeEE("SUMCARRAY関数の範囲指定がキャラクタ配列の範囲を超えています(" + index1.ToString() + "～" + index2.ToString() + ")");
+						throw new CodeEE(string.Format(Lang.Error.CharacterRangeInvalid.Text, Name, index1, index2));
 					return (exm.VEvaluator.GetArraySumChara(p, index1, index2));
 				}
 			}
@@ -2713,7 +2758,10 @@ namespace MinorShift.Emuera.GameData.Function
 			public MatchMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.RefAny1D, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+				};
 				isCharaRange = false;
 				CanRestructure = false;
 				HasUniqueRestructure = true;
@@ -2721,38 +2769,41 @@ namespace MinorShift.Emuera.GameData.Function
 			public MatchMethod(bool isChara)
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefAny1D, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+				};
 				isCharaRange = isChara;
 				CanRestructure = false;
 				HasUniqueRestructure = true;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 2)
-					return name + "関数には少なくとも2つの引数が必要です";
-				if (arguments.Length > 4)
-					return name + "関数の引数が多すぎます";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (!(arguments[0] is VariableTerm))
-					return name + "関数の1番目の引数が変数ではありません";
-				VariableTerm varToken = (VariableTerm)arguments[0];
-				if (isCharaRange && !varToken.Identifier.IsCharacterData)
-					return name + "関数の1番目の引数がキャラクタ変数ではありません";
-				if (!isCharaRange && (varToken.Identifier.IsArray2D || varToken.Identifier.IsArray3D))
-					return name + "関数は二重配列・三重配列には対応していません";
-				if (!isCharaRange && !varToken.Identifier.IsArray1D)
-					return name + "関数の1番目の引数が配列変数ではありません";
-				if (arguments[1] == null)
-					return name + "関数の2番目の引数は省略できません";
-				if (arguments[1].GetOperandType() != arguments[0].GetOperandType())
-					return name + "関数の1番目の引数と2番目の引数の型が異なります";
-				if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
-					return name + "関数の3番目の引数の型が正しくありません";
-				if ((arguments.Length >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
-					return name + "関数の4番目の引数の型が正しくありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length < 2)
+			//		return name + "関数には少なくとも2つの引数が必要です";
+			//	if (arguments.Length > 4)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (!(arguments[0] is VariableTerm))
+			//		return name + "関数の1番目の引数が変数ではありません";
+			//	VariableTerm varToken = (VariableTerm)arguments[0];
+			//	if (isCharaRange && !varToken.Identifier.IsCharacterData)
+			//		return name + "関数の1番目の引数がキャラクタ変数ではありません";
+			//	if (!isCharaRange && (varToken.Identifier.IsArray2D || varToken.Identifier.IsArray3D))
+			//		return name + "関数は二重配列・三重配列には対応していません";
+			//	if (!isCharaRange && !varToken.Identifier.IsArray1D)
+			//		return name + "関数の1番目の引数が配列変数ではありません";
+			//	if (arguments[1] == null)
+			//		return name + "関数の2番目の引数は省略できません";
+			//	if (arguments[1].GetOperandType() != arguments[0].GetOperandType())
+			//		return name + "関数の1番目の引数と2番目の引数の型が異なります";
+			//	if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の3番目の引数の型が正しくありません";
+			//	if ((arguments.Length >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の4番目の引数の型が正しくありません";
+			//	return null;
+			//}
 
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
@@ -2779,7 +2830,8 @@ namespace MinorShift.Emuera.GameData.Function
 				{
 					Int64 charaNum = exm.VEvaluator.CHARANUM;
 					if (start >= charaNum || start < 0 || end > charaNum || end < 0)
-						throw new CodeEE("CMATCH関数の範囲指定がキャラクタ配列の範囲を超えています(" + start.ToString() + "～" + end.ToString() + ")");
+						// throw new CodeEE("CMATCH関数の範囲指定がキャラクタ配列の範囲を超えています(" + start.ToString() + "～" + end.ToString() + ")");
+						throw new CodeEE(string.Format(Lang.Error.CharacterRangeInvalid.Text, Name, start, end));
 					if (arguments[0].GetOperandType() == typeof(Int64))
 					{
 						Int64 targetValue = arguments[1].GetIntValue(exm);
@@ -2811,25 +2863,28 @@ namespace MinorShift.Emuera.GameData.Function
 			public GroupMatchMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.VariadicSameAsFirst } },
+				};
 				CanRestructure = false;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 2)
-					return name + "関数には少なくとも2つの引数が必要です";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				Type baseType = arguments[0].GetOperandType();
-				for (int i = 1; i < arguments.Length; i++)
-				{
-					if (arguments[i] == null)
-						return name + "関数の" + (i + 1).ToString() + "番目の引数は省略できません";
-					if (arguments[i].GetOperandType() != baseType)
-						return name + "関数の" + (i + 1).ToString() + "番目の引数の型が正しくありません";
-				}
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length < 2)
+			//		return name + "関数には少なくとも2つの引数が必要です";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	Type baseType = arguments[0].GetOperandType();
+			//	for (int i = 1; i < arguments.Length; i++)
+			//	{
+			//		if (arguments[i] == null)
+			//			return name + "関数の" + (i + 1).ToString() + "番目の引数は省略できません";
+			//		if (arguments[i].GetOperandType() != baseType)
+			//			return name + "関数の" + (i + 1).ToString() + "番目の引数の型が正しくありません";
+			//	}
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				Int64 ret = 0;
@@ -2860,25 +2915,28 @@ namespace MinorShift.Emuera.GameData.Function
 			public NosamesMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.VariadicSameAsFirst } },
+				};
 				CanRestructure = false;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 2)
-					return name + "関数には少なくとも2つの引数が必要です";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				Type baseType = arguments[0].GetOperandType();
-				for (int i = 1; i < arguments.Length; i++)
-				{
-					if (arguments[i] == null)
-						return name + "関数の" + (i + 1).ToString() + "番目の引数は省略できません";
-					if (arguments[i].GetOperandType() != baseType)
-						return name + "関数の" + (i + 1).ToString() + "番目の引数の型が正しくありません";
-				}
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length < 2)
+			//		return name + "関数には少なくとも2つの引数が必要です";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	Type baseType = arguments[0].GetOperandType();
+			//	for (int i = 1; i < arguments.Length; i++)
+			//	{
+			//		if (arguments[i] == null)
+			//			return name + "関数の" + (i + 1).ToString() + "番目の引数は省略できません";
+			//		if (arguments[i].GetOperandType() != baseType)
+			//			return name + "関数の" + (i + 1).ToString() + "番目の引数の型が正しくありません";
+			//	}
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				if (arguments[0].GetOperandType() == typeof(Int64))
@@ -2908,25 +2966,28 @@ namespace MinorShift.Emuera.GameData.Function
 			public AllsamesMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.VariadicSameAsFirst } },
+				};
 				CanRestructure = false;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 2)
-					return name + "関数には少なくとも2つの引数が必要です";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				Type baseType = arguments[0].GetOperandType();
-				for (int i = 1; i < arguments.Length; i++)
-				{
-					if (arguments[i] == null)
-						return name + "関数の" + (i + 1).ToString() + "番目の引数は省略できません";
-					if (arguments[i].GetOperandType() != baseType)
-						return name + "関数の" + (i + 1).ToString() + "番目の引数の型が正しくありません";
-				}
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length < 2)
+			//		return name + "関数には少なくとも2つの引数が必要です";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	Type baseType = arguments[0].GetOperandType();
+			//	for (int i = 1; i < arguments.Length; i++)
+			//	{
+			//		if (arguments[i] == null)
+			//			return name + "関数の" + (i + 1).ToString() + "番目の引数は省略できません";
+			//		if (arguments[i].GetOperandType() != baseType)
+			//			return name + "関数の" + (i + 1).ToString() + "番目の引数の型が正しくありません";
+			//	}
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				if (arguments[0].GetOperandType() == typeof(Int64))
@@ -2959,7 +3020,10 @@ namespace MinorShift.Emuera.GameData.Function
 			public MaxArrayMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.RefInt1D, ArgType.Int, ArgType.Int }, OmitStart = 1 },
+				};
 				isCharaRange = false;
 				isMax = true;
 				funcName = "MAXARRAY";
@@ -2968,7 +3032,10 @@ namespace MinorShift.Emuera.GameData.Function
 			public MaxArrayMethod(bool isChara)
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefInt1D, ArgType.Int, ArgType.Int }, OmitStart = 1 },
+				};
 				isCharaRange = isChara;
 				isMax = true;
 				if (isCharaRange)
@@ -2980,37 +3047,44 @@ namespace MinorShift.Emuera.GameData.Function
 			public MaxArrayMethod(bool isChara, bool isMaxFunc)
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = isChara
+					? new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefInt1D, ArgType.Int, ArgType.Int }, OmitStart = 1 },
+					}
+					: new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.RefInt1D, ArgType.Int, ArgType.Int }, OmitStart = 1 },
+					};
 				isCharaRange = isChara;
 				isMax = isMaxFunc;
 				funcName = (isMax ? "MAX" : "MIN") + (isCharaRange ? "C" : "") + "ARRAY";
 				CanRestructure = false;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 1)
-					return name + "関数には少なくとも1つの引数が必要です";
-				if (arguments.Length > 3)
-					return name + "関数の引数が多すぎます";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (!(arguments[0] is VariableTerm))
-					return name + "関数の1番目の引数が変数ではありません";
-				VariableTerm varToken = (VariableTerm)arguments[0];
-				if (isCharaRange && !varToken.Identifier.IsCharacterData)
-					return name + "関数の1番目の引数がキャラクタ変数ではありません";
-				if (!varToken.IsInteger)
-					return name + "関数の1番目の引数が数値変数ではありません";
-				if (!isCharaRange && (varToken.Identifier.IsArray2D || varToken.Identifier.IsArray3D))
-					return name + "関数は二重配列・三重配列には対応していません";
-				if (!varToken.Identifier.IsArray1D)
-					return name + "関数の1番目の引数が配列変数ではありません";
-				if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
-					return name + "関数の2番目の引数の型が正しくありません";
-				if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
-					return name + "関数の3番目の引数の型が正しくありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length < 1)
+			//		return name + "関数には少なくとも1つの引数が必要です";
+			//	if (arguments.Length > 3)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (!(arguments[0] is VariableTerm))
+			//		return name + "関数の1番目の引数が変数ではありません";
+			//	VariableTerm varToken = (VariableTerm)arguments[0];
+			//	if (isCharaRange && !varToken.Identifier.IsCharacterData)
+			//		return name + "関数の1番目の引数がキャラクタ変数ではありません";
+			//	if (!varToken.IsInteger)
+			//		return name + "関数の1番目の引数が数値変数ではありません";
+			//	if (!isCharaRange && (varToken.Identifier.IsArray2D || varToken.Identifier.IsArray3D))
+			//		return name + "関数は二重配列・三重配列には対応していません";
+			//	if (!varToken.Identifier.IsArray1D)
+			//		return name + "関数の1番目の引数が配列変数ではありません";
+			//	if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の2番目の引数の型が正しくありません";
+			//	if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の3番目の引数の型が正しくありません";
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				VariableTerm vTerm = (VariableTerm)arguments[0];
@@ -3040,25 +3114,26 @@ namespace MinorShift.Emuera.GameData.Function
 				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64) };
 				CanRestructure = true;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				string ret = base.CheckArgumentType(name, arguments);
-				if (ret != null)
-					return ret;
-				if (arguments[1] is SingleTerm)
-				{
-					Int64 m = ((SingleTerm)arguments[1]).Int;
-					if (m < 0 || m > 63)
-						return "GETBIT関数の第２引数(" + m.ToString() + ")が範囲(０～６３)を超えています";
-				}
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	string ret = base.CheckArgumentType(name, arguments);
+			//	if (ret != null)
+			//		return ret;
+			//	if (arguments[1] is SingleTerm)
+			//	{
+			//		Int64 m = ((SingleTerm)arguments[1]).Int;
+			//		if (m < 0 || m > 63)
+			//			return "GETBIT関数の第２引数(" + m.ToString() + ")が範囲(０～６３)を超えています";
+			//	}
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				Int64 n = arguments[0].GetIntValue(exm);
 				Int64 m = arguments[1].GetIntValue(exm);
 				if ((m < 0) || (m > 63))
-					throw new CodeEE("GETBIT関数の第２引数(" + m.ToString() + ")が範囲(０～６３)を超えています");
+					// throw new CodeEE("GETBIT関数の第２引数(" + m.ToString() + ")が範囲(０～６３)を超えています");
+					throw new CodeEE(string.Format(Lang.Error.ArgIsOutOfRange.Text, Name, 2, m, 0, 63));
 				int mi = (int)m;
 				return ((n >> mi) & 1);
 			}
@@ -3069,24 +3144,27 @@ namespace MinorShift.Emuera.GameData.Function
 			public GetnumMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.RefAny, ArgType.String } },
+				};
 				CanRestructure = true;
 				HasUniqueRestructure = true;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length != 2)
-					return name + "関数には2つの引数が必要です";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (!(arguments[0] is VariableTerm))
-					return name + "関数の1番目の引数の型が正しくありません";
-				if (arguments[1] == null)
-					return name + "関数の2番目の引数は省略できません";
-				if (arguments[1].GetOperandType() != typeof(string))
-					return name + "関数の2番目の引数の型が正しくありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length != 2)
+			//		return name + "関数には2つの引数が必要です";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (!(arguments[0] is VariableTerm))
+			//		return name + "関数の1番目の引数の型が正しくありません";
+			//	if (arguments[1] == null)
+			//		return name + "関数の2番目の引数は省略できません";
+			//	if (arguments[1].GetOperandType() != typeof(string))
+			//		return name + "関数の2番目の引数の型が正しくありません";
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				VariableTerm vToken = (VariableTerm)arguments[0];
@@ -3110,45 +3188,46 @@ namespace MinorShift.Emuera.GameData.Function
 			}
 		}
 
-		private sealed class GetnumBMethod : FunctionMethod
-		{
-			public GetnumBMethod()
-			{
-				ReturnType = typeof(Int64);
-				argumentTypeArray = new Type[] { typeof(string), typeof(string) };
-				CanRestructure = true;
-			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				string errStr = base.CheckArgumentType(name, arguments);
-				if (errStr != null)
-					return errStr;
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (arguments[0] is SingleTerm)
-				{
-					string varName = ((SingleTerm)arguments[0]).Str;
-					if (GlobalStatic.IdentifierDictionary.GetVariableToken(varName, null, true) == null)
-						return name + "関数の1番目の引数が変数名ではありません";
-				}
-				return null;
-			}
-			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-			{
-				VariableToken var = GlobalStatic.IdentifierDictionary.GetVariableToken(arguments[0].GetStrValue(exm), null, true);
-				if (var == null)
-					throw new CodeEE("GETNUMBの1番目の引数(\"" + arguments[0].GetStrValue(exm) + "\")が変数名ではありません");
-				string key = arguments[1].GetStrValue(exm);
-				#region EE_ERD
-				//GETNUMBは使ってないのでテストしていない
-				// if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, var.Code, key, -1))
-				if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, var.Code, key, -1, arguments[0].GetStrValue(exm)))
-				#endregion
-					return ret;
-				else
-					return -1;
-			}
-		}
+		// 使われてない
+		//private sealed class GetnumBMethod : FunctionMethod
+		//{
+		//	public GetnumBMethod()
+		//	{
+		//		ReturnType = typeof(Int64);
+		//		argumentTypeArray = new Type[] { typeof(string), typeof(string) };
+		//		CanRestructure = true;
+		//	}
+		//	public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+		//	{
+		//		string errStr = base.CheckArgumentType(name, arguments);
+		//		if (errStr != null)
+		//			return errStr;
+		//		if (arguments[0] == null)
+		//			return name + "関数の1番目の引数は省略できません";
+		//		if (arguments[0] is SingleTerm)
+		//		{
+		//			string varName = ((SingleTerm)arguments[0]).Str;
+		//			if (GlobalStatic.IdentifierDictionary.GetVariableToken(varName, null, true) == null)
+		//				return name + "関数の1番目の引数が変数名ではありません";
+		//		}
+		//		return null;
+		//	}
+		//	public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+		//	{
+		//		VariableToken var = GlobalStatic.IdentifierDictionary.GetVariableToken(arguments[0].GetStrValue(exm), null, true);
+		//		if (var == null)
+		//			throw new CodeEE("GETNUMBの1番目の引数(\"" + arguments[0].GetStrValue(exm) + "\")が変数名ではありません");
+		//		string key = arguments[1].GetStrValue(exm);
+		//		#region EE_ERD
+		//		//GETNUMBは使ってないのでテストしていない
+		//		// if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, var.Code, key, -1))
+		//		if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, var.Code, key, -1, arguments[0].GetStrValue(exm)))
+		//		#endregion
+		//			return ret;
+		//		else
+		//			return -1;
+		//	}
+		//}
 
 		private sealed class GetPalamLVMethod : FunctionMethod
 		{
@@ -3158,15 +3237,15 @@ namespace MinorShift.Emuera.GameData.Function
 				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64) };
 				CanRestructure = false;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				string errStr = base.CheckArgumentType(name, arguments);
-				if (errStr != null)
-					return errStr;
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	string errStr = base.CheckArgumentType(name, arguments);
+			//	if (errStr != null)
+			//		return errStr;
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				Int64 value = arguments[0].GetIntValue(exm);
@@ -3184,15 +3263,15 @@ namespace MinorShift.Emuera.GameData.Function
 				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64) };
 				CanRestructure = false;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				string errStr = base.CheckArgumentType(name, arguments);
-				if (errStr != null)
-					return errStr;
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	string errStr = base.CheckArgumentType(name, arguments);
+			//	if (errStr != null)
+			//		return errStr;
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				Int64 value = arguments[0].GetIntValue(exm);
@@ -3207,7 +3286,10 @@ namespace MinorShift.Emuera.GameData.Function
 			public FindElementMethod(bool last)
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.RefAny1D, ArgType.SameAsFirst, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+				};
 				CanRestructure = true; //すべて定数項ならできるはず
 				HasUniqueRestructure = true;
 				isLast = last;
@@ -3216,33 +3298,33 @@ namespace MinorShift.Emuera.GameData.Function
 
 			readonly bool isLast;
 			readonly string funcName;
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 2)
-					return name + "関数には少なくとも2つの引数が必要です";
-				if (arguments.Length > 5)
-					return name + "関数の引数が多すぎます";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (!(arguments[0] is VariableTerm varToken))
-					return name + "関数の1番目の引数が変数ではありません";
-				if (varToken.Identifier.IsArray2D || varToken.Identifier.IsArray3D)
-					return name + "関数は二重配列・三重配列には対応していません";
-				if (!varToken.Identifier.IsArray1D)
-					return name + "関数の1番目の引数が配列変数ではありません";
-				Type baseType = arguments[0].GetOperandType();
-				if (arguments[1] == null)
-					return name + "関数の2番目の引数は省略できません";
-				if (arguments[1].GetOperandType() != baseType)
-					return name + "関数の2番目の引数の型が正しくありません";
-				if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
-					return name + "関数の3番目の引数の型が正しくありません";
-				if ((arguments.Length >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
-					return name + "関数の4番目の引数の型が正しくありません";
-				if ((arguments.Length >= 5) && (arguments[4] != null) && (arguments[4].GetOperandType() != typeof(Int64)))
-					return name + "関数の5番目の引数の型が正しくありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length < 2)
+			//		return name + "関数には少なくとも2つの引数が必要です";
+			//	if (arguments.Length > 5)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (!(arguments[0] is VariableTerm varToken))
+			//		return name + "関数の1番目の引数が変数ではありません";
+			//	if (varToken.Identifier.IsArray2D || varToken.Identifier.IsArray3D)
+			//		return name + "関数は二重配列・三重配列には対応していません";
+			//	if (!varToken.Identifier.IsArray1D)
+			//		return name + "関数の1番目の引数が配列変数ではありません";
+			//	Type baseType = arguments[0].GetOperandType();
+			//	if (arguments[1] == null)
+			//		return name + "関数の2番目の引数は省略できません";
+			//	if (arguments[1].GetOperandType() != baseType)
+			//		return name + "関数の2番目の引数の型が正しくありません";
+			//	if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の3番目の引数の型が正しくありません";
+			//	if ((arguments.Length >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の4番目の引数の型が正しくありません";
+			//	if ((arguments.Length >= 5) && (arguments[4] != null) && (arguments[4].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の5番目の引数の型が正しくありません";
+			//	return null;
+			//}
 
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
@@ -3269,9 +3351,10 @@ namespace MinorShift.Emuera.GameData.Function
 					{
 						targetString = new Regex(arguments[1].GetStrValue(exm));
 					}
-					catch (ArgumentException)
+					catch (ArgumentException e)
 					{
-						throw new CodeEE("第2引数が正規表現として不正です");
+						// throw new CodeEE("第2引数が正規表現として不正です");
+						throw new CodeEE(string.Format(Lang.Error.InvalidRegexArg.Text, Name, 2, e.Message));
 					}
 					return exm.VEvaluator.FindElement(p, targetString, start, end, isExact, isLast);
 				}
@@ -3317,50 +3400,56 @@ namespace MinorShift.Emuera.GameData.Function
 			public InRangeArrayMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.RefInt1D, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 3 },
+				};
 				CanRestructure = false;
 			}
 			public InRangeArrayMethod(bool isChara)
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefInt1D, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 3 },
+				};
 				isCharaRange = isChara;
 				CanRestructure = false;
 			}
 			private readonly bool isCharaRange = false;
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 2)
-					return name + "関数には少なくとも2つの引数が必要です";
-				if (arguments.Length > 6)
-					return name + "関数の引数が多すぎます";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (!(arguments[0] is VariableTerm))
-					return name + "関数の1番目の引数が変数ではありません";
-				VariableTerm varToken = (VariableTerm)arguments[0];
-				if (isCharaRange && !varToken.Identifier.IsCharacterData)
-					return name + "関数の1番目の引数がキャラクタ変数ではありません";
-				if (!isCharaRange && (varToken.Identifier.IsArray2D || varToken.Identifier.IsArray3D))
-					return name + "関数は二重配列・三重配列には対応していません";
-				if (!isCharaRange && !varToken.Identifier.IsArray1D)
-					return name + "関数の1番目の引数が配列変数ではありません";
-				if (!varToken.IsInteger)
-					return name + "関数の1番目の引数が数値型変数ではありません";
-				if (arguments[1] == null)
-					return name + "関数の2番目の引数は省略できません";
-				if (arguments[1].GetOperandType() != typeof(Int64))
-					return name + "関数の2番目の引数が数値型ではありません";
-				if (arguments[2] == null)
-					return name + "関数の3番目の引数は省略できません";
-				if (arguments[2].GetOperandType() != typeof(Int64))
-					return name + "関数の3番目の引数が数値型ではありません";
-				if ((arguments.Length >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
-					return name + "関数の4番目の引数の型が正しくありません";
-				if ((arguments.Length >= 5) && (arguments[4] != null) && (arguments[4].GetOperandType() != typeof(Int64)))
-					return name + "関数の5番目の引数の型が正しくありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length < 2)
+			//		return name + "関数には少なくとも2つの引数が必要です";
+			//	if (arguments.Length > 6)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (!(arguments[0] is VariableTerm))
+			//		return name + "関数の1番目の引数が変数ではありません";
+			//	VariableTerm varToken = (VariableTerm)arguments[0];
+			//	if (isCharaRange && !varToken.Identifier.IsCharacterData)
+			//		return name + "関数の1番目の引数がキャラクタ変数ではありません";
+			//	if (!isCharaRange && (varToken.Identifier.IsArray2D || varToken.Identifier.IsArray3D))
+			//		return name + "関数は二重配列・三重配列には対応していません";
+			//	if (!isCharaRange && !varToken.Identifier.IsArray1D)
+			//		return name + "関数の1番目の引数が配列変数ではありません";
+			//	if (!varToken.IsInteger)
+			//		return name + "関数の1番目の引数が数値型変数ではありません";
+			//	if (arguments[1] == null)
+			//		return name + "関数の2番目の引数は省略できません";
+			//	if (arguments[1].GetOperandType() != typeof(Int64))
+			//		return name + "関数の2番目の引数が数値型ではありません";
+			//	if (arguments[2] == null)
+			//		return name + "関数の3番目の引数は省略できません";
+			//	if (arguments[2].GetOperandType() != typeof(Int64))
+			//		return name + "関数の3番目の引数が数値型ではありません";
+			//	if ((arguments.Length >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の4番目の引数の型が正しくありません";
+			//	if ((arguments.Length >= 5) && (arguments[4] != null) && (arguments[4].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の5番目の引数の型が正しくありません";
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				Int64 min = arguments[1].GetIntValue(exm);
@@ -3392,32 +3481,35 @@ namespace MinorShift.Emuera.GameData.Function
 			public ArrayMultiSortMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.RefAny1D, ArgType.RefAnyArray | ArgType.Variadic }, OmitStart = 1 },
+				};
 				CanRestructure = false;
 				HasUniqueRestructure = true;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 2)
-					return string.Format("{0}関数:少なくとも{1}の引数が必要です", name, 2);
-				for (int i = 0; i < arguments.Length; i++)
-				{
-					if (arguments[i] == null)
-						return string.Format("{0}関数:{1}番目の引数は省略できません", name, i + 1);
-					if (!(arguments[i] is VariableTerm varTerm) || varTerm.Identifier.IsCalc || varTerm.Identifier.IsConst)
-						return string.Format("{0}関数:{1}番目の引数が変数ではありません", name, i + 1);
-					if (varTerm.Identifier.IsCharacterData)
-						return string.Format("{0}関数:{1}番目の引数がキャラクタ変数です", name, i + 1);
-					if (i == 0 && !varTerm.Identifier.IsArray1D)
-						return string.Format("{0}関数:{1}番目の引数が一次元配列ではありません", name, i + 1);
-					#region EM_私家版_ARRAYMSORT_三次元配列修正
-					//if (!varTerm.Identifier.IsArray1D && !varTerm.Identifier.IsArray2D && !varTerm.Identifier.IsArray2D)
-					if (!varTerm.Identifier.IsArray1D && !varTerm.Identifier.IsArray2D && !varTerm.Identifier.IsArray3D)
-						return string.Format("{0}関数:{1}番目の引数が配列変数ではありません", name, i + 1);
-					#endregion
-				}
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length < 2)
+			//		return string.Format("{0}関数:少なくとも{1}の引数が必要です", name, 2);
+			//	for (int i = 0; i < arguments.Length; i++)
+			//	{
+			//		if (arguments[i] == null)
+			//			return string.Format("{0}関数:{1}番目の引数は省略できません", name, i + 1);
+			//		if (!(arguments[i] is VariableTerm varTerm) || varTerm.Identifier.IsCalc || varTerm.Identifier.IsConst)
+			//			return string.Format("{0}関数:{1}番目の引数が変数ではありません", name, i + 1);
+			//		if (varTerm.Identifier.IsCharacterData)
+			//			return string.Format("{0}関数:{1}番目の引数がキャラクタ変数です", name, i + 1);
+			//		if (i == 0 && !varTerm.Identifier.IsArray1D)
+			//			return string.Format("{0}関数:{1}番目の引数が一次元配列ではありません", name, i + 1);
+			//		#region EM_私家版_ARRAYMSORT_三次元配列修正
+			//		//if (!varTerm.Identifier.IsArray1D && !varTerm.Identifier.IsArray2D && !varTerm.Identifier.IsArray2D)
+			//		if (!varTerm.Identifier.IsArray1D && !varTerm.Identifier.IsArray2D && !varTerm.Identifier.IsArray3D)
+			//			return string.Format("{0}関数:{1}番目の引数が配列変数ではありません", name, i + 1);
+			//		#endregion
+			//	}
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				VariableTerm varTerm = arguments[0] as VariableTerm;
@@ -3526,7 +3618,8 @@ namespace MinorShift.Emuera.GameData.Function
 										array[i, x, y] = clone[sortedArray[i], x, y];
 						}
 					}
-					else { throw new ExeEE("異常な配列"); }
+					// else { throw new ExeEE("異常な配列"); }
+					else { throw new ExeEE(trerror.AbnormalArray.Text); }
 				}
 				return 1;
 			}
@@ -3575,29 +3668,32 @@ namespace MinorShift.Emuera.GameData.Function
 			public SubstringMethod()
 			{
 				ReturnType = typeof(string);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int, ArgType.Int}, OmitStart = 1 }
+				};
 				CanRestructure = true;
 			}
 
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				//通常３つ、２つ省略可能で１～３の引数が必要。
-				if (arguments.Length < 1)
-					return name + "関数には少なくとも1つの引数が必要です";
-				if (arguments.Length > 3)
-					return name + "関数の引数が多すぎます";
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	//通常３つ、２つ省略可能で１～３の引数が必要。
+			//	if (arguments.Length < 1)
+			//		return name + "関数には少なくとも1つの引数が必要です";
+			//	if (arguments.Length > 3)
+			//		return name + "関数の引数が多すぎます";
 
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (arguments[0].GetOperandType() != typeof(string))
-					return name + "関数の1番目の引数の型が正しくありません";
-				//2、３は省略可能
-				if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
-					return name + "関数の2番目の引数の型が正しくありません";
-				if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
-					return name + "関数の3番目の引数の型が正しくありません";
-				return null;
-			}
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (arguments[0].GetOperandType() != typeof(string))
+			//		return name + "関数の1番目の引数の型が正しくありません";
+			//	//2、３は省略可能
+			//	if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の2番目の引数の型が正しくありません";
+			//	if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の3番目の引数の型が正しくありません";
+			//	return null;
+			//}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				string str = arguments[0].GetStrValue(exm);
@@ -3617,29 +3713,32 @@ namespace MinorShift.Emuera.GameData.Function
 			public SubstringuMethod()
 			{
 				ReturnType = typeof(string);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int, ArgType.Int}, OmitStart = 1 }
+				};
 				CanRestructure = true;
 			}
 
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				//通常３つ、２つ省略可能で１～３の引数が必要。
-				if (arguments.Length < 1)
-					return name + "関数には少なくとも1つの引数が必要です";
-				if (arguments.Length > 3)
-					return name + "関数の引数が多すぎます";
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	//通常３つ、２つ省略可能で１～３の引数が必要。
+			//	if (arguments.Length < 1)
+			//		return name + "関数には少なくとも1つの引数が必要です";
+			//	if (arguments.Length > 3)
+			//		return name + "関数の引数が多すぎます";
 
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (arguments[0].GetOperandType() != typeof(string))
-					return name + "関数の1番目の引数の型が正しくありません";
-				//2、３は省略可能
-				if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
-					return name + "関数の2番目の引数の型が正しくありません";
-				if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
-					return name + "関数の3番目の引数の型が正しくありません";
-				return null;
-			}
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (arguments[0].GetOperandType() != typeof(string))
+			//		return name + "関数の1番目の引数の型が正しくありません";
+			//	//2、３は省略可能
+			//	if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の2番目の引数の型が正しくありません";
+			//	if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の3番目の引数の型が正しくありません";
+			//	return null;
+			//}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				string str = arguments[0].GetStrValue(exm);
@@ -3673,31 +3772,35 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				ReturnType = typeof(Int64);
 				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Int}, OmitStart = 2 }
+				};
 				CanRestructure = true;
 				this.unicode = unicode;
 			}
 
 			readonly bool unicode = false;
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				//通常３つ、１つ省略可能で２～３の引数が必要。
-				if (arguments.Length < 2)
-					return name + "関数には少なくとも2つの引数が必要です";
-				if (arguments.Length > 3)
-					return name + "関数の引数が多すぎます";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (arguments[0].GetOperandType() != typeof(string))
-					return name + "関数の1番目の引数の型が正しくありません";
-				if (arguments[1] == null)
-					return name + "関数の2番目の引数は省略できません";
-				if (arguments[1].GetOperandType() != typeof(string))
-					return name + "関数の2番目の引数の型が正しくありません";
-				//3つ目は省略可能
-				if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
-					return name + "関数の3番目の引数の型が正しくありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	//通常３つ、１つ省略可能で２～３の引数が必要。
+			//	if (arguments.Length < 2)
+			//		return name + "関数には少なくとも2つの引数が必要です";
+			//	if (arguments.Length > 3)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (arguments[0].GetOperandType() != typeof(string))
+			//		return name + "関数の1番目の引数の型が正しくありません";
+			//	if (arguments[1] == null)
+			//		return name + "関数の2番目の引数は省略できません";
+			//	if (arguments[1].GetOperandType() != typeof(string))
+			//		return name + "関数の2番目の引数の型が正しくありません";
+			//	//3つ目は省略可能
+			//	if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の3番目の引数の型が正しくありません";
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 
@@ -3744,7 +3847,8 @@ namespace MinorShift.Emuera.GameData.Function
 				}
 				catch (ArgumentException e)
 				{
-					throw new CodeEE("第2引数が正規表現として不正です：" + e.Message);
+					// throw new CodeEE("第2引数が正規表現として不正です：" + e.Message);
+					throw new CodeEE(string.Format(Lang.Error.InvalidRegexArg.Text, Name, 2, e.Message));
 				}
 				return (reg.Matches(arguments[0].GetStrValue(exm)).Count);
 			}
@@ -3755,25 +3859,28 @@ namespace MinorShift.Emuera.GameData.Function
 			public ToStrMethod()
 			{
 				ReturnType = typeof(string);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String }, OmitStart = 1 }
+				};
 				CanRestructure = true;
 			}
 
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				//通常2つ、1つ省略可能で1～2の引数が必要。
-				if (arguments.Length < 1)
-					return name + "関数には少なくとも1つの引数が必要です";
-				if (arguments.Length > 2)
-					return name + "関数の引数が多すぎます";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (arguments[0].GetOperandType() != typeof(Int64))
-					return name + "関数の1番目の引数の型が正しくありません";
-				if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(string)))
-					return name + "関数の2番目の引数の型が正しくありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	//通常2つ、1つ省略可能で1～2の引数が必要。
+			//	if (arguments.Length < 1)
+			//		return name + "関数には少なくとも1つの引数が必要です";
+			//	if (arguments.Length > 2)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (arguments[0].GetOperandType() != typeof(Int64))
+			//		return name + "関数の1番目の引数の型が正しくありません";
+			//	if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(string)))
+			//		return name + "関数の2番目の引数の型が正しくありません";
+			//	return null;
+			//}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				Int64 i = arguments[0].GetIntValue(exm);
@@ -3787,7 +3894,8 @@ namespace MinorShift.Emuera.GameData.Function
 				}
 				catch (FormatException)
 				{
-					throw new CodeEE("TOSTR関数の書式指定が間違っています");
+					// throw new CodeEE("TOSTR関数の書式指定が間違っています");
+					throw new CodeEE(string.Format(Lang.Error.InvalidFormat.Text, Name, 2));
 				}
 				return (ret);
 			}
@@ -3904,7 +4012,10 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				ReturnType = typeof(string);
 				// argumentTypeArray = new Type[] { typeof(string), typeof(string), typeof(string) };
-				argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.Int }, OmitStart = 3 },
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.RefString1D, ArgType.Int } },
+				};
 				HasUniqueRestructure = true;
 				CanRestructure = false;
 			}
@@ -3913,59 +4024,62 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				return (arguments.Length < 4 || arguments[3].GetIntValue(exm) != 1) ;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				//通常2つ、1つ省略可能で1～2の引数が必要。
-				if (arguments.Length < 3)
-					return name + "関数には少なくとも3つの引数が必要です";
-				if (arguments.Length > 4)
-					return name + "関数の引数が多すぎます";
-				for (int i = 0; i < 3; i++)
-					if (arguments[i].GetOperandType() != typeof(string))
-						return string.Format("{0}関数:{1}番目の引数が文字列ではありません", name, i + 1);
-				if (arguments.Length == 4 && arguments[3].GetOperandType() != typeof(Int64))
-					return string.Format("{0}関数:4番目の引数が整数ではありません", name);
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	//通常2つ、1つ省略可能で1～2の引数が必要。
+			//	if (arguments.Length < 3)
+			//		return name + "関数には少なくとも3つの引数が必要です";
+			//	if (arguments.Length > 4)
+			//		return name + "関数の引数が多すぎます";
+			//	for (int i = 0; i < 3; i++)
+			//		if (arguments[i].GetOperandType() != typeof(string))
+			//			return string.Format("{0}関数:{1}番目の引数が文字列ではありません", name, i + 1);
+			//	if (arguments.Length == 4 && arguments[3].GetOperandType() != typeof(Int64))
+			//		return string.Format("{0}関数:4番目の引数が整数ではありません", name);
+			//	return null;
+			//}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				string baseString = arguments[0].GetStrValue(exm);
 				Regex reg = null;
 				int type = arguments.Length == 4 ? (int)arguments[3].GetIntValue(exm) : 0;
 				if (type != 2)
-                {
+				{
 					try
 					{
 						reg = new Regex(arguments[1].GetStrValue(exm));
 					}
 					catch (ArgumentException e)
 					{
-						throw new CodeEE("第２引数が正規表現として不正です：" + e.Message);
+						// throw new CodeEE("第２引数が正規表現として不正です：" + e.Message);
+						throw new CodeEE(string.Format(Lang.Error.InvalidRegexArg.Text, Name, 2, e.Message));
 					}
 				}
 				if (arguments.Length == 4)
-                {
+				{
 					switch (type)
-                    {
+					{
 						case 1: 
 							{
 								if (!(arguments[2] is VariableTerm varTerm) || varTerm.Identifier.IsCalc || !varTerm.Identifier.IsArray1D || !varTerm.Identifier.IsString || varTerm.Identifier.IsConst)
-									throw new CodeEE("REPLACE関数:3番目の引数が一次元文字列配列変数ではありません");
+									throw new CodeEE(string.Format(Lang.Error.ArgIsNotNDStrArray.Text, Name, 3, 1));
 								var items = (arguments[2] as VariableTerm).Identifier.GetArray() as string[];
 								int idx = 0;
 								return reg.Replace(baseString, (Match match) => {
 									if (idx < items.Length)
-                                    {
+									{
 										return items[idx++];
-                                    }
+									}
 									return string.Empty;
 								});
 							}
 						case 2: {
+								// 正規表現を使わず
 								return baseString.Replace(arguments[1].GetStrValue(exm), arguments[2].GetStrValue(exm));
 							}
 					}
 				}
+				// type == 0 or > 2 or omitted.
 				return (reg.Replace(baseString, arguments[2].GetStrValue(exm)));
 			}
 		}
@@ -3983,17 +4097,22 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				Int64 i = arguments[0].GetIntValue(exm);
 				if ((i < 0) || (i > 0xFFFF))
-					throw new CodeEE("UNICODE関数に範囲外の値(" + i.ToString() + ")が渡されました");
+					// throw new CodeEE("UNICODE関数に範囲外の値(" + i.ToString() + ")が渡されました");
+					throw new CodeEE(string.Format(Lang.Error.ArgIsOutOfRange.Text, Name, 1, i, 0, 0xFFFF));
 				//改行関係以外の制御文字は警告扱いに変更
 				//とはいえ、改行以外の制御文字を意図的に渡すのはそもそもコーディングに問題がありすぎるので、エラーでもいい気はする
 				if ((i < 0x001F && i != 0x000A && i != 0x000D) || (i >= 0x007F && i <= 0x009F))
 				{
 					//コード実行中の場合
 					if(GlobalStatic.Process.getCurrentLine != null)
-						GlobalStatic.Console.PrintSystemLine("注意:" + GlobalStatic.Process.getCurrentLine.Position.Filename + "の" + GlobalStatic.Process.getCurrentLine.Position.LineNo.ToString() + "行目でUNICODE関数に制御文字に対応する値(0x" + String.Format("{0:X}", i) + ")が渡されました");
+						// GlobalStatic.Console.PrintSystemLine("注意:" + GlobalStatic.Process.getCurrentLine.Position.Filename + "の" + GlobalStatic.Process.getCurrentLine.Position.LineNo.ToString() + "行目でUNICODE関数に制御文字に対応する値(0x" + String.Format("{0:X}", i) + ")が渡されました");
+						GlobalStatic.Console.PrintSystemLine(string.Format(Lang.Error.WarnPrefix.Text,
+							GlobalStatic.Process.getCurrentLine.Position.Filename,
+							GlobalStatic.Process.getCurrentLine.Position.LineNo,
+							string.Format(Lang.Error.InvalidUnicode.Text, Name, i.ToString("X"))));
 					else
-						ParserMediator.Warn("UNICODE関数に制御文字に対応する値(0x" + String.Format("{0:X}", i) + ")が渡されました", GlobalStatic.Process.scaningLine, 1, false, false, null);
-
+						//ParserMediator.Warn("UNICODE関数に制御文字に対応する値(0x" + String.Format("{0:X}", i) + ")が渡されました", GlobalStatic.Process.scaningLine, 1, false, false, null);
+						ParserMediator.Warn(string.Format(Lang.Error.InvalidUnicode.Text, Name, i.ToString("X")), GlobalStatic.Process.scaningLine, 1, false, false, null);
 					return "";
 				}
 				string s = new string(new char[] { (char)i });
@@ -4034,7 +4153,8 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				Int64 toBase = arguments[1].GetIntValue(exm);
 				if ((toBase != 2) && (toBase != 8) && (toBase != 10) && (toBase != 16))
-					throw new CodeEE("CONVERT関数の第２引数は2, 8, 10, 16のいずれかでなければなりません");
+					// new CodeEE("CONVERT関数の第２引数は2, 8, 10, 16のいずれかでなければなりません");
+					throw new CodeEE(string.Format(Lang.Error.ArgShouldBeSpecificValue.Text, Name, 2, "2, 8, 10, 16"));
 				return Convert.ToString(arguments[0].GetIntValue(exm), (int)toBase);
 			}
 		}
@@ -4098,24 +4218,27 @@ namespace MinorShift.Emuera.GameData.Function
 			public EncodeToUniMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = new Type[] { null };
+				// argumentTypeArray = new Type[] { null };
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int }, OmitStart = 1 },
+				};
 				CanRestructure = true;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				//通常2つ、1つ省略可能で1～2の引数が必要。
-				if (arguments.Length < 1)
-					return name + "関数には少なくとも1つの引数が必要です";
-				if (arguments.Length > 2)
-					return name + "関数の引数が多すぎます";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (arguments[0].GetOperandType() != typeof(string))
-					return name + "関数の1番目の引数の型が正しくありません";
-				if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
-					return name + "関数の2番目の引数の型が正しくありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	//通常2つ、1つ省略可能で1～2の引数が必要。
+			//	if (arguments.Length < 1)
+			//		return name + "関数には少なくとも1つの引数が必要です";
+			//	if (arguments.Length > 2)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (arguments[0].GetOperandType() != typeof(string))
+			//		return name + "関数の1番目の引数の型が正しくありません";
+			//	if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の2番目の引数の型が正しくありません";
+			//	return null;
+			//}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				string baseStr = arguments[0].GetStrValue(exm);
@@ -4123,9 +4246,11 @@ namespace MinorShift.Emuera.GameData.Function
 					return -1;
 				Int64 position = (arguments.Length > 1 && arguments[1] != null) ? arguments[1].GetIntValue(exm) : 0;
 				if (position < 0)
-					throw new CodeEE("ENCOIDETOUNI関数の第２引数(" + position.ToString() + ")が負の値です");
+					// throw new CodeEE("ENCOIDETOUNI関数の第２引数(" + position.ToString() + ")が負の値です");
+					throw new CodeEE(string.Format(Lang.Error.ArgIsNegative.Text, Name, 2, position));
 				if (position >= baseStr.Length)
-					throw new CodeEE("ENCOIDETOUNI関数の第２引数(" + position.ToString() + ")が第１引数の文字列(" + baseStr + ")の文字数を超えています");
+					// throw new CodeEE("ENCOIDETOUNI関数の第２引数(" + position.ToString() + ")が第１引数の文字列(" + baseStr + ")の文字数を超えています");
+					throw new CodeEE(string.Format(Lang.Error.EncodeToUni2ndArgError.Text, Name, position, baseStr));
 				return char.ConvertToUtf32(baseStr, (int)position);
 			}
 		}
@@ -4160,7 +4285,8 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				string str = arguments[0].GetStrValue(exm);
 				if (string.IsNullOrEmpty(str))
-					throw new CodeEE("GETLINESTR関数の引数が空文字列です");
+					// throw new CodeEE("GETLINESTR関数の引数が空文字列です");
+					throw new CodeEE(string.Format(Lang.Error.ArgIsEmptyString.Text, Name, 1));
 				return exm.Console.getStBar(str);
 			}
 		}
@@ -4186,11 +4312,13 @@ namespace MinorShift.Emuera.GameData.Function
 				}
 				catch(CodeEE e)
 				{
-					throw new CodeEE("STRFORM関数:文字列\"" + str + "\"の展開エラー:" + e.Message);
+					// throw new CodeEE("STRFORM関数:文字列\"" + str + "\"の展開エラー:" + e.Message);
+					throw new CodeEE(string.Format(Lang.Error.InvalidFormString.Text, Name, str, e.Message));
 				}
 				catch
 				{
-					throw new CodeEE("STRFORM関数:文字列\"" + str+ "\"の展開処理中にエラーが発生しました");
+					// throw new CodeEE("STRFORM関数:文字列\"" + str+ "\"の展開処理中にエラーが発生しました");
+					throw new CodeEE(string.Format(Lang.Error.UnexectedFormStringErr.Text, Name, str));
 				}
 				return destStr;
 			}
@@ -4225,37 +4353,40 @@ namespace MinorShift.Emuera.GameData.Function
 			public JoinMethod()
 			{
 				ReturnType = typeof(string);
-				argumentTypeArray = null;
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.RefAnyArray, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 1 },
+				};
 				HasUniqueRestructure = true;
 				CanRestructure = true;
 			}
-			public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-			{
-				if (arguments.Length < 1)
-					return name + "関数には少なくとも1つの引数が必要です";
-				if (arguments.Length > 4)
-					return name + "関数の引数が多すぎます";
-				if (arguments[0] == null)
-					return name + "関数の1番目の引数は省略できません";
-				if (!(arguments[0] is VariableTerm))
-					return name + "関数の1番目の引数が変数ではありません";
-				VariableTerm varToken = (VariableTerm)arguments[0];
-				if (!varToken.Identifier.IsArray1D && !varToken.Identifier.IsArray2D && !varToken.Identifier.IsArray3D)
-					return name + "関数の1番目の引数が配列変数ではありません";
-				if (arguments.Length == 1)
-					return null;
-				if ((arguments[1] != null) && (arguments[1].GetOperandType() != typeof(string)))
-					return name + "関数の2番目の変数が文字列ではありません";
-				if (arguments.Length == 2)
-					return null;
-				if ((arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
-					return name + "関数の3番目の変数が数値ではありません";
-				if (arguments.Length == 3)
-					return null;
-				if ((arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
-					return name + "関数の4番目の変数が数値ではありません";
-				return null;
-			}
+			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+			//{
+			//	if (arguments.Length < 1)
+			//		return name + "関数には少なくとも1つの引数が必要です";
+			//	if (arguments.Length > 4)
+			//		return name + "関数の引数が多すぎます";
+			//	if (arguments[0] == null)
+			//		return name + "関数の1番目の引数は省略できません";
+			//	if (!(arguments[0] is VariableTerm))
+			//		return name + "関数の1番目の引数が変数ではありません";
+			//	VariableTerm varToken = (VariableTerm)arguments[0];
+			//	if (!varToken.Identifier.IsArray1D && !varToken.Identifier.IsArray2D && !varToken.Identifier.IsArray3D)
+			//		return name + "関数の1番目の引数が配列変数ではありません";
+			//	if (arguments.Length == 1)
+			//		return null;
+			//	if ((arguments[1] != null) && (arguments[1].GetOperandType() != typeof(string)))
+			//		return name + "関数の2番目の変数が文字列ではありません";
+			//	if (arguments.Length == 2)
+			//		return null;
+			//	if ((arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の3番目の変数が数値ではありません";
+			//	if (arguments.Length == 3)
+			//		return null;
+			//	if ((arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
+			//		return name + "関数の4番目の変数が数値ではありません";
+			//	return null;
+			//}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				VariableTerm varTerm = (VariableTerm)arguments[0];
@@ -4266,7 +4397,8 @@ namespace MinorShift.Emuera.GameData.Function
 				FixedVariableTerm p = varTerm.GetFixedVariableTerm(exm);
 
 				if (index2 < 0)
-					throw new CodeEE("STRJOINの第4引数(" + index2.ToString()+ ")が負の値になっています");
+					// throw new CodeEE("STRJOINの第4引数(" + index2.ToString()+ ")が負の値になっています");
+					throw new CodeEE(string.Format(Lang.Error.ArgIsNegative.Text, Name, 4, index2));
 
 				p.IsArrayRangeValid(index1, index1 + index2, "STRJOIN", 2L, 3L);
 				return (exm.VEvaluator.GetJoinedStr(p, delimiter, index1, index2));
@@ -4309,11 +4441,13 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				string str = arguments[0].GetStrValue(exm);
 				if(str == null || str.Length == 0)
-					throw new CodeEE(funcname + "関数に空文字列が渡されました");
+					// throw new CodeEE(funcname + "関数に空文字列が渡されました");
+					throw new CodeEE(string.Format(Lang.Error.ArgIsEmptyString.Text, Name, 1));
 				string errMes = null;
 				SingleTerm term = ConfigData.Instance.GetConfigValueInERB(str, ref errMes);
 				if(errMes != null)
-					throw new CodeEE(funcname + "関数:" + errMes);
+					// throw new CodeEE(funcname + "関数:" + errMes);
+					throw new CodeEE(string.Format(Lang.Error.FuncPrefix.Text, Name));
 				return term;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
@@ -4322,7 +4456,8 @@ namespace MinorShift.Emuera.GameData.Function
 					throw new ExeEE(funcname + "関数:不正な呼び出し");
 				SingleTerm term = GetSingleTerm(exm, arguments);
 				if(term.GetOperandType() != typeof(Int64))
-					throw new CodeEE(funcname + "関数:型が違います（GETCONFIGS関数を使用してください）");
+					// throw new CodeEE(funcname + "関数:型が違います（GETCONFIGS関数を使用してください）");
+					throw new CodeEE(string.Format(Lang.Error.InvalidType.Text, Name, "GETCONFIGS"));
 				return term.Int;
 			}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
@@ -4331,7 +4466,8 @@ namespace MinorShift.Emuera.GameData.Function
 					throw new ExeEE(funcname + "関数:不正な呼び出し");
 				SingleTerm term = GetSingleTerm(exm, arguments);
 				if (term.GetOperandType() != typeof(string))
-					throw new CodeEE(funcname + "関数:型が違います（GETCONFIG関数を使用してください）");
+					// throw new CodeEE(funcname + "関数:型が違います（GETCONFIG関数を使用してください）");
+					throw new CodeEE(string.Format(Lang.Error.InvalidType.Text, Name, "GETCONFIG"));
 				return term.Str;
 			}
 		}

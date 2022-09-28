@@ -315,6 +315,10 @@ namespace EvilMask.Emuera
         public sealed class Error
         {
             public static string Text { get { return trClass[typeof(Error)].Text; } }
+
+            [Managed] public static TranslatableString WarnPrefix { get; } = new TranslatableString("注意: {0}の{1}行目: {2}");
+            [Managed] public static TranslatableString FuncPrefix { get; } = new TranslatableString("{0}関数: {1}");
+
             [Managed] public static TranslatableString NotExistColorSpecifier { get; } = new TranslatableString("値をColor指定子として認識できません");
             [Managed] public static TranslatableString ContainsNonNumericCharacters { get; } = new TranslatableString("数字でない文字が含まれています");
             [Managed] public static TranslatableString InvalidSpecification { get; } = new TranslatableString("不正な指定です");
@@ -417,7 +421,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString AbnormalArray { get; } = new TranslatableString("異常な配列");
             [Managed] public static TranslatableString SetStrToInt { get; } = new TranslatableString("文字列型でない変数\"{0}\"に文字列型を代入しようとしました");
             [Managed] public static TranslatableString SetIntToStr { get; } = new TranslatableString("整数型でない変数\"{0}\"に整数値を代入しようとしました");
-            [Managed] public static TranslatableString InvalidRegexArg { get; } = new TranslatableString("第{1}引数が正規表現として不正です：{0}");
+            [Managed] public static TranslatableString InvalidRegexArg { get; } = new TranslatableString("{0}関数: 第{1}引数が正規表現として不正です: {2}");
             [Managed] public static TranslatableString XmlParseError { get; } = new TranslatableString("{0}関数:\"{1}\"の解析エラー:{2}");
             [Managed] public static TranslatableString XmlXPathParseError { get; } = new TranslatableString("{0}関数:XPath\"{1}\"の解析エラー:{2}");
             [Managed] public static TranslatableString ReturnTypeDifferentOrNotImpelemnt { get; } = new TranslatableString("戻り値の型が違う or 未実装");
@@ -686,24 +690,50 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString ArgIsNotVar { get; } = new TranslatableString("{0}関数: 第{1}引数は変数ではありません");
             [Managed] public static TranslatableString ArgIsNotStrVar { get; } = new TranslatableString("{0}関数: 第{1}引数は文字列型変数ではありません");
             [Managed] public static TranslatableString ArgIsNotIntVar { get; } = new TranslatableString("{0}関数: 第{1}引数は整数型変数ではありません");
+            [Managed] public static TranslatableString ArgIsNotArray { get; } = new TranslatableString("{0}関数: 第{1}引数は配列変数ではありません");
+            [Managed] public static TranslatableString ArgIsNotStrArray { get; } = new TranslatableString("{0}関数: 第{1}引数は文字列型配列変数ではありません");
+            [Managed] public static TranslatableString ArgIsNotIntArray { get; } = new TranslatableString("{0}関数: 第{1}引数は整数型配列変数ではありません");
             [Managed] public static TranslatableString ArgIsNotNDArray { get; } = new TranslatableString("{0}関数: 第{1}引数は{2}次元配列変数ではありません");
             [Managed] public static TranslatableString ArgIsNotNDStrArray { get; } = new TranslatableString("{0}関数: 第{1}引数は文字列型{2}次元配列変数ではありません");
             [Managed] public static TranslatableString ArgIsNotNDIntArray { get; } = new TranslatableString("{0}関数: 第{1}引数は整数型{2}次元配列変数ではありません");
             [Managed] public static TranslatableString TooManyFuncArgs { get; } = new TranslatableString("{0}関数: 引数が多すぎます");
             [Managed] public static TranslatableString NotEnoughArgs { get; } = new TranslatableString("{0}関数: 少なくとも{1}つの引数が必要です");
+            [Managed] public static TranslatableString ArgsCountNotMatches { get; } = new TranslatableString("{0}関数: {1}つの引数が必要ですが，{2}つが与えられています");
+            [Managed] public static TranslatableString ArgsNotNeeded { get; } = new TranslatableString("{0}関数: 引数の必要がありません");
             [Managed] public static TranslatableString NotValidArgs { get; } = new TranslatableString("{0}関数: 引数がどの書式にも合わせていません | {1}");
             [Managed] public static TranslatableString NotValidArgsReason { get; } = new TranslatableString("書式{0}: {1}");
-
-            [Managed] public static TranslatableString ErrArgsCount { get; } = new TranslatableString("{0}関数: 引数の数が間違っています");
 
             [Managed] public static TranslatableString IsNotVar { get; } = new TranslatableString("\"{0}\"が変数ではありません");
             [Managed] public static TranslatableString IsNotInt { get; } = new TranslatableString("\"{0}\"が整数型ではありません");
             [Managed] public static TranslatableString IsNotStr { get; } = new TranslatableString("\"{0}\"が文字列型ではありません");
 
             [Managed] public static TranslatableString SPCharacterFeatureDisabled { get; } = new TranslatableString("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
-            [Managed] public static TranslatableString CharacterIndexOutOfRange { get; } = new TranslatableString("{0}関数: 第{1}引数(\"{2}\")はキャラクタ位置の範囲外です");
+            [Managed] public static TranslatableString CharacterIndexOutOfRange { get; } = new TranslatableString("{0}関数: 第{1}引数({2})はキャラクタ位置の範囲外です");
+            [Managed] public static TranslatableString NotVariableName { get; } = new TranslatableString("{0}関数: 第{1}引数(\"{2}\")が変数名ではありません");
+            [Managed] public static TranslatableString ArgIsNegative { get; } = new TranslatableString("{0}関数: 第{1}引数に負の値({2})が指定されました");
+            [Managed] public static TranslatableString ArgIsTooLarge { get; } = new TranslatableString("{0}関数: 第{1}引数({2})が大きすぎます");
+            [Managed] public static TranslatableString FuncDeprecated { get; } = new TranslatableString("関数{0}()は推奨されません。代わりに関数{1}()を使用してください");
+            [Managed] public static TranslatableString TransparentUnsupported { get; } = new TranslatableString("無色透明(Transparent)は色として指定できません");
+            [Managed] public static TranslatableString ArgIsOutOfRange { get; } = new TranslatableString("{0}関数: 第{1}引数({2})が{3}から{4}の範囲外です");
+            [Managed] public static TranslatableString InvalidFormat { get; } = new TranslatableString("{0}関数: 第{1}引数の書式指定が間違っています");
+            [Managed] public static TranslatableString NegativeMaximum { get; } = new TranslatableString("{0}関数: 最大値に0以下の値({1})が指定されました");
+            [Managed] public static TranslatableString MaximumLowerThanMinimum { get; } = new TranslatableString("{0}関数: 最大値に最小値以下の値({1})が指定されました");
 
+            [Managed] public static TranslatableString ResultIsNaN { get; } = new TranslatableString("{0}関数: 計算結果が非数値です");
+            [Managed] public static TranslatableString ResultIsInfinity { get; } = new TranslatableString("{0}関数: 計算結果が無限大です");
+            [Managed] public static TranslatableString ResultIsOutOfTheRangeOfInt64 { get; } = new TranslatableString("{0}関数: 計算結果({1})が64ビット符号付き整数の範囲外です");
 
+            [Managed] public static TranslatableString CharacterRangeInvalid { get; } = new TranslatableString("{0}関数: 範囲指定がキャラクタ配列の範囲を超えています({1}～{2})");
+            [Managed] public static TranslatableString InvalidUnicode { get; } = new TranslatableString("{0}関数: 制御文字に対応する値(0x{1})が渡されました");
+            [Managed] public static TranslatableString ArgShouldBeSpecificValue { get; } = new TranslatableString("{0}関数: 第{1}引数は{2}のいずれかでなければなりません");
+
+            [Managed] public static TranslatableString EncodeToUni2ndArgError { get; } = new TranslatableString("{0}関数: 第2引数({1})が第1引数の文字列({2})の文字数を超えています");
+            [Managed] public static TranslatableString ArgIsEmptyString { get; } = new TranslatableString("{0}関数: 第{1}引数が空文字列です");
+
+            [Managed] public static TranslatableString InvalidFormString { get; } = new TranslatableString("{0}関数: 文字列\"{1}\"の展開エラー: {2}");
+            [Managed] public static TranslatableString UnexectedFormStringErr { get; } = new TranslatableString("{0}関数: 文字列\"{1}\"の展開処理中にエラーが発生しました");
+
+            [Managed] public static TranslatableString InvalidType { get; } = new TranslatableString("{0}関数: 型が違います ({1}関数を使用してください)");
         }
         [Managed]
         public sealed class MessageBox

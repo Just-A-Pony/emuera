@@ -95,7 +95,7 @@ namespace MinorShift.Emuera
 			configArray.Add(new ConfigItem<TextEditorType>(ConfigCode.EditorType, "テキストエディタコマンドライン指定", "Text editor commandline setting", TextEditorType.USER_SETTING));
 			configArray.Add(new ConfigItem<string>(ConfigCode.EditorArgument, "エディタに渡す行指定引数", "Text editor commandLine", ""));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.WarnNormalFunctionOverloading, "同名の非イベント関数が複数定義されたとき警告する", "Duplicated functions warning", false));
-			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiErrorLine, "解釈不可能な行があっても実行する", "Execute rror lines", false));
+			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiErrorLine, "解釈不可能な行があっても実行する", "Execute error lines", false));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiCALLNAME, "CALLNAMEが空文字列の時にNAMEを代入する", "Use NAME if CALLNAME is empty", false));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.UseSaveFolder, "セーブデータをsavフォルダ内に作成する", "Use sav folder", false));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiRAND, "擬似変数RANDの仕様をeramakerに合わせる", "Imitate behavior for RAND", false));
