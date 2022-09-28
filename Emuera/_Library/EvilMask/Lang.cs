@@ -644,7 +644,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString ArraycopyArgIsConst { get; } = new TranslatableString("ARRAYCOPY命令の第{0}引数\"{1}\"は値を変更できない変数です");
             [Managed] public static TranslatableString DifferentArraycopyArgsDim { get; } = new TranslatableString("ARRAYCOPY命令の2つの引数の次元が異なります");
             [Managed] public static TranslatableString DifferentArraycopyArgsType { get; } = new TranslatableString("ARRAYCOPY命令の２つの配列変数の型が一致していません");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            [Managed] public static TranslatableString MissingArgAfterColon { get; } = new TranslatableString("変数の:の後に引数がありません");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");

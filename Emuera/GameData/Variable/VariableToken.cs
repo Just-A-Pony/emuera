@@ -994,7 +994,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			{
 				if ((dimension == 0) || (dimension == 1) || (dimension == 2))
 					return array.GetLength(dimension);
-				throw new CodeEE("配列型変数" + varName + "の存在しない次元の長さを取得しようとしました");
+				throw new CodeEE(string.Format(trerror.GetSizeNonExistDim.Text, varName));
 			}
 			public override object GetArray() { return array; }
 

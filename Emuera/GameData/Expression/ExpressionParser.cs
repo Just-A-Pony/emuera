@@ -201,7 +201,7 @@ namespace MinorShift.Emuera.GameData.Expression
 			// IOperandTerm ret = reduceTerm(wc, false, TermEndWith.EoL, varCode);
 			IOperandTerm ret = reduceTerm(wc, false, TermEndWith.EoL, varCode, id);
 			if (ret == null)
-                throw new CodeEE("変数の:の後に引数がありません");
+                throw new CodeEE(trerror.MissingArgAfterColon.Text);
 			return ret;
 		}
 		#endregion
