@@ -315,6 +315,10 @@ namespace EvilMask.Emuera
         public sealed class Error
         {
             public static string Text { get { return trClass[typeof(Error)].Text; } }
+
+            [Managed] public static TranslatableString WarnPrefix { get; } = new TranslatableString("注意: {0}の{1}行目: {2}");
+            [Managed] public static TranslatableString FuncPrefix { get; } = new TranslatableString("{0}関数: {1}");
+
             [Managed] public static TranslatableString NotExistColorSpecifier { get; } = new TranslatableString("値をColor指定子として認識できません");
             [Managed] public static TranslatableString ContainsNonNumericCharacters { get; } = new TranslatableString("数字でない文字が含まれています");
             [Managed] public static TranslatableString InvalidSpecification { get; } = new TranslatableString("不正な指定です");
@@ -623,8 +627,8 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString SPCharacterFeatureDisabled { get; } = new TranslatableString("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
             [Managed] public static TranslatableString CharacterIndexOutOfRange { get; } = new TranslatableString("{0}関数: 第{1}引数({2})はキャラクタ位置の範囲外です");
             [Managed] public static TranslatableString NotVariableName { get; } = new TranslatableString("{0}関数: 第{1}引数(\"{2}\")が変数名ではありません");
-            [Managed] public static TranslatableString ArgIsNegative { get; } = new TranslatableString("{0}関数: 引数に負の値({1})が指定されました");
-            [Managed] public static TranslatableString ArgIsTooLarge { get; } = new TranslatableString("{0}関数: 引数({1})が大きすぎます");
+            [Managed] public static TranslatableString ArgIsNegative { get; } = new TranslatableString("{0}関数: 第{1}引数に負の値({2})が指定されました");
+            [Managed] public static TranslatableString ArgIsTooLarge { get; } = new TranslatableString("{0}関数: 第{1}引数({2})が大きすぎます");
             [Managed] public static TranslatableString FuncDeprecated { get; } = new TranslatableString("関数{0}()は推奨されません。代わりに関数{1}()を使用してください");
             [Managed] public static TranslatableString TransparentUnsupported { get; } = new TranslatableString("無色透明(Transparent)は色として指定できません");
             [Managed] public static TranslatableString ArgIsOutOfRange { get; } = new TranslatableString("{0}関数: 第{1}引数({2})が{3}から{4}の範囲外です");
@@ -637,6 +641,16 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString ResultIsOutOfTheRangeOfInt64 { get; } = new TranslatableString("{0}関数: 計算結果({1})が64ビット符号付き整数の範囲外です");
 
             [Managed] public static TranslatableString CharacterRangeInvalid { get; } = new TranslatableString("{0}関数: 範囲指定がキャラクタ配列の範囲を超えています({1}～{2})");
+            [Managed] public static TranslatableString InvalidUnicode { get; } = new TranslatableString("{0}関数: 制御文字に対応する値(0x{1})が渡されました");
+            [Managed] public static TranslatableString ArgShouldBeSpecificValue { get; } = new TranslatableString("{0}関数: 第{1}引数は{2}のいずれかでなければなりません");
+
+            [Managed] public static TranslatableString EncodeToUni2ndArgError { get; } = new TranslatableString("{0}関数: 第2引数({1})が第1引数の文字列({2})の文字数を超えています");
+            [Managed] public static TranslatableString ArgIsEmptyString { get; } = new TranslatableString("{0}関数: 第{1}引数が空文字列です");
+
+            [Managed] public static TranslatableString InvalidFormString { get; } = new TranslatableString("{0}関数: 文字列\"{1}\"の展開エラー: {2}");
+            [Managed] public static TranslatableString UnexectedFormStringErr { get; } = new TranslatableString("{0}関数: 文字列\"{1}\"の展開処理中にエラーが発生しました");
+
+            [Managed] public static TranslatableString InvalidType { get; } = new TranslatableString("{0}関数: 型が違います ({1}関数を使用してください)");
         }
         [Managed]
         public sealed class MessageBox
