@@ -2589,7 +2589,7 @@ namespace MinorShift.Emuera.GameData.Function
 				Int64 ret = arguments[0].GetIntValue(exm);
 				if (ret <= 0)
 					// throw new CodeEE("対数関数の引数に0以下の値が指定されました");
-					throw new CodeEE(string.Format(Lang.Error.ArgIsNegative.Text, Name, 1, ret));
+					throw new CodeEE(string.Format(Lang.Error.ArgIsNotMoreThan0.Text, Name, 1, ret));
 				//　今の段階は発生しない
 				//if (Base <= 0.0d)
 				//	throw new CodeEE("対数関数の底に0以下の値が指定されました");

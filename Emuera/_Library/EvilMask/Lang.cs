@@ -711,6 +711,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString CharacterIndexOutOfRange { get; } = new TranslatableString("{0}関数: 第{1}引数({2})はキャラクタ位置の範囲外です");
             [Managed] public static TranslatableString NotVariableName { get; } = new TranslatableString("{0}関数: 第{1}引数(\"{2}\")が変数名ではありません");
             [Managed] public static TranslatableString ArgIsNegative { get; } = new TranslatableString("{0}関数: 第{1}引数に負の値({2})が指定されました");
+            [Managed] public static TranslatableString ArgIsNotMoreThan0 { get; } = new TranslatableString("{0}関数: 第{1}引数に0以下の値({2})が指定されました");
             [Managed] public static TranslatableString ArgIsTooLarge { get; } = new TranslatableString("{0}関数: 第{1}引数({2})が大きすぎます");
             [Managed] public static TranslatableString FuncDeprecated { get; } = new TranslatableString("関数{0}()は推奨されません。代わりに関数{1}()を使用してください");
             [Managed] public static TranslatableString TransparentUnsupported { get; } = new TranslatableString("無色透明(Transparent)は色として指定できません");
