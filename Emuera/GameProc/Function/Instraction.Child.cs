@@ -2168,7 +2168,7 @@ namespace MinorShift.Emuera.GameProc.Function
 					string funcName = state.Scope;
 					if (funcName == null)
 						funcName = "";
-					throw new CodeEE(string.Format(trerror.CanNotUseInstruction.Text, funcName, "SAVEGAME/LOADGAME"));
+					throw new CodeEE(string.Format(trerror.CanNotUseInstructionInFunc.Text, funcName, "SAVEGAME/LOADGAME"));
 				}
 				GlobalStatic.Process.saveCurrentState(true);
 				//バックアップに入れた旧ProcessStateの方を参照するため、ここでstateは使えない

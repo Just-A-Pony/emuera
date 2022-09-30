@@ -234,7 +234,7 @@ namespace MinorShift.Emuera.GameProc
 		err:
 			CalledFunction func = functionList[0];
 			string funcName = func.FunctionName;
-			throw new CodeEE(string.Format(trerror.CanNotUseInstruction.Text, funcName, errmes));
+			throw new CodeEE(string.Format(trerror.CanNotUseInstructionInFunc.Text, funcName, errmes));
 		}
 		#endregion
 
