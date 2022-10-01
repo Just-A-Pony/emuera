@@ -48,7 +48,7 @@ namespace MinorShift.Emuera
 			configArray.Add(new ConfigItem<bool>(ConfigCode.UseMenu, "メニューを使用する", "Show menu", true));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.UseDebugCommand, "デバッグコマンドを使用する", "Allow debug commands", false));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.AllowMultipleInstances, "多重起動を許可する", "Allow multiple instances", true)); 
-			configArray.Add(new ConfigItem<bool>(ConfigCode.AutoSave, "オートセーブを行なう", "Make auto saves", true));
+			configArray.Add(new ConfigItem<bool>(ConfigCode.AutoSave, "オートセーブを行なう", "Make autosaves", true));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.UseKeyMacro, "キーボードマクロを使用する", "Use keyboard macros", true));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.SizableWindow, "ウィンドウの高さを可変にする", "Changeable window height", true));
 			configArray.Add(new ConfigItem<TextDrawingMode>(ConfigCode.TextDrawingMode, "描画インターフェース", "Drawing interface", TextDrawingMode.TEXTRENDERER));
@@ -78,7 +78,7 @@ namespace MinorShift.Emuera
 			configArray.Add(new ConfigItem<ReduceArgumentOnLoadFlag>(ConfigCode.ReduceArgumentOnLoad, "ロード時に引数を解析する", "Reduce argument on load", ReduceArgumentOnLoadFlag.NO));
 
 			configArray.Add(new ConfigItem<bool>(ConfigCode.IgnoreUncalledFunction, "呼び出されなかった関数を無視する", "Ignore uncalled functions", true));
-			configArray.Add(new ConfigItem<DisplayWarningFlag>(ConfigCode.FunctionNotFoundWarning, "関数が見つからない警告の扱い", "Function not found warning", DisplayWarningFlag.IGNORE));
+			configArray.Add(new ConfigItem<DisplayWarningFlag>(ConfigCode.FunctionNotFoundWarning, "関数が見つからない警告の扱い", "Function is not found warning", DisplayWarningFlag.IGNORE));
 			configArray.Add(new ConfigItem<DisplayWarningFlag>(ConfigCode.FunctionNotCalledWarning, "関数が呼び出されなかった警告の扱い", "Function not called warning", DisplayWarningFlag.IGNORE));
 
 
@@ -92,8 +92,8 @@ namespace MinorShift.Emuera
 			configArray.Add(new ConfigItem<bool>(ConfigCode.AllowFunctionOverloading, "システム関数の上書きを許可する", "Allow overriding system functions", true));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.WarnFunctionOverloading, "システム関数が上書きされたとき警告を表示する", "System function override warning", true));
 			configArray.Add(new ConfigItem<string>(ConfigCode.TextEditor, "関連づけるテキストエディタ", "Text editor", "notepad"));
-			configArray.Add(new ConfigItem<TextEditorType>(ConfigCode.EditorType, "テキストエディタコマンドライン指定", "Text editor commandline setting", TextEditorType.USER_SETTING));
-			configArray.Add(new ConfigItem<string>(ConfigCode.EditorArgument, "エディタに渡す行指定引数", "Text editor commandLine", ""));
+			configArray.Add(new ConfigItem<TextEditorType>(ConfigCode.EditorType, "テキストエディタコマンドライン指定", "Text editor command line setting", TextEditorType.USER_SETTING));
+			configArray.Add(new ConfigItem<string>(ConfigCode.EditorArgument, "エディタに渡す行指定引数", "Text editor command line arguments", ""));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.WarnNormalFunctionOverloading, "同名の非イベント関数が複数定義されたとき警告する", "Duplicated functions warning", false));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiErrorLine, "解釈不可能な行があっても実行する", "Execute error lines", false));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiCALLNAME, "CALLNAMEが空文字列の時にNAMEを代入する", "Use NAME if CALLNAME is empty", false));
@@ -103,15 +103,15 @@ namespace MinorShift.Emuera
 			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiFunctionNoignoreCase, "関数・属性については大文字小文字を無視しない", "Do not ignore case for functions and attributes", false));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.SystemAllowFullSpace, "全角スペースをホワイトスペースに含める", "Whitespace includes full-width space", true));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.SystemSaveInUTF8, "セーブデータをUTF-8で保存する", "Use UTF8 for save data", false));
-			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiLinefeedAs1739, "ver1739以前の非ボタン折り返しを再現する", "Reproduce warpping behavior like in pre ver1739", false));
+			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiLinefeedAs1739, "ver1739以前の非ボタン折り返しを再現する", "Reproduce wrapping behavior like in pre ver1739", false));
 			configArray.Add(new ConfigItem<UseLanguage>(ConfigCode.useLanguage, "内部で使用する東アジア言語", "Default ANSI encoding", UseLanguage.JAPANESE));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.AllowLongInputByMouse, "ONEINPUT系命令でマウスによる2文字以上の入力を許可する", "Allow long input by mouse for ONEINPUT", false));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiCallEvent, "イベント関数のCALLを許可する", "Allow CALL on event functions", false));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiSPChara, "SPキャラを使用する", "Allow SP characters", false));
 
-			configArray.Add(new ConfigItem<bool>(ConfigCode.SystemSaveInBinary, "セーブデータをバイナリ形式で保存する", "Use bBinary format for savedata", false));
+			configArray.Add(new ConfigItem<bool>(ConfigCode.SystemSaveInBinary, "セーブデータをバイナリ形式で保存する", "Use the binary format for saving data", false));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiFuncArgOptional, "ユーザー関数の全ての引数の省略を許可する", "Allow arguments omission for user functions", false));
-			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiFuncArgAutoConvert, "ユーザー関数の引数に自動的にTOSTRを補完する", "Auto TOSTR convertion for user function arguments", false));
+			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiFuncArgAutoConvert, "ユーザー関数の引数に自動的にTOSTRを補完する", "Auto TOSTR conversion for user function arguments", false));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.SystemIgnoreTripleSymbol, "FORM中の三連記号を展開しない", "Do not process triple symbols inside FORM", false));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.TimesNotRigorousCalculation, "TIMESの計算をeramakerにあわせる", "Imitate behavior for TIMES", false));
 
@@ -131,7 +131,7 @@ namespace MinorShift.Emuera
 			configArray.Add(new ConfigItem<bool>(ConfigCode.ZipSaveData, "セーブデータを圧縮して保存する", "Compress save data", false));
 			#endregion
 			#region EM_私家版_Emuera多言語化改造
-			configArray.Add(new ConfigItem<bool>(ConfigCode.EnglishConfigOutput, "CONFIGファイルの内容を英語で保存する", "Output English items in config file", false));
+			configArray.Add(new ConfigItem<bool>(ConfigCode.EnglishConfigOutput, "CONFIGファイルの内容を英語で保存する", "Output English items in the config file", false));
 			configArray.Add(new ConfigItem<string>(ConfigCode.EmueraLang, "Emueraの表示言語", "Emuera interface language", string.Empty));
 			#endregion
 
