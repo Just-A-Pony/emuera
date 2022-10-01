@@ -1921,7 +1921,7 @@ namespace MinorShift.Emuera.GameView
 			}
 			if (state == ConsoleState.Initializing)
 			{
-				MessageBox.Show(trerror.CanNotUseWhenInitialize.Texts);
+				MessageBox.Show(trerror.CanNotUseWhenInitialize.Text);
 				return;
 			}
             bool notRedraw = false;
