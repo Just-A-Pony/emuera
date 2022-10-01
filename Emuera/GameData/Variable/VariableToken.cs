@@ -1300,15 +1300,15 @@ namespace MinorShift.Emuera.GameData.Variable
 				CanRestructure = true;
 			}
 			public override void SetValue(Int64 value, Int64[] arguments)
-			{ throw new CodeEE(string.Format(trerror.SetToConst.Text, varName)); }
+			{ throw new CodeEE(string.Format(trerror.AssignToConst.Text, varName)); }
 			public override void SetValue(string value, Int64[] arguments)
-			{ throw new CodeEE(string.Format(trerror.SetToConst.Text, varName)); }
+			{ throw new CodeEE(string.Format(trerror.AssignToConst.Text, varName)); }
 			public override void SetValue(Int64[] values, Int64[] arguments)
-			{ throw new CodeEE(string.Format(trerror.SetToConst.Text, varName)); }
+			{ throw new CodeEE(string.Format(trerror.AssignToConst.Text, varName)); }
 			public override void SetValue(string[] values, Int64[] arguments)
-			{ throw new CodeEE(string.Format(trerror.SetToConst.Text, varName)); }
+			{ throw new CodeEE(string.Format(trerror.AssignToConst.Text, varName)); }
 			public override Int64 PlusValue(Int64 value, Int64[] arguments)
-			{ throw new CodeEE(string.Format(trerror.SetToConst.Text, varName)); }
+			{ throw new CodeEE(string.Format(trerror.AssignToConst.Text, varName)); }
 		}
 
 		private sealed class IntConstantToken : ConstantToken
@@ -1431,15 +1431,15 @@ namespace MinorShift.Emuera.GameData.Variable
 				CanRestructure = false;
 			}
 			public override void SetValue(Int64 value, Int64[] arguments)
-			{ throw new CodeEE(string.Format(trerror.SetToPseudoVar.Text, varName)); }
+			{ throw new CodeEE(string.Format(trerror.AssignToPseudoVar.Text, varName)); }
 			public override void SetValue(string value, Int64[] arguments)
-			{ throw new CodeEE(string.Format(trerror.SetToPseudoVar.Text, varName)); }
+			{ throw new CodeEE(string.Format(trerror.AssignToPseudoVar.Text, varName)); }
 			public override void SetValue(Int64[] values, Int64[] arguments)
-			{ throw new CodeEE(string.Format(trerror.SetToPseudoVar.Text, varName)); }
+			{ throw new CodeEE(string.Format(trerror.AssignToPseudoVar.Text, varName)); }
 			public override void SetValue(string[] values, Int64[] arguments)
-			{ throw new CodeEE(string.Format(trerror.SetToPseudoVar.Text, varName)); }
+			{ throw new CodeEE(string.Format(trerror.AssignToPseudoVar.Text, varName)); }
 			public override Int64 PlusValue(Int64 value, Int64[] arguments)
-			{ throw new CodeEE(string.Format(trerror.SetToPseudoVar.Text, varName)); }
+			{ throw new CodeEE(string.Format(trerror.AssignToPseudoVar.Text, varName)); }
 			public override Int32 GetLength()
 			{ throw new CodeEE(string.Format(trerror.GetSizePseudoVar.Text, varName)); }
 			public override Int32 GetLength(int dimension)

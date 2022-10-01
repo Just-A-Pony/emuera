@@ -435,7 +435,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString AbnormalData { get; } = new TranslatableString("データ異常");
             [Managed] public static TranslatableString OoRSortKey { get; } = new TranslatableString("ソートキーが配列外を参照しています");
             [Managed] public static TranslatableString AbnormalVarDeclaration { get; } = new TranslatableString("異常な変数宣言");
-            [Managed] public static TranslatableString SetToConst { get; } = new TranslatableString("読み取り専用の変数\"{0}\"に代入しようとしました");
+            [Managed] public static TranslatableString AssignToConst { get; } = new TranslatableString("読み取り専用の変数\"{0}\"に代入しようとしました");
             [Managed] public static TranslatableString OoRCharaVar { get; } = new TranslatableString("キャラクタ配列変数\"{0}\"の第{1}引数({2})は配列の範囲外です");
             [Managed] public static TranslatableString OoRArrayShift { get; } = new TranslatableString("命令ARRAYSHIFTの第4引数({0})が配列\"{1}\"の範囲を超えています");
             [Managed] public static TranslatableString OoRArrayRemove { get; } = new TranslatableString("命令ARRAYREMOVEの第2引数({0})が配列\"{1}\"の範囲を超えています");

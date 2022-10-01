@@ -146,7 +146,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			if (!p.Identifier.IsInteger)
 				throw new CodeEE(string.Format(trerror.SetIntToStr.Text, p.Identifier.Name));
 			if (p.Identifier.IsConst)
-				throw new CodeEE(string.Format(trerror.SetToConst.Text, p.Identifier.Name));
+				throw new CodeEE(string.Format(trerror.AssignToConst.Text, p.Identifier.Name));
 			if (p.Identifier.IsCalc)
 				return;
 			//一応チェック済み
@@ -178,7 +178,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			if (!p.Identifier.IsString)
 				throw new CodeEE(string.Format(trerror.SetStrToInt.Text, p.Identifier.Name));
 			if (p.Identifier.IsConst)
-				throw new CodeEE(string.Format(trerror.SetToConst.Text, p.Identifier.Name));
+				throw new CodeEE(string.Format(trerror.AssignToConst.Text, p.Identifier.Name));
 			if (p.Identifier.IsCalc)
 			{
 				if (p.Identifier.Code == VariableCode.WINDOW_TITLE)
