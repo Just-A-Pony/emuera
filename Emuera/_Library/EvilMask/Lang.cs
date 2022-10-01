@@ -503,7 +503,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString CanNotRefCharaVar { get; } = new TranslatableString("キャラ変数は参照できません");
             [Managed] public static TranslatableString CanNotRefDifferentType { get; } = new TranslatableString("型が異なる変数は参照できません");
             [Managed] public static TranslatableString CanNotRefDifferentDim { get; } = new TranslatableString("次元数が異なる変数は参照できません");
-            [Managed] public static TranslatableString SetToPseudoVar { get; } = new TranslatableString("擬似変数\"{0}\"に代入しようとしました");
+            [Managed] public static TranslatableString AssignToPseudoVar { get; } = new TranslatableString("擬似変数\"{0}\"に代入しようとしました");
             [Managed] public static TranslatableString GetSizePseudoVar { get; } = new TranslatableString("擬似変数\"{0}\"の長さを取得しようとしました");
             [Managed] public static TranslatableString GetDimPseudoVar { get; } = new TranslatableString("擬似変数\"{0}\"の配列を取得しようとしました");
             [Managed] public static TranslatableString RandArgIsNegative { get; } = new TranslatableString("RANDの引数に0以下の値({0})が指定されました");
