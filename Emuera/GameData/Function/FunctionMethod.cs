@@ -29,6 +29,8 @@ namespace MinorShift.Emuera.GameData.Function
 			Variadic = 1<<8,
 			SameAsFirst = 1<<9,
 			CharacterData = Ref | 1 << 10,
+			AllowConstRef = 1 << 11,
+			DisallowVoid = 1 << 12,
 
 			RefInt = Ref | Int,
 			RefAny = Ref | Any,
@@ -58,6 +60,8 @@ namespace MinorShift.Emuera.GameData.Function
 			}
 			public Type Type { get { return this.Int ? typeof(Int64) : typeof(string); } }
 			public ArgType type = ArgType.Invalid;
+			public bool AllowConstRef { get { return (type & ArgType.AllowConstRef) != 0; } }
+			public bool DisallowVoid { get { return (type & ArgType.DisallowVoid) != 0; } }
 			public bool Ref { get { return (type & ArgType.Ref) != 0; } }
 			public bool Any { get { return (type & ArgType.Any) != 0; } }
 			public bool Int { get { return (type & ArgType.Int) != 0; } }
@@ -105,12 +109,16 @@ namespace MinorShift.Emuera.GameData.Function
 					// 引数の数が有効
 					for (int i = 0; i < (variadic ? arguments.Length : Math.Min(arguments.Length, list.ArgTypes.Count)); i++)
 					{
+						var rule = variadic && i + 1 >= list.ArgTypes.Count ? list.Last : list.ArgTypes[i];
 						if (arguments[i] == null)
 						{
-							errMsg[idx] = string.Format(Lang.Error.ArgCanNotBeNull.Text, name, i + 1);
-							break;
+							if (i < list.OmitStart || (list.OmitStart > -1 && i >= list.OmitStart && rule.DisallowVoid))
+							{
+								errMsg[idx] = string.Format(Lang.Error.ArgCanNotBeNull.Text, name, i + 1);
+								break;
+							}
+							else continue;
 						}
-						var rule = variadic && i + 1 >= list.ArgTypes.Count ? list.Last : list.ArgTypes[i];
 						bool typeNotMatch = rule.SameAsFirst
 							? arguments[0].GetOperandType() != arguments[i].GetOperandType()
 							: !rule.Any && rule.Type != arguments[i].GetOperandType();
@@ -154,12 +162,12 @@ namespace MinorShift.Emuera.GameData.Function
 									}
 							}
 							// 引数が引用系
-							if ((arguments[i] is VariableTerm varTerm && !(varTerm.Identifier.IsCalc || varTerm.Identifier.IsConst)))
+							if ((arguments[i] is VariableTerm varTerm && !(varTerm.Identifier.IsCalc || (!rule.AllowConstRef && varTerm.Identifier.IsConst))))
 							{
 								// 変数の場合
 								switch (dims)
 								{
-									case 0: error = !varTerm.Identifier.IsArray1D || typeNotMatch; break;
+									case 0: error = typeNotMatch; break;
 									case -1: error = (!varTerm.Identifier.IsArray1D && !varTerm.Identifier.IsArray2D && !varTerm.Identifier.IsArray3D) || typeNotMatch; break;
 									case 1: error = !varTerm.Identifier.IsArray1D || typeNotMatch; break;
 									case 2: error = !varTerm.Identifier.IsArray2D || typeNotMatch; break;

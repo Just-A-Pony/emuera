@@ -49,9 +49,25 @@ namespace MinorShift.Emuera.Forms
 			numericUpDownPosY.Maximum = 10000;
 
 		}
+		internal void SetupLang(string[] langs) {
+			var fisrt = this.comboBox7.Items[0];
+			int selected = 0;
+			int idx = 1;
+			this.comboBox7.Items.Clear();
+			this.comboBox7.Items.Add(fisrt);
 
+			ConfigItem<string> item = (ConfigItem<string>)ConfigData.Instance.GetConfigItem(ConfigCode.EmueraLang);
+			foreach (var lang in langs)
+			{
+				this.comboBox7.Items.Add(lang);
+				if (lang == item.Value) selected = idx;
+				idx++;
+			}
+			this.comboBox7.SelectedIndex = selected;
+			comboBox7.Enabled = !item.Fixed;
+		}
 		internal void TranslateUI()
-        {
+		{
 			this.Text = Lang.UI.ConfigDialog.Text;
 
 			this.tabEnvironment.Text = Lang.UI.ConfigDialog.Environment.Text;
@@ -76,6 +92,7 @@ namespace MinorShift.Emuera.Forms
 			this.label5.Text = Lang.UI.ConfigDialog.Display.PrintCPerLine.Text;
 			this.label1.Text = Lang.UI.ConfigDialog.Display.PrintCLength.Text;
 			this.checkBox14.Text = Lang.UI.ConfigDialog.Display.ButtonWrap.Text;
+			this.label26.Text = Lang.UI.ConfigDialog.Display.EmueraLang.Text;
 
 			this.tabPageWindow.Text = Lang.UI.ConfigDialog.Window.Text;
 			this.label2.Text = Lang.UI.ConfigDialog.Window.WindowWidth.Text;
@@ -558,6 +575,19 @@ namespace MinorShift.Emuera.Forms
 			#endregion
 			#region EM_私家版_セーブ圧縮
 			config.GetConfigItem(ConfigCode.ZipSaveData).SetValue<bool>(checkBox32.Checked);
+			#endregion
+			#region EM_私家版_多言語化改造
+			if (comboBox7.SelectedIndex == 0)
+			{
+				config.GetConfigItem(ConfigCode.EmueraLang).SetValue<string>(string.Empty);
+				ConfigData.Instance.GetConfigItem(ConfigCode.EmueraLang).SetValue<string>(string.Empty);
+			}
+			else
+			{
+				config.GetConfigItem(ConfigCode.EmueraLang).SetValue<string>(comboBox7.SelectedItem as string);
+				ConfigData.Instance.GetConfigItem(ConfigCode.EmueraLang).SetValue<string>(comboBox7.SelectedItem as string);
+			}
+			Config.UpdateLangSetting(config);
 			#endregion
 
 			config.SaveConfig();

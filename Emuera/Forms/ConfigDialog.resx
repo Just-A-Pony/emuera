@@ -780,6 +780,36 @@
   <data name="&gt;&gt;checkBox14.ZOrder" xml:space="preserve">
     <value>0</value>
   </data>
+  <data name="label26.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="label26.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="label26.Location" type="System.Drawing.Point, System.Drawing">
+    <value>7, 234</value>
+  </data>
+  <data name="label26.Size" type="System.Drawing.Size, System.Drawing">
+    <value>89, 12</value>
+  </data>
+  <data name="label26.TabIndex" type="System.Int32, mscorlib">
+    <value>65</value>
+  </data>
+  <data name="label26.Text" xml:space="preserve">
+    <value>Emuera表示言語</value>
+  </data>
+  <data name="&gt;&gt;label26.Name" xml:space="preserve">
+    <value>label26</value>
+  </data>
+  <data name="&gt;&gt;label26.Type" xml:space="preserve">
+    <value>System.Windows.Forms.Label, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;label26.Parent" xml:space="preserve">
+    <value>tabPageView</value>
+  </data>
+  <data name="&gt;&gt;label26.ZOrder" xml:space="preserve">
+    <value>1</value>
+  </data>
   <data name="label18.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -808,7 +838,31 @@
     <value>tabPageView</value>
   </data>
   <data name="&gt;&gt;label18.ZOrder" xml:space="preserve">
-    <value>1</value>
+    <value>2</value>
+  </data>
+  <data name="comboBox7.Items" xml:space="preserve">
+    <value>日本語(Default)</value>
+  </data>
+  <data name="comboBox7.Location" type="System.Drawing.Point, System.Drawing">
+    <value>19, 249</value>
+  </data>
+  <data name="comboBox7.Size" type="System.Drawing.Size, System.Drawing">
+    <value>190, 20</value>
+  </data>
+  <data name="comboBox7.TabIndex" type="System.Int32, mscorlib">
+    <value>64</value>
+  </data>
+  <data name="&gt;&gt;comboBox7.Name" xml:space="preserve">
+    <value>comboBox7</value>
+  </data>
+  <data name="&gt;&gt;comboBox7.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ComboBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;comboBox7.Parent" xml:space="preserve">
+    <value>tabPageView</value>
+  </data>
+  <data name="&gt;&gt;comboBox7.ZOrder" xml:space="preserve">
+    <value>3</value>
   </data>
   <data name="comboBoxTextDrawingMode.Items" xml:space="preserve">
     <value>WIN API (GDI)</value>
@@ -838,7 +892,7 @@
     <value>tabPageView</value>
   </data>
   <data name="&gt;&gt;comboBoxTextDrawingMode.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>4</value>
   </data>
   <data name="label1.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -868,7 +922,7 @@
     <value>tabPageView</value>
   </data>
   <data name="&gt;&gt;label1.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>5</value>
   </data>
   <data name="numericUpDown9.Location" type="System.Drawing.Point, System.Drawing">
     <value>17, 160</value>
@@ -889,7 +943,7 @@
     <value>tabPageView</value>
   </data>
   <data name="&gt;&gt;numericUpDown9.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>6</value>
   </data>
   <data name="label5.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -919,7 +973,7 @@
     <value>tabPageView</value>
   </data>
   <data name="&gt;&gt;label5.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>7</value>
   </data>
   <data name="numericUpDown1.Location" type="System.Drawing.Point, System.Drawing">
     <value>17, 135</value>
@@ -940,7 +994,7 @@
     <value>tabPageView</value>
   </data>
   <data name="&gt;&gt;numericUpDown1.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>8</value>
   </data>
   <data name="label9.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -970,7 +1024,7 @@
     <value>tabPageView</value>
   </data>
   <data name="&gt;&gt;label9.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>9</value>
   </data>
   <data name="numericUpDown7.Location" type="System.Drawing.Point, System.Drawing">
     <value>17, 109</value>
@@ -991,7 +1045,7 @@
     <value>tabPageView</value>
   </data>
   <data name="&gt;&gt;numericUpDown7.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>10</value>
   </data>
   <data name="tabPageView.Location" type="System.Drawing.Point, System.Drawing">
     <value>4, 40</value>
@@ -1636,7 +1690,7 @@
     <value>colorBoxBacklog</value>
   </data>
   <data name="&gt;&gt;colorBoxBacklog.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8302.1961, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8309.35559, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxBacklog.Parent" xml:space="preserve">
     <value>tabPageFont</value>
@@ -1657,7 +1711,7 @@
     <value>colorBoxSelecting</value>
   </data>
   <data name="&gt;&gt;colorBoxSelecting.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8302.1961, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8309.35559, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxSelecting.Parent" xml:space="preserve">
     <value>tabPageFont</value>
@@ -1678,7 +1732,7 @@
     <value>colorBoxFG</value>
   </data>
   <data name="&gt;&gt;colorBoxFG.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8302.1961, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8309.35559, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxFG.Parent" xml:space="preserve">
     <value>tabPageFont</value>
@@ -1699,7 +1753,7 @@
     <value>colorBoxBG</value>
   </data>
   <data name="&gt;&gt;colorBoxBG.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8302.1961, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8309.35559, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxBG.Parent" xml:space="preserve">
     <value>tabPageFont</value>

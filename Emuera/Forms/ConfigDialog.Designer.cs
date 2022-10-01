@@ -46,7 +46,6 @@
             this.label17 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.numericUpDown11 = new System.Windows.Forms.NumericUpDown();
-            this.checkBox18 = new System.Windows.Forms.CheckBox();
             this.numericUpDown10 = new System.Windows.Forms.NumericUpDown();
             this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
             this.checkBox7 = new System.Windows.Forms.CheckBox();
@@ -54,6 +53,7 @@
             this.checkBox5 = new System.Windows.Forms.CheckBox();
             this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.checkBox18 = new System.Windows.Forms.CheckBox();
             this.tabPageView = new System.Windows.Forms.TabPage();
             this.checkBox14 = new System.Windows.Forms.CheckBox();
             this.label18 = new System.Windows.Forms.Label();
@@ -147,6 +147,8 @@
             this.label16 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.comboBox7 = new System.Windows.Forms.ComboBox();
+            this.label26 = new System.Windows.Forms.Label();
             this.tabControl.SuspendLayout();
             this.tabEnvironment.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown11)).BeginInit();
@@ -298,12 +300,6 @@
             resources.ApplyResources(this.numericUpDown11, "numericUpDown11");
             this.numericUpDown11.Name = "numericUpDown11";
             // 
-            // checkBox18
-            // 
-            resources.ApplyResources(this.checkBox18, "checkBox18");
-            this.checkBox18.Name = "checkBox18";
-            this.checkBox18.UseVisualStyleBackColor = true;
-            // 
             // numericUpDown10
             // 
             resources.ApplyResources(this.numericUpDown10, "numericUpDown10");
@@ -344,10 +340,18 @@
             this.checkBox3.Name = "checkBox3";
             this.checkBox3.UseVisualStyleBackColor = true;
             // 
+            // checkBox18
+            // 
+            resources.ApplyResources(this.checkBox18, "checkBox18");
+            this.checkBox18.Name = "checkBox18";
+            this.checkBox18.UseVisualStyleBackColor = true;
+            // 
             // tabPageView
             // 
             this.tabPageView.Controls.Add(this.checkBox14);
+            this.tabPageView.Controls.Add(this.label26);
             this.tabPageView.Controls.Add(this.label18);
+            this.tabPageView.Controls.Add(this.comboBox7);
             this.tabPageView.Controls.Add(this.comboBoxTextDrawingMode);
             this.tabPageView.Controls.Add(this.label1);
             this.tabPageView.Controls.Add(this.numericUpDown9);
@@ -999,6 +1003,20 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // comboBox7
+            // 
+            this.comboBox7.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox7.FormattingEnabled = true;
+            this.comboBox7.Items.AddRange(new object[] {
+            resources.GetString("comboBox7.Items")});
+            resources.ApplyResources(this.comboBox7, "comboBox7");
+            this.comboBox7.Name = "comboBox7";
+            // 
+            // label26
+            // 
+            resources.ApplyResources(this.label26, "label26");
+            this.label26.Name = "label26";
+            // 
             // ConfigDialog
             // 
             resources.ApplyResources(this, "$this");
@@ -1168,5 +1186,7 @@
         private System.Windows.Forms.TextBox textBox3;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.CheckBox checkBox32;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.ComboBox comboBox7;
     }
 }

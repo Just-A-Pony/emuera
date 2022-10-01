@@ -160,6 +160,7 @@ namespace EvilMask.Emuera
                     [Managed] public static TranslatableString PrintCPerLine { get; } = new TranslatableString("PRINTCを並べる数");
                     [Managed] public static TranslatableString PrintCLength { get; } = new TranslatableString("PRINTCの文字数");
                     [Managed] public static TranslatableString ButtonWrap { get; } = new TranslatableString("ボタンの途中で行を折りかえさない");
+                    [Managed] public static TranslatableString EmueraLang { get; } = new TranslatableString("Emuera表示言語");
                 }
 
                 [Translate("ウィンドウ"), Managed]
@@ -315,8 +316,6 @@ namespace EvilMask.Emuera
         [Managed]
         public sealed class Error
         {
-            public static string Text { get { return trClass[typeof(Error)].Text; } }
-
             [Managed] public static TranslatableString WarnPrefix { get; } = new TranslatableString("注意: {0}の{1}行目: {2}");
             [Managed] public static TranslatableString FuncPrefix { get; } = new TranslatableString("{0}関数: {1}");
 
@@ -1099,7 +1098,6 @@ namespace EvilMask.Emuera
         [Managed]
         public sealed class MessageBox
         {
-            public static string Text { get { return trClass[typeof(MessageBox)].Text; } }
             [Managed] public static TranslatableString ConfigError { get; } = new TranslatableString("設定のエラー");
             [Managed] public static TranslatableString TooSmallFontSize { get; } = new TranslatableString("フォントサイズが小さすぎます(8が下限)");
             [Managed] public static TranslatableString LineHeightLessThanFontSize { get; } = new TranslatableString("行の高さがフォントサイズより小さいため、フォントサイズと同じ高さと解釈されます");
@@ -1142,7 +1140,6 @@ namespace EvilMask.Emuera
         [Managed]
         public sealed class KeyMacro
         {
-            public static string Text { get { return trClass[typeof(KeyMacro)].Text; } }
             [Managed] public static TranslatableString SetMacroGroup { get; } = new TranslatableString("マクログループ{0}に設定");
             [Managed] public static TranslatableString MacroKeyF { get; } = new TranslatableString("マクロキーF{0}:");
             [Managed] public static TranslatableString GMacroKeyF { get; } = new TranslatableString("G{0}:マクロキーF{1}:");
@@ -1151,7 +1148,6 @@ namespace EvilMask.Emuera
         [Managed]
         public sealed class SystemLine
         {
-            public static string Text { get { return trClass[typeof(SystemLine)].Text; } }
             [Managed] public static TranslatableString LoadingFile { get; } = new TranslatableString("{0}読み込み中・・・");
             [Managed] public static TranslatableString ElapsedTimeLoad { get; } = new TranslatableString("経過時間:{0}ms:{1}読み込み中・・・");
             [Managed] public static TranslatableString ElapsedTime { get; } = new TranslatableString("経過時間:{0}ms");
@@ -1230,13 +1226,54 @@ namespace EvilMask.Emuera
                     }
                 }
             }
+            langNames = new string[langList.Count];
+            langList.Keys.CopyTo(langNames, 0);
+        }
+        static public void ReloadLang()
+        {
+            if (Config.EmueraLang == string.Empty)
+            {
+                foreach (var item in trItems) item.Value.Clear();
+                return;
+            }
+            if (langList.ContainsKey(Config.EmueraLang))
+            {
+                var path = langList[Config.EmueraLang];
+                XmlDocument xml = new XmlDocument();
+                try
+                {
+                    xml.Load(path);
+                }
+                catch
+                {
+                    return;
+                }
+                var node = xml.SelectSingleNode("/lang/name");
+                if (node != null)
+                {
+                    if (Config.EmueraLang == node.InnerText)
+                    {
+                        var nodes = xml.SelectNodes("/lang/tr");
+                        for (int i = 0; i < nodes.Count; i++)
+                        {
+                            var attr = nodes[i].Attributes["id"];
+                            if (attr != null && trItems.ContainsKey(attr.Value))
+                                trItems[attr.Value].Set(nodes[i].InnerText);
+                        }
+                    }
+                }
+            }
+        }
+        static public string[] GetLangList()
+        {
+            return langNames;
         }
 
         static public void GenerateDefaultLangFile()
         {
             if (!Directory.Exists(langDir))
                 Directory.CreateDirectory(langDir);
-            FileStream fs = new FileStream(langDir + "emuera.default.xml", FileMode.Create);
+            FileStream fs = new FileStream(langDir + "emuera-default-lang.xml", FileMode.Create);
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
             settings.IndentChars = "\t";
@@ -1262,6 +1299,7 @@ namespace EvilMask.Emuera
 
         static readonly string langDir = "lang/";
         static readonly Dictionary<string, string> langList = new Dictionary<string, string>();
+        static string[] langNames;
         static readonly Dictionary<string, TranslatableString> trItems = new Dictionary<string, TranslatableString>();
         static readonly Dictionary<Type, TranslatableString> trClass = new Dictionary<Type, TranslatableString>();
     
