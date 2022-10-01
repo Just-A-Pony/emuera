@@ -140,7 +140,7 @@ namespace MinorShift.Emuera
 					//if (!File.Exists(args[i]) && !Directory.Exists(args[i]))
 					if (!File.Exists(arg) && !Directory.Exists(arg))
 					{
-						MessageBox.Show("与えられたファイル・フォルダは存在しません");
+						MessageBox.Show(Lang.UI.MainWindow.MsgBox.ArgPathNotExists.Text);
 						return;
 					}
 					//if ((File.GetAttributes(args[i]) & FileAttributes.Directory) == FileAttributes.Directory)
@@ -158,7 +158,7 @@ namespace MinorShift.Emuera
 						//if (Path.GetExtension(args[i]).ToUpper() != ".ERB")
 						if (Path.GetExtension(arg).ToUpper() != ".ERB")
 						{
-							MessageBox.Show("ドロップ可能なファイルはERBファイルのみです");
+							MessageBox.Show(Lang.UI.MainWindow.MsgBox.InvalidArg.Text);
 							return;
 						}
 						//AnalysisFiles.Add(args[i]);

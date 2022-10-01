@@ -110,7 +110,9 @@ namespace EvilMask.Emuera
                     [Managed] public static TranslatableString FolderNotFound { get; } = new TranslatableString("フォルダなし");
                     [Managed] public static TranslatableString NoCsvFolder { get; } = new TranslatableString("csvフォルダが見つかりません");
                     [Managed] public static TranslatableString NoErbFolder { get; } = new TranslatableString("erbフォルダが見つかりません");
-                    [Managed] public static TranslatableString FailedCreateDebugFolder { get; } = new TranslatableString("erbフォルダが見つかりません");
+                    [Managed] public static TranslatableString FailedCreateDebugFolder { get; } = new TranslatableString("debugフォルダの作成に失敗しました");
+                    [Managed] public static TranslatableString ArgPathNotExists { get; } = new TranslatableString("与えられたファイル・フォルダは存在しません");
+                    [Managed] public static TranslatableString InvalidArg{ get; } = new TranslatableString("ドロップ可能なファイルはERBファイルのみです");
                 }
             }
 
