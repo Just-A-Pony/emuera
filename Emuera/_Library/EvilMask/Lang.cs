@@ -110,6 +110,7 @@ namespace EvilMask.Emuera
                     [Managed] public static TranslatableString FolderNotFound { get; } = new TranslatableString("フォルダなし");
                     [Managed] public static TranslatableString NoCsvFolder { get; } = new TranslatableString("csvフォルダが見つかりません");
                     [Managed] public static TranslatableString NoErbFolder { get; } = new TranslatableString("erbフォルダが見つかりません");
+                    [Managed] public static TranslatableString FailedCreateDebugFolder { get; } = new TranslatableString("erbフォルダが見つかりません");
                 }
             }
 
@@ -428,7 +429,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString XmlParseError { get; } = new TranslatableString("{0}関数:\"{1}\"の解析エラー:{2}");
             [Managed] public static TranslatableString XmlXPathParseError { get; } = new TranslatableString("{0}関数:XPath\"{1}\"の解析エラー:{2}");
             [Managed] public static TranslatableString ReturnTypeDifferentOrNotImpelemnt { get; } = new TranslatableString("戻り値の型が違う or 未実装");
-            [Managed] public static TranslatableString NotImplement { get; } = new TranslatableString("未実装？");
+            [Managed] public static TranslatableString NotImplement { get; } = new TranslatableString("未実装");
             [Managed] public static TranslatableString EmptyRefFunc { get; } = new TranslatableString("何も参照していない関数参照\"{0}\"を呼び出しました");
             [Managed] public static TranslatableString RefFuncHasNotArg { get; } = new TranslatableString("引数のない関数参照\"{0}\"を呼び出しました");
             [Managed] public static TranslatableString AbnormalData { get; } = new TranslatableString("データ異常");
@@ -960,9 +961,43 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString OoRColorValue { get; } = new TranslatableString("{0}は適切な色指定の範囲外です");
             [Managed] public static TranslatableString CanNotInterpretNumValue { get; } = new TranslatableString("{0}は数値として解釈できません");
             [Managed] public static TranslatableString InvalidColorName2 { get; } = new TranslatableString("指定された色名\"{0}\"は無効な色名です(16進数で色を指定する場合には数値の前に#が必要です)");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            [Managed] public static TranslatableString BufferOverFlow { get; } = new TranslatableString("※※※バッファーの文字数が2000字(全角1000字)を超えています。これ以降は表示できません※※※");
+            [Managed] public static TranslatableString CanNotUseFuncCurrentVer { get; } = new TranslatableString("この機能は現バージョンでは使えません");
+            [Managed] public static TranslatableString AbnormalFileData { get; } = new TranslatableString("ファイルデータ型異常");
+            [Managed] public static TranslatableString AbnormalBinaryData { get; } = new TranslatableString("バイナリデータの異常");
+            [Managed] public static TranslatableString InvalidStream { get; } = new TranslatableString("無効なストリームです");
+            [Managed] public static TranslatableString NoStrToRead { get; } = new TranslatableString("読み取るべき文字列がありません");
+            [Managed] public static TranslatableString NoNumToRead { get; } = new TranslatableString("読み取るべき数値がありません");
+            [Managed] public static TranslatableString CanNotInterpretNum { get; } = new TranslatableString("数値として認識できません");
+            [Managed] public static TranslatableString InvalidArray { get; } = new TranslatableString("無効な配列が渡されました");
+            [Managed] public static TranslatableString UnexpectedSaveDataEnd { get; } = new TranslatableString("予期しないセーブデータの終端です");
+            [Managed] public static TranslatableString InvalidSaveDataFormat { get; } = new TranslatableString("セーブデータの形式が不正です");
+            [Managed] public static TranslatableString NotSupportStringArray2D { get; } = new TranslatableString("StringArray2Dのロードには対応していません");
+            [Managed] public static TranslatableString UnexpectedContinuationEnd { get; } = new TranslatableString("予期しない行連結終端記号'}'が見つかりました");
+            [Managed] public static TranslatableString CharacterAfterContinuation { get; } = new TranslatableString("行連結始端記号'{'の行に'{'以外の文字を含めることはできません");
+            [Managed] public static TranslatableString NotCloseLineContinuation { get; } = new TranslatableString("行連結始端記号'{'が使われましたが終端記号'}'が見つかりません");
+            [Managed] public static TranslatableString CharacterAfterContinuationEnd { get; } = new TranslatableString("行連結終端記号'}'の行に'}'以外の文字を含めることはできません");
+            [Managed] public static TranslatableString UnexpectedContinuation { get; } = new TranslatableString("予期しない行連結始端記号'{'が見つかりました");
+            [Managed] public static TranslatableString OoRInt64 { get; } = new TranslatableString("\"{0}\"は64ビット符号付き整数の範囲を超えています");
+            [Managed] public static TranslatableString CanNotUseBinaryNotate { get; } = new TranslatableString("二進法表記の中で使用できない文字が使われています");
+            [Managed] public static TranslatableString LineBeginsIllegalCharacter { get; } = new TranslatableString("不正な文字で行が始まっています");
+            [Managed] public static TranslatableString MacroOverLimit { get; } = new TranslatableString("マクロの展開数が1文あたりの上限値{0}を超えました(自己参照・循環参照のおそれ)");
+            [Managed] public static TranslatableString MacroIsNotAvailable { get; } = new TranslatableString("マクロ{0}はこの文脈では使用できません(1単語に置き換えるマクロのみが使用できます)");
+            [Managed] public static TranslatableString UnexpectedFullWidthSpace { get; } = new TranslatableString("予期しない全角スペースを発見しました(この警告はシステムオプション「{0}」により無視できます)");
+            [Managed] public static TranslatableString MissingCharacterAfterEscape { get; } = new TranslatableString("エスケープ文字\\の後に文字がありません");
+            [Managed] public static TranslatableString UnexpectedEqual { get; } = new TranslatableString("予期しない代入演算子'='を発見しました(等価比較には'=='を使用してください)");
+            [Managed] public static TranslatableString CanNotRecognizedOp { get; } = new TranslatableString("'{0}'は演算子として認識できません");
+            [Managed] public static TranslatableString CanNotRecognizedAssignOp { get; } = new TranslatableString("\"{0}\"は代入演算子として認識できません");
+            [Managed] public static TranslatableString UnexpectedCharacter { get; } = new TranslatableString("字句解析中に予期しない文字'{0}'を発見しました");
+            [Managed] public static TranslatableString EmptyTwoSBrackets { get; } = new TranslatableString("空の[[]]です");
+            [Managed] public static TranslatableString MissingTwoSBrackets { get; } = new TranslatableString("対応する\"]]\"のない\"[[\"です");
+            [Managed] public static TranslatableString CanNotRenameKey { get; } = new TranslatableString("字句解析中に置換(rename)できない符号{0}を発見しました");
+            [Managed] public static TranslatableString NotClosed { get; } = new TranslatableString("\"{0}\"が閉じられていません");
+            [Managed] public static TranslatableString MacroHasNotArg { get; } = new TranslatableString("関数形式のマクロ{0}に引数がありません");
+            [Managed] public static TranslatableString WrongMacroUsage { get; } = new TranslatableString("関数形式のマクロ{0}の用法が正しくありません");
+            [Managed] public static TranslatableString MacroDifferentArgCount { get; } = new TranslatableString("関数形式のマクロ{0}の引数の数が正しくありません");
+            [Managed] public static TranslatableString CanNotOmitMacroArg { get; } = new TranslatableString("関数形式のマクロ{0}の引数を省略することはできません");
+            [Managed] public static TranslatableString NotFoundCorresponding { get; } = new TranslatableString("\'{0}\'が使われましたが対応する\'{1}\'が見つかりません");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");

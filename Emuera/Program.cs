@@ -125,7 +125,7 @@ namespace MinorShift.Emuera
 					}
 					catch
 					{
-						MessageBox.Show("debugフォルダの作成に失敗しました", "フォルダなし");
+						MessageBox.Show(Lang.UI.MainWindow.MsgBox.FailedCreateDebugFolder.Text, Lang.UI.MainWindow.MsgBox.FolderNotFound.Text);
 						return;
 					}
 				}
