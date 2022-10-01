@@ -160,6 +160,7 @@ namespace EvilMask.Emuera
                     [Managed] public static TranslatableString PrintCPerLine { get; } = new TranslatableString("PRINTCを並べる数");
                     [Managed] public static TranslatableString PrintCLength { get; } = new TranslatableString("PRINTCの文字数");
                     [Managed] public static TranslatableString ButtonWrap { get; } = new TranslatableString("ボタンの途中で行を折りかえさない");
+                    [Managed] public static TranslatableString EmueraLang { get; } = new TranslatableString("Emuera表示言語");
                 }
 
                 [Translate("ウィンドウ"), Managed]
@@ -1225,13 +1226,54 @@ namespace EvilMask.Emuera
                     }
                 }
             }
+            langNames = new string[langList.Count];
+            langList.Keys.CopyTo(langNames, 0);
+        }
+        static public void ReloadLang()
+        {
+            if (Config.EmueraLang == string.Empty)
+            {
+                foreach (var item in trItems) item.Value.Clear();
+                return;
+            }
+            if (langList.ContainsKey(Config.EmueraLang))
+            {
+                var path = langList[Config.EmueraLang];
+                XmlDocument xml = new XmlDocument();
+                try
+                {
+                    xml.Load(path);
+                }
+                catch
+                {
+                    return;
+                }
+                var node = xml.SelectSingleNode("/lang/name");
+                if (node != null)
+                {
+                    if (Config.EmueraLang == node.InnerText)
+                    {
+                        var nodes = xml.SelectNodes("/lang/tr");
+                        for (int i = 0; i < nodes.Count; i++)
+                        {
+                            var attr = nodes[i].Attributes["id"];
+                            if (attr != null && trItems.ContainsKey(attr.Value))
+                                trItems[attr.Value].Set(nodes[i].InnerText);
+                        }
+                    }
+                }
+            }
+        }
+        static public string[] GetLangList()
+        {
+            return langNames;
         }
 
         static public void GenerateDefaultLangFile()
         {
             if (!Directory.Exists(langDir))
                 Directory.CreateDirectory(langDir);
-            FileStream fs = new FileStream(langDir + "emuera.default.xml", FileMode.Create);
+            FileStream fs = new FileStream(langDir + "emuera-default-lang.xml", FileMode.Create);
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
             settings.IndentChars = "\t";
@@ -1257,6 +1299,7 @@ namespace EvilMask.Emuera
 
         static readonly string langDir = "lang/";
         static readonly Dictionary<string, string> langList = new Dictionary<string, string>();
+        static string[] langNames;
         static readonly Dictionary<string, TranslatableString> trItems = new Dictionary<string, TranslatableString>();
         static readonly Dictionary<Type, TranslatableString> trClass = new Dictionary<Type, TranslatableString>();
     

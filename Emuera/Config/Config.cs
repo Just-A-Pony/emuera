@@ -197,6 +197,13 @@ namespace MinorShift.Emuera
 			if (UseSaveFolder && !Directory.Exists(SavDir))
 				createSavDirAndMoveFiles();
 		}
+		#region EM_私家版_Emuera多言語化改造
+		public static void UpdateLangSetting(ConfigData instance) 
+		{
+			EnglishConfigOutput = instance.GetConfigValue<bool>(ConfigCode.EnglishConfigOutput);
+			EmueraLang = instance.GetConfigValue<string>(ConfigCode.EmueraLang);
+		}
+		#endregion
 
 
 		static readonly Dictionary<string, Dictionary<FontStyle, Font>> fontDic = new Dictionary<string, Dictionary<FontStyle, Font>>();

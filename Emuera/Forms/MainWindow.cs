@@ -705,9 +705,10 @@ namespace MinorShift.Emuera
 
 		public void ShowConfigDialog()
 		{
-			
+			string lang = Config.EmueraLang;
 			ConfigDialog dialog = new ConfigDialog();
 			dialog.TranslateUI();
+			dialog.SetupLang(Lang.GetLangList());
             dialog.StartPosition = FormStartPosition.CenterParent;
 			dialog.SetConfig(this);
 			dialog.ShowDialog();
@@ -716,6 +717,11 @@ namespace MinorShift.Emuera
                 console.forceStopTimer();
                 Program.Reboot = true;
                 this.Close();
+			}
+			if (Config.EmueraLang != lang)
+			{
+				Lang.ReloadLang();
+				this.TranslateUI();
 			}
 		}
 
