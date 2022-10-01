@@ -426,7 +426,7 @@ namespace MinorShift.Emuera.GameProc
 						if (c.A == 0)
 						{
 							if (str.Equals("transparent", StringComparison.OrdinalIgnoreCase))
-								throw new CodeEE(trerror.CanNotSpecifiedTransparent.Text);
+								throw new CodeEE(trerror.TransparentUnsupported.Text);
 							throw new CodeEE(string.Format(trerror.InvalidColorName.Text, colorName));
 						}
 						exm.Console.SetStringStyle(c);
@@ -473,7 +473,7 @@ namespace MinorShift.Emuera.GameProc
 						if (c.A == 0)
 						{
 							if (str.Equals("transparent", StringComparison.OrdinalIgnoreCase))
-								throw new CodeEE(trerror.CanNotSpecifiedTransparent.Text);
+								throw new CodeEE(trerror.TransparentUnsupported.Text);
 							throw new CodeEE(string.Format(trerror.InvalidColorName.Text, colorName));
 						}
 						exm.Console.SetBgColor(c);

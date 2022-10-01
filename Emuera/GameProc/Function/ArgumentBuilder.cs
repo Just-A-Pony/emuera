@@ -469,7 +469,7 @@ namespace MinorShift.Emuera.GameProc.Function
 					if (c.A == 0)
 					{
 						if (rowStr.Equals("transparent", StringComparison.OrdinalIgnoreCase))
-							throw new CodeEE(trerror.CanNotSpecifiedTransparent.Text);
+							throw new CodeEE(trerror.TransparentUnsupported.Text);
 						throw new CodeEE(string.Format(trerror.InvalidColorName.Text, rowStr));
 					}
 
