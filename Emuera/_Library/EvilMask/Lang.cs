@@ -488,9 +488,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString GetSize0DCharaVar { get; } = new TranslatableString("配列型でないキャラクタ変数\"{0}\"の長さを取得しようとしました");
             [Managed] public static TranslatableString GetSizeCharaVarWithoutDim { get; } = new TranslatableString("{0}次元配列型のキャラ変数\"{1}\"の長さを次元を指定せずに取得しようとしました");
             [Managed] public static TranslatableString GetSizeCharaVarNonExistDim { get; } = new TranslatableString("配列型変数のキャラ変数\"{0}\"の存在しない次元の長さを取得しようとしました");
-            [Managed] public static TranslatableString OoRCharaVarFirstArg { get; } = new TranslatableString("キャラクタ配列変数\"{0}\"の第1引数({1})はキャラ登録番号の範囲外です");
-            [Managed] public static TranslatableString OoRCharaVarSecondArg { get; } = new TranslatableString("キャラクタ配列変数\"{0}\"の第2引数({1})は配列の範囲外です");
-            [Managed] public static TranslatableString OoRCharaVarThirdArg { get; } = new TranslatableString("キャラクタ配列変数\"{0}\"の第3引数({1})は配列の範囲外です");
+            [Managed] public static TranslatableString OoRCharaVarArg { get; } = new TranslatableString("キャラクタ配列変数\"{0}\"の第{1}引数({2})はキャラ登録番号の範囲外です");
             [Managed] public static TranslatableString OoRInstructionArg { get; } = new TranslatableString("\"{0}\"命令の第{1}引数({2})は配列\"{3}\"の範囲外です");
             [Managed] public static TranslatableString GetSizeDimError { get; } = new TranslatableString("{0}次元配列型変数\"{1}\"の長さを取得しようとしました");
             [Managed] public static TranslatableString GetSizeNonExistDim { get; } = new TranslatableString("配列型変数\"{0}\"の存在しない次元の長さを取得しようとしました");
