@@ -405,9 +405,9 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString NumericType { get; } = new TranslatableString("数値型");
             [Managed] public static TranslatableString StringType { get; } = new TranslatableString("文字列型");
             [Managed] public static TranslatableString UnknownType { get; } = new TranslatableString("不定型");
-            [Managed] public static TranslatableString RefType { get; } = new TranslatableString("不定型");
-            [Managed] public static TranslatableString MultidimType { get; } = new TranslatableString("不定型");
-            [Managed] public static TranslatableString CharaType { get; } = new TranslatableString("不定型");
+            [Managed] public static TranslatableString RefType { get; } = new TranslatableString("参照型");
+            [Managed] public static TranslatableString MultidimType { get; } = new TranslatableString("多次元型");
+            [Managed] public static TranslatableString CharaType { get; } = new TranslatableString("キャラクター型");
             [Managed] public static TranslatableString CanNotAppliedUnaryOp { get; } = new TranslatableString("{0}に単項演算子\"{1}\"は適用できません");
             [Managed] public static TranslatableString CanNotAppliedBinaryOp { get; } = new TranslatableString("{0}と{1}の演算に二項演算子\"{2}\"は適用できません");
 
