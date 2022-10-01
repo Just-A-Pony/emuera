@@ -43,7 +43,7 @@ namespace MinorShift.Emuera.GameProc
 					{
 						Int64 charaNo = vTerm.GetElementInt(0, exm);
 						if ((charaNo < 0) || (charaNo >= GlobalStatic.VariableData.CharacterList.Count))
-							throw new CodeEE(string.Format(trerror.OoRCharaVarFirstArg.Text, vTerm.Identifier.Name, charaNo.ToString()));
+							throw new CodeEE(string.Format(trerror.OoRCharaVarArg.Text, vTerm.Identifier.Name, "1", charaNo.ToString()));
 						TransporterRef[i] = (Array)vTerm.Identifier.GetArrayChara((int)charaNo);
 					}
 					else
