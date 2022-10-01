@@ -62,8 +62,8 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				byName = byname;
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Int, ArgType.Int}, OmitStart = 2 },
-					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.RefString1D, ArgType.Int}, OmitStart = 3 },
+					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.String, ArgType.Int, ArgType.Int}, OmitStart = 2 },
+					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.String, ArgType.RefString1D, ArgType.Int}, OmitStart = 3 },
 				};
 			}
 			private bool byName = false;
@@ -342,7 +342,7 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(Int64);
 				argumentTypeArrayEx = new ArgTypeList[] {
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D, ArgType.Int }, OmitStart = 2 },
-					new ArgTypeList{ ArgTypes = { ArgType.RefInt, ArgType.RefString1D, ArgType.Int }, OmitStart = 2 },
+					new ArgTypeList{ ArgTypes = { ArgType.RefInt | ArgType.AllowConstRef, ArgType.RefString1D, ArgType.Int }, OmitStart = 2 },
 				};
 				CanRestructure = false;
 			}
@@ -708,6 +708,7 @@ namespace MinorShift.Emuera.GameData.Function
 			public enum Operation { Create, Check, Release };
 			public XmlDocumentMethod(Operation type)
 			{
+				op = type;
 				ReturnType = typeof(Int64);
 				if (op == Operation.Create)
 					argumentTypeArrayEx = new ArgTypeList[] {
@@ -718,7 +719,6 @@ namespace MinorShift.Emuera.GameData.Function
 						new ArgTypeList{ ArgTypes = { ArgType.Any } },
 					};
 				CanRestructure = false;
-				op = type;
 			}
 			private Operation op;
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
@@ -1651,7 +1651,7 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(Int64);
 				// argumentTypeArray = null;
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.CharacterData, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.Any, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
 				};
 				CanRestructure = false;
 				isLast = last;
@@ -2697,7 +2697,7 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(Int64);
 				// argumentTypeArray = null;
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefIntArray, ArgType.Int, ArgType.Int }, OmitStart = 1 }
+					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefIntArray | ArgType.AllowConstRef, ArgType.Int, ArgType.Int }, OmitStart = 1 }
 				};
 				isCharaRange = isChara;
 				CanRestructure = false;
@@ -2760,7 +2760,7 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(Int64);
 				// argumentTypeArray = null;
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.RefAny1D, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+					new ArgTypeList{ ArgTypes = { ArgType.RefAny1D | ArgType.AllowConstRef, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
 				};
 				isCharaRange = false;
 				CanRestructure = false;
@@ -2771,7 +2771,7 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(Int64);
 				// argumentTypeArray = null;
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefAny1D, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefAny1D | ArgType.AllowConstRef, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
 				};
 				isCharaRange = isChara;
 				CanRestructure = false;
@@ -3022,7 +3022,7 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(Int64);
 				// argumentTypeArray = null;
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.RefInt1D, ArgType.Int, ArgType.Int }, OmitStart = 1 },
+					new ArgTypeList{ ArgTypes = { ArgType.RefInt1D | ArgType.AllowConstRef, ArgType.Int, ArgType.Int }, OmitStart = 1 },
 				};
 				isCharaRange = false;
 				isMax = true;
@@ -3034,7 +3034,7 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(Int64);
 				// argumentTypeArray = null;
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefInt1D, ArgType.Int, ArgType.Int }, OmitStart = 1 },
+					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefInt1D | ArgType.AllowConstRef, ArgType.Int, ArgType.Int }, OmitStart = 1 },
 				};
 				isCharaRange = isChara;
 				isMax = true;
@@ -3050,10 +3050,10 @@ namespace MinorShift.Emuera.GameData.Function
 				// argumentTypeArray = null;
 				argumentTypeArrayEx = isChara
 					? new ArgTypeList[] {
-						new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefInt1D, ArgType.Int, ArgType.Int }, OmitStart = 1 },
+						new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefInt1D | ArgType.AllowConstRef, ArgType.Int, ArgType.Int }, OmitStart = 1 },
 					}
 					: new ArgTypeList[] {
-						new ArgTypeList{ ArgTypes = { ArgType.RefInt1D, ArgType.Int, ArgType.Int }, OmitStart = 1 },
+						new ArgTypeList{ ArgTypes = { ArgType.RefInt1D | ArgType.AllowConstRef, ArgType.Int, ArgType.Int }, OmitStart = 1 },
 					};
 				isCharaRange = isChara;
 				isMax = isMaxFunc;
@@ -3146,7 +3146,7 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(Int64);
 				// argumentTypeArray = null;
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.RefAny, ArgType.String } },
+					new ArgTypeList{ ArgTypes = { ArgType.RefAny | ArgType.AllowConstRef, ArgType.String } },
 				};
 				CanRestructure = true;
 				HasUniqueRestructure = true;
@@ -3288,7 +3288,7 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(Int64);
 				// argumentTypeArray = null;
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.RefAny1D, ArgType.SameAsFirst, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+					new ArgTypeList{ ArgTypes = { ArgType.RefAny1D | ArgType.AllowConstRef, ArgType.SameAsFirst, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 2 },
 				};
 				CanRestructure = true; //すべて定数項ならできるはず
 				HasUniqueRestructure = true;
@@ -3402,7 +3402,7 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(Int64);
 				// argumentTypeArray = null;
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.RefInt1D, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 3 },
+					new ArgTypeList{ ArgTypes = { ArgType.RefInt1D | ArgType.AllowConstRef, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 3 },
 				};
 				CanRestructure = false;
 			}
@@ -3411,7 +3411,7 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(Int64);
 				// argumentTypeArray = null;
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefInt1D, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 3 },
+					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefInt1D | ArgType.AllowConstRef, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 3 },
 				};
 				isCharaRange = isChara;
 				CanRestructure = false;
@@ -4015,7 +4015,7 @@ namespace MinorShift.Emuera.GameData.Function
 				// argumentTypeArray = new Type[] { typeof(string), typeof(string), typeof(string) };
 				argumentTypeArrayEx = new ArgTypeList[] {
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.Int }, OmitStart = 3 },
-					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.RefString1D, ArgType.Int } },
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.RefString1D | ArgType.AllowConstRef, ArgType.Int } },
 				};
 				HasUniqueRestructure = true;
 				CanRestructure = false;
@@ -4356,7 +4356,7 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(string);
 				// argumentTypeArray = null;
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.RefAnyArray, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 1 },
+					new ArgTypeList{ ArgTypes = { ArgType.RefAnyArray | ArgType.AllowConstRef, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 1 },
 				};
 				HasUniqueRestructure = true;
 				CanRestructure = true;
@@ -5557,10 +5557,10 @@ namespace MinorShift.Emuera.GameData.Function
 				argumentTypeArrayEx = new ArgTypeList[] {
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int,
 							ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int,
-							ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.RefInt2D }, OmitStart = 10 },
+							ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.RefInt2D | ArgType.AllowConstRef }, OmitStart = 10 },
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int,
 							ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int,
-							ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.RefInt3D }, OmitStart = 10 },
+							ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.RefInt3D | ArgType.AllowConstRef }, OmitStart = 10 },
 				};
 				CanRestructure = false;
 				HasUniqueRestructure = true;
@@ -5678,8 +5678,8 @@ namespace MinorShift.Emuera.GameData.Function
 				argumentTypeArrayEx = new ArgTypeList[] {
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String } },
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.Int, ArgType.Int } },
-					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.RefInt2D }, OmitStart = 6 },
-					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.RefInt3D }, OmitStart = 6 },
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.RefInt2D | ArgType.AllowConstRef }, OmitStart = 6 },
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.RefInt3D | ArgType.AllowConstRef }, OmitStart = 6 },
 				};
 				CanRestructure = false;
 				HasUniqueRestructure = true;
