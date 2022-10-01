@@ -315,8 +315,6 @@ namespace EvilMask.Emuera
         [Managed]
         public sealed class Error
         {
-            public static string Text { get { return trClass[typeof(Error)].Text; } }
-
             [Managed] public static TranslatableString WarnPrefix { get; } = new TranslatableString("注意: {0}の{1}行目: {2}");
             [Managed] public static TranslatableString FuncPrefix { get; } = new TranslatableString("{0}関数: {1}");
 
@@ -1099,7 +1097,6 @@ namespace EvilMask.Emuera
         [Managed]
         public sealed class MessageBox
         {
-            public static string Text { get { return trClass[typeof(MessageBox)].Text; } }
             [Managed] public static TranslatableString ConfigError { get; } = new TranslatableString("設定のエラー");
             [Managed] public static TranslatableString TooSmallFontSize { get; } = new TranslatableString("フォントサイズが小さすぎます(8が下限)");
             [Managed] public static TranslatableString LineHeightLessThanFontSize { get; } = new TranslatableString("行の高さがフォントサイズより小さいため、フォントサイズと同じ高さと解釈されます");
@@ -1142,7 +1139,6 @@ namespace EvilMask.Emuera
         [Managed]
         public sealed class KeyMacro
         {
-            public static string Text { get { return trClass[typeof(KeyMacro)].Text; } }
             [Managed] public static TranslatableString SetMacroGroup { get; } = new TranslatableString("マクログループ{0}に設定");
             [Managed] public static TranslatableString MacroKeyF { get; } = new TranslatableString("マクロキーF{0}:");
             [Managed] public static TranslatableString GMacroKeyF { get; } = new TranslatableString("G{0}:マクロキーF{1}:");
@@ -1151,7 +1147,6 @@ namespace EvilMask.Emuera
         [Managed]
         public sealed class SystemLine
         {
-            public static string Text { get { return trClass[typeof(SystemLine)].Text; } }
             [Managed] public static TranslatableString LoadingFile { get; } = new TranslatableString("{0}読み込み中・・・");
             [Managed] public static TranslatableString ElapsedTimeLoad { get; } = new TranslatableString("経過時間:{0}ms:{1}読み込み中・・・");
             [Managed] public static TranslatableString ElapsedTime { get; } = new TranslatableString("経過時間:{0}ms");
