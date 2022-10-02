@@ -816,8 +816,8 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString RequireArrayBecauseRefArg { get; } = new TranslatableString("\"@{0}\"の{1}番目の引数は参照渡しのための配列変数でなければなりません");
             [Managed] public static TranslatableString NumberOfArg { get; } = new TranslatableString("\"@{0}\"の{1}番目の引数:{2}");
             [Managed] public static TranslatableString CanNotOmitArgWithMessage { get; } = new TranslatableString("\"@{0}\"の{1}番目の引数は省略できません(この警告は互換性オプション「{2}」により無視できます)");
-            [Managed] public static TranslatableString CanNotConvertStrToInt1 { get; } = new TranslatableString("\"@{0}\"の{}番目の引数を文字列型から整数型に変換できません");
-            [Managed] public static TranslatableString CanNotConvertStrToInt2 { get; } = new TranslatableString("\"@{0}\"の{1}番目の引数を整数型から文字列型に変換できません(この警告は互換性オプション「{2}」により無視できます)");
+            [Managed] public static TranslatableString CanNotConvertStrToInt { get; } = new TranslatableString("\"@{0}\"の{1}番目の引数を文字列型から整数型に変換できません");
+            [Managed] public static TranslatableString CanNotConvertIntToStr { get; } = new TranslatableString("\"@{0}\"の{1}番目の引数を整数型から文字列型に変換できません(この警告は互換性オプション「{2}」により無視できます)");
             [Managed] public static TranslatableString CalltrainArgMoreThanSelectcom { get; } = new TranslatableString("CALLTRAIN命令の引数の値がSELECTCOMの要素数を超えています");
             [Managed] public static TranslatableString SelectExitInfiniteLoopMB { get; } = new TranslatableString("無限ループの疑いにより強制終了が選択されました");
             [Managed] public static TranslatableString OverflowFuncStack { get; } = new TranslatableString("関数の呼び出しスタックが溢れました(無限に再帰呼び出しされていませんか？)");

@@ -202,14 +202,14 @@ namespace MinorShift.Emuera.GameProc
 				{
 					if (term.GetOperandType() == typeof(string))
 					{
-						errMes = string.Format(trerror.CanNotConvertStrToInt1.Text, func.LabelName, (i + 1).ToString());
+						errMes = string.Format(trerror.CanNotConvertStrToInt.Text, func.LabelName, (i + 1).ToString());
 						return null;
 					}
 					else
 					{
 						if (!Config.CompatiFuncArgAutoConvert)
 						{
-							errMes = string.Format(trerror.CanNotConvertStrToInt2.Text, func.LabelName, (i + 1).ToString(), Config.GetConfigName(ConfigCode.CompatiFuncArgAutoConvert));
+							errMes = string.Format(trerror.CanNotConvertIntToStr.Text, func.LabelName, (i + 1).ToString(), Config.GetConfigName(ConfigCode.CompatiFuncArgAutoConvert));
 							return null;
 						}
 						if (tostrMethod == null)
