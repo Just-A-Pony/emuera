@@ -151,6 +151,7 @@ namespace MinorShift.Emuera.Forms
 			this.checkBoxCompatiSP.Text = Lang.UI.ConfigDialog.Compatibility.UseSPCharacters.Text;
 			this.checkBoxCompatiLinefeedAs1739.Text = Lang.UI.ConfigDialog.Compatibility.ButtonWarp.Text;
 			this.checkBox12.Text = Lang.UI.ConfigDialog.Compatibility.OmitArgs.Text;
+			this.checkBox25.Text = Lang.UI.ConfigDialog.Compatibility.AutoTOSTR.Text;
 			this.button7.Text = Lang.UI.ConfigDialog.Compatibility.EramakerStandard.Text;
 			this.button8.Text = Lang.UI.ConfigDialog.Compatibility.EmueraStandard.Text;
 
