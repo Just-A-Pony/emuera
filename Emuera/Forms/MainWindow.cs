@@ -79,6 +79,12 @@ namespace MinorShift.Emuera
 		public ToolTip ToolTip { get { return toolTipButton; } }
 		private EmueraConsole console = null;
 
+		#region EM_私家版_Icon指定機能
+		public void SetupIcon(Icon icon)
+		{
+			this.Icon = icon;
+		}
+		#endregion
 
 		#region EM_私家版_Emuera多言語化改造
 		public void TranslateUI()

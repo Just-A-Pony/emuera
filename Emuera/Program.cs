@@ -94,6 +94,17 @@ namespace MinorShift.Emuera
 			#region EM_私家版_Emuera多言語化改造
 			Lang.LoadLanguageFile();
 			#endregion
+			#region EM_私家版_Icon指定機能
+			Icon icon = null;
+			{
+				var bmp = Utils.LoadImage(Utils.GetValidPath(Config.EmueraIcon));
+				if (bmp != null)
+				{
+					icon = Utils.MakeIconFromBmpFile(bmp);
+					bmp.Dispose();
+				}
+			}
+			#endregion
 
 			//二重起動の禁止かつ二重起動
 			if ((!Config.AllowMultipleInstances) && (Sys.PrevInstance()))
@@ -175,6 +186,10 @@ namespace MinorShift.Emuera
 				{
 					#region EM_私家版_Emuera多言語化改造
 					win.TranslateUI();
+					#endregion
+					#region EM_私家版_Icon指定機能
+					if (icon != null)
+						win.SetupIcon(icon);
 					#endregion
 					Application.Run(win);
 					Content.AppContents.UnloadContents();
