@@ -533,7 +533,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString CanNotChangeVarSize { get; } = new TranslatableString("{0}のサイズは変更できません");
             [Managed] public static TranslatableString ArrayLengthIs0 { get; } = new TranslatableString("配列長に0は指定できません（変数を使用禁止にするには配列長に負の値を指定してください）");
             [Managed] public static TranslatableString CanNotDisableVarArrayLengthIsNegative { get; } = new TranslatableString("使用禁止にできない変数に対して負の配列長が指定されています");
-            [Managed] public static TranslatableString IgnoreNDData { get; } = new TranslatableString("一次元配列のサイズ指定に不必要なデータは無視されます");
+            [Managed] public static TranslatableString IgnoreNDData { get; } = new TranslatableString("{0}次元配列のサイズ指定に不必要なデータは無視されます");
             [Managed] public static TranslatableString LocalVarSizeCanNotLessThan1 { get; } = new TranslatableString("ローカル変数のサイズを1未満にはできません");
             [Managed] public static TranslatableString InternalVarSizeCanNotLessThan100 { get; } = new TranslatableString("ローカル変数でない一次元配列のサイズを100未満にはできません");
             [Managed] public static TranslatableString OneDVarSizeCanNotGreaterThan1M { get; } = new TranslatableString("一次元配列のサイズを1000000より大きくすることはできません");
