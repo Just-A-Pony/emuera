@@ -1893,7 +1893,7 @@ namespace MinorShift.Emuera.GameProc.Function
 					if (iValue < 0)
 					{ warn(trerror.NotPositiveCharaNo.Text, line, 2, false); return null; }
 					if (iValue > Int32.MaxValue)
-					{ warn(trerror.CharaNoOver2p32.Text, line, 2, false); return null; }
+					{ warn(trerror.CharaNoOverInt32.Text, line, 2, false); return null; }
 					for (int j = i + 1; j < termList.Count; j++)
 					{
 						if (!(termList[j] is SingleTerm))

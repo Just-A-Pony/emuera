@@ -585,7 +585,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString InvalidColorName { get; } = new TranslatableString("指定された色名\"{0}\"は無効な色名です");
             [Managed] public static TranslatableString ArgIsNotArrayVar { get; } = new TranslatableString("第{0}引数に配列でない変数を指定することはできません");
             [Managed] public static TranslatableString ExtraCharacterAfterArg { get; } = new TranslatableString("引数の後に余分な文字があります");
-            [Managed] public static TranslatableString ArgIsNotCharaVar { get; } = new TranslatableString("第１引数はキャラクタ変数でなければなりません");
+            [Managed] public static TranslatableString ArgIsNotCharaVar { get; } = new TranslatableString("第{0}引数はキャラクタ変数でなければなりません");
             [Managed] public static TranslatableString ArgIsNot1DVar { get; } = new TranslatableString("第{0}引数に１次元配列もしくは配列型キャラクタ変数以外を指定することはできません");
             [Managed] public static TranslatableString IsNotForwardBack { get; } = new TranslatableString("第{0}引数にソート方法指定子（FORWARD or BACK）以外が指定されています");
             [Managed] public static TranslatableString ArgIsNotNumber { get; } = new TranslatableString("第{0}引数が数値ではありません");
@@ -635,7 +635,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString CanNotSaveRefVar { get; } = new TranslatableString("参照型変数はセーブできません");
             [Managed] public static TranslatableString DuplicateVarSave { get; } = new TranslatableString("変数\"{0}\"を二度以上保存しようとしています");
             [Managed] public static TranslatableString NotPositiveCharaNo { get; } = new TranslatableString("キャラ登録番号は正の値でなければなりません");
-            [Managed] public static TranslatableString CharaNoOver2p32 { get; } = new TranslatableString("キャラ登録番号が32bit符号付整数の上限を超えています");
+            [Managed] public static TranslatableString CharaNoOverInt32 { get; } = new TranslatableString("キャラ登録番号が32bit符号付整数の上限を超えています");
             [Managed] public static TranslatableString DuplicateCharaSave { get; } = new TranslatableString("キャラ登録番号\"{0}\"を二度以上保存しようとしています");
             [Managed] public static TranslatableString ArgIsNotRef { get; } = new TranslatableString("第{0}引数は関数参照か参照型変数でなければなりません");
             [Managed] public static TranslatableString NotDefinedUserFunc { get; } = new TranslatableString("式中関数\"{0}\"が見つかりません");
