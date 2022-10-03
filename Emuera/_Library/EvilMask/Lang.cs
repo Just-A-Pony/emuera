@@ -310,6 +310,24 @@ namespace EvilMask.Emuera
                 [Managed] public static TranslatableString SetWindowPos { get; } = new TranslatableString("デバッグウィンドウ位置を指定する");
                 [Managed] public static TranslatableString WindowX { get; } = new TranslatableString("デバッグウィンドウ位置X");
                 [Managed] public static TranslatableString WindowY { get; } = new TranslatableString("デバッグウィンドウ位置Y");
+                [Managed] public static TranslatableString File { get; } = new TranslatableString("ファイル(&F)");
+                [Managed] public static TranslatableString SaveWatchList { get; } = new TranslatableString("ウォッチリストの保存");
+                [Managed] public static TranslatableString LoadWatchList { get; } = new TranslatableString("ウォッチリストの読込");
+                [Managed] public static TranslatableString Close { get; } = new TranslatableString("閉じる");
+                [Managed] public static TranslatableString Setting { get; } = new TranslatableString("設定(&C)");
+                [Managed] public static TranslatableString Config { get; } = new TranslatableString("コンフィグ(&C)");
+                [Managed] public static TranslatableString VariableWatch { get; } = new TranslatableString("変数ウォッチ");
+                [Managed] public static TranslatableString Object { get; } = new TranslatableString("対象");
+                [Managed] public static TranslatableString Value { get; } = new TranslatableString("値");
+                [Managed] public static TranslatableString StackTrace { get; } = new TranslatableString("スタックトレース");
+                [Managed] public static TranslatableString Console { get; } = new TranslatableString("コンソール");
+                [Managed] public static TranslatableString StayOnTop { get; } = new TranslatableString("最前面に表示");
+                [Managed] public static TranslatableString UpdateData { get; } = new TranslatableString("データ更新");
+                [Managed] public static TranslatableString EmueraDebugWindow { get; } = new TranslatableString("Emuera - デバッグウインドウ");
+                //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+                //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+                //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+                //[Managed] public static TranslatableString { get; } = new TranslatableString("");
                 // [Managed] public static TranslatableString Warning { get; } = new TranslatableString("現在のウィンドウ位置を取得");
                 // Lang.UI.ConfigDialog.Window.GetWindowPos
             }
