@@ -3146,7 +3146,7 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(Int64);
 				// argumentTypeArray = null;
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.RefAny | ArgType.AllowConstRef, ArgType.String } },
+					new ArgTypeList{ ArgTypes = { ArgType.RefAny | ArgType.AllowConstRef, ArgType.String, ArgType.Int }, OmitStart = 2 },
 				};
 				CanRestructure = true;
 				HasUniqueRestructure = true;
@@ -3169,8 +3169,12 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				VariableTerm vToken = (VariableTerm)arguments[0];
 				VariableCode varCode = vToken.Identifier.Code;
+				string varname = "";
 				#region EE_ERD
-				string varname = vToken.Identifier.Name;
+				if (arguments.Length > 2)
+					varname = vToken.Identifier.Name+"@"+arguments[2].GetIntValue(exm);
+				else
+					varname = vToken.Identifier.Name;
 				#endregion
 				string key = arguments[1].GetStrValue(exm);
 				#region EE_ERD
