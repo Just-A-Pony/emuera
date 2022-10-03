@@ -1562,6 +1562,7 @@ namespace MinorShift.Emuera.GameView
 			}
 			dd = new DebugDialog();
 			dd.SetParent(this, emuera);
+			dd.TranslateUI();
 			dd.Show();
 		}
 
