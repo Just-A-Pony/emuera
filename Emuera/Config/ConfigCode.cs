@@ -167,5 +167,8 @@ namespace MinorShift.Emuera
 		EnglishConfigOutput,
 		EmueraLang,
 		#endregion
+		#region EM_私家版_Icon指定機能
+		EmueraIcon,
+		#endregion
 	}
 }

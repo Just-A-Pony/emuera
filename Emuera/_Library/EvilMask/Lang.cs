@@ -353,12 +353,12 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString UseInstructionLikeVar { get; } = new TranslatableString("命令名\"{0}\"が変数のように使われています");
             [Managed] public static TranslatableString CanNotInterpreted { get; } = new TranslatableString("\"{0}\"は解釈できない識別子です");
             [Managed] public static TranslatableString AbnormalFirstOperand { get; } = new TranslatableString("三項演算子\\@の第一オペランドが異常です");
-            [Managed] public static TranslatableString EmptyBrace { get; } = new TranslatableString("{}の中に式が存在しません");
+            [Managed] public static TranslatableString EmptyBrace { get; } = new TranslatableString("{{}}の中に式が存在しません");
             [Managed] public static TranslatableString EmptyPer { get; } = new TranslatableString("%%の中に式が存在しません");
             [Managed] public static TranslatableString NotSpecifiedLR { get; } = new TranslatableString("','の後にRIGHT又はLEFTがありません");
             [Managed] public static TranslatableString OtherThanLR { get; } = new TranslatableString("','の後にRIGHT又はLEFT以外の単語があります");
             [Managed] public static TranslatableString ExtraCharacterLR { get; } = new TranslatableString("RIGHT又はLEFTの後に余分な文字があります");
-            [Managed] public static TranslatableString IsNotNumericBrace { get; } = new TranslatableString("{}の中の式が数式ではありません");
+            [Managed] public static TranslatableString IsNotNumericBrace { get; } = new TranslatableString("{{}}の中の式が数式ではありません");
             [Managed] public static TranslatableString IsNotStringPer { get; } = new TranslatableString("%%の中の式が文字列式ではありません");
             [Managed] public static TranslatableString OoRForcekanaArg { get; } = new TranslatableString("命令FORCEKANAの引数が指定可能な範囲(0～3)を超えています");
             [Managed] public static TranslatableString MaxBarNotPositive { get; } = new TranslatableString("BARの最大値が正の値ではありません");

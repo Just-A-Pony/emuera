@@ -145,6 +145,9 @@ namespace MinorShift.Emuera
 			EnglishConfigOutput = instance.GetConfigValue<bool>(ConfigCode.EnglishConfigOutput);
 			EmueraLang = instance.GetConfigValue<string>(ConfigCode.EmueraLang);
 			#endregion
+			#region EM_私家版_Icon指定機能
+			EmueraIcon = instance.GetConfigValue<string>(ConfigCode.EmueraIcon);
+			#endregion
 
 			UseLanguage lang = instance.GetConfigValue<UseLanguage>(ConfigCode.useLanguage);
 			switch (lang)
@@ -616,6 +619,9 @@ namespace MinorShift.Emuera
 		#region EM_私家版_Emuera多言語化改造
 		public static bool EnglishConfigOutput { get; private set; }
 		public static string EmueraLang { get; private set; }
+		#endregion
+		#region EM_私家版_Icon指定機能
+		public static string EmueraIcon { get; private set; }
 		#endregion
 
 	}

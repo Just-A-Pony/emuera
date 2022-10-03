@@ -5333,7 +5333,7 @@ namespace MinorShift.Emuera.GameData.Function
 						return 0;
 					#region EM_私家版_webp
 					// bmp = new Bitmap(filepath);
-					bmp = AppContents.LoadImage(filepath);
+					bmp = Utils.LoadImage(filepath);
 					if (bmp == null) return 0;
 					#endregion
 					if (bmp.Width > AbstractImage.MAX_IMAGESIZE || bmp.Height > AbstractImage.MAX_IMAGESIZE)
@@ -6447,7 +6447,7 @@ namespace MinorShift.Emuera.GameData.Function
 						return 0;
 					#region EM_私家版_webp
 					// bmp = new Bitmap(filepath);
-					bmp = AppContents.LoadImage(filepath);
+					bmp = Utils.LoadImage(filepath);
 					if (bmp == null) return 0;
 					#endregion
 					if (bmp.Width > AbstractImage.MAX_IMAGESIZE || bmp.Height > AbstractImage.MAX_IMAGESIZE)

@@ -1,4 +1,5 @@
-﻿using MinorShift.Emuera.Sub;
+﻿using EvilMask.Emuera;
+using MinorShift.Emuera.Sub;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -148,31 +149,6 @@ namespace MinorShift.Emuera.Content
 				graph.GDispose();
 			gList.Clear();
 		}
-		#region EM_私家版_ファイル占用解除
-		// filepathの安全性(ゲームフォルダ以外のフォルダか)を確認しない
-		static public Bitmap LoadImage(string filepath)
-		{
-			Bitmap bmp = null;
-			FileStream fs = null;
-			if (!File.Exists(filepath)) return null;
-
-			try
-			{
-				fs = new FileStream(filepath, FileMode.Open);
-				var factory = new ImageProcessor.ImageFactory();
-				factory.Load(fs);
-				bmp = (Bitmap)factory.Image;
-			}
-			catch { }
-			finally
-			{
-				fs?.Close();
-				fs?.Dispose();
-			}
-			return bmp;
-
-		}
-		#endregion
 		/// <summary>
 		/// resourcesフォルダ中のcsvの1行を読んで新しいリソースを作る(or既存のアニメーションスプライトに1フレーム追加する)
 		/// </summary>
@@ -232,7 +208,7 @@ namespace MinorShift.Emuera.Content
 				}
 				#region EM_私家版_webp
 				// Bitmap bmp = new Bitmap(filepath);
-				var bmp = LoadImage(filepath);
+				var bmp = Utils.LoadImage(filepath);
 				#endregion
 				if (bmp == null)
 				{
