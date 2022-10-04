@@ -38,7 +38,6 @@ namespace MinorShift.Emuera
             folderSelectDialog.ShowNewFolderButton = false;
 
 			openFileDialog.InitialDirectory = Program.ErbDir;
-            openFileDialog.Filter = "ERBファイル (*.erb)|*.erb";
             openFileDialog.FileName = "";
             openFileDialog.Multiselect = true;
             openFileDialog.RestoreDirectory = true;
@@ -68,6 +67,17 @@ namespace MinorShift.Emuera
 			this.richTextBox1.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.richTextBox1_MouseWheel);
 			this.mainPicBox.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.richTextBox1_MouseWheel);
 			this.vScrollBar.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.richTextBox1_MouseWheel);
+
+
+			#region EM_私家版_INPUT系機能拡張
+			this.richTextBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.richTextBox1_ModifierRecorder_KeyUp);
+			this.richTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.richTextBox1_ModifierRecorder_KeyDown);
+			#endregion
+
+			#region EM_私家版_Emuera多言語化改造
+			this.labelMacroGroupChanged.Font = new Font(Lang.MFont, 24F, FontStyle.Regular, GraphicsUnit.Point, (byte)128);
+			this.richTextBox1.Font = new Font(Config.Font.FontFamily, 18F, FontStyle.Regular, GraphicsUnit.Pixel);
+			#endregion
 		}
 		private ToolStripMenuItem[] macroMenuItems = new ToolStripMenuItem[KeyMacro.MaxFkey];
         private System.Diagnostics.FileVersionInfo emueraVer = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
@@ -98,6 +108,7 @@ namespace MinorShift.Emuera
 			this.フォルダを読み直すFToolStripMenuItem.Text = Lang.UI.MainWindow.File.ReloadFolder.Text;
 			this.ファイルを読み直すFToolStripMenuItem.Text = Lang.UI.MainWindow.File.ReloadScriptFile.Text;
 			this.exitToolStripMenuItem.Text = Lang.UI.MainWindow.File.Exit.Text;
+			this.openFileDialog.Filter = Lang.UI.MainWindow.FileFilter.Text + " (*.erb)|*.erb";
 
 			this.デバッグToolStripMenuItem.Text = Lang.UI.MainWindow.Debug.Text;
 			this.デバッグウインドウを開くToolStripMenuItem.Text = Lang.UI.MainWindow.Debug.OpenDebugWindow.Text;
@@ -727,6 +738,7 @@ namespace MinorShift.Emuera
 			if (Config.EmueraLang != lang)
 			{
 				Lang.ReloadLang();
+				KeyMacro.ResetNames();
 				this.TranslateUI();
 			}
 		}

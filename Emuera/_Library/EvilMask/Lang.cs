@@ -2,6 +2,7 @@
 using MinorShift.Emuera;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -114,6 +115,8 @@ namespace EvilMask.Emuera
                     [Managed] public static TranslatableString ArgPathNotExists { get; } = new TranslatableString("与えられたファイル・フォルダは存在しません");
                     [Managed] public static TranslatableString InvalidArg{ get; } = new TranslatableString("ドロップ可能なファイルはERBファイルのみです");
                 }
+
+                [Managed] public static TranslatableString FileFilter { get; } = new TranslatableString("ERBファイル");
             }
 
             [Translate("ClipBoardDialog"), Managed]
@@ -138,6 +141,7 @@ namespace EvilMask.Emuera
                     [Managed] public static TranslatableString UseKeyMacro { get; } = new TranslatableString("キーボードマクロを使用する");
                     [Managed] public static TranslatableString AutoSave { get; } = new TranslatableString("オートセーブを行なう");
                     [Managed] public static TranslatableString UseSaveFolder { get; } = new TranslatableString("セーブデータをsavフォルダ内に作成する");
+                    [Managed] public static TranslatableString EnglishConfigOutput { get; } = new TranslatableString("CONFIGファイルの内容を英語で保存する");
                     [Managed] public static TranslatableString MaxLog { get; } = new TranslatableString("履歴ログの行数");
                     [Managed] public static TranslatableString InfiniteLoopAlertTime { get; } = new TranslatableString("無限ループ警告までのミリ秒");
                     [Managed] public static TranslatableString SaveDataPerPage { get; } = new TranslatableString("使用するセーブデータ数");
@@ -310,26 +314,44 @@ namespace EvilMask.Emuera
                 [Managed] public static TranslatableString SetWindowPos { get; } = new TranslatableString("デバッグウィンドウ位置を指定する");
                 [Managed] public static TranslatableString WindowX { get; } = new TranslatableString("デバッグウィンドウ位置X");
                 [Managed] public static TranslatableString WindowY { get; } = new TranslatableString("デバッグウィンドウ位置Y");
-                [Managed] public static TranslatableString File { get; } = new TranslatableString("ファイル(&F)");
-                [Managed] public static TranslatableString SaveWatchList { get; } = new TranslatableString("ウォッチリストの保存");
-                [Managed] public static TranslatableString LoadWatchList { get; } = new TranslatableString("ウォッチリストの読込");
-                [Managed] public static TranslatableString Close { get; } = new TranslatableString("閉じる");
-                [Managed] public static TranslatableString Setting { get; } = new TranslatableString("設定(&C)");
-                [Managed] public static TranslatableString Config { get; } = new TranslatableString("コンフィグ(&C)");
-                [Managed] public static TranslatableString VariableWatch { get; } = new TranslatableString("変数ウォッチ");
-                [Managed] public static TranslatableString Object { get; } = new TranslatableString("対象");
-                [Managed] public static TranslatableString Value { get; } = new TranslatableString("値");
+                // [Managed] public static TranslatableString Warning { get; } = new TranslatableString("現在のウィンドウ位置を取得");
+                // Lang.UI.ConfigDialog.Window.GetWindowPos
+            }
+
+            [Translate("Emuera - デバッグウインドウ"), Managed]
+            public sealed class DebugDialog
+            {
+                public static string Text { get { return trClass[typeof(DebugDialog)].Text; } }
+
+                //[Translate("ファイル(&F)"), Managed]
+                [Managed]
+                public sealed class File
+                {
+                    // public static string Text { get { return trClass[typeof(File)].Text; } }
+                    // use Lang.UI.MainWindow.File.Text
+                    [Managed] public static TranslatableString SaveWatchList { get; } = new TranslatableString("ウォッチリストの保存");
+                    [Managed] public static TranslatableString LoadWatchList { get; } = new TranslatableString("ウォッチリストの読込");
+                    // Managed] public static TranslatableString Close { get; } = new TranslatableString("閉じる");
+                    // use Lang.UI.DebugDialog.Close.Text
+                }
+                [Translate("設定(&C)"), Managed]
+                public sealed class Setting
+                {
+                    public static string Text { get { return trClass[typeof(Setting)].Text; } }
+                    [Managed] public static TranslatableString Config { get; } = new TranslatableString("コンフィグ(&C)");
+                }
+                [Translate("変数ウォッチ"), Managed]
+                public sealed class VariableWatch
+                {
+                    public static string Text { get { return trClass[typeof(VariableWatch)].Text; } }
+                    [Managed] public static TranslatableString Object { get; } = new TranslatableString("対象");
+                    [Managed] public static TranslatableString Value { get; } = new TranslatableString("値");
+                }
                 [Managed] public static TranslatableString StackTrace { get; } = new TranslatableString("スタックトレース");
                 [Managed] public static TranslatableString Console { get; } = new TranslatableString("コンソール");
                 [Managed] public static TranslatableString StayOnTop { get; } = new TranslatableString("最前面に表示");
                 [Managed] public static TranslatableString UpdateData { get; } = new TranslatableString("データ更新");
-                [Managed] public static TranslatableString EmueraDebugWindow { get; } = new TranslatableString("Emuera - デバッグウインドウ");
-                //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-                //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-                //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-                //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-                // [Managed] public static TranslatableString Warning { get; } = new TranslatableString("現在のウィンドウ位置を取得");
-                // Lang.UI.ConfigDialog.Window.GetWindowPos
+                [Managed] public static TranslatableString Close { get; } = new TranslatableString("閉じる");
             }
         }
 
@@ -1230,22 +1252,34 @@ namespace EvilMask.Emuera
                     var node = xml.SelectSingleNode("/lang/name");
                     if (node != null)
                     {
-                        langList.Add(node.InnerText, path);
-                        if (Config.EmueraLang == node.InnerText)
+                        var langName = node.InnerText.Trim();
+                        if (langName.IndexOf('\n')<0 && !langList.ContainsKey(langName))
                         {
-                            var nodes = xml.SelectNodes("/lang/tr");
-                            for (int i = 0; i < nodes.Count; i++)
-                            {
-                                var attr = nodes[i].Attributes["id"];
-                                if (attr != null && trItems.ContainsKey(attr.Value))
-                                    trItems[attr.Value].Set(nodes[i].InnerText);
-                            }
+                            langList.Add(langName, path);
+                            var fontName = node.InnerText.Trim();
+                            if (Config.EmueraLang == langName)
+                                loadLangXML(xml);
                         }
                     }
                 }
             }
             langNames = new string[langList.Count];
             langList.Keys.CopyTo(langNames, 0);
+        }
+        static void loadLangXML(XmlDocument xml)
+        {
+            var fnode = xml.SelectSingleNode("/lang/mfont");
+            if (fnode != null)
+                MFont = fnode.InnerText.Trim();
+            else
+                MFont = "MS UI Gothic";
+            var nodes = xml.SelectNodes("/lang/tr");
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                var attr = nodes[i].Attributes["id"];
+                if (attr != null && trItems.ContainsKey(attr.Value))
+                    trItems[attr.Value].Set(nodes[i].InnerText);
+            }
         }
         static public void ReloadLang()
         {
@@ -1266,20 +1300,7 @@ namespace EvilMask.Emuera
                 {
                     return;
                 }
-                var node = xml.SelectSingleNode("/lang/name");
-                if (node != null)
-                {
-                    if (Config.EmueraLang == node.InnerText)
-                    {
-                        var nodes = xml.SelectNodes("/lang/tr");
-                        for (int i = 0; i < nodes.Count; i++)
-                        {
-                            var attr = nodes[i].Attributes["id"];
-                            if (attr != null && trItems.ContainsKey(attr.Value))
-                                trItems[attr.Value].Set(nodes[i].InnerText);
-                        }
-                    }
-                }
+                loadLangXML(xml);
             }
         }
         static public string[] GetLangList()
@@ -1317,10 +1338,10 @@ namespace EvilMask.Emuera
 
         static readonly string langDir = "lang/";
         static readonly Dictionary<string, string> langList = new Dictionary<string, string>();
+        public static string MFont { get; private set; }
         static string[] langNames;
         static readonly Dictionary<string, TranslatableString> trItems = new Dictionary<string, TranslatableString>();
         static readonly Dictionary<Type, TranslatableString> trClass = new Dictionary<Type, TranslatableString>();
-    
 
         static Lang()
         {

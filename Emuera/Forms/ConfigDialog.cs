@@ -17,9 +17,9 @@ namespace MinorShift.Emuera.Forms
 		Save = 1,
 		SaveReboot = 2,
 	}
-
 	internal partial class ConfigDialog : Form
 	{
+		FlowLayoutPanel[] pages;
 		public ConfigDialog()
 		{
 			InitializeComponent();
@@ -48,6 +48,16 @@ namespace MinorShift.Emuera.Forms
 			numericUpDownPosX.Maximum = 10000;//WindowPosX
 			numericUpDownPosY.Maximum = 10000;
 
+			pages = new FlowLayoutPanel[] {
+				flowLayoutPanel13,
+				flowLayoutPanel17,
+				flowLayoutPanel23,
+				flowLayoutPanel27,
+				flowLayoutPanel29,
+				flowLayoutPanel30,
+				flowLayoutPanel32,
+				flowLayoutPanel33,
+			};
 		}
 		internal void SetupLang(string[] langs) {
 			var fisrt = this.comboBox7.Items[0];
@@ -78,6 +88,7 @@ namespace MinorShift.Emuera.Forms
 			this.checkBox18.Text = Lang.UI.ConfigDialog.Environment.UseKeyMacro.Text;
 			this.checkBox7.Text = Lang.UI.ConfigDialog.Environment.AutoSave.Text;
 			this.checkBox24.Text = Lang.UI.ConfigDialog.Environment.UseSaveFolder.Text;
+			this.checkBox33.Text = Lang.UI.ConfigDialog.Environment.EnglishConfigOutput.Text;
 			this.label6.Text = Lang.UI.ConfigDialog.Environment.MaxLog.Text;
 			this.label17.Text = Lang.UI.ConfigDialog.Environment.InfiniteLoopAlertTime.Text;
 			this.label20.Text = Lang.UI.ConfigDialog.Environment.SaveDataPerPage.Text;
@@ -185,6 +196,19 @@ namespace MinorShift.Emuera.Forms
 			this.buttonReboot.Text = Lang.UI.ConfigDialog.SaveAndRestart.Text;
 			this.buttonCancel.Text = Lang.UI.ConfigDialog.Cancel.Text;
 			this.label16.Text = Lang.UI.ConfigDialog.ChangeWontTakeEffectUntilRestart.Text;
+
+			var diff = tabControl.Size - tabControl.DisplayRectangle.Size + ((Size)tabControl.Padding);
+			var size = new Size(0, 0);
+			foreach(var page in pages)
+			{
+				page.Dock = DockStyle.None;
+				if (page.Size.Width + page.Margin.Size.Width> size.Width) size.Width = page.Size.Width + page.Margin.Size.Width;
+				if (page.Size.Height + page.Margin.Size.Height > size.Height ) size.Height  = page.Size.Height + page.Margin.Size.Height;
+				page.Dock = DockStyle.Fill;
+			}
+			this.tabControl.Size = new Size(size.Width + diff.Width, tabControl.Size.Height);
+			diff = tabControl.Size - tabControl.DisplayRectangle.Size + ((Size)tabControl.Padding);
+			tabControl.Size = size + diff;
 		}
 
 		private void buttonSave_Click(object sender, EventArgs e)
@@ -269,6 +293,9 @@ namespace MinorShift.Emuera.Forms
 			setCheckBox(checkBoxCompatiErrorLine, ConfigCode.CompatiErrorLine);
 			setCheckBox(checkBoxCompatiCALLNAME, ConfigCode.CompatiCALLNAME);
 			setCheckBox(checkBox24, ConfigCode.UseSaveFolder);
+			#region EM_私家版_Emuera多言語化改造
+			setCheckBox(checkBox33, ConfigCode.EnglishConfigOutput);
+			#endregion
 			setCheckBox(checkBox27, ConfigCode.SystemSaveInUTF8);
 			setCheckBox(checkBoxCompatiRAND, ConfigCode.CompatiRAND);
 			setCheckBox(checkBoxCompatiLinefeedAs1739, ConfigCode.CompatiLinefeedAs1739);
@@ -588,6 +615,7 @@ namespace MinorShift.Emuera.Forms
 				config.GetConfigItem(ConfigCode.EmueraLang).SetValue<string>(comboBox7.SelectedItem as string);
 				ConfigData.Instance.GetConfigItem(ConfigCode.EmueraLang).SetValue<string>(comboBox7.SelectedItem as string);
 			}
+			config.GetConfigItem(ConfigCode.EnglishConfigOutput).SetValue<bool>(checkBox33.Checked);
 			Config.UpdateLangSetting(config);
 			#endregion
 
@@ -780,9 +808,5 @@ namespace MinorShift.Emuera.Forms
             textBox2.Enabled = ((ComboBox)sender).SelectedIndex == 3;
         }
 
-        private void tabPageSystem2_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
