@@ -2,6 +2,7 @@
 using MinorShift.Emuera;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -114,6 +115,8 @@ namespace EvilMask.Emuera
                     [Managed] public static TranslatableString ArgPathNotExists { get; } = new TranslatableString("与えられたファイル・フォルダは存在しません");
                     [Managed] public static TranslatableString InvalidArg{ get; } = new TranslatableString("ドロップ可能なファイルはERBファイルのみです");
                 }
+
+                [Managed] public static TranslatableString FileFilter { get; } = new TranslatableString("ERBファイル");
             }
 
             [Translate("ClipBoardDialog"), Managed]
@@ -1253,22 +1256,30 @@ namespace EvilMask.Emuera
                         if (langName.IndexOf('\n')<0 && !langList.ContainsKey(langName))
                         {
                             langList.Add(langName, path);
+                            var fontName = node.InnerText.Trim();
                             if (Config.EmueraLang == langName)
-                            {
-                                var nodes = xml.SelectNodes("/lang/tr");
-                                for (int i = 0; i < nodes.Count; i++)
-                                {
-                                    var attr = nodes[i].Attributes["id"];
-                                    if (attr != null && trItems.ContainsKey(attr.Value))
-                                        trItems[attr.Value].Set(nodes[i].InnerText);
-                                }
-                            }
+                                loadLangXML(xml);
                         }
                     }
                 }
             }
             langNames = new string[langList.Count];
             langList.Keys.CopyTo(langNames, 0);
+        }
+        static void loadLangXML(XmlDocument xml)
+        {
+            var fnode = xml.SelectSingleNode("/lang/mfont");
+            if (fnode != null)
+                MFont = fnode.InnerText.Trim();
+            else
+                MFont = "MS UI Gothic";
+            var nodes = xml.SelectNodes("/lang/tr");
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                var attr = nodes[i].Attributes["id"];
+                if (attr != null && trItems.ContainsKey(attr.Value))
+                    trItems[attr.Value].Set(nodes[i].InnerText);
+            }
         }
         static public void ReloadLang()
         {
@@ -1289,20 +1300,7 @@ namespace EvilMask.Emuera
                 {
                     return;
                 }
-                var node = xml.SelectSingleNode("/lang/name");
-                if (node != null)
-                {
-                    if (Config.EmueraLang == node.InnerText)
-                    {
-                        var nodes = xml.SelectNodes("/lang/tr");
-                        for (int i = 0; i < nodes.Count; i++)
-                        {
-                            var attr = nodes[i].Attributes["id"];
-                            if (attr != null && trItems.ContainsKey(attr.Value))
-                                trItems[attr.Value].Set(nodes[i].InnerText);
-                        }
-                    }
-                }
+                loadLangXML(xml);
             }
         }
         static public string[] GetLangList()
@@ -1340,10 +1338,10 @@ namespace EvilMask.Emuera
 
         static readonly string langDir = "lang/";
         static readonly Dictionary<string, string> langList = new Dictionary<string, string>();
+        public static string MFont { get; private set; }
         static string[] langNames;
         static readonly Dictionary<string, TranslatableString> trItems = new Dictionary<string, TranslatableString>();
         static readonly Dictionary<Type, TranslatableString> trClass = new Dictionary<Type, TranslatableString>();
-    
 
         static Lang()
         {

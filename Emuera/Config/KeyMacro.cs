@@ -26,6 +26,11 @@ namespace MinorShift.Emuera
 		static bool isMacroChanged = false;
 		static KeyMacro()
 		{
+			ResetNames();
+		}
+
+		public static void ResetNames()
+		{
 			for (int g = 0; g < MaxGroup; g++)
 			{
 				groupName[g] = string.Format(trmk.SetMacroGroup.Text, g.ToString());
