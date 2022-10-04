@@ -402,6 +402,8 @@ namespace MinorShift.Emuera
 		}
 		public AConfigItem GetReplaceItem(string key)
 		{
+			#region EM_私家版_Emuera多言語化改造
+			key = key.ToUpper();
 			foreach (AConfigItem item in replaceArray)
 			{
 				if (item == null)
@@ -412,8 +414,9 @@ namespace MinorShift.Emuera
 					return item;
 			}
 			return null;
+			#endregion
 		}
-		
+
 		public AConfigItem GetDebugItem(ConfigCode code)
 		{
 			foreach (AConfigItem item in debugArray)
@@ -427,6 +430,8 @@ namespace MinorShift.Emuera
 		}
 		public AConfigItem GetDebugItem(string key)
 		{
+			#region EM_私家版_Emuera多言語化改造
+			key = key.ToUpper();
 			foreach (AConfigItem item in debugArray)
 			{
 				if (item == null)
@@ -437,8 +442,9 @@ namespace MinorShift.Emuera
 					return item;
 			}
 			return null;
+			#endregion
 		}
-		
+
 		public SingleTerm GetConfigValueInERB(string text, ref string errMes)
 		{
 			AConfigItem item = ConfigData.Instance.GetItem(text);
