@@ -372,21 +372,21 @@ namespace MinorShift.Emuera
 		}
 		public AConfigItem GetConfigItem(string key)
 		{
+			#region EM_私家版_Emuera多言語化改造
+			key = key.ToUpper();
 			foreach (AConfigItem item in configArray)
 			{
-				#region EM_私家版_Emuera多言語化改造
 				if (item == null)
 					continue;
-				key = key.ToUpper();
 				if (item.Name == key)
 						return item;
 				if (item.Text == key)
 						return item;
 				if (item.EngText == key)
 					return item;
-				#endregion
 			}
 			return null;
+			#endregion
 		}
 
 		public AConfigItem GetReplaceItem(ConfigCode code)
@@ -645,7 +645,7 @@ namespace MinorShift.Emuera
 					if (tokens.Length < 2)
 						continue;
 					#region EM_私家版_Emuera多言語化改造
-					AConfigItem item = GetConfigItem(tokens[0].Trim().ToUpper());
+					AConfigItem item = GetConfigItem(tokens[0].Trim());
 					#endregion
 					if (item != null)
 					{
