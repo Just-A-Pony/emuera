@@ -6591,7 +6591,44 @@ namespace MinorShift.Emuera.GameData.Function
 				return 1;
 			}
 		}
-        #endregion
-
-    }
+		#endregion
+		#region EE_GETERDNAME
+		private sealed class ErdNameMethod : FunctionMethod
+		{
+			public ErdNameMethod()
+			{
+				ReturnType = typeof(string);
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.RefAny | ArgType.AllowConstRef, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+				};
+				CanRestructure = true;
+				HasUniqueRestructure = true;
+			}
+			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				VariableTerm vToken = (VariableTerm)arguments[0];
+				string varname = "";
+				#region EE_ERD
+				if (arguments.Length > 2)
+					varname = vToken.Identifier.Name + "@" + arguments[2].GetIntValue(exm);
+				else
+					varname = vToken.Identifier.Name;
+				#endregion
+				long value = arguments[1].GetIntValue(exm);
+				#region EE_ERD
+				if (exm.VEvaluator.Constant.TryIntegerToKeyword(out string ret, value, varname))
+					#endregion
+					return ret;
+				else
+					return "";
+			}
+			public override bool UniqueRestructure(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				arguments[1] = arguments[1].Restructure(exm);
+				return arguments[1] is SingleTerm;
+			}
+		}
+		#endregion
+	}
 }

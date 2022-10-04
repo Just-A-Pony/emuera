@@ -8,6 +8,7 @@ using MinorShift.Emuera.GameData.Variable;
 using EvilMask.Emuera;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
+using System.Linq;
 
 namespace MinorShift.Emuera.GameData
 {
@@ -819,7 +820,32 @@ namespace MinorShift.Emuera.GameData
 			return false;
 		}
 		#endregion
-
+		#region EE_ERDNAME
+		public bool TryIntegerToKeyword(out string ret, long value, string varname)
+		{
+			ret = "";
+			if (value < 0)
+				return false;
+			Dictionary<string, int> dic;
+			if (!string.IsNullOrEmpty(varname))
+			{
+				if (!erdNameToIntDics.ContainsKey(varname))
+					return false;
+				dic = erdNameToIntDics[varname];
+                try
+                {
+					ret = dic.First(x => x.Value == value).Key;
+				}
+                catch
+                {
+					return false;
+                }
+				if (!string.IsNullOrEmpty(ret))
+					return true;
+			}
+			return false;
+		}
+		#endregion
 
 		public int KeywordToInteger(VariableCode code, string key, int index)
 		{
