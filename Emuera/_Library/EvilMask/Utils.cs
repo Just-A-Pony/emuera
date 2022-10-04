@@ -48,9 +48,9 @@ namespace EvilMask.Emuera
 		{
 			Image img = bmp;
  
-			Bitmap bitmap = new Bitmap(32, 32, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+			Bitmap bitmap = new Bitmap(256, 256, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 			Graphics g = Graphics.FromImage(bitmap);
-			g.DrawImage(img, new Rectangle(0, 0, 32, 32));
+			g.DrawImage(img, new Rectangle(0, 0, 256, 256));
 			g.Dispose();
  
 			Icon icon = Icon.FromHandle(bitmap.GetHicon());

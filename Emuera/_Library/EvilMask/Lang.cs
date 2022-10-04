@@ -138,6 +138,7 @@ namespace EvilMask.Emuera
                     [Managed] public static TranslatableString UseKeyMacro { get; } = new TranslatableString("キーボードマクロを使用する");
                     [Managed] public static TranslatableString AutoSave { get; } = new TranslatableString("オートセーブを行なう");
                     [Managed] public static TranslatableString UseSaveFolder { get; } = new TranslatableString("セーブデータをsavフォルダ内に作成する");
+                    [Managed] public static TranslatableString EnglishConfigOutput { get; } = new TranslatableString("CONFIGファイルの内容を英語で保存する");
                     [Managed] public static TranslatableString MaxLog { get; } = new TranslatableString("履歴ログの行数");
                     [Managed] public static TranslatableString InfiniteLoopAlertTime { get; } = new TranslatableString("無限ループ警告までのミリ秒");
                     [Managed] public static TranslatableString SaveDataPerPage { get; } = new TranslatableString("使用するセーブデータ数");
@@ -1248,15 +1249,19 @@ namespace EvilMask.Emuera
                     var node = xml.SelectSingleNode("/lang/name");
                     if (node != null)
                     {
-                        langList.Add(node.InnerText, path);
-                        if (Config.EmueraLang == node.InnerText)
+                        var langName = node.InnerText.Trim();
+                        if (langName.IndexOf('\n')<0 && !langList.ContainsKey(langName))
                         {
-                            var nodes = xml.SelectNodes("/lang/tr");
-                            for (int i = 0; i < nodes.Count; i++)
+                            langList.Add(langName, path);
+                            if (Config.EmueraLang == langName)
                             {
-                                var attr = nodes[i].Attributes["id"];
-                                if (attr != null && trItems.ContainsKey(attr.Value))
-                                    trItems[attr.Value].Set(nodes[i].InnerText);
+                                var nodes = xml.SelectNodes("/lang/tr");
+                                for (int i = 0; i < nodes.Count; i++)
+                                {
+                                    var attr = nodes[i].Attributes["id"];
+                                    if (attr != null && trItems.ContainsKey(attr.Value))
+                                        trItems[attr.Value].Set(nodes[i].InnerText);
+                                }
                             }
                         }
                     }

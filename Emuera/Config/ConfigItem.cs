@@ -18,8 +18,10 @@ namespace MinorShift.Emuera
 		{
 			this.Code = code;
 			this.Name = code.ToString();
-			this.Text = text;
-			this.EngText = etext;
+			// this.Text = text;
+			this.Text = text.ToUpper();
+			// this.EngText = etext;
+			this.EngText = etext.ToUpper();
 		}
 		#endregion
 

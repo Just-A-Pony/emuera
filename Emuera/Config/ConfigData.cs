@@ -374,13 +374,14 @@ namespace MinorShift.Emuera
 		{
 			foreach (AConfigItem item in configArray)
 			{
+				#region EM_私家版_Emuera多言語化改造
 				if (item == null)
 					continue;
+				key = key.ToUpper();
 				if (item.Name == key)
-					return item;
+						return item;
 				if (item.Text == key)
-					return item;
-				#region EM_私家版_Emuera多言語化改造
+						return item;
 				if (item.EngText == key)
 					return item;
 				#endregion
@@ -643,7 +644,9 @@ namespace MinorShift.Emuera
 					string[] tokens = line.Split(new char[] { ':' });
 					if (tokens.Length < 2)
 						continue;
-					AConfigItem item = GetConfigItem(tokens[0].Trim());
+					#region EM_私家版_Emuera多言語化改造
+					AConfigItem item = GetConfigItem(tokens[0].Trim().ToUpper());
+					#endregion
 					if (item != null)
 					{
 						//1806beta001 CompatiDRAWLINEの廃止、CompatiLinefeedAs1739へ移行

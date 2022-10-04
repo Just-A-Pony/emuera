@@ -33,9 +33,24 @@ namespace MinorShift.Emuera.Forms
 			this.label28.Text = Lang.UI.DebugConfigDialog.WindowWidth.Text;
 			this.label27.Text = Lang.UI.DebugConfigDialog.WindowHeight.Text;
 			this.button6.Text = Lang.UI.ConfigDialog.Window.GetWindowSize.Text;
+			this.checkBoxSetDWPos.Text = Lang.UI.DebugConfigDialog.SetWindowPos.Text;
 			this.label26.Text = Lang.UI.DebugConfigDialog.WindowX.Text;
 			this.label25.Text = Lang.UI.DebugConfigDialog.WindowY.Text;
 			this.button5.Text = Lang.UI.ConfigDialog.Window.GetWindowPos.Text;
+			this.label16.Text = Lang.UI.ConfigDialog.ChangeWontTakeEffectUntilRestart.Text;
+			this.buttonSave.Text = Lang.UI.ConfigDialog.Save.Text;
+			this.buttonCancel.Text = Lang.UI.ConfigDialog.Cancel.Text;
+
+
+			var diff = tabControl.Size - tabControl.DisplayRectangle.Size + ((Size)tabControl.Padding);
+			Size size;
+			{
+				var page = flowLayoutPanel5;
+				page.Dock = DockStyle.None;
+				size = page.Size + page.Margin.Size;
+				page.Dock = DockStyle.Fill;
+			}
+			tabControl.Size = size + diff;
 		}
 
 		private void buttonSave_Click(object sender, EventArgs e)

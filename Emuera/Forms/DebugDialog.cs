@@ -45,7 +45,7 @@ namespace MinorShift.Emuera.Forms
 
 		public void TranslateUI()
 		{
-			this.Name = Lang.UI.DebugDialog.Text;
+			this.Text = Lang.UI.DebugDialog.Text;
 			
 			this.toolStripMenuItem1.Text = Lang.UI.MainWindow.File.Text;
 			this.ウォッチリストの保存ToolStripMenuItem.Text = Lang.UI.DebugDialog.File.SaveWatchList.Text;
