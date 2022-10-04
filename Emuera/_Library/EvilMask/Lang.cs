@@ -1127,7 +1127,7 @@ namespace EvilMask.Emuera
 
             [Managed] public static TranslatableString InvalidType { get; } = new TranslatableString("{0}関数: 型が違います ({1}関数を使用してください)");
             [Managed] public static TranslatableString GIdIsNegative { get; } = new TranslatableString("{0}関数: GraphicsIDに負の値({1})が指定されました");
-            [Managed] public static TranslatableString GIdIsTooLarge { get; } = new TranslatableString("{0}関数: GraphicsIDに負の値({1})が大きすぎます");
+            [Managed] public static TranslatableString GIdIsTooLarge { get; } = new TranslatableString("{0}関数: GraphicsIDの値({1})が大きすぎます");
             [Managed] public static TranslatableString InvalidColorARGB { get; } = new TranslatableString("{0}関数: ColorARGB引数に不適切な値(0x{1:X})が指定されました");
             [Managed] public static TranslatableString InvalidColorMatrix { get; } = new TranslatableString("{0}関数: ColorMatrixの指定された要素({1}, {2})が不適切であるか5x5に足りていません");
             [Managed] public static TranslatableString GDIPlusOnly { get; } = new TranslatableString("{0}関数: 描画オプションがWINAPIの時には使用できません");
