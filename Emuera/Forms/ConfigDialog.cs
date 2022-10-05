@@ -201,14 +201,19 @@ namespace MinorShift.Emuera.Forms
 			var size = new Size(0, 0);
 			foreach(var page in pages)
 			{
-				page.Dock = DockStyle.None;
 				if (page.Size.Width + page.Margin.Size.Width> size.Width) size.Width = page.Size.Width + page.Margin.Size.Width;
 				if (page.Size.Height + page.Margin.Size.Height > size.Height ) size.Height  = page.Size.Height + page.Margin.Size.Height;
-				page.Dock = DockStyle.Fill;
 			}
 			this.tabControl.Size = new Size(size.Width + diff.Width, tabControl.Size.Height);
 			diff = tabControl.Size - tabControl.DisplayRectangle.Size + ((Size)tabControl.Padding);
 			tabControl.Size = size + diff;
+			
+			foreach (var page in pages)
+			{
+				diff = tabControl.DisplayRectangle.Size - page.Size;
+				page.Location = new Point(diff.Width / 2, diff.Height / 2);
+			}
+			
 		}
 
 		private void buttonSave_Click(object sender, EventArgs e)

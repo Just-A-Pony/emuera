@@ -46,6 +46,7 @@
             this.checkBox4 = new System.Windows.Forms.CheckBox();
             this.checkBox7 = new System.Windows.Forms.CheckBox();
             this.checkBox24 = new System.Windows.Forms.CheckBox();
+            this.checkBox33 = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel7 = new System.Windows.Forms.FlowLayoutPanel();
             this.numericUpDown4 = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
@@ -183,7 +184,6 @@
             this.colorBoxFG = new MinorShift.Emuera.Forms.ColorBox();
             this.colorBoxSelecting = new MinorShift.Emuera.Forms.ColorBox();
             this.colorBoxBacklog = new MinorShift.Emuera.Forms.ColorBox();
-            this.checkBox33 = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabEnvironment.SuspendLayout();
             this.flowLayoutPanel13.SuspendLayout();
@@ -363,6 +363,12 @@
             resources.ApplyResources(this.checkBox24, "checkBox24");
             this.checkBox24.Name = "checkBox24";
             this.checkBox24.UseVisualStyleBackColor = true;
+            // 
+            // checkBox33
+            // 
+            resources.ApplyResources(this.checkBox33, "checkBox33");
+            this.checkBox33.Name = "checkBox33";
+            this.checkBox33.UseVisualStyleBackColor = true;
             // 
             // flowLayoutPanel7
             // 
@@ -1293,12 +1299,6 @@
             resources.ApplyResources(this.colorBoxBacklog, "colorBoxBacklog");
             this.colorBoxBacklog.Name = "colorBoxBacklog";
             this.colorBoxBacklog.SelectingColor = System.Drawing.Color.Transparent;
-            // 
-            // checkBox33
-            // 
-            resources.ApplyResources(this.checkBox33, "checkBox33");
-            this.checkBox33.Name = "checkBox33";
-            this.checkBox33.UseVisualStyleBackColor = true;
             // 
             // ConfigDialog
             // 
