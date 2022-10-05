@@ -134,6 +134,10 @@ namespace MinorShift.Emuera
 			#region EE版_ERDConfig
 			UseERD = instance.GetConfigValue<bool>(ConfigCode.UseERD);
 			#endregion
+			#region EE_ERDNAME
+			VarsizeDimConfig = instance.GetConfigValue<bool>(ConfigCode.VarsizeDimConfig);
+			#endregion
+
 
 			#region EM_私家版_LoadText＆SaveText機能拡張
 			ValidExtension = instance.GetConfigValue<List<string>>(ConfigCode.ValidExtension);
@@ -609,6 +613,9 @@ namespace MinorShift.Emuera
 		#endregion
 		#region EE版_ERDConfig
 		public static bool UseERD { get; private set; }
+        #endregion
+        #region EE_ERDNAME
+		public static bool VarsizeDimConfig { get; private set; }
 		#endregion
 		#region EM_私家版_LoadText＆SaveText機能拡張
 		public static List<string> ValidExtension { get; private set; }

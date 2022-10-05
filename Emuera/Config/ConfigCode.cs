@@ -155,6 +155,9 @@ namespace MinorShift.Emuera
 		#endregion
 		#region EE_ERDConfig
 		UseERD,
+        #endregion
+        #region EE_ERDNAME
+		VarsizeDimConfig,
 		#endregion
 
 		#region EM_私家版_LoadText＆SaveText機能拡張

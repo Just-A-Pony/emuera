@@ -1811,6 +1811,8 @@ namespace MinorShift.Emuera.GameData.Function
 				int dim = 0;
 				if (arguments.Length == 2 && arguments[1] != null)
 					dim = (int)arguments[1].GetIntValue(exm);
+				if (Config.VarsizeDimConfig && dim > 0)
+					dim--;
 				return (var.GetLength(dim));
 			}
 			public override bool UniqueRestructure(ExpressionMediator exm, IOperandTerm[] arguments)

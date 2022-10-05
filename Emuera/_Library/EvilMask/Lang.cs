@@ -227,6 +227,7 @@ namespace EvilMask.Emuera
                     [Managed] public static TranslatableString NoAutoCompleteCVar { get; } = new TranslatableString("キャラクタ変数の引数を補完しない");
                     [Managed] public static TranslatableString DisallowUpdateCheck { get; } = new TranslatableString("UPDATECHECKを許可しない");
                     [Managed] public static TranslatableString UseERD { get; } = new TranslatableString("ERD機能を利用する");
+                    [Managed] public static TranslatableString VarsizeDimConfig { get; } = new TranslatableString("VARSIZEの次元指定をERD機能に合わせる");
                     [Managed] public static TranslatableString SaveLoadExt { get; } = new TranslatableString("LOADTEXTとSAVETEXTで使える拡張子");
                 }
 

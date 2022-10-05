@@ -149,6 +149,7 @@ namespace MinorShift.Emuera.Forms
 			this.checkBox29.Text = Lang.UI.ConfigDialog.System2.NoAutoCompleteCVar.Text;
 			this.checkBox30.Text = Lang.UI.ConfigDialog.System2.DisallowUpdateCheck.Text;
 			this.checkBox31.Text = Lang.UI.ConfigDialog.System2.UseERD.Text;
+			this.checkBox34.Text = Lang.UI.ConfigDialog.System2.VarsizeDimConfig.Text;
 			this.label25.Text = Lang.UI.ConfigDialog.System2.SaveLoadExt.Text;
 
 			this.tabPageCompati.Text = Lang.UI.ConfigDialog.Compatibility.Text;
@@ -316,6 +317,7 @@ namespace MinorShift.Emuera.Forms
 			setCheckBox(checkBox29, ConfigCode.SystemNoTarget);
 			setCheckBox(checkBox30, ConfigCode.ForbidUpdateCheck);
 			setCheckBox(checkBox31, ConfigCode.UseERD);
+			setCheckBox(checkBox34, ConfigCode.VarsizeDimConfig);
 			#region EM_私家版_セーブ圧縮
 			setCheckBox(checkBox32, ConfigCode.ZipSaveData);
 			#endregion
@@ -504,6 +506,7 @@ namespace MinorShift.Emuera.Forms
 			config.GetConfigItem(ConfigCode.SystemNoTarget).SetValue<bool>(checkBox29.Checked);
 			config.GetConfigItem(ConfigCode.ForbidUpdateCheck).SetValue<bool>(checkBox30.Checked);
 			config.GetConfigItem(ConfigCode.UseERD).SetValue<bool>(checkBox31.Checked);
+			config.GetConfigItem(ConfigCode.VarsizeDimConfig).SetValue<bool>(checkBox34.Checked);
 
 			config.GetConfigItem(ConfigCode.WindowX).SetValue<int>((int)numericUpDown2.Value);
 			config.GetConfigItem(ConfigCode.WindowY).SetValue<int>((int)numericUpDown3.Value);

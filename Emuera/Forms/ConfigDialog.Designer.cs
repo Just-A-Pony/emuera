@@ -105,6 +105,10 @@
             this.ScrollRange = new System.Windows.Forms.Label();
             this.tabPageFont = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel27 = new System.Windows.Forms.FlowLayoutPanel();
+            this.colorBoxBG = new MinorShift.Emuera.Forms.ColorBox();
+            this.colorBoxFG = new MinorShift.Emuera.Forms.ColorBox();
+            this.colorBoxSelecting = new MinorShift.Emuera.Forms.ColorBox();
+            this.colorBoxBacklog = new MinorShift.Emuera.Forms.ColorBox();
             this.flowLayoutPanel24 = new System.Windows.Forms.FlowLayoutPanel();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -140,8 +144,9 @@
             this.checkBox29 = new System.Windows.Forms.CheckBox();
             this.checkBox30 = new System.Windows.Forms.CheckBox();
             this.checkBox31 = new System.Windows.Forms.CheckBox();
-            this.label25 = new System.Windows.Forms.Label();
+            this.checkBox34 = new System.Windows.Forms.CheckBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label25 = new System.Windows.Forms.Label();
             this.tabPageCompati = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel33 = new System.Windows.Forms.FlowLayoutPanel();
             this.label30 = new System.Windows.Forms.Label();
@@ -180,10 +185,6 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.colorBoxBG = new MinorShift.Emuera.Forms.ColorBox();
-            this.colorBoxFG = new MinorShift.Emuera.Forms.ColorBox();
-            this.colorBoxSelecting = new MinorShift.Emuera.Forms.ColorBox();
-            this.colorBoxBacklog = new MinorShift.Emuera.Forms.ColorBox();
             this.tabControl.SuspendLayout();
             this.tabEnvironment.SuspendLayout();
             this.flowLayoutPanel13.SuspendLayout();
@@ -748,6 +749,34 @@
             this.flowLayoutPanel27.Controls.Add(this.flowLayoutPanel26);
             this.flowLayoutPanel27.Name = "flowLayoutPanel27";
             // 
+            // colorBoxBG
+            // 
+            this.colorBoxBG.ButtonText = "背景色";
+            resources.ApplyResources(this.colorBoxBG, "colorBoxBG");
+            this.colorBoxBG.Name = "colorBoxBG";
+            this.colorBoxBG.SelectingColor = System.Drawing.Color.Transparent;
+            // 
+            // colorBoxFG
+            // 
+            this.colorBoxFG.ButtonText = "文字色";
+            resources.ApplyResources(this.colorBoxFG, "colorBoxFG");
+            this.colorBoxFG.Name = "colorBoxFG";
+            this.colorBoxFG.SelectingColor = System.Drawing.Color.Transparent;
+            // 
+            // colorBoxSelecting
+            // 
+            this.colorBoxSelecting.ButtonText = "選択中文字色";
+            resources.ApplyResources(this.colorBoxSelecting, "colorBoxSelecting");
+            this.colorBoxSelecting.Name = "colorBoxSelecting";
+            this.colorBoxSelecting.SelectingColor = System.Drawing.Color.Transparent;
+            // 
+            // colorBoxBacklog
+            // 
+            this.colorBoxBacklog.ButtonText = "履歴文字色";
+            resources.ApplyResources(this.colorBoxBacklog, "colorBoxBacklog");
+            this.colorBoxBacklog.Name = "colorBoxBacklog";
+            this.colorBoxBacklog.SelectingColor = System.Drawing.Color.Transparent;
+            // 
             // flowLayoutPanel24
             // 
             resources.ApplyResources(this.flowLayoutPanel24, "flowLayoutPanel24");
@@ -915,6 +944,8 @@
             // tabPageSystem2
             // 
             this.tabPageSystem2.Controls.Add(this.flowLayoutPanel30);
+            this.tabPageSystem2.Controls.Add(this.textBox3);
+            this.tabPageSystem2.Controls.Add(this.label25);
             resources.ApplyResources(this.tabPageSystem2, "tabPageSystem2");
             this.tabPageSystem2.Name = "tabPageSystem2";
             this.tabPageSystem2.UseVisualStyleBackColor = true;
@@ -930,8 +961,7 @@
             this.flowLayoutPanel30.Controls.Add(this.checkBox29);
             this.flowLayoutPanel30.Controls.Add(this.checkBox30);
             this.flowLayoutPanel30.Controls.Add(this.checkBox31);
-            this.flowLayoutPanel30.Controls.Add(this.label25);
-            this.flowLayoutPanel30.Controls.Add(this.textBox3);
+            this.flowLayoutPanel30.Controls.Add(this.checkBox34);
             this.flowLayoutPanel30.Name = "flowLayoutPanel30";
             // 
             // label24
@@ -981,15 +1011,21 @@
             this.checkBox31.Name = "checkBox31";
             this.checkBox31.UseVisualStyleBackColor = true;
             // 
-            // label25
+            // checkBox34
             // 
-            resources.ApplyResources(this.label25, "label25");
-            this.label25.Name = "label25";
+            resources.ApplyResources(this.checkBox34, "checkBox34");
+            this.checkBox34.Name = "checkBox34";
+            this.checkBox34.UseVisualStyleBackColor = true;
             // 
             // textBox3
             // 
             resources.ApplyResources(this.textBox3, "textBox3");
             this.textBox3.Name = "textBox3";
+            // 
+            // label25
+            // 
+            resources.ApplyResources(this.label25, "label25");
+            this.label25.Name = "label25";
             // 
             // tabPageCompati
             // 
@@ -1272,34 +1308,6 @@
             this.flowLayoutPanel2.Controls.Add(this.buttonCancel);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             // 
-            // colorBoxBG
-            // 
-            this.colorBoxBG.ButtonText = "背景色";
-            resources.ApplyResources(this.colorBoxBG, "colorBoxBG");
-            this.colorBoxBG.Name = "colorBoxBG";
-            this.colorBoxBG.SelectingColor = System.Drawing.Color.Transparent;
-            // 
-            // colorBoxFG
-            // 
-            this.colorBoxFG.ButtonText = "文字色";
-            resources.ApplyResources(this.colorBoxFG, "colorBoxFG");
-            this.colorBoxFG.Name = "colorBoxFG";
-            this.colorBoxFG.SelectingColor = System.Drawing.Color.Transparent;
-            // 
-            // colorBoxSelecting
-            // 
-            this.colorBoxSelecting.ButtonText = "選択中文字色";
-            resources.ApplyResources(this.colorBoxSelecting, "colorBoxSelecting");
-            this.colorBoxSelecting.Name = "colorBoxSelecting";
-            this.colorBoxSelecting.SelectingColor = System.Drawing.Color.Transparent;
-            // 
-            // colorBoxBacklog
-            // 
-            this.colorBoxBacklog.ButtonText = "履歴文字色";
-            resources.ApplyResources(this.colorBoxBacklog, "colorBoxBacklog");
-            this.colorBoxBacklog.Name = "colorBoxBacklog";
-            this.colorBoxBacklog.SelectingColor = System.Drawing.Color.Transparent;
-            // 
             // ConfigDialog
             // 
             resources.ApplyResources(this, "$this");
@@ -1570,5 +1578,6 @@
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel32;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel31;
         private System.Windows.Forms.CheckBox checkBox33;
+        private System.Windows.Forms.CheckBox checkBox34;
     }
 }
