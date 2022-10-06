@@ -1058,7 +1058,7 @@ namespace EvilMask.Emuera
 
             [Managed] public static TranslatableString VarContainsOtherThanUnderline { get; } = new TranslatableString("変数名\"{0}\"に\"_\"以外の記号が含まれています");
             [Managed] public static TranslatableString VarConflictReservedWord { get; } = new TranslatableString("変数名\"{0}\"はEmueraの予約語です");
-            [Managed] public static TranslatableString VarNameAlreadyUsedInternalInstruction { get; } = new TranslatableString("変数目\"{0}\"はEmueraの変数もしくは命令で使われています");
+            [Managed] public static TranslatableString VarNameAlreadyUsedInternalInstruction { get; } = new TranslatableString("変数名\"{0}\"はEmueraの変数もしくは命令で使われています");
             [Managed] public static TranslatableString VarNameAlreadyUsedInternalVariable { get; } = new TranslatableString("変数名\"{0}\"はEmueraの変数名として使われています");
             [Managed] public static TranslatableString VarNameAlreadyUsedMacro { get; } = new TranslatableString("変数名\"{0}\"はマクロに使用されています");
             [Managed] public static TranslatableString VarNameAlreadyUsedGlobalVariable { get; } = new TranslatableString("変数名\"{0}\"はユーザー定義の広域変数名に使用されています");
