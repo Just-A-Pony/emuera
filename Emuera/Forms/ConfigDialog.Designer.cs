@@ -944,8 +944,6 @@
             // tabPageSystem2
             // 
             this.tabPageSystem2.Controls.Add(this.flowLayoutPanel30);
-            this.tabPageSystem2.Controls.Add(this.textBox3);
-            this.tabPageSystem2.Controls.Add(this.label25);
             resources.ApplyResources(this.tabPageSystem2, "tabPageSystem2");
             this.tabPageSystem2.Name = "tabPageSystem2";
             this.tabPageSystem2.UseVisualStyleBackColor = true;
@@ -962,6 +960,8 @@
             this.flowLayoutPanel30.Controls.Add(this.checkBox30);
             this.flowLayoutPanel30.Controls.Add(this.checkBox31);
             this.flowLayoutPanel30.Controls.Add(this.checkBox34);
+            this.flowLayoutPanel30.Controls.Add(this.label25);
+            this.flowLayoutPanel30.Controls.Add(this.textBox3);
             this.flowLayoutPanel30.Name = "flowLayoutPanel30";
             // 
             // label24
