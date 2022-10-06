@@ -1151,6 +1151,10 @@ namespace MinorShift.Emuera.GameData.Variable
 
 		public void ResetGlobalData()
 		{
+			#region EM_私家版_XMLDocument_連想配列
+			varData.DataXmlDocument = varData.DataXmlDocument.Where(p => !Constant.StaticXmls.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
+			varData.DataStringMaps = varData.DataStringMaps.Where(p => !Constant.StaticMaps.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
+			#endregion
 			varData.SetDefaultGlobalValue();
 		}
 
