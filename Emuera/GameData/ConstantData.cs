@@ -1550,6 +1550,9 @@ namespace MinorShift.Emuera.GameData
 					namearray = nameToIntDics[cstrIndex];//CStrName;
 					errPos = "cstr.csv";
 					break;
+				case "ISASSI":
+				case "助手":
+					return;
 				default:
 					ParserMediator.Warn(string.Format(trerror.CanNotInterpreted.Text, tokens[0]), position, 1);
 					return;

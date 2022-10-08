@@ -6,6 +6,7 @@ using MinorShift.Emuera.Sub;
 using MinorShift.Emuera.GameData.Function;
 using MinorShift.Emuera.GameData.Variable;
 using trerror = EvilMask.Emuera.Lang.Error;
+using EvilMask.Emuera;
 
 namespace MinorShift.Emuera.GameData.Expression
 {
@@ -692,6 +693,11 @@ namespace MinorShift.Emuera.GameData.Expression
 
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
+				long ret = arguments[0].GetIntValue(exm);
+				if (ret == long.MinValue)
+				{
+					exm.Console.PrintSystemLine(string.Format(Lang.SystemLine.MinusWontWork.Text, long.MinValue));
+				}
 				return -arguments[0].GetIntValue(exm);
 			}
 		}

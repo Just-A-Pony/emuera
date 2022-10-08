@@ -2503,6 +2503,9 @@ namespace MinorShift.Emuera.GameData.Function
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				Int64 ret = arguments[0].GetIntValue(exm);
+				//普通は使わない値なので例外として投げてしまう方向性で
+				if (ret == long.MinValue)
+					throw new CodeEE(string.Format(Lang.Error.MinInt64CanNotApplyABS.Text, Name, long.MinValue));
 				return (Math.Abs(ret));
 			}
 		}
@@ -2943,21 +2946,25 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				if (arguments[0].GetOperandType() == typeof(Int64))
 				{
-					Int64 baseValue = arguments[0].GetIntValue(exm);
-					for (int i = 1; i < arguments.Length; i++)
+					Int64[] valueArray = new Int64[arguments.Length];
+					for (int i = 0; i < arguments.Length; i++)
 					{
-						if (baseValue == arguments[i].GetIntValue(exm))
-							return 0L;
+						valueArray[i] = arguments[i].GetIntValue(exm);
 					}
+					var resultArray = valueArray.Distinct();
+					if (resultArray.Count() != arguments.Length)
+						return 0L;
 				}
 				else
 				{
-					string baseValue = arguments[0].GetStrValue(exm);
-					for (int i = 1; i < arguments.Length; i++)
+					string[] stringArray = new string[arguments.Length];
+					for (int i = 0; i < arguments.Length; i++)
 					{
-						if (baseValue == arguments[i].GetStrValue(exm))
-							return 0L;
+						stringArray[i] = arguments[i].GetStrValue(exm);
 					}
+					var resultArray = stringArray.Distinct();
+					if (resultArray.Count() != arguments.Length)
+						return 0L;
 				}
 				return 1L;
 			}

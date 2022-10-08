@@ -1135,6 +1135,8 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString GParamIsNegative { get; } = new TranslatableString("{0}関数: Graphicsの{1}に0以下の値({2})が指定されました");
             [Managed] public static TranslatableString GParamTooLarge { get; } = new TranslatableString("{0}関数: Graphicsの{1}に{2}以上の値({3})が指定されました");
             [Managed] public static TranslatableString ImgRefOutOfRange { get; } = new TranslatableString("{0}関数: 画像の範囲外が指定されています");
+
+            [Managed] public static TranslatableString MinInt64CanNotApplyABS { get; } = new TranslatableString("{0}関数: 符号付き64bit整数の最小値({1})に対して絶対値を取ることはできません");
         }
         [Managed]
         public sealed class MessageBox
@@ -1227,6 +1229,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString ReloadingErb { get; } = new TranslatableString("ERB再読み込み中……");
             [Managed] public static TranslatableString ReloadCompleted { get; } = new TranslatableString("再読み込み完了");
             [Managed] public static TranslatableString LogFileHasBeenCreated { get; } = new TranslatableString("※※※ログファイルを{0}に出力しました※※※");
+            [Managed] public static TranslatableString MinusWontWork { get; } = new TranslatableString("整数型最小値({0})は-を取っても値は変化しません");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
