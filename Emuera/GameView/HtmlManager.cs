@@ -707,35 +707,35 @@ namespace MinorShift.Emuera.GameView
 						return null;
 					case "p":
 						if ((!state.FlagP) || (state.FlagPClosed))
-							throw new CodeEE(trerror.UnexpectedCloseP.Text);
+							throw new CodeEE(string.Format(trerror.UnexpectedCloseTag.Text, "p"));
 						state.FlagPClosed = true;
 						return null;
 					case "nobr":
 						if ((!state.FlagNobr) || (state.FlagNobrClosed))
-							throw new CodeEE(trerror.UnexpectedCloseNobr.Text);
+							throw new CodeEE(string.Format(trerror.UnexpectedCloseTag.Text, "nobr"));
 						state.FlagNobrClosed = true;
 						return null;
 					case "font":
 						if (state.FonttagList.Count == 0)
-							throw new CodeEE(trerror.UnexpectedCloseFont.Text);
+							throw new CodeEE(string.Format(trerror.UnexpectedCloseTag.Text, "font"));
 						state.FonttagList.RemoveAt(state.FonttagList.Count - 1);
 						return null;
 					case "button":
 						if (state.CurrentButtonTag == null || !state.CurrentButtonTag.IsButtonTag)
-							throw new CodeEE(trerror.UnexpectedCloseButton.Text);
+							throw new CodeEE(string.Format(trerror.UnexpectedCloseTag.Text, "button"));
 						state.CurrentButtonTag = null;
 						state.FlagButton = true;
 						return null;
 					case "nonbutton":
 						if (state.CurrentButtonTag == null || state.CurrentButtonTag.IsButtonTag)
-							throw new CodeEE(trerror.UnexpectedCloseNonbutton.Text);
+							throw new CodeEE(string.Format(trerror.UnexpectedCloseTag.Text, "nonbutton"));
 						state.CurrentButtonTag = null;
 						state.FlagButton = true;
 						return null;
 					#region EM_私家版_clearbutton
 					case "clearbutton":
 						if (!state.FlagClearButton)
-							throw new CodeEE(trerror.UnexpectedCloseClearbutton.Text);
+							throw new CodeEE(string.Format(trerror.UnexpectedCloseTag.Text, "clearbutton"));
 						state.FlagClearButton = false;
 						state.FlagClearButtonTooltip = false;
 						return null;

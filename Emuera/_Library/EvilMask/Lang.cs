@@ -976,13 +976,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString InvalidCharacterReference { get; } = new TranslatableString("\"&{0};\"は適切な文字参照ではありません");
             [Managed] public static TranslatableString OoRUnicodeHtml { get; } = new TranslatableString("\"&{0};\"はUnicodeの範囲外です(サロゲートペアは使えません)");
             [Managed] public static TranslatableString UnexpectedCloseTag { get; } = new TranslatableString("</{0}>の前に<{0}>がありません");
-            [Managed] public static TranslatableString UnexpectedCloseP { get; } = new TranslatableString("</p>の前に<p>がありません");
-            [Managed] public static TranslatableString UnexpectedCloseNobr { get; } = new TranslatableString("</nobr>の前に<nobr>がありません");
-            [Managed] public static TranslatableString UnexpectedCloseFont { get; } = new TranslatableString("</font>の前に<font>がありません");
-            [Managed] public static TranslatableString UnexpectedCloseButton { get; } = new TranslatableString("</button>の前に<button>がありません");
-            [Managed] public static TranslatableString UnexpectedCloseNonbutton { get; } = new TranslatableString("</nonbutton>の前に<nonbutton>がありません");
-            [Managed] public static TranslatableString UnexpectedCloseClearbutton { get; } = new TranslatableString("</clearbutton>の前に<clearbutton>がありません");
-            [Managed] public static TranslatableString CanNotInterpretCloseTag { get; } = new TranslatableString("終了タグ</{}>は解釈できません");
+            [Managed] public static TranslatableString CanNotInterpretCloseTag { get; } = new TranslatableString("終了タグ</{0}>は解釈できません");
             [Managed] public static TranslatableString AttributeSetToTag { get; } = new TranslatableString("<{0}>タグにに属性が設定されています");
             [Managed] public static TranslatableString DuplicateTag { get; } = new TranslatableString("<{0}>が二重に使われています");
             [Managed] public static TranslatableString TagIsNotBegin { get; } = new TranslatableString("<{0}>が行頭以外で使われています");
