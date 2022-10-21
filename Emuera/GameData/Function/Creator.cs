@@ -275,7 +275,7 @@ namespace MinorShift.Emuera.GameData.Function
                 ["DT_EXIST"] = new DataTableManagementMethod(DataTableManagementMethod.Operation.Check),
                 ["DT_RELEASE"] = new DataTableManagementMethod(DataTableManagementMethod.Operation.Release),
                 ["DT_CLEAR"] = new DataTableManagementMethod(DataTableManagementMethod.Operation.Clear),
-                ["DT_NOCASE"] = new DataTableManagementMethod(DataTableManagementMethod.Operation.Clear),
+                ["DT_NOCASE"] = new DataTableManagementMethod(DataTableManagementMethod.Operation.Case),
 
                 ["DT_COLUMN_ADD"] = new DataTableColumnManagementMethod(DataTableColumnManagementMethod.Operation.Create),
                 ["DT_COLUMN_EXIST"] = new DataTableColumnManagementMethod(DataTableColumnManagementMethod.Operation.Check),

@@ -1240,7 +1240,7 @@ namespace MinorShift.Emuera.GameData.Function
 			public DataTableManagementMethod(Operation type)
 			{
 				ReturnType = typeof(Int64);
-				if (op==Operation.Case)
+				if (type == Operation.Case)
 					argumentTypeArray = new Type[] { typeof(string), typeof(Int64) };
 				else
 					argumentTypeArray = new Type[] { typeof(string) };
@@ -1259,7 +1259,7 @@ namespace MinorShift.Emuera.GameData.Function
 						{
 							if (contains)
 							{
-								dict[key].CaseSensitive = arguments[1].GetIntValue(exm) != 0;
+								dict[key].Clear();
 								return 1;
 							}
 							return -1;
@@ -1268,7 +1268,7 @@ namespace MinorShift.Emuera.GameData.Function
 						{
 							if (contains)
 							{
-								dict[key].Clear();
+								dict[key].CaseSensitive = arguments[1].GetIntValue(exm) == 0;
 								return 1;
 							}
 							return -1;
@@ -1278,6 +1278,7 @@ namespace MinorShift.Emuera.GameData.Function
 				}
 				if (contains) return 0;
 				var dt = new DataTable(key);
+				dt.CaseSensitive = true;
 				var c = dt.Columns.Add("id", typeof(UInt32));
 				c.AutoIncrement = true;
 				dict[key] = dt;
