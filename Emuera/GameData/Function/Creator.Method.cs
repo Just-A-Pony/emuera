@@ -1279,9 +1279,11 @@ namespace MinorShift.Emuera.GameData.Function
 				if (contains) return 0;
 				var dt = new DataTable(key);
 				dt.CaseSensitive = true;
-				var c = dt.Columns.Add("id", typeof(UInt32));
-				c.AutoIncrement = true;
+				var c = dt.Columns.Add("id", typeof(Int64));
+				c.AllowDBNull = false;
+				c.Unique = true;
 				dict[key] = dt;
+				dt.PrimaryKey = new DataColumn[] { c };
 				return 1;
 			}
 		}
@@ -1396,11 +1398,15 @@ namespace MinorShift.Emuera.GameData.Function
 				if (op == Operation.Set)
 				{
 					var idx = (int)arguments[1].GetIntValue(exm);
-					if (dt.Rows.Count > idx && idx >= 0)
-						row = dt.Rows[idx];
+					if (dt.Rows.Find(idx) is DataRow r)
+						row = r;
 					else return -2;
 				}
-				else row = dt.NewRow();
+				else
+				{
+					row = dt.NewRow();
+					row[0] = Utils.TimePoint();
+				}
 				if (arguments.Length == b + 4)
 				{ 
 					var names = (arguments[1] as VariableTerm).Identifier.GetArray() as string[];
@@ -1431,7 +1437,7 @@ namespace MinorShift.Emuera.GameData.Function
 					}
 				}
 				dt.Rows.Add(row);
-				return (int)row[0];
+				return (Int64)row[0];
 			}
 		}
 		private sealed class DataTableLengthMethod : FunctionMethod
@@ -1453,13 +1459,53 @@ namespace MinorShift.Emuera.GameData.Function
 				return op == Operation.Row ? dict[key].Rows.Count : dict[key].Columns.Count;
 			}
 		}
+		private sealed class DataTableRowRemoveMethod : FunctionMethod
+		{
+			public DataTableRowRemoveMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int } },
+						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefInt1D, ArgType.Int } },
+					};
+				CanRestructure = false;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				string key = arguments[0].GetStrValue(exm);
+				var dict = exm.VEvaluator.VariableData.DataDataTables;
+				if (!dict.ContainsKey(key)) return -1;
+				var dt = dict[key];
+				DataRow[] rows;
+				if (arguments.Length == 3)
+				{
+					StringBuilder sb = new StringBuilder();
+					var array = (arguments[1] as VariableTerm).Identifier.GetArray() as Int64[];
+					var count = Math.Min((int)arguments[2].GetIntValue(exm), array.Length);
+					if (count <= 0) return 0;
+					sb.Append('(');
+					for (int i = 0; i < count; i++)
+						sb.Append(i == 0 ? array[i].ToString() : "," + array[i]);
+					sb.Append(')');
+					rows = dt.Select("id IN " + sb.ToString());
+					if (rows == null) return 0;
+				}
+				else if (dt.Rows.Find(arguments[1].GetIntValue(exm)) is DataRow row)
+					rows = new DataRow[] { row };
+				else return 0;
+				foreach (var row in rows) dt.Rows.Remove(row);
+				return rows.Length;
+			}
+		}
 		private sealed class DataTableCellGetMethod : FunctionMethod
 		{
 			public enum Operation { Get, IsNull, Gets };
 			public DataTableCellGetMethod(Operation type)
 			{
 				ReturnType = type == Operation.Gets ? typeof(string) : typeof(Int64);
-				argumentTypeArray = new Type[] { typeof(string), typeof(Int64), typeof(string) };
+				argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int, ArgType.String, ArgType.Int }, OmitStart = 3 },
+					};
 				CanRestructure = false;
 				op = type;
 			}
@@ -1469,11 +1515,19 @@ namespace MinorShift.Emuera.GameData.Function
 				var key = arguments[0].GetStrValue(exm);
 				var dict = exm.VEvaluator.VariableData.DataDataTables;
 				if (!dict.ContainsKey(key)) return -1;
+				bool asId = arguments.Length == 4 ? arguments[3].GetIntValue(exm) != 0 : false;
 				var dt = dict[key];
 				var idx = (int)arguments[1].GetIntValue(exm);
 				var name = arguments[2].GetStrValue(exm);
-				if (idx >= 0 && idx < dt.Rows.Count && dt.Columns.Contains(name))
-					return op == Operation.Get ? Convert.ToInt64(dt.Rows[idx][name]) : (dt.Rows[idx][name] == DBNull.Value ? 1 : 0);
+				if (asId)
+				{
+					if (dt.Rows.Find(idx) is DataRow row && dt.Columns.Contains(name))
+						return op == Operation.Get ? Convert.ToInt64(row[name]) : (row[name] == DBNull.Value ? 1 : 0);
+				} else
+				{
+					if (0 <= idx && idx < dt.Rows.Count && dt.Columns.Contains(name))
+						return op == Operation.Get ? Convert.ToInt64(dt.Rows[idx][name]) : (dt.Rows[idx][name] == DBNull.Value ? 1 : 0);
+				}
 				return -2;
 			}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
@@ -1484,8 +1538,8 @@ namespace MinorShift.Emuera.GameData.Function
 				var dt = dict[key];
 				var idx = (int)arguments[1].GetIntValue(exm);
 				var name = arguments[2].GetStrValue(exm);
-				if (idx >= 0 && idx < dt.Rows.Count && dt.Columns.Contains(name))
-					return (string)dt.Rows[idx][name];
+				if (dt.Rows.Find(idx) is DataRow row && dt.Columns.Contains(name))
+					return (string)row[name];
 				return string.Empty;
 			}
 		}
@@ -1549,7 +1603,7 @@ namespace MinorShift.Emuera.GameData.Function
 				{
 					int count = Math.Min(res.Length, toResult ? output.Length - 1 : output.Length);
 					for (int i = 0; i < count; i++)
-						output[toResult ? i + 1 : i] = (int)res[i][0];
+						output[toResult ? i + 1 : i] = (Int64)res[i][0];
 					if (toResult) output[0] = res.Length;
 					return res.Length;
 				}

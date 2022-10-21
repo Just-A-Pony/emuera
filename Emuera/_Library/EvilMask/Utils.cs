@@ -3,6 +3,7 @@ using MinorShift.Emuera.Sub;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 
@@ -10,6 +11,13 @@ namespace EvilMask.Emuera
 {
 	internal sealed class Utils
 	{
+		static Stopwatch stopwatch = new Stopwatch();
+		static Int64 stopwatch_base = DateTime.Now.Ticks;
+		public static Int64 TimePoint()
+		{
+			if (!stopwatch.IsRunning) stopwatch.Start();
+			return stopwatch_base + stopwatch.Elapsed.Ticks;
+		}
 		public static string GetValidPath(string path)
 		{
 			path =  path.Replace('/', '\\').Replace("..\\", "");
