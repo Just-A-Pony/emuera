@@ -1314,7 +1314,15 @@ namespace MinorShift.Emuera.GameData.Function
 				switch (op)
 				{
 					case Operation.Check: { return contains ? Utils.DataTable.TypeToInt(dt.Columns[cName].DataType) : 0; }
-					case Operation.Remove: { if (contains) dt.Columns.Remove(cName); return 1; }
+					case Operation.Remove:
+						{
+							if (contains && cName.ToLower() != "id")
+							{
+								dt.Columns.Remove(cName);
+								return 1;
+							}
+							return 0;
+						}
 				}
 				if (contains) return 0;
 				Type t = null;
