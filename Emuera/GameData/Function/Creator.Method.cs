@@ -17,6 +17,7 @@ using System.Xml;
 using System.IO;
 using EvilMask.Emuera;
 using trerror = EvilMask.Emuera.Lang.Error;
+using System.Data;
 
 namespace MinorShift.Emuera.GameData.Function
 {
@@ -1233,6 +1234,329 @@ namespace MinorShift.Emuera.GameData.Function
 				return 0;
 			}
 		}
+		private sealed class DataTableManagementMethod : FunctionMethod
+		{
+			public enum Operation { Create, Check, Release, Clear, Case };
+			public DataTableManagementMethod(Operation type)
+			{
+				ReturnType = typeof(Int64);
+				if (op==Operation.Case)
+					argumentTypeArray = new Type[] { typeof(string), typeof(Int64) };
+				else
+					argumentTypeArray = new Type[] { typeof(string) };
+				CanRestructure = false;
+				op = type;
+			}
+			private Operation op;
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				string key = arguments[0].GetStrValue(exm);
+				var dict = exm.VEvaluator.VariableData.DataDataTables;
+				bool contains = dict.ContainsKey(key);
+				switch (op)
+				{
+					case Operation.Clear:
+						{
+							if (contains)
+							{
+								dict[key].CaseSensitive = arguments[1].GetIntValue(exm) != 0;
+								return 1;
+							}
+							return -1;
+						}
+					case Operation.Case:
+						{
+							if (contains)
+							{
+								dict[key].Clear();
+								return 1;
+							}
+							return -1;
+						}
+					case Operation.Check: { return contains ? 1 : 0; }
+					case Operation.Release: { if (contains) dict.Remove(key); return 1; }
+				}
+				if (contains) return 0;
+				var dt = new DataTable(key);
+				var c = dt.Columns.Add("id", typeof(UInt32));
+				c.AutoIncrement = true;
+				dict[key] = dt;
+				return 1;
+			}
+		}
+		private sealed class DataTableColumnManagementMethod : FunctionMethod
+		{
+			public enum Operation { Create, Check, Remove };
+			public DataTableColumnManagementMethod(Operation type)
+			{
+				ReturnType = typeof(Int64);
+				if (type == Operation.Create)
+					argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Any, ArgType.Int }, OmitStart = 2 },
+					};
+				else
+					argumentTypeArray = new Type[] { typeof(string), typeof(string) };
+				CanRestructure = false;
+				op = type;
+			}
+			private Operation op;
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				string key = arguments[0].GetStrValue(exm);
+				string cName = arguments[1].GetStrValue(exm);
+				var dict = exm.VEvaluator.VariableData.DataDataTables;
+				if (!dict.ContainsKey(key)) return -1;
+				var dt = dict[key];
+				bool contains = dt.Columns.Contains(cName);
+				switch (op)
+				{
+					case Operation.Check: { return contains ? Utils.DataTable.TypeToInt(dt.Columns[cName].DataType) : 0; }
+					case Operation.Remove: { if (contains) dt.Columns.Remove(cName); return 1; }
+				}
+				if (contains) return 0;
+				Type t = null;
+				if (arguments.Length >= 3)
+				{
+					if (arguments[2].GetOperandType() == typeof(string)) t = Utils.DataTable.NameToType(arguments[2].GetStrValue(exm));
+					else t = Utils.DataTable.IntToType(arguments[2].GetIntValue(exm));
+					if (t == null) {
+						throw new CodeEE(string.Format(Lang.Error.UnsupportedType.Text, Name));
+					}
+				}
+				bool nullable = arguments.Length == 4 ? arguments[3].GetIntValue(exm) != 0 : true;
+				DataColumn dc;
+				if (t != null) dc = dt.Columns.Add(cName, t);
+				else dc = dt.Columns.Add(cName);
+				dc.AllowDBNull = nullable;
+				return 1;
+			}
+		}
+		private sealed class DataTableRowSetMethod : FunctionMethod
+		{
+			public enum Operation { Add, Set };
+			public DataTableRowSetMethod(Operation type)
+			{
+				ReturnType = typeof(Int64);
+				if (type == Operation.Add)
+					argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.VariadicString, ArgType.VariadicAny }, MatchVariadicGroup = true, OmitStart = 1 },
+						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D, ArgType.RefAny1D, ArgType.Int } },
+					};
+				else
+					argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int, ArgType.VariadicString, ArgType.VariadicAny }, MatchVariadicGroup = true },
+						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int, ArgType.RefString1D, ArgType.RefAny1D, ArgType.Int } },
+					};
+				CanRestructure = false;
+				op = type;
+			}
+			private Operation op;
+			void CheckName(System.Data.DataTable dt, string name, string key)
+			{
+				if (name == "id")
+					throw new CodeEE(string.Format(Lang.Error.DTLackOfNamedColumn.Text, key));
+				if (!dt.Columns.Contains(name))
+					throw new CodeEE(string.Format(Lang.Error.DTLackOfNamedColumn.Text, key, name));
+			}
+			void SetValue(DataRow row, System.Data.DataTable dt, string name, string key, ExpressionMediator exm, IOperandTerm v)
+			{
+				CheckName(dt, name, key);
+				bool isString = dt.Columns[name].DataType == typeof(string);
+				if (v.GetOperandType() != (isString ? typeof(string) : typeof(Int64)))
+					throw new CodeEE(string.Format(Lang.Error.DTInvalidDataType.Text, Name, key, name));
+
+				if (isString)
+					row[name] = v.GetStrValue(exm);
+				else
+					row[name] = Utils.DataTable.ConvertInt(v.GetIntValue(exm), dt.Columns[name].DataType);
+			}
+			void SetValue(DataRow row, System.Data.DataTable dt, string name, string key, string str)
+			{
+				CheckName(dt, name, key);
+				if (dt.Columns[name].DataType != typeof(string))
+					throw new CodeEE(string.Format(Lang.Error.DTInvalidDataType.Text, Name, key, name));
+				row[name] = str;
+			}
+			void SetValue(DataRow row, System.Data.DataTable dt, string name, string key, Int64 v)
+			{
+				CheckName(dt, name, key);
+				if (dt.Columns[name].DataType == typeof(string))
+					throw new CodeEE(string.Format(Lang.Error.DTInvalidDataType.Text, Name, key, name));
+				row[name] = Utils.DataTable.ConvertInt(v, dt.Columns[name].DataType);
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				var b = op == Operation.Add ? 0 : 1;
+				string key = arguments[0].GetStrValue(exm);
+				var dict = exm.VEvaluator.VariableData.DataDataTables;
+				if (!dict.ContainsKey(key)) return -1;
+				var dt = dict[key];
+				DataRow row;
+				if (op == Operation.Set)
+				{
+					var idx = (int)arguments[1].GetIntValue(exm);
+					if (dt.Rows.Count > idx && idx >= 0)
+						row = dt.Rows[idx];
+					else return -2;
+				}
+				else row = dt.NewRow();
+				if (arguments.Length == b + 4)
+				{ 
+					var names = (arguments[1] as VariableTerm).Identifier.GetArray() as string[];
+					var count = Math.Min(names.Length, arguments[b + 3].GetIntValue(exm));
+					if (arguments[b + 2].GetOperandType() == typeof(string))
+					{ 
+						var vals = (arguments[b + 2] as VariableTerm).Identifier.GetArray() as string[];
+						count = Math.Min(vals.Length, count);
+						for (int i = 0; i < count; i++)
+							SetValue(row, dt, names[i], key, vals[i]);
+					}
+					else
+					{
+						var vals = (arguments[b + 2] as VariableTerm).Identifier.GetArray() as Int64[];
+						count = Math.Min(vals.Length, count);
+						for (int i = 0; i < count; i++)
+							SetValue(row, dt, names[i], key, vals[i]);
+					}
+				}
+				else
+				{
+					var pos = b + 1;
+					while (pos < arguments.Length)
+					{
+						var name = arguments[pos].GetStrValue(exm);
+						SetValue(row, dt, name, key, exm, arguments[pos + 1]);
+						pos += 2;
+					}
+				}
+				dt.Rows.Add(row);
+				return (int)row[0];
+			}
+		}
+		private sealed class DataTableLengthMethod : FunctionMethod
+		{
+			public enum Operation { Row, Column };
+			public DataTableLengthMethod(Operation type)
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(string) };
+				CanRestructure = false;
+				op = type;
+			}
+			private Operation op;
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				string key = arguments[0].GetStrValue(exm);
+				var dict = exm.VEvaluator.VariableData.DataDataTables;
+				if (!dict.ContainsKey(key)) return -1;
+				return op == Operation.Row ? dict[key].Rows.Count : dict[key].Columns.Count;
+			}
+		}
+		private sealed class DataTableCellGetMethod : FunctionMethod
+		{
+			public enum Operation { Get, IsNull, Gets };
+			public DataTableCellGetMethod(Operation type)
+			{
+				ReturnType = type == Operation.Gets ? typeof(string) : typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(string), typeof(Int64), typeof(string) };
+				CanRestructure = false;
+				op = type;
+			}
+			private Operation op;
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				var key = arguments[0].GetStrValue(exm);
+				var dict = exm.VEvaluator.VariableData.DataDataTables;
+				if (!dict.ContainsKey(key)) return -1;
+				var dt = dict[key];
+				var idx = (int)arguments[1].GetIntValue(exm);
+				var name = arguments[2].GetStrValue(exm);
+				if (idx >= 0 && idx < dt.Rows.Count && dt.Columns.Contains(name))
+					return op == Operation.Get ? Convert.ToInt64(dt.Rows[idx][name]) : (dt.Rows[idx][name] == DBNull.Value ? 1 : 0);
+				return -2;
+			}
+			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				var key = arguments[0].GetStrValue(exm);
+				var dict = exm.VEvaluator.VariableData.DataDataTables;
+				if (!dict.ContainsKey(key)) return string.Empty;
+				var dt = dict[key];
+				var idx = (int)arguments[1].GetIntValue(exm);
+				var name = arguments[2].GetStrValue(exm);
+				if (idx >= 0 && idx < dt.Rows.Count && dt.Columns.Contains(name))
+					return (string)dt.Rows[idx][name];
+				return string.Empty;
+			}
+		}
+		private sealed class DataTableCellSetMethod : FunctionMethod
+		{
+			public DataTableCellSetMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int, ArgType.String, ArgType.Any } },
+				};
+				CanRestructure = false;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				var key = arguments[0].GetStrValue(exm);
+				var dict = exm.VEvaluator.VariableData.DataDataTables;
+				if (!dict.ContainsKey(key)) return -1;
+				var dt = dict[key];
+				var idx = (int)arguments[1].GetIntValue(exm);
+				var name = arguments[2].GetStrValue(exm);
+				var v = arguments[3];
+				if (idx >= 0 && idx < dt.Rows.Count && dt.Columns.Contains(name))
+				{ 
+					bool isString = dt.Columns[name].DataType == typeof(string);
+					if (v.GetOperandType() != (isString ? typeof(string) : typeof(Int64))) return -3;
+
+					if (isString)
+						dt.Rows[idx][name] = v.GetStrValue(exm);
+					else
+						dt.Rows[idx][name] = Utils.DataTable.ConvertInt(v.GetIntValue(exm), dt.Columns[name].DataType);
+				}
+				return -2;
+			}
+		}
+		private sealed class DataTableSelectMethod : FunctionMethod
+		{
+			public DataTableSelectMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.RefInt1D }, OmitStart = 1 },
+				};
+				CanRestructure = false;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				var key = arguments[0].GetStrValue(exm);
+				var dict = exm.VEvaluator.VariableData.DataDataTables;
+				if (!dict.ContainsKey(key)) return -1;
+				var dt = dict[key];
+				string filter = arguments.Length > 1 ? arguments[1].GetStrValue(exm) : null;
+				string sort = arguments.Length > 2 ? arguments[2].GetStrValue(exm) : null;
+				DataRow[] res;
+				if (sort != null) res = dt.Select(filter, sort);
+				else if (filter != null) res = dt.Select(filter);
+				else res = dt.Select();
+				bool toResult = arguments.Length != 4;
+				Int64[] output = toResult ? GlobalStatic.VEvaluator.RESULT_ARRAY : (arguments[3] as VariableTerm).Identifier.GetArray() as Int64[];
+				if (res != null)
+				{
+					int count = Math.Min(res.Length, toResult ? output.Length - 1 : output.Length);
+					for (int i = 0; i < count; i++)
+						output[toResult ? i + 1 : i] = (int)res[i][0];
+					if (toResult) output[0] = res.Length;
+					return res.Length;
+				}
+				if (toResult) output[0] = 0;
+				return 0;
+			}
+		}
+
 		private sealed class MapManagementMethod : FunctionMethod
 		{
 			public enum Operation { Create, Check, Release };
