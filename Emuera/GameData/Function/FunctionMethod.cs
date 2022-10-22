@@ -103,7 +103,7 @@ namespace MinorShift.Emuera.GameData.Function
 					var ret = new _ArgType[count];
 					for (int i = 0; i < count; i++)
 					{
-						ret[i] = ArgTypes[count + i - 1];
+						ret[i] = ArgTypes[ArgTypes.Count - count + i];
 					}
 					return ret;
 				}
