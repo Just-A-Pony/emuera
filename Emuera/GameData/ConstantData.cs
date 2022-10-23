@@ -1682,9 +1682,11 @@ namespace MinorShift.Emuera.GameData
 						ParserMediator.Warn(trerror.ProhibitedArrayName.Text, position, 2);
 						break;
 					}
-					if ((index < 0) || (target.Length <= index))
+					if (((index < 0) || (target.Length <= index)))
 					{
-						ParserMediator.Warn(string.Format(trerror.OoRArray.Text, index.ToString()), position, 1);
+						//ERDでは警告しない
+						if (targetIndex != ERD_NAMES_INDEX)
+							ParserMediator.Warn(string.Format(trerror.OoRArray.Text, index.ToString()), position, 1);
 						continue;
 					}
                     if (!defined.Add(index))
