@@ -1684,9 +1684,7 @@ namespace MinorShift.Emuera.GameData
 					}
 					if (((index < 0) || (target.Length <= index)))
 					{
-						//ERDでは警告しない
-						if (targetIndex != ERD_NAMES_INDEX)
-							ParserMediator.Warn(string.Format(trerror.OoRArray.Text, index.ToString()), position, 1);
+						ParserMediator.Warn(string.Format(trerror.OoRArray.Text, index.ToString()), position, 1);
 						continue;
 					}
                     if (!defined.Add(index))
