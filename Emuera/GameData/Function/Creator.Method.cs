@@ -342,45 +342,48 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				ReturnType = typeof(Int64);
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D, ArgType.Int }, OmitStart = 2 },
-					new ArgTypeList{ ArgTypes = { ArgType.RefInt | ArgType.AllowConstRef, ArgType.RefString1D, ArgType.Int }, OmitStart = 2 },
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D, ArgType.Int, ArgType.Int | ArgType.DisallowVoid }, OmitStart = 2 },
+					new ArgTypeList{ ArgTypes = { ArgType.RefInt | ArgType.AllowConstRef, ArgType.RefString1D, ArgType.Int, ArgType.Int | ArgType.DisallowVoid }, OmitStart = 2 },
 				};
 				CanRestructure = false;
 			}
-			private string CheckVariableTerm(IOperandTerm arg, string name, string v)
+			private string CheckVariableTerm(IOperandTerm arg, string v)
 			{
 				var vname = v == null ? trerror.FirstArg.Text : v;
 				if (!(arg is VariableTerm varTerm) || varTerm.Identifier.IsCalc || varTerm.Identifier.IsConst)
-					return string.Format(trerror.NotVarFunc.Text, name, vname);
+					return string.Format(trerror.NotVarFunc.Text, Name, vname);
 				if (v == null && !varTerm.Identifier.IsArray1D)
-					return string.Format(trerror.Not1DFuncArg.Text, name, "1");
+					return string.Format(trerror.Not1DFuncArg.Text, Name, "1");
 				if (varTerm.Identifier.IsCharacterData)
-					return string.Format(trerror.IsCharaVarFunc.Text, name, vname);
+					return string.Format(trerror.IsCharaVarFunc.Text, Name, vname);
 				if (!varTerm.Identifier.IsArray1D && !varTerm.Identifier.IsArray2D && !varTerm.Identifier.IsArray3D)
-					return string.Format(trerror.NotDimVarFunc.Text, name, vname);
+					return string.Format(trerror.NotDimVarFunc.Text, Name, vname);
 				return null;
 			}
 			private VariableTerm GetConvertedTerm(ExpressionMediator exm, string name)
 			{
 				WordCollection wc = LexicalAnalyzer.Analyse(new StringStream(name), LexEndWith.EoL, LexAnalyzeFlag.None);
 				var term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
-				var err = CheckVariableTerm(term, "ARRAYMSORTEX", name);
+				var err = CheckVariableTerm(term, name);
 				if (err != null)
 					throw new CodeEE(err);
 				return term as VariableTerm;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
-				bool isAscending = arguments.Length < 3 || arguments[2].GetIntValue(exm) != 0;
+				bool isAscending = arguments.Length < 3 || arguments[2] == null || arguments[2].GetIntValue(exm) != 0;
+				Int64 fixedLength = arguments.Length < 4 ? -1 : arguments[3].GetIntValue(exm);
+				if (fixedLength == 0) return 0;
 				VariableTerm varTerm = arguments[0] is VariableTerm ? arguments[0] as VariableTerm : GetConvertedTerm(exm, arguments[0].GetStrValue(exm));
 				int[] sortedArray;
 				if (varTerm.Identifier.IsInteger)
 				{
 					List<KeyValuePair<Int64, int>> sortList = new List<KeyValuePair<long, int>>();
 					Int64[] array = (Int64[])varTerm.Identifier.GetArray();
-					for (int i = 0; i < array.Length; i++)
+					var length = fixedLength > 0 ? Math.Min(fixedLength, array.Length) : array.Length;
+					for (int i = 0; i < length; i++)
 					{
-						if (array[i] == 0)
+						if (fixedLength == -1 && array[i] == 0)
 							break;
 						if (array[i] < Int64.MinValue || array[i] > Int64.MaxValue)
 							return 0;
@@ -388,24 +391,21 @@ namespace MinorShift.Emuera.GameData.Function
 					}
 					//素ではintの範囲しか扱えないので一工夫
 					sortList.Sort((a, b) => { return (isAscending ? 1 : -1) * Math.Sign(a.Key - b.Key); });
-					sortedArray = new int[sortList.Count];
-					for (int i = 0; i < sortedArray.Length; i++)
-						sortedArray[i] = sortList[i].Value;
+					sortedArray = sortList.Select(p => p.Value).ToArray();
 				}
 				else
 				{
 					List<KeyValuePair<string, int>> sortList = new List<KeyValuePair<string, int>>();
 					string[] array = (string[])varTerm.Identifier.GetArray();
-					for (int i = 0; i < array.Length; i++)
+					var length = fixedLength > 0 ? Math.Min(fixedLength, array.Length) : array.Length;
+					for (int i = 0; i < length; i++)
 					{
-						if (string.IsNullOrEmpty(array[i]))
+						if (fixedLength == -1 && string.IsNullOrEmpty(array[i]))
 							return 0;
 						sortList.Add(new KeyValuePair<string, int>(array[i], i));
 					}
 					sortList.Sort((a, b) => { return (isAscending ? 1 : -1) * a.Key.CompareTo(b.Key); });
-					sortedArray = new int[sortList.Count];
-					for (int i = 0; i < sortedArray.Length; i++)
-						sortedArray[i] = sortList[i].Value;
+					sortedArray = sortList.Select(p => p.Value).ToArray();
 				}
 				List<VariableTerm> varTerms = new List<VariableTerm>();
 				foreach (var nTerm in (string[])(arguments[1] as VariableTerm).Identifier.GetArray())
@@ -983,7 +983,7 @@ namespace MinorShift.Emuera.GameData.Function
 						{
 							throw new CodeEE(string.Format(trerror.XmlParseError.Text, Name, xml, e.Message));
 						}
-						var newNode = childNode.FirstChild;
+						var newNode = childNode.DocumentElement;
 						child = doc.CreateNode(newNode.NodeType, newNode.Name, newNode.NamespaceURI);
 						for (int i = 0; i < newNode.Attributes.Count; i++)
 						{
@@ -1194,7 +1194,7 @@ namespace MinorShift.Emuera.GameData.Function
 				}
 				if (nodes.Count > 0)
 				{
-					var newNode = newXml.FirstChild;
+					var newNode = newXml.DocumentElement;
 					var child = doc.CreateNode(newNode.NodeType, newNode.Name, newNode.NamespaceURI);
 					for (int i = 0; i < newNode.Attributes.Count; i++)
 					{
