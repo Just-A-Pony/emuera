@@ -232,6 +232,10 @@ namespace MinorShift.Emuera.GameProc.Function
 			argb[FunctionArgType.SP_PRINT_RECT] = new SP_PRINT_SHAPE_ArgumentBuilder(4);
 			argb[FunctionArgType.SP_PRINT_SPACE] = new SP_PRINT_SHAPE_ArgumentBuilder(1);
 			#endregion
+
+			#region EM_DT
+			argb[FunctionArgType.SP_DT_COLUMN_OPTIONS] = new SP_DT_COLUMN_OPTIONS_ArgumentBuilder();
+			#endregion
 		}
 
 		#region EM_私家版_HTMLパラメータ拡張
@@ -252,7 +256,7 @@ namespace MinorShift.Emuera.GameProc.Function
 					name = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.Comma);
 					if (name == null)
 					{
-						warn(trerror.MissingArg.Text, line, 2, false);
+						warn(string.Format(trerror.CanNotOmitArg.Text, "1"), line, 2, false);
 						return null;
 					}
 					if (Config.NeedReduceArgumentOnLoad) name = name.Restructure(exm);
@@ -335,6 +339,89 @@ namespace MinorShift.Emuera.GameProc.Function
 				if (!checkArgumentType(line, exm, terms)) return null;
 
 				return new SpPrintShapeArgument(param.ToArray());
+			}
+		}
+		#endregion
+		#region EM_DT
+		private sealed class SP_DT_COLUMN_OPTIONS_ArgumentBuilder : ArgumentBuilder
+		{
+			public SP_DT_COLUMN_OPTIONS_ArgumentBuilder()
+			{
+				this.argumentTypeArray = null;// new Type[] { typeof(string), typeof(string), typeof(Int64), typeof(Int64), typeof(Int64) };
+				this.minArg = 1;
+			}
+			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
+			{
+				var wc = popWords(line);
+				IOperandTerm dt, colum;
+				if (!wc.EOL)
+				{
+					dt = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.Comma);
+					if (dt == null)
+					{
+						warn(string.Format(trerror.CanNotOmitArg.Text, "1"), line, 2, false);
+						return null;
+					}
+					if (Config.NeedReduceArgumentOnLoad) dt = dt.Restructure(exm);
+					wc.ShiftNext();
+				}
+				else
+				{
+					warn(string.Format(trerror.CanNotOmitArg.Text, "1"), line, 2, false);
+					return null;
+				}
+				if (!wc.EOL)
+				{
+					colum = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.Comma);
+					if (colum == null)
+					{
+						warn(string.Format(trerror.CanNotOmitArg.Text, "1"), line, 2, false);
+						return null;
+					}
+					if (Config.NeedReduceArgumentOnLoad) colum = colum.Restructure(exm);
+					wc.ShiftNext();
+				}
+				else
+				{
+					warn(string.Format(trerror.CanNotOmitArg.Text, "1"), line, 2, false);
+					return null;
+				}
+				List<SpDtColumnOptions.DTOptions> opts = new List<SpDtColumnOptions.DTOptions>();
+				List<IOperandTerm> values = new List<IOperandTerm>();
+				int argCount = 3;
+				while (!wc.EOL)
+				{
+					IOperandTerm v = null;
+					string keyword = wc.Current.ToString().ToLower();
+					wc.ShiftNext(); // keyword
+					wc.ShiftNext(); // ,
+					if (wc.EOL)
+					{
+						warn(string.Format(trerror.NotEnoughArguments.Text), line, 2, false);
+						return null;
+					}
+					argCount++;
+					switch (keyword)
+					{
+						case "default":
+							opts.Add(SpDtColumnOptions.DTOptions.Default);
+							v = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.Comma);
+							wc.ShiftNext();
+							break;
+						default:
+							warn(string.Format(trerror.CanNotInterpreted.Text), line, 2, false);
+							return null;
+					}
+					if (v == null)
+					{
+						warn(string.Format(trerror.CanNotOmitArg.Text, argCount), line, 2, false);
+						return null;
+					}
+					if (Config.NeedReduceArgumentOnLoad) v = v.Restructure(exm);
+					values.Add(v);
+					argCount++;
+				}
+				return new SpDtColumnOptions(dt, colum, opts.ToArray(), values.ToArray());
 			}
 		}
 		#endregion

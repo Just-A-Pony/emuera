@@ -407,6 +407,9 @@ namespace MinorShift.Emuera.GameProc.Function
 			addFunction(FunctionCode.FORCE_BEGIN, new FORCE_BEGIN_Instruction());//強制BEGIN
 			addFunction(FunctionCode.INPUTANY, new INPUTANY_Instruction());
 			#endregion
+			#region EM
+			addFunction(FunctionCode.DT_COLUMN_OPTIONS, new DT_COLUMN_OPTIONS_Instruction());
+			#endregion
 
 			Dictionary<string, FunctionMethod> methodList = FunctionMethodCreator.GetMethodList();
 			foreach (KeyValuePair<string, FunctionMethod> pair in methodList)

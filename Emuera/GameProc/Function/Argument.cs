@@ -49,6 +49,26 @@ namespace MinorShift.Emuera.GameProc.Function
 		readonly public MixedIntegerExprTerm[] Param;
 	}
 	#endregion
+	#region EM_DT
+	internal sealed class SpDtColumnOptions : Argument
+	{
+		public enum DTOptions
+		{
+			Default,
+		};
+		public SpDtColumnOptions(IOperandTerm dt, IOperandTerm column, DTOptions[] opts, IOperandTerm[] values)
+		{
+			Values = values;
+			Options = opts;
+			DT = dt;
+			Column = column;
+		}
+		readonly public IOperandTerm[] Values;
+		readonly public DTOptions[] Options;
+		readonly public IOperandTerm DT;
+		readonly public IOperandTerm Column;
+	}
+	#endregion
 	internal abstract class Argument
 	{
 		public bool IsConst;

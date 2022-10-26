@@ -1543,11 +1543,18 @@ namespace MinorShift.Emuera.GameData.Function
 				if (asId)
 				{
 					if (dt.Rows.Find(idx) is DataRow row && dt.Columns.Contains(name))
-						return op == Operation.Get ? Convert.ToInt64(row[name]) : (row[name] == DBNull.Value ? 1 : 0);
-				} else
+					{
+						var v = row[name];
+						return op == Operation.Get ? v == DBNull.Value ? 0 : Convert.ToInt64(v) : (v == DBNull.Value ? 1 : 0);
+					}
+				}
+				else
 				{
 					if (0 <= idx && idx < dt.Rows.Count && dt.Columns.Contains(name))
-						return op == Operation.Get ? Convert.ToInt64(dt.Rows[(int)idx][name]) : (dt.Rows[(int)idx][name] == DBNull.Value ? 1 : 0);
+					{
+						var v = dt.Rows[(int)idx][name];
+						return op == Operation.Get ? v == DBNull.Value ? 0 : Convert.ToInt64(v) : (v == DBNull.Value ? 1 : 0);
+					}
 				}
 				return op == Operation.IsNull ? -2 : 0;
 			}
@@ -1563,12 +1570,18 @@ namespace MinorShift.Emuera.GameData.Function
 				if (asId)
 				{
 					if (dt.Rows.Find(idx) is DataRow row && dt.Columns.Contains(name))
-						return (string)row[name];
+					{
+						var v = row[name];
+						if (v != DBNull.Value) return (string)v;
+					}
 				}
 				else
 				{
 					if (0 <= idx && idx < dt.Rows.Count && dt.Columns.Contains(name))
-						return (string)dt.Rows[(int)idx][name];
+					{
+						var v = dt.Rows[(int)idx][name];
+						if (v != DBNull.Value) return (string)v;
+					}
 				}
 				return string.Empty;
 			}
@@ -1706,7 +1719,7 @@ namespace MinorShift.Emuera.GameData.Function
 						dt.ReadXml(reader);
 					}
 				}
-				catch(Exception e)
+				catch
 				{
 					return 0;
 				}
