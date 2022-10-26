@@ -294,6 +294,9 @@ namespace MinorShift.Emuera.GameData.Function
                 ["DT_CELL_SET"] = new DataTableCellSetMethod(),
 
                 ["DT_SELECT"] = new DataTableSelectMethod(),
+
+                ["DT_TOXML"] = new DataTableToXmlMethod(),
+                ["DT_FROMXML"] = new DataTableFromXmlMethod(),
                 #endregion
 
                 #region EEで追加されたやつ

@@ -1651,6 +1651,70 @@ namespace MinorShift.Emuera.GameData.Function
 				return 0;
 			}
 		}
+		private sealed class DataTableToXmlMethod : FunctionMethod
+		{
+			public DataTableToXmlMethod()
+			{
+				ReturnType = typeof(string);
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString }, OmitStart = 1 },
+				};
+				CanRestructure = false;
+			}
+			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				var key = arguments[0].GetStrValue(exm);
+				var dict = exm.VEvaluator.VariableData.DataDataTables;
+				if (!dict.ContainsKey(key)) return string.Empty;
+				var dt = dict[key];
+				var output = arguments.Length > 1 ? (arguments[1] as VariableTerm).Identifier.GetArray() as string[] : GlobalStatic.VEvaluator.RESULTS_ARRAY;
+				var idx = arguments.Length > 1 ? 0 : 1;
+
+				var sb = new StringBuilder();
+				using (var sw = new StringWriter(sb))
+				{
+					dt.WriteXmlSchema(sw);
+					output[idx] = sb.ToString();
+					sb.Clear();
+					dt.WriteXml(sw);
+					return sb.ToString();
+				}
+			}
+		}
+		private sealed class DataTableFromXmlMethod : FunctionMethod
+		{
+			public DataTableFromXmlMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(string), typeof(string), typeof(string) };
+				CanRestructure = false;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				var key = arguments[0].GetStrValue(exm);
+				var dict = exm.VEvaluator.VariableData.DataDataTables;
+				DataTable dt;
+				try 
+				{
+					dt = new DataTable(key);
+					using (var reader = new StringReader(arguments[1].GetStrValue(exm)))
+					{
+						dt.ReadXmlSchema(reader);
+					}
+					using (var reader = new StringReader(arguments[2].GetStrValue(exm)))
+					{
+						dt.ReadXml(reader);
+					}
+				}
+				catch(Exception e)
+				{
+					return 0;
+				}
+				if (dict.ContainsKey(key)) dict[key] = dt;
+				else dict.Add(key, dt);
+				return 1;
+			}
+		}
 
 		private sealed class MapManagementMethod : FunctionMethod
 		{
