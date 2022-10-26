@@ -239,18 +239,22 @@ namespace MinorShift.Emuera.GameProc.Function
 		{
 			public SP_PRINT_IMG_ArgumentBuilder()
 			{
-				this.argumentTypeArray = new Type[] { typeof(string), typeof(string), typeof(Int64), typeof(Int64), typeof(Int64) };
+				this.argumentTypeArray = null;// new Type[] { typeof(string), typeof(string), typeof(Int64), typeof(Int64), typeof(Int64) };
 				this.minArg = 1;
 			}
 			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 			{
-				int argCount = 1;
 				var wc = popWords(line);
-				IOperandTerm name = null, nameb = null;
+				IOperandTerm name, nameb = null, namem = null;
 				List<MixedIntegerExprTerm> param = new List<MixedIntegerExprTerm>();
 				if (!wc.EOL)
 				{
 					name = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.Comma);
+					if (name == null)
+					{
+						warn(trerror.MissingArg.Text, line, 2, false);
+						return null;
+					}
 					if (Config.NeedReduceArgumentOnLoad) name = name.Restructure(exm);
 					wc.ShiftNext();
 				}
@@ -259,30 +263,37 @@ namespace MinorShift.Emuera.GameProc.Function
 					warn(string.Format(trerror.CanNotOmitArg.Text, "1"), line, 2, false);
 					return null;
 				}
-				if (!wc.EOL)
-				{
-					nameb = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.Comma);
-					if (Config.NeedReduceArgumentOnLoad) nameb = nameb.Restructure(exm);
-					wc.ShiftNext();
-					argCount++;
-				}
+				int argCount = 2;
 				while (!wc.EOL)
 				{
+					if (param.Count == 3)
+					{
+						warn(trerror.TooManyArg.Text, line, 2, false);
+						return null;
+					}
 					var arg = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.Comma | TermEndWith.KeyWordPx);
-					if (Config.NeedReduceArgumentOnLoad) arg = arg.Restructure(exm);
-					param.Add(new MixedIntegerExprTerm { num = arg, isPx = (wc.Current.Type != '\0' && wc.Current.Type != ',') });
+					if (Config.NeedReduceArgumentOnLoad && arg != null) arg = arg.Restructure(exm);
+					if (arg.GetOperandType() == typeof(string))
+					{
+						if (param.Count > 0 || argCount > 3)
+						{
+							warn(string.Format(trerror.IncorrectArg.Text, argCount), line, 2, false);
+							return null;
+						}
+						switch(argCount)
+						{
+							case 2: nameb = arg;break;
+							case 3: namem = arg;break;
+						}
+					} 
+					else
+						param.Add(new MixedIntegerExprTerm { num = arg, isPx = (wc.Current.Type != '\0' && wc.Current.Type != ',') });
 					if (wc.Current.Type != '\0' && wc.Current.Type != ',') wc.ShiftNext();
 					wc.ShiftNext();
 					argCount++;
 				}
 
-				IOperandTerm[] terms = new IOperandTerm[argCount];
-				terms[0] = name;
-				if (nameb != null) terms[1] = nameb;
-				for (int i = 0; i < param.Count; i++) terms[i + 2] = param[i].num;
-				if (!checkArgumentType(line, exm, terms)) return null;
-
-				return new SpPrintImgArgument(name, nameb, param.Count > 0 ? param.ToArray() : null);
+				return new SpPrintImgArgument(name, nameb, namem, param.Count > 0 ? param.ToArray() : null);
 			}
 		}
 		private sealed class SP_PRINT_SHAPE_ArgumentBuilder : ArgumentBuilder
@@ -1026,7 +1037,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				}
 				if (terms.Length > 0)
 				{
-					if (!terms[0].IsInteger)
+					if (terms[0] == null || !terms[0].IsInteger)
 					{
 						warn(trerror.IgnoreArgBecauseNotInt.Text, line, 1, false);
 						ret = new SpInputsArgument(term, null);
@@ -1987,18 +1998,21 @@ namespace MinorShift.Emuera.GameProc.Function
         private sealed class SP_INPUT_ArgumentBuilder : ArgumentBuilder
         {
             public SP_INPUT_ArgumentBuilder()
-            {
-                argumentTypeArray = new Type[] { typeof(Int64) };
-                //if (nullable)妥協
-                minArg = 0;
+			{
+				#region EM_私家版_INPUT系機能拡張
+				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64) };
+				#endregion
+				//if (nullable)妥協
+				minArg = 0;
             }
             public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
-            {
-                IOperandTerm[] terms = popTerms(line);
-                if (!checkArgumentType(line, exm, terms))
-                    return null;
-				IOperandTerm term;
+			{
 				#region EM_私家版_INPUT系機能拡張＆ONEINPUT系制限解除
+				//IOperandTerm[] terms = popTerms(line);
+				//if (!checkArgumentType(line, exm, terms))
+				//	return null;
+				//IOperandTerm term;
+
 				//ExpressionArgument ret;
 				//if (terms.Length == 0)
 				//{
@@ -2031,6 +2045,15 @@ namespace MinorShift.Emuera.GameProc.Function
 				//	ret.ConstInt = i;
 				//	ret.IsConst = true;
 				//}
+				IOperandTerm[] terms = popTerms(line);
+				for (int i = 0; i<terms.Length;i++)
+				{
+					if (terms[i] != null && terms[i].GetOperandType() != typeof(Int64))
+					{
+						warn(string.Format(trerror.DifferentArgType.Text, i + 1), line, 2, false);
+						return null;
+					}
+				}
 				SpInputsArgument ret;
 				if (terms.Length == 0)
 				{
@@ -2039,12 +2062,10 @@ namespace MinorShift.Emuera.GameProc.Function
 				}
 				else if (terms.Length == 1)
 				{
-					term = terms[0];
-					ret = new SpInputsArgument(term, null);
+					ret = new SpInputsArgument(terms[0], null);
 				}
 				else
 				{
-					term = terms[0];
 					ret = new SpInputsArgument(terms[0], terms[1]);
 				}
 				#endregion

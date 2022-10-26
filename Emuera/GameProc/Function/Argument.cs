@@ -36,14 +36,16 @@ namespace MinorShift.Emuera.GameProc.Function
 	}
 	internal sealed class SpPrintImgArgument : Argument
 	{
-		public SpPrintImgArgument(IOperandTerm name, IOperandTerm nameb, MixedIntegerExprTerm[] param)
+		public SpPrintImgArgument(IOperandTerm name, IOperandTerm nameb, IOperandTerm namem, MixedIntegerExprTerm[] param)
 		{
 			Name = name;
 			Nameb = nameb;
+			Namem = namem;
 			Param = param;
 		}
 		readonly public IOperandTerm Name;
 		readonly public IOperandTerm Nameb;
+		readonly public IOperandTerm Namem;
 		readonly public MixedIntegerExprTerm[] Param;
 	}
 	#endregion

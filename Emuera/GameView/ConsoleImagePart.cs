@@ -18,20 +18,26 @@ namespace MinorShift.Emuera.GameView
 	{
 		#region EM_私家版_HTMLパラメータ拡張
 		//public ConsoleImagePart(string resName, string resNameb, int raw_height, int raw_width, int raw_ypos)
-		public ConsoleImagePart(string resName, string resNameb, MixedNum raw_height, MixedNum raw_width, MixedNum raw_ypos)
+		public ConsoleImagePart(string resName, string resNameb, string resNamem, MixedNum raw_height, MixedNum raw_width, MixedNum raw_ypos)
 		{
 			top = 0;
 			bottom = Config.FontSize;
 			Str = "";
 			ResourceName = resName ?? "";
 			ButtonResourceName = resNameb;
+			MappingGraphName = resNamem;
 			StringBuilder sb = new StringBuilder();
 			sb.Append("<img src='");
 			sb.Append(ResourceName);
-			if(ButtonResourceName != null)
+			if (ButtonResourceName != null)
 			{
 				sb.Append("' srcb='");
 				sb.Append(ButtonResourceName);
+			}
+			if (MappingGraphName != null)
+			{
+				sb.Append("' srcm='");
+				sb.Append(MappingGraphName);
 			}
 			//if(raw_height != 0)
 			if (raw_height != null && raw_height.num != 0)
@@ -117,7 +123,13 @@ namespace MinorShift.Emuera.GameView
 				//if (cImageB != null && !cImageB.IsCreated)
 				//	cImageB = null;
 			}
+			if (MappingGraphName != null)
+			{
+				cImageM = AppContents.GetSprite(MappingGraphName);
+			}
 		}
+		public readonly string MappingGraphName;
+		private readonly ASprite cImageM;
 		#endregion
 		private readonly ASprite cImage;
 		private readonly ASprite cImageB;
@@ -152,7 +164,29 @@ namespace MinorShift.Emuera.GameView
 				return "";
 			return AltText;
 		}
-
+		#region EM_私家版_imgマースク
+		public Int64 GetMappingColor(int pointX, int pointY)
+		{
+			if (cImageM != null && cImageM.IsCreated)
+			{
+				Size spriteSize;
+				if (cImageM is SpriteF sf)
+				{
+					spriteSize = sf.DestBaseSize;
+				}
+				else if (cImageM is SpriteG sg)
+				{
+					spriteSize = sg.DestBaseSize;
+				}
+				else return 0;
+				pointX = pointX * spriteSize.Width / destRect.Width;
+				pointY = pointY * spriteSize.Height / destRect.Height;
+				var c = cImageM.SpriteGetColor(pointX, pointY);
+				return c.ToArgb() & 0xFFFFFF;
+			}
+			return 0;
+		}
+		#endregion
 		public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)
 		{
 			if (this.Error)

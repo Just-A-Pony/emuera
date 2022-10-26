@@ -11,6 +11,18 @@ namespace MinorShift.Emuera.GameView
 	/// </summary>
 	internal sealed class ConsoleButtonString
 	{
+		#region EM_私家版_imgマースク
+		void getLastImg()
+		{
+			for (int i = strArray.Length - 1; i > -1; i--)
+			{
+				if (strArray[i] is ConsoleImagePart img)
+				{
+					mask = img;
+					break;
+				}
+			}
+		}
 		public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs)
 		{
 			this.parent = console;
@@ -18,7 +30,7 @@ namespace MinorShift.Emuera.GameView
 			IsButton = false;
 			PointX = -1;
 			Width = -1;
-            ErrPos = null;
+			ErrPos = null;
 		}
 		public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, Int64 input)
 			:this(console, strs)
@@ -27,6 +39,7 @@ namespace MinorShift.Emuera.GameView
 			Inputs = input.ToString();
 			IsButton = true;
 			IsInteger = true;
+			getLastImg();
 			if (console != null)
 			{
 				Generation = parent.NewButtonGeneration;
@@ -40,6 +53,7 @@ namespace MinorShift.Emuera.GameView
 			this.Inputs = inputs;
 			IsButton = true;
 			IsInteger = false;
+			getLastImg();
 			if (console != null)
 			{
 				Generation = parent.NewButtonGeneration;
@@ -55,6 +69,7 @@ namespace MinorShift.Emuera.GameView
 			this.Inputs = inputs;
 			IsButton = true;
 			IsInteger = true;
+			getLastImg();
 			if (console != null)
 			{
 				Generation = parent.NewButtonGeneration;
@@ -68,6 +83,7 @@ namespace MinorShift.Emuera.GameView
             this.Inputs = inputs;
             IsButton = true;
             IsInteger = false;
+			getLastImg();
 			if (console != null)
 			{
 				Generation = parent.NewButtonGeneration;
@@ -75,6 +91,19 @@ namespace MinorShift.Emuera.GameView
 			}
             ErrPos = pos;
         }
+		public Int64 GetMappedColor(int pointX, int pointY)
+		{
+			if (mask != null) 
+			{
+				var offsetX = pointX - PointX - mask.PointX - Config.DrawingParam_ShapePositionShift;
+				var offsetY = pointY - GlobalStatic.Console.GetLinePointY(ParentLine.LineNo) - mask.Top;
+				if (offsetX > 0 && offsetX < mask.Width && offsetY > 0 && offsetY < (mask.Bottom - mask.Top))
+					return mask.GetMappingColor(offsetX, offsetY);
+			}
+			return 0;
+		}
+		ConsoleImagePart mask = null;
+		#endregion
 
 		AConsoleDisplayPart[] strArray;
 		public AConsoleDisplayPart[] StrArray { get { return strArray; } }
