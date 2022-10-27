@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using MinorShift.Emuera.GameView;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
+using EvilMask.Emuera;
 
 namespace MinorShift.Emuera.GameProc.Function
 {
@@ -317,10 +318,12 @@ namespace MinorShift.Emuera.GameProc.Function
 				if (arg == null)
 					throw new CodeEE(trerror.InvalidArg.Text);
 				var strb = arg.Nameb != null ? arg.Nameb.GetStrValue(exm) : null;
+				var strm = arg.Namem != null ? arg.Namem.GetStrValue(exm) : null;
 				if (strb == string.Empty) strb = null;
 				exm.Console.PrintImg(
 					arg.Name.GetStrValue(exm),
 					strb,
+					strm,
 					arg.Param != null && arg.Param.Length > 1 ? new MixedNum { num = (int)arg.Param[1].num.GetIntValue(exm), isPx = arg.Param[1].isPx } : null,
 					arg.Param != null && arg.Param.Length > 0 ? new MixedNum { num = (int)arg.Param[0].num.GetIntValue(exm), isPx = arg.Param[0].isPx } : null,
 					arg.Param != null && arg.Param.Length > 2 ? new MixedNum { num = (int)arg.Param[2].num.GetIntValue(exm), isPx = arg.Param[2].isPx } : null);
@@ -1847,10 +1850,53 @@ namespace MinorShift.Emuera.GameProc.Function
 				exm.Console.WaitInput(req);
 			}
 		}
-        #endregion
+		#endregion
 
+		#region EM_DT
+		private sealed class DT_COLUMN_OPTIONS_Instruction : AbstractInstruction
+		{
+			public DT_COLUMN_OPTIONS_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_DT_COLUMN_OPTIONS);
+				//スキップ不可
+				//flag = IS_PRINT | IS_INPUT | EXTENDED;
+				flag = EXTENDED | METHOD_SAFE;
+			}
 
-        private sealed class AWAIT_Instruction : AbstractInstruction
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				var arg = (SpDtColumnOptions)func.Argument;
+				var dict = exm.VEvaluator.VariableData.DataDataTables;
+				var cName = arg.Column.GetStrValue(exm);
+				var key = arg.DT.GetStrValue(exm);
+				if (!dict.ContainsKey(key)) exm.VEvaluator.RESULT = -1;
+				var dt = dict[key];
+				if (!dt.Columns.Contains(cName)) exm.VEvaluator.RESULT = 0;
+				var column = dt.Columns[cName];
+				bool isString = column.DataType == typeof(string);
+				int idx = 0;
+				foreach (var opt in arg.Options)
+				{
+					var v = arg.Values[idx];
+					switch(opt)
+					{
+						case SpDtColumnOptions.DTOptions.Default:
+							if (v.GetOperandType() != (isString ? typeof(string) : typeof(Int64)))
+								throw new CodeEE(string.Format(Lang.Error.DTInvalidDataType.Text, "DT_COLUMN_OPTIONS", key, cName));
+							if (isString)
+								column.DefaultValue = v.GetStrValue(exm);
+							else
+								column.DefaultValue = Utils.DataTable.ConvertInt(v.GetIntValue(exm), column.DataType);
+							break;
+					}
+					idx++;
+				}
+				exm.VEvaluator.RESULT = 1;
+			}
+		}
+		#endregion
+
+		private sealed class AWAIT_Instruction : AbstractInstruction
 		{
 			public AWAIT_Instruction()
 			{

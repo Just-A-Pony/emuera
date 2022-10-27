@@ -372,5 +372,9 @@ namespace MinorShift.Emuera.GameProc.Function
 		FORCE_BEGIN,
 		INPUTANY,
 		#endregion
+
+		#region EM
+		DT_COLUMN_OPTIONS,
+		#endregion
 	}
 }

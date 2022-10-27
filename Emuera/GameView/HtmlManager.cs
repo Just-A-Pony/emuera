@@ -834,6 +834,7 @@ namespace MinorShift.Emuera.GameView
 						string attrValue;
 						string src = null;
 						string srcb = null;
+						string srcm = null;
 						#region EM_私家版_HTMLパラメータ拡張
 						//int height = 0;
 						//int width = 0;
@@ -863,6 +864,12 @@ namespace MinorShift.Emuera.GameView
 								if (srcb != null)
 									throw new CodeEE(string.Format(trerror.DuplicateAttribute.Text, tag, word.Code));
 								srcb = attrValue;
+							}
+							else if (word.Code.Equals("srcm", StringComparison.OrdinalIgnoreCase))
+							{
+								if (srcm != null)
+									throw new CodeEE(string.Format(trerror.DuplicateAttribute.Text, tag, word.Code));
+								srcm = attrValue;
 							}
 							else if (word.Code.Equals("height", StringComparison.OrdinalIgnoreCase))
 							{
@@ -915,7 +922,7 @@ namespace MinorShift.Emuera.GameView
 						#endregion
 						if (src == null)
 							throw new CodeEE(string.Format(trerror.NotSetAttribute.Text, tag, "src"));
-						return new ConsoleImagePart(src, srcb, height, width, ypos);
+						return new ConsoleImagePart(src, srcb, srcm, height, width, ypos);
 					}
 
 				case "shape":

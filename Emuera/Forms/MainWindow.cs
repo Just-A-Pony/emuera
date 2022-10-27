@@ -545,6 +545,7 @@ namespace MinorShift.Emuera
 			{
 				if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
 				{
+					GlobalStatic.Process.InputInteger(3, console.SelectingButton.GetMappedColor(e.X, e.Y));
 					if (modifiersWhileWaintingInputWithMouse != null)
 					{
 						GlobalStatic.Process.InputInteger(2, (long)modifiersWhileWaintingInputWithMouse);
@@ -553,12 +554,12 @@ namespace MinorShift.Emuera
 					if (e.Button == MouseButtons.Right)
 					{
 						GlobalStatic.Process.InputInteger(1, 2);
-						PressEnterKey(true, true);
+						console.PressEnterKey(true, str, true);
 					}
 					else
 					{
 						GlobalStatic.Process.InputInteger(1, 1);
-						PressEnterKey(false, true);
+						console.PressEnterKey(false, str, true);
 					}
 					return;
 				}

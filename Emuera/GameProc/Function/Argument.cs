@@ -36,15 +36,37 @@ namespace MinorShift.Emuera.GameProc.Function
 	}
 	internal sealed class SpPrintImgArgument : Argument
 	{
-		public SpPrintImgArgument(IOperandTerm name, IOperandTerm nameb, MixedIntegerExprTerm[] param)
+		public SpPrintImgArgument(IOperandTerm name, IOperandTerm nameb, IOperandTerm namem, MixedIntegerExprTerm[] param)
 		{
 			Name = name;
 			Nameb = nameb;
+			Namem = namem;
 			Param = param;
 		}
 		readonly public IOperandTerm Name;
 		readonly public IOperandTerm Nameb;
+		readonly public IOperandTerm Namem;
 		readonly public MixedIntegerExprTerm[] Param;
+	}
+	#endregion
+	#region EM_DT
+	internal sealed class SpDtColumnOptions : Argument
+	{
+		public enum DTOptions
+		{
+			Default,
+		};
+		public SpDtColumnOptions(IOperandTerm dt, IOperandTerm column, DTOptions[] opts, IOperandTerm[] values)
+		{
+			Values = values;
+			Options = opts;
+			DT = dt;
+			Column = column;
+		}
+		readonly public IOperandTerm[] Values;
+		readonly public DTOptions[] Options;
+		readonly public IOperandTerm DT;
+		readonly public IOperandTerm Column;
 	}
 	#endregion
 	internal abstract class Argument

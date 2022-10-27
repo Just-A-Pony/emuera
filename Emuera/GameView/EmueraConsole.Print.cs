@@ -353,10 +353,10 @@ namespace MinorShift.Emuera.GameView
 
 		#region EM_私家版_HTMLパラメータ拡張
 		// public void PrintImg(string str)
-		public void PrintImg(string name, string nameb, MixedNum height, MixedNum width, MixedNum ypos)
+		public void PrintImg(string name, string nameb, string namem, MixedNum height, MixedNum width, MixedNum ypos)
 		{
 			//printBuffer.Append(new ConsoleImagePart(str, null, 0, 0, 0));
-			printBuffer.Append(new ConsoleImagePart(name, nameb, height, width, ypos));
+			printBuffer.Append(new ConsoleImagePart(name, nameb, namem, height, width, ypos));
 		}
 		#endregion
 
