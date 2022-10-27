@@ -842,6 +842,11 @@ namespace MinorShift.Emuera.GameView
 			}
 			Print(str);
 			PrintFlush(false);
+			#region EM_textbox位置指定拡張
+			// 入力成功した
+			if (GlobalStatic.MainWindow.TextBoxPosChanged)
+				GlobalStatic.MainWindow.ResetTextBoxPos();
+			#endregion
 			return true;
 		}
 		#endregion

@@ -1917,6 +1917,27 @@ namespace MinorShift.Emuera.GameData.Function
 				return 1;
 			}
 		}
+
+		private sealed class MoveTextBoxMethod : FunctionMethod
+		{
+			public MoveTextBoxMethod(bool b = false)
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64) };
+				CanRestructure = false;
+				resume = b;
+			}
+			bool resume;
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				if (resume) GlobalStatic.MainWindow.ResetTextBoxPos();
+				else GlobalStatic.MainWindow.SetTextBoxPos(
+					(int)arguments[0].GetIntValue(exm),
+					(int)arguments[1].GetIntValue(exm),
+					(int)arguments[2].GetIntValue(exm));
+				return 1;
+			}
+		}
 		#endregion
 
 		#region CSVデータ関係

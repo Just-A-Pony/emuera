@@ -297,6 +297,9 @@ namespace MinorShift.Emuera.GameData.Function
 
                 ["DT_TOXML"] = new DataTableToXmlMethod(),
                 ["DT_FROMXML"] = new DataTableFromXmlMethod(),
+
+                ["MOVETEXTBOX"] = new MoveTextBoxMethod(),
+                ["RESUMETEXTBOX"] = new MoveTextBoxMethod(true),
                 #endregion
 
                 #region EEで追加されたやつ

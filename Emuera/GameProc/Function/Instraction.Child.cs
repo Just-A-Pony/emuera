@@ -700,6 +700,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				{
 					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
 				}
+				GlobalStatic.MainWindow.ApplyTextBoxChanges();
 				#endregion
 				exm.Console.WaitInput(req);
 			}
@@ -742,6 +743,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				{
 					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
 				}
+				GlobalStatic.MainWindow.ApplyTextBoxChanges();
 				#endregion
 				exm.Console.WaitInput(req);
 			}

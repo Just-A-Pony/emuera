@@ -80,6 +80,14 @@ namespace MinorShift.Emuera
 			this.labelMacroGroupChanged.Font = new Font(Lang.MFont, 24F, FontStyle.Regular, GraphicsUnit.Point, (byte)128);
 			this.richTextBox1.Font = new Font(Config.Font.FontFamily, Config.FontSize, FontStyle.Regular, GraphicsUnit.Pixel);
 			#endregion
+
+			#region EM_textbox位置指定拡張
+			textBoxInfo.Left = richTextBox1.Left;
+			textBoxInfo.Top = richTextBox1.Top;
+			textBoxInfo.Size = richTextBox1.Size;
+			textBoxState = TextBoxState.Unchanged;
+			vScrollBar.ValueChanged += new EventHandler(textBoxHandleScrollValueChanged);
+			#endregion
 		}
 		private ToolStripMenuItem[] macroMenuItems = new ToolStripMenuItem[KeyMacro.MaxFkey];
         private System.Diagnostics.FileVersionInfo emueraVer = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
@@ -131,6 +139,61 @@ namespace MinorShift.Emuera
 			this.貼り付け.Text = Lang.UI.MainWindow.ContextMenu.Paste.Text;
 			this.削除.Text = Lang.UI.MainWindow.ContextMenu.Delete.Text;
 			this.実行.Text = Lang.UI.MainWindow.ContextMenu.Execute.Text;
+		}
+		#endregion
+
+		#region EM_textbox位置指定拡張
+		void textBoxHandleScrollValueChanged(Object sender, EventArgs e)
+		{
+			if (vScrollBar.Value < vScrollBar.Maximum && TextBoxPosChanged)
+				ScrollBackTextBoxPos();
+			else if (vScrollBar.Value == vScrollBar.Maximum && TextBoxPosScrolledBack)
+				ApplyTextBoxChanges();
+		}
+		struct TextBoxInfo
+		{
+			public int Top, Left;
+			public Size Size;
+		}
+		TextBoxInfo textBoxInfo, nextTextBoxInfo;
+		enum TextBoxState { Unchanged, WatingToChange, Changed, ScrollBack };
+		TextBoxState textBoxState;
+		public bool TextBoxPosChanged { get { return textBoxState == TextBoxState.Changed; } }
+		public bool TextBoxPosScrolledBack { get { return textBoxState == TextBoxState.ScrollBack; } }
+		public bool TextBoxPosWatingToChange { get { return textBoxState == TextBoxState.WatingToChange; } }
+		public void SetTextBoxPos(int xOffset, int yOffset, int width)
+		{
+			nextTextBoxInfo.Left = Math.Max(0, Math.Min(xOffset, ClientSize.Width - 50));
+			nextTextBoxInfo.Top = Math.Min(Math.Max(ClientSize.Height - yOffset, 0), ClientSize.Height - richTextBox1.Height);
+			nextTextBoxInfo.Size = new Size(Math.Max(50, Math.Min(width, ClientSize.Width - richTextBox1.Left)), richTextBox1.Size.Height);
+			textBoxState = TextBoxState.WatingToChange;
+			#region EM_textbox位置指定拡張
+			if (TextBoxPosChanged) ScrollBackTextBoxPos();
+			#endregion
+		}
+		public void ResetTextBoxPos()
+		{
+			SetTextBoxPos(textBoxInfo);
+			textBoxState = TextBoxState.Unchanged;
+		}
+		public void ScrollBackTextBoxPos()
+		{
+			SetTextBoxPos(textBoxInfo);
+			textBoxState = TextBoxState.ScrollBack;
+		}
+		public void ApplyTextBoxChanges()
+		{
+			if (TextBoxPosWatingToChange || TextBoxPosScrolledBack)
+			{
+				SetTextBoxPos(nextTextBoxInfo);
+				textBoxState = TextBoxState.Changed;
+			}
+		}
+		void SetTextBoxPos(TextBoxInfo info)
+		{
+			this.richTextBox1.Left = info.Left;
+			this.richTextBox1.Top = info.Top;
+			this.richTextBox1.Size = info.Size;
 		}
 		#endregion
 
@@ -950,7 +1013,7 @@ namespace MinorShift.Emuera
 			else
 				vScrollBar.Value = value;
 			bool force_refresh = (vScrollBar.Value == vScrollBar.Maximum) || (vScrollBar.Value == vScrollBar.Minimum);
-		
+
 			//ボタンとの関係をチェック
 			if (Config.UseMouse)
 				force_refresh = console.MoveMouse(mainPicBox.PointToClient(Control.MousePosition)) || force_refresh;
