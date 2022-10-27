@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using MinorShift.Emuera.GameProc.Function;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
@@ -34,6 +35,9 @@ namespace MinorShift.Emuera.GameView
 		#endregion
 		public void ClearDisplay()
 		{
+			#region EE_AnchorのCB機能移植
+			CBProc.ClearScreen();
+			#endregion
 			displayLineList.Clear();
 			logicalLineCount = 0;
 			lineNo = 0;
@@ -121,6 +125,9 @@ namespace MinorShift.Emuera.GameView
 
 		private void addDisplayLine(ConsoleDisplayLine line, bool force_LEFT)
 		{
+			#region EE_AnchorのCB機能移植
+			CBProc.AddLine(line, force_LEFT);
+			#endregion
 			if (LastLineIsTemporary)
 				deleteLine(1);
 			//不適正なFontのチェック
@@ -167,6 +174,9 @@ namespace MinorShift.Emuera.GameView
 
 		public void deleteLine(int argNum)
 		{
+			#region EE_AnchorのCB機能移植
+			CBProc.DelLine(Math.Min(argNum, displayLineList.Count)); //FIXIT - Do we need to worry about the count?
+			#endregion
 			int delNum = 0;
 			int num = argNum;
 			while (delNum < num)
@@ -671,7 +681,10 @@ namespace MinorShift.Emuera.GameView
 				return;
 			for (int i = 0; i < displayLineList.Count; i++)
 			{
-				builder.AppendLine(displayLineList[i].ToString());
+                #region EE_AnchorのCB機能移植
+                //builder.AppendLine(displayLineList[i].ToString());
+				builder.AppendLine(ClipboardProcessor.StripHTML(displayLineList[i].ToString()));
+				#endregion
 			}
 		}
 

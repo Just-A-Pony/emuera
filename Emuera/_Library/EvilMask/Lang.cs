@@ -292,6 +292,27 @@ namespace EvilMask.Emuera
                     [Managed] public static TranslatableString PlayerStandard { get; } = new TranslatableString("ユーザー向けの設定にする");
                     [Managed] public static TranslatableString DeveloperStandard { get; } = new TranslatableString("開発者向けの設定にする");
                 }
+                [Translate("クリップボード"), Managed]
+                public sealed class Clipboard
+                {
+                    public static string Text { get { return trClass[typeof(Clipboard)].Text; } }
+                    [Managed] public static TranslatableString CopyToClipboard { get; } = new TranslatableString("表示したテキストをクリップボードにコピーする");
+                    [Managed] public static TranslatableString IgnoreTags { get; } = new TranslatableString("テキスト中の<>タグを無視する");
+                    [Managed] public static TranslatableString ReplaceTags { get; } = new TranslatableString("<>を次の文で置き換える");
+                    [Managed] public static TranslatableString NewLineOnly { get; } = new TranslatableString("新しい行のみコピーする");
+                    [Managed] public static TranslatableString ClearClipboard { get; } = new TranslatableString("画面のリフレッシュ時にクリップボードとバッファを消去する");
+                    [Managed] public static TranslatableString TriggerToUse { get; } = new TranslatableString("クリップボードにコピーするタイミング");
+                    [Managed] public static TranslatableString LClick { get; } = new TranslatableString("左クリック時");
+                    [Managed] public static TranslatableString MClick { get; } = new TranslatableString("ホイールクリック時");
+                    [Managed] public static TranslatableString DoubleClick { get; } = new TranslatableString("ダブルクリック時");
+                    [Managed] public static TranslatableString AnyKeyWait { get; } = new TranslatableString("WAIT時");
+                    [Managed] public static TranslatableString InputWait { get; } = new TranslatableString("INPUT時");
+                    [Managed] public static TranslatableString LinesToClipboard { get; } = new TranslatableString("クリップボードに貼り付ける行数");
+                    [Managed] public static TranslatableString TotalBuffer { get; } = new TranslatableString("総バッファサイズ");
+                    [Managed] public static TranslatableString LinesToScroll { get; } = new TranslatableString("スクロールの行数");
+                    [Managed] public static TranslatableString UpdateTime { get; } = new TranslatableString("クリップボードの更新間隔(ミリ秒)");
+                    [Managed] public static TranslatableString ScrollThrough { get; } = new TranslatableString("Ctrl+↑、Ctrl+↓、またはCtrl+マイスホイールで履歴をスクロールできます");
+                }
 
                 [Managed] public static TranslatableString ChangeWontTakeEffectUntilRestart { get; } = new TranslatableString("※変更は再起動するまで反映されません");
                 [Managed] public static TranslatableString Save { get; } = new TranslatableString("保存");
@@ -1168,6 +1189,26 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString FailedOutputLog { get; } = new TranslatableString("ログ出力失敗");
             [Managed] public static TranslatableString CanNotOutputToParentDirectory { get; } = new TranslatableString("ログ出力先に親ディレクトリは指定できません");
             [Managed] public static TranslatableString CanOnlyOutputToSubDirectory { get; } = new TranslatableString("ログファイルは実行ファイル以下のディレクトリにのみ保存できます");
+            [Managed] public static TranslatableString NotAvailableDuringScript { get; } = new TranslatableString("スクリプト動作中には使用できません");
+            [Managed] public static TranslatableString FileNotFound { get; } = new TranslatableString("ファイルがありません");
+            [Managed] public static TranslatableString IsNotErb { get; } = new TranslatableString("ERBファイル以外は読み込めません");
+            [Managed] public static TranslatableString FileFormatError { get; } = new TranslatableString("ファイル形式エラー");
+            [Managed] public static TranslatableString ErrorInAnalysisMode { get; } = new TranslatableString("コード解析でエラーが発見されたため、タイトルへは飛べません");
+            [Managed] public static TranslatableString CanNotReturnToTitle { get; } = new TranslatableString("解析モードのためタイトルへは飛べません");
+            [Managed] public static TranslatableString ReturnToTitleAsk { get; } = new TranslatableString("タイトル画面に戻りますか？");
+            [Managed] public static TranslatableString ReturnToTitle { get; } = new TranslatableString("タイトルに戻る");
+            [Managed] public static TranslatableString RestartAsk { get; } = new TranslatableString("再起動しますか？");
+            [Managed] public static TranslatableString Restart { get; } = new TranslatableString("再起動");
+            [Managed] public static TranslatableString ExitAsk { get; } = new TranslatableString("ゲームを終了します");
+            [Managed] public static TranslatableString Exit { get; } = new TranslatableString("終了");
+            [Managed] public static TranslatableString ReloadErbAsk { get; } = new TranslatableString("ERBファイルを読み直します");
+            [Managed] public static TranslatableString ReloadErb { get; } = new TranslatableString("ERBファイル再読み込み");
+            [Managed] public static TranslatableString CanNotOpenClipboard { get; } = new TranslatableString("予期せぬエラーが発生したためクリップボードを開けません");
+            [Managed] public static TranslatableString NotAllowChangeSetting { get; } = new TranslatableString("いくつかの設定は_fixed.configにより変更を許可されていないために変更できませんでした");
+            [Managed] public static TranslatableString UnableChangeSetting { get; } = new TranslatableString("設定変更不可");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");

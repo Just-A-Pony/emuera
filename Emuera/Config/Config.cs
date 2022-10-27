@@ -152,6 +152,23 @@ namespace MinorShift.Emuera
 			#region EM_私家版_Icon指定機能
 			EmueraIcon = instance.GetConfigValue<string>(ConfigCode.EmueraIcon);
 			#endregion
+			#region EE_AnchorのCB機能移植
+			CBUseClipboard = instance.GetConfigValue<bool>(ConfigCode.CBUseClipboard);
+			CBIgnoreTags = instance.GetConfigValue<bool>(ConfigCode.CBIgnoreTags);
+			CBReplaceTags = instance.GetConfigValue<string>(ConfigCode.CBReplaceTags);
+			CBNewLinesOnly = instance.GetConfigValue<bool>(ConfigCode.CBNewLinesOnly);
+			CBClearBuffer = instance.GetConfigValue<bool>(ConfigCode.CBClearBuffer);
+			CBTriggerLeftClick = instance.GetConfigValue<bool>(ConfigCode.CBTriggerLeftClick);
+			CBTriggerMiddleClick = instance.GetConfigValue<bool>(ConfigCode.CBTriggerMiddleClick);
+			CBTriggerDoubleLeftClick = instance.GetConfigValue<bool>(ConfigCode.CBTriggerDoubleLeftClick);
+			CBTriggerAnyKeyWait = instance.GetConfigValue<bool>(ConfigCode.CBTriggerAnyKeyWait);
+			CBTriggerInputWait = instance.GetConfigValue<bool>(ConfigCode.CBTriggerInputWait);
+			CBMaxCB = instance.GetConfigValue<int>(ConfigCode.CBMaxCB);
+			CBBufferSize = instance.GetConfigValue<int>(ConfigCode.CBBufferSize);
+			CBScrollCount = instance.GetConfigValue<int>(ConfigCode.CBScrollCount);
+			CBMinTimer = instance.GetConfigValue<int>(ConfigCode.CBMinTimer);
+			#endregion
+
 
 			UseLanguage lang = instance.GetConfigValue<UseLanguage>(ConfigCode.useLanguage);
 			switch (lang)
@@ -630,6 +647,21 @@ namespace MinorShift.Emuera
 		#region EM_私家版_Icon指定機能
 		public static string EmueraIcon { get; private set; }
 		#endregion
-
+		#region EE_AnchorのCB機能移植
+		public static bool CBUseClipboard { get; private set; }
+		public static bool CBIgnoreTags { get; private set; }
+		public static string CBReplaceTags { get; private set; }
+		public static bool CBNewLinesOnly { get; private set; }
+		public static bool CBClearBuffer { get; private set; }
+		public static bool CBTriggerLeftClick { get; private set; }
+		public static bool CBTriggerMiddleClick { get; private set; }
+		public static bool CBTriggerDoubleLeftClick { get; private set; }
+		public static bool CBTriggerAnyKeyWait { get; private set; }
+		public static bool CBTriggerInputWait { get; private set; }
+		public static int CBMaxCB { get; private set; }
+		public static int CBBufferSize { get; private set; }
+		public static int CBScrollCount { get; private set; }
+		public static int CBMinTimer { get; private set; }
+		#endregion
 	}
 }

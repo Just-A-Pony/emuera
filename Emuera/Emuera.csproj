@@ -131,6 +131,8 @@
     <Compile Include="GameData\Variable\VariableTerm.cs" />
     <Compile Include="GameProc\Function\ArgumentBuilder.cs" />
     <Compile Include="GameProc\Function\ArgumentParser.cs" />
+    <Compile Include="GameProc\Function\CircularBuffer.cs" />
+    <Compile Include="GameProc\Function\Clipboard.cs" />
     <Compile Include="GameProc\Function\FunctionArgType.cs" />
     <Compile Include="GameProc\Function\Instraction.Child.cs" />
     <Compile Include="GameProc\Function\Instruction.cs" />

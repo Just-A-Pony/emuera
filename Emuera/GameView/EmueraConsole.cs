@@ -63,6 +63,9 @@ namespace MinorShift.Emuera.GameView
 		public EmueraConsole(MainWindow parent)
 		{
 			window = parent;
+            #region EE_AnchorのCB機能移植
+            CBProc = new ClipboardProcessor(parent);
+			#endregion
 
 			//1.713 この段階でsetStBarを使用してはいけない
 			//setStBar(StaticConfig.DrawLineString);
@@ -226,6 +229,9 @@ namespace MinorShift.Emuera.GameView
 
 		const string ErrorButtonsText = "__openFileWithDebug__";
         private readonly MainWindow window;
+        #region EE_AnchorのCB機能移植
+        public readonly ClipboardProcessor CBProc;
+		#endregion
 
 		MinorShift.Emuera.GameProc.Process emuera;
 		ConsoleState state = ConsoleState.Initializing;
@@ -526,6 +532,9 @@ namespace MinorShift.Emuera.GameView
 
 		public void WaitInput(InputRequest req)
 		{
+            #region EE_AnchorのCB機能移植
+            CBProc.Check(ClipboardProcessor.CBTriggers.InputWait);
+			#endregion
 			state = ConsoleState.WaitInput;
 			inputReq = req;
 			if (req.Timelimit > 0)
@@ -546,6 +555,9 @@ namespace MinorShift.Emuera.GameView
 
 		public void ReadAnyKey(bool anykey = false, bool stopMesskip = false)
 		{
+			#region EE_AnchorのCB機能移植
+			CBProc.Check(ClipboardProcessor.CBTriggers.AnyKeyWait);
+			#endregion
 			InputRequest req = new InputRequest();
 			if (!anykey)
 				req.InputType = InputType.EnterKey;
