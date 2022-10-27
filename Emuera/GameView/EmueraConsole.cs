@@ -844,8 +844,8 @@ namespace MinorShift.Emuera.GameView
 			PrintFlush(false);
 			#region EM_textbox位置指定拡張
 			// 入力成功した
-			if (GlobalStatic.MainWindow.TextBoxPosChanged)
-				GlobalStatic.MainWindow.ResetTextBoxPos();
+			if (window.TextBoxPosChanged)
+				window.ResetTextBoxPos();
 			#endregion
 			return true;
 		}
@@ -2011,12 +2011,14 @@ namespace MinorShift.Emuera.GameView
 			}
 		}
 
+		#region EM_textbox位置指定拡張
 		private void verticalScrollBarUpdate()
 		{
 			int max = displayLineList.Count;
 			int move = max - window.ScrollBar.Maximum;
 			if (move == 0)
 				return;
+			window.TextBoxIgnoreScrollBarChanges = true;
 			if (move > 0)
 			{
 				window.ScrollBar.Maximum = max;
@@ -2029,7 +2031,9 @@ namespace MinorShift.Emuera.GameView
 				window.ScrollBar.Maximum = max;
 			}
 			window.ScrollBar.Enabled = max > 0;
+			window.TextBoxIgnoreScrollBarChanges = false;
 		}
+		#endregion
 		#endregion
 
 

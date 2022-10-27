@@ -145,6 +145,7 @@ namespace MinorShift.Emuera
 		#region EM_textbox位置指定拡張
 		void textBoxHandleScrollValueChanged(Object sender, EventArgs e)
 		{
+			if (TextBoxIgnoreScrollBarChanges) return;
 			if (vScrollBar.Value < vScrollBar.Maximum && TextBoxPosChanged)
 				ScrollBackTextBoxPos();
 			else if (vScrollBar.Value == vScrollBar.Maximum && TextBoxPosScrolledBack)
@@ -158,6 +159,7 @@ namespace MinorShift.Emuera
 		TextBoxInfo textBoxInfo, nextTextBoxInfo;
 		enum TextBoxState { Unchanged, WatingToChange, Changed, ScrollBack };
 		TextBoxState textBoxState;
+		public bool TextBoxIgnoreScrollBarChanges { get; set; }
 		public bool TextBoxPosChanged { get { return textBoxState == TextBoxState.Changed; } }
 		public bool TextBoxPosScrolledBack { get { return textBoxState == TextBoxState.ScrollBack; } }
 		public bool TextBoxPosWatingToChange { get { return textBoxState == TextBoxState.WatingToChange; } }
@@ -167,9 +169,6 @@ namespace MinorShift.Emuera
 			nextTextBoxInfo.Top = Math.Min(Math.Max(ClientSize.Height - yOffset, 0), ClientSize.Height - richTextBox1.Height);
 			nextTextBoxInfo.Size = new Size(Math.Max(50, Math.Min(width, ClientSize.Width - richTextBox1.Left)), richTextBox1.Size.Height);
 			textBoxState = TextBoxState.WatingToChange;
-			#region EM_textbox位置指定拡張
-			if (TextBoxPosChanged) ScrollBackTextBoxPos();
-			#endregion
 		}
 		public void ResetTextBoxPos()
 		{
