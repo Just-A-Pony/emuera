@@ -1,4 +1,5 @@
-﻿using MinorShift._Library;
+﻿using EvilMask.Emuera;
+using MinorShift._Library;
 using MinorShift.Emuera.Content;
 using System;
 using System.Collections.Generic;
@@ -29,38 +30,45 @@ namespace MinorShift.Emuera.GameView
 			StringBuilder sb = new StringBuilder();
 			sb.Append("<img src='");
 			sb.Append(ResourceName);
+			sb.Append('\'');
 			if (ButtonResourceName != null)
-			{
-				sb.Append("' srcb='");
-				sb.Append(ButtonResourceName);
-			}
-			if (MappingGraphName != null)
-			{
-				sb.Append("' srcm='");
-				sb.Append(MappingGraphName);
-			}
+				Utils.AddTagArg(sb, "srcb", ButtonResourceName);
+			//{
+			//	sb.Append("' srcb='");
+			//	sb.Append(ButtonResourceName);
+			//}
+			if (!string.IsNullOrEmpty(MappingGraphName))
+				Utils.AddTagArg(sb, "srcm", MappingGraphName);
+			Utils.AddTagMixedNumArg(sb, "height", raw_height);
+			Utils.AddTagMixedNumArg(sb, "width", raw_width);
+			Utils.AddTagMixedNumArg(sb, "ypos", raw_ypos);
+			//{
+			//	sb.Append("' srcm='");
+			//	sb.Append(MappingGraphName);
+			//}
 			//if(raw_height != 0)
-			if (raw_height != null && raw_height.num != 0)
-				{
-				sb.Append("' height='");
-				sb.Append(raw_height.num.ToString());
-				if (raw_height.isPx) sb.Append("px");
-			}
+			//	if (raw_height != null && raw_height.num != 0)
+			//	{
+			//	sb.Append("' height='");
+			//	sb.Append(raw_height.num.ToString());
+			//	if (raw_height.isPx) sb.Append("px");
+			//}
 			//if(raw_width != 0)
-			if(raw_width != null && raw_width.num != 0)
-				{
-				sb.Append("' width='");
-				sb.Append(raw_width.num.ToString());
-				if (raw_width.isPx) sb.Append("px");
-			}
-			//if(raw_ypos != 0)
-			if(raw_ypos != null && raw_ypos.num != 0)
-				{
-				sb.Append("' ypos='");
-				sb.Append(raw_ypos.num.ToString());
-				if (raw_ypos.isPx) sb.Append("px");
-			}
-			sb.Append("'>");
+			//if (raw_width != null && raw_width.num != 0)
+			//	{
+			//	sb.Append("' width='");
+			//	sb.Append(raw_width.num.ToString());
+			//	if (raw_width.isPx) sb.Append("px");
+			//}
+			////if(raw_ypos != 0)
+			//if(raw_ypos != null && raw_ypos.num != 0)
+			//	{
+			//	sb.Append("' ypos='");
+			//	sb.Append(raw_ypos.num.ToString());
+			//	if (raw_ypos.isPx) sb.Append("px");
+			//}
+			// sb.Append("'>");
+			sb.Append(">");
 			AltText = sb.ToString();
 			cImage = AppContents.GetSprite(ResourceName);
 			//if (cImage != null && !cImage.IsCreated)

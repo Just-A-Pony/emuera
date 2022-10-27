@@ -1009,7 +1009,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString CanNotInterpretAttributeName { get; } = new TranslatableString("<{0}>タグの属性名{1}は解釈できません");
             [Managed] public static TranslatableString NotSetAttribute { get; } = new TranslatableString("<{0}>タグに{1}属性が設定されていません");
             [Managed] public static TranslatableString NestedButtonTag { get; } = new TranslatableString("<button>又は<nonbutton>が入れ子にされています");
-            [Managed] public static TranslatableString NestedClearbuttonTag { get; } = new TranslatableString("<clearbutton>が入れ子にされています");
+            [Managed] public static TranslatableString NestedTag { get; } = new TranslatableString("<{0}>が入れ子にされています");
             [Managed] public static TranslatableString ClearbuttonAttributeCanNotInterpretNum { get; } = new TranslatableString("<{0}>タグに{1}属性の値\"{2}\"は解釈できません");
             [Managed] public static TranslatableString HtmlTagError { get; } = new TranslatableString("html文字列\"{0}\"のタグ解析中にエラーが発生しました");
             [Managed] public static TranslatableString RequireColorCode { get; } = new TranslatableString("色を表す単語又は#RRGGBB値が必要です");

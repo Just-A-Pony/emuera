@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 using System.Drawing;
 using MinorShift.Emuera.Sub;
 
@@ -96,7 +97,7 @@ namespace MinorShift.Emuera.GameView
 			if (mask != null) 
 			{
 				var offsetX = pointX - PointX - mask.PointX - Config.DrawingParam_ShapePositionShift;
-				var offsetY = pointY - GlobalStatic.Console.GetLinePointY(ParentLine.LineNo) - mask.Top;
+				var offsetY = pointY - parent.GetLinePointY(ParentLine.LineNo) - mask.Top;
 				if (offsetX > 0 && offsetX < mask.Width && offsetY > 0 && offsetY < (mask.Bottom - mask.Top))
 					return mask.GetMappingColor(offsetX, offsetY);
 			}
@@ -131,6 +132,22 @@ namespace MinorShift.Emuera.GameView
 			PointXisLocked = true;
 			RelativePointX = rel_px;
 		}
+
+		#region EM_私家版_描画拡張
+		public AConsoleDisplayPart[] EscapedParts { get { return escaped; } }
+		AConsoleDisplayPart[] escaped;
+		bool escapeFilterApplied = false;
+
+		public void FilterEscaped()
+		{
+			if (!escapeFilterApplied)
+			{
+				var e = strArray.Where(p => p.Top < 0 || p.Bottom > Config.LineHeight).ToArray();
+				if (e.Length > 0) escaped = e;
+				escapeFilterApplied = true;
+			}
+		}
+		#endregion
 
 		//indexの文字数の前方文字列とindex以降の後方文字列に分割
 		public ConsoleButtonString DivideAt(int divIndex, StringMeasure sm)
@@ -249,8 +266,15 @@ namespace MinorShift.Emuera.GameView
 		public void DrawTo(Graphics graph, int pointY, bool isBackLog, TextDrawingMode mode)
 		{
 			bool isSelecting = (IsButton) && (parent.ButtonIsSelected(this));
+			#region EM_私家版_描画拡張
+			//foreach (AConsoleDisplayPart css in strArray)
+			//	css.DrawTo(graph, pointY, isSelecting, isBackLog, mode);
 			foreach (AConsoleDisplayPart css in strArray)
+			{
+				if (css is ConsoleDivPart div && div.Depth != 0) continue;
 				css.DrawTo(graph, pointY, isSelecting, isBackLog, mode);
+			}
+			#endregion
 		}
 
 		public void GDIDrawTo(int pointY, bool isBackLog)
@@ -259,7 +283,15 @@ namespace MinorShift.Emuera.GameView
 			foreach (AConsoleDisplayPart css in strArray)
 				css.GDIDrawTo(pointY, isSelecting, isBackLog);
 		}
-		
+
+		#region EM_私家版_描画拡張
+		public void DrawPartTo(Graphics graph, AConsoleDisplayPart css, int pointY, bool isBackLog, TextDrawingMode mode)
+		{
+			bool isSelecting = (IsButton) && (parent.ButtonIsSelected(this));
+			css.DrawTo(graph, pointY, isSelecting, isBackLog, mode);
+		}
+		#endregion
+
 		public override string ToString()
 		{
 			if (strArray == null)
@@ -270,5 +302,13 @@ namespace MinorShift.Emuera.GameView
 			return str;
 		}
 
+		#region EM_私家版_描画拡張
+		public void BuildString(StringBuilder builder)
+		{
+			if (strArray == null) return;
+			foreach (AConsoleDisplayPart css in strArray)
+				builder.Append(css.ToString());
+		}
+		#endregion
 	}
 }
