@@ -163,7 +163,7 @@ namespace MinorShift.Emuera.GameView
 			//	GDI.FillRectBGColor(rect);
 			//}
 		}
-		
+
 		public override string ToString()
 		{
 			if (buttons == null)
@@ -173,5 +173,13 @@ namespace MinorShift.Emuera.GameView
 				builder.Append(button.ToString());
 			return builder.ToString();
 		}
+		#region EM_私家版_描画拡張
+		public void BuildString(StringBuilder builder)
+		{
+			if (buttons == null) return;
+			foreach (ConsoleButtonString button in buttons)
+				builder.Append(button.ToString());
+		}
+		#endregion
 	}
 }

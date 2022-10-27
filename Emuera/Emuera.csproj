@@ -60,6 +60,7 @@
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
@@ -242,6 +243,8 @@
     <Compile Include="Sub\Word.cs" />
     <Compile Include="Sub\SubWord.cs" />
     <Compile Include="Sub\EraBinaryDataWriter.cs" />
+    <Compile Include="_Library\EvilMask\ConsoleDivPart.cs" />
+    <Compile Include="_Library\EvilMask\ConsoleEscapedParts.cs" />
     <Compile Include="_Library\EvilMask\Lang.cs" />
     <Compile Include="_Library\EvilMask\Utils.cs" />
     <Compile Include="_Library\GDI.cs" />

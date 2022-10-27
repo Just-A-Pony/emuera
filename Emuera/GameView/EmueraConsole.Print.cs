@@ -10,6 +10,7 @@ using MinorShift.Emuera.GameProc.Function;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
+using EvilMask.Emuera;
 
 namespace MinorShift.Emuera.GameView
 {
@@ -39,6 +40,9 @@ namespace MinorShift.Emuera.GameView
 			CBProc.ClearScreen();
 			#endregion
 			displayLineList.Clear();
+			#region EM_私家版_描画拡張
+			ConsoleEscapedParts.Clear();
+			#endregion
 			logicalLineCount = 0;
 			lineNo = 0;
 			lastDrawnLineNo = -1;
@@ -132,6 +136,7 @@ namespace MinorShift.Emuera.GameView
 				deleteLine(1);
 			//不適正なFontのチェック
 			AConsoleDisplayPart errorStr = null;
+			#region EM_私家版_描画拡張
 			foreach (ConsoleButtonString button in line.Buttons)
 			{
 				foreach (AConsoleDisplayPart css in button.StrArray)
@@ -139,10 +144,26 @@ namespace MinorShift.Emuera.GameView
 					if (css.Error)
 					{
 						errorStr = css;
-						break;
+						goto ScanBreak;
+					}
+				}
+				if (Config.TextDrawingMode != TextDrawingMode.WINAPI)
+				{
+					button.FilterEscaped();
+					if (button.EscapedParts != null)
+					{
+						foreach (var p in button.EscapedParts)
+						{
+							p.Parent = button;
+							ConsoleEscapedParts.Add(p, lineNo, p.Depth,
+								(int)Math.Ceiling((float)p.Top / Config.LineHeight) + lineNo,
+								(int)Math.Floor((float)Math.Max(0, p.Bottom - 1) / Config.LineHeight) + lineNo);
+						}
 					}
 				}
 			}
+		ScanBreak:
+			#endregion
 			if (errorStr != null)
 			{
 				MessageBox.Show(trmb.IllegalFontError.Text, trmb.IllegalFontError.Text);
@@ -167,8 +188,15 @@ namespace MinorShift.Emuera.GameView
 			{
 				logicalLineCount = 0;
 			}
+			#region EM_私家版_描画拡張
 			if (displayLineList.Count > Config.MaxLog)
+			// displayLineList.RemoveAt(0);
+			{
+				if (Config.TextDrawingMode != TextDrawingMode.WINAPI)
+					ConsoleEscapedParts.RemoveAt(displayLineList[0].LineNo);
 				displayLineList.RemoveAt(0);
+			}
+			#endregion
 		}
 
 
@@ -179,11 +207,14 @@ namespace MinorShift.Emuera.GameView
 			#endregion
 			int delNum = 0;
 			int num = argNum;
+			#region EM_私家版_描画拡張
+			int topLineNo = int.MaxValue;
 			while (delNum < num)
 			{
 				if (displayLineList.Count == 0)
 					break;
 				ConsoleDisplayLine line = displayLineList[displayLineList.Count - 1];
+				topLineNo = line.LineNo;
 				displayLineList.RemoveAt(displayLineList.Count - 1);
 				lineNo--;
 				if (line.IsLogicalLine)
@@ -192,6 +223,9 @@ namespace MinorShift.Emuera.GameView
 					logicalLineCount--;
 				}
 			}
+			if (topLineNo != int.MaxValue && Config.TextDrawingMode != TextDrawingMode.WINAPI)
+				ConsoleEscapedParts.Remove(topLineNo);
+			#endregion
 			if (lineNo < 0)
 				lineNo += int.MaxValue;
 			lastDrawnLineNo = -1;

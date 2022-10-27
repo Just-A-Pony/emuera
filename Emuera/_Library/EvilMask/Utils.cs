@@ -1,4 +1,5 @@
 ﻿using MinorShift.Emuera.GameData.Expression;
+using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.Sub;
 using System;
 using System.Collections.Generic;
@@ -6,6 +7,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Text;
 
 namespace EvilMask.Emuera
 {
@@ -13,6 +15,42 @@ namespace EvilMask.Emuera
 	{
 		static Stopwatch stopwatch = new Stopwatch();
 		static Int64 stopwatch_base = DateTime.Now.Ticks;
+		public static void ParseMixedNum(ref MixedNum num, string tag, string attr, string attrValue, string word)
+		{
+			if (num == null) num = new MixedNum();
+			//if (height != 0)
+			if (num.num != 0)
+				throw new CodeEE(string.Format(Lang.Error.DuplicateAttribute.Text, tag, word));
+			if (attrValue.EndsWith("px", StringComparison.OrdinalIgnoreCase))
+			{
+				if (!int.TryParse(attrValue.Substring(0, attrValue.Length - 2), out num.num))
+					throw new CodeEE(string.Format(Lang.Error.AttributeCanNotInterpretNum.Text, tag, attr));
+				num.isPx = true;
+			}
+			//if (!int.TryParse(attrValue, out height))
+			else if (!int.TryParse(attrValue, out num.num))
+				throw new CodeEE(string.Format(Lang.Error.AttributeCanNotInterpretNum.Text, tag, attr));
+		}
+		public static void AddTagMixedNumArg(StringBuilder sb, string name, MixedNum num)
+		{
+			if (num != null && num.num != 0)
+			{
+				sb.Append(' ');
+				sb.Append(name);
+				sb.Append("='");
+				sb.Append(num.num.ToString());
+				if (num.isPx) sb.Append("px");
+				sb.Append('\'');
+			}
+		}
+		public static void AddTagArg(StringBuilder sb, string name, string value)
+		{
+			sb.Append(' ');
+			sb.Append(name);
+			sb.Append("='");
+			sb.Append(value);
+			sb.Append('\'');
+		}
 		public static Int64 TimePoint()
 		{
 			if (!stopwatch.IsRunning) stopwatch.Start();

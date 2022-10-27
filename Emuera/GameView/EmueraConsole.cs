@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Linq;
 using MinorShift._Library;
 using MinorShift.Emuera.Sub;
 //using MinorShift.Emuera.GameData;
@@ -17,6 +18,7 @@ using MinorShift.Emuera.Content;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
+using EvilMask.Emuera;
 
 namespace MinorShift.Emuera.GameView
 {
@@ -234,7 +236,23 @@ namespace MinorShift.Emuera.GameView
 		#endregion
 
 		MinorShift.Emuera.GameProc.Process emuera;
-		ConsoleState state = ConsoleState.Initializing;
+		// ConsoleState state = ConsoleState.Initializing;
+		#region EM_私家版_描画拡張
+		ConsoleState _state = ConsoleState.Initializing;
+		ConsoleState state {
+			get { return _state; }
+			set { 
+				switch(value)
+				{
+					case ConsoleState.Quit:
+					case ConsoleState.Error:
+						ConsoleEscapedParts.Clear();
+						break;
+				}
+				_state = value;
+			}
+		}
+		#endregion
 		public bool Enabled { get { return window.Created; } }
 
 		/// <summary>
@@ -879,7 +897,6 @@ namespace MinorShift.Emuera.GameView
 			if (selectingButton != null)
 			{
 				// マスク色をRESULT:6にボタンの値が代入される
-				GlobalStatic.Process.InputInteger(6, selectingButton.GetMappedColor(point.X, point.Y));
 				if (!selectingButton.IsInteger)
 				{
 					GlobalStatic.VEvaluator.RESULTS = selectingButton.Inputs;
@@ -1344,6 +1361,9 @@ namespace MinorShift.Emuera.GameView
 
 		}
 
+		#region EM_私家版_描画拡張
+		Dictionary<int, List<AConsoleDisplayPart>> escapedParts;
+		#endregion
 		#region EM_私家版_imgマースク
 		public int GetLinePointY(int lineNo)
 		{
@@ -1406,29 +1426,72 @@ namespace MinorShift.Emuera.GameView
 			{
 				graph.Clear(this.bgColor);
 				//1823 cbg追加
-				for (int j = 0; j < cbgList.Count; j++)
+				#region EM_私家版_描画拡張
+				if (escapedParts == null) escapedParts = new Dictionary<int, List<AConsoleDisplayPart>>();
+				escapedParts.Clear();
+				ConsoleEscapedParts.GetPartsInRange(topLineNo, bottomLineNo, escapedParts);
+				var edepth = escapedParts.Keys.ToArray();
+				Array.Sort(edepth, (int a, int b) => -a.CompareTo(b));
+				int eidx = 0, cidx = 0;
+				int topPointY = pointY;
+				while (eidx < edepth.Length || cidx < cbgList.Count)
 				{
-					if (cbgList[j].zdepth == 0)
+					var depth = Math.Max(eidx < edepth.Length ? edepth[eidx] : int.MinValue,
+						cidx < cbgList.Count ? cbgList[cidx].zdepth : int.MinValue);
+					if (cidx < cbgList.Count && cbgList[cidx].zdepth == depth)
 					{
-						//1823以前の文字列描画
+						// 先にCBGを描画
+						ASprite img = cbgList[cidx].Img;
+						if (cbgList[cidx].isButton && cbgList[cidx].buttonValue == selectingCBGButtonInt)
+							img = cbgList[cidx].ImgB;
+						if (img != null && img.IsCreated)
+							img.GraphicsDraw(graph, new Point(cbgList[cidx].x, cbgList[cidx].y + window.MainPicBox.Height - img.DestBaseSize.Height));
+						cidx++;
+					}
+					if (depth == 0)
+					{
+						// 普通のパーツを描画
 						for (int i = topLineNo; i <= bottomLineNo; i++)
 						{
 							displayLineList[i].DrawTo(graph, pointY, isBackLog, true, Config.TextDrawingMode);
 							pointY += Config.LineHeight;
 						}
-						continue;
 					}
-					ASprite img = cbgList[j].Img;
-					if (cbgList[j].isButton && cbgList[j].buttonValue == selectingCBGButtonInt)
-						img = cbgList[j].ImgB;
-					if (img == null || !img.IsCreated)
-						continue;
-					img.GraphicsDraw(graph, new Point(cbgList[j].x, cbgList[j].y + window.MainPicBox.Height - img.DestBaseSize.Height));
-					//Bitmap bmp = img.Bitmap;
-					//graph.DrawImage(bmp,
-					//	new Rectangle(cbgList[j].x + img.DestBasePosition.X, window.MainPicBox.Height - img.SrcRectangle.Height + cbgList[j].y + img.DestBasePosition.Y, img.SrcRectangle.Width, img.SrcRectangle.Height),
-					//	img.SrcRectangle, GraphicsUnit.Pixel);
+					if (eidx < edepth.Length && edepth[eidx] == depth)
+					{
+						// 行範囲を超えたパーツを描画
+						foreach(var p in escapedParts[edepth[eidx]])
+						{
+							var baseLineNo = p.Parent.ParentLine.LineNo;
+							p.Parent.DrawPartTo(graph, p, topPointY + (baseLineNo - topLineNo) * Config.LineHeight, isBackLog, Config.TextDrawingMode);
+						}
+						eidx++;
+					}
 				}
+				#endregion
+				//for (int j = 0; j < cbgList.Count; j++)
+				//{
+				//	if (cbgList[j].zdepth == 0)
+				//	{
+				//		//1823以前の文字列描画
+				//		for (int i = topLineNo; i <= bottomLineNo; i++)
+				//		{
+				//			displayLineList[i].DrawTo(graph, pointY, isBackLog, true, Config.TextDrawingMode);
+				//			pointY += Config.LineHeight;
+				//		}
+				//		continue;
+				//	}
+				//	ASprite img = cbgList[j].Img;
+				//	if (cbgList[j].isButton && cbgList[j].buttonValue == selectingCBGButtonInt)
+				//		img = cbgList[j].ImgB;
+				//	if (img == null || !img.IsCreated)
+				//		continue;
+				//	img.GraphicsDraw(graph, new Point(cbgList[j].x, cbgList[j].y + window.MainPicBox.Height - img.DestBaseSize.Height));
+				//	//Bitmap bmp = img.Bitmap;
+				//	//graph.DrawImage(bmp,
+				//	//	new Rectangle(cbgList[j].x + img.DestBasePosition.X, window.MainPicBox.Height - img.SrcRectangle.Height + cbgList[j].y + img.DestBasePosition.Y, img.SrcRectangle.Width, img.SrcRectangle.Height),
+				//	//	img.SrcRectangle, GraphicsUnit.Pixel);
+				//}
 
 			}
 			//ToolTip描画
@@ -1746,6 +1809,9 @@ namespace MinorShift.Emuera.GameView
 			return pos;
 		}
 
+		#region EM_私家版_描画拡張
+		int[] dummy = new int[] { };
+		#endregion
 		/// <summary>
 		/// マウス位置をボタンの選択状態に反映させる
 		/// </summary>
@@ -1815,39 +1881,83 @@ namespace MinorShift.Emuera.GameView
 				topLineNo = 0;
 			int relPointY = pointY - window.MainPicBox.Height;
 			//下から上へ探索し発見次第打ち切り
-			for (int i = bottomLineNo; i >= topLineNo; i--)
+			#region EM_私家版_描画拡張
+			var edepth = escapedParts == null ? dummy : escapedParts.Keys.ToArray();
+			Array.Sort(edepth);
+			int eidx = 0;
+			bool zeroTested = false;
+			int topPointY = pointY;
+			var bottomLineBase = window.MainPicBox.Height - Config.LineHeight;
+			while (eidx < edepth.Length)
 			{
-				relPointY += Config.LineHeight;
-				curLine = displayLineList[i];
-				
-				for (int b = 0; b < curLine.Buttons.Length; b++)
+				var depth = edepth[eidx];
+				if (!zeroTested && depth >= 0)
 				{
-					ConsoleButtonString button = curLine.Buttons[curLine.Buttons.Length - b - 1];
-					if(button == null || button.StrArray == null)
-						continue;
-					if ((button.PointX <= pointX) && (button.PointX + button.Width >= pointX))
+					depth = 0;
+					zeroTested = true;
+					// 普通のパーツのヒットテスト
+					for (int i = bottomLineNo; i >= topLineNo; i--)
 					{
-						//if (relPointY >= 0 && relPointY <= Config.FontSize)
-						//{
-						//	pointing = button;
-						//	if(pointing.IsButton)
-						//		goto breakfor;
-						//}
-						foreach(AConsoleDisplayPart part in button.StrArray)
+						relPointY += Config.LineHeight;
+						curLine = displayLineList[i];
+
+						for (int b = 0; b < curLine.Buttons.Length; b++)
 						{
-							if(part == null)
+							ConsoleButtonString button = curLine.Buttons[curLine.Buttons.Length - b - 1];
+							if (button == null || button.StrArray == null)
 								continue;
-							if ((part.PointX <= pointX) && (part.PointX + part.Width >= pointX)
-								&& (relPointY >= part.Top) && (relPointY <= part.Bottom))
+							if ((button.PointX <= pointX) && (button.PointX + button.Width >= pointX))
 							{
-								pointing = button;
-								if (pointing.IsButton)
-									goto breakfor;
+								//if (relPointY >= 0 && relPointY <= Config.FontSize)
+								//{
+								//	pointing = button;
+								//	if(pointing.IsButton)
+								//		goto breakfor;
+								//}
+								foreach (AConsoleDisplayPart part in button.StrArray)
+								{
+									if (part == null || part is ConsoleDivPart)
+										continue;
+									if ((part.PointX <= pointX) && (part.PointX + part.Width >= pointX)
+										&& (relPointY >= part.Top) && (relPointY <= part.Bottom))
+									{
+										pointing = button;
+										if (pointing.IsButton)
+											goto breakfor;
+									}
+								}
 							}
 						}
 					}
 				}
+				if (eidx < edepth.Length && edepth[eidx] == depth)
+				{
+					// 行範囲を超えたパーツのヒットテスト
+					foreach (var part in escapedParts[depth])
+					{
+						if (part is ConsoleDivPart div)
+						{
+							var lineY = bottomLineBase + (div.Parent.ParentLine.LineNo - bottomLineNo) * Config.LineHeight;
+							var childPointing = div.TestChildHitbox(pointX, pointY, lineY);
+							if (childPointing != null)
+							{
+								pointing = childPointing;
+								if (pointing.IsButton)
+									goto breakfor;
+							}
+						}
+						else if ((part.PointX <= pointX) && (part.PointX + part.Width >= pointX)
+							&& (relPointY >= part.Top) && (relPointY <= part.Bottom))
+						{
+							pointing = part.Parent;
+							if (pointing.IsButton)
+								goto breakfor;
+						}
+					}
+					eidx++;
+				}
 			}
+			#endregion
 
 
 			//int posy_bottom2up = window.MainPicBox.Height - pointY;

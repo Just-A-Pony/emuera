@@ -516,6 +516,10 @@ namespace MinorShift.Emuera
 //			if (console.IsWaitingPrimitiveMouse)
 			{
 				console.MouseDown(e.Location, e.Button);
+				#region EM_私家版_INPUT系機能拡張
+				if (vScrollBar.Value == vScrollBar.Maximum)
+					GlobalStatic.Process.InputInteger(6, console.SelectingButton.GetMappedColor(e.X, e.Y));
+				#endregion
 				return;
 			}
 			bool isBacklog = vScrollBar.Value != vScrollBar.Maximum;
@@ -545,7 +549,8 @@ namespace MinorShift.Emuera
 			{
 				if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
 				{
-					GlobalStatic.Process.InputInteger(3, console.SelectingButton.GetMappedColor(e.X, e.Y));
+					if (!isBacklog)
+						GlobalStatic.Process.InputInteger(3, console.SelectingButton.GetMappedColor(e.X, e.Y));
 					if (modifiersWhileWaintingInputWithMouse != null)
 					{
 						GlobalStatic.Process.InputInteger(2, (long)modifiersWhileWaintingInputWithMouse);
