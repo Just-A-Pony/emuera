@@ -14,6 +14,7 @@ namespace EvilMask.Emuera
 	{
 		static readonly DataTable dt = new DataTable();
 		static readonly Dictionary<Int64, AConsoleDisplayPart> parts = new Dictionary<long, AConsoleDisplayPart>();
+		public static bool Changed { get; private set; }
 		static ConsoleEscapedParts()
 		{
 			dt.Columns.Add("line", typeof(int));
@@ -26,6 +27,7 @@ namespace EvilMask.Emuera
 		{
 			dt.Clear();
 			parts.Clear();
+			Changed = false;
 		}
 		public static void Add(AConsoleDisplayPart part, int line, int depth, int top, int bottom)
 		{
@@ -38,6 +40,7 @@ namespace EvilMask.Emuera
 			row[4] = id;
 			dt.Rows.Add(row);
 			parts.Add(id, part);
+			Changed = true;
 		}
 		public static void Remove(int line)
 		{
@@ -45,6 +48,7 @@ namespace EvilMask.Emuera
 			{
 				parts.Remove((Int64)row[4]);
 				dt.Rows.Remove(row);
+				Changed = true;
 			}
 		}
 		public static void RemoveAt(int line)
@@ -53,10 +57,12 @@ namespace EvilMask.Emuera
 			{
 				parts.Remove((Int64)row[4]);
 				dt.Rows.Remove(row);
+				Changed = true;
 			}
 		}
 		public static void GetPartsInRange(int top, int bottom, Dictionary<int, List<AConsoleDisplayPart>> rmap)
 		{
+			if (rmap == null) return;
 			rmap.Clear();
 			foreach (var row in DataTableExtensions.AsEnumerable(dt)
 				.Where(r => (int)r[2] <= bottom && (int)r[3] >= top && r[0] is int line 
@@ -71,6 +77,7 @@ namespace EvilMask.Emuera
 				}
 				list.Add(parts[(Int64)row[4]]);
 			}
+			Changed = false;
 		}
 	}
 }
