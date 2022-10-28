@@ -417,9 +417,24 @@ namespace MinorShift.Emuera.GameProc.Function
 						warn(string.Format(trerror.CanNotOmitArg.Text, argCount), line, 2, false);
 						return null;
 					}
+					Type type = null;
+					//switch (keyword)
+					//{
+					//	case "default": type = typeof(Int64);  break;
+					//}
+					if (type != null && type != v.GetOperandType())
+					{
+						warn(string.Format(trerror.IncorrectArg.Text, argCount), line, 2, false);
+						continue;
+					}
 					if (Config.NeedReduceArgumentOnLoad) v = v.Restructure(exm);
 					values.Add(v);
 					argCount++;
+				}
+				if (opts.Count == 0)
+				{
+					warn(string.Format(trerror.NotEnoughArguments.Text), line, 2, false);
+					return null;
 				}
 				return new SpDtColumnOptions(dt, colum, opts.ToArray(), values.ToArray());
 			}

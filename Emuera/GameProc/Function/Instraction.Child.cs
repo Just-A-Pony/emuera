@@ -1893,7 +1893,6 @@ namespace MinorShift.Emuera.GameProc.Function
 					}
 					idx++;
 				}
-				exm.VEvaluator.RESULT = 1;
 			}
 		}
 		#endregion
