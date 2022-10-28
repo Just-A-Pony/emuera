@@ -311,7 +311,7 @@ namespace EvilMask.Emuera
                     [Managed] public static TranslatableString TotalBuffer { get; } = new TranslatableString("総バッファサイズ");
                     [Managed] public static TranslatableString LinesToScroll { get; } = new TranslatableString("スクロールの行数");
                     [Managed] public static TranslatableString UpdateTime { get; } = new TranslatableString("クリップボードの更新間隔(ミリ秒)");
-                    [Managed] public static TranslatableString ScrollThrough { get; } = new TranslatableString("Ctrl+↑、Ctrl+↓、またはCtrl+マイスホイールで履歴をスクロールできます");
+                    [Managed] public static TranslatableString ScrollThrough { get; } = new TranslatableString("Ctrl+↑、Ctrl+↓、またはCtrl+マウスホイールで履歴をスクロールできます");
                 }
 
                 [Managed] public static TranslatableString ChangeWontTakeEffectUntilRestart { get; } = new TranslatableString("※変更は再起動するまで反映されません");
