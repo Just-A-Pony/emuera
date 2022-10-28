@@ -22,6 +22,7 @@ namespace EvilMask.Emuera
 			dt.Columns.Add("top", typeof(int));
 			dt.Columns.Add("bottom", typeof(int));
 			dt.Columns.Add("id", typeof(Int64));
+			dt.Columns.Add("div", typeof(bool));
 		}
 		public static void Clear()
 		{
@@ -38,6 +39,7 @@ namespace EvilMask.Emuera
 			row[2] = top;
 			row[3] = bottom;
 			row[4] = id;
+			row[5] = part is ConsoleDivPart;
 			dt.Rows.Add(row);
 			parts.Add(id, part);
 			Changed = true;
@@ -65,8 +67,8 @@ namespace EvilMask.Emuera
 			if (rmap == null) return;
 			rmap.Clear();
 			foreach (var row in DataTableExtensions.AsEnumerable(dt)
-				.Where(r => (int)r[2] <= bottom && (int)r[3] >= top && r[0] is int line 
-				&& ((int)r[1] !=0 || top > line || line > bottom)))
+				.Where(r => (int)r[2] <= bottom && (int)r[3] >= top && r[0] is int line
+				&& ((bool)r[5] || top > line || line > bottom)))
 			{
 				List<AConsoleDisplayPart> list = null;
 				rmap.TryGetValue((int)row[1], out list);

@@ -1815,7 +1815,7 @@ namespace MinorShift.Emuera.GameView
 		}
 
 		#region EM_私家版_描画拡張
-		int[] dummy = new int[] { };
+		int[] dummy = new int[] { 0 };
 		#endregion
 		/// <summary>
 		/// マウス位置をボタンの選択状態に反映させる
@@ -1892,11 +1892,10 @@ namespace MinorShift.Emuera.GameView
 				if (escapedParts == null) escapedParts = new Dictionary<int, List<AConsoleDisplayPart>>();
 				ConsoleEscapedParts.GetPartsInRange(topLineNo, bottomLineNo, escapedParts);
 			}
-			var edepth = escapedParts == null ? dummy : escapedParts.Keys.ToArray();
+			var edepth = escapedParts == null || escapedParts.Keys.Count == 0 ? dummy : escapedParts.Keys.ToArray();
 			Array.Sort(edepth);
 			int eidx = 0;
 			bool zeroTested = false;
-			int topPointY = pointY;
 			var bottomLineBase = window.MainPicBox.Height - Config.LineHeight;
 			while (eidx < edepth.Length)
 			{
@@ -1943,27 +1942,28 @@ namespace MinorShift.Emuera.GameView
 				if (eidx < edepth.Length && edepth[eidx] == depth)
 				{
 					// 行範囲を超えたパーツのヒットテスト
-					foreach (var part in escapedParts[depth])
-					{
-						if (part is ConsoleDivPart div)
+					if (depth != 0 || escapedParts.ContainsKey(depth))
+						foreach (var part in escapedParts[depth])
 						{
-							var lineY = bottomLineBase + (div.Parent.ParentLine.LineNo - bottomLineNo) * Config.LineHeight;
-							var childPointing = div.TestChildHitbox(pointX, pointY, lineY);
-							if (childPointing != null)
+							if (part is ConsoleDivPart div)
 							{
-								pointing = childPointing;
+								var lineY = bottomLineBase + (div.Parent.ParentLine.LineNo - bottomLineNo) * Config.LineHeight;
+								var childPointing = div.TestChildHitbox(pointX, pointY, lineY);
+								if (childPointing != null)
+								{
+									pointing = childPointing;
+									if (pointing.IsButton)
+										goto breakfor;
+								}
+							}
+							else if ((part.PointX <= pointX) && (part.PointX + part.Width >= pointX)
+								&& (relPointY >= part.Top) && (relPointY <= part.Bottom))
+							{
+								pointing = part.Parent;
 								if (pointing.IsButton)
 									goto breakfor;
 							}
 						}
-						else if ((part.PointX <= pointX) && (part.PointX + part.Width >= pointX)
-							&& (relPointY >= part.Top) && (relPointY <= part.Bottom))
-						{
-							pointing = part.Parent;
-							if (pointing.IsButton)
-								goto breakfor;
-						}
-					}
 					eidx++;
 				}
 			}
