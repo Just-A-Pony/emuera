@@ -166,7 +166,7 @@ namespace MinorShift.Emuera
 		public void SetTextBoxPos(int xOffset, int yOffset, int width)
 		{
 			nextTextBoxInfo.Left = Math.Max(0, Math.Min(xOffset, ClientSize.Width - 50));
-			nextTextBoxInfo.Top = Math.Min(Math.Max(ClientSize.Height - yOffset, 0), ClientSize.Height - richTextBox1.Height);
+			nextTextBoxInfo.Top = Math.Min(Math.Max(ClientSize.Height - yOffset - richTextBox1.Height, 0), ClientSize.Height - richTextBox1.Height);
 			nextTextBoxInfo.Size = new Size(Math.Max(50, Math.Min(width, ClientSize.Width - richTextBox1.Left)), richTextBox1.Size.Height);
 			textBoxState = TextBoxState.WatingToChange;
 		}
