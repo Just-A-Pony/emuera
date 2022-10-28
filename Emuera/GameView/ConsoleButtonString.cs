@@ -143,6 +143,7 @@ namespace MinorShift.Emuera.GameView
 			if (!escapeFilterApplied)
 			{
 				var e = strArray.Where(p => p.Top < 0 || p.Bottom > Config.LineHeight).ToArray();
+				foreach (var p in e) if (p is ConsoleDivPart div) div.IsEscaped = true;
 				if (e.Length > 0) escaped = e;
 				escapeFilterApplied = true;
 			}
@@ -271,7 +272,7 @@ namespace MinorShift.Emuera.GameView
 			//	css.DrawTo(graph, pointY, isSelecting, isBackLog, mode);
 			foreach (AConsoleDisplayPart css in strArray)
 			{
-				if (css is ConsoleDivPart div && div.Depth != 0) continue;
+				if (css is ConsoleDivPart div && (div.Depth != 0 || div.IsEscaped)) continue;
 				css.DrawTo(graph, pointY, isSelecting, isBackLog, mode);
 			}
 			#endregion

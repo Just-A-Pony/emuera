@@ -236,6 +236,9 @@ namespace MinorShift.Emuera.GameProc.Function
 			#region EM_DT
 			argb[FunctionArgType.SP_DT_COLUMN_OPTIONS] = new SP_DT_COLUMN_OPTIONS_ArgumentBuilder();
 			#endregion
+			#region EM_私家版_HTML_PRINT拡張
+			argb[FunctionArgType.SP_HTML_PRINT] = new SP_HTML_PRINT_ArgumentBuilder();
+			#endregion
 		}
 
 		#region EM_私家版_HTMLパラメータ拡張
@@ -342,13 +345,59 @@ namespace MinorShift.Emuera.GameProc.Function
 			}
 		}
 		#endregion
+		#region EM_私家版_HTML_PRINT拡張
+		private sealed class SP_HTML_PRINT_ArgumentBuilder : ArgumentBuilder
+		{
+			public SP_HTML_PRINT_ArgumentBuilder()
+			{
+				this.argumentTypeArray = null;// new Type[] { typeof(string), typeof(string), typeof(Int64), typeof(Int64), typeof(Int64) };
+			}
+			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
+			{
+				StringStream st = line.PopArgumentPrimitive();
+				WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AnalyzePrintV);
+				IOperandTerm[] args = ExpressionParser.ReduceArguments(wc, ArgsEndWith.EoL, false);
+				if (args.Length < 1)
+				{
+					warn(trerror.NotEnoughArguments.Text, line, 2, false);
+					return null;
+				}
+				if (args.Length > 2)
+				{
+					warn(trerror.TooManyArg.Text, line, 2, false);
+					return null;
+				}
+				bool constStr = false, constInt = true;
+				for (int i = 0; i < args.Length; i++)
+				{
+					if (i == 0 && args[i] == null)
+					{ warn(string.Format(trerror.CanNotOmitArg.Text, i + 1), line, 2, false); return null; }
+
+					if (i == 0 && args[i].GetOperandType() != typeof(string))
+					{ warn(string.Format(trerror.IncorrectArg.Text, i + 1), line, 2, false); return null; }
+					if (i == 1 && args[i].GetOperandType() != typeof(Int64))
+					{ warn(string.Format(trerror.IncorrectArg.Text, i + 1), line, 2, false); return null; }
+
+					args[i] = args[i].Restructure(exm);
+					if (i == 0 && args[i] is SingleTerm) constStr = true;
+					if (i == 1 && !(args[i] is SingleTerm)) constInt = false;
+				}
+				var ret = new SpHtmlPrint(args[0], args.Length > 1 ? args[1] : null);
+				if (constStr&&constInt)
+				{
+					ret.ConstInt = args.Length > 1 ? args[1].GetIntValue(exm) : 0;
+					ret.ConstStr = args[0].GetStrValue(exm);
+				}
+				return ret;
+			}
+		}
+		#endregion
 		#region EM_DT
 		private sealed class SP_DT_COLUMN_OPTIONS_ArgumentBuilder : ArgumentBuilder
 		{
 			public SP_DT_COLUMN_OPTIONS_ArgumentBuilder()
 			{
 				this.argumentTypeArray = null;// new Type[] { typeof(string), typeof(string), typeof(Int64), typeof(Int64), typeof(Int64) };
-				this.minArg = 1;
 			}
 			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 			{

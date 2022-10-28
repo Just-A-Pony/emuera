@@ -119,6 +119,14 @@ namespace MinorShift.Emuera.GameView
 			m_stringList.Clear();
 		}
 
+		#region EM_私家版_HTML_PRINT拡張
+		public void AppendButton(ConsoleButtonString button)
+		{
+			fromCssToButton();
+			m_buttonList.Add(button);
+		}
+		#endregion
+
 		public bool IsEmpty
 		{
 			get

@@ -248,19 +248,25 @@ namespace MinorShift.Emuera.GameProc.Function
 			public HTML_PRINT_Instruction()
 			{
 				flag = EXTENDED | METHOD_SAFE;
-				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.STR_EXPRESSION);
+				#region EM_私家版_HTML_PRINT拡張
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_HTML_PRINT);
+				#endregion
 			}
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                if (GlobalStatic.Process.SkipPrint)
+				if (GlobalStatic.Process.SkipPrint)
                     return;
-                string str;
-				if (func.Argument.IsConst)
-					str = func.Argument.ConstStr;
-				else
-					str = ((ExpressionArgument)func.Argument).Term.GetStrValue(exm);
-				exm.Console.PrintHtml(str);
+				#region EM_私家版_HTML_PRINT拡張
+				var arg = (SpHtmlPrint)func.Argument;
+                // string str;
+				if (arg.IsConst) exm.Console.PrintHtml(arg.ConstStr, arg.ConstInt != 0);
+				else exm.Console.PrintHtml(arg.Str.GetStrValue(exm), arg.Opt == null ? false : arg.Opt.GetIntValue(exm) != 0);
+				//if (func.Argument.IsConst)
+				//	str = func.Argument.ConstStr;
+				//else
+				//	str = ((ExpressionArgument)func.Argument).Term.GetStrValue(exm);
+				#endregion
 			}
 		}
 

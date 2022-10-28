@@ -69,6 +69,18 @@ namespace MinorShift.Emuera.GameProc.Function
 		readonly public IOperandTerm Column;
 	}
 	#endregion
+	#region EM_私家版_HTML_PRINT拡張
+	internal sealed class SpHtmlPrint : Argument
+	{
+		public SpHtmlPrint(IOperandTerm str, IOperandTerm opt)
+		{
+			Str = str;
+			Opt = opt;
+		}
+		readonly public IOperandTerm Str;
+		readonly public IOperandTerm Opt;
+	}
+	#endregion
 	internal abstract class Argument
 	{
 		public bool IsConst;

@@ -383,7 +383,6 @@ namespace MinorShift.Emuera.GameView
 			return ret;
 		}
 
-
 		#region EM_私家版_描画拡張
 		sealed class HtmlParentInfo
 		{
@@ -401,25 +400,36 @@ namespace MinorShift.Emuera.GameView
 		/// <returns></returns>
 		public static ConsoleDisplayLine[] Html2DisplayLine(string str, StringMeasure sm, EmueraConsole console)
 		{
-			return html2DisplayLine(str, sm, console, null);
+			return html2DisplayLine(str, sm, console, null, null);
 		}
-		static ConsoleDisplayLine[] html2DisplayLine(string str, StringMeasure sm, EmueraConsole console, HtmlParentInfo parent)
+		public static ConsoleButtonString[] Html2ButtonList(string str, StringMeasure sm, EmueraConsole console)
+		{
+			var parts = new List<ConsoleButtonString>();
+			html2DisplayLine(str, sm, console, null, parts);
+			return parts.ToArray();
+		}
+		static ConsoleDisplayLine[] html2DisplayLine(string str, StringMeasure sm, EmueraConsole console, HtmlParentInfo parent, List<ConsoleButtonString> buttonsOutput)
 		#endregion
 		{
+			#region EM_私家版_HTML_PRINT拡張
 			List<AConsoleDisplayPart> cssList = new List<AConsoleDisplayPart>();
-			List<ConsoleButtonString> buttonList = new List<ConsoleButtonString>();
+			// List<ConsoleButtonString> buttonList = new List<ConsoleButtonString>();
+			List<ConsoleButtonString> buttonList = buttonsOutput == null ? new List<ConsoleButtonString>() : buttonsOutput;
+			#endregion
 			// StringStream st = new StringStream(str);
 			StringStream st = parent != null ? parent.Stream : new StringStream(str);
 			int found;
 			bool hasComment = parent != null ? parent.HasComment : str.IndexOf("<!--") >= 0;
 			bool hasReturn = parent != null ? parent.HasReturn : str.IndexOf('\n') >= 0;
 			HtmlAnalzeState state = new HtmlAnalzeState();
+			#region EM_私家版_HTML_divタグ
 			if (parent != null)
 			{
 				state.SubDivisionWidth = parent.State.SubDivisionWidth;
 				state.CurrentDivTag = parent.State.CurrentDivTag;
 				state.StartingSubDivision = parent.State.StartingSubDivision;
 			}
+			#endregion
 			while (!st.EOS)
 			{
 				found = st.Find('<');
@@ -488,7 +498,7 @@ namespace MinorShift.Emuera.GameView
 									HasReturn = hasReturn,
 									State = state,
 									Stream = st,
-								});
+								}, null);
 								var tagInfo = state.CurrentDivTag;
 								state.CurrentDivTag = null;
 								state.StartingSubDivision = false;
@@ -524,8 +534,11 @@ namespace MinorShift.Emuera.GameView
 				throw new CodeEE(trerror.TagIsNotClosed.Text);
 			if (cssList.Count > 0)
 				buttonList.Add(cssToButton(cssList, state, console));
+			#region EM_私家版_HTML_PRINT拡張
+			if (buttonsOutput != null) return null;
+			#endregion
 
-			foreach(ConsoleButtonString button in buttonList)
+			foreach (ConsoleButtonString button in buttonList)
 			{
 				if (button != null && button.PointXisLocked)
 				{
