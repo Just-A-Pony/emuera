@@ -300,7 +300,7 @@ namespace EvilMask.Emuera
                     [Managed] public static TranslatableString IgnoreTags { get; } = new TranslatableString("テキスト中の<>タグを無視する");
                     [Managed] public static TranslatableString ReplaceTags { get; } = new TranslatableString("<>を次の文で置き換える");
                     [Managed] public static TranslatableString NewLineOnly { get; } = new TranslatableString("新しい行のみコピーする");
-                    [Managed] public static TranslatableString ClearClipboard { get; } = new TranslatableString("画面のリフレッシュ時にクリップボードとバッファを消去する");
+                    [Managed] public static TranslatableString ClearClipboard { get; } = new TranslatableString("タイトル画面に戻った時にクリップボードとバッファを消去する");
                     [Managed] public static TranslatableString TriggerToUse { get; } = new TranslatableString("クリップボードにコピーするタイミング");
                     [Managed] public static TranslatableString LClick { get; } = new TranslatableString("左クリック時");
                     [Managed] public static TranslatableString MClick { get; } = new TranslatableString("ホイールクリック時");
