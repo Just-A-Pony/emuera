@@ -43,7 +43,7 @@ namespace MinorShift.Emuera.GameView
 		Color color;
 		string altHeadTag;
 		readonly ConsoleDisplayLine[] children;
-
+		public bool IsEscaped { get; set; } = false;
 		public override int Top { get { return PointY; } }
 		public override int Bottom { get { return PointY + Height; } }
 
