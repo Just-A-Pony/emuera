@@ -15,21 +15,19 @@ namespace EvilMask.Emuera
 	{
 		static Stopwatch stopwatch = new Stopwatch();
 		static Int64 stopwatch_base = DateTime.Now.Ticks;
-		public static void ParseMixedNum(ref MixedNum num, string tag, string attr, string attrValue, string word)
+		public static void ParseMixedNum(ref MixedNum num, string tag, string word, string attrValue)
 		{
 			if (num == null) num = new MixedNum();
-			//if (height != 0)
-			if (num.num != 0)
+			else
 				throw new CodeEE(string.Format(Lang.Error.DuplicateAttribute.Text, tag, word));
 			if (attrValue.EndsWith("px", StringComparison.OrdinalIgnoreCase))
 			{
 				if (!int.TryParse(attrValue.Substring(0, attrValue.Length - 2), out num.num))
-					throw new CodeEE(string.Format(Lang.Error.AttributeCanNotInterpretNum.Text, tag, attr));
+					throw new CodeEE(string.Format(Lang.Error.AttributeCanNotInterpretNum.Text, tag, word));
 				num.isPx = true;
 			}
-			//if (!int.TryParse(attrValue, out height))
 			else if (!int.TryParse(attrValue, out num.num))
-				throw new CodeEE(string.Format(Lang.Error.AttributeCanNotInterpretNum.Text, tag, attr));
+				throw new CodeEE(string.Format(Lang.Error.AttributeCanNotInterpretNum.Text, tag, word));
 		}
 		public static void AddTagMixedNumArg(StringBuilder sb, string name, MixedNum num)
 		{

@@ -13,6 +13,8 @@ namespace MinorShift.Emuera.GameView
 		public ConsoleDivPart(MixedNum xPos, MixedNum yPos, MixedNum width, MixedNum height, int depth, int color, ConsoleDisplayLine[] childs)
 		{
 			StringBuilder sb = new StringBuilder();
+			width.num = Math.Abs(width.num);
+			height.num = Math.Abs(height.num);
 			sb.Append("<div");
 			Utils.AddTagMixedNumArg(sb, "xpos", xPos);
 			Utils.AddTagMixedNumArg(sb, "ypos", yPos);

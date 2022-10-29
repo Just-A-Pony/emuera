@@ -981,15 +981,15 @@ namespace MinorShift.Emuera.GameView
 							}
 							else if (word.Code.Equals("height", StringComparison.OrdinalIgnoreCase))
 							{
-								Utils.ParseMixedNum(ref height, tag, "height", attrValue, word.Code);
+								Utils.ParseMixedNum(ref height, tag, word.Code, attrValue);
 							}
 							else if (word.Code.Equals("width", StringComparison.OrdinalIgnoreCase))
 							{
-								Utils.ParseMixedNum(ref width, tag, "width", attrValue, word.Code);
+								Utils.ParseMixedNum(ref width, tag, word.Code, attrValue);
 							}
 							else if (word.Code.Equals("ypos", StringComparison.OrdinalIgnoreCase))
 							{
-								Utils.ParseMixedNum(ref ypos, tag, "ypos", attrValue, word.Code);
+								Utils.ParseMixedNum(ref ypos, tag, word.Code, attrValue);
 							}
 							else
 								throw new CodeEE(string.Format(trerror.CanNotInterpretAttributeName.Text, tag, word.Code));
@@ -1004,8 +1004,8 @@ namespace MinorShift.Emuera.GameView
 					{
 						if (state.CurrentDivTag != null)
 							throw new CodeEE(string.Format(trerror.NestedTag.Text, "div"));
-						MixedNum x = new MixedNum();
-						MixedNum y = new MixedNum();
+						MixedNum x = null;
+						MixedNum y = null;
 						MixedNum width = null;
 						MixedNum height = null;
 						int depth = 0;
@@ -1024,19 +1024,19 @@ namespace MinorShift.Emuera.GameView
 							attrValue = Unescape(attr.Str);
 							if (word.Code.Equals("height", StringComparison.OrdinalIgnoreCase))
 							{
-								Utils.ParseMixedNum(ref height, tag, "height", attrValue, word.Code);
+								Utils.ParseMixedNum(ref height, tag, word.Code,  attrValue);
 							}
 							else if (word.Code.Equals("width", StringComparison.OrdinalIgnoreCase))
 							{
-								Utils.ParseMixedNum(ref width, tag, "width", attrValue, word.Code);
+								Utils.ParseMixedNum(ref width, tag, word.Code, attrValue);
 							}
 							else if (word.Code.Equals("ypos", StringComparison.OrdinalIgnoreCase))
 							{
-								Utils.ParseMixedNum(ref y, tag, "ypos", attrValue, word.Code);
+								Utils.ParseMixedNum(ref y, tag, word.Code, attrValue);
 							}
 							else if (word.Code.Equals("xpos", StringComparison.OrdinalIgnoreCase))
 							{
-								Utils.ParseMixedNum(ref x, tag, "xpos", attrValue, word.Code);
+								Utils.ParseMixedNum(ref x, tag, word.Code, attrValue);
 							}
 							else if (word.Code.Equals("depth", StringComparison.OrdinalIgnoreCase))
 							{
@@ -1050,6 +1050,38 @@ namespace MinorShift.Emuera.GameView
 								if (color >= 0)
 									throw new CodeEE(string.Format(trerror.DuplicateAttribute.Text, tag, word.Code));
 								color = stringToColorInt32(attrValue);
+							}
+							else if (word.Code.Equals("size", StringComparison.OrdinalIgnoreCase))
+							{
+								string[] tokens = attrValue.Split(',');
+								if (tokens.Length != 2)
+									throw new CodeEE(string.Format(trerror.ClearbuttonAttributeCanNotInterpretNum.Text, tag, word.Code, attrValue));
+								for (int i = 0; i < tokens.Length; i++)
+								{
+									tokens[i] = tokens[i].Trim();
+									switch (i)
+									{
+										case 0: Utils.ParseMixedNum(ref width, tag, "width", tokens[i]); break;
+										case 1: Utils.ParseMixedNum(ref height, tag, "height", tokens[i]); break;
+									}
+								}
+							}
+							else if (word.Code.Equals("rect", StringComparison.OrdinalIgnoreCase))
+							{
+								string[] tokens = attrValue.Split(',');
+								if (tokens.Length != 4)
+									throw new CodeEE(string.Format(trerror.ClearbuttonAttributeCanNotInterpretNum.Text, tag, word.Code, attrValue));
+								for (int i = 0; i < tokens.Length; i++)
+								{
+									tokens[i] = tokens[i].Trim();
+									switch (i)
+									{
+										case 0: Utils.ParseMixedNum(ref x, tag, "xpos", tokens[i]); break;
+										case 1: Utils.ParseMixedNum(ref y, tag, "ypos", tokens[i]); break;
+										case 2: Utils.ParseMixedNum(ref width, tag, "width", tokens[i]); break;
+										case 3: Utils.ParseMixedNum(ref height, tag, "height", tokens[i]); break;
+									}
+								}
 							}
 							else
 								throw new CodeEE(string.Format(trerror.CanNotInterpretAttributeName.Text, tag, word.Code));
