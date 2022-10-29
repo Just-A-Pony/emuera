@@ -579,7 +579,7 @@ namespace MinorShift.Emuera
 			{
 				console.MouseDown(e.Location, e.Button);
 				#region EM_私家版_INPUT系機能拡張
-				if (vScrollBar.Value == vScrollBar.Maximum)
+				if (vScrollBar.Value == vScrollBar.Maximum && console.SelectingButton != null)
 					GlobalStatic.Process.InputInteger(6, console.SelectingButton.GetMappedColor(e.X, e.Y));
 				#endregion
 				return;
