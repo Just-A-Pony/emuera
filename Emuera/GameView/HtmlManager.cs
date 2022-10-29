@@ -947,9 +947,9 @@ namespace MinorShift.Emuera.GameView
 						//int height = 0;
 						//int width = 0;
 						//int ypos = 0;
-						MixedNum height = new MixedNum();
-						MixedNum width = new MixedNum();
-						MixedNum ypos = new MixedNum();
+						MixedNum height = null;
+						MixedNum width = null;
+						MixedNum ypos = null;
 						while (wc != null && !wc.EOL)
 						{
 							word = wc.Current as IdentifierWord;
