@@ -23,10 +23,10 @@ namespace MinorShift.Emuera.GameView
 			sb.Append(">");
 			altHeadTag = sb.ToString();
 			Str = string.Empty;
-			xOffset = xPos != null ? (xPos.isPx ? xPos.num : xPos.num * Config.FontSize / 100) : 0;
-			PointY = yPos != null ? (yPos.isPx ? yPos.num : yPos.num * Config.FontSize / 100) : 0;
-			this.width = width.isPx ? width.num : width.num * Config.FontSize / 100;
-			Height = height.isPx ? height.num : height.num * Config.FontSize / 100;
+			xOffset = xPos != null ? (xPos.isPx ? xPos.num : xPos.num * Config.LineHeight / 100) : 0;
+			PointY = yPos != null ? (yPos.isPx ? yPos.num : yPos.num * Config.LineHeight / 100) : 0;
+			this.width = width.isPx ? width.num : width.num * Config.LineHeight / 100;
+			Height = height.isPx ? height.num : height.num * Config.LineHeight / 100;
 			children = childs;
 			Depth = depth;
 			this.color = color >= 0 ? Color.FromArgb((int)(color | 0xff000000)) : Color.Transparent;
