@@ -343,7 +343,7 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(Int64);
 				argumentTypeArrayEx = new ArgTypeList[] {
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D, ArgType.Int, ArgType.Int | ArgType.DisallowVoid }, OmitStart = 2 },
-					new ArgTypeList{ ArgTypes = { ArgType.RefInt | ArgType.AllowConstRef, ArgType.RefString1D, ArgType.Int, ArgType.Int | ArgType.DisallowVoid }, OmitStart = 2 },
+					new ArgTypeList{ ArgTypes = { ArgType.RefInt1D, ArgType.RefString1D, ArgType.Int, ArgType.Int | ArgType.DisallowVoid }, OmitStart = 2 },
 				};
 				CanRestructure = false;
 			}
