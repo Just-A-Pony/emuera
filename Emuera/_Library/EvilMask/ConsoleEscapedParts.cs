@@ -15,11 +15,11 @@ namespace EvilMask.Emuera
 		static readonly DataTable dt = new DataTable();
 		static readonly Dictionary<Int64, AConsoleDisplayPart> parts = new Dictionary<long, AConsoleDisplayPart>();
 		static bool getOnce = false;
-		static int lastTop, lastBottom;
+		static int lastTop, lastBottom, lastGeneration;
 		public static bool Changed { get; private set; }
-		public static bool TestedInRange(int top, int bottom)
+		public static bool TestedInRange(int top, int bottom, int gen)
 		{
-			return getOnce && top == lastTop && bottom == lastBottom;
+			return getOnce && top == lastTop && bottom == lastBottom && gen == lastGeneration;
 		}
 		static ConsoleEscapedParts()
 		{
@@ -69,7 +69,7 @@ namespace EvilMask.Emuera
 				Changed = true;
 			}
 		}
-		public static void GetPartsInRange(int top, int bottom, Dictionary<int, List<AConsoleDisplayPart>> rmap)
+		public static void GetPartsInRange(int top, int bottom, int gen, Dictionary<int, List<AConsoleDisplayPart>> rmap)
 		{
 			if (rmap == null) return;
 			rmap.Clear();
@@ -87,7 +87,7 @@ namespace EvilMask.Emuera
 				list.Add(parts[(Int64)row[4]]);
 			}
 			getOnce = true;
-			lastTop = top; lastBottom = bottom;
+			lastTop = top; lastBottom = bottom; lastGeneration = gen;
 			Changed = false;
 		}
 	}
