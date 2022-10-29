@@ -1433,7 +1433,7 @@ namespace MinorShift.Emuera.GameView
 				//1823 cbg追加
 				#region EM_私家版_描画拡張
 				if (escapedParts == null) escapedParts = new Dictionary<int, List<AConsoleDisplayPart>>();
-				if (ConsoleEscapedParts.Changed && !ConsoleEscapedParts.TestedInRange(topLineNo, bottomLineNo, lastButtonGeneration))
+				if (ConsoleEscapedParts.Changed || !ConsoleEscapedParts.TestedInRange(topLineNo, bottomLineNo, lastButtonGeneration))
 					ConsoleEscapedParts.GetPartsInRange(topLineNo, bottomLineNo, lastButtonGeneration, escapedParts);
 				var edepth = escapedParts.Keys.ToArray();
 				Array.Sort(edepth, (int a, int b) => -a.CompareTo(b));
@@ -1887,7 +1887,7 @@ namespace MinorShift.Emuera.GameView
 			int relPointY = pointY - window.MainPicBox.Height;
 			//下から上へ探索し発見次第打ち切り
 			#region EM_私家版_描画拡張
-			if (ConsoleEscapedParts.Changed && !ConsoleEscapedParts.TestedInRange(topLineNo, bottomLineNo, lastButtonGeneration))
+			if (ConsoleEscapedParts.Changed || !ConsoleEscapedParts.TestedInRange(topLineNo, bottomLineNo, lastButtonGeneration))
 			{
 				if (escapedParts == null) escapedParts = new Dictionary<int, List<AConsoleDisplayPart>>();
 				ConsoleEscapedParts.GetPartsInRange(topLineNo, bottomLineNo, lastButtonGeneration, escapedParts);
