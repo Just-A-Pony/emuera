@@ -13,7 +13,7 @@ namespace MinorShift.Emuera.GameView
 {
 	class ConsoleDivPart : AConsoleDisplayPart
 	{
-		public ConsoleDivPart(MixedNum xPos, MixedNum yPos, MixedNum width, MixedNum height, int depth, int color, StyledBoxModel box, ConsoleDisplayLine[] childs)
+		public ConsoleDivPart(MixedNum xPos, MixedNum yPos, MixedNum width, MixedNum height, int depth, int color, StyledBoxModel box, bool isRelative, ConsoleDisplayLine[] childs)
 		{
 			backgroundColor = color >= 0 ? Color.FromArgb((int)(color | 0xff000000)) : Color.Transparent;
 			StringBuilder sb = new StringBuilder();
@@ -52,6 +52,7 @@ namespace MinorShift.Emuera.GameView
 			Height = MixedNum.ToPixel(height, 0);
 			children = childs;
 			Depth = depth;
+			IsRelative = isRelative;
 		}
 		int pointX = 0;
 		int xOffset;
@@ -72,6 +73,7 @@ namespace MinorShift.Emuera.GameView
 		public bool IsEscaped { get; set; } = false;
 		public override int Top { get { return PointY; } }
 		public override int Bottom { get { return PointY + Height; } }
+		public bool IsRelative { get; private set; }
 
 		public override bool CanDivide => false;
 		public ConsoleButtonString TestChildHitbox(int pointX, int pointY, int relPointY)
@@ -115,7 +117,8 @@ namespace MinorShift.Emuera.GameView
 		}
 		public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)
 		{
-			var rect = new Rectangle(PointX + xOffset, pointY + PointY, width, Height);
+			var rect = IsRelative ? new Rectangle(PointX + xOffset, pointY + PointY, width, Height) 
+				: new Rectangle(xOffset, PointY, width, Height);
 
 			if (margin != null)
 				rect = new Rectangle(rect.X + margin[Direction.Left], rect.Y + margin[Direction.Top],

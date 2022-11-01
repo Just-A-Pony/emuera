@@ -171,7 +171,7 @@ namespace MinorShift.Emuera.GameView
 		#region EM_私家版_HTML_divタグ
 		private sealed class HtmlDivTag
 		{
-			public HtmlDivTag(MixedNum x, MixedNum y, MixedNum width, MixedNum height, int depth, int color, StyledBoxModel box)
+			public HtmlDivTag(MixedNum x, MixedNum y, MixedNum width, MixedNum height, int depth, int color, StyledBoxModel box, bool isRelative)
 			{
 				X = x;
 				Y = y;
@@ -180,6 +180,7 @@ namespace MinorShift.Emuera.GameView
 				Depth = depth;
 				Color = color;
 				StyledBox = box;
+				IsRelative = isRelative;
 			}
 			public ConsoleDisplayLine[] Lines = null;
 			public MixedNum Width;
@@ -189,6 +190,7 @@ namespace MinorShift.Emuera.GameView
 			public int Color;
 			public int Depth;
 			public StyledBoxModel StyledBox;
+			public bool IsRelative;
 		}
 		#endregion
 		static HtmlManager()
@@ -550,7 +552,7 @@ namespace MinorShift.Emuera.GameView
 								var tagInfo = state.CurrentDivTag;
 								state.CurrentDivTag = null;
 								state.StartingSubDivision = false;
-								cssList.Add(new ConsoleDivPart(tagInfo.X, tagInfo.Y, tagInfo.Width, tagInfo.Height, tagInfo.Depth, tagInfo.Color, tagInfo.StyledBox, tagInfo.Lines));
+								cssList.Add(new ConsoleDivPart(tagInfo.X, tagInfo.Y, tagInfo.Width, tagInfo.Height, tagInfo.Depth, tagInfo.Color, tagInfo.StyledBox, tagInfo.IsRelative, tagInfo.Lines));
 							}
 						}
 						else
@@ -1060,6 +1062,7 @@ namespace MinorShift.Emuera.GameView
 						MixedNum width = null;
 						MixedNum height = null;
 						StyledBoxModel box = null;
+						bool isRelative = true;
 						int depth = 0;
 						int color = -1;
 						string attrValue;
@@ -1139,6 +1142,12 @@ namespace MinorShift.Emuera.GameView
 							{
 								ParseParam4IntNum(ref Utils.CreateIfNull(ref box).color, tag, word.Code, attrValue);
 							}
+							else if (word.Code.Equals("display", StringComparison.OrdinalIgnoreCase))
+							{
+								if (attrValue.Equals("absolute", StringComparison.OrdinalIgnoreCase)) isRelative = false;
+								else if (attrValue.Equals("relative", StringComparison.OrdinalIgnoreCase)) isRelative = true;
+								else throw new CodeEE(string.Format(Lang.Error.CanNotInterpretAttribute.Text, attrValue));
+							}
 							else if (!Utils.TryParseStyledBoxModel(ref box, tag, word.Code, attrValue))
 								throw new CodeEE(string.Format(trerror.CanNotInterpretAttributeName.Text, tag, word.Code));
 						}
@@ -1146,7 +1155,7 @@ namespace MinorShift.Emuera.GameView
 							throw new CodeEE(string.Format(trerror.NotSetAttribute.Text, tag, "width"));
 						if (height == null)
 							throw new CodeEE(string.Format(trerror.NotSetAttribute.Text, tag, "height"));
-						state.CurrentDivTag = new HtmlDivTag(x, y, width, height, depth, color, box);
+						state.CurrentDivTag = new HtmlDivTag(x, y, width, height, depth, color, box, isRelative);
 						state.StartingSubDivision = true;
 						return null;
 					}

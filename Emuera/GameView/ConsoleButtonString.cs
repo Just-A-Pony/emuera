@@ -245,6 +245,9 @@ namespace MinorShift.Emuera.GameView
 				px = PointX;
 			for (int i = 0; i < strArray.Length; i++)
 			{
+				#region EM_私家版_HTML_divタグ
+				if (strArray[i] is ConsoleDivPart div && !div.IsRelative) continue;
+				#endregion
 				strArray[i].PointX = px;
 				px += strArray[i].Width;
 			}
@@ -272,7 +275,7 @@ namespace MinorShift.Emuera.GameView
 			//	css.DrawTo(graph, pointY, isSelecting, isBackLog, mode);
 			foreach (AConsoleDisplayPart css in strArray)
 			{
-				if (css is ConsoleDivPart div && (div.Depth != 0 || div.IsEscaped)) continue;
+				if (css is ConsoleDivPart div) continue;
 				css.DrawTo(graph, pointY, isSelecting, isBackLog, mode);
 			}
 			#endregion
