@@ -11,6 +11,7 @@ using trmb = EvilMask.Emuera.Lang.MessageBox;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using EvilMask.Emuera;
+using static EvilMask.Emuera.Utils;
 
 namespace MinorShift.Emuera.GameView
 {

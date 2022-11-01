@@ -39,6 +39,11 @@ namespace MinorShift.Emuera.GameView
 		#region EM_私家版_描画拡張
 		public ConsoleButtonString Parent { get; set; }
 		public int Depth { get; set; }
+		public virtual StringBuilder BuildString(StringBuilder sb)
+		{
+			if (Str != null) sb.Append(Str);
+			return sb;
+		}
 		#endregion
 	}
 

@@ -2,16 +2,20 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static EvilMask.Emuera.Shape;
+using static EvilMask.Emuera.Utils;
 
 namespace MinorShift.Emuera.GameView
 {
 	class ConsoleDivPart : AConsoleDisplayPart
 	{
-		public ConsoleDivPart(MixedNum xPos, MixedNum yPos, MixedNum width, MixedNum height, int depth, int color, ConsoleDisplayLine[] childs)
+		public ConsoleDivPart(MixedNum xPos, MixedNum yPos, MixedNum width, MixedNum height, int depth, int color, StyledBoxModel box, ConsoleDisplayLine[] childs)
 		{
+			backgroundColor = color >= 0 ? Color.FromArgb((int)(color | 0xff000000)) : Color.Transparent;
 			StringBuilder sb = new StringBuilder();
 			width.num = Math.Abs(width.num);
 			height.num = Math.Abs(height.num);
@@ -19,17 +23,35 @@ namespace MinorShift.Emuera.GameView
 			Utils.AddTagMixedNumArg(sb, "xpos", xPos);
 			Utils.AddTagMixedNumArg(sb, "ypos", yPos);
 			Utils.AddTagMixedNumArg(sb, "width", width);
+			Utils.AddColorParam(sb, "color", backgroundColor);
 			Utils.AddTagMixedNumArg(sb, "height", height);
+			if (box != null)
+			{
+				Utils.AddTagMixedParam(sb, "margin", box.margin);
+				Utils.MixedNum4ToInt4(box.margin, ref margin);
+				Utils.AddTagMixedParam(sb, "padding", box.padding);
+				Utils.MixedNum4ToInt4(box.padding, ref padding);
+				Utils.AddTagMixedParam(sb, "border", box.border);
+				Utils.MixedNum4ToInt4(box.border, ref border);
+				Utils.AddTagMixedParam(sb, "radius", box.radius);
+				Utils.MixedNum4ToInt4(box.radius, ref radius);
+				if (box.color != null)
+				{
+					borderColors = new Color[4];
+					for (int i = 0; i < 4; i++)
+						borderColors[i] = box.color[i] >= 0 ? Color.FromArgb((int)(box.color[i] | 0xff000000)) : Color.Transparent;
+					Utils.AddColorParam4(sb, "bcolor", borderColors);
+				}
+			}
 			sb.Append(">");
 			altHeadTag = sb.ToString();
 			Str = string.Empty;
-			xOffset = xPos != null ? (xPos.isPx ? xPos.num : xPos.num * Config.FontSize / 100) : 0;
-			PointY = yPos != null ? (yPos.isPx ? yPos.num : yPos.num * Config.FontSize / 100) : 0;
-			this.width = width.isPx ? width.num : width.num * Config.FontSize / 100;
-			Height = height.isPx ? height.num : height.num * Config.FontSize / 100;
+			xOffset = MixedNum.ToPixel(xPos, 0);
+			PointY = MixedNum.ToPixel(yPos, 0);
+			this.width = MixedNum.ToPixel(width, 0);
+			Height = MixedNum.ToPixel(height, 0);
 			children = childs;
 			Depth = depth;
-			this.color = color >= 0 ? Color.FromArgb((int)(color | 0xff000000)) : Color.Transparent;
 		}
 		int pointX = 0;
 		int xOffset;
@@ -42,7 +64,9 @@ namespace MinorShift.Emuera.GameView
 			} }
 		int PointY;
 		int Height;
-		Color color;
+		int[] margin, padding, radius, border;
+		Color[] borderColors;
+		Color backgroundColor;
 		string altHeadTag;
 		readonly ConsoleDisplayLine[] children;
 		public bool IsEscaped { get; set; } = false;
@@ -92,12 +116,27 @@ namespace MinorShift.Emuera.GameView
 		public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)
 		{
 			var rect = new Rectangle(PointX + xOffset, pointY + PointY, width, Height);
-			graph.SetClip(rect, System.Drawing.Drawing2D.CombineMode.Replace);
-			if (color != Color.Transparent)
-				graph.FillRectangle(new SolidBrush(color), rect);
+
+			if (margin != null)
+				rect = new Rectangle(rect.X + margin[Direction.Left], rect.Y + margin[Direction.Top],
+					 rect.Width - margin[Direction.Left] - margin[Direction.Right], rect.Height - margin[Direction.Top] - margin[Direction.Bottom]);
+			graph.SetClip(rect, CombineMode.Replace);
+
+			Shape.BoxBorder.DrawBorder(graph, rect, border, radius, borderColors, backgroundColor);
+
+			if (border != null)
+				rect = new Rectangle(rect.X + border[Direction.Left], rect.Y + border[Direction.Top],
+					 rect.Width - border[Direction.Left] - border[Direction.Right], rect.Height - border[Direction.Top] - border[Direction.Bottom]);
+
+			if (padding != null)
+				rect = new Rectangle(rect.X + margin[Direction.Left], rect.Y + margin[Direction.Top],
+					 rect.Width - margin[Direction.Left] - margin[Direction.Right], rect.Height - margin[Direction.Top] - margin[Direction.Bottom]);
+
+			graph.SetClip(rect, CombineMode.Replace);
+
 			foreach (var child in children)
 			{
-				child.DrawTo(graph, pointY + PointY, isBackLog, true, mode);
+				child.DrawTo(graph, rect.Y, isBackLog, true, mode);
 				pointY += Config.LineHeight;
 			}
 			graph.ResetClip();
@@ -118,11 +157,22 @@ namespace MinorShift.Emuera.GameView
 			sb.Append(altHeadTag);
 			foreach (var line in children)
 			{
-				sb.Append(line.ToString());
+				line.BuildString(sb);
 				sb.Append("\r\n");
 			}
 			sb.Append("</div>");
 			return sb.ToString();
+		}
+		public override StringBuilder BuildString(StringBuilder sb)
+		{
+			sb.Append(altHeadTag);
+			foreach (var line in children)
+			{
+				line.BuildString(sb);
+				sb.Append("\r\n");
+			}
+			sb.Append("</div>");
+			return sb;
 		}
 	}
 }

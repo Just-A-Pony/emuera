@@ -304,11 +304,12 @@ namespace MinorShift.Emuera.GameView
 		}
 
 		#region EM_私家版_描画拡張
-		public void BuildString(StringBuilder builder)
+		public StringBuilder BuildString(StringBuilder builder)
 		{
-			if (strArray == null) return;
-			foreach (AConsoleDisplayPart css in strArray)
-				builder.Append(css.ToString());
+			if (strArray != null)
+				foreach (AConsoleDisplayPart css in strArray)
+					css.BuildString(builder);
+			return builder;
 		}
 		#endregion
 	}

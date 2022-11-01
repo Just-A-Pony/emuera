@@ -7,6 +7,8 @@ using System.Drawing;
 using MinorShift.Emuera.GameData.Expression;
 using trerror = EvilMask.Emuera.Lang.Error;
 using EvilMask.Emuera;
+using static EvilMask.Emuera.Utils;
+using static EvilMask.Emuera.Shape;
 
 namespace MinorShift.Emuera.GameView
 {
@@ -131,11 +133,45 @@ namespace MinorShift.Emuera.GameView
 			ret[1] += str.Substring(last - 1 + delbr * 4, str.Length - last + 1 - delbr * 4);
 			return ret;
 		}
+
+		public static void ParseParam4IntNum(ref int[] nums, string tag, string word, string attrValue)
+		{
+			if (nums == null) nums = new int[4];
+			else throw new CodeEE(string.Format(Lang.Error.DuplicateAttribute.Text, tag, word));
+			string[] tokens = attrValue.Split(',');
+			switch (tokens.Length)
+			{
+				case 1: // all
+					nums[0] = stringToColorInt32(tokens[0].Trim());
+					nums[1] = nums[0];
+					nums[2] = nums[0];
+					nums[3] = nums[0];
+					break;
+				case 2: // top and bottom | left and right
+					nums[0] = stringToColorInt32(tokens[0].Trim());
+					nums[1] = stringToColorInt32(tokens[1].Trim());
+					nums[2] = nums[0];
+					nums[3] = nums[1];
+					break;
+				case 3: //top | left and right | bottom
+					nums[0] = stringToColorInt32(tokens[0].Trim());
+					nums[1] = stringToColorInt32(tokens[1].Trim());
+					nums[2] = stringToColorInt32(tokens[2].Trim());
+					nums[3] = nums[1];
+					break;
+				case 4:  // top | right | bottom | left
+					for (int i = 0; i < 4; i++)
+						nums[i] = stringToColorInt32(tokens[i].Trim());
+					break;
+				default:
+					throw new CodeEE(string.Format(Lang.Error.CanNotInterpretAttribute.Text, attrValue));
+			}
+		}
 		#endregion
 		#region EM_私家版_HTML_divタグ
 		private sealed class HtmlDivTag
 		{
-			public HtmlDivTag(MixedNum x, MixedNum y, MixedNum width, MixedNum height, int depth, int color)
+			public HtmlDivTag(MixedNum x, MixedNum y, MixedNum width, MixedNum height, int depth, int color, StyledBoxModel box)
 			{
 				X = x;
 				Y = y;
@@ -143,6 +179,7 @@ namespace MinorShift.Emuera.GameView
 				Height = height;
 				Depth = depth;
 				Color = color;
+				StyledBox = box;
 			}
 			public ConsoleDisplayLine[] Lines = null;
 			public MixedNum Width;
@@ -151,6 +188,7 @@ namespace MinorShift.Emuera.GameView
 			public MixedNum Y;
 			public int Color;
 			public int Depth;
+			public StyledBoxModel StyledBox;
 		}
 		#endregion
 		static HtmlManager()
@@ -491,7 +529,17 @@ namespace MinorShift.Emuera.GameView
 								if (state.CurrentButtonTag != null || state.FontStyle != FontStyle.Regular || state.FonttagList.Count > 0)
 									throw new CodeEE(trerror.TagIsNotClosed.Text);
 								var width = state.CurrentDivTag.Width;
-								state.SubDivisionWidth = width.isPx ? width.num : width.num * Config.FontSize / 100;
+								state.SubDivisionWidth = MixedNum.ToPixel(width);
+								if (state.CurrentDivTag.StyledBox != null)
+								{
+									var box = state.CurrentDivTag.StyledBox;
+									if (box.margin != null)
+										state.SubDivisionWidth -= MixedNum.ToPixel(box.margin[Direction.Left]) + MixedNum.ToPixel(box.margin[Direction.Right]);
+									if (box.border != null)
+										state.SubDivisionWidth -= MixedNum.ToPixel(box.border[Direction.Left]) + MixedNum.ToPixel(box.border[Direction.Right]);
+									if (box.padding != null)
+										state.SubDivisionWidth -= MixedNum.ToPixel(box.padding[Direction.Left]) + MixedNum.ToPixel(box.padding[Direction.Right]);
+								}
 								state.CurrentDivTag.Lines = html2DisplayLine(null, sm, console, new HtmlParentInfo
 								{
 									HasComment = hasComment,
@@ -502,7 +550,7 @@ namespace MinorShift.Emuera.GameView
 								var tagInfo = state.CurrentDivTag;
 								state.CurrentDivTag = null;
 								state.StartingSubDivision = false;
-								cssList.Add(new ConsoleDivPart(tagInfo.X, tagInfo.Y, tagInfo.Width, tagInfo.Height, tagInfo.Depth, tagInfo.Color, tagInfo.Lines));
+								cssList.Add(new ConsoleDivPart(tagInfo.X, tagInfo.Y, tagInfo.Width, tagInfo.Height, tagInfo.Depth, tagInfo.Color, tagInfo.StyledBox, tagInfo.Lines));
 							}
 						}
 						else
@@ -558,11 +606,14 @@ namespace MinorShift.Emuera.GameView
 			}
 			else
 				ret = PrintStringBuffer.ButtonsToDisplayLines(buttonList, sm, state.FlagNobr, false);
-			#endregion
 			foreach (ConsoleDisplayLine dl in ret)
 			{
-				dl.SetAlignment(state.Alignment);
+				if (state.StartingSubDivision && state.CurrentDivTag == null)
+					dl.SetAlignment(state.Alignment, state.SubDivisionWidth);
+				else
+					dl.SetAlignment(state.Alignment);
 			}
+			#endregion
 			return ret;
 		}
 
@@ -1008,6 +1059,7 @@ namespace MinorShift.Emuera.GameView
 						MixedNum y = null;
 						MixedNum width = null;
 						MixedNum height = null;
+						StyledBoxModel box = null;
 						int depth = 0;
 						int color = -1;
 						string attrValue;
@@ -1083,14 +1135,18 @@ namespace MinorShift.Emuera.GameView
 									}
 								}
 							}
-							else
+							else if (word.Code.Equals("bcolor", StringComparison.OrdinalIgnoreCase))
+							{
+								ParseParam4IntNum(ref Utils.CreateIfNull(ref box).color, tag, word.Code, attrValue);
+							}
+							else if (!Utils.TryParseStyledBoxModel(ref box, tag, word.Code, attrValue))
 								throw new CodeEE(string.Format(trerror.CanNotInterpretAttributeName.Text, tag, word.Code));
 						}
 						if (width == null)
 							throw new CodeEE(string.Format(trerror.NotSetAttribute.Text, tag, "width"));
 						if (height == null)
 							throw new CodeEE(string.Format(trerror.NotSetAttribute.Text, tag, "height"));
-						state.CurrentDivTag = new HtmlDivTag(x, y, width, height, depth, color);
+						state.CurrentDivTag = new HtmlDivTag(x, y, width, height, depth, color, box);
 						state.StartingSubDivision = true;
 						return null;
 					}
