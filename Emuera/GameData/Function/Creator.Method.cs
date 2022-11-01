@@ -1292,7 +1292,7 @@ namespace MinorShift.Emuera.GameData.Function
 			public enum Operation { Create, Check, Remove, Names };
 			public DataTableColumnManagementMethod(Operation type)
 			{
-				ReturnType = type==Operation.Names ? typeof(string) : typeof(Int64);
+				ReturnType = typeof(Int64);
 				if (type == Operation.Create)
 					argumentTypeArrayEx = new ArgTypeList[] {
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Any, ArgType.Int }, OmitStart = 2 },
