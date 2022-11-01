@@ -5256,6 +5256,13 @@ namespace MinorShift.Emuera.GameData.Function
 						return g.Fontsize;
 					case "GGETFONTSTYLE":
 						return g.Fontstyle;
+					case "GGETPEN":
+						return g.Pen.Color.ToArgb() & 0xffffffffL;
+					case "GGETPENWIDTH":
+						return (long)g.Pen.Width;
+					case "GGETBRUSH":
+						SolidBrush b = (SolidBrush)g.Brush;
+						return b.Color.ToArgb() & 0xffffffffL;
 					#endregion
 				}
 				throw new ExeEE("GraphicsState:" + Name + ":異常な分岐");
