@@ -129,8 +129,8 @@ namespace MinorShift.Emuera.GameView
 					 rect.Width - border[Direction.Left] - border[Direction.Right], rect.Height - border[Direction.Top] - border[Direction.Bottom]);
 
 			if (padding != null)
-				rect = new Rectangle(rect.X + margin[Direction.Left], rect.Y + margin[Direction.Top],
-					 rect.Width - margin[Direction.Left] - margin[Direction.Right], rect.Height - margin[Direction.Top] - margin[Direction.Bottom]);
+				rect = new Rectangle(rect.X + padding[Direction.Left], rect.Y + padding[Direction.Top],
+					 rect.Width - padding[Direction.Left] - padding[Direction.Right], rect.Height - padding[Direction.Top] - padding[Direction.Bottom]);
 
 			graph.SetClip(rect, CombineMode.Replace);
 
