@@ -117,6 +117,7 @@ namespace MinorShift.Emuera.GameView
 		}
 		public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)
 		{
+			if (GlobalStatic.MainWindow == null) return;
 			var rect = IsRelative ? new Rectangle(PointX + xOffset, pointY + PointY, width, Height) 
 				: new Rectangle(xOffset, GlobalStatic.MainWindow.MainPicBox.Height - PointY - Height, width, Height);
 
