@@ -213,11 +213,16 @@ namespace MinorShift.Emuera
 			if (TextDrawingMode != TextDrawingMode.WINAPI)
 				DrawingParam_ShapePositionShift = Math.Max(2, FontSize / 6);
 			DrawableWidth = WindowX - DrawingParam_ShapePositionShift;
-			ForceSavDir = Program.ExeDir + "sav\\";
+			#region eee_カレントディレクトリー
+			// ForceSavDir = Program.ExeDir + "sav\\";
+			ForceSavDir = Program.WorkingDir + "sav\\";
 			if (UseSaveFolder)
-				SavDir = Program.ExeDir + "sav\\";
+				// SavDir = Program.ExeDir + "sav\\";
+				SavDir = Program.WorkingDir + "sav\\";
 			else
-				SavDir = Program.ExeDir;
+				// SavDir = Program.ExeDir;
+				SavDir = Program.WorkingDir;
+			#endregion
 			if (UseSaveFolder && !Directory.Exists(SavDir))
 				createSavDirAndMoveFiles();
 		}
@@ -304,8 +309,12 @@ namespace MinorShift.Emuera
 				MessageBox.Show(trmb.FailedCreateSavFolder.Text, trmb.FolderCreationFailure.Text);
 				return;
 			}
-			bool existGlobal = File.Exists(Program.ExeDir + "global.sav");
-			string[] savFiles = Directory.GetFiles(Program.ExeDir, "save*.sav", SearchOption.TopDirectoryOnly);
+			#region eee_カレントディレクトリー
+			// bool existGlobal = File.Exists(Program.ExeDir + "global.sav");
+			// string[] savFiles = Directory.GetFiles(Program.ExeDir, "save*.sav", SearchOption.TopDirectoryOnly);
+			bool existGlobal = File.Exists(Program.WorkingDir + "global.sav");
+			string[] savFiles = Directory.GetFiles(Program.WorkingDir, "save*.sav", SearchOption.TopDirectoryOnly);
+			#endregion
 			if (!existGlobal && savFiles.Length == 0)
 				return;
 			DialogResult result = MessageBox.Show(trmb.SavFolderCreated.Text, trmb.DataTransfer.Text, MessageBoxButtons.YesNo);
@@ -320,9 +329,14 @@ namespace MinorShift.Emuera
 			//ダイアログが開いている間にファイルを変更するような邪悪なユーザーがいるかもしれない
 			try
 			{
-				if (File.Exists(Program.ExeDir + "global.sav"))
-					File.Move(Program.ExeDir + "global.sav", SavDir + "global.sav");
-				savFiles = Directory.GetFiles(Program.ExeDir, "save*.sav", SearchOption.TopDirectoryOnly);
+				#region eee_カレントディレクトリー
+				//if (File.Exists(Program.ExeDir + "global.sav"))
+				//	File.Move(Program.ExeDir + "global.sav", SavDir + "global.sav");
+				//savFiles = Directory.GetFiles(Program.ExeDir, "save*.sav", SearchOption.TopDirectoryOnly);
+				if (File.Exists(Program.WorkingDir + "global.sav"))
+					File.Move(Program.WorkingDir + "global.sav", SavDir + "global.sav");
+				savFiles = Directory.GetFiles(Program.WorkingDir, "save*.sav", SearchOption.TopDirectoryOnly);
+				#endregion
 				foreach (string oldpath in savFiles)
 					File.Move(oldpath, SavDir + Path.GetFileName(oldpath));
 			}
