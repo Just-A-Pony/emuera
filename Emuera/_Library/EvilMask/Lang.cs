@@ -1158,6 +1158,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString DTLackOfNamedColumn { get; } = new TranslatableString("{0}関数: DataTable(\"{1}\")に\"{2}\"を名前とした列がありません");
             [Managed] public static TranslatableString DTInvalidDataType{ get; } = new TranslatableString("{0}関数: DataTable(\"{1}\")の\"{2}\"列に違う型の値を指定しようとしています");
             [Managed] public static TranslatableString DTCanNotEditIdColumn { get; } = new TranslatableString("{0}関数: DataTable(\"{1}\")の\"id\"列は変更できません");
+            [Managed] public static TranslatableString IsDefinedCsvVariable { get; } = new TranslatableString("変数名\"{0}\"は既にCSV変数の定義に使われており、予期せぬ配列参照を引き起こす場合があります");
         }
         [Managed]
         public sealed class MessageBox
@@ -1206,7 +1207,6 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString CanNotOpenClipboard { get; } = new TranslatableString("予期せぬエラーが発生したためクリップボードを開けません");
             [Managed] public static TranslatableString NotAllowChangeSetting { get; } = new TranslatableString("いくつかの設定は_fixed.configにより変更を許可されていないために変更できませんでした");
             [Managed] public static TranslatableString UnableChangeSetting { get; } = new TranslatableString("設定変更不可");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
