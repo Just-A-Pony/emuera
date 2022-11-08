@@ -11,6 +11,7 @@ using trmb = EvilMask.Emuera.Lang.MessageBox;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using EvilMask.Emuera;
+using static EvilMask.Emuera.Utils;
 
 namespace MinorShift.Emuera.GameView
 {
@@ -667,15 +668,15 @@ namespace MinorShift.Emuera.GameView
 		{
 			// if (filename == null)
 			if (filename == "" || filename == null)
-				filename = Program.ExeDir + "emuera.log";
+				filename = Program.WorkingDir + "emuera.log";
 			else
-				filename = Program.ExeDir + filename;
+				filename = Program.WorkingDir + filename;
 			if (filename.IndexOf("../") >= 0)
 			{
 				MessageBox.Show(trmb.CanNotOutputToParentDirectory.Text, trmb.FailedOutputLog.Text);
 				return false;
 			}
-			if (!filename.StartsWith(Program.ExeDir, StringComparison.CurrentCultureIgnoreCase))
+			if (!filename.StartsWith(Program.WorkingDir, StringComparison.CurrentCultureIgnoreCase))
 			{
 				MessageBox.Show(trmb.CanOnlyOutputToSubDirectory.Text, trmb.FailedOutputLog.Text);
 				return false;
@@ -685,7 +686,7 @@ namespace MinorShift.Emuera.GameView
 			{
 				if (window.Created)
 				{
-					PrintSystemLine(string.Format(trsl.LogFileHasBeenCreated.Text, filename.Replace(Program.ExeDir, "")));
+					PrintSystemLine(string.Format(trsl.LogFileHasBeenCreated.Text, filename.Replace(Program.WorkingDir, "")));
 					RefreshStrings(true);
 				}
 				return true;
@@ -697,9 +698,9 @@ namespace MinorShift.Emuera.GameView
 		public bool OutputSystemLog(string filename)
 		{
 			if (filename == "" || filename == null)
-				filename = Program.ExeDir + "emuera.log";
+				filename = Program.WorkingDir + "emuera.log";
 
-			if (!filename.StartsWith(Program.ExeDir, StringComparison.CurrentCultureIgnoreCase))
+			if (!filename.StartsWith(Program.WorkingDir, StringComparison.CurrentCultureIgnoreCase))
             {
                 MessageBox.Show(trmb.CanOnlyOutputToSubDirectory.Text, trmb.FailedOutputLog.Text);
                 return false;
@@ -709,7 +710,7 @@ namespace MinorShift.Emuera.GameView
 			{
 				if (window.Created)
 				{
-					PrintSystemLine(string.Format(trsl.LogFileHasBeenCreated.Text, filename.Replace(Program.ExeDir, "")));
+					PrintSystemLine(string.Format(trsl.LogFileHasBeenCreated.Text, filename.Replace(Program.WorkingDir, "")));
 					RefreshStrings(true);
 				}
 				return true;

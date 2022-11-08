@@ -780,10 +780,10 @@ namespace MinorShift.Emuera.GameView
 				state = ConsoleState.Error;
 				PrintError(trerror.ProgramStatusError.Text);
 			}
+			#region EE_OUTPUTLOG
 			if (state == ConsoleState.Error && !noOutputLog)
-				#region EE_OUTPUTLOG
 				//OutputLog(Program.ExeDir + "emuera.log");
-				OutputSystemLog(Program.ExeDir + "emuera.log");
+				OutputSystemLog(Program.WorkingDir + "emuera.log");
 			#endregion
 
 			PrintFlush(false);
@@ -1232,7 +1232,7 @@ namespace MinorShift.Emuera.GameView
 			{
 				#region EE_OUTPUTLOG
 				// this.OutputLog(Program.ExeDir + "emuera.log");
-				this.OutputSystemLog(Program.ExeDir + "emuera.log");
+				this.OutputSystemLog(Program.WorkingDir + "emuera.log");
 				#endregion
 
 				return;

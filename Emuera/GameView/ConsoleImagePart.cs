@@ -6,15 +6,10 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Text;
+using static EvilMask.Emuera.Utils;
+
 namespace MinorShift.Emuera.GameView
 {
-	#region EM_私家版_HTMLパラメータ拡張
-	internal sealed class MixedNum
-	{
-		public int num = 0;
-		public bool isPx = false;
-	}
-	#endregion
 	class ConsoleImagePart : AConsoleDisplayPart
 	{
 		#region EM_私家版_HTMLパラメータ拡張
@@ -28,9 +23,7 @@ namespace MinorShift.Emuera.GameView
 			ButtonResourceName = resNameb;
 			MappingGraphName = resNamem;
 			StringBuilder sb = new StringBuilder();
-			sb.Append("<img src='");
-			sb.Append(ResourceName);
-			sb.Append('\'');
+			sb.Append("<img src='").Append(ResourceName).Append('\'');
 			if (ButtonResourceName != null)
 				Utils.AddTagArg(sb, "srcb", ButtonResourceName);
 			//{
@@ -172,6 +165,13 @@ namespace MinorShift.Emuera.GameView
 				return "";
 			return AltText;
 		}
+		#region EM_私家版_描画拡張
+		public override StringBuilder BuildString(StringBuilder sb)
+		{
+			if (AltText != null) sb.Append(AltText);
+			return sb;
+		}
+		#endregion
 		#region EM_私家版_imgマースク
 		public Int64 GetMappingColor(int pointX, int pointY)
 		{

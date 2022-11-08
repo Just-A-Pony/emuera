@@ -1289,13 +1289,17 @@ namespace MinorShift.Emuera.GameData.Function
 		}
 		private sealed class DataTableColumnManagementMethod : FunctionMethod
 		{
-			public enum Operation { Create, Check, Remove };
+			public enum Operation { Create, Check, Remove, Names };
 			public DataTableColumnManagementMethod(Operation type)
 			{
 				ReturnType = typeof(Int64);
 				if (type == Operation.Create)
 					argumentTypeArrayEx = new ArgTypeList[] {
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Any, ArgType.Int }, OmitStart = 2 },
+					};
+				else if (type == Operation.Names)
+					argumentTypeArrayEx = new ArgTypeList[] {
+						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D }, OmitStart = 1 },
 					};
 				else
 					argumentTypeArray = new Type[] { typeof(string), typeof(string) };
@@ -1306,10 +1310,18 @@ namespace MinorShift.Emuera.GameData.Function
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				string key = arguments[0].GetStrValue(exm);
-				string cName = arguments[1].GetStrValue(exm);
 				var dict = exm.VEvaluator.VariableData.DataDataTables;
 				if (!dict.ContainsKey(key)) return -1;
 				var dt = dict[key];
+				if (op == Operation.Names)
+				{
+					string[] output;
+					if (arguments.Length > 1 && arguments[1] is VariableTerm v) output = v.Identifier.GetArray() as string[];
+					else output = exm.VEvaluator.RESULTS_ARRAY;
+					for (int i = 0; i < dt.Columns.Count; i++) output[i] = dt.Columns[i].ColumnName;
+					return dt.Columns.Count;
+				}
+				string cName = arguments[1].GetStrValue(exm);
 				bool contains = dt.Columns.Contains(cName);
 				switch (op)
 				{

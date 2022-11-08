@@ -879,7 +879,10 @@ namespace MinorShift.Emuera
 		{
 			if (console == null)
 				return;
-			saveFileDialog.InitialDirectory = Program.ExeDir;
+			#region eee_カレントディレクトリー
+			//saveFileDialog.InitialDirectory = Program.ExeDir;
+			saveFileDialog.InitialDirectory = Program.WorkingDir;
+			#endregion
 			DateTime time = DateTime.Now;
 			string fname = time.ToString("yyyyMMdd-HHmmss");
 			fname += ".log";
