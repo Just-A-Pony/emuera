@@ -1504,6 +1504,7 @@ namespace MinorShift.Emuera.GameView
 			{
 				if (tooltipUsed)
 					window.ToolTip.RemoveAll();
+
 				string title = null;
 				if (pointingString != null)
 					title = pointingString.Title;
@@ -1521,10 +1522,18 @@ namespace MinorShift.Emuera.GameView
 				}
 				if (!string.IsNullOrEmpty(title))
 				{
-                    if (tooltip_duration == 0)
+					title = title.Replace("<br>", Environment.NewLine);
+					if (tooltip_duration == 0 || window.ToolTip.OwnerDraw == true)
+					{
+						if (window.ToolTip.OwnerDraw == true)
+                        {
+							window.ToolTip.Draw += new DrawToolTipEventHandler(ToolTip_Draw);
+							window.ToolTip.Popup += new PopupEventHandler(ToolTip_Popup);
+						}
 						window.ToolTip.SetToolTip(window.MainPicBox, title);
-                    else
-                    {
+					}
+					else
+					{
 						if (window.ToolTip.InitialDelay == 0)
 						{
 							Point mousePos = window.MainPicBox.PointToClient(MainWindow.MousePosition);
@@ -1570,6 +1579,30 @@ namespace MinorShift.Emuera.GameView
 			}
 		}
 
+		private void ToolTip_Draw(object sender, DrawToolTipEventArgs e)
+		{
+			e.DrawBackground();
+			e.DrawBorder();
+			using (Font f = new Font(tooltip_fontname, tooltip_fontsize))
+			{
+				TextRenderer.DrawText(e.Graphics, e.ToolTipText, f, e.Bounds, window.ToolTip.ForeColor, window.ToolTip.BackColor, tooltip_format);
+			}
+		}
+
+		private void ToolTip_Popup(object sender, PopupEventArgs e)
+		{
+			var bitmap = new Bitmap(16, 16);
+			var graphics = Graphics.FromImage(bitmap);
+			Font f = new Font(tooltip_fontname, tooltip_fontsize);
+			var size = graphics.MeasureString((sender as ToolTip).GetToolTip(e.AssociatedControl), f, int.MaxValue);
+			e.ToolTipSize = new Size((int)size.Width, (int)size.Height);
+		}
+
+		public void CustomToolTip(bool b)
+        {
+			window.ToolTip.OwnerDraw = b;
+        }
+
 		public void SetToolTipColor(Color foreColor, Color backColor)
 		{
 			window.ToolTip.ForeColor = foreColor;
@@ -1582,27 +1615,42 @@ namespace MinorShift.Emuera.GameView
 		}
 
         int tooltip_duration = 0;
+		TextFormatFlags tooltip_format = 0;
+		string tooltip_fontname = Config.FontName;
+		long tooltip_fontsize = Config.FontSize;
         public void SetToolTipDuration(int duration)
         {
             tooltip_duration = duration;
+			window.ToolTip.AutoPopDelay = duration;
         }
+		public void SetToolTipFontName(string fn)
+        {
+			tooltip_fontname = fn;
+        }
+		public void SetToolTipFontSize(long fs)
+		{
+			tooltip_fontsize = fs;
+		}
+		public void SetToolTipFormat(long f)
+		{
+			tooltip_format = (TextFormatFlags)f;
+		}
 
+		//private Graphics getGraphics()
+		//{
+		//	//消したいが怖いので残し
+		//	if (!window.Created)
+		//		throw new ExeEE("存在しないウィンドウにアクセスした");
+		//	//if (Config.UseImageBuffer)
+		//	//	return Graphics.FromImage(window.MainPicBox.Image);
+		//	//else
+		//		return window.MainPicBox.CreateGraphics();
+		//}
 
-        //private Graphics getGraphics()
-        //{
-        //	//消したいが怖いので残し
-        //	if (!window.Created)
-        //		throw new ExeEE("存在しないウィンドウにアクセスした");
-        //	//if (Config.UseImageBuffer)
-        //	//	return Graphics.FromImage(window.MainPicBox.Image);
-        //	//else
-        //		return window.MainPicBox.CreateGraphics();
-        //}
+		#endregion
 
-        #endregion
-
-        #region DebugMode系
-        DebugDialog dd = null;
+		#region DebugMode系
+		DebugDialog dd = null;
 		public DebugDialog DebugDialog { get { return dd; } }
 		StringBuilder dConsoleLog = new StringBuilder("");
 		public string DebugConsoleLog { get { return dConsoleLog.ToString(); } }

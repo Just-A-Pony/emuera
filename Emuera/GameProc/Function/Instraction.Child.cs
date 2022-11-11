@@ -2163,6 +2163,76 @@ namespace MinorShift.Emuera.GameProc.Function
 			}
 		}
 		#endregion
+		#region EE_TOOLTIP拡張
+		private sealed class TOOLTIP_SETFONT_Instruction : AbstractInstruction
+		{
+			public TOOLTIP_SETFONT_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.STR_EXPRESSION);
+				//スキップ不可
+				//flag = IS_PRINT | IS_INPUT | EXTENDED;
+				flag = EXTENDED;
+			}
+
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				ExpressionArgument fn = (ExpressionArgument)func.Argument;
+				exm.Console.SetToolTipFontName(fn.Term.GetStrValue(exm));
+			}
+		}
+		private sealed class TOOLTIP_SETFONTSIZE_Instruction : AbstractInstruction
+		{
+			public TOOLTIP_SETFONTSIZE_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
+				//スキップ不可
+				//flag = IS_PRINT | IS_INPUT | EXTENDED;
+				flag = EXTENDED;
+			}
+
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				ExpressionArgument fs = (ExpressionArgument)func.Argument;
+				exm.Console.SetToolTipFontSize(fs.Term.GetIntValue(exm));
+			}
+		}
+		private sealed class TOOLTIP_CUSTOM_Instruction : AbstractInstruction
+		{
+			public TOOLTIP_CUSTOM_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
+				//スキップ不可
+				//flag = IS_PRINT | IS_INPUT | EXTENDED;
+				flag = EXTENDED;
+			}
+
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				ExpressionArgument b = (ExpressionArgument)func.Argument;
+				if (b.Term.GetIntValue(exm) == 0)
+					exm.Console.CustomToolTip(false);
+				else
+					exm.Console.CustomToolTip(true);
+			}
+		}
+		private sealed class TOOLTIP_FORMAT_Instruction : AbstractInstruction
+		{
+			public TOOLTIP_FORMAT_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
+				//スキップ不可
+				//flag = IS_PRINT | IS_INPUT | EXTENDED;
+				flag = EXTENDED;
+			}
+
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				ExpressionArgument i = (ExpressionArgument)func.Argument;
+				exm.Console.SetToolTipFormat(i.Term.GetIntValue(exm));
+			}
+		}
+		#endregion
+
 		#endregion
 
 		#region flowControlFunction
