@@ -1591,10 +1591,8 @@ namespace MinorShift.Emuera.GameView
 
 		private void ToolTip_Popup(object sender, PopupEventArgs e)
 		{
-			var bitmap = new Bitmap(16, 16);
-			var graphics = Graphics.FromImage(bitmap);
 			Font f = new Font(tooltip_fontname, tooltip_fontsize);
-			var size = graphics.MeasureString((sender as ToolTip).GetToolTip(e.AssociatedControl), f, int.MaxValue);
+			var size = TextRenderer.MeasureText((sender as ToolTip).GetToolTip(e.AssociatedControl), f, new Size(int.MaxValue, int.MaxValue), tooltip_format);
 			e.ToolTipSize = new Size((int)size.Width, (int)size.Height);
 		}
 
@@ -1615,10 +1613,10 @@ namespace MinorShift.Emuera.GameView
 		}
 
         int tooltip_duration = 0;
-		TextFormatFlags tooltip_format = 0;
 		string tooltip_fontname = Config.FontName;
 		long tooltip_fontsize = Config.FontSize;
-        public void SetToolTipDuration(int duration)
+		TextFormatFlags tooltip_format = 0;
+		public void SetToolTipDuration(int duration)
         {
             tooltip_duration = duration;
 			window.ToolTip.AutoPopDelay = duration;
