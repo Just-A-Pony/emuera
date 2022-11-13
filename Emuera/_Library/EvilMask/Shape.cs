@@ -18,21 +18,21 @@ namespace EvilMask.Emuera
 		{
 			public static void DrawBorder(Graphics graph, Rectangle rect, int[] border, int[] radius, Color[] colors, Color bgColor)
 			{
-				if (border != null && (radius == null || radius[Corner.LeftTop] == 0))
+				if (radius == null || radius[Corner.LeftTop] == 0)
 					drawNormalCornerBorderLeftTop(graph, rect, border, bgColor, colors, false, false);
-				else if (radius != null && radius[Corner.LeftTop] != 0)
+				else
 					drawRoundedCornerBorderLeftTop(graph, rect, border, radius, bgColor, colors, false, false);
-				if (border != null && (radius == null || radius[Corner.RightTop] == 0))
+				if (radius == null || radius[Corner.RightTop] == 0)
 					drawNormalCornerBorderLeftTop(graph, rect, border, bgColor, colors, true, false);
-				else if (radius != null && radius[Corner.RightTop] != 0)
+				else
 					drawRoundedCornerBorderLeftTop(graph, rect, border, radius, bgColor, colors, true, false);
-				if (border != null && (radius == null || radius[Corner.LeftBottom] == 0))
+				if (radius == null || radius[Corner.LeftBottom] == 0)
 					drawNormalCornerBorderLeftTop(graph, rect, border, bgColor, colors, false, true);
-				else if (radius != null && radius[Corner.LeftBottom] != 0)
+				else
 					drawRoundedCornerBorderLeftTop(graph, rect, border, radius, bgColor, colors, false, true);
-				if (border != null && (radius == null || radius[Corner.RightBottom] == 0))
+				if (radius == null || radius[Corner.RightBottom] == 0)
 					drawNormalCornerBorderLeftTop(graph, rect, border, bgColor, colors, true, true);
-				else if (radius != null && radius[Corner.RightBottom] != 0)
+				else
 					drawRoundedCornerBorderLeftTop(graph, rect, border, radius, bgColor, colors, true, true);
 			}
 			static void drawNormalCornerBorderLeftTop(Graphics graph, Rectangle rect, int[] border, Color bgColor, Color[] colors, bool flipX, bool flipY)
@@ -42,20 +42,21 @@ namespace EvilMask.Emuera
 				if (bgColor != Color.Transparent)
 				{
 					// 1/4の背景を描画
-					var bWidth = rect.Width - border[Direction.Left] - border[Direction.Right];
+					var bWidth = rect.Width - (border != null ? border[Direction.Left] - border[Direction.Right] : 0);
 					var bHalfWidth = bWidth / 2;
-					var bHeigh = rect.Height - border[Direction.Top] - border[Direction.Bottom];
+					var bHeigh = rect.Height - (border != null ? border[Direction.Top] - border[Direction.Bottom] : 0);
 					var bHalfHeigh = bHeigh / 2;
 					if ((flipX ? bWidth - bHalfWidth : bHalfWidth) > 0 && (flipY ? bHeigh - bHalfHeigh : bHalfHeigh) > 0)
 						using (var brush = new SolidBrush(bgColor))
 						{
 							graph.FillRectangle(brush, new Rectangle(
-								flipX ? rect.X + border[Direction.Left] + bHalfWidth : rect.X + border[Direction.Left],
-								flipY ? rect.Y + border[Direction.Top] + bHalfHeigh : rect.Y + border[Direction.Top],
-								flipX ? bWidth - bHalfWidth : bHalfWidth,
-								flipY ? bHeigh - bHalfHeigh : bHalfHeigh));
+								rect.X + (border != null ? border[Direction.Left] : 0) + (flipX ? bHalfWidth : 0),
+								rect.Y + (border != null ? border[Direction.Top] : 0) + (flipY ? bHalfHeigh : 0),
+								flipX ? bWidth - bHalfWidth : bHalfWidth + 1,
+								flipY ? bHeigh - bHalfHeigh : bHalfHeigh + 1));
 						}
 				}
+				if (border == null) return;
 				if (border[flipX ? Direction.Right : Direction.Left] > 0)
 				{
 					// 左枠の半分
@@ -151,8 +152,8 @@ namespace EvilMask.Emuera
 								var bgRect = new Rectangle(
 									flipX ? rect.X + (border != null ? border[Direction.Left] : 0) + bHalfWidth : rect.X + (border != null ? border[Direction.Left] : 0),
 									flipY ? rect.Y + (border != null ? border[Direction.Top] : 0) + bHalfHeigh : rect.Y + (border != null ? border[Direction.Top] : 0),
-									flipX ? bWidth - bHalfWidth : bHalfWidth,
-									flipY ? bHeigh - bHalfHeigh : bHalfHeigh);
+									flipX ? bWidth - bHalfWidth : bHalfWidth + 1,
+									flipY ? bHeigh - bHalfHeigh : bHalfHeigh + 1);
 								if (hasInnerEllipse)
 									using (var region = new Region(bgRect))
 									{
