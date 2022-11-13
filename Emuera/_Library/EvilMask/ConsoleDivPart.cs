@@ -138,9 +138,10 @@ namespace MinorShift.Emuera.GameView
 
 			graph.SetClip(rect, CombineMode.Replace);
 
+			pointY = rect.Y;
 			foreach (var child in children)
 			{
-				child.DrawTo(graph, rect.Y, isBackLog, true, mode);
+				child.DrawTo(graph, pointY, isBackLog, true, mode);
 				pointY += Config.LineHeight;
 			}
 			graph.ResetClip();
