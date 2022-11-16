@@ -122,6 +122,7 @@ namespace MinorShift.Emuera.Content
 			System.Drawing.Drawing2D.GraphicsPath gp =
 				new System.Drawing.Drawing2D.GraphicsPath();
 			gp.AddString(text, usingFont.FontFamily, (int)usingFont.Style, usingFont.Height, new Point(x, y), format);
+			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 			if (brush != null)
 				g.FillPath(brush, gp);
 			else
