@@ -101,10 +101,20 @@ namespace MinorShift.Emuera.GameProc
 		{
 			console.ReadAnyKey();
 		}
+		long flowinputdef = 0;
+		bool flowinput = false;
 
 		void setWaitInput()
 		{
 			InputRequest req = new InputRequest();
+            #region EE_SystemInput拡張
+            if (flowinput)
+			{
+				req.HasDefValue = true;
+				req.DefIntValue = flowinputdef;
+				req.MouseInput = flowinput;
+			}
+			#endregion
 			req.InputType = InputType.IntValue;
 			req.IsSystemInput = true;
 			console.WaitInput(req);

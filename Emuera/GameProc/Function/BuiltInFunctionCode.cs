@@ -375,6 +375,7 @@ namespace MinorShift.Emuera.GameProc.Function
 		TOOLTIP_SETFONTSIZE,
 		TOOLTIP_CUSTOM,
 		TOOLTIP_FORMAT,
+		FLOWINPUT,
 		#endregion
 
 		#region EM

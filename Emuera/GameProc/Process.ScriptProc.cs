@@ -775,12 +775,21 @@ namespace MinorShift.Emuera.GameProc
 						state.JumpTo(func.JumpTo);
 						break;
 					}
+				#region EE_SysteInput拡張
+				case FunctionCode.FLOWINPUT:
+                    {
+						SpInputsArgument arg = (SpInputsArgument)func.Argument;
+						flowinputdef = arg.Def.GetIntValue(exm);
+						flowinput = arg.Mouse.GetIntValue(exm) != 0;
+						break;
+					}
+				#endregion
 #if DEBUG
 				default:
 					throw new ExeEE(trerror.UndefinedFunc.Text);
 #endif
 			}
-			return;
+            return;
 		}
 
 		bool saveSkip = false;
