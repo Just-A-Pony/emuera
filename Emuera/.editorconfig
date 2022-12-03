@@ -1,0 +1,8 @@
+
+[*.cs]
+indent_size = 4
+indent_style = tab
+
+[_Library/ImageProcessor/*.cs]
+indent_size = 4
+indent_style = space
