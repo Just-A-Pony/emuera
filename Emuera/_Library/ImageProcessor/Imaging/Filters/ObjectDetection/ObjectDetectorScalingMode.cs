@@ -1,4 +1,4 @@
-namespace ImageProcessor.Imaging.Filters.ObjectDetection
+﻿namespace ImageProcessor.Imaging.Filters.ObjectDetection
 {
     /// <summary>
     ///   Object detector options for window scaling.
