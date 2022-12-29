@@ -229,6 +229,7 @@
     </Compile>
     <Compile Include="GameProc\Function\Argument.cs" />
     <Compile Include="GameProc\Process.CalledFunction.cs" />
+    <None Include=".editorconfig" />
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
