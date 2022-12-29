@@ -1465,9 +1465,14 @@ namespace MinorShift.Emuera.GameView
 					if (eidx < edepth.Length && edepth[eidx] == depth)
 					{
 						// 行範囲を超えたパーツを描画
-						foreach(var p in escapedParts[edepth[eidx]])
+						foreach (var p in escapedParts[edepth[eidx]])
 						{
 							var baseLineNo = p.Parent.ParentLine.LineNo;
+							if (GlobalStatic.Console?.GetLineNo > Config.MaxLog)
+							{
+								var correction = GlobalStatic.Console.GetLineNo - Config.MaxLog;
+								baseLineNo -= correction;
+							}
 							p.Parent.DrawPartTo(graph, p, topPointY + (baseLineNo - topLineNo) * Config.LineHeight, isBackLog, Config.TextDrawingMode);
 						}
 						eidx++;

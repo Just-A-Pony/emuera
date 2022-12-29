@@ -74,6 +74,12 @@ namespace EvilMask.Emuera
 		}
 		public static void GetPartsInRange(int top, int bottom, int gen, Dictionary<int, List<AConsoleDisplayPart>> rmap)
 		{
+			if (GlobalStatic.Console?.GetLineNo > Config.MaxLog)
+			{
+				var correction = GlobalStatic.Console.GetLineNo - Config.MaxLog;
+				top += correction;
+				bottom += correction;
+			}
 			if (rmap == null) return;
 			rmap.Clear();
 			foreach (var row in DataTableExtensions.AsEnumerable(dt)

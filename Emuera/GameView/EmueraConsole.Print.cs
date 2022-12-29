@@ -120,6 +120,7 @@ namespace MinorShift.Emuera.GameView
 		/// </summary>
 		int lastDrawnLineNo = -1;
 		int lineNo = 0;
+		public int GetLineNo { get { return lineNo; } }
 		Int64 logicalLineCount = 0;
 		public long LineCount { get { return logicalLineCount; } }
 		private void addRangeDisplayLine(ConsoleDisplayLine[] lineList)
