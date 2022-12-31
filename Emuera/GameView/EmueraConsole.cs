@@ -62,6 +62,8 @@ namespace MinorShift.Emuera.GameView
 
 	internal sealed partial class EmueraConsole : IDisposable
 	{
+		public Rikaichan rikaichan = new Rikaichan();
+
 		public EmueraConsole(MainWindow parent)
 		{
 			window = parent;
@@ -1504,6 +1506,7 @@ namespace MinorShift.Emuera.GameView
 				//}
 
 			}
+			rikaichan.OnPaint(graph, stringMeasure, window.MainPicBox.Width);
 			//ToolTip描画
 			if (lastPointingString != pointingString || lastSelectingCBGButtonInt != selectingCBGButtonInt)
 			{
@@ -1875,6 +1878,7 @@ namespace MinorShift.Emuera.GameView
 		/// <returns>この後でRefreshStringsが必要かどうか</returns>
 		public bool MoveMouse(Point point)
 		{
+			int curLineY = -1;
 
 			if (cbgButtonMap != null && cbgButtonMap.IsCreated)
 			{
@@ -1982,6 +1986,7 @@ namespace MinorShift.Emuera.GameView
 										&& (relPointY >= part.Top) && (relPointY <= part.Bottom))
 									{
 										pointing = button;
+										curLineY = window.MainPicBox.Height - Config.LineHeight * (bottomLineNo - i + 1);
 										if (pointing.IsButton)
 											goto breakfor;
 									}
@@ -2047,6 +2052,74 @@ namespace MinorShift.Emuera.GameView
 			bool needRefresh = select != selectingButton || pointing != pointingString;
 			pointingString = pointing;
 			selectingButton = select;
+			if (rikaichan.enabled)
+			{
+				//if (_pointingString != _lastPointingString && 
+				if (pointing == null || pointing.StrArray.Length == 0) goto rikaichan_not_found;
+
+				AConsoleDisplayPart cdp;
+				ConsoleStyledString css;
+				for (int first_subbutton_i = 0; first_subbutton_i < pointing.StrArray.Length; first_subbutton_i++)
+				{
+					cdp = pointing.StrArray[first_subbutton_i];
+					if (cdp.rikaichaned)
+					{
+						css = cdp as ConsoleStyledString;
+						if (css.PointX + css.Width > point.X)
+						{
+							goto rikaichan_found;
+						}
+					}
+				}
+
+				goto rikaichan_not_found;
+
+			rikaichan_found:
+				int xpos = point.X - css.PointX;
+				//rikaichan.laststr_css = pointing; //LATER: do I even need this?
+				//rikaichan.laststr = rikaichan.laststr_css.ToString();
+
+				rikaichan.laststr = css.Str;
+				if (css.NextLine != null)
+				{
+					rikaichan.laststr += css.NextLine.Str;
+				}
+
+				rikaichan.strpos = css.Ends.Length - 1;
+				for (int i = css.Ends.Length - 1; i >= 0; i--)
+				{
+					if (css.Ends[i] < xpos) break;
+					rikaichan.strpos = i;
+				}
+
+				if (pointingString == lastPointingString && rikaichan.strpos == rikaichan.laststrpos) goto rikaichan_end;
+
+				rikaichan.css = css;
+				rikaichan.point = point;
+				rikaichan.curLineY = curLineY;
+
+				rikaichan.hidden = false;
+				rikaichan.laststrpos = rikaichan.strpos;
+				//int show = 3;
+				//int showmax = rikaichan.laststr.Length - rikaichan.strpos;
+				//if (showmax < show) show = showmax;
+				//rikaichan.output = rikaichan.laststr.Substring(rikaichan.strpos, show);
+				rikaichan.output = rikaichan.laststr.Substring(rikaichan.strpos);
+
+				//rikaichan.refresh_num++;
+				//rikaichan.output = rikaichan.refresh_num.ToString();
+				needRefresh = true;
+				goto rikaichan_end;
+
+			rikaichan_not_found:
+				if (rikaichan.hidden == false)
+				{
+					rikaichan.hidden = true;
+					needRefresh = true;
+				}
+			} //if rikaichan.enabled
+		rikaichan_end:
+
 			return needRefresh;
 		}
 

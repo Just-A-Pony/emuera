@@ -508,6 +508,13 @@ namespace MinorShift.Emuera.Forms
 			setNumericUpDown(numericUpDownCBMinTimer, ConfigCode.CBMinTimer);
 			#endregion
 
+			setCheckBox(rikaiCheckBoxEnable, ConfigCode.RikaiEnabled);
+			setCheckBox(rikaiCheckBoxSeparateBoxes, ConfigCode.RikaiUseSeparateBoxes);
+			setColorBox(rikaiColorBoxBG, ConfigCode.RikaiColorBack);
+			setColorBox(rikaiColorBoxText, ConfigCode.RikaiColorText);
+			rikaiDictFilenameTextBox.Text = Config.RikaiFilename;
+
+
 		}
 
 		private void SaveConfig()
@@ -691,6 +698,12 @@ namespace MinorShift.Emuera.Forms
 			config.GetConfigItem(ConfigCode.CBScrollCount).SetValue<int>((int)numericUpDownCBScrollCount.Value);
 			config.GetConfigItem(ConfigCode.CBMinTimer).SetValue<int>((int)numericUpDownCBMinTimer.Value);
 			#endregion
+
+			config.GetConfigItem(ConfigCode.RikaiEnabled).SetValue<bool>(rikaiCheckBoxEnable.Checked);
+			config.GetConfigItem(ConfigCode.RikaiFilename).SetValue<string>(rikaiDictFilenameTextBox.Text);
+			config.GetConfigItem(ConfigCode.RikaiColorBack).SetValue<Color>(rikaiColorBoxBG.SelectingColor);
+			config.GetConfigItem(ConfigCode.RikaiColorText).SetValue<Color>(rikaiColorBoxText.SelectingColor);
+			config.GetConfigItem(ConfigCode.RikaiUseSeparateBoxes).SetValue<bool>(rikaiCheckBoxSeparateBoxes.Checked);
 
 
 			config.SaveConfig();
@@ -881,5 +894,20 @@ namespace MinorShift.Emuera.Forms
         {
             textBox2.Enabled = ((ComboBox)sender).SelectedIndex == 3;
         }
-    }
+
+		private void rikaiFlowLayoutPanel_Paint(object sender, PaintEventArgs e)
+		{
+
+		}
+
+		private void rikaiDictFilenameLabel_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void rikaiNote2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+		{
+			System.Diagnostics.Process.Start("https://wiki.eragames.rip/index.php/Emuera-Rikaichan");
+		}
+	}
 }

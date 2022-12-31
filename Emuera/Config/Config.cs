@@ -168,6 +168,13 @@ namespace MinorShift.Emuera
 			CBScrollCount = instance.GetConfigValue<int>(ConfigCode.CBScrollCount);
 			CBMinTimer = instance.GetConfigValue<int>(ConfigCode.CBMinTimer);
 			#endregion
+			#region EmuEra-Rikaichan related settings
+			RikaiEnabled = instance.GetConfigValue<bool>(ConfigCode.RikaiEnabled);
+			RikaiFilename = instance.GetConfigValue<string>(ConfigCode.RikaiFilename);
+			RikaiColorBack = instance.GetConfigValue<Color>(ConfigCode.RikaiColorBack);
+			RikaiColorText = instance.GetConfigValue<Color>(ConfigCode.RikaiColorText);
+			RikaiUseSeparateBoxes = instance.GetConfigValue<bool>(ConfigCode.RikaiUseSeparateBoxes);
+			#endregion
 
 
 			UseLanguage lang = instance.GetConfigValue<UseLanguage>(ConfigCode.useLanguage);
@@ -676,6 +683,13 @@ namespace MinorShift.Emuera
 		public static int CBBufferSize { get; private set; }
 		public static int CBScrollCount { get; private set; }
 		public static int CBMinTimer { get; private set; }
+		#endregion
+		#region EmuEra-Rikaichan related settings
+		public static bool RikaiEnabled { get; private set; }
+		public static string RikaiFilename { get; private set; }
+		public static Color RikaiColorBack { get; private set; }
+		public static Color RikaiColorText { get; private set; }
+		public static bool RikaiUseSeparateBoxes { get; private set; }
 		#endregion
 	}
 }

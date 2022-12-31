@@ -80,6 +80,19 @@ namespace MinorShift.Emuera.GameView
 			}
 			Width = sm.GetDisplayLength(Str, Font);
 			XsubPixel = subPixel;
+
+			if (!rikaichaned)
+			{
+				rikaichaned = true;
+				int len = Str.Length;
+				Ends = new int[len];
+				for (int i = 0; i < len; i++)
+				{
+					String temp = Str.Substring(0, i + 1);
+					Ends[i] = sm.GetDisplayLength(temp, Font);
+				}
+
+			}
 		}
 
 		public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)

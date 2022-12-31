@@ -105,6 +105,10 @@
             this.ScrollRange = new System.Windows.Forms.Label();
             this.tabPageFont = new System.Windows.Forms.TabPage();
             this.flowLayoutPanel27 = new System.Windows.Forms.FlowLayoutPanel();
+            this.colorBoxBG = new MinorShift.Emuera.Forms.ColorBox();
+            this.colorBoxFG = new MinorShift.Emuera.Forms.ColorBox();
+            this.colorBoxSelecting = new MinorShift.Emuera.Forms.ColorBox();
+            this.colorBoxBacklog = new MinorShift.Emuera.Forms.ColorBox();
             this.flowLayoutPanel24 = new System.Windows.Forms.FlowLayoutPanel();
             this.comboBox2 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -204,16 +208,24 @@
             this.numericUpDownCBMinTimer = new System.Windows.Forms.NumericUpDown();
             this.label33 = new System.Windows.Forms.Label();
             this.label34 = new System.Windows.Forms.Label();
+            this.tabPageRikai = new System.Windows.Forms.TabPage();
+            this.rikaiFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
+            this.rikaiCheckBoxEnable = new System.Windows.Forms.CheckBox();
+            this.flowLayoutPanel42 = new System.Windows.Forms.FlowLayoutPanel();
+            this.rikaiDictFilenameLabel = new System.Windows.Forms.Label();
+            this.rikaiDictFilenameTextBox = new System.Windows.Forms.TextBox();
+            this.rikaiColorBoxBG = new MinorShift.Emuera.Forms.ColorBox();
+            this.rikaiColorBoxText = new MinorShift.Emuera.Forms.ColorBox();
+            this.rikaiCheckBoxSeparateBoxes = new System.Windows.Forms.CheckBox();
+            this.rikaiNote1 = new System.Windows.Forms.Label();
+            this.rikaiNote2 = new System.Windows.Forms.LinkLabel();
+            this.rikaiNote3 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.colorBoxBG = new MinorShift.Emuera.Forms.ColorBox();
-            this.colorBoxFG = new MinorShift.Emuera.Forms.ColorBox();
-            this.colorBoxSelecting = new MinorShift.Emuera.Forms.ColorBox();
-            this.colorBoxBacklog = new MinorShift.Emuera.Forms.ColorBox();
             this.tabControl.SuspendLayout();
             this.tabEnvironment.SuspendLayout();
             this.flowLayoutPanel13.SuspendLayout();
@@ -279,6 +291,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCBScrollCount)).BeginInit();
             this.flowLayoutPanel41.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCBMinTimer)).BeginInit();
+            this.tabPageRikai.SuspendLayout();
+            this.rikaiFlowLayoutPanel.SuspendLayout();
+            this.flowLayoutPanel42.SuspendLayout();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
@@ -316,6 +331,7 @@
             this.tabControl.Controls.Add(this.tabPageCompati);
             this.tabControl.Controls.Add(this.tabPageDebug);
             this.tabControl.Controls.Add(this.tabPageClipboard);
+            this.tabControl.Controls.Add(this.tabPageRikai);
             resources.ApplyResources(this.tabControl, "tabControl");
             this.tabControl.Multiline = true;
             this.tabControl.Name = "tabControl";
@@ -790,6 +806,34 @@
             this.flowLayoutPanel27.Controls.Add(this.flowLayoutPanel25);
             this.flowLayoutPanel27.Controls.Add(this.flowLayoutPanel26);
             this.flowLayoutPanel27.Name = "flowLayoutPanel27";
+            // 
+            // colorBoxBG
+            // 
+            this.colorBoxBG.ButtonText = "背景色";
+            resources.ApplyResources(this.colorBoxBG, "colorBoxBG");
+            this.colorBoxBG.Name = "colorBoxBG";
+            this.colorBoxBG.SelectingColor = System.Drawing.Color.Transparent;
+            // 
+            // colorBoxFG
+            // 
+            this.colorBoxFG.ButtonText = "文字色";
+            resources.ApplyResources(this.colorBoxFG, "colorBoxFG");
+            this.colorBoxFG.Name = "colorBoxFG";
+            this.colorBoxFG.SelectingColor = System.Drawing.Color.Transparent;
+            // 
+            // colorBoxSelecting
+            // 
+            this.colorBoxSelecting.ButtonText = "選択中文字色";
+            resources.ApplyResources(this.colorBoxSelecting, "colorBoxSelecting");
+            this.colorBoxSelecting.Name = "colorBoxSelecting";
+            this.colorBoxSelecting.SelectingColor = System.Drawing.Color.Transparent;
+            // 
+            // colorBoxBacklog
+            // 
+            this.colorBoxBacklog.ButtonText = "履歴文字色";
+            resources.ApplyResources(this.colorBoxBacklog, "colorBoxBacklog");
+            this.colorBoxBacklog.Name = "colorBoxBacklog";
+            this.colorBoxBacklog.SelectingColor = System.Drawing.Color.Transparent;
             // 
             // flowLayoutPanel24
             // 
@@ -1494,6 +1538,88 @@
             resources.ApplyResources(this.label34, "label34");
             this.label34.Name = "label34";
             // 
+            // tabPageRikai
+            // 
+            this.tabPageRikai.Controls.Add(this.rikaiFlowLayoutPanel);
+            resources.ApplyResources(this.tabPageRikai, "tabPageRikai");
+            this.tabPageRikai.Name = "tabPageRikai";
+            this.tabPageRikai.UseVisualStyleBackColor = true;
+            // 
+            // rikaiFlowLayoutPanel
+            // 
+            this.rikaiFlowLayoutPanel.Controls.Add(this.rikaiCheckBoxEnable);
+            this.rikaiFlowLayoutPanel.Controls.Add(this.flowLayoutPanel42);
+            this.rikaiFlowLayoutPanel.Controls.Add(this.rikaiColorBoxBG);
+            this.rikaiFlowLayoutPanel.Controls.Add(this.rikaiColorBoxText);
+            this.rikaiFlowLayoutPanel.Controls.Add(this.rikaiCheckBoxSeparateBoxes);
+            this.rikaiFlowLayoutPanel.Controls.Add(this.rikaiNote1);
+            this.rikaiFlowLayoutPanel.Controls.Add(this.rikaiNote2);
+            this.rikaiFlowLayoutPanel.Controls.Add(this.rikaiNote3);
+            resources.ApplyResources(this.rikaiFlowLayoutPanel, "rikaiFlowLayoutPanel");
+            this.rikaiFlowLayoutPanel.Name = "rikaiFlowLayoutPanel";
+            this.rikaiFlowLayoutPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.rikaiFlowLayoutPanel_Paint);
+            // 
+            // rikaiCheckBoxEnable
+            // 
+            resources.ApplyResources(this.rikaiCheckBoxEnable, "rikaiCheckBoxEnable");
+            this.rikaiCheckBoxEnable.Name = "rikaiCheckBoxEnable";
+            this.rikaiCheckBoxEnable.UseVisualStyleBackColor = true;
+            // 
+            // flowLayoutPanel42
+            // 
+            this.flowLayoutPanel42.Controls.Add(this.rikaiDictFilenameLabel);
+            this.flowLayoutPanel42.Controls.Add(this.rikaiDictFilenameTextBox);
+            resources.ApplyResources(this.flowLayoutPanel42, "flowLayoutPanel42");
+            this.flowLayoutPanel42.Name = "flowLayoutPanel42";
+            // 
+            // rikaiDictFilenameLabel
+            // 
+            resources.ApplyResources(this.rikaiDictFilenameLabel, "rikaiDictFilenameLabel");
+            this.rikaiDictFilenameLabel.Name = "rikaiDictFilenameLabel";
+            this.rikaiDictFilenameLabel.Click += new System.EventHandler(this.rikaiDictFilenameLabel_Click);
+            // 
+            // rikaiDictFilenameTextBox
+            // 
+            resources.ApplyResources(this.rikaiDictFilenameTextBox, "rikaiDictFilenameTextBox");
+            this.rikaiDictFilenameTextBox.Name = "rikaiDictFilenameTextBox";
+            // 
+            // rikaiColorBoxBG
+            // 
+            this.rikaiColorBoxBG.ButtonText = "Background Color";
+            resources.ApplyResources(this.rikaiColorBoxBG, "rikaiColorBoxBG");
+            this.rikaiColorBoxBG.Name = "rikaiColorBoxBG";
+            this.rikaiColorBoxBG.SelectingColor = System.Drawing.Color.Transparent;
+            // 
+            // rikaiColorBoxText
+            // 
+            this.rikaiColorBoxText.ButtonText = "Text Color";
+            resources.ApplyResources(this.rikaiColorBoxText, "rikaiColorBoxText");
+            this.rikaiColorBoxText.Name = "rikaiColorBoxText";
+            this.rikaiColorBoxText.SelectingColor = System.Drawing.Color.Transparent;
+            // 
+            // rikaiCheckBoxSeparateBoxes
+            // 
+            resources.ApplyResources(this.rikaiCheckBoxSeparateBoxes, "rikaiCheckBoxSeparateBoxes");
+            this.rikaiCheckBoxSeparateBoxes.Name = "rikaiCheckBoxSeparateBoxes";
+            this.rikaiCheckBoxSeparateBoxes.UseVisualStyleBackColor = true;
+            // 
+            // rikaiNote1
+            // 
+            resources.ApplyResources(this.rikaiNote1, "rikaiNote1");
+            this.rikaiNote1.Name = "rikaiNote1";
+            // 
+            // rikaiNote2
+            // 
+            resources.ApplyResources(this.rikaiNote2, "rikaiNote2");
+            this.rikaiNote2.Name = "rikaiNote2";
+            this.rikaiNote2.TabStop = true;
+            this.rikaiNote2.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.rikaiNote2_LinkClicked);
+            // 
+            // rikaiNote3
+            // 
+            resources.ApplyResources(this.rikaiNote3, "rikaiNote3");
+            this.rikaiNote3.Name = "rikaiNote3";
+            // 
             // label16
             // 
             resources.ApplyResources(this.label16, "label16");
@@ -1524,34 +1650,6 @@
             this.flowLayoutPanel2.Controls.Add(this.buttonReboot);
             this.flowLayoutPanel2.Controls.Add(this.buttonCancel);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
-            // 
-            // colorBoxBG
-            // 
-            this.colorBoxBG.ButtonText = "背景色";
-            resources.ApplyResources(this.colorBoxBG, "colorBoxBG");
-            this.colorBoxBG.Name = "colorBoxBG";
-            this.colorBoxBG.SelectingColor = System.Drawing.Color.Transparent;
-            // 
-            // colorBoxFG
-            // 
-            this.colorBoxFG.ButtonText = "文字色";
-            resources.ApplyResources(this.colorBoxFG, "colorBoxFG");
-            this.colorBoxFG.Name = "colorBoxFG";
-            this.colorBoxFG.SelectingColor = System.Drawing.Color.Transparent;
-            // 
-            // colorBoxSelecting
-            // 
-            this.colorBoxSelecting.ButtonText = "選択中文字色";
-            resources.ApplyResources(this.colorBoxSelecting, "colorBoxSelecting");
-            this.colorBoxSelecting.Name = "colorBoxSelecting";
-            this.colorBoxSelecting.SelectingColor = System.Drawing.Color.Transparent;
-            // 
-            // colorBoxBacklog
-            // 
-            this.colorBoxBacklog.ButtonText = "履歴文字色";
-            resources.ApplyResources(this.colorBoxBacklog, "colorBoxBacklog");
-            this.colorBoxBacklog.Name = "colorBoxBacklog";
-            this.colorBoxBacklog.SelectingColor = System.Drawing.Color.Transparent;
             // 
             // ConfigDialog
             // 
@@ -1676,6 +1774,11 @@
             this.flowLayoutPanel41.ResumeLayout(false);
             this.flowLayoutPanel41.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCBMinTimer)).EndInit();
+            this.tabPageRikai.ResumeLayout(false);
+            this.rikaiFlowLayoutPanel.ResumeLayout(false);
+            this.rikaiFlowLayoutPanel.PerformLayout();
+            this.flowLayoutPanel42.ResumeLayout(false);
+            this.flowLayoutPanel42.PerformLayout();
             this.flowLayoutPanel1.ResumeLayout(false);
             this.flowLayoutPanel1.PerformLayout();
             this.flowLayoutPanel3.ResumeLayout(false);
@@ -1873,5 +1976,17 @@
         private System.Windows.Forms.Label label33;
         private System.Windows.Forms.Label label34;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel32;
-    }
+		private System.Windows.Forms.TabPage tabPageRikai;
+		private System.Windows.Forms.FlowLayoutPanel rikaiFlowLayoutPanel;
+		private System.Windows.Forms.CheckBox rikaiCheckBoxEnable;
+		private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel42;
+		private System.Windows.Forms.Label rikaiDictFilenameLabel;
+		private System.Windows.Forms.TextBox rikaiDictFilenameTextBox;
+		private ColorBox rikaiColorBoxBG;
+		private ColorBox rikaiColorBoxText;
+		private System.Windows.Forms.CheckBox rikaiCheckBoxSeparateBoxes;
+		private System.Windows.Forms.Label rikaiNote1;
+		private System.Windows.Forms.LinkLabel rikaiNote2;
+		private System.Windows.Forms.Label rikaiNote3;
+	}
 }

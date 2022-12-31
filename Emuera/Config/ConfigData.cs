@@ -158,6 +158,13 @@ namespace MinorShift.Emuera
 			configArray.Add(new ConfigItem<int>(ConfigCode.CBScrollCount, "スクロールの行数", "Clipboard- Scrolled Lines per Key", 5));
 			configArray.Add(new ConfigItem<int>(ConfigCode.CBMinTimer, "クリップボードの更新間隔(ミリ秒)", "Clipboard- min time between pastes", 800));
 			#endregion
+			#region EmuEra-Rikaichan related settings
+			configArray.Add(new ConfigItem<bool>(ConfigCode.RikaiEnabled, "Rikai- Enabled", "Rikai- Enabled", false));
+			configArray.Add(new ConfigItem<string>(ConfigCode.RikaiFilename, "Rikai- Dictionary Filename", "Rikai- Dictionary Filename", "Emuera-Rikai-edict.txt-eucjp"));
+			configArray.Add(new ConfigItem<Color>(ConfigCode.RikaiColorBack, "Rikai- Back Color", "Rikai- Back Color", Color.FromArgb(0, 0, 0x8B))); ////Color.DarkBlue
+			configArray.Add(new ConfigItem<Color>(ConfigCode.RikaiColorText, "Rikai- Text Color", "Rikai- Text Color", Color.FromArgb(0, 0, 0x8B))); ////Color.White
+			configArray.Add(new ConfigItem<bool>(ConfigCode.RikaiUseSeparateBoxes, "Rikai- Use Separate Boxes", "Rikai- Use Separate Boxes", true));
+			#endregion
 
 			debugArray.Add(new ConfigItem<bool>(ConfigCode.DebugShowWindow, "起動時にデバッグウインドウを表示する", "Show debug window on startup", true));
 			debugArray.Add(new ConfigItem<bool>(ConfigCode.DebugWindowTopMost, "デバッグウインドウを最前面に表示する", "Debug window always on top", true));

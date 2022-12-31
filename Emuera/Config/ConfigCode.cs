@@ -166,6 +166,13 @@ namespace MinorShift.Emuera
 		#region EM_私家版_セーブ圧縮
 		ZipSaveData,
 		#endregion
+		#region EmuEra-Rikaichan related settings
+		RikaiEnabled = 250,
+		RikaiFilename,
+		RikaiColorBack,
+		RikaiColorText,
+		RikaiUseSeparateBoxes,
+		#endregion
 		#region EM_私家版_Emuera多言語化改造
 		EnglishConfigOutput,
 		EmueraLang,

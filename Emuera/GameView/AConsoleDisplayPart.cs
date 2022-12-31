@@ -45,6 +45,10 @@ namespace MinorShift.Emuera.GameView
 			return sb;
 		}
 		#endregion
+
+		public bool rikaichaned = false;
+		public int[] Ends = null;
+		public AConsoleDisplayPart NextLine;
 	}
 
 	/// <summary>

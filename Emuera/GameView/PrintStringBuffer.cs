@@ -229,6 +229,7 @@ namespace MinorShift.Emuera.GameView
 					{
 						ConsoleButtonString newButton = buttonList[i].DivideAt(divIndex, stringMeasure);
 						//newButton.CalcPointX(buttonList[i].PointX + buttonList[i].Width);
+						buttonList[i].StrArray[0].NextLine = newButton.StrArray[0];
 						buttonList.Insert(i + 1, newButton);
 						lineButtonList.Add(buttonList[i]);
 						i++;
@@ -255,6 +256,10 @@ namespace MinorShift.Emuera.GameView
 					pointX += buttonList[j].Width;
 				}
 				i--;//buttonList[i]は新しい行に含めないので次の行のために再検討する必要がある(直後のi++と相殺)
+			}
+			for (int i = lineButtonList.Count - 1; i > 0; i--)
+			{
+				lineButtonList[i - 1].StrArray[0].NextLine = lineButtonList[i].StrArray[0];
 			}
 			if (lineButtonList.Count > 0)
 			{
