@@ -1547,6 +1547,7 @@
             // 
             // rikaiFlowLayoutPanel
             // 
+            resources.ApplyResources(this.rikaiFlowLayoutPanel, "rikaiFlowLayoutPanel");
             this.rikaiFlowLayoutPanel.Controls.Add(this.rikaiCheckBoxEnable);
             this.rikaiFlowLayoutPanel.Controls.Add(this.flowLayoutPanel42);
             this.rikaiFlowLayoutPanel.Controls.Add(this.rikaiColorBoxBG);
@@ -1555,7 +1556,6 @@
             this.rikaiFlowLayoutPanel.Controls.Add(this.rikaiNote1);
             this.rikaiFlowLayoutPanel.Controls.Add(this.rikaiNote2);
             this.rikaiFlowLayoutPanel.Controls.Add(this.rikaiNote3);
-            resources.ApplyResources(this.rikaiFlowLayoutPanel, "rikaiFlowLayoutPanel");
             this.rikaiFlowLayoutPanel.Name = "rikaiFlowLayoutPanel";
             this.rikaiFlowLayoutPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.rikaiFlowLayoutPanel_Paint);
             // 

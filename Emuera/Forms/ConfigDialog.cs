@@ -70,6 +70,7 @@ namespace MinorShift.Emuera.Forms
 				flowLayoutPanel32,
 				flowLayoutPanel33,
 				flowLayoutPanel35,
+				rikaiFlowLayoutPanel,
 			};
 		}
 		internal void SetupLang(string[] langs) {
@@ -223,6 +224,15 @@ namespace MinorShift.Emuera.Forms
 			this.label32.Text = Lang.UI.ConfigDialog.Clipboard.LinesToScroll.Text;
 			this.label33.Text = Lang.UI.ConfigDialog.Clipboard.UpdateTime.Text;
 			this.label34.Text = Lang.UI.ConfigDialog.Clipboard.ScrollThrough.Text;
+
+			this.tabPageRikai.Text = Lang.UI.ConfigDialog.Rikai.Text;
+			this.rikaiCheckBoxEnable.Text = Lang.UI.ConfigDialog.Rikai.RikaiEnable.Text;
+			this.rikaiDictFilenameLabel.Text = Lang.UI.ConfigDialog.Rikai.RikaiFilename.Text;
+			this.rikaiColorBoxBG.Text = Lang.UI.ConfigDialog.Font.BackgroundColor.Text;
+			this.rikaiColorBoxText.Text = Lang.UI.ConfigDialog.Font.TextColor.Text;
+			this.rikaiCheckBoxSeparateBoxes.Text = Lang.UI.ConfigDialog.Rikai.RikaiSeparateBox.Text;
+			this.rikaiNote1.Text = Lang.UI.ConfigDialog.Rikai.RikaiLink.Text;
+			this.rikaiNote3.Text = Lang.UI.ConfigDialog.Rikai.OtherEDICT1.Text;
 
 
 			this.buttonSave.Text = Lang.UI.ConfigDialog.Save.Text;

@@ -313,7 +313,16 @@ namespace EvilMask.Emuera
                     [Managed] public static TranslatableString UpdateTime { get; } = new TranslatableString("クリップボードの更新間隔(ミリ秒)");
                     [Managed] public static TranslatableString ScrollThrough { get; } = new TranslatableString("Ctrl+↑、Ctrl+↓、またはCtrl+マウスホイールで履歴をスクロールできます");
                 }
-
+                [Translate("Rikai"), Managed]
+                public sealed class Rikai
+                {
+                    public static string Text { get { return trClass[typeof(Rikai)].Text; } }
+                    [Managed] public static TranslatableString RikaiEnable { get; } = new TranslatableString("ポップアップ翻訳辞書を有効にする(日本語→英語)");
+                    [Managed] public static TranslatableString RikaiFilename { get; } = new TranslatableString("Dictionaryファイルのパス(Emuera本体との相対パス)");
+                    [Managed] public static TranslatableString RikaiSeparateBox { get; } = new TranslatableString("翻訳中の語句を強調表示する");
+                    [Managed] public static TranslatableString RikaiLink { get; } = new TranslatableString("Dictionaryファイルは下記リンクからDLできます");
+                    [Managed] public static TranslatableString OtherEDICT1 { get; } = new TranslatableString("上記以外のEDICT1形式のファイルも使用可能です");
+                }
                 [Managed] public static TranslatableString ChangeWontTakeEffectUntilRestart { get; } = new TranslatableString("※変更は再起動するまで反映されません");
                 [Managed] public static TranslatableString Save { get; } = new TranslatableString("保存");
                 [Managed] public static TranslatableString SaveAndRestart { get; } = new TranslatableString("保存して再起動");
