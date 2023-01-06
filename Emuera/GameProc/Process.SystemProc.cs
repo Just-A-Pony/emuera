@@ -103,6 +103,7 @@ namespace MinorShift.Emuera.GameProc
 		}
 		long flowinputdef = 0;
 		bool flowinput = false;
+		bool flowinputcanskip = false;
 
 		void setWaitInput()
 		{
@@ -117,7 +118,12 @@ namespace MinorShift.Emuera.GameProc
 			#endregion
 			req.InputType = InputType.IntValue;
 			req.IsSystemInput = true;
-			console.WaitInput(req);
+			#region EE_SystemInput拡張
+			if (flowinputcanskip && GlobalStatic.Console.MesSkip)
+				systemResult = req.DefIntValue;
+			else
+				console.WaitInput(req);
+			#endregion
 		}
 
 

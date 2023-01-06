@@ -527,6 +527,9 @@ namespace MinorShift.Emuera.GameView
 		//string defStr;
 
 		private InputRequest inputReq = null;
+		#region EE_INPUT第二引数修正
+		public InputType NowInputType{ get { return inputReq.InputType;	} }
+		#endregion
 		public void Await(int time)
 		{
 			if (!Enabled || state != ConsoleState.Running)

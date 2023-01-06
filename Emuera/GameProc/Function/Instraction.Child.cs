@@ -709,7 +709,17 @@ namespace MinorShift.Emuera.GameProc.Function
 				}
 				GlobalStatic.MainWindow.ApplyTextBoxChanges();
 				#endregion
-				exm.Console.WaitInput(req);
+				#region EE_INPUT機能拡張
+				if (arg.CanSkip != null && GlobalStatic.Console.MesSkip)
+				{
+					if (arg.Mouse.GetIntValue(exm) == 0)
+						GlobalStatic.VEvaluator.RESULT = arg.Def.GetIntValue(exm);
+					else
+						GlobalStatic.VEvaluator.RESULT_ARRAY[1] = arg.Def.GetIntValue(exm);
+				}
+				else
+					exm.Console.WaitInput(req);
+				#endregion
 			}
 		}
 		private sealed class INPUTS_Instruction : AbstractInstruction
@@ -752,7 +762,17 @@ namespace MinorShift.Emuera.GameProc.Function
 				}
 				GlobalStatic.MainWindow.ApplyTextBoxChanges();
 				#endregion
-				exm.Console.WaitInput(req);
+				#region EE_INPUT機能拡張
+				if (arg.CanSkip != null && GlobalStatic.Console.MesSkip)
+				{
+					if (arg.Mouse.GetIntValue(exm) == 0)
+						GlobalStatic.VEvaluator.RESULTS = arg.Def.GetStrValue(exm);
+					else
+						GlobalStatic.VEvaluator.RESULTS_ARRAY[1] = arg.Def.GetStrValue(exm);
+				}
+				else
+					exm.Console.WaitInput(req);
+				#endregion
 			}
 		}
 
@@ -805,7 +825,17 @@ namespace MinorShift.Emuera.GameProc.Function
 				}
 				GlobalStatic.Process.InputInteger(1, 0);
 				#endregion
-				exm.Console.WaitInput(req);
+				#region EE_INPUT機能拡張
+				if (arg.CanSkip != null && GlobalStatic.Console.MesSkip)
+				{
+					if (arg.Mouse.GetIntValue(exm) == 0)
+						GlobalStatic.VEvaluator.RESULT = arg.Def.GetIntValue(exm);
+					else
+						GlobalStatic.VEvaluator.RESULT_ARRAY[1] = arg.Def.GetIntValue(exm);
+				}
+				else
+					exm.Console.WaitInput(req);
+				#endregion
 			}
 		}
 
@@ -856,7 +886,17 @@ namespace MinorShift.Emuera.GameProc.Function
 				}
 				GlobalStatic.Process.InputInteger(1, 0);
 				#endregion
-				exm.Console.WaitInput(req);
+				#region EE_INPUT機能拡張
+				if (arg.CanSkip != null && GlobalStatic.Console.MesSkip)
+				{
+					if (arg.Mouse.GetIntValue(exm) == 0)
+						GlobalStatic.VEvaluator.RESULTS = arg.Def.GetStrValue(exm);
+					else
+						GlobalStatic.VEvaluator.RESULTS_ARRAY[1] = arg.Def.GetStrValue(exm);
+				}
+				else
+					exm.Console.WaitInput(req);
+				#endregion
 			}
 		}
 
@@ -901,7 +941,17 @@ namespace MinorShift.Emuera.GameProc.Function
 				#region EM_私家版_INPUT系機能拡張
 				GlobalStatic.Process.InputInteger(1, 0);
 				#endregion
-				exm.Console.WaitInput(req);
+				#region EE_INPUT機能拡張
+				if (tinputarg.CanSkip != null && GlobalStatic.Console.MesSkip)
+				{
+					if (tinputarg.Mouse.GetIntValue(exm) == 0)
+						GlobalStatic.VEvaluator.RESULT = tinputarg.Def.GetIntValue(exm);
+					else
+						GlobalStatic.VEvaluator.RESULT_ARRAY[1] = tinputarg.Def.GetIntValue(exm);
+				}
+				else
+					exm.Console.WaitInput(req);
+				#endregion
 			}
 		}
 
@@ -939,7 +989,17 @@ namespace MinorShift.Emuera.GameProc.Function
 				#region EM_私家版_INPUT系機能拡張
 				GlobalStatic.Process.InputInteger(1, 0);
 				#endregion
-				exm.Console.WaitInput(req);
+				#region EE_INPUT機能拡張
+				if (tinputarg.CanSkip != null && GlobalStatic.Console.MesSkip)
+				{
+					if (tinputarg.Mouse.GetIntValue(exm) == 0)
+						GlobalStatic.VEvaluator.RESULTS = tinputarg.Def.GetStrValue(exm);
+					else
+						GlobalStatic.VEvaluator.RESULTS_ARRAY[1] = tinputarg.Def.GetStrValue(exm);
+				}
+				else
+					exm.Console.WaitInput(req);
+				#endregion
 			}
 		}
 

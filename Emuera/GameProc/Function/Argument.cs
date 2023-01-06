@@ -11,13 +11,15 @@ namespace MinorShift.Emuera.GameProc.Function
 	#region EM_私家版_INPUT系機能拡張
 	internal sealed class SpInputsArgument : Argument
 	{
-		public SpInputsArgument(IOperandTerm def, IOperandTerm mouse)
+		public SpInputsArgument(IOperandTerm def, IOperandTerm mouse, IOperandTerm canskip)
 		{
 			Def = def;
 			Mouse = mouse;
+			CanSkip = canskip;
 		}
 		readonly public IOperandTerm Def;
 		readonly public IOperandTerm Mouse;
+		readonly public IOperandTerm CanSkip;
 	}
 	#endregion
 	#region EM_私家版_HTMLパラメータ拡張
@@ -216,7 +218,7 @@ namespace MinorShift.Emuera.GameProc.Function
 	{
 		#region EM_私家版_INPUT系機能拡張
 		//public SpTInputsArgument(IOperandTerm time, IOperandTerm def, IOperandTerm disp, IOperandTerm timeout)
-		public SpTInputsArgument(IOperandTerm time, IOperandTerm def, IOperandTerm disp, IOperandTerm timeout, IOperandTerm mouse)
+		public SpTInputsArgument(IOperandTerm time, IOperandTerm def, IOperandTerm disp, IOperandTerm timeout, IOperandTerm mouse, IOperandTerm canskip)
 		#endregion
 		{
 			Time = time;
@@ -226,6 +228,9 @@ namespace MinorShift.Emuera.GameProc.Function
 			#region EM_私家版_INPUT系機能拡張
 			Mouse = mouse;
 			#endregion
+			#region EE_INPUT機能拡張
+			CanSkip = canskip;
+			#endregion
 		}
 		readonly public IOperandTerm Time;
 		readonly public IOperandTerm Def;
@@ -233,6 +238,9 @@ namespace MinorShift.Emuera.GameProc.Function
         readonly public IOperandTerm Timeout;
 		#region EM_私家版_INPUT系機能拡張
 		readonly public IOperandTerm Mouse;
+		#endregion
+		#region EE_INPUT機能拡張
+		readonly public IOperandTerm CanSkip;
 		#endregion
 	}
 

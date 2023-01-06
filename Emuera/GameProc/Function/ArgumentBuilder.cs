@@ -1167,7 +1167,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				SpInputsArgument ret = null;
 				if (st.EOS)
 				{
-					ret = new SpInputsArgument(null, null);
+					ret = new SpInputsArgument(null, null, null);
 					return ret;
 				}
 				StrFormWord sfwt = LexicalAnalyzer.AnalyseFormattedString(st, FormStrEndWith.Comma, false);
@@ -1175,7 +1175,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				term = term.Restructure(exm);
 				if (st.EOS)
 				{
-					ret = new SpInputsArgument(term, null);
+					ret = new SpInputsArgument(term, null, null);
 					return ret;
 				}
 				st.ShiftNext();
@@ -1191,9 +1191,10 @@ namespace MinorShift.Emuera.GameProc.Function
 					if (terms[0] == null || !terms[0].IsInteger)
 					{
 						warn(trerror.IgnoreArgBecauseNotInt.Text, line, 1, false);
-						ret = new SpInputsArgument(term, null);
+						ret = new SpInputsArgument(term, null, null);
 					}
-					else ret = new SpInputsArgument(term, terms[0]);
+					else if (terms.Length == 1) ret = new SpInputsArgument(term, terms[0], null);
+					else ret = new SpInputsArgument(term, terms[0], terms[1]);
 				}
 				#endregion
 				return ret;
@@ -1438,13 +1439,13 @@ namespace MinorShift.Emuera.GameProc.Function
 		{
 			public SP_TINPUT_ArgumentBuilder()
 			{
-				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64), typeof(string), typeof(Int64) };
+				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64), typeof(string), typeof(Int64), typeof(Int64) };
 				minArg = 2;
 			}
 			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 			{
 				IOperandTerm[] terms = popTerms(line);
-				IOperandTerm term3 = null, term4 = null, term5 = null;
+				IOperandTerm term3 = null, term4 = null, term5 = null, term6 = null;
 				if (!checkArgumentType(line, exm, terms))
 					return null;
 				if (terms.Length > 2)
@@ -1453,8 +1454,10 @@ namespace MinorShift.Emuera.GameProc.Function
 					term4 = terms[3];
 				if (terms.Length > 4)
 					term5 = terms[4];
+				if (terms.Length > 5)
+					term6 = terms[5];
 
-				return new SpTInputsArgument(terms[0], terms[1], term3, term4, term5);
+				return new SpTInputsArgument(terms[0], terms[1], term3, term4, term5, term6);
 			}
 		}
 
@@ -1462,13 +1465,13 @@ namespace MinorShift.Emuera.GameProc.Function
 		{
 			public SP_TINPUTS_ArgumentBuilder()
 			{
-				argumentTypeArray = new Type[] { typeof(Int64), typeof(string), typeof(Int64), typeof(string), typeof(Int64) };
+				argumentTypeArray = new Type[] { typeof(Int64), typeof(string), typeof(Int64), typeof(string), typeof(Int64), typeof(Int64) };
 				minArg = 2;
 			}
 			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 			{
 				IOperandTerm[] terms = popTerms(line);
-				IOperandTerm term3 = null, term4 = null, term5 = null;
+				IOperandTerm term3 = null, term4 = null, term5 = null, term6 = null;
 				if (!checkArgumentType(line, exm, terms))
 					return null;
 				if (terms.Length > 2)
@@ -1477,7 +1480,9 @@ namespace MinorShift.Emuera.GameProc.Function
 					term4 = terms[3];
 				if (terms.Length > 4)
 					term5 = terms[4];
-				return new SpTInputsArgument(terms[0], terms[1], term3, term4, term5);
+				if (terms.Length > 5)
+					term6 = terms[5];
+				return new SpTInputsArgument(terms[0], terms[1], term3, term4, term5, term6);
 			}
 		}
 		//private sealed class SP_TINPUT_ArgumentBuilder : ArgumentBuilder
@@ -2151,7 +2156,7 @@ namespace MinorShift.Emuera.GameProc.Function
             public SP_INPUT_ArgumentBuilder()
 			{
 				#region EM_私家版_INPUT系機能拡張
-				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64) };
+				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64)};
 				#endregion
 				//if (nullable)妥協
 				minArg = 0;
@@ -2208,16 +2213,20 @@ namespace MinorShift.Emuera.GameProc.Function
 				SpInputsArgument ret;
 				if (terms.Length == 0)
 				{
-					ret = new SpInputsArgument(null, null);
+					ret = new SpInputsArgument(null, null, null);
 					return ret;
 				}
 				else if (terms.Length == 1)
 				{
-					ret = new SpInputsArgument(terms[0], null);
+					ret = new SpInputsArgument(terms[0], null, null);
+				}
+				else if (terms.Length == 2)
+				{
+					ret = new SpInputsArgument(terms[0], terms[1], null);
 				}
 				else
 				{
-					ret = new SpInputsArgument(terms[0], terms[1]);
+					ret = new SpInputsArgument(terms[0], terms[1], terms[2]);
 				}
 				#endregion
 				return ret;

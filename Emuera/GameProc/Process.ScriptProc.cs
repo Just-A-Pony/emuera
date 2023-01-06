@@ -780,7 +780,8 @@ namespace MinorShift.Emuera.GameProc
                     {
 						SpInputsArgument arg = (SpInputsArgument)func.Argument;
 						flowinputdef = arg.Def.GetIntValue(exm);
-						flowinput = arg.Mouse.GetIntValue(exm) != 0;
+						flowinput = arg.Mouse != null && arg.Mouse.GetIntValue(exm) != 0;
+						flowinputcanskip = arg.CanSkip != null && arg.CanSkip.GetIntValue(exm) != 0;
 						break;
 					}
 				#endregion

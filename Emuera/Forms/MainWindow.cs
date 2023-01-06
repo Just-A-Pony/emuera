@@ -6,6 +6,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Windows.Input;
 using MinorShift._Library;
 using MinorShift.Emuera.Sub;
 using MinorShift.Emuera.GameData;
@@ -546,7 +547,7 @@ namespace MinorShift.Emuera
 				this.WindowState = FormWindowState.Maximized;
 		}
 		
-		private void mainPicBox_MouseMove(object sender, MouseEventArgs e)
+		private void mainPicBox_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			if (!Config.UseMouse)
 				return;
@@ -556,19 +557,19 @@ namespace MinorShift.Emuera
 				console.RefreshStrings(true);
 		}
 		#region EE_AnchorのCB機能移植
-		private void mainPicBox_MouseClickCBCheck(object sender, MouseEventArgs e)
+		private void mainPicBox_MouseClickCBCheck(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			if (e.Button == MouseButtons.Left) console.CBProc.Check(ClipboardProcessor.CBTriggers.LeftClick);
 			else if (e.Button == MouseButtons.Middle) console.CBProc.Check(ClipboardProcessor.CBTriggers.MiddleClick);
 		}
 
-		private void mainPicBox_MouseDoubleClickCBCheck(object sender, MouseEventArgs e)
+		private void mainPicBox_MouseDoubleClickCBCheck(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			if (e.Button == MouseButtons.Left) console.CBProc.Check(ClipboardProcessor.CBTriggers.DoubleLeftClick);
 		}
 		#endregion
 		bool changeTextbyMouse = false;
-		private void mainPicBox_MouseDown(object sender, MouseEventArgs e)
+		private void mainPicBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			if (!Config.UseMouse)
 				return;
@@ -632,8 +633,35 @@ namespace MinorShift.Emuera
 				}
 			}
 			#endregion
+			#region EE_INPUT第二引数修正
+			if (console.IsWaintingInputWithMouse && !console.IsError && (e.Button == MouseButtons.Left || e.Button == MouseButtons.Right))
+			{
+				//念のため
+				if (console.IsWaintingOnePhrase)
+					last_inputed = "";
+				richTextBox1.Text = string.Empty;
+
+				if (str != null)
+					GlobalStatic.VEvaluator.RESULTS_ARRAY[1] = str;
+				if (e.Button == MouseButtons.Left)
+					GlobalStatic.VEvaluator.RESULT_ARRAY[1] = 1;
+				if (e.Button == MouseButtons.Right)
+					GlobalStatic.VEvaluator.RESULT_ARRAY[1] = 2;
+				int result2 = 0;
+				if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+					result2 += 16;
+				if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+					result2 += 17;
+				if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
+					result2 += 18;
+				GlobalStatic.VEvaluator.RESULT_ARRAY[2] = result2;
+
+				PressEnterKey(false, true);
+				return;
+			}
+			#endregion
 			//左が押されたなら選択。
-			if (str != null && ((e.Button & MouseButtons.Left) == MouseButtons.Left))
+			else if (str != null && ((e.Button & MouseButtons.Left) == MouseButtons.Left))
 			{ 
 				changeTextbyMouse = console.IsWaintingOnePhrase;
 				richTextBox1.Text = str;
@@ -1029,10 +1057,10 @@ namespace MinorShift.Emuera
         public void update_lastinput()
         {
             richTextBox1.TextChanged -= new EventHandler(richTextBox1_TextChanged);
-            richTextBox1.KeyDown -= new KeyEventHandler(richTextBox1_KeyDown);
+            richTextBox1.KeyDown -= new System.Windows.Forms.KeyEventHandler(richTextBox1_KeyDown);
             System.Windows.Forms.Application.DoEvents();
             richTextBox1.TextChanged += new EventHandler(richTextBox1_TextChanged);
-            richTextBox1.KeyDown += new KeyEventHandler(richTextBox1_KeyDown);
+            richTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(richTextBox1_KeyDown);
             last_inputed = richTextBox1.Text;
         }
 
@@ -1072,13 +1100,13 @@ namespace MinorShift.Emuera
 		}
 		#region EM_私家版_INPUT系機能拡張
 		Keys? modifiersWhileWaintingInputWithMouse = null;
-		private void richTextBox1_ModifierRecorder_KeyUp(object sender, KeyEventArgs e)
+		private void richTextBox1_ModifierRecorder_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
 		{
 			if (console == null || !console.IsWaintingInputWithMouse)
 				return;
 			modifiersWhileWaintingInputWithMouse = null;
 		}
-		private void richTextBox1_ModifierRecorder_KeyDown(object sender, KeyEventArgs e)
+		private void richTextBox1_ModifierRecorder_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
 		{
 			if (console == null || !console.IsWaintingInputWithMouse)
 				return;
@@ -1086,7 +1114,7 @@ namespace MinorShift.Emuera
 		}
 		#endregion
 
-		private void richTextBox1_KeyDown(object sender, KeyEventArgs e)
+		private void richTextBox1_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
         {
             if (console == null)
                 return;
