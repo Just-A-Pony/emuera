@@ -648,13 +648,13 @@ namespace MinorShift.Emuera
 					GlobalStatic.VEvaluator.RESULT_ARRAY[1] = 1;
 				if (e.Button == MouseButtons.Right)
 					GlobalStatic.VEvaluator.RESULT_ARRAY[1] = 2;
-				int result2 = 0;
+				long result2 = 0;
 				if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
-					result2 += 16;
+					result2 += (long)Math.Pow(2, 16);
 				if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-					result2 += 17;
+					result2 += (long)Math.Pow(2, 17);
 				if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
-					result2 += 18;
+					result2 += (long)Math.Pow(2, 18);
 				GlobalStatic.VEvaluator.RESULT_ARRAY[2] = result2;
 
 				PressEnterKey(false, true);
