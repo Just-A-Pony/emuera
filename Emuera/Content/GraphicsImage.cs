@@ -71,9 +71,12 @@ namespace MinorShift.Emuera.Content
 			Bitmap = new Bitmap(x, y, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 			size = new Size(x, y);
 			g = Graphics.FromImage(Bitmap);
-        }
+			//こうしないとbmpファイルの拡縮が綺麗に出ない
+			g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
 
-        internal void GCreateFromF(Bitmap bmp, bool useGDI)
+		}
+		internal void GCreateFromF(Bitmap bmp, bool useGDI)
 		{
 			if (useGDI)
 				throw new NotImplementedException();
@@ -81,7 +84,9 @@ namespace MinorShift.Emuera.Content
 			Bitmap = new Bitmap(bmp.Width, bmp.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 			size = new Size(bmp.Width, bmp.Height);
 			g = Graphics.FromImage(Bitmap);
-			g.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height);
+			//こうしないとbmpファイルの拡縮が綺麗に出ない
+			g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
+			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
 		}
 
 		/// <summary>
