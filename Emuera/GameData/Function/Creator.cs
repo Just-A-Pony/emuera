@@ -164,7 +164,10 @@ namespace MinorShift.Emuera.GameData.Function
                 ["GETKEYTRIGGERED"] = new GetKeyStateMethod(),
                 ["MOUSEX"] = new MousePosMethod(),
                 ["MOUSEY"] = new MousePosMethod(),
-                ["ISACTIVE"] = new IsActiveMethod(),
+				#region EE_MOUSEB
+				["MOUSEB"] = new MouseButtonMethod(),
+				#endregion
+				["ISACTIVE"] = new IsActiveMethod(),
                 ["SAVETEXT"] = new SaveTextMethod(),
                 ["LOADTEXT"] = new LoadTextMethod(),
 

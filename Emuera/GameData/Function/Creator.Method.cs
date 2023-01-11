@@ -6677,6 +6677,35 @@ namespace MinorShift.Emuera.GameData.Function
 				throw new ExeEE("異常な名前");
 			}
 		}
+		#region EE_MOUSEB
+		private sealed class MouseButtonMethod : FunctionMethod
+		{
+			public MouseButtonMethod()
+			{
+				ReturnType = typeof(string);
+				argumentTypeArray = new Type[] { };
+				CanRestructure = false;
+			}
+			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				//if (exm.Console.SelectingButton != null)
+				//	return exm.Console.SelectingButton.ToString();
+				bool b = exm.Console.AlwaysRefresh;
+				Point point = exm.Console.Window.MainPicBox.PointToClient(Control.MousePosition);
+				exm.Console.AlwaysRefresh = true;
+				if (exm.Console.Window.MainPicBox.ClientRectangle.Contains(point))
+					exm.Console.MoveMouse(point);
+				exm.Console.AlwaysRefresh = b;
+				if (exm.Console.PointingSring != null)
+				{
+					if (exm.Console.PointingSring.IsInteger)
+						return exm.Console.PointingSring.Input.ToString();
+					return exm.Console.PointingSring.Inputs;
+				}
+				return "";
+			}
+		}
+		#endregion
 
 
 		private sealed class IsActiveMethod : FunctionMethod

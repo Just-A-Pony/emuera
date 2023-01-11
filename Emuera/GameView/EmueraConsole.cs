@@ -233,8 +233,11 @@ namespace MinorShift.Emuera.GameView
 
 		const string ErrorButtonsText = "__openFileWithDebug__";
         private readonly MainWindow window;
-        #region EE_AnchorのCB機能移植
-        public readonly ClipboardProcessor CBProc;
+		#region EE_MOUSEB
+		public MainWindow Window { get { return window; } }
+		#endregion
+		#region EE_AnchorのCB機能移植
+		public readonly ClipboardProcessor CBProc;
 		#endregion
 
 		MinorShift.Emuera.GameProc.Process emuera;
@@ -517,6 +520,9 @@ namespace MinorShift.Emuera.GameView
 		/// ToolTip表示用。世代無視、履歴中も表示
 		/// </summary>
 		ConsoleButtonString pointingString = null;
+		#region EE_MOUSEB
+		public ConsoleButtonString PointingSring { get { return pointingString; } }
+		#endregion
 		ConsoleButtonString lastPointingString = null;
 		#endregion
 
@@ -1870,6 +1876,9 @@ namespace MinorShift.Emuera.GameView
 			pos.Y -= ClientHeight;
 			return pos;
 		}
+		#region EE_MOUSEB
+		public bool AlwaysRefresh = false;
+		#endregion
 
 		#region EM_私家版_描画拡張
 		int[] dummy = new int[] { 0 };
@@ -1927,7 +1936,9 @@ namespace MinorShift.Emuera.GameView
 			else if (state == ConsoleState.WaitInput && inputReq.NeedValue)
 				canSelect = true;
 			//スクリプト実行中は無視//入力・マクロ処理中は無視
-			if(this.IsInProcess)
+			#region EE_MOUSEB
+			if (this.IsInProcess && AlwaysRefresh == false)
+			#endregion
 				goto end;
 			//履歴表示中は無視
 			//if (window.ScrollBar.Value != window.ScrollBar.Maximum)
