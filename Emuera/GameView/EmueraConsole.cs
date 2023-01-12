@@ -62,7 +62,9 @@ namespace MinorShift.Emuera.GameView
 
 	internal sealed partial class EmueraConsole : IDisposable
 	{
+		#region EmuEra-Rikaichan
 		public Rikaichan rikaichan = new Rikaichan();
+		#endregion
 
 		public EmueraConsole(MainWindow parent)
 		{
@@ -1515,7 +1517,10 @@ namespace MinorShift.Emuera.GameView
 				//}
 
 			}
-			rikaichan.OnPaint(graph, stringMeasure, window.MainPicBox.Width);
+			#region EmuEra-Rikaichan
+			if (Config.RikaiEnabled)
+				rikaichan.OnPaint(graph, stringMeasure, window.MainPicBox.Width);
+			#endregion
 			//ToolTip描画
 			if (lastPointingString != pointingString || lastSelectingCBGButtonInt != selectingCBGButtonInt)
 			{
@@ -1890,7 +1895,9 @@ namespace MinorShift.Emuera.GameView
 		/// <returns>この後でRefreshStringsが必要かどうか</returns>
 		public bool MoveMouse(Point point)
 		{
+			#region EmuEra-Rikaichan
 			int curLineY = -1;
+			#endregion
 
 			if (cbgButtonMap != null && cbgButtonMap.IsCreated)
 			{
@@ -2066,7 +2073,8 @@ namespace MinorShift.Emuera.GameView
 			bool needRefresh = select != selectingButton || pointing != pointingString;
 			pointingString = pointing;
 			selectingButton = select;
-			if (rikaichan.enabled)
+			#region EmuEra-Rikaichan
+			if (Config.RikaiEnabled && rikaichan.enabled)
 			{
 				//if (_pointingString != _lastPointingString && 
 				if (pointing == null || pointing.StrArray.Length == 0) goto rikaichan_not_found;
@@ -2133,6 +2141,7 @@ namespace MinorShift.Emuera.GameView
 				}
 			} //if rikaichan.enabled
 		rikaichan_end:
+			#endregion
 
 			return needRefresh;
 		}

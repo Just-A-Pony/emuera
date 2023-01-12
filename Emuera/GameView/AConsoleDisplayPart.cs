@@ -46,9 +46,11 @@ namespace MinorShift.Emuera.GameView
 		}
 		#endregion
 
+		#region EmuEra-Rikaichan
 		public bool rikaichaned = false;
 		public int[] Ends = null;
 		public AConsoleDisplayPart NextLine;
+		#endregion
 	}
 
 	/// <summary>
