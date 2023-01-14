@@ -58,7 +58,7 @@ namespace MinorShift.Emuera.GameView
 		public ConsoleButtonString[] Buttons{get{return buttons;}}
 		public DisplayLineAlignment Align{get{return align;}}
 		bool aligned = false;
-		public void SetAlignment(DisplayLineAlignment align, int customWdith = -1)
+		public void SetAlignment(DisplayLineAlignment align, int customWidth = -1, int xOffset = 0)
 		{
 			if (aligned)
 				return;
@@ -80,15 +80,23 @@ namespace MinorShift.Emuera.GameView
 				//位置固定に対応
 				if (IsLogicalLine)
 					return;
-				movetoX = 0;
+				#region EE_div各要素の修正
+				//movetoX = 0;
+				movetoX = 0+xOffset;
+				#endregion
+
 			}
 			#region EM_私家版_HTML_divタグ
 			else if (align == DisplayLineAlignment.CENTER)
 				// movetoX = Config.WindowX / 2 - width / 2;
-				movetoX = (customWdith > 0 ? customWdith : Config.WindowX) / 2 - width / 2;
+				#region EE_div各要素の修正
+				movetoX = (customWidth > 0 ? customWidth : Config.WindowX) / 2 - width / 2 + xOffset;
+				#endregion
 			else if (align == DisplayLineAlignment.RIGHT)
 				// movetoX = Config.WindowX - width;
-				movetoX = (customWdith > 0 ? customWdith : Config.WindowX) - width;
+				#region EE_div各要素の修正
+				movetoX = (customWidth > 0 ? customWidth : Config.WindowX) - width + xOffset;
+				#endregion
 			#endregion
 			//移動距離
 			int shiftX = movetoX - pointX;

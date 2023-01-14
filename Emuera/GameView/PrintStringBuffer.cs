@@ -249,7 +249,7 @@ namespace MinorShift.Emuera.GameView
 				lineList.Add(m_buttonsToDisplayLine(lineButtonList, firstLine, temporary));
 				firstLine = false;
 				//位置調整
-//				shiftX = buttonList[i].PointX;
+				//				shiftX = buttonList[i].PointX;
 				int pointX = 0;
 				for (int j = i; j < buttonList.Count; j++)
 				{

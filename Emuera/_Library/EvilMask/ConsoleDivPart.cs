@@ -47,7 +47,19 @@ namespace MinorShift.Emuera.GameView
 			altHeadTag = sb.ToString();
 			Str = string.Empty;
 			xOffset = MixedNum.ToPixel(xPos, 0);
+			#region EE_div各要素の修正
+			if (margin != null)	divXOffset += margin[Direction.Left];
+			if (padding != null) divXOffset += padding[Direction.Left];
+			if (border != null) divXOffset += border[Direction.Left];
+			#endregion
 			PointY = MixedNum.ToPixel(yPos, 0);
+
+			#region EE_div各要素の修正
+			if (margin != null) yOffset += margin[Direction.Top];
+			if (padding != null) yOffset += padding[Direction.Top];
+			if (border != null) yOffset += border[Direction.Top];
+			#endregion
+
 			this.width = MixedNum.ToPixel(width, 0);
 			Height = MixedNum.ToPixel(height, 0);
 			children = childs;
@@ -56,12 +68,18 @@ namespace MinorShift.Emuera.GameView
 		}
 		int pointX = 0;
 		int xOffset;
+		#region EE_div各要素の修正
+		int divXOffset;
+		int yOffset;
+		#endregion
 		int width;
 		public override int PointX {
 			get { return pointX; }
 			set { pointX = value;
 				foreach (var child in children)
-					child.ShiftPositionX(value + xOffset);
+					#region EE_div各要素の修正
+					child.ShiftPositionX(value + xOffset + divXOffset);
+					#endregion
 			} }
 		int PointY;
 		int Height;
@@ -79,7 +97,9 @@ namespace MinorShift.Emuera.GameView
 		public ConsoleButtonString TestChildHitbox(int pointX, int pointY, int relPointY)
 		{
 			ConsoleButtonString pointing = null;
-			var rect = new Rectangle(PointX + xOffset, relPointY + PointY, width, Height);
+			#region EE_div各要素の修正
+			var rect = new Rectangle(PointX + xOffset, relPointY + PointY + yOffset, width, Height);
+			#endregion
 			if (!rect.Contains(pointX, pointY)) return null;
 			relPointY = rect.Y;
 			foreach (var line in children)

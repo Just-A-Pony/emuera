@@ -253,6 +253,7 @@ namespace MinorShift.Emuera.GameView
 			public bool StartingSubDivision = false;
 			public HtmlDivTag CurrentDivTag = null;
 			public int SubDivisionWidth;
+			public int SubDivisionXOffset;
 			#endregion
 			public bool FlagBr = false;//<br>による強制改行の予約
 			public bool FlagButton = false;//<button></button>によるボタン化の予約
@@ -468,6 +469,7 @@ namespace MinorShift.Emuera.GameView
 				state.SubDivisionWidth = parent.State.SubDivisionWidth;
 				state.CurrentDivTag = parent.State.CurrentDivTag;
 				state.StartingSubDivision = parent.State.StartingSubDivision;
+				state.SubDivisionXOffset = parent.State.SubDivisionXOffset;
 			}
 			#endregion
 			while (!st.EOS)
@@ -532,15 +534,25 @@ namespace MinorShift.Emuera.GameView
 									throw new CodeEE(trerror.TagIsNotClosed.Text);
 								var width = state.CurrentDivTag.Width;
 								state.SubDivisionWidth = MixedNum.ToPixel(width);
+								state.SubDivisionXOffset = 0;
 								if (state.CurrentDivTag.StyledBox != null)
 								{
 									var box = state.CurrentDivTag.StyledBox;
 									if (box.margin != null)
+									{
 										state.SubDivisionWidth -= MixedNum.ToPixel(box.margin[Direction.Left]) + MixedNum.ToPixel(box.margin[Direction.Right]);
+										state.SubDivisionXOffset += MixedNum.ToPixel(box.margin[Direction.Left]);
+									}
 									if (box.border != null)
+									{
 										state.SubDivisionWidth -= MixedNum.ToPixel(box.border[Direction.Left]) + MixedNum.ToPixel(box.border[Direction.Right]);
+										state.SubDivisionXOffset += MixedNum.ToPixel(box.border[Direction.Left]);
+									}
 									if (box.padding != null)
+									{
 										state.SubDivisionWidth -= MixedNum.ToPixel(box.padding[Direction.Left]) + MixedNum.ToPixel(box.padding[Direction.Right]);
+										state.SubDivisionXOffset += MixedNum.ToPixel(box.padding[Direction.Left]);
+									}
 								}
 								state.CurrentDivTag.Lines = html2DisplayLine(null, sm, console, new HtmlParentInfo
 								{
@@ -611,7 +623,7 @@ namespace MinorShift.Emuera.GameView
 			foreach (ConsoleDisplayLine dl in ret)
 			{
 				if (state.StartingSubDivision && state.CurrentDivTag == null)
-					dl.SetAlignment(state.Alignment, state.SubDivisionWidth);
+					dl.SetAlignment(state.Alignment, state.SubDivisionWidth, state.SubDivisionXOffset);
 				else
 					dl.SetAlignment(state.Alignment);
 			}
