@@ -324,8 +324,9 @@ namespace MinorShift.Emuera.GameData.Function
                 ["GETTEXTBOX"] = new GetTextBoxMethod(),
                 ["SETTEXTBOX"] = new ChangeTextBoxMethod(),
                 ["ERDNAME"] = new ErdNameMethod(),
-                #endregion
-            };
+				["SPRITEDISPOSEALL"] = new SpriteDisposeAllMethod(),
+				#endregion
+			};
 
 
             //1823 自分の関数名を知っていた方が何かと便利なので覚えさせることにした

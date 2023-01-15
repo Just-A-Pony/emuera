@@ -6018,6 +6018,20 @@ namespace MinorShift.Emuera.GameData.Function
 			}
 		}
 
+		public sealed class SpriteDisposeAllMethod : FunctionMethod
+		{
+			public SpriteDisposeAllMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(Int64) };
+				CanRestructure = false;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				return AppContents.SpriteDisposeAll(arguments[0].GetIntValue(exm) != 0);
+			}
+		}
+
 
 		/// <summary>
 		/// GCLEAR(int ID, int cARGB)

@@ -16,8 +16,9 @@ namespace MinorShift.Emuera.Content
 			gList = new Dictionary<int, GraphicsImage>();
 		}
 		static readonly Dictionary<string, AContentFile> resourceDic = new Dictionary<string, AContentFile>();
-		static readonly Dictionary<string, ASprite> imageDictionary = new Dictionary<string, ASprite>();
+		static Dictionary<string, ASprite> imageDictionary = new Dictionary<string, ASprite>();
 		static readonly Dictionary<int, GraphicsImage> gList;
+		static readonly Dictionary<string, ASprite> resourceImageDictionary = new Dictionary<string, ASprite>();
 
 		//static public T GetContent<T>(string name)where T :AContentItem
 		//{
@@ -56,6 +57,23 @@ namespace MinorShift.Emuera.Content
 				return;
 			imageDictionary[name].Dispose();
 			imageDictionary.Remove(name);
+		}
+
+		static public long SpriteDisposeAll(bool delCsvImage)
+		{
+			int sprites = imageDictionary.Count;
+			int csprites = resourceImageDictionary.Count;
+			if (delCsvImage)
+			{
+				imageDictionary.Clear();
+				resourceImageDictionary.Clear();
+				return sprites;
+			}
+			else
+			{
+				imageDictionary = new Dictionary<string, ASprite>(resourceImageDictionary);
+				return sprites-csprites;
+			}
 		}
 
 		static public void CreateSpriteG(string imgName, GraphicsImage parent,Rectangle rect)
@@ -110,9 +128,9 @@ namespace MinorShift.Emuera.Content
 						{
 							//アニメスプライト宣言ならcurrentAnime上書きしてフレーム追加モードにする。そうでないならnull
 							currentAnime = item as SpriteAnime;
-							if (!imageDictionary.ContainsKey(item.Name))
+							if (!resourceImageDictionary.ContainsKey(item.Name))
 							{
-								imageDictionary.Add(item.Name, item);
+								resourceImageDictionary.Add(item.Name, item);
 							}
 							else
 							{
@@ -128,6 +146,7 @@ namespace MinorShift.Emuera.Content
 				return false;
 				//throw new CodeEE("リソースファイルのロード中にエラーが発生しました");
 			}
+			imageDictionary = new Dictionary<string, ASprite>(resourceImageDictionary);
 			return true;
 		}
 
@@ -137,6 +156,7 @@ namespace MinorShift.Emuera.Content
 				img.Dispose();
 			resourceDic.Clear();
 			imageDictionary.Clear();
+			resourceImageDictionary.Clear();
 			foreach (var graph in gList.Values)
 				graph.GDispose();
 			gList.Clear();
