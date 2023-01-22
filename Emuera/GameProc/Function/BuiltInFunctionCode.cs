@@ -376,6 +376,7 @@ namespace MinorShift.Emuera.GameProc.Function
 		TOOLTIP_CUSTOM,
 		TOOLTIP_FORMAT,
 		FLOWINPUT,
+		SKIPLOG,
 		#endregion
 
 		#region EM

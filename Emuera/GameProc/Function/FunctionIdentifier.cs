@@ -327,6 +327,9 @@ namespace MinorShift.Emuera.GameProc.Function
             #region EE_SystemInput拡張
             addFunction(FunctionCode.FLOWINPUT, argb[FunctionArgType.SP_INPUT], METHOD_SAFE | EXTENDED);
 			#endregion
+			#region EE_SKIPLOG
+			addFunction(FunctionCode.SKIPLOG, argb[FunctionArgType.INT_EXPRESSION], METHOD_SAFE | EXTENDED);
+			#endregion
 
 
 			addFunction(FunctionCode.JUMP, new CALL_Instruction(false, true, false, false));//関数に移動

@@ -785,12 +785,20 @@ namespace MinorShift.Emuera.GameProc
 						break;
 					}
 				#endregion
+				#region EE_SKIPLOG
+				case FunctionCode.SKIPLOG:
+				{
+					iValue = (func.Argument.IsConst) ? func.Argument.ConstInt : ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
+					console.MesSkip = (iValue != 0);
+					break;
+				}
+				#endregion
 #if DEBUG
 				default:
 					throw new ExeEE(trerror.UndefinedFunc.Text);
 #endif
 			}
-            return;
+			return;
 		}
 
 		bool saveSkip = false;
