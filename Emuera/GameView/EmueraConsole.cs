@@ -564,7 +564,8 @@ namespace MinorShift.Emuera.GameView
 		public void WaitInput(InputRequest req)
 		{
             #region EE_AnchorのCB機能移植
-            CBProc.Check(ClipboardProcessor.CBTriggers.InputWait);
+			if (Config.CBUseClipboard)
+	            CBProc.Check(ClipboardProcessor.CBTriggers.InputWait);
 			#endregion
 			state = ConsoleState.WaitInput;
 			inputReq = req;
@@ -587,7 +588,8 @@ namespace MinorShift.Emuera.GameView
 		public void ReadAnyKey(bool anykey = false, bool stopMesskip = false)
 		{
 			#region EE_AnchorのCB機能移植
-			CBProc.Check(ClipboardProcessor.CBTriggers.AnyKeyWait);
+			if (Config.CBUseClipboard)
+				CBProc.Check(ClipboardProcessor.CBTriggers.AnyKeyWait);
 			#endregion
 			InputRequest req = new InputRequest();
 			if (!anykey)

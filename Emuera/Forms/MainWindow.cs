@@ -342,10 +342,10 @@ namespace MinorShift.Emuera
 				//}
 				#region EE_AnchorのCB機能移植
 				case Keys.Up when (keyData & Keys.Modifiers & Keys.Control) == Keys.Control:
-					if (console.CBProc.ScrollUp(1)) return true;
+					if (Config.CBUseClipboard && console.CBProc.ScrollUp(1)) return true;
 					break;
 				case Keys.Down when (keyData & Keys.Modifiers & Keys.Control) == Keys.Control:
-					if (console.CBProc.ScrollDown(1)) return true;
+					if (Config.CBUseClipboard && console.CBProc.ScrollDown(1)) return true;
 					break;
 				#endregion
 				default:
@@ -560,13 +560,16 @@ namespace MinorShift.Emuera
 		#region EE_AnchorのCB機能移植
 		private void mainPicBox_MouseClickCBCheck(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
-			if (e.Button == MouseButtons.Left) console.CBProc.Check(ClipboardProcessor.CBTriggers.LeftClick);
-			else if (e.Button == MouseButtons.Middle) console.CBProc.Check(ClipboardProcessor.CBTriggers.MiddleClick);
+			if (Config.CBUseClipboard)
+			{
+				if (e.Button == MouseButtons.Left) console.CBProc.Check(ClipboardProcessor.CBTriggers.LeftClick);
+				else if (e.Button == MouseButtons.Middle) console.CBProc.Check(ClipboardProcessor.CBTriggers.MiddleClick);
+			}
 		}
 
 		private void mainPicBox_MouseDoubleClickCBCheck(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
-			if (e.Button == MouseButtons.Left) console.CBProc.Check(ClipboardProcessor.CBTriggers.DoubleLeftClick);
+			if (Config.CBUseClipboard && e.Button == MouseButtons.Left) console.CBProc.Check(ClipboardProcessor.CBTriggers.DoubleLeftClick);
 		}
 		#endregion
 		bool changeTextbyMouse = false;

@@ -132,7 +132,8 @@ namespace MinorShift.Emuera.GameView
 		private void addDisplayLine(ConsoleDisplayLine line, bool force_LEFT)
 		{
 			#region EE_AnchorのCB機能移植
-			CBProc.AddLine(line, force_LEFT);
+			if (Config.CBUseClipboard)
+				CBProc.AddLine(line, force_LEFT);
 			#endregion
 			if (LastLineIsTemporary)
 				deleteLine(1);
@@ -205,7 +206,8 @@ namespace MinorShift.Emuera.GameView
 		public void deleteLine(int argNum)
 		{
 			#region EE_AnchorのCB機能移植
-			CBProc.DelLine(Math.Min(argNum, displayLineList.Count)); //FIXIT - Do we need to worry about the count?
+			if (Config.CBUseClipboard)
+				CBProc.DelLine(Math.Min(argNum, displayLineList.Count)); //FIXIT - Do we need to worry about the count?
 			#endregion
 			int delNum = 0;
 			int num = argNum;
@@ -728,7 +730,7 @@ namespace MinorShift.Emuera.GameView
 			for (int i = 0; i < displayLineList.Count; i++)
 			{
                 #region EE_AnchorのCB機能移植
-                //builder.AppendLine(displayLineList[i].ToString());
+                //builder.AppendLine(displayLineList[i].ToString());]
 				builder.AppendLine(ClipboardProcessor.StripHTML(displayLineList[i].ToString()));
 				#endregion
 			}
