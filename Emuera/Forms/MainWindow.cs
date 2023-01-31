@@ -349,7 +349,7 @@ namespace MinorShift.Emuera
 					break;
 				#endregion
 				default:
-					if ((keyData & Keys.Modifiers & Keys.Alt) == Keys.Alt) return true;
+					//if ((keyData & Keys.Modifiers & Keys.Alt) == Keys.Alt) return true;
 					if (Config.UseKeyMacro)
 					{
 						int keyCode = (int)(keyData & Keys.KeyCode);
