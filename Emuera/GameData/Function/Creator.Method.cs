@@ -4082,7 +4082,10 @@ namespace MinorShift.Emuera.GameData.Function
 					for (int i = 0; i < array.Length; i++)
 					{
 						if (string.IsNullOrEmpty(array[i]))
-							return 0;
+							#region EM_私家版_ARRAYMSORT_文字列配列処理修正
+							//return 0;
+							break;
+							#endregion
 						sortList.Add(new KeyValuePair<string, int>(array[i], i));
 					}
 					sortList.Sort((a, b) => { return a.Key.CompareTo(b.Key); });
