@@ -228,7 +228,11 @@ namespace MinorShift.Emuera.GameView
 				}
 			}
 
-			if (delNum < num) lineNo -= num - delNum;
+			if (delNum < num)
+			{
+				lineNo = 0;
+				logicalLineCount = 0;
+			}
 
 			if (deleted && Config.TextDrawingMode != TextDrawingMode.WINAPI)
 				ConsoleEscapedParts.Remove(lineNo);
