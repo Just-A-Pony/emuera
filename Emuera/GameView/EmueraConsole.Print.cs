@@ -212,13 +212,13 @@ namespace MinorShift.Emuera.GameView
 			int delNum = 0;
 			int num = argNum;
 			#region EM_私家版_描画拡張
-			int topLineNo = int.MaxValue;
+			bool deleted = false;
 			while (delNum < num)
 			{
 				if (displayLineList.Count == 0)
 					break;
 				ConsoleDisplayLine line = displayLineList[displayLineList.Count - 1];
-				topLineNo = line.LineNo;
+				deleted = true;
 				displayLineList.RemoveAt(displayLineList.Count - 1);
 				lineNo--;
 				if (line.IsLogicalLine)
@@ -227,8 +227,11 @@ namespace MinorShift.Emuera.GameView
 					logicalLineCount--;
 				}
 			}
-			if (topLineNo != int.MaxValue && Config.TextDrawingMode != TextDrawingMode.WINAPI)
-				ConsoleEscapedParts.Remove(topLineNo);
+
+			if (delNum < num) lineNo -= num - delNum;
+
+			if (deleted && Config.TextDrawingMode != TextDrawingMode.WINAPI)
+				ConsoleEscapedParts.Remove(lineNo);
 			#endregion
 			if (lineNo < 0)
 				lineNo += int.MaxValue;
