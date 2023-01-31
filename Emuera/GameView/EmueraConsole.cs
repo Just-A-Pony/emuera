@@ -2021,12 +2021,13 @@ namespace MinorShift.Emuera.GameView
 				if (eidx < edepth.Length && edepth[eidx] == depth)
 				{
 					// 行範囲を超えたパーツのヒットテスト
+					var correction = lineNo > Config.MaxLog ? lineNo - Config.MaxLog : 0;
 					if (depth != 0 || escapedParts.ContainsKey(depth))
 						foreach (var part in escapedParts[depth])
 						{
 							if (part is ConsoleDivPart div)
 							{
-								var lineY = bottomLineBase + (div.Parent.ParentLine.LineNo - bottomLineNo) * Config.LineHeight;
+								var lineY = bottomLineBase + (div.Parent.ParentLine.LineNo - bottomLineNo - correction) * Config.LineHeight;
 								var childPointing = div.TestChildHitbox(pointX, pointY, lineY);
 								if (childPointing != null)
 								{

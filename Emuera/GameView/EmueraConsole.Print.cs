@@ -198,7 +198,6 @@ namespace MinorShift.Emuera.GameView
 				if (Config.TextDrawingMode != TextDrawingMode.WINAPI)
 					ConsoleEscapedParts.RemoveAt(displayLineList[0].LineNo);
 				displayLineList.RemoveAt(0);
-				lineNo--;
 			}
 			#endregion
 		}
