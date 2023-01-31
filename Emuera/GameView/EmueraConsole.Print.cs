@@ -231,7 +231,7 @@ namespace MinorShift.Emuera.GameView
 			if (delNum < num)
 			{
 				lineNo = 0;
-				logicalLineCount = 0;
+				logicalLineCount -= num - delNum;
 			}
 
 			if (deleted && Config.TextDrawingMode != TextDrawingMode.WINAPI)
