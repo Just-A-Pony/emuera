@@ -418,6 +418,8 @@ namespace MinorShift.Emuera.GameProc.Function
 			addFunction(FunctionCode.TOOLTIP_SETFONTSIZE, new TOOLTIP_SETFONTSIZE_Instruction());
 			addFunction(FunctionCode.TOOLTIP_CUSTOM, new TOOLTIP_CUSTOM_Instruction());
 			addFunction(FunctionCode.TOOLTIP_FORMAT, new TOOLTIP_FORMAT_Instruction());
+			addFunction(FunctionCode.BINPUT, new BINPUT_Instruction());
+			addFunction(FunctionCode.BINPUTS, new BINPUTS_Instruction());
 			#endregion
 			#region EM
 			addFunction(FunctionCode.DT_COLUMN_OPTIONS, new DT_COLUMN_OPTIONS_Instruction());

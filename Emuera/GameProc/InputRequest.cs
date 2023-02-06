@@ -14,6 +14,10 @@ namespace MinorShift.Emuera.GameProc
         #region EE_INPUTANY
 		AnyValue = 6,//数値or文字列
 		#endregion
+		#region EE_BINPUT
+		IntButton = 7,
+		StrButton = 8,
+		#endregion
 
 		//1823
 		PrimitiveMouseKey = 11,
@@ -39,7 +43,8 @@ namespace MinorShift.Emuera.GameProc
 			{
                 #region EE_INPUTANY
                 return (InputType == InputType.IntValue || InputType == InputType.StrValue
-					|| InputType == InputType.PrimitiveMouseKey || InputType == InputType.AnyValue);
+					|| InputType == InputType.PrimitiveMouseKey || InputType == InputType.AnyValue
+					|| InputType == InputType.IntButton || InputType == InputType.StrButton);
 				#endregion
 			}
 		}

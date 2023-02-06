@@ -375,12 +375,14 @@ namespace MinorShift.Emuera.GameView
 					return selectingButton.Inputs;
 				if (state != ConsoleState.WaitInput)
 					return null;
-				if (inputReq.InputType == InputType.IntValue && (selectingButton.IsInteger))
+				#region EE_BINPUT
+				if ((inputReq.InputType == InputType.IntValue || inputReq.InputType == InputType.IntButton) && selectingButton.IsInteger)
 					return selectingButton.Input.ToString();
-				if (inputReq.InputType == InputType.StrValue)
+				if (inputReq.InputType == InputType.StrValue || inputReq.InputType == InputType.StrButton)
 					return selectingButton.Inputs;
+				#endregion
 				#region EE_INPUTANY
-				if (inputReq.InputType == InputType.AnyValue && (selectingButton.IsInteger))
+				if (inputReq.InputType == InputType.AnyValue && selectingButton.IsInteger)
 					return selectingButton.Input.ToString();
 				if (inputReq.InputType == InputType.AnyValue)
 					return selectingButton.Inputs;
@@ -484,25 +486,31 @@ namespace MinorShift.Emuera.GameView
 			else
 				updatedGeneration = false;
 			lastInputLine = emuera.getCurrentLine;
-			//古い選択肢を選択できないように。INPUTで使った選択肢をINPUTSには流用できないように。
-			if (inputReq.InputType == InputType.IntValue)
+			#region EE_BINPUT
+			switch (inputReq.InputType)
 			{
-				if (lastButtonGeneration == newButtonGeneration)
-					unchecked { newButtonGeneration++; }
-				else if (!lastButtonIsInput)
-					lastButtonGeneration = newButtonGeneration;
-				lastButtonIsInput = true;
+				//古い選択肢を選択できないように。INPUTで使った選択肢をINPUTSには流用できないように。
+				case InputType.IntValue:
+				case InputType.IntButton:
+						if (lastButtonGeneration == newButtonGeneration)
+							unchecked { newButtonGeneration++; }
+						else if (!lastButtonIsInput)
+							lastButtonGeneration = newButtonGeneration;
+						lastButtonIsInput = true;
+						break;
+				case InputType.StrValue:
+				#region EE_INPUTANY
+				case InputType.AnyValue:
+				#endregion
+				case InputType.StrButton:
+						if (lastButtonGeneration == newButtonGeneration)
+							unchecked { newButtonGeneration++; }
+						else if (lastButtonIsInput)
+							lastButtonGeneration = newButtonGeneration;
+						lastButtonIsInput = false;
+						break;
 			}
-			#region EE_INPUTANY
-			if (inputReq.InputType == InputType.StrValue || inputReq.InputType == InputType.AnyValue)
 			#endregion
-			{
-				if (lastButtonGeneration == newButtonGeneration)
-					unchecked { newButtonGeneration++; }
-				else if (lastButtonIsInput)
-					lastButtonGeneration = newButtonGeneration;
-				lastButtonIsInput = false;
-			}
 		}
 
 		/// <summary>
@@ -828,6 +836,34 @@ namespace MinorShift.Emuera.GameView
 						else
 							emuera.InputInteger(inputValue);
 						break;
+					#region EE_BINPUT
+					case InputType.IntButton:
+						if (string.IsNullOrEmpty(str) && inputReq.HasDefValue && !IsRunningTimer)
+						{
+							inputValue = inputReq.DefIntValue;
+							str = inputValue.ToString();
+						}
+						else if (!Int64.TryParse(str, out inputValue))
+							return false;
+						foreach (ConsoleDisplayLine line in Enumerable.Reverse(displayLineList).ToList())
+						{
+							foreach (ConsoleButtonString button in line.Buttons)
+							{
+								if (button.IsInteger && button.Generation == lastButtonGeneration && button.Input == inputValue)
+								{
+									emuera.InputInteger(inputValue);
+									goto loopendint;
+								}
+								//後ろから回してるので世代が違うボタンに到達したらもう無い
+								else if (button.Generation != lastButtonGeneration)
+									return false;
+							}
+
+						}
+						return false;
+					loopendint:
+						break;
+					#endregion
 					case InputType.StrValue:
 						if (string.IsNullOrEmpty(str) && inputReq.HasDefValue && !IsRunningTimer)
 							str = inputReq.DefStrValue;
@@ -836,6 +872,32 @@ namespace MinorShift.Emuera.GameView
 							str = "";
 						emuera.InputString(str);
 						break;
+					#region EE_BINPUT
+					case InputType.StrButton:
+						if (string.IsNullOrEmpty(str) && inputReq.HasDefValue && !IsRunningTimer)
+							str = inputReq.DefStrValue;
+						//空入力と時間切れ
+						if (str == null)
+							str = "";
+						foreach (ConsoleDisplayLine line in Enumerable.Reverse(displayLineList).ToList())
+						{
+							foreach (ConsoleButtonString button in line.Buttons)
+							{
+								if (button.Generation == lastButtonGeneration && (button.Input.ToString() == str || button.Inputs == str))
+								{
+									emuera.InputString(str);
+									goto loopendstr;
+								}
+								//後ろから回してるので世代が違うボタンに到達したらもう無い
+								else if (button.Generation != lastButtonGeneration)
+									return false;
+							}
+
+						}
+						return false;
+					loopendstr:
+						break;
+					#endregion
 					#region EE_INPUTANY
 					case InputType.AnyValue:
 						if (Int64.TryParse(str, out inputValue))
@@ -2068,8 +2130,11 @@ namespace MinorShift.Emuera.GameView
 				canSelect = false;
 			else if (!pointing.IsButton)
 				canSelect = false;
-			else if ((state == ConsoleState.WaitInput && inputReq.InputType == InputType.IntValue) && (!pointing.IsInteger))
-				canSelect = false;
+			else if (state == ConsoleState.WaitInput && !pointing.IsInteger)
+			{
+				if ((inputReq.InputType == InputType.IntValue) || (inputReq.InputType == InputType.IntButton))
+					canSelect = false;
+			}
 		end:
 			if (canSelect)
 				select = pointing;

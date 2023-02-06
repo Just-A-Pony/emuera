@@ -1920,6 +1920,99 @@ namespace MinorShift.Emuera.GameProc.Function
 			}
 		}
 		#endregion
+		#region EE_BINPUT
+		private sealed class BINPUT_Instruction : AbstractInstruction
+		{
+			public BINPUT_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_INPUT);
+				flag = IS_PRINT | IS_INPUT;
+			}
+
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				SpInputsArgument arg = (SpInputsArgument)func.Argument;
+				InputRequest req = new InputRequest();
+				req.InputType = InputType.IntButton;
+				if (arg.Def != null)
+				{
+					Int64 def;
+					def = arg.Def.GetIntValue(exm);
+					req.HasDefValue = true;
+					req.DefIntValue = def;
+				}
+				if (arg.Mouse != null)
+				{
+					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
+				}
+				GlobalStatic.MainWindow.ApplyTextBoxChanges();
+				#endregion
+				#region EE_INPUT機能拡張
+				if (arg.CanSkip != null && GlobalStatic.Console.MesSkip)
+				{
+					if (arg.Mouse.GetIntValue(exm) == 0)
+						GlobalStatic.VEvaluator.RESULT = arg.Def.GetIntValue(exm);
+					else
+						GlobalStatic.VEvaluator.RESULT_ARRAY[1] = arg.Def.GetIntValue(exm);
+				}
+				else
+					exm.Console.WaitInput(req);
+			}
+		}
+		private sealed class BINPUTS_Instruction : AbstractInstruction
+		{
+			public BINPUTS_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_INPUTS);
+				flag = IS_PRINT | IS_INPUT;
+			}
+
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				#region EM_私家版_INPUT系機能拡張
+				//ExpressionArgument arg = (ExpressionArgument)func.Argument;
+				//InputRequest req = new InputRequest();
+				//req.InputType = InputType.StrValue;
+				//if (arg.Term != null)
+				//{
+				//	string def;
+				//	if (arg.IsConst)
+				//		def = arg.ConstStr;
+				//	else
+				//		def = arg.Term.GetStrValue(exm);
+				//	req.HasDefValue = true;
+				//	req.DefStrValue = def;
+				//}
+				SpInputsArgument arg = (SpInputsArgument)func.Argument;
+				InputRequest req = new InputRequest();
+				req.InputType = InputType.StrButton;
+				if (arg.Def != null)
+				{
+					string def;
+					def = arg.Def.GetStrValue(exm);
+					req.HasDefValue = true;
+					req.DefStrValue = def;
+				}
+				if (arg.Mouse != null)
+				{
+					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
+				}
+				GlobalStatic.MainWindow.ApplyTextBoxChanges();
+				#endregion
+				#region EE_INPUT機能拡張
+				if (arg.CanSkip != null && GlobalStatic.Console.MesSkip)
+				{
+					if (arg.Mouse.GetIntValue(exm) == 0)
+						GlobalStatic.VEvaluator.RESULTS = arg.Def.GetStrValue(exm);
+					else
+						GlobalStatic.VEvaluator.RESULTS_ARRAY[1] = arg.Def.GetStrValue(exm);
+				}
+				else
+					exm.Console.WaitInput(req);
+				#endregion
+			}
+		}
+		#endregion
 
 		#region EM_DT
 		private sealed class DT_COLUMN_OPTIONS_Instruction : AbstractInstruction
