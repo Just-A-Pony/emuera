@@ -17,6 +17,7 @@ using trerror = EvilMask.Emuera.Lang.Error;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
 using EvilMask.Emuera;
 using static EvilMask.Emuera.Utils;
+using System.Linq;
 
 namespace MinorShift.Emuera.GameProc.Function
 {
@@ -1946,8 +1947,7 @@ namespace MinorShift.Emuera.GameProc.Function
 					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
 				}
 				GlobalStatic.MainWindow.ApplyTextBoxChanges();
-				#endregion
-				#region EE_INPUT機能拡張
+				int count = 0;
 				if (arg.CanSkip != null && GlobalStatic.Console.MesSkip)
 				{
 					if (arg.Mouse.GetIntValue(exm) == 0)
@@ -1956,7 +1956,23 @@ namespace MinorShift.Emuera.GameProc.Function
 						GlobalStatic.VEvaluator.RESULT_ARRAY[1] = arg.Def.GetIntValue(exm);
 				}
 				else
-					exm.Console.WaitInput(req);
+				{
+					foreach (ConsoleDisplayLine line in Enumerable.Reverse(exm.Console.DisplayLineList).ToList())
+					{
+						foreach (ConsoleButtonString button in line.Buttons)
+						{
+							if (button.Generation != exm.Console.LastButtonGeneration)
+								goto loopend;
+							else if (button.IsButton && button.IsInteger)
+								count++;
+						}
+					}
+
+				}
+				loopend:
+				if (count == 0)
+					throw new CodeEE(string.Format(trerror.NothingButtonBinput.Text, "BINPUT"));
+				exm.Console.WaitInput(req);
 			}
 		}
 		private sealed class BINPUTS_Instruction : AbstractInstruction
@@ -1969,7 +1985,6 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-				#region EM_私家版_INPUT系機能拡張
 				//ExpressionArgument arg = (ExpressionArgument)func.Argument;
 				//InputRequest req = new InputRequest();
 				//req.InputType = InputType.StrValue;
@@ -1998,8 +2013,7 @@ namespace MinorShift.Emuera.GameProc.Function
 					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
 				}
 				GlobalStatic.MainWindow.ApplyTextBoxChanges();
-				#endregion
-				#region EE_INPUT機能拡張
+				int count = 0;
 				if (arg.CanSkip != null && GlobalStatic.Console.MesSkip)
 				{
 					if (arg.Mouse.GetIntValue(exm) == 0)
@@ -2008,8 +2022,24 @@ namespace MinorShift.Emuera.GameProc.Function
 						GlobalStatic.VEvaluator.RESULTS_ARRAY[1] = arg.Def.GetStrValue(exm);
 				}
 				else
-					exm.Console.WaitInput(req);
-				#endregion
+				{
+					foreach (ConsoleDisplayLine line in Enumerable.Reverse(exm.Console.DisplayLineList).ToList())
+					{
+						foreach (ConsoleButtonString button in line.Buttons)
+						{
+							if (button.Generation != exm.Console.LastButtonGeneration)
+								goto loopend;
+							else if (button.IsButton)
+								count++;
+						}
+					}
+
+
+				}
+				loopend:
+				if (count == 0)
+					throw new CodeEE(string.Format(trerror.NothingButtonBinput.Text, "BINPUTS"));
+				exm.Console.WaitInput(req);
 			}
 		}
 		#endregion

@@ -238,6 +238,9 @@ namespace MinorShift.Emuera.GameView
 		#region EE_MOUSEB
 		public MainWindow Window { get { return window; } }
 		#endregion
+		#region EE_BINPUT
+		public List<ConsoleDisplayLine> DisplayLineList { get { return displayLineList; } }
+		#endregion
 		#region EE_AnchorのCB機能移植
 		public readonly ClipboardProcessor CBProc;
 		#endregion
@@ -466,6 +469,9 @@ namespace MinorShift.Emuera.GameView
 		bool lastButtonIsInput = true;
 		public bool updatedGeneration = false;
 		int lastButtonGeneration = 0;//最後に追加された選択肢の世代。これと世代が一致しない選択肢は選択できない。
+		#region EE_BINPUT
+		public int LastButtonGeneration { get { return lastButtonGeneration; } }
+		#endregion
 		int newButtonGeneration = 0;//次に追加される選択肢の世代。Input又はInputsごとに増加
 									//public int LastButtonGeneration { get { return lastButtonGeneration; } }
 		public int NewButtonGeneration { get { return newButtonGeneration; } }

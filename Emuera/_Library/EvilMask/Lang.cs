@@ -1168,8 +1168,9 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString DTInvalidDataType{ get; } = new TranslatableString("{0}関数: DataTable(\"{1}\")の\"{2}\"列に違う型の値を指定しようとしています");
             [Managed] public static TranslatableString DTCanNotEditIdColumn { get; } = new TranslatableString("{0}関数: DataTable(\"{1}\")の\"id\"列は変更できません");
             [Managed] public static TranslatableString IsDefinedCsvVariable { get; } = new TranslatableString("変数名\"{0}\"は既にCSV変数の定義に使われており、予期せぬ配列参照を引き起こす場合があります");
-        }
-        [Managed]
+			[Managed] public static TranslatableString NothingButtonBinput { get; } = new TranslatableString("ボタンが一つも無い状態で{0}が行われました。全ての入力を受け付けなくなります");
+		}
+		[Managed]
         public sealed class MessageBox
         {
             [Managed] public static TranslatableString ConfigError { get; } = new TranslatableString("設定のエラー");
