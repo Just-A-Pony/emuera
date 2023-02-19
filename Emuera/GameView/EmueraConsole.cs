@@ -826,6 +826,7 @@ namespace MinorShift.Emuera.GameView
 			if (state == ConsoleState.WaitInput)
 			{
 				Int64 inputValue;
+				List<AConsoleDisplayPart> ep;
 
 				switch (inputReq.InputType)
 				{
@@ -861,10 +862,31 @@ namespace MinorShift.Emuera.GameView
 									goto loopendint;
 								}
 								//後ろから回してるので世代が違うボタンに到達したらもう無い
-								else if (button.Generation != lastButtonGeneration)
-									return false;
+								else if (button.Generation != 0 && button.Generation != lastButtonGeneration)
+									goto loopepint;
 							}
-
+						}
+						loopepint:
+						foreach (var value in escapedParts)
+						{
+							ep = value.Value;
+							foreach (var part in ep)
+							{
+								if (part is ConsoleDivPart div)
+								{
+									foreach (ConsoleDisplayLine line in Enumerable.Reverse(div.Children).ToList())
+									{
+										foreach (ConsoleButtonString button in line.Buttons)
+										{
+											if (button.IsInteger && button.Input == inputValue)
+											{
+												emuera.InputInteger(inputValue);
+												goto loopendint;
+											}
+										}
+									}
+								}
+							}
 						}
 						return false;
 					loopendint:
@@ -895,10 +917,32 @@ namespace MinorShift.Emuera.GameView
 									goto loopendstr;
 								}
 								//後ろから回してるので世代が違うボタンに到達したらもう無い
-								else if (button.Generation != lastButtonGeneration)
-									return false;
+								else if (button.Generation != 0 && button.Generation != lastButtonGeneration)
+									goto loopepstr;
 							}
+						}
+					loopepstr:
+						foreach (var value in escapedParts)
+						{
+							ep = value.Value;
 
+							foreach (var part in ep)
+							{
+								if (part is ConsoleDivPart div)
+								{
+									foreach (ConsoleDisplayLine line in Enumerable.Reverse(div.Children).ToList())
+									{
+										foreach (ConsoleButtonString button in line.Buttons)
+										{
+											if (button.IsInteger && (button.Input.ToString() == str || button.Inputs == str))
+											{
+												emuera.InputString(str);
+												goto loopendint;
+											}
+										}
+									}
+								}
+							}
 						}
 						return false;
 					loopendstr:
@@ -1451,6 +1495,9 @@ namespace MinorShift.Emuera.GameView
 
 		#region EM_私家版_描画拡張
 		Dictionary<int, List<AConsoleDisplayPart>> escapedParts;
+		#endregion
+		#region EE_BINPUT
+		public Dictionary<int, List<AConsoleDisplayPart>> EscapedParts { get { return escapedParts; } }
 		#endregion
 		#region EM_私家版_imgマースク
 		public int GetLinePointY(int lineNo)

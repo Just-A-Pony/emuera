@@ -92,6 +92,7 @@ namespace MinorShift.Emuera.GameView
 		public override int Top { get { return PointY; } }
 		public override int Bottom { get { return PointY + Height; } }
 		public bool IsRelative { get; private set; }
+		public ConsoleDisplayLine[] Children { get { return children; } }
 
 		public override bool CanDivide => false;
 		public ConsoleButtonString TestChildHitbox(int pointX, int pointY, int relPointY)

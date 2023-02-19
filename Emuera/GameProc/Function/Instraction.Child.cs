@@ -1932,6 +1932,8 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
+				//実行時点で描画されてないときがあるのでやっておく
+				exm.Console.RefreshStrings(true);
 				SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();
 				req.InputType = InputType.IntButton;
@@ -1961,17 +1963,48 @@ namespace MinorShift.Emuera.GameProc.Function
 					{
 						foreach (ConsoleButtonString button in line.Buttons)
 						{
-							if (button.Generation != exm.Console.LastButtonGeneration)
-								goto loopend;
+							if (button.Generation != 0 && button.Generation != exm.Console.LastButtonGeneration)
+								goto loopep;
 							else if (button.IsButton && button.IsInteger)
 								count++;
 						}
 					}
+					loopep:
+					List<AConsoleDisplayPart> ep;
+					foreach (var value in exm.Console.EscapedParts)
+					{
+						ep = value.Value;
+						foreach (var part in ep)
+						{
+							if (part is ConsoleDivPart div)
+							{
+								foreach (ConsoleDisplayLine line in Enumerable.Reverse(div.Children).ToList())
+								{
+									foreach (ConsoleButtonString button in line.Buttons)
+									{
+										if (button.IsButton && button.IsInteger)
+										{
+											count++;
+											goto loopend;
+										}
+									}
+								}
+							}
+						}
+					}
 
 				}
-				loopend:
+			loopend:
 				if (count == 0)
-					throw new CodeEE(string.Format(trerror.NothingButtonBinput.Text, "BINPUT"));
+				{
+					if (arg.Def == null)
+						throw new CodeEE(string.Format(trerror.NothingButtonBinput.Text, "BINPUT"));
+					else
+					{
+						GlobalStatic.VEvaluator.RESULT = arg.Def.GetIntValue(exm);
+						return;
+					}
+				}
 				exm.Console.WaitInput(req);
 			}
 		}
@@ -1998,6 +2031,8 @@ namespace MinorShift.Emuera.GameProc.Function
 				//	req.HasDefValue = true;
 				//	req.DefStrValue = def;
 				//}
+				//実行時点で描画されてないときがあるのでやっておく
+				exm.Console.RefreshStrings(true);
 				SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();
 				req.InputType = InputType.StrButton;
@@ -2027,18 +2062,48 @@ namespace MinorShift.Emuera.GameProc.Function
 					{
 						foreach (ConsoleButtonString button in line.Buttons)
 						{
-							if (button.Generation != exm.Console.LastButtonGeneration)
-								goto loopend;
+							if (button.Generation != 0 && button.Generation != exm.Console.LastButtonGeneration)
+								goto loopep;
 							else if (button.IsButton)
 								count++;
 						}
 					}
-
+				loopep:
+					List<AConsoleDisplayPart> ep;
+					foreach (var value in exm.Console.EscapedParts)
+					{
+						ep = value.Value;
+						foreach (var part in ep)
+						{
+							if (part is ConsoleDivPart div)
+							{
+								foreach (ConsoleDisplayLine line in Enumerable.Reverse(div.Children).ToList())
+								{
+									foreach (ConsoleButtonString button in line.Buttons)
+									{
+										if (button.IsButton)
+										{
+											count++;
+											goto loopend;
+										}
+									}
+								}
+							}
+						}
+					}
 
 				}
-				loopend:
+			loopend:
 				if (count == 0)
-					throw new CodeEE(string.Format(trerror.NothingButtonBinput.Text, "BINPUTS"));
+				{
+					if (arg.Def == null)
+						throw new CodeEE(string.Format(trerror.NothingButtonBinput.Text, "BINPUTS"));
+					else
+					{
+						GlobalStatic.VEvaluator.RESULTS = arg.Def.GetStrValue(exm);
+						return;
+					}
+				}
 				exm.Console.WaitInput(req);
 			}
 		}
