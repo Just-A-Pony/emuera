@@ -143,7 +143,7 @@ namespace MinorShift.Emuera.Content
 		#endregion
 
 		/// <summary>
-		/// GDRAWTEXTGDRAWTEXT int ID, str text, int x, int y, int width, int height
+		/// GDRAWTEXT int ID, str text, int x, int y, int width, int height
 		/// エラーチェックは呼び出し元でのみ行う
 		/// </summary>
 		public void GDrawString(string text, int x, int y, int width, int height)
@@ -351,6 +351,23 @@ namespace MinorShift.Emuera.Content
 			g.TranslateTransform(x, y, System.Drawing.Drawing2D.MatrixOrder.Append);
 			Bitmap src = srcGra.GetBitmap();
 			g.DrawImage(src, 0, 0);
+		}
+		#endregion
+		#region EE_GDRAWLINE
+		public void GDrawLine(int fromX, int fromY, int forX, int forY)
+		{
+			if (g == null)
+				throw new NullReferenceException();
+
+			if (pen != null)
+			{
+				g.DrawLine(pen, fromX, fromY, forX, forY); 
+			}
+			else
+			{
+				using (Pen p = new Pen(Config.ForeColor))
+					g.DrawLine(p, fromX, fromY, forX, forY);
+			}
 		}
 		#endregion
 

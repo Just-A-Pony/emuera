@@ -5708,6 +5708,29 @@ namespace MinorShift.Emuera.GameData.Function
         }
         **/
 		#endregion
+		#region EE_GDRAWLINE
+		public sealed class GraphicsDrawLineMethod : FunctionMethod
+		{
+			public GraphicsDrawLineMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64) };
+				CanRestructure = false;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
+					throw new CodeEE(string.Format(Lang.Error.GDIPlusOnly.Text, Name));
+				GraphicsImage g = ReadGraphics(Name, exm, arguments, 0);
+				if (!g.IsCreated)
+					return 0;
+				Point fromP = ReadPoint(Name, exm, arguments, 1);
+				Point forP = ReadPoint(Name, exm, arguments, 3);
+				g.GDrawLine(fromP.X, fromP.Y, forP.X, forP.Y);
+				return 1;
+			}
+		}
+		#endregion
 
 		public sealed class SpriteStateMethod : FunctionMethod
 		{

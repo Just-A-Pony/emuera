@@ -325,6 +325,7 @@ namespace MinorShift.Emuera.GameData.Function
                 ["SETTEXTBOX"] = new ChangeTextBoxMethod(),
                 ["ERDNAME"] = new ErdNameMethod(),
 				["SPRITEDISPOSEALL"] = new SpriteDisposeAllMethod(),
+				["GDRAWLINE"] = new GraphicsDrawLineMethod(),
 				#endregion
 			};
 
