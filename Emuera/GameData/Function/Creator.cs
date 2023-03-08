@@ -326,6 +326,7 @@ namespace MinorShift.Emuera.GameData.Function
                 ["ERDNAME"] = new ErdNameMethod(),
 				["SPRITEDISPOSEALL"] = new SpriteDisposeAllMethod(),
 				["GDRAWLINE"] = new GraphicsDrawLineMethod(),
+				["GETDISPLAYLINE"] = new GetDisplayLineMethod(),
 				#endregion
 			};
 

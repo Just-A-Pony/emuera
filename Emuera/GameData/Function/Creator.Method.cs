@@ -5881,7 +5881,9 @@ namespace MinorShift.Emuera.GameData.Function
 			public GraphicsCreateFromFileMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = new Type[] { typeof(Int64), typeof(string) };
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.Int }, OmitStart = 2 }
+				};
 				CanRestructure = false;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
@@ -5894,12 +5896,21 @@ namespace MinorShift.Emuera.GameData.Function
 					return 0;
 
 				string filename = arguments[1].GetStrValue(exm);
+				bool isRelative = false;
+				if (arguments.Length > 2)
+					isRelative = arguments[2].GetIntValue(exm) != 0;
+
 				Bitmap bmp = null;
 				try
 				{
 					string filepath = filename;
-					if(!System.IO.Path.IsPathRooted(filepath))
-						filepath = Program.ContentDir + filename;
+					if (!System.IO.Path.IsPathRooted(filepath))
+					{
+						if (isRelative)
+							filepath = filename;
+						else
+							filepath = Program.ContentDir + filename;
+					}
 					if (!System.IO.File.Exists(filepath))
 						return 0;
 					#region EM_私家版_webp
@@ -7223,16 +7234,12 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				VariableTerm vToken = (VariableTerm)arguments[0];
 				string varname = "";
-				#region EE_ERD
 				if (arguments.Length > 2)
 					varname = vToken.Identifier.Name + "@" + arguments[2].GetIntValue(exm);
 				else
 					varname = vToken.Identifier.Name;
-				#endregion
 				long value = arguments[1].GetIntValue(exm);
-				#region EE_ERD
 				if (exm.VEvaluator.Constant.TryIntegerToKeyword(out string ret, value, varname))
-					#endregion
 					return ret;
 				else
 					return "";
@@ -7241,6 +7248,28 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				arguments[1] = arguments[1].Restructure(exm);
 				return arguments[1] is SingleTerm;
+			}
+		}
+		#endregion
+		#region EE_GETDISPLAYLINE
+		private sealed class GetDisplayLineMethod : FunctionMethod
+		{
+			public GetDisplayLineMethod()
+			{
+				ReturnType = typeof(string);
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int }},
+				};
+				CanRestructure = false;
+			}
+			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				long num = arguments[0].GetIntValue(exm);
+				if (num < 0 || num >= exm.Console.DisplayLineList.Count)
+					return "";
+				else
+					return exm.Console.DisplayLineList[(int)num].ToString();
 			}
 		}
 		#endregion
