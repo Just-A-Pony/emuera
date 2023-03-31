@@ -116,7 +116,7 @@ namespace ImageProcessor.Common.Helpers
                 return rootDirectory;
             }
 
-            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+            string codeBase = Assembly.GetExecutingAssembly().Location;
             var uri = new Uri(codeBase);
             string path = uri.LocalPath;
             string baseDirectory = Path.GetDirectoryName(path);

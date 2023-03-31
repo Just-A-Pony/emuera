@@ -781,6 +781,8 @@ namespace MinorShift.Emuera.Forms
 		{
 			if (!comboBox2.Enabled)
 				return;
+			if (!OperatingSystem.IsWindows())
+				return;
 			InstalledFontCollection ifc = new InstalledFontCollection();
 			foreach (FontFamily ff in ifc.Families)
 			{

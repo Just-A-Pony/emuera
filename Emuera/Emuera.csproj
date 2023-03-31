@@ -1,24 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{F3B2ED56-A5BF-45DA-A270-3ED0F775320B}</ProjectGuid>
+    <TargetFramework>net7.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MinorShift.Emuera</RootNamespace>
-    <AssemblyName>Emuera</AssemblyName>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <UpgradeBackupLocation>
-    </UpgradeBackupLocation>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -33,410 +18,22 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+  	<Deterministic>false</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="WindowsBase" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Config\ConfigData.cs" />
-    <Compile Include="Config\ConfigCode.cs" />
-    <Compile Include="Config\ConfigItem.cs" />
-    <Compile Include="Config\KeyMacro.cs" />
-    <Compile Include="Config\Config.cs" />
-    <Compile Include="Content\AContentFile.cs" />
-    <Compile Include="Content\AContentItem.cs" />
-    <Compile Include="Content\ConstImage.cs" />
-    <Compile Include="Content\AppContents.cs" />
-    <Compile Include="Content\CroppedImage.cs" />
-    <Compile Include="Content\GraphicsImage.cs" />
-    <Compile Include="Forms\ClipBoardDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ClipBoardDialog.Designer.cs">
-      <DependentUpon>ClipBoardDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ColorBox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Forms\ColorBox.Designer.cs">
-      <DependentUpon>ColorBox.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ConfigDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ConfigDialog.Designer.cs">
-      <DependentUpon>ConfigDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\DebugDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\DebugDialog.Designer.cs">
-      <DependentUpon>DebugDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\EraPictureBox.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Forms\DebugConfigDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\DebugConfigDialog.Designer.cs">
-      <DependentUpon>DebugConfigDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\RikaiDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\RikaiDialog.designer.cs">
-      <DependentUpon>RikaiDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GameData\DefineMacro.cs" />
-    <Compile Include="GameData\Expression\CaseExpression.cs" />
-    <Compile Include="GameData\Expression\IOperandTerm.cs" />
-    <Compile Include="GameData\Expression\OperatorMethod.cs" />
-    <Compile Include="GameData\Expression\Term.cs" />
-    <Compile Include="GameData\Function\UserDefinedRefMethod.cs" />
-    <Compile Include="GameData\IdentifierDictionary.cs" />
-    <Compile Include="GameData\ParserMediator.cs" />
-    <Compile Include="GameData\StrForm.cs" />
-    <Compile Include="GameData\Function\Creator.Method.cs" />
-    <Compile Include="GameData\Function\FunctionMethod.cs" />
-    <Compile Include="GameData\Function\Creator.cs" />
-    <Compile Include="GameData\Function\FunctionMethodTerm.cs" />
-    <Compile Include="GameData\Function\UserDefinedMethodTerm.cs" />
-    <Compile Include="GameData\Variable\VariableIdentifier.cs" />
-    <Compile Include="GameData\Variable\VariableLocal.cs" />
-    <Compile Include="GameData\Variable\VariableParser.cs" />
-    <Compile Include="GameData\Variable\VariableStrArgTerm.cs" />
-    <Compile Include="GameData\Variable\VariableTerm.cs" />
-    <Compile Include="GameProc\Function\ArgumentBuilder.cs" />
-    <Compile Include="GameProc\Function\ArgumentParser.cs" />
-    <Compile Include="GameProc\Function\CircularBuffer.cs" />
-    <Compile Include="GameProc\Function\Clipboard.cs" />
-    <Compile Include="GameProc\Function\FunctionArgType.cs" />
-    <Compile Include="GameProc\Function\Instraction.Child.cs" />
-    <Compile Include="GameProc\Function\Instruction.cs" />
-    <Compile Include="GameProc\HeaderFileLoader.cs" />
-    <Compile Include="GameProc\InputRequest.cs" />
-    <Compile Include="GameProc\LabelDictionary.cs" />
-    <Compile Include="GameProc\LogicalLineParser.cs" />
-    <Compile Include="GameProc\UserDefinedFunction.cs" />
-    <Compile Include="GameProc\UserDefinedVariable.cs" />
-    <Compile Include="GameView\AConsoleDisplayPart.cs" />
-    <Compile Include="GameView\ConsoleButtonString.cs" />
-    <Compile Include="GameView\ConsoleDisplayLine.cs" />
-    <Compile Include="GameView\ConsoleShapePart.cs" />
-    <Compile Include="GameView\ConsoleImagePart.cs" />
-    <Compile Include="GameView\ConsoleStyledString.cs" />
-    <Compile Include="GameView\ButtonStringCreator.cs" />
-    <Compile Include="GameView\EmueraConsole.cs" />
-    <Compile Include="GameView\EmueraConsole.Print.cs" />
-    <Compile Include="GameView\HtmlManager.cs" />
-    <Compile Include="GameView\PrintStringBuffer.cs" />
-    <Compile Include="GameView\Rikaichan.cs" />
-    <Compile Include="GameView\RikaichanAutogenerated.cs" />
-    <Compile Include="GameView\StringMeasure.cs" />
-    <Compile Include="GameView\StringStyle.cs" />
-    <Compile Include="GlobalStatic.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Sub\EmueraException.cs" />
-    <Compile Include="GameProc\Function\BuiltInFunctionCode.cs" />
-    <Compile Include="GameProc\Function\FunctionIdentifier.cs" />
-    <Compile Include="GameData\ConstantData.cs" />
-    <Compile Include="GameData\Expression\ExpressionMediator.cs" />
-    <Compile Include="GameData\Expression\ExpressionParser.cs" />
-    <Compile Include="GameData\Variable\CharacterData.cs" />
-    <Compile Include="GameData\Variable\VariableEvaluator.cs" />
-    <Compile Include="GameData\Variable\VariableToken.cs" />
-    <Compile Include="GameProc\Process.State.cs" />
-    <Compile Include="GameData\Expression\OperatorCode.cs" />
-    <Compile Include="GameProc\Process.cs" />
-    <Compile Include="GameProc\ErbLoader.cs" />
-    <Compile Include="GameProc\LogicalLine.cs" />
-    <Compile Include="GameProc\Process.ScriptProc.cs" />
-    <Compile Include="GameProc\Process.SystemProc.cs" />
-    <Compile Include="GameData\GameBase.cs" />
-    <Compile Include="Sub\EraBinaryDataReader.cs" />
-    <Compile Include="Sub\EraDataStream.cs" />
-    <Compile Include="Sub\EraStreamReader.cs" />
-    <Compile Include="Sub\LexicalAnalyzer.cs" />
-    <Compile Include="Sub\StringStream.cs" />
-    <Compile Include="GameData\Variable\VariableData.cs" />
-    <Compile Include="GameData\Variable\VariableCode.cs" />
-    <Compile Include="Forms\MainWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\MainWindow.Designer.cs">
-      <DependentUpon>MainWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\ClipBoardDialog.resx">
-      <DependentUpon>ClipBoardDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ColorBox.resx">
-      <DependentUpon>ColorBox.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ConfigDialog.resx">
-      <DependentUpon>ConfigDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DebugDialog.resx">
-      <DependentUpon>DebugDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EraPictureBox.resx">
-      <DependentUpon>EraPictureBox.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\MainWindow.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>MainWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DebugConfigDialog.resx">
-      <DependentUpon>DebugConfigDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\RikaiDialog.resx">
-      <DependentUpon>RikaiDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="GameProc\Function\Argument.cs" />
-    <Compile Include="GameProc\Process.CalledFunction.cs" />
-    <None Include=".editorconfig" />
-    <None Include="app.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="Sub\WordCollection.cs" />
-    <Compile Include="Sub\Word.cs" />
-    <Compile Include="Sub\SubWord.cs" />
-    <Compile Include="Sub\EraBinaryDataWriter.cs" />
-    <Compile Include="_Library\EvilMask\ConsoleDivPart.cs" />
-    <Compile Include="_Library\EvilMask\ConsoleEscapedParts.cs" />
-    <Compile Include="_Library\EvilMask\Lang.cs" />
-    <Compile Include="_Library\EvilMask\Shape.cs" />
-    <Compile Include="_Library\EvilMask\Utils.cs" />
-    <Compile Include="_Library\GDI.cs" />
-    <Compile Include="_Library\ImageProcessor\BitDepth.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Exceptions\ImageFormatException.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Exceptions\ImageProcessingException.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Exceptions\Logging\DefaultLogger.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Exceptions\Logging\ILogger.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Exceptions\QuantizationException.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Extensions\AssemblyExtensions.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Extensions\DoubleExtensions.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Extensions\EnumerableExtensions.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Extensions\FloatExtensions.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Extensions\ImageExtensions.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Extensions\IntegerExtensions.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Extensions\RectangleExtensions.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Helpers\IOHelper.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Helpers\TypeFinder.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Helpers\UpgradeableReadLock.cs" />
-    <Compile Include="_Library\ImageProcessor\Common\Helpers\WriteLock.cs" />
-    <Compile Include="_Library\ImageProcessor\Configuration\ImageProcessorBootstrapper.cs" />
-    <Compile Include="_Library\ImageProcessor\Configuration\NativeBinaryFactory.cs" />
-    <Compile Include="_Library\ImageProcessor\Configuration\NativeMethods.cs" />
-    <Compile Include="_Library\ImageProcessor\ImageFactory.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\AnchorPosition.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\AnimationProcessMode.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Colors\CmykColor.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Colors\Color32.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Colors\ColorExtensions.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Colors\HSLAColor.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Colors\RGBAColor.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Colors\RgbaComponent.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Colors\YCbCrColor.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\ComputerArchitectureInfo.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Convolution.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\CropLayer.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\CropMode.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\FastBitmap.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Artistic\HalftoneFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Artistic\OilPaintingFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Binarization\BinaryThreshold.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\EdgeDetection\ConvolutionFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\EdgeDetection\I2DEdgeFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\EdgeDetection\IEdgeFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\EdgeDetection\KayyaliEdgeFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\EdgeDetection\KirschEdgeFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\EdgeDetection\Laplacian3X3EdgeFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\EdgeDetection\Laplacian5X5EdgeFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\EdgeDetection\LaplacianOfGaussianEdgeFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\EdgeDetection\PrewittEdgeFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\EdgeDetection\RobertsCrossEdgeFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\EdgeDetection\ScharrEdgeFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\EdgeDetection\SobelEdgeFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\ObjectDetection\Class1.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\ObjectDetection\EmbeddedHaarCascades.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\ObjectDetection\GroupMatching.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\ObjectDetection\HaarCascade\HaarCascade.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\ObjectDetection\HaarCascade\HaarCascadeSerializationObject.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\ObjectDetection\HaarCascade\HaarCascadeStage.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\ObjectDetection\HaarCascade\HaarCascadeWriter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\ObjectDetection\HaarCascade\HaarClassifier.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\ObjectDetection\HaarCascade\HaarFeature.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\ObjectDetection\HaarCascade\HaarFeatureNode.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\ObjectDetection\HaarCascade\HaarRectangle.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\ObjectDetection\HaarObjectDetector.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\ObjectDetection\ObjectDetectorScalingMode.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\ObjectDetection\ObjectDetectorSearchMode.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\ObjectDetection\RectangleGroupMatching.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Photo\BlackWhiteMatrixFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Photo\ColorMatrixes.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Photo\ComicMatrixFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Photo\GothamMatrixFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Photo\GreyScaleMatrixFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Photo\HiSatchMatrixFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Photo\IMatrixFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Photo\InvertMatrixFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Photo\LomographMatrixFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Photo\LoSatchMatrixFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Photo\MatrixFilterBase.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Photo\MatrixFilters.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Photo\PolaroidMatrixFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Filters\Photo\SepiaMatrixFilter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Formats\BitmapFormat.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Formats\FormatBase.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Formats\FormatUtilities.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Formats\GifDecoder.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Formats\GifEncoder.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Formats\GifFormat.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Formats\GifFrame.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Formats\IAnimatedImageFormat.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Formats\IQuantizableImageFormat.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Formats\ISupportedImageFormat.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Formats\JpegFormat.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Formats\NativeMethods.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Formats\PngFormat.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Formats\TiffFormat.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Formats\WebPFormat.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\GaussianLayer.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Helpers\Adjustments.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Helpers\Converters\BigEndianBitConverter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Helpers\Converters\EndianBitConverter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Helpers\Converters\Endianness.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Helpers\Converters\LittleEndianBitConverter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Helpers\Effects.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Helpers\GraphicsHelper.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Helpers\ImageMaths.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Helpers\PixelOperations.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\IComputerArchitectureInfo.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\ImageLayer.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Interpolation.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\MetaData\ExifBitConverter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\MetaData\ExifPropertyTag.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\MetaData\ExifPropertyTagConstants.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\MetaData\ExifPropertyTagType.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\MetaData\ImageFactoryMetaExtensions.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\MetaData\Int32Converter.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\MetaData\PropertyTagResolutionUnit.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\MetaData\Rational.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Quantizers\IQuantizer.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Quantizers\OctreeQuantizer.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Quantizers\Quantizer.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Quantizers\WuQuantizer\Box.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Quantizers\WuQuantizer\ColorMoment.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Quantizers\WuQuantizer\CubeCut.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Quantizers\WuQuantizer\Histogram.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Quantizers\WuQuantizer\ImageBuffer.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Quantizers\WuQuantizer\IWuQuantizer.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Quantizers\WuQuantizer\PaletteColorHistory.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Quantizers\WuQuantizer\PaletteLookup.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Quantizers\WuQuantizer\WuQuantizer.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Quantizers\WuQuantizer\WuQuantizerBase.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\ResizeHelper.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\ResizeLayer.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\ResizeMode.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\Resizer.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\RoundedCornerLayer.cs" />
-    <Compile Include="_Library\ImageProcessor\Imaging\TextLayer.cs" />
-    <Compile Include="_Library\ImageProcessor\MetaDataMode.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Alpha.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\AutoRotate.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Background.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\BackgroundColor.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Brightness.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Contrast.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Crop.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\DetectEdges.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\DetectObjects.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\EntropyCrop.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Filter.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Flip.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Format.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Gamma.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\GaussianBlur.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\GaussianSharpen.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Halftone.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Hue.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\IGraphicsProcessor.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Mask.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Meta.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Overlay.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Pixelate.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Quality.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\ReplaceColor.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Resize.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Resolution.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Rotate.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\RotateBounded.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\RoundedCorners.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Saturation.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Tint.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Vignette.cs" />
-    <Compile Include="_Library\ImageProcessor\Processors\Watermark.cs" />
-    <Compile Include="_Library\SFMT.cs" />
-    <Compile Include="_Library\LangManager.cs" />
-    <Compile Include="_Library\WinInput.cs" />
-    <Compile Include="_Library\WinmmTimer.cs" />
-    <Compile Include="_Library\Sys.cs" />
+    <Compile Update="Forms\ColorBox.cs" />
+    <Compile Update="Forms\EraPictureBox.cs" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="WMPLib">
@@ -487,12 +84,17 @@
     <Content Include="_Library\ImageProcessor\Resources\Unmanaged\x64\libwebp.dll" />
     <Content Include="_Library\ImageProcessor\Resources\Unmanaged\x86\libwebp.dll" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <PackageReference Include="Costura.Fody" Version="5.7.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.410601">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="7.0.0" />
+  </ItemGroup>
 </Project>

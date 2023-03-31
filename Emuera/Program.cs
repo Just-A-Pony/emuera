@@ -7,6 +7,7 @@ using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.GameData.Expression;
 using System.IO;
 using EvilMask.Emuera;
+using System.Text;
 
 namespace MinorShift.Emuera
 {
@@ -95,9 +96,10 @@ namespace MinorShift.Emuera
 			#endregion
 
 			Application.EnableVisualStyles();
+			Application.SetHighDpiMode(HighDpiMode.SystemAware);
 			Application.SetCompatibleTextRenderingDefault(false);
 			ConfigData.Instance.LoadConfig();
-
+			
 
 			#region EM_私家版_Emuera多言語化改造
 			Lang.LoadLanguageFile();
