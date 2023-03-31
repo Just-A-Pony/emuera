@@ -7,7 +7,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using System.Drawing.Drawing2D;
 
 namespace MinorShift.Emuera.Content
 {
@@ -372,19 +371,6 @@ namespace MinorShift.Emuera.Content
 		}
 		#endregion
 
-		#region EE_GDASHSTYLE
-		public void GDashStyle(long style, long cap)
-		{
-			if (g == null)
-				throw new NullReferenceException();
-			if (pen == null)
-				pen = new Pen(Config.ForeColor);
-
-			pen.DashStyle = (System.Drawing.Drawing2D.DashStyle)style;
-			pen.DashCap = (System.Drawing.Drawing2D.DashCap)cap;
-		}
-		#endregion
-
 		#region EE_GDRAWTEXT フォントスタイルも指定できるように
 		// public void GSetFont(Font r)
 		public void GSetFont(Font r, FontStyle fs)
@@ -403,18 +389,9 @@ namespace MinorShift.Emuera.Content
 		}
 		public void GSetPen(Pen r)
 		{
-			DashStyle style = DashStyle.Solid;
-			DashCap cap = DashCap.Flat;
-
 			if (pen != null)
-			{
-				style = pen.DashStyle;
-				cap = pen.DashCap;
 				pen.Dispose();
-			}
 			pen = r;
-			pen.DashStyle = style;
-			pen.DashCap = cap;
 		}
 
 
