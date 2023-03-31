@@ -5469,6 +5469,30 @@ namespace MinorShift.Emuera.GameData.Function
 			}
 		}
 
+		#region EE_GDASHSTYLE
+		public sealed class GraphicsSetDashStyleMethod : FunctionMethod
+		{
+			public GraphicsSetDashStyleMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64) };
+				CanRestructure = false;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
+					// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
+					throw new CodeEE(string.Format(Lang.Error.GDIPlusOnly.Text, Name));
+				GraphicsImage g = ReadGraphics(Name, exm, arguments, 0);
+				if (!g.IsCreated)
+					return 0;
+				
+				g.GDashStyle(arguments[1].GetIntValue(exm), arguments[2].GetIntValue(exm));
+				return 1;
+			}
+		}
+		#endregion
+
 		#region EE_GDRAWTEXT
 		public sealed class GraphicsDrawStringMethod : FunctionMethod
 		{
