@@ -220,9 +220,13 @@ namespace MinorShift.Emuera
 				ParserMediator.Initialize(null);
 				GlobalStatic.Reset();
 				//GC.Collect();
-				Reboot = false;
+			#region EE_メモリリークの解決
 				ConfigData.Instance.ReLoadConfig();
+				break;
 			}
+			if (Reboot)
+				Application.Restart();
+			#endregion
 		}
 
 		#region eee_カレントディレクトリー
