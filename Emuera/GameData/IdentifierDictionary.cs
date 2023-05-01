@@ -15,6 +15,7 @@ using MinorShift._Library;
 using System.Linq;
 using EvilMask.Emuera;
 using treer = EvilMask.Emuera.Lang.Error;
+using System.Windows.Input;
 
 
 namespace MinorShift.Emuera
@@ -153,7 +154,15 @@ namespace MinorShift.Emuera
 			nameDic.Add("__DEBUG__", DefinedNameType.Reserved);
 			nameDic.Add("__SKIP__", DefinedNameType.Reserved);
 			nameDic.Add("_", DefinedNameType.Reserved);
-			instructionDic = FunctionIdentifier.GetInstructionNameDic();
+			try
+			{
+				instructionDic = FunctionIdentifier.GetInstructionNameDic();
+			}
+			catch
+			{
+				throw new CodeEE(treer.DoNotInstallWMP.Text);
+			}
+
 
 			varTokenDic = varData.GetVarTokenDicClone();
 			localvarTokenDic = varData.GetLocalvarTokenDic();
