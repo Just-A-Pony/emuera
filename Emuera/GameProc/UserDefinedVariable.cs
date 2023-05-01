@@ -178,6 +178,8 @@ namespace MinorShift.Emuera.GameProc
 		whilebreak:
 			if (ret.Name == null)
 				throw new CodeEE(string.Format(trerror.NotVarAfterKeyword.Text, keyword), sc);
+			if (Config.UseERD)
+				GlobalStatic.ConstantData.isDefinedErd(ret.Name, sc);
 			string errMes = "";
 			int errLevel = -1;
 			if (isPrivate)

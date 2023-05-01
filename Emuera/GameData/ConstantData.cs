@@ -9,6 +9,7 @@ using EvilMask.Emuera;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using System.Linq;
+using MinorShift.Emuera.GameProc;
 
 namespace MinorShift.Emuera.GameData
 {
@@ -741,6 +742,21 @@ namespace MinorShift.Emuera.GameData
 				dict.Add(pair.Key, pair.Value.num);
 			erdNameToIntDics.Add(varname, dict);
 		}
+
+		#region EE_重複定義の確認
+		public void isDefinedErd(string varname, ScriptPosition sc)
+		{
+			List<string> erddic = new List<string>(erdNameToIntDics.Keys);
+			foreach (var erdvarname in erddic)
+			{
+				foreach (string erdname in erdNameToIntDics[erdvarname].Keys)
+				{
+					if (erdname == varname)
+						ParserMediator.Warn(string.Format(trerror.IsDefinedErdVariable.Text, varname, erdvarname), sc, 1);
+				}
+			}
+		}
+		#endregion
 
 		public bool isDefined(VariableCode varCode, string str)
 		{
