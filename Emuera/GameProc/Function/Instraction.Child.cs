@@ -1933,6 +1933,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
 				//実行時点で描画されてないときがあるのでやっておく
+				exm.Console.NewLine();
 				exm.Console.RefreshStrings(true);
 				SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();
@@ -2032,6 +2033,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				//	req.DefStrValue = def;
 				//}
 				//実行時点で描画されてないときがあるのでやっておく
+				exm.Console.NewLine();
 				exm.Console.RefreshStrings(true);
 				SpInputsArgument arg = (SpInputsArgument)func.Argument;
 				InputRequest req = new InputRequest();

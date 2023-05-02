@@ -226,6 +226,7 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+            this.checkBox35 = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabEnvironment.SuspendLayout();
             this.flowLayoutPanel13.SuspendLayout();
@@ -1216,6 +1217,7 @@
             resources.ApplyResources(this.flowLayoutPanel32, "flowLayoutPanel32");
             this.flowLayoutPanel32.Controls.Add(this.checkBox23);
             this.flowLayoutPanel32.Controls.Add(this.checkBox13);
+            this.flowLayoutPanel32.Controls.Add(this.checkBox35);
             this.flowLayoutPanel32.Controls.Add(this.label12);
             this.flowLayoutPanel32.Controls.Add(this.comboBoxReduceArgumentOnLoad);
             this.flowLayoutPanel32.Controls.Add(this.label15);
@@ -1651,6 +1653,12 @@
             this.flowLayoutPanel2.Controls.Add(this.buttonCancel);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             // 
+            // checkBox35
+            // 
+            resources.ApplyResources(this.checkBox35, "checkBox35");
+            this.checkBox35.Name = "checkBox35";
+            this.checkBox35.UseVisualStyleBackColor = true;
+            // 
             // ConfigDialog
             // 
             resources.ApplyResources(this, "$this");
@@ -1988,5 +1996,6 @@
 		private System.Windows.Forms.Label rikaiNote1;
 		private System.Windows.Forms.LinkLabel rikaiNote2;
 		private System.Windows.Forms.Label rikaiNote3;
+		private System.Windows.Forms.CheckBox checkBox35;
 	}
 }

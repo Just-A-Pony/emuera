@@ -137,6 +137,9 @@ namespace MinorShift.Emuera
 			#region EE_ERDNAME
 			VarsizeDimConfig = instance.GetConfigValue<bool>(ConfigCode.VarsizeDimConfig);
 			#endregion
+			#region EE_重複定義の確認
+			CheckDuplicateIdentifier = instance.GetConfigValue<bool>(ConfigCode.CheckDuplicateIdentifier);
+			#endregion
 
 
 			#region EM_私家版_LoadText＆SaveText機能拡張
@@ -654,6 +657,9 @@ namespace MinorShift.Emuera
         #endregion
         #region EE_ERDNAME
 		public static bool VarsizeDimConfig { get; private set; }
+		#endregion
+		#region EE_重複定義の確認
+		public static bool CheckDuplicateIdentifier { get; private set; }
 		#endregion
 		#region EM_私家版_LoadText＆SaveText機能拡張
 		public static List<string> ValidExtension { get; private set; }

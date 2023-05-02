@@ -159,6 +159,9 @@ namespace MinorShift.Emuera
         #region EE_ERDNAME
 		VarsizeDimConfig,
 		#endregion
+		#region EE_重複定義の確認
+		CheckDuplicateIdentifier,
+		#endregion
 
 		#region EM_私家版_LoadText＆SaveText機能拡張
 		ValidExtension = 200,

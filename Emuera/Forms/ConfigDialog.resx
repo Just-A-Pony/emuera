@@ -2254,7 +2254,7 @@
     <value>colorBoxBG</value>
   </data>
   <data name="&gt;&gt;colorBoxBG.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8400.37660, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8522.28459, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxBG.Parent" xml:space="preserve">
     <value>flowLayoutPanel27</value>
@@ -2275,7 +2275,7 @@
     <value>colorBoxFG</value>
   </data>
   <data name="&gt;&gt;colorBoxFG.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8400.37660, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8522.28459, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxFG.Parent" xml:space="preserve">
     <value>flowLayoutPanel27</value>
@@ -2296,7 +2296,7 @@
     <value>colorBoxSelecting</value>
   </data>
   <data name="&gt;&gt;colorBoxSelecting.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8400.37660, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8522.28459, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxSelecting.Parent" xml:space="preserve">
     <value>flowLayoutPanel27</value>
@@ -2317,7 +2317,7 @@
     <value>colorBoxBacklog</value>
   </data>
   <data name="&gt;&gt;colorBoxBacklog.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8400.37660, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8522.28459, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxBacklog.Parent" xml:space="preserve">
     <value>flowLayoutPanel27</value>
@@ -4115,6 +4115,36 @@ Emueraの過去のバージョンで動作したものが動作しない、
   <data name="&gt;&gt;checkBox13.ZOrder" xml:space="preserve">
     <value>1</value>
   </data>
+  <data name="checkBox35.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBox35.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBox35.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 47</value>
+  </data>
+  <data name="checkBox35.Size" type="System.Drawing.Size, System.Drawing">
+    <value>249, 16</value>
+  </data>
+  <data name="checkBox35.TabIndex" type="System.Int32, mscorlib">
+    <value>74</value>
+  </data>
+  <data name="checkBox35.Text" xml:space="preserve">
+    <value>ERDの識別子とローカル変数の重複を確認する</value>
+  </data>
+  <data name="&gt;&gt;checkBox35.Name" xml:space="preserve">
+    <value>checkBox35</value>
+  </data>
+  <data name="&gt;&gt;checkBox35.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBox35.Parent" xml:space="preserve">
+    <value>flowLayoutPanel32</value>
+  </data>
+  <data name="&gt;&gt;checkBox35.ZOrder" xml:space="preserve">
+    <value>2</value>
+  </data>
   <data name="label12.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -4122,7 +4152,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>NoControl</value>
   </data>
   <data name="label12.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 64</value>
+    <value>3, 86</value>
   </data>
   <data name="label12.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 20, 3, 3</value>
@@ -4146,7 +4176,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>flowLayoutPanel32</value>
   </data>
   <data name="&gt;&gt;label12.ZOrder" xml:space="preserve">
-    <value>2</value>
+    <value>3</value>
   </data>
   <data name="comboBoxReduceArgumentOnLoad.Items" xml:space="preserve">
     <value>常に行わない</value>
@@ -4158,7 +4188,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>常に行う</value>
   </data>
   <data name="comboBoxReduceArgumentOnLoad.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 82</value>
+    <value>20, 104</value>
   </data>
   <data name="comboBoxReduceArgumentOnLoad.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>20, 3, 3, 3</value>
@@ -4179,7 +4209,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>flowLayoutPanel32</value>
   </data>
   <data name="&gt;&gt;comboBoxReduceArgumentOnLoad.ZOrder" xml:space="preserve">
-    <value>3</value>
+    <value>4</value>
   </data>
   <data name="label15.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -4188,7 +4218,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>NoControl</value>
   </data>
   <data name="label15.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 108</value>
+    <value>3, 130</value>
   </data>
   <data name="label15.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
@@ -4212,7 +4242,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>flowLayoutPanel32</value>
   </data>
   <data name="&gt;&gt;label15.ZOrder" xml:space="preserve">
-    <value>4</value>
+    <value>5</value>
   </data>
   <data name="comboBox5.Items" xml:space="preserve">
     <value>0:標準でない文法</value>
@@ -4227,7 +4257,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>3:致命的エラー</value>
   </data>
   <data name="comboBox5.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 126</value>
+    <value>20, 148</value>
   </data>
   <data name="comboBox5.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>20, 3, 3, 3</value>
@@ -4248,7 +4278,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>flowLayoutPanel32</value>
   </data>
   <data name="&gt;&gt;comboBox5.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="checkBox11.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -4257,7 +4287,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>NoControl</value>
   </data>
   <data name="checkBox11.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 152</value>
+    <value>3, 174</value>
   </data>
   <data name="checkBox11.Size" type="System.Drawing.Size, System.Drawing">
     <value>190, 16</value>
@@ -4278,7 +4308,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>flowLayoutPanel32</value>
   </data>
   <data name="&gt;&gt;checkBox11.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="label13.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -4287,7 +4317,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>NoControl</value>
   </data>
   <data name="label13.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 174</value>
+    <value>3, 196</value>
   </data>
   <data name="label13.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
@@ -4311,7 +4341,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>flowLayoutPanel32</value>
   </data>
   <data name="&gt;&gt;label13.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="comboBox3.Items" xml:space="preserve">
     <value>無視</value>
@@ -4326,7 +4356,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>表示する</value>
   </data>
   <data name="comboBox3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 192</value>
+    <value>20, 214</value>
   </data>
   <data name="comboBox3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>20, 3, 3, 3</value>
@@ -4347,7 +4377,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>flowLayoutPanel32</value>
   </data>
   <data name="&gt;&gt;comboBox3.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="label14.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -4356,7 +4386,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>NoControl</value>
   </data>
   <data name="label14.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 218</value>
+    <value>3, 240</value>
   </data>
   <data name="label14.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 3, 3, 3</value>
@@ -4380,7 +4410,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>flowLayoutPanel32</value>
   </data>
   <data name="&gt;&gt;label14.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="comboBox4.Items" xml:space="preserve">
     <value>無視</value>
@@ -4395,7 +4425,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>表示する</value>
   </data>
   <data name="comboBox4.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 236</value>
+    <value>20, 258</value>
   </data>
   <data name="comboBox4.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>20, 3, 3, 3</value>
@@ -4416,7 +4446,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>flowLayoutPanel32</value>
   </data>
   <data name="&gt;&gt;comboBox4.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="flowLayoutPanel31.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -4491,7 +4521,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>1</value>
   </data>
   <data name="flowLayoutPanel31.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 279</value>
+    <value>0, 301</value>
   </data>
   <data name="flowLayoutPanel31.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>0, 20, 0, 0</value>
@@ -4512,7 +4542,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>flowLayoutPanel32</value>
   </data>
   <data name="&gt;&gt;flowLayoutPanel31.ZOrder" xml:space="preserve">
-    <value>11</value>
+    <value>12</value>
   </data>
   <data name="flowLayoutPanel32.FlowDirection" type="System.Windows.Forms.FlowDirection, System.Windows.Forms">
     <value>TopDown</value>
@@ -4521,7 +4551,7 @@ Emueraの過去のバージョンで動作したものが動作しない、
     <value>93, 52</value>
   </data>
   <data name="flowLayoutPanel32.Size" type="System.Drawing.Size, System.Drawing">
-    <value>286, 307</value>
+    <value>286, 329</value>
   </data>
   <data name="flowLayoutPanel32.TabIndex" type="System.Int32, mscorlib">
     <value>38</value>
@@ -5578,7 +5608,7 @@ at all. Note scrolling bypasses this and might still cause no-update issues.</va
     <value>rikaiColorBoxBG</value>
   </data>
   <data name="&gt;&gt;rikaiColorBoxBG.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8400.37660, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8522.28459, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;rikaiColorBoxBG.Parent" xml:space="preserve">
     <value>rikaiFlowLayoutPanel</value>
@@ -5599,7 +5629,7 @@ at all. Note scrolling bypasses this and might still cause no-update issues.</va
     <value>rikaiColorBoxText</value>
   </data>
   <data name="&gt;&gt;rikaiColorBoxText.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8400.37660, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8522.28459, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;rikaiColorBoxText.Parent" xml:space="preserve">
     <value>rikaiFlowLayoutPanel</value>

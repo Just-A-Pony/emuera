@@ -360,6 +360,7 @@ namespace MinorShift.Emuera.Forms
 			setCheckBox(checkBox30, ConfigCode.ForbidUpdateCheck);
 			setCheckBox(checkBox31, ConfigCode.UseERD);
 			setCheckBox(checkBox34, ConfigCode.VarsizeDimConfig);
+			setCheckBox(checkBox35, ConfigCode.CheckDuplicateIdentifier);
 			#region EM_私家版_セーブ圧縮
 			setCheckBox(checkBox32, ConfigCode.ZipSaveData);
 			#endregion
@@ -573,6 +574,7 @@ namespace MinorShift.Emuera.Forms
 			config.GetConfigItem(ConfigCode.ForbidUpdateCheck).SetValue<bool>(checkBox30.Checked);
 			config.GetConfigItem(ConfigCode.UseERD).SetValue<bool>(checkBox31.Checked);
 			config.GetConfigItem(ConfigCode.VarsizeDimConfig).SetValue<bool>(checkBox34.Checked);
+			config.GetConfigItem(ConfigCode.CheckDuplicateIdentifier).SetValue<bool>(checkBox35.Checked);
 
 			config.GetConfigItem(ConfigCode.WindowX).SetValue<int>((int)numericUpDown2.Value);
 			config.GetConfigItem(ConfigCode.WindowY).SetValue<int>((int)numericUpDown3.Value);

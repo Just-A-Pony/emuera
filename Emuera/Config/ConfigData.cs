@@ -129,6 +129,9 @@ namespace MinorShift.Emuera
 			#region EE_ERDNAME
 			configArray.Add(new ConfigItem<bool>(ConfigCode.VarsizeDimConfig, "VARSIZEの次元指定をERD機能に合わせる", "Imitate ERD to VARSIZE dimension specification", false));
 			#endregion
+			#region EE_重複定義の確認
+			configArray.Add(new ConfigItem<bool>(ConfigCode.CheckDuplicateIdentifier, "ERDで定義した識別子とローカル変数の重複を確認する", "Check duplicate ERD identifier and private variablea", false));
+			#endregion
 			#region EM_私家版_LoadText＆SaveText機能拡張
 			configArray.Add(new ConfigItem<List<string>>(ConfigCode.ValidExtension, "LOADTEXTとSAVETEXTで使える拡張子", "Valid extensions for LOADTEXT and SAVETEXT", new List<string> { "txt" }));
 			#endregion

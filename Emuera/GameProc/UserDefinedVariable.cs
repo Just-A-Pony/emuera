@@ -178,7 +178,7 @@ namespace MinorShift.Emuera.GameProc
 		whilebreak:
 			if (ret.Name == null)
 				throw new CodeEE(string.Format(trerror.NotVarAfterKeyword.Text, keyword), sc);
-			if (Config.UseERD)
+			if (Config.UseERD && Config.CheckDuplicateIdentifier)
 				GlobalStatic.ConstantData.isDefinedErd(ret.Name, sc);
 			string errMes = "";
 			int errLevel = -1;
