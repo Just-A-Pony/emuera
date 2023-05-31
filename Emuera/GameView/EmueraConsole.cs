@@ -854,6 +854,7 @@ namespace MinorShift.Emuera.GameView
 							return false;
 						foreach (ConsoleDisplayLine line in Enumerable.Reverse(displayLineList).ToList())
 						{
+
 							foreach (ConsoleButtonString button in line.Buttons)
 							{
 								if (button.IsInteger && button.Generation == lastButtonGeneration && button.Input == inputValue)
@@ -934,7 +935,7 @@ namespace MinorShift.Emuera.GameView
 									{
 										foreach (ConsoleButtonString button in line.Buttons)
 										{
-											if (button.IsInteger && (button.Input.ToString() == str || button.Inputs == str))
+											if ((button.IsInteger && button.Input.ToString() == str) || button.Inputs == str)
 											{
 												emuera.InputString(str);
 												goto loopendint;
