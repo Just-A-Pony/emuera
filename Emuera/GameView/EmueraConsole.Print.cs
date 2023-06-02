@@ -608,13 +608,16 @@ namespace MinorShift.Emuera.GameView
 			userStyle = ss;
 		}
 
-		public void printCustomBar(string barStr)
+		public void printCustomBar(string barStr, bool isConst)
 		{
 			if (string.IsNullOrEmpty(barStr))
 				throw new CodeEE(trerror.EmptyDrawline.Text);
 			StringStyle ss = userStyle;
 			userStyle.FontStyle = FontStyle.Regular;
-			Print(getStBar(barStr));
+			if (isConst)
+				Print(barStr);
+			else
+				Print(getStBar(barStr));
 			userStyle = ss;
 		}
 

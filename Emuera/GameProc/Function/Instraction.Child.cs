@@ -405,6 +405,39 @@ namespace MinorShift.Emuera.GameProc.Function
 				#endregion
 			}
 		}
+		private sealed class CUSTOMDRAWLINE_Instruction : AbstractInstruction
+		{
+			public CUSTOMDRAWLINE_Instruction()
+			{
+				ArgBuilder = null;
+				flag = METHOD_SAFE | EXTENDED;
+			}
+
+			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
+			{
+				StringStream st = line.PopArgumentPrimitive();
+				string rowStr;
+				if (st.EOS)
+					throw new CodeEE("引数が設定されていません");
+				else
+					rowStr = st.Substring();
+				rowStr = GlobalStatic.Console.getStBar(rowStr);
+				Argument ret = new ExpressionArgument(new SingleTerm(rowStr))
+				{
+					ConstStr = rowStr,
+					IsConst = true
+				};
+				return ret;
+			}
+
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				if (GlobalStatic.Process.SkipPrint)
+					return;
+				GlobalStatic.Console.printCustomBar(((ExpressionArgument)func.Argument).ConstStr, true);
+				exm.Console.NewLine();
+			}
+		}
 
 		private sealed class DEBUGPRINT_Instruction : AbstractInstruction
 		{

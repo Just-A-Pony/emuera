@@ -276,7 +276,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			addFunction(FunctionCode.SORTCHARA, new SORTCHARA_Instruction());
 			addFunction(FunctionCode.FONTSTYLE, argb[FunctionArgType.INT_EXPRESSION_NULLABLE], METHOD_SAFE | EXTENDED);
 			addFunction(FunctionCode.ALIGNMENT, argb[FunctionArgType.STR], METHOD_SAFE | EXTENDED);
-			addFunction(FunctionCode.CUSTOMDRAWLINE, argb[FunctionArgType.STR], METHOD_SAFE | EXTENDED);
+			addFunction(FunctionCode.CUSTOMDRAWLINE, new CUSTOMDRAWLINE_Instruction());
 			addFunction(FunctionCode.DRAWLINEFORM, argb[FunctionArgType.FORM_STR], METHOD_SAFE | EXTENDED);
 			addFunction(FunctionCode.CLEARTEXTBOX, argb[FunctionArgType.VOID], METHOD_SAFE | EXTENDED);
 

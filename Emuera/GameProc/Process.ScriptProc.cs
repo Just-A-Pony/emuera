@@ -158,14 +158,14 @@ namespace MinorShift.Emuera.GameProc
 					exm.Console.PrintBar();
 					exm.Console.NewLine();
 					break;
-				case FunctionCode.CUSTOMDRAWLINE:
+				//case FunctionCode.CUSTOMDRAWLINE:
 				case FunctionCode.DRAWLINEFORM:
 					{
 						if (skipPrint)
 							break;
 						term = ((ExpressionArgument)func.Argument).Term;
 						str = term.GetStrValue(exm);
-						exm.Console.printCustomBar(str);
+						exm.Console.printCustomBar(str, false);
 						//exm.Console.setStBar(str);
 						//exm.Console.PrintBar();
 						exm.Console.NewLine();
