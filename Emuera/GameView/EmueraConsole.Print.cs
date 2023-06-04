@@ -24,6 +24,9 @@ namespace MinorShift.Emuera.GameView
 		public Color bgColor = Config.BackColor;
 
 		private readonly PrintStringBuffer printBuffer;
+		#region EE_BINPUT
+		public PrintStringBuffer PrintBuffer { get { return printBuffer; } }
+		#endregion
 		readonly StringMeasure stringMeasure = new StringMeasure();
 
 		#region EM_私家版_StringMeasure獲得
