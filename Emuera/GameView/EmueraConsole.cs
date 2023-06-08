@@ -1723,6 +1723,17 @@ namespace MinorShift.Emuera.GameView
 		{
 			e.DrawBackground();
 			e.DrawBorder();
+			foreach (FontFamily ff in GlobalStatic.Pfc.Families)
+			{
+				if (ff.Name == tooltip_fontname)
+				{
+					using (Font f = new Font(ff, tooltip_fontsize))
+					{
+						TextRenderer.DrawText(e.Graphics, e.ToolTipText, f, e.Bounds, window.ToolTip.ForeColor, window.ToolTip.BackColor, tooltip_format);
+					}
+					return;
+				}
+			}
 			using (Font f = new Font(tooltip_fontname, tooltip_fontsize))
 			{
 				TextRenderer.DrawText(e.Graphics, e.ToolTipText, f, e.Bounds, window.ToolTip.ForeColor, window.ToolTip.BackColor, tooltip_format);
@@ -1731,7 +1742,17 @@ namespace MinorShift.Emuera.GameView
 
 		private void ToolTip_Popup(object sender, PopupEventArgs e)
 		{
-			Font f = new Font(tooltip_fontname, tooltip_fontsize);
+			Font f;
+			foreach (FontFamily ff in GlobalStatic.Pfc.Families)
+			{
+				if (ff.Name == tooltip_fontname)
+				{
+					f = new Font(ff, tooltip_fontsize);
+					goto foundfont;
+				}
+			}
+			f = new Font(tooltip_fontname, tooltip_fontsize);
+			foundfont:
 			var size = TextRenderer.MeasureText((sender as ToolTip).GetToolTip(e.AssociatedControl), f, new Size(int.MaxValue, int.MaxValue), tooltip_format);
 			e.ToolTipSize = new Size((int)size.Width, (int)size.Height);
 		}

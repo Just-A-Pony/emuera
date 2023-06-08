@@ -173,7 +173,7 @@ namespace MinorShift.Emuera.GameData.Function
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
-				string arg = arguments[0].GetStrValue(exm);
+				string arg = arguments[0].GetStrValue(exm).ToUpper();
 				string[] array = null;
 				switch (type)
 				{
@@ -195,13 +195,13 @@ namespace MinorShift.Emuera.GameData.Function
 						switch (action)
 						{
 							case EAction.BeginsWith:
-								if (item.IndexOf(arg) == 0) strs.Add(item);
+								if (item.ToUpper().IndexOf(arg) == 0) strs.Add(item);
 								break;
 							case EAction.EndsWith:
-								if (item.LastIndexOf(arg) == item.Length - arg.Length) strs.Add(item);
+								if (item.ToUpper().LastIndexOf(arg) == item.Length - arg.Length) strs.Add(item);
 								break;
 							case EAction.With:
-								if (item.IndexOf(arg) >= 0) strs.Add(item);
+								if (item.ToUpper().IndexOf(arg) >= 0) strs.Add(item);
 								break;
 						}
 					}
@@ -2376,12 +2376,22 @@ namespace MinorShift.Emuera.GameData.Function
 					Int64 isInstalled = 0;
 					foreach (System.Drawing.FontFamily ff in ifc.Families)
 					{
+						#region EE_フォントファイル対応
 						if (ff.Name == str)
 						{
 							isInstalled = 1;
 							break;
 						}
 					}
+					foreach (FontFamily ff in GlobalStatic.Pfc.Families)
+					{
+						if (ff.Name == str)
+						{
+							isInstalled = 1;
+							break;
+						}
+					}
+					#endregion
 					return (isInstalled);
 				}
 			}
@@ -5430,6 +5440,15 @@ namespace MinorShift.Emuera.GameData.Function
 				Font styledFont;
 				try
 				{
+					#region EE_フォントファイル対応
+					foreach (FontFamily ff in GlobalStatic.Pfc.Families)
+					{
+						if (ff.Name == fontname)
+						{
+							styledFont = new Font(ff, fontsize, fs, GraphicsUnit.Pixel);
+							goto foundfont;
+						}
+					}
 					// styledFont = new Font(fontname, fontsize, FontStyle.Regular, GraphicsUnit.Pixel);
 					styledFont = new Font(fontname, fontsize, fs, GraphicsUnit.Pixel);
 				}
@@ -5437,6 +5456,8 @@ namespace MinorShift.Emuera.GameData.Function
 				{
 					return 0;
 				}
+				foundfont:
+				#endregion
 				// g.GSetFont(styledFont);
 				g.GSetFont(styledFont, fs);
 				return 1;
@@ -7155,18 +7176,24 @@ namespace MinorShift.Emuera.GameData.Function
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				string functionname = arguments[0].GetStrValue(exm);
-				FunctionLabelLine func = GlobalStatic.LabelDictionary.GetNonEventLabel(functionname);
-				if (func == null)
-					return 0;
-				if (func.IsMethod)
+				foreach (string funcname in GlobalStatic.Process.LabelDictionary.NoneventKeys)
 				{
-					if (func.MethodType == typeof(string))
-						return 3;
-					else if (func.MethodType == typeof(Int64))
-						return 2;
+					if (funcname.ToUpper() == functionname.ToUpper())
+					{
+						FunctionLabelLine func = GlobalStatic.LabelDictionary.GetNonEventLabel(funcname);
 
+						if (func.IsMethod)
+						{
+							if (func.MethodType == typeof(string))
+								return 3;
+							else if (func.MethodType == typeof(Int64))
+								return 2;
+
+						}
+						return 1;
+					}
 				}
-				return 1;
+				return 0;
 			}
 		}
 		#endregion

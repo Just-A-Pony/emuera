@@ -63,6 +63,9 @@ namespace MinorShift.Emuera
 			DebugDir = WorkingDir + "debug\\";
 			DatDir = WorkingDir + "dat\\";
 			ContentDir = WorkingDir + "resources\\";
+			#region EE_フォントファイル対応
+			FontDir = WorkingDir + "font\\";
+			#endregion
 			#endregion
 			//エラー出力用
 			//1815 .exeが東方板のNGワードに引っかかるそうなので除去
@@ -133,6 +136,18 @@ namespace MinorShift.Emuera
 				MessageBox.Show(Lang.UI.MainWindow.MsgBox.NoErbFolder.Text, Lang.UI.MainWindow.MsgBox.FolderNotFound.Text);
 				return;
 			}
+			#region EE_フォントファイル対応
+			//フォントファイルを読み込む
+			if (Directory.Exists(FontDir))
+			{
+				foreach (string fontFile in Directory.GetFiles(Program.FontDir, "*.ttf", SearchOption.AllDirectories))
+					GlobalStatic.Pfc.AddFontFile(fontFile);
+
+				foreach (string fontFile in Directory.GetFiles(Program.FontDir, "*.otf", SearchOption.AllDirectories))
+					GlobalStatic.Pfc.AddFontFile(fontFile);
+			}
+			#endregion
+
 			if (debugMode)
 			{
 				ConfigData.Instance.LoadDebugConfig();
@@ -244,6 +259,9 @@ namespace MinorShift.Emuera
 		public static string ExeName { get; private set; }
 		#region EE_PLAYSOUND系
 		public static string MusicDir { get; private set; }
+		#endregion
+		#region EE_フォントファイル対応
+		public static string FontDir { get; private set; }
 		#endregion
 
 

@@ -6,6 +6,7 @@ using MinorShift.Emuera.GameData;
 using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameData.Variable;
 using MinorShift.Emuera.GameView;
+using System.Drawing.Text;
 
 namespace MinorShift.Emuera
 {
@@ -41,6 +42,9 @@ namespace MinorShift.Emuera
 		public static Dictionary<string, Int64> tempDic = new Dictionary<string, long>();
 		#region EE_FORCE_QUIT_AND_RESTART
 		public static bool ForceQuitAndRestart = false;//連続実行を防ぐ
+		#endregion
+		#region EE_フォントファイル対応
+		public static PrivateFontCollection Pfc = new PrivateFontCollection();
 		#endregion
 
 #if DEBUG

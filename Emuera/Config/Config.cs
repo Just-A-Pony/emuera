@@ -6,6 +6,7 @@ using System;
 using System.Windows.Forms;
 using MinorShift._Library;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
+using ImageProcessor.Imaging.Formats;
 
 namespace MinorShift.Emuera
 {
@@ -262,12 +263,23 @@ namespace MinorShift.Emuera
 				Font styledFont;
 				try
 				{
+					#region EE_フォントファイル対応
+					foreach (FontFamily ff in GlobalStatic.Pfc.Families)
+					{
+						if (ff.Name == fn)
+						{
+							styledFont = new Font(ff, fontsize, style, GraphicsUnit.Pixel);
+							goto foundfont;
+						}
+					}
 					styledFont = new Font(fn, fontsize, style, GraphicsUnit.Pixel);
 				}
 				catch
 				{
 					return null;
 				}
+				foundfont:
+				#endregion
 				fontStyleDic.Add(style, styledFont);
 			}
 			return fontStyleDic[style];
