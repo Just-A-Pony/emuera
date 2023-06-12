@@ -167,7 +167,10 @@
             this.flowLayoutPanel32 = new System.Windows.Forms.FlowLayoutPanel();
             this.checkBox23 = new System.Windows.Forms.CheckBox();
             this.checkBox13 = new System.Windows.Forms.CheckBox();
-            this.label12 = new System.Windows.Forms.Label();
+			#region UTF-8(BOM無し)対応
+			this.checkBox35 = new System.Windows.Forms.CheckBox();
+			#endregion
+			this.label12 = new System.Windows.Forms.Label();
             this.comboBoxReduceArgumentOnLoad = new System.Windows.Forms.ComboBox();
             this.label15 = new System.Windows.Forms.Label();
             this.comboBox5 = new System.Windows.Forms.ComboBox();
@@ -226,7 +229,7 @@
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.checkBox35 = new System.Windows.Forms.CheckBox();
+            this.checkBox36 = new System.Windows.Forms.CheckBox();
             this.tabControl.SuspendLayout();
             this.tabEnvironment.SuspendLayout();
             this.flowLayoutPanel13.SuspendLayout();
@@ -1015,6 +1018,7 @@
             this.flowLayoutPanel30.Controls.Add(this.checkBox26);
             this.flowLayoutPanel30.Controls.Add(this.checkBox27);
             this.flowLayoutPanel30.Controls.Add(this.checkBox32);
+            this.flowLayoutPanel30.Controls.Add(this.checkBox36);
             this.flowLayoutPanel30.Controls.Add(this.checkBox29);
             this.flowLayoutPanel30.Controls.Add(this.checkBox30);
             this.flowLayoutPanel30.Controls.Add(this.checkBox31);
@@ -1241,6 +1245,12 @@
             resources.ApplyResources(this.checkBox13, "checkBox13");
             this.checkBox13.Name = "checkBox13";
             this.checkBox13.UseVisualStyleBackColor = true;
+            // 
+            // checkBox35
+            // 
+            resources.ApplyResources(this.checkBox35, "checkBox35");
+            this.checkBox35.Name = "checkBox35";
+            this.checkBox35.UseVisualStyleBackColor = true;
             // 
             // label12
             // 
@@ -1653,11 +1663,11 @@
             this.flowLayoutPanel2.Controls.Add(this.buttonCancel);
             this.flowLayoutPanel2.Name = "flowLayoutPanel2";
             // 
-            // checkBox35
+            // checkBox36
             // 
-            resources.ApplyResources(this.checkBox35, "checkBox35");
-            this.checkBox35.Name = "checkBox35";
-            this.checkBox35.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.checkBox36, "checkBox36");
+            this.checkBox36.Name = "checkBox36";
+            this.checkBox36.UseVisualStyleBackColor = true;
             // 
             // ConfigDialog
             // 
@@ -1997,5 +2007,6 @@
 		private System.Windows.Forms.LinkLabel rikaiNote2;
 		private System.Windows.Forms.Label rikaiNote3;
 		private System.Windows.Forms.CheckBox checkBox35;
+		private System.Windows.Forms.CheckBox checkBox36;
 	}
 }

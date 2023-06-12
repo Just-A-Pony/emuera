@@ -113,6 +113,11 @@ namespace MinorShift.Emuera
 			SystemSaveInUTF8 = instance.GetConfigValue<bool>(ConfigCode.SystemSaveInUTF8);
 			if (SystemSaveInUTF8)
 				SaveEncode = Encoding.GetEncoding("UTF-8");
+			#region UTF-8(BOM無し)対応
+			SystemFilesInUTF8 = instance.GetConfigValue<bool>(ConfigCode.SystemFilesInUTF8);
+	        if (SystemFilesInUTF8)
+				Encode = Encoding.GetEncoding("UTF-8");
+			#endregion
 			SystemSaveInBinary = instance.GetConfigValue<bool>(ConfigCode.SystemSaveInBinary);
 			SystemIgnoreTripleSymbol = instance.GetConfigValue<bool>(ConfigCode.SystemIgnoreTripleSymbol);
 			SystemIgnoreStringSet = instance.GetConfigValue<bool>(ConfigCode.SystemIgnoreStringSet);
@@ -575,6 +580,7 @@ namespace MinorShift.Emuera
 		public static bool CompatiLinefeedAs1739 { get; private set; }
 		public static bool SystemAllowFullSpace { get; private set; }
 		public static bool SystemSaveInUTF8 { get; private set; }
+		public static bool SystemFilesInUTF8 { get; private set; }
 		public static bool SystemSaveInBinary { get; private set; }
 		public static bool CompatiFuncArgAutoConvert { get; private set; }
 		public static bool CompatiFuncArgOptional { get; private set; }

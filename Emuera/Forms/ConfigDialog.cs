@@ -160,6 +160,9 @@ namespace MinorShift.Emuera.Forms
 			this.checkBoxSystemTripleSymbol.Text = Lang.UI.ConfigDialog.System2.IgnoreTripleSymbol.Text;
 			this.checkBox26.Text = Lang.UI.ConfigDialog.System2.SaveInBinary.Text;
 			this.checkBox27.Text = Lang.UI.ConfigDialog.System2.SaveInUTF8.Text;
+			#region UTF-8(BOM無し)対応
+			this.checkBox36.Text = Lang.UI.ConfigDialog.System2.FilesInUTF8.Text;
+			#endregion
 			this.checkBox32.Text = Lang.UI.ConfigDialog.System2.CompressSave.Text;
 			this.checkBox29.Text = Lang.UI.ConfigDialog.System2.NoAutoCompleteCVar.Text;
 			this.checkBox30.Text = Lang.UI.ConfigDialog.System2.DisallowUpdateCheck.Text;
@@ -346,6 +349,7 @@ namespace MinorShift.Emuera.Forms
 			setCheckBox(checkBox33, ConfigCode.EnglishConfigOutput);
 			#endregion
 			setCheckBox(checkBox27, ConfigCode.SystemSaveInUTF8);
+			setCheckBox(checkBox36, ConfigCode.SystemFilesInUTF8);
 			setCheckBox(checkBoxCompatiRAND, ConfigCode.CompatiRAND);
 			setCheckBox(checkBoxCompatiLinefeedAs1739, ConfigCode.CompatiLinefeedAs1739);
 			setCheckBox(checkBox28, ConfigCode.CompatiCallEvent);
@@ -561,6 +565,7 @@ namespace MinorShift.Emuera.Forms
 			config.GetConfigItem(ConfigCode.CompatiLinefeedAs1739).SetValue<bool>(checkBoxCompatiLinefeedAs1739.Checked);
 			config.GetConfigItem(ConfigCode.CompatiCallEvent).SetValue<bool>(checkBox28.Checked);
 			config.GetConfigItem(ConfigCode.SystemSaveInUTF8).SetValue<bool>(checkBox27.Checked);
+			config.GetConfigItem(ConfigCode.SystemFilesInUTF8).SetValue<bool>(checkBox36.Checked);
 
 			config.GetConfigItem(ConfigCode.CompatiFuncArgOptional).SetValue<bool>(checkBox12.Checked);
 			config.GetConfigItem(ConfigCode.CompatiFuncArgAutoConvert).SetValue<bool>(checkBox25.Checked);

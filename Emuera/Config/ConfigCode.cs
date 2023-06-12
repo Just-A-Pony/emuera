@@ -116,6 +116,9 @@ namespace MinorShift.Emuera
 		CompatiFunctionNoignoreCase,
 		SystemAllowFullSpace,
 		SystemSaveInUTF8,
+		#region UTF-8(BOM無し)対応
+		SystemFilesInUTF8,
+		#endregion
 		CompatiLinefeedAs1739,
 		useLanguage,
 		SystemSaveInBinary,

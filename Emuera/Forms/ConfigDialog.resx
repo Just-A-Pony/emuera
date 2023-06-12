@@ -2254,7 +2254,7 @@
     <value>colorBoxBG</value>
   </data>
   <data name="&gt;&gt;colorBoxBG.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8522.28459, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8559.42831, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxBG.Parent" xml:space="preserve">
     <value>flowLayoutPanel27</value>
@@ -2275,7 +2275,7 @@
     <value>colorBoxFG</value>
   </data>
   <data name="&gt;&gt;colorBoxFG.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8522.28459, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8559.42831, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxFG.Parent" xml:space="preserve">
     <value>flowLayoutPanel27</value>
@@ -2296,7 +2296,7 @@
     <value>colorBoxSelecting</value>
   </data>
   <data name="&gt;&gt;colorBoxSelecting.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8522.28459, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8559.42831, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxSelecting.Parent" xml:space="preserve">
     <value>flowLayoutPanel27</value>
@@ -2317,7 +2317,7 @@
     <value>colorBoxBacklog</value>
   </data>
   <data name="&gt;&gt;colorBoxBacklog.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8522.28459, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8559.42831, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;colorBoxBacklog.Parent" xml:space="preserve">
     <value>flowLayoutPanel27</value>
@@ -3293,6 +3293,36 @@ ERBスクリプトが正常に動作しないことがあります</value>
   <data name="&gt;&gt;checkBox32.ZOrder" xml:space="preserve">
     <value>4</value>
   </data>
+  <data name="checkBox36.AutoSize" type="System.Boolean, mscorlib">
+    <value>True</value>
+  </data>
+  <data name="checkBox36.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
+  <data name="checkBox36.Location" type="System.Drawing.Point, System.Drawing">
+    <value>3, 121</value>
+  </data>
+  <data name="checkBox36.Size" type="System.Drawing.Size, System.Drawing">
+    <value>229, 16</value>
+  </data>
+  <data name="checkBox36.TabIndex" type="System.Int32, mscorlib">
+    <value>88</value>
+  </data>
+  <data name="checkBox36.Text" xml:space="preserve">
+    <value>UTF-8でエンコードされたファイルを読み込む</value>
+  </data>
+  <data name="&gt;&gt;checkBox36.Name" xml:space="preserve">
+    <value>checkBox36</value>
+  </data>
+  <data name="&gt;&gt;checkBox36.Type" xml:space="preserve">
+    <value>System.Windows.Forms.CheckBox, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;checkBox36.Parent" xml:space="preserve">
+    <value>flowLayoutPanel30</value>
+  </data>
+  <data name="&gt;&gt;checkBox36.ZOrder" xml:space="preserve">
+    <value>5</value>
+  </data>
   <data name="checkBox29.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
   </data>
@@ -3300,7 +3330,7 @@ ERBスクリプトが正常に動作しないことがあります</value>
     <value>NoControl</value>
   </data>
   <data name="checkBox29.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 121</value>
+    <value>3, 143</value>
   </data>
   <data name="checkBox29.Size" type="System.Drawing.Size, System.Drawing">
     <value>186, 16</value>
@@ -3321,7 +3351,7 @@ ERBスクリプトが正常に動作しないことがあります</value>
     <value>flowLayoutPanel30</value>
   </data>
   <data name="&gt;&gt;checkBox29.ZOrder" xml:space="preserve">
-    <value>5</value>
+    <value>6</value>
   </data>
   <data name="checkBox30.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -3330,7 +3360,7 @@ ERBスクリプトが正常に動作しないことがあります</value>
     <value>NoControl</value>
   </data>
   <data name="checkBox30.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 143</value>
+    <value>3, 165</value>
   </data>
   <data name="checkBox30.Size" type="System.Drawing.Size, System.Drawing">
     <value>169, 16</value>
@@ -3351,7 +3381,7 @@ ERBスクリプトが正常に動作しないことがあります</value>
     <value>flowLayoutPanel30</value>
   </data>
   <data name="&gt;&gt;checkBox30.ZOrder" xml:space="preserve">
-    <value>6</value>
+    <value>7</value>
   </data>
   <data name="checkBox31.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -3360,7 +3390,7 @@ ERBスクリプトが正常に動作しないことがあります</value>
     <value>NoControl</value>
   </data>
   <data name="checkBox31.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 165</value>
+    <value>3, 187</value>
   </data>
   <data name="checkBox31.Size" type="System.Drawing.Size, System.Drawing">
     <value>123, 16</value>
@@ -3381,7 +3411,7 @@ ERBスクリプトが正常に動作しないことがあります</value>
     <value>flowLayoutPanel30</value>
   </data>
   <data name="&gt;&gt;checkBox31.ZOrder" xml:space="preserve">
-    <value>7</value>
+    <value>8</value>
   </data>
   <data name="checkBox34.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -3390,7 +3420,7 @@ ERBスクリプトが正常に動作しないことがあります</value>
     <value>NoControl</value>
   </data>
   <data name="checkBox34.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 187</value>
+    <value>3, 209</value>
   </data>
   <data name="checkBox34.Size" type="System.Drawing.Size, System.Drawing">
     <value>233, 16</value>
@@ -3411,7 +3441,7 @@ ERBスクリプトが正常に動作しないことがあります</value>
     <value>flowLayoutPanel30</value>
   </data>
   <data name="&gt;&gt;checkBox34.ZOrder" xml:space="preserve">
-    <value>8</value>
+    <value>9</value>
   </data>
   <data name="label25.AutoSize" type="System.Boolean, mscorlib">
     <value>True</value>
@@ -3420,7 +3450,7 @@ ERBスクリプトが正常に動作しないことがあります</value>
     <value>NoControl</value>
   </data>
   <data name="label25.Location" type="System.Drawing.Point, System.Drawing">
-    <value>3, 226</value>
+    <value>3, 248</value>
   </data>
   <data name="label25.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>3, 20, 3, 3</value>
@@ -3444,10 +3474,10 @@ ERBスクリプトが正常に動作しないことがあります</value>
     <value>flowLayoutPanel30</value>
   </data>
   <data name="&gt;&gt;label25.ZOrder" xml:space="preserve">
-    <value>9</value>
+    <value>10</value>
   </data>
   <data name="textBox3.Location" type="System.Drawing.Point, System.Drawing">
-    <value>20, 244</value>
+    <value>20, 266</value>
   </data>
   <data name="textBox3.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
     <value>20, 3, 3, 3</value>
@@ -3468,7 +3498,7 @@ ERBスクリプトが正常に動作しないことがあります</value>
     <value>flowLayoutPanel30</value>
   </data>
   <data name="&gt;&gt;textBox3.ZOrder" xml:space="preserve">
-    <value>10</value>
+    <value>11</value>
   </data>
   <data name="flowLayoutPanel30.FlowDirection" type="System.Windows.Forms.FlowDirection, System.Windows.Forms">
     <value>TopDown</value>
@@ -3477,7 +3507,7 @@ ERBスクリプトが正常に動作しないことがあります</value>
     <value>60, 35</value>
   </data>
   <data name="flowLayoutPanel30.Size" type="System.Drawing.Size, System.Drawing">
-    <value>309, 266</value>
+    <value>309, 288</value>
   </data>
   <data name="flowLayoutPanel30.TabIndex" type="System.Int32, mscorlib">
     <value>38</value>
@@ -5608,7 +5638,7 @@ at all. Note scrolling bypasses this and might still cause no-update issues.</va
     <value>rikaiColorBoxBG</value>
   </data>
   <data name="&gt;&gt;rikaiColorBoxBG.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8522.28459, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8559.42831, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;rikaiColorBoxBG.Parent" xml:space="preserve">
     <value>rikaiFlowLayoutPanel</value>
@@ -5629,7 +5659,7 @@ at all. Note scrolling bypasses this and might still cause no-update issues.</va
     <value>rikaiColorBoxText</value>
   </data>
   <data name="&gt;&gt;rikaiColorBoxText.Type" xml:space="preserve">
-    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8522.28459, Culture=neutral, PublicKeyToken=null</value>
+    <value>MinorShift.Emuera.Forms.ColorBox, Emuera, Version=1.824.8559.42831, Culture=neutral, PublicKeyToken=null</value>
   </data>
   <data name="&gt;&gt;rikaiColorBoxText.Parent" xml:space="preserve">
     <value>rikaiFlowLayoutPanel</value>

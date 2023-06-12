@@ -2385,7 +2385,12 @@ namespace MinorShift.Emuera.GameProc.Function
 				try
 				{
 					Stream st = wc.OpenRead(url);
-					StreamReader sr = new StreamReader(st, Encoding.GetEncoding("Shift-JIS"));
+					#region UTF-8(BOM無し)対応
+					var encoding = Encoding.GetEncoding("Shift-JIS");
+                    if (Config.SystemFilesInUTF8)
+						encoding = Encoding.GetEncoding("UTF-8");
+					StreamReader sr = new StreamReader(st, encoding);
+					#endregion
 					try
 					{
 						var version = sr.ReadLine();
