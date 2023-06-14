@@ -229,6 +229,11 @@ namespace MinorShift.Emuera.GameView
 					delNum++;
 					logicalLineCount--;
 				}
+				if (displayLineList.Count == Config.MaxLog-2)
+				{
+					ConsoleDisplayLine dummyline = BufferToSingleLine(true, false);
+					displayLineList.Insert(0, dummyline);
+				}
 			}
 
 			if (delNum < num)
@@ -243,6 +248,9 @@ namespace MinorShift.Emuera.GameView
 			if (lineNo < 0)
 				lineNo += int.MaxValue;
 			lastDrawnLineNo = -1;
+			//MaxLog超過時の補充はCLEARLINEで改行が入るため1つだけ消す
+			if (displayLineList.Count == Config.MaxLog)
+				displayLineList.RemoveAt(0);
 			//RefreshStrings(true);
 		}
 
