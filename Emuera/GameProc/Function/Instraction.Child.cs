@@ -857,7 +857,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				{
 					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
 				}
-				GlobalStatic.Process.InputInteger(1, 0);
+				//GlobalStatic.Process.InputInteger(1, 0);
 				#endregion
 				#region EE_INPUT機能拡張
 				if (arg.CanSkip != null && GlobalStatic.Console.MesSkip)
@@ -918,7 +918,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				{
 					req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
 				}
-				GlobalStatic.Process.InputInteger(1, 0);
+				//GlobalStatic.Process.InputInteger(1, 0);
 				#endregion
 				#region EE_INPUT機能拡張
 				if (arg.CanSkip != null && GlobalStatic.Console.MesSkip)
@@ -973,7 +973,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				req.DisplayTime = z != 0;
 				req.TimeUpMes = (tinputarg.Timeout != null) ? tinputarg.Timeout.GetStrValue(exm) : Config.TimeupLabel;
 				#region EM_私家版_INPUT系機能拡張
-				GlobalStatic.Process.InputInteger(1, 0);
+				//GlobalStatic.Process.InputInteger(1, 0);
 				#endregion
 				#region EE_INPUT機能拡張
 				if (tinputarg.CanSkip != null && GlobalStatic.Console.MesSkip)
@@ -1021,7 +1021,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				req.DisplayTime = z != 0;
 				req.TimeUpMes = (tinputarg.Timeout != null) ? tinputarg.Timeout.GetStrValue(exm) : Config.TimeupLabel;
 				#region EM_私家版_INPUT系機能拡張
-				GlobalStatic.Process.InputInteger(1, 0);
+				//GlobalStatic.Process.InputInteger(1, 0);
 				#endregion
 				#region EE_INPUT機能拡張
 				if (tinputarg.CanSkip != null && GlobalStatic.Console.MesSkip)

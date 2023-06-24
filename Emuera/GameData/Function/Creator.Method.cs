@@ -3315,7 +3315,8 @@ namespace MinorShift.Emuera.GameData.Function
 				ReturnType = typeof(Int64);
 				// argumentTypeArray = null;
 				argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefAny1D | ArgType.AllowConstRef, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+					//new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefAny1D | ArgType.AllowConstRef | ArgType.Any, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
+					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
 				};
 				isCharaRange = isChara;
 				CanRestructure = false;
@@ -7170,30 +7171,50 @@ namespace MinorShift.Emuera.GameData.Function
 			public ExistFunctionMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = new Type[] { typeof(string) };
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int}, OmitStart = 1 },
+				};
 				CanRestructure = false;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				string functionname = arguments[0].GetStrValue(exm);
-				foreach (string funcname in GlobalStatic.Process.LabelDictionary.NoneventKeys)
+				if (arguments.Length == 1 ||  arguments[1].GetIntValue(exm) == 0)
 				{
-					if (funcname.ToUpper() == functionname.ToUpper())
+					FunctionLabelLine func = GlobalStatic.LabelDictionary.GetNonEventLabel(functionname);
+					if (func == null)
+						return 0;
+					if (func.IsMethod)
 					{
-						FunctionLabelLine func = GlobalStatic.LabelDictionary.GetNonEventLabel(funcname);
+						if (func.MethodType == typeof(string))
+							return 3;
+						else if (func.MethodType == typeof(Int64))
+							return 2;
 
-						if (func.IsMethod)
-						{
-							if (func.MethodType == typeof(string))
-								return 3;
-							else if (func.MethodType == typeof(Int64))
-								return 2;
-
-						}
-						return 1;
 					}
+					return 1;
 				}
-				return 0;
+				else
+				{
+					foreach (string funcname in GlobalStatic.Process.LabelDictionary.NoneventKeys)
+					{
+						if (funcname.ToUpper() == functionname.ToUpper())
+						{
+							FunctionLabelLine func = GlobalStatic.LabelDictionary.GetNonEventLabel(funcname);
+
+							if (func.IsMethod)
+							{
+								if (func.MethodType == typeof(string))
+									return 3;
+								else if (func.MethodType == typeof(Int64))
+									return 2;
+
+							}
+							return 1;
+						}
+					}
+					return 0;
+				}
 			}
 		}
 		#endregion
