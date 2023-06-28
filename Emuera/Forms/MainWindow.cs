@@ -652,11 +652,11 @@ namespace MinorShift.Emuera
 				if (e.Button == MouseButtons.Right)
 					GlobalStatic.VEvaluator.RESULT_ARRAY[1] = 2;
 				long result2 = 0;
-				if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+				if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
 					result2 += (long)Math.Pow(2, 16);
-				if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+				if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
 					result2 += (long)Math.Pow(2, 17);
-				if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
+				if ((Control.ModifierKeys & Keys.Alt) == Keys.Alt)
 					result2 += (long)Math.Pow(2, 18);
 				GlobalStatic.VEvaluator.RESULT_ARRAY[2] = result2;
 
