@@ -659,6 +659,7 @@ namespace MinorShift.Emuera
 				if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
 					result2 += (long)Math.Pow(2, 18);
 				GlobalStatic.VEvaluator.RESULT_ARRAY[2] = result2;
+				console.inputReq.Timelimit = 0;
 
 				PressEnterKey(false, true);
 				return;

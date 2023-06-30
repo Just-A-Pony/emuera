@@ -548,7 +548,7 @@ namespace MinorShift.Emuera.GameView
 		//Int64 defNum;
 		//string defStr;
 
-		private InputRequest inputReq = null;
+		public InputRequest inputReq = null;
 		#region EE_INPUT第二引数修正
 		public InputType NowInputType{ get { return inputReq.InputType;	} }
 		#endregion
