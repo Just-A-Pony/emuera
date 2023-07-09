@@ -6,7 +6,6 @@ using System;
 using System.Windows.Forms;
 using MinorShift._Library;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
-using ImageProcessor.Imaging.Formats;
 
 namespace MinorShift.Emuera
 {

@@ -7182,7 +7182,11 @@ namespace MinorShift.Emuera.GameData.Function
 				string functionname = arguments[0].GetStrValue(exm);
 				if (arguments.Length == 1 ||  arguments[1].GetIntValue(exm) == 0)
 				{
-					FunctionLabelLine func = GlobalStatic.LabelDictionary.GetNonEventLabel(functionname);
+					FunctionLabelLine func;
+					if (Config.SCFunction == StringComparison.OrdinalIgnoreCase)
+						func = GlobalStatic.LabelDictionary.GetNonEventLabel(functionname.ToUpper());
+					else
+						func = GlobalStatic.LabelDictionary.GetNonEventLabel(functionname);
 					if (func == null)
 						return 0;
 					if (func.IsMethod)
