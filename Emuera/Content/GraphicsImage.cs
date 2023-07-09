@@ -127,7 +127,9 @@ namespace MinorShift.Emuera.Content
 				usingFont = new Font(Config.FontName, 100, GlobalStatic.Console.StringStyle.FontStyle, GraphicsUnit.Pixel);
 			System.Drawing.Drawing2D.GraphicsPath gp =
 				new System.Drawing.Drawing2D.GraphicsPath();
-			gp.AddString(text, usingFont.FontFamily, (int)usingFont.Style, usingFont.Height, new Point(x, y), format);
+			//一部のフォントで描画がずれる問題修正
+			float emSize = (float)font.Height * font.FontFamily.GetEmHeight(font.Style) / font.FontFamily.GetLineSpacing(font.Style);
+			gp.AddString(text, usingFont.FontFamily, (int)usingFont.Style, emSize, new Point(x, y), format);
 			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 			if (brush != null)
 				g.FillPath(brush, gp);

@@ -18,6 +18,7 @@ using System.IO;
 using EvilMask.Emuera;
 using trerror = EvilMask.Emuera.Lang.Error;
 using System.Data;
+using static EvilMask.Emuera.Lang.UI.ConfigDialog;
 
 namespace MinorShift.Emuera.GameData.Function
 {
@@ -5438,7 +5439,7 @@ namespace MinorShift.Emuera.GameData.Function
 						fs |= FontStyle.Underline;
 				}
 
-				Font styledFont;
+				System.Drawing.Font styledFont;
 				try
 				{
 					#region EE_フォントファイル対応
@@ -5446,12 +5447,12 @@ namespace MinorShift.Emuera.GameData.Function
 					{
 						if (ff.Name == fontname)
 						{
-							styledFont = new Font(ff, fontsize, fs, GraphicsUnit.Pixel);
+							styledFont = new System.Drawing.Font(ff, fontsize, fs, GraphicsUnit.Pixel);
 							goto foundfont;
 						}
 					}
 					// styledFont = new Font(fontname, fontsize, FontStyle.Regular, GraphicsUnit.Pixel);
-					styledFont = new Font(fontname, fontsize, fs, GraphicsUnit.Pixel);
+					styledFont = new System.Drawing.Font(fontname, fontsize, fs, GraphicsUnit.Pixel);
 				}
 				catch
 				{
@@ -5572,9 +5573,9 @@ namespace MinorShift.Emuera.GameData.Function
 				var bitmap = new Bitmap(16, 16);
 				//Graphics canvas = Graphics.FromImage(bitmap);
 				var graphics = Graphics.FromImage(bitmap);
-				Font font = g.Fnt;
+                System.Drawing.Font font = g.Fnt;
 				if (font == null)
-					font = new Font(Config.FontName, 100, GlobalStatic.Console.StringStyle.FontStyle, GraphicsUnit.Pixel);
+					font = new System.Drawing.Font(Config.FontName, 100, GlobalStatic.Console.StringStyle.FontStyle, GraphicsUnit.Pixel);
 				var size = graphics.MeasureString(text, font, int.MaxValue, StringFormat.GenericTypographic);
 
 				//TextRenderer
@@ -5628,7 +5629,7 @@ namespace MinorShift.Emuera.GameData.Function
 					if ((style & 8) != 0)
 						fs |= FontStyle.Underline;
 				}
-				Font fnt = new Font(fontname, fontsize, fs, GraphicsUnit.Pixel);
+				System.Drawing.Font fnt = new System.Drawing.Font(fontname, fontsize, fs, GraphicsUnit.Pixel);
 				var bitmap = new Bitmap(16, 16);
 				//Graphics canvas = Graphics.FromImage(bitmap);
 				var graphics = Graphics.FromImage(bitmap);
