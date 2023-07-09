@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
+using WebPWrapper;
 
 namespace EvilMask.Emuera
 {
@@ -239,22 +240,25 @@ namespace EvilMask.Emuera
 		static public Bitmap LoadImage(string filepath)
 		{
 			Bitmap bmp = null;
-			FileStream fs = null;
+			//FileStream fs = null;
 			if (!File.Exists(filepath)) return null;
-
 			try
 			{
-				fs = new FileStream(filepath, FileMode.Open);
-				var factory = new ImageProcessor.ImageFactory();
-				factory.Load(fs);
-				bmp = (Bitmap)factory.Image;
+				/*				fs = new FileStream(filepath, FileMode.Open);
+								var factory = new ImageProcessor.ImageFactory();
+								factory.Load(fs);
+								bmp = (Bitmap)factory.Image;*/
+				if (Path.GetExtension(filepath).ToLower() == ".webp")
+				{
+					using WebP webp = new();
+					bmp = webp.Load(filepath);
+				}
+				else
+				{
+					bmp = new Bitmap(filepath);
+				}
 			}
-			catch { }
-			finally
-			{
-				fs?.Close();
-				fs?.Dispose();
-			}
+			catch{ }
 			return bmp;
 
 		}

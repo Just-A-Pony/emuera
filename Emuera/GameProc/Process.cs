@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using MinorShift.Emuera.GameData;
 using MinorShift.Emuera.Sub;
+using MinorShift._Library;
 using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameData.Variable;
@@ -286,7 +287,7 @@ namespace MinorShift.Emuera.GameProc
 		
 		public void DoScript()
 		{
-			startTime = _Library.WinmmTimer.TickCount;
+			startTime = WinmmTimer.TickCount;
 			state.lineCount = 0;
 			bool systemProcRunning = true;
 			try
@@ -324,7 +325,7 @@ namespace MinorShift.Emuera.GameProc
 
 		public void UpdateCheckInfiniteLoopState()
 		{
-			startTime = _Library.WinmmTimer.TickCount;
+			startTime = WinmmTimer.TickCount;
 			state.lineCount = 0;
 		}
 
@@ -341,7 +342,7 @@ namespace MinorShift.Emuera.GameProc
 			//    console.ReadAnyKey();
 			//    return;
 			//}
-			uint time = _Library.WinmmTimer.TickCount - startTime;
+			uint time = WinmmTimer.TickCount - startTime;
 			if (time < Config.InfiniteLoopAlertTime)
 				return;
 			LogicalLine currentLine = state.CurrentLine;
@@ -361,7 +362,7 @@ namespace MinorShift.Emuera.GameProc
 			else
 			{
 				state.lineCount = 0;
-				startTime = _Library.WinmmTimer.TickCount;
+				startTime = WinmmTimer.TickCount;
 			}
 		}
 
