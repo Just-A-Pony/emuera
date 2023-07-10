@@ -481,7 +481,10 @@ namespace MinorShift.Emuera.GameView
 			int length = 0;
 			int width;
 			if (str != null)
-				length = Config.Encode.GetByteCount(str);
+				#region .NET 7化の弊害でPRINTC系の文字数カウントがおかしい不具合修正
+				//length = Config.Encode.GetByteCount(str);
+				length = Encoding.GetEncoding("Shift-JIS").GetByteCount(str);
+			#endregion
 			int printcLength = Config.PrintCLength;
 			Font font;
 			try
