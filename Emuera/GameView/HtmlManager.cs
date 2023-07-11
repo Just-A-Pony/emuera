@@ -460,8 +460,8 @@ namespace MinorShift.Emuera.GameView
 			// StringStream st = new StringStream(str);
 			StringStream st = parent != null ? parent.Stream : new StringStream(str);
 			int found;
-			bool hasComment = parent != null ? parent.HasComment : str.IndexOf("<!--") >= 0;
-			bool hasReturn = parent != null ? parent.HasReturn : str.IndexOf('\n') >= 0;
+			bool hasComment = parent != null ? parent.HasComment : str.IndexOf("<!--", StringComparison.Ordinal) >= 0;
+			bool hasReturn = parent != null ? parent.HasReturn : str.IndexOf('\n', StringComparison.Ordinal) >= 0;
 			HtmlAnalzeState state = new HtmlAnalzeState();
 			#region EM_私家版_HTML_divタグ
 			if (parent != null)

@@ -391,7 +391,7 @@ namespace MinorShift.Emuera.GameView
 				return;
 			if (str.Contains("\n"))
 			{
-				int newline = str.IndexOf('\n');
+				int newline = str.IndexOf('\n', StringComparison.Ordinal);
 				string upper = str.Substring(0, newline);
 				printBuffer.Append(upper, Style);
 				NewLine();
@@ -698,7 +698,7 @@ namespace MinorShift.Emuera.GameView
 				filename = Program.WorkingDir + "emuera.log";
 			else
 				filename = Program.WorkingDir + filename;
-			if (filename.IndexOf("../") >= 0)
+			if (filename.IndexOf("../", StringComparison.Ordinal) >= 0)
 			{
 				MessageBox.Show(trmb.CanNotOutputToParentDirectory.Text, trmb.FailedOutputLog.Text);
 				return false;

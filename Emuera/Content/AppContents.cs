@@ -209,7 +209,7 @@ namespace MinorShift.Emuera.Content
 			}
 			//アニメ宣言以外（アニメ用フレーム含む
 
-			if(arg2.IndexOf('.') < 0)
+			if(arg2.IndexOf('.', StringComparison.Ordinal) < 0)
 			{
 				ParserMediator.Warn(string.Format(trerror.MissingSecondArgumentExtension.Text, arg2), sp, 1);
 				return null;

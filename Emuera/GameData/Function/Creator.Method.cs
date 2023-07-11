@@ -196,13 +196,13 @@ namespace MinorShift.Emuera.GameData.Function
 						switch (action)
 						{
 							case EAction.BeginsWith:
-								if (item.ToUpper().IndexOf(arg) == 0) strs.Add(item);
+								if (item.ToUpper().IndexOf(arg, StringComparison.Ordinal) == 0) strs.Add(item);
 								break;
 							case EAction.EndsWith:
-								if (item.ToUpper().LastIndexOf(arg) == item.Length - arg.Length) strs.Add(item);
+								if (item.ToUpper().LastIndexOf(arg, StringComparison.Ordinal) == item.Length - arg.Length) strs.Add(item);
 								break;
 							case EAction.With:
-								if (item.ToUpper().IndexOf(arg) >= 0) strs.Add(item);
+								if (item.ToUpper().IndexOf(arg, StringComparison.Ordinal) >= 0) strs.Add(item);
 								break;
 						}
 					}
