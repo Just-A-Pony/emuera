@@ -8,6 +8,7 @@ using MinorShift.Emuera.GameData.Expression;
 using System.IO;
 using EvilMask.Emuera;
 using System.Text;
+using MinorShift.Emuera.GameProc.Function;
 
 namespace MinorShift.Emuera
 {
@@ -71,6 +72,13 @@ namespace MinorShift.Emuera
 			//エラー出力用
 			//1815 .exeが東方板のNGワードに引っかかるそうなので除去
 			ExeName = Path.GetFileNameWithoutExtension(Sys.ExeName);
+
+			//WMPも終了しておく
+			FunctionIdentifier.bgm.close();
+			for (int i = 0; i < FunctionIdentifier.sound.Length; i++)
+			{
+				if (FunctionIdentifier.sound[i] != null) FunctionIdentifier.sound[i].close();
+			}
 
 			//解析モードの判定だけ先に行う
 			//int argsStart = 0;
