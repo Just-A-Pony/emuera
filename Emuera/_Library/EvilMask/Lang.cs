@@ -1313,7 +1313,7 @@ namespace EvilMask.Emuera
                     if (node != null)
                     {
                         var langName = node.InnerText.Trim();
-                        if (langName.IndexOf('\n')<0 && !langList.ContainsKey(langName))
+                        if (langName.IndexOf('\n', StringComparison.Ordinal) <0 && !langList.ContainsKey(langName))
                         {
                             langList.Add(langName, path);
                             var fontName = node.InnerText.Trim();

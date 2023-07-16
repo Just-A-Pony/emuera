@@ -1387,6 +1387,8 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
+				if (!OperatingSystem.IsWindows())
+					return;
 				exm.Console.SetStringStyle(exm.Console.StringStyle.FontStyle | FontStyle.Bold);
 			}
 		}
@@ -1400,6 +1402,8 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
+				if (!OperatingSystem.IsWindows())
+					return;
 				exm.Console.SetStringStyle(exm.Console.StringStyle.FontStyle | FontStyle.Italic);
 			}
 		}
@@ -1413,6 +1417,8 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
+				if (!OperatingSystem.IsWindows())
+					return;
 				exm.Console.SetStringStyle(FontStyle.Regular);
 			}
 		}
@@ -2217,8 +2223,8 @@ namespace MinorShift.Emuera.GameProc.Function
 		}
 		//ここからEnter版
 		#region EE
-		static WindowsMediaPlayer[] sound = new WindowsMediaPlayer[10];
-		static WindowsMediaPlayer bgm = new WindowsMediaPlayer();
+		public static WindowsMediaPlayer[] sound = new WindowsMediaPlayer[10];
+		public static WindowsMediaPlayer bgm = new WindowsMediaPlayer();
 		private sealed class PLAYSOUND_Instruction : AbstractInstruction
 		{
 

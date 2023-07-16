@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -791,7 +791,7 @@ namespace MinorShift.Emuera.GameView
 				var output = eucjp.GetString(temp);
 
 				int ind;
-				while ((ind = output.IndexOf('/')) != -1)
+				while ((ind = output.IndexOf('/', StringComparison.Ordinal)) != -1)
 				{
 					output = output.Substring(0, ind) + "; " + output.Substring(ind + 1);
 				}
@@ -799,7 +799,7 @@ namespace MinorShift.Emuera.GameView
 
 
 
-				if ((ind = output.IndexOf("(1)")) != -1 && (ind = output.IndexOf("(2)")) != -1)
+				if ((ind = output.IndexOf("(1)", StringComparison.Ordinal)) != -1 && (ind = output.IndexOf("(2)", StringComparison.Ordinal)) != -1)
 				{
 					int prevSplit = 0;
 					int split = ind;
@@ -819,7 +819,7 @@ namespace MinorShift.Emuera.GameView
 						}
 						split++;
 						prevSplit = split;
-						if ((ind = output.IndexOf("(" + j + ")")) != -1)
+						if ((ind = output.IndexOf("(" + j + ")", StringComparison.Ordinal)) != -1)
 						{
 							split = ind;
 						}

@@ -11,7 +11,8 @@ namespace MinorShift._Library
 
         public static void setEncode(int code)
         {
-            lang = Encoding.GetEncoding(code);
+			Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+			lang = Encoding.GetEncoding(code);
         }
 
         public static int GetStrlenLang(string str)

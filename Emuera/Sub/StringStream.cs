@@ -108,7 +108,7 @@ namespace MinorShift.Emuera.Sub
 		/// <param name="str"></param>
 		public int Find(string str)
 		{
-			return source.IndexOf(str, pointer) - pointer;
+			return source.IndexOf(str, pointer, StringComparison.Ordinal) - pointer;
 		}
 
 		/// <summary>

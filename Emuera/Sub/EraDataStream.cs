@@ -182,7 +182,7 @@ namespace MinorShift.Emuera.Sub
 					throw new FileEE(trerror.InvalidSaveDataFormat.Text);
 				if (str.Equals(EMU_SEPARATOR, StringComparison.Ordinal))
 					break;
-				int index = str.IndexOf(':');
+				int index = str.IndexOf(':', StringComparison.Ordinal);
 				if (index < 0)
 					throw new FileEE(trerror.InvalidSaveDataFormat.Text);
 				string key = str.Substring(0, index);
@@ -207,7 +207,7 @@ namespace MinorShift.Emuera.Sub
 					throw new FileEE(trerror.InvalidSaveDataFormat.Text);
 				if (str.Equals(EMU_SEPARATOR, StringComparison.Ordinal))
 					break;
-				int index = str.IndexOf(':');
+				int index = str.IndexOf(':', StringComparison.Ordinal);
 				if (index < 0)
 					throw new FileEE(trerror.InvalidSaveDataFormat.Text);
 				string key = str.Substring(0, index);

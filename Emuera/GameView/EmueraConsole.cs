@@ -548,7 +548,7 @@ namespace MinorShift.Emuera.GameView
 		//Int64 defNum;
 		//string defStr;
 
-		private InputRequest inputReq = null;
+		public InputRequest inputReq = null;
 		#region EE_INPUT第二引数修正
 		public InputType NowInputType{ get { return inputReq.InputType;	} }
 		#endregion
@@ -1136,7 +1136,7 @@ namespace MinorShift.Emuera.GameView
 				for (int i = 0; i < text.Length; i++)
 				{
 					string inputs = text[i];
-					if (inputs.IndexOf("\\e") >= 0)
+					if (inputs.IndexOf("\\e", StringComparison.Ordinal) >= 0)
 					{
 						inputs = inputs.Replace("\\e", "");//\eの除去
 						MesSkip = true;
@@ -1919,7 +1919,7 @@ namespace MinorShift.Emuera.GameView
             try
 			{
 				//デバッグコマンドはReadEnabledLineを通してないのでRename変換を入れる
-				if (Config.UseRenameFile && (com.IndexOf("[[") >= 0) && (com.IndexOf("]]") >= 0))
+				if (Config.UseRenameFile && (com.IndexOf("[[", StringComparison.Ordinal) >= 0) && (com.IndexOf("]]", StringComparison.Ordinal) >= 0))
 				{
 					foreach (KeyValuePair<string, string> pair in ParserMediator.RenameDic)
 						com = com.Replace(pair.Key, pair.Value);

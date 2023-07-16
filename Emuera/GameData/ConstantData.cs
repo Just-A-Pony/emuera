@@ -1420,7 +1420,7 @@ namespace MinorShift.Emuera.GameData
 						}
 						tmpl = new CharacterTemplate(index, this);
 						string no = eReader.Filename.ToUpper();
-						no = no.Substring(no.IndexOf("CHARA") + 5);
+						no = no.Substring(no.IndexOf("CHARA", StringComparison.Ordinal) + 5);
 						StringBuilder sb = new StringBuilder();
 						StringStream ss = new StringStream(no);
 						while (!ss.EOS && char.IsDigit(ss.Current))

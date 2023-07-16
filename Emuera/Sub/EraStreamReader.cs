@@ -75,7 +75,7 @@ namespace MinorShift.Emuera.Sub
 				if (line.Length == 0)
 					continue;
 
-				if (useRename && (line.IndexOf("[[") >= 0) && (line.IndexOf("]]") >= 0))
+				if (useRename && (line.IndexOf("[[", StringComparison.Ordinal) >= 0) && (line.IndexOf("]]", StringComparison.Ordinal) >= 0))
 				{
 					foreach (KeyValuePair<string, string> pair in ParserMediator.RenameDic)
 						line = line.Replace(pair.Key, pair.Value);
@@ -109,7 +109,7 @@ namespace MinorShift.Emuera.Sub
 					throw new CodeEE(trerror.NotCloseLineContinuation.Text, new ScriptPosition(filename, curNo));
 				}
 
-				if (useRename && (line.IndexOf("[[") >= 0) && (line.IndexOf("]]") >= 0))
+				if (useRename && (line.IndexOf("[[", StringComparison.Ordinal) >= 0) && (line.IndexOf("]]", StringComparison.Ordinal) >= 0))
 				{
 					foreach (KeyValuePair<string, string> pair in ParserMediator.RenameDic)
 						line = line.Replace(pair.Key, pair.Value);

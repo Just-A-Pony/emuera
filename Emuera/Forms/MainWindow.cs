@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -91,7 +92,8 @@ namespace MinorShift.Emuera
 			#endregion
 		}
 		private ToolStripMenuItem[] macroMenuItems = new ToolStripMenuItem[KeyMacro.MaxFkey];
-        private System.Diagnostics.FileVersionInfo emueraVer = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
+		//private System.Diagnostics.FileVersionInfo emueraVer = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
+		private System.Diagnostics.FileVersionInfo emueraVer = System.Diagnostics.FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName);
 		public PictureBox MainPicBox { get { return mainPicBox; } }
 		public VScrollBar ScrollBar { get { return vScrollBar; } }
 		public RichTextBox TextBox { get { return richTextBox1; } }
@@ -659,6 +661,7 @@ namespace MinorShift.Emuera
 				if ((Control.ModifierKeys & Keys.Alt) == Keys.Alt)
 					result2 += (long)Math.Pow(2, 18);
 				GlobalStatic.VEvaluator.RESULT_ARRAY[2] = result2;
+				console.inputReq.Timelimit = 0;
 
 				PressEnterKey(false, true);
 				return;
