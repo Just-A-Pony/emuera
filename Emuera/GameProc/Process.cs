@@ -72,7 +72,7 @@ namespace MinorShift.Emuera.GameProc
 					}
 				}
 				//リソースフォルダ読み込み
-				if (!Content.AppContents.LoadContents())
+				if (!Content.AppContents.LoadContents(false))
 				{
 					ParserMediator.FlushWarningList();
 					console.PrintSystemLine(trsl.ResourceReadError.Text);

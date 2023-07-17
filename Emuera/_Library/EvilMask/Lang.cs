@@ -67,9 +67,10 @@ namespace EvilMask.Emuera
                     [Managed] public static TranslatableString ReloadFolder { get; } = new TranslatableString("フォルダを読み直す(&F)");
                     [Managed] public static TranslatableString ReloadScriptFile { get; } = new TranslatableString("ファイルを読み直す(&A)");
                     [Managed] public static TranslatableString Exit { get; } = new TranslatableString("終了(&X)");
-                }
+					[Managed] public static TranslatableString ReloadResource { get; } = new TranslatableString("リソースフォルダを読み直す(&R)");
+				}
 
-                [Translate("デバッグ(&D)"), Managed]
+				[Translate("デバッグ(&D)"), Managed]
                 public sealed class Debug
                 {
                     public static string Text { get { return trClass[typeof(Debug)].Text; } }
@@ -1222,8 +1223,8 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString CanNotOpenClipboard { get; } = new TranslatableString("予期せぬエラーが発生したためクリップボードを開けません");
             [Managed] public static TranslatableString NotAllowChangeSetting { get; } = new TranslatableString("いくつかの設定は_fixed.configにより変更を許可されていないために変更できませんでした");
             [Managed] public static TranslatableString UnableChangeSetting { get; } = new TranslatableString("設定変更不可");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            [Managed] public static TranslatableString ReloadResourceAsk { get; } = new TranslatableString("リソースフォルダを読み直します");
+            [Managed] public static TranslatableString ReloadResource { get; } = new TranslatableString("リソースフォルダを読み直します");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
@@ -1286,7 +1287,7 @@ namespace EvilMask.Emuera
             [Managed] public static TranslatableString ReloadCompleted { get; } = new TranslatableString("再読み込み完了");
             [Managed] public static TranslatableString LogFileHasBeenCreated { get; } = new TranslatableString("※※※ログファイルを{0}に出力しました※※※");
             [Managed] public static TranslatableString MinusWontWork { get; } = new TranslatableString("整数型最小値({0})は-を取っても値は変化しません");
-            //[Managed] public static TranslatableString { get; } = new TranslatableString("");
+            [Managed] public static TranslatableString ReloadResourceMessage { get; } = new TranslatableString("リソースフォルダを読み直しました");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
             //[Managed] public static TranslatableString { get; } = new TranslatableString("");
 
