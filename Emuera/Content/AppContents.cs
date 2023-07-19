@@ -113,6 +113,17 @@ namespace MinorShift.Emuera.Content
 					string filename = Path.GetFileName(filepath);
 					string[] lines = File.ReadAllLines(filepath, Config.Encode);
 					int lineNo = 0;
+					if (reload)
+					{
+						foreach (string key in resourceImageDictionary.Keys)
+						{
+							imageDictionary.Remove(key);
+						}
+						resourceImageDictionary.Clear();
+						foreach (var img in resourceDic.Values)
+							img.Dispose();
+						resourceDic.Clear();
+					}
 					foreach (var line in lines)
 					{
 						lineNo++;
@@ -124,15 +135,6 @@ namespace MinorShift.Emuera.Content
 						string[] tokens = str.Split(',');
 						//AContentItem item = CreateFromCsv(tokens);
 						ScriptPosition sp = new ScriptPosition(filename, lineNo);
-						if (reload)
-						{
-							foreach (string key in resourceImageDictionary.Keys)
-							{
-								imageDictionary.Remove(key);
-							}
-							resourceImageDictionary.Clear();
-							resourceDic.Clear();
-						}
 
 						if (CreateFromCsv(tokens, directory, currentAnime, sp) is ASprite item)
 						{

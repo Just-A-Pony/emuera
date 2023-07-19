@@ -41,6 +41,7 @@ namespace MinorShift.Emuera
 			コードを読み直すcToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			フォルダを読み直すFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			ファイルを読み直すFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			リソースフォルダを読み直すToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			デバッグToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			デバッグウインドウを開くToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -88,8 +89,6 @@ namespace MinorShift.Emuera
 			timerKeyMacroChanged = new System.Windows.Forms.Timer(components);
 			labelMacroGroupChanged = new System.Windows.Forms.Label();
 			mainPicBox = new EraPictureBox();
-			ファイルFToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			リソースフォルダを読み直すToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			menuStrip.SuspendLayout();
 			AutoVerbMenu.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)mainPicBox).BeginInit();
@@ -122,7 +121,7 @@ namespace MinorShift.Emuera
 			// 
 			// fileToolStripMenuItem
 			// 
-			fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { rebootToolStripMenuItem, ログを保存するSToolStripMenuItem, ログをクリップボードにコピーToolStripMenuItem, タイトルへ戻るTToolStripMenuItem, コードを読み直すcToolStripMenuItem, フォルダを読み直すFToolStripMenuItem, ファイルを読み直すFToolStripMenuItem, リソースフォルダを読み直すToolStripMenuItem, exitToolStripMenuItem, ファイルFToolStripMenuItem });
+			fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { rebootToolStripMenuItem, ログを保存するSToolStripMenuItem, ログをクリップボードにコピーToolStripMenuItem, タイトルへ戻るTToolStripMenuItem, コードを読み直すcToolStripMenuItem, フォルダを読み直すFToolStripMenuItem, ファイルを読み直すFToolStripMenuItem, リソースフォルダを読み直すToolStripMenuItem, exitToolStripMenuItem });
 			fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			fileToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
 			fileToolStripMenuItem.Text = "ファイル(&F)";
@@ -175,6 +174,13 @@ namespace MinorShift.Emuera
 			ファイルを読み直すFToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
 			ファイルを読み直すFToolStripMenuItem.Text = "ファイルを読み直す(&A)";
 			ファイルを読み直すFToolStripMenuItem.Click += ファイルを読み直すFToolStripMenuItem_Click;
+			// 
+			// リソースフォルダを読み直すToolStripMenuItem
+			// 
+			リソースフォルダを読み直すToolStripMenuItem.Name = "リソースフォルダを読み直すToolStripMenuItem";
+			リソースフォルダを読み直すToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+			リソースフォルダを読み直すToolStripMenuItem.Text = "リソースフォルダを読み直す(&R)";
+			リソースフォルダを読み直すToolStripMenuItem.Click += リソースフォルダを読み直すToolStripMenuItem_Click;
 			// 
 			// exitToolStripMenuItem
 			// 
@@ -536,19 +542,6 @@ namespace MinorShift.Emuera
 			mainPicBox.MouseLeave += mainPicBox_MouseLeave;
 			mainPicBox.MouseMove += mainPicBox_MouseMove;
 			// 
-			// ファイルFToolStripMenuItem
-			// 
-			ファイルFToolStripMenuItem.Name = "ファイルFToolStripMenuItem";
-			ファイルFToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-			ファイルFToolStripMenuItem.Text = "ファイル(&F)";
-			// 
-			// リソースフォルダを読み直すToolStripMenuItem
-			// 
-			リソースフォルダを読み直すToolStripMenuItem.Name = "リソースフォルダを読み直すToolStripMenuItem";
-			リソースフォルダを読み直すToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
-			リソースフォルダを読み直すToolStripMenuItem.Text = "リソースフォルダを読み直す(&R)";
-			リソースフォルダを読み直すToolStripMenuItem.Click += リソースフォルダを読み直すToolStripMenuItem_Click;
-			// 
 			// MainWindow
 			// 
 			AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -635,7 +628,6 @@ namespace MinorShift.Emuera
 		private System.Windows.Forms.ToolStripMenuItem グループ9ToolStripMenuItem;
 		private System.Windows.Forms.ToolStripTextBox EmuVerToolStripTextBox;
 		private System.Windows.Forms.ToolStripMenuItem リソースフォルダを読み直すToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem ファイルFToolStripMenuItem;
 	}
 }
 

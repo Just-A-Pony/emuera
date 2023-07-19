@@ -2488,6 +2488,7 @@ namespace MinorShift.Emuera.GameView
         }
 		public void ReloadResource()
 		{
+			/*
 			if (state == ConsoleState.Error)
 			{
 				MessageBox.Show(trerror.CanNotUseWhenError.Text);
@@ -2514,14 +2515,17 @@ namespace MinorShift.Emuera.GameView
 			prevReq = inputReq;
 			state = ConsoleState.Initializing;
 			force_temporary = true;
+			*/
 			AppContents.LoadContents(true);
-			force_temporary = false;
+			//force_temporary = false;
 			PrintSingleLine(trsl.ReloadResourceMessage.Text, true);
+			/*
 			RefreshStrings(true);
 			//強制的にボタン世代が切り替わるのを防ぐ
 			updatedGeneration = true;
 			if (notRedraw)
 				redraw = ConsoleRedraw.None;
+			*/
 		}
 
 		public void Dispose()
