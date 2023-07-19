@@ -7285,7 +7285,7 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				ReturnType = typeof(Int64);
 				argumentTypeArray = new Type[] { typeof(string) };
-				CanRestructure = true;
+				CanRestructure = false;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{

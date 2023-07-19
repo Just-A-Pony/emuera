@@ -94,7 +94,7 @@ namespace MinorShift.Emuera.Content
 			imageDictionary[imgName] = newCImg;
 		}
 		
-		static public bool LoadContents()
+		static public bool LoadContents(bool reload)
 		{
 			if (!Directory.Exists(Program.ContentDir))
 				return true;
@@ -124,10 +124,22 @@ namespace MinorShift.Emuera.Content
 						string[] tokens = str.Split(',');
 						//AContentItem item = CreateFromCsv(tokens);
 						ScriptPosition sp = new ScriptPosition(filename, lineNo);
+						if (reload)
+						{
+							foreach (string key in resourceImageDictionary.Keys)
+							{
+								imageDictionary.Remove(key);
+							}
+							resourceImageDictionary.Clear();
+							resourceDic.Clear();
+						}
+
 						if (CreateFromCsv(tokens, directory, currentAnime, sp) is ASprite item)
 						{
 							//アニメスプライト宣言ならcurrentAnime上書きしてフレーム追加モードにする。そうでないならnull
 							currentAnime = item as SpriteAnime;
+							if (reload && resourceImageDictionary.ContainsKey(item.Name))
+								resourceImageDictionary.Remove(item.Name);
 							if (!resourceImageDictionary.ContainsKey(item.Name))
 							{
 								resourceImageDictionary.Add(item.Name, item);

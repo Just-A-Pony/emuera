@@ -2486,6 +2486,43 @@ namespace MinorShift.Emuera.GameView
             if (notRedraw)
                 redraw = ConsoleRedraw.None;
         }
+		public void ReloadResource()
+		{
+			if (state == ConsoleState.Error)
+			{
+				MessageBox.Show(trerror.CanNotUseWhenError.Text);
+				return;
+			}
+			if (state == ConsoleState.Initializing)
+			{
+				MessageBox.Show(trerror.CanNotUseWhenInitialize.Text);
+				return;
+			}
+			if (timer.Enabled)
+			{
+				timer.Enabled = false;
+				timer_suspended = true;
+			}
+			bool notRedraw = false;
+			if (redraw == ConsoleRedraw.None)
+			{
+				notRedraw = true;
+				redraw = ConsoleRedraw.Normal;
+			}
+
+			prevState = state;
+			prevReq = inputReq;
+			state = ConsoleState.Initializing;
+			force_temporary = true;
+			AppContents.LoadContents(true);
+			force_temporary = false;
+			PrintSingleLine(trsl.ReloadResourceMessage.Text, true);
+			RefreshStrings(true);
+			//強制的にボタン世代が切り替わるのを防ぐ
+			updatedGeneration = true;
+			if (notRedraw)
+				redraw = ConsoleRedraw.None;
+		}
 
 		public void Dispose()
 		{

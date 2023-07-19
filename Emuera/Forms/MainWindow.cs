@@ -31,26 +31,26 @@ namespace MinorShift.Emuera
 			initControlSizeAndLocation();
 			richTextBox1.ForeColor = Config.ForeColor;
 			richTextBox1.BackColor = Config.BackColor;
-            mainPicBox.BackColor = Config.BackColor;//これは実際には使用されないはず
-            
+			mainPicBox.BackColor = Config.BackColor;//これは実際には使用されないはず
+
 			this.BackColor = Config.BackColor;
 
 			richTextBox1.Font = Config.Font;
-            richTextBox1.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
+			richTextBox1.LanguageOption = RichTextBoxLanguageOptions.UIFonts;
 			folderSelectDialog.SelectedPath = Program.ErbDir;
-            folderSelectDialog.ShowNewFolderButton = false;
+			folderSelectDialog.ShowNewFolderButton = false;
 
 			openFileDialog.InitialDirectory = Program.ErbDir;
-            openFileDialog.FileName = "";
-            openFileDialog.Multiselect = true;
-            openFileDialog.RestoreDirectory = true;
-            
-           string Emuera_verInfo = "Emuera Ver. " + emueraVer.FileVersion.Remove(5);
-            if (emueraVer.FileBuildPart > 0)
-                Emuera_verInfo += "+v" + emueraVer.FileBuildPart.ToString() + ((emueraVer.FilePrivatePart > 0) ? "." + emueraVer.FilePrivatePart.ToString() : "");
+			openFileDialog.FileName = "";
+			openFileDialog.Multiselect = true;
+			openFileDialog.RestoreDirectory = true;
+
+			string Emuera_verInfo = "Emuera Ver. " + emueraVer.FileVersion.Remove(5);
+			if (emueraVer.FileBuildPart > 0)
+				Emuera_verInfo += "+v" + emueraVer.FileBuildPart.ToString() + ((emueraVer.FilePrivatePart > 0) ? "." + emueraVer.FilePrivatePart.ToString() : "");
 			EmuVerToolStripTextBox.Text = Emuera_verInfo;
 
-             timer.Enabled = true;
+			timer.Enabled = true;
 			console = new EmueraConsole(this);
 			macroMenuItems[0] = マクロ01ToolStripMenuItem;
 			macroMenuItems[1] = マクロ02ToolStripMenuItem;
@@ -64,7 +64,7 @@ namespace MinorShift.Emuera
 			macroMenuItems[9] = マクロ10ToolStripMenuItem;
 			macroMenuItems[10] = マクロ11ToolStripMenuItem;
 			macroMenuItems[11] = マクロ12ToolStripMenuItem;
-			foreach(ToolStripMenuItem item in macroMenuItems)
+			foreach (ToolStripMenuItem item in macroMenuItems)
 				item.Click += new EventHandler(マクロToolStripMenuItem_Click);
 
 			this.richTextBox1.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.richTextBox1_MouseWheel);
@@ -97,7 +97,7 @@ namespace MinorShift.Emuera
 		public PictureBox MainPicBox { get { return mainPicBox; } }
 		public VScrollBar ScrollBar { get { return vScrollBar; } }
 		public RichTextBox TextBox { get { return richTextBox1; } }
-        public string InternalEmueraVer { get { return emueraVer.FileVersion; } }
+		public string InternalEmueraVer { get { return emueraVer.FileVersion; } }
 		public string EmueraVerText { get { return EmuVerToolStripTextBox.Text; } }
 		public ToolTip ToolTip { get { return toolTipButton; } }
 		private EmueraConsole console = null;
@@ -120,6 +120,7 @@ namespace MinorShift.Emuera
 			this.コードを読み直すcToolStripMenuItem.Text = Lang.UI.MainWindow.File.ReloadAllScripts.Text;
 			this.フォルダを読み直すFToolStripMenuItem.Text = Lang.UI.MainWindow.File.ReloadFolder.Text;
 			this.ファイルを読み直すFToolStripMenuItem.Text = Lang.UI.MainWindow.File.ReloadScriptFile.Text;
+			this.リソースフォルダを読み直すToolStripMenuItem.Text = Lang.UI.MainWindow.File.ReloadResource.Text;
 			this.exitToolStripMenuItem.Text = Lang.UI.MainWindow.File.Exit.Text;
 			this.openFileDialog.Filter = Lang.UI.MainWindow.FileFilter.Text + " (*.erb)|*.erb";
 
@@ -201,9 +202,9 @@ namespace MinorShift.Emuera
 
 		#region EE_textbox拡張
 		public void ChangeTextBox(string str)
-        {
+		{
 			this.richTextBox1.Text = str;
-        }
+		}
 		#endregion
 
 		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -214,8 +215,8 @@ namespace MinorShift.Emuera
 			{
 				return false;
 			}
-            #region EE_ホットキー拡張
-            DialogResult result;
+			#region EE_ホットキー拡張
+			DialogResult result;
 			switch (keyData & Keys.KeyCode)
 			{
 				case Keys.B when (keyData & Keys.Modifiers & Keys.Control) == Keys.Control:
@@ -391,10 +392,10 @@ namespace MinorShift.Emuera
 			}
 			return base.ProcessCmdKey(ref msg, keyData);
 		}
-        #endregion
+		#endregion
 
 
-        protected override void WndProc(ref Message m)
+		protected override void WndProc(ref Message m)
 		{
 			const int WM_SYSCOMMAND = 0x112;
 			//const int WM_MOUSEWHEEL = 0x020A;
@@ -404,69 +405,69 @@ namespace MinorShift.Emuera
 			// WM_SYSCOMMAND (SC_MOVE) を無視することでフォームを移動できないようにする
 			switch (m.Msg)
 			{
-			case WM_SYSCOMMAND:
-				{
-					int wparam = m.WParam.ToInt32() & 0xfff0;
-					switch (wparam)
+				case WM_SYSCOMMAND:
 					{
-					case SC_MOVE:
-						if (WindowState == FormWindowState.Maximized)
-							return;
-						break;
-					case SC_MAXIMIZE:
-						if (Screen.AllScreens.Length == 1)
+						int wparam = m.WParam.ToInt32() & 0xfff0;
+						switch (wparam)
 						{
-							this.MaximizedBounds = new Rectangle(this.Left, 0, Config.WindowX, Screen.PrimaryScreen.WorkingArea.Height);
-						}
-						else
-						{
-							for (int i = 0; i < Screen.AllScreens.Length; i++)
-							{
-								if (this.Left >= Screen.AllScreens[i].Bounds.Left && this.Left < Screen.AllScreens[i].Bounds.Right)
+							case SC_MOVE:
+								if (WindowState == FormWindowState.Maximized)
+									return;
+								break;
+							case SC_MAXIMIZE:
+								if (Screen.AllScreens.Length == 1)
 								{
-									this.MaximizedBounds = new Rectangle(this.Left - Screen.AllScreens[i].Bounds.Left, Screen.AllScreens[i].Bounds.Top, Config.WindowX, Screen.AllScreens[i].WorkingArea.Height);
-									break;
+									this.MaximizedBounds = new Rectangle(this.Left, 0, Config.WindowX, Screen.PrimaryScreen.WorkingArea.Height);
 								}
-							}
+								else
+								{
+									for (int i = 0; i < Screen.AllScreens.Length; i++)
+									{
+										if (this.Left >= Screen.AllScreens[i].Bounds.Left && this.Left < Screen.AllScreens[i].Bounds.Right)
+										{
+											this.MaximizedBounds = new Rectangle(this.Left - Screen.AllScreens[i].Bounds.Left, Screen.AllScreens[i].Bounds.Top, Config.WindowX, Screen.AllScreens[i].WorkingArea.Height);
+											break;
+										}
+									}
+								}
+								break;
 						}
 						break;
 					}
-					break;
-				}
 
-			//MouseWheelイベントをここで処理しようと思ったけどなんかここまで来ない (Windows 7)
-			//case WM_MOUSEWHEEL:
-			//	{
-			//		if (!vScrollBar.Enabled)
-			//			break;
-			//		if (console == null)
-			//			break;
-			//		//int wparam_hiword = m.WParam.ToInt32() >> 16;
-			//		int move = (m.WParam.ToInt32() >> 16) / 120 * -1;
-			//		if ((vScrollBar.Value == vScrollBar.Maximum && move > 0) || (vScrollBar.Value == vScrollBar.Minimum && move < 0))
-			//			break;
-			//		int value = vScrollBar.Value + move;
-			//		if (value >= vScrollBar.Maximum)
-			//			vScrollBar.Value = vScrollBar.Maximum;
-			//		else if (value <= vScrollBar.Minimum)
-			//			vScrollBar.Value = vScrollBar.Minimum;
-			//		else
-			//			vScrollBar.Value = value;
-			//		bool force_refresh = (vScrollBar.Value == vScrollBar.Maximum) || (vScrollBar.Value == vScrollBar.Minimum);
+					//MouseWheelイベントをここで処理しようと思ったけどなんかここまで来ない (Windows 7)
+					//case WM_MOUSEWHEEL:
+					//	{
+					//		if (!vScrollBar.Enabled)
+					//			break;
+					//		if (console == null)
+					//			break;
+					//		//int wparam_hiword = m.WParam.ToInt32() >> 16;
+					//		int move = (m.WParam.ToInt32() >> 16) / 120 * -1;
+					//		if ((vScrollBar.Value == vScrollBar.Maximum && move > 0) || (vScrollBar.Value == vScrollBar.Minimum && move < 0))
+					//			break;
+					//		int value = vScrollBar.Value + move;
+					//		if (value >= vScrollBar.Maximum)
+					//			vScrollBar.Value = vScrollBar.Maximum;
+					//		else if (value <= vScrollBar.Minimum)
+					//			vScrollBar.Value = vScrollBar.Minimum;
+					//		else
+					//			vScrollBar.Value = value;
+					//		bool force_refresh = (vScrollBar.Value == vScrollBar.Maximum) || (vScrollBar.Value == vScrollBar.Minimum);
 
-			//		//ボタンとの関係をチェック
-			//		if (Config.UseMouse)
-			//			force_refresh = console.MoveMouse(mainPicBox.PointToClient(Control.MousePosition)) || force_refresh;
-			//		//上端でも下端でもなくボタン選択状態のアップデートも必要ないなら描画を控えめに。
-			//		console.RefreshStrings(force_refresh);
+					//		//ボタンとの関係をチェック
+					//		if (Config.UseMouse)
+					//			force_refresh = console.MoveMouse(mainPicBox.PointToClient(Control.MousePosition)) || force_refresh;
+					//		//上端でも下端でもなくボタン選択状態のアップデートも必要ないなら描画を控えめに。
+					//		console.RefreshStrings(force_refresh);
 
-			//		break;
-			//	}
+					//		break;
+					//	}
 			}
 			base.WndProc(ref m);
 		}
-        
-        private void timer_Tick(object sender, EventArgs e)
+
+		private void timer_Tick(object sender, EventArgs e)
 		{
 			if (!this.Created)
 				return;
@@ -516,13 +517,13 @@ namespace MinorShift.Emuera
 				this.StartPosition = FormStartPosition.Manual;
 				this.Location = new Point(Config.WindowPosX, Config.WindowPosY);
 			}
-			else if(!winMaximize && Program.RebootLocation != new Point())
+			else if (!winMaximize && Program.RebootLocation != new Point())
 			{
 				this.StartPosition = FormStartPosition.Manual;
 				this.Location = Program.RebootLocation;
 			}
 			//Windowのサイズ設定・再起動時
-			if (!winMaximize &&	(Program.RebootClientY > 0))
+			if (!winMaximize && (Program.RebootClientY > 0))
 				winHeight = Program.RebootClientY;
 			this.ClientSize = new Size(winWidth, winHeight);
 
@@ -549,13 +550,13 @@ namespace MinorShift.Emuera
 			if (winMaximize)
 				this.WindowState = FormWindowState.Maximized;
 		}
-		
+
 		private void mainPicBox_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			if (!Config.UseMouse)
 				return;
-            if (console == null)
-                return;
+			if (console == null)
+				return;
 			if (console.MoveMouse(e.Location))
 				console.RefreshStrings(true);
 		}
@@ -582,7 +583,7 @@ namespace MinorShift.Emuera
 			if (console == null || console.IsInProcess)
 				return;
 			if (console.IsWaitingPrimitive)
-//			if (console.IsWaitingPrimitiveMouse)
+			//			if (console.IsWaitingPrimitiveMouse)
 			{
 				console.MouseDown(e.Location, e.Button);
 				#region EM_私家版_INPUT系機能拡張
@@ -600,14 +601,14 @@ namespace MinorShift.Emuera
 					vScrollBar.Value = vScrollBar.Maximum;
 					console.RefreshStrings(true);
 				}
-			if (console.IsWaitingEnterKey && (!console.IsError&&str == null))
+			if (console.IsWaitingEnterKey && (!console.IsError && str == null))
 			{
 				if (isBacklog)
 					return;
 				if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
 				{
 					if (e.Button == MouseButtons.Right)
-						PressEnterKey(true,true);
+						PressEnterKey(true, true);
 					else
 						PressEnterKey(false, true);
 					return;
@@ -669,12 +670,12 @@ namespace MinorShift.Emuera
 			#endregion
 			//左が押されたなら選択。
 			else if (str != null && ((e.Button & MouseButtons.Left) == MouseButtons.Left))
-			{ 
+			{
 				changeTextbyMouse = console.IsWaintingOnePhrase;
 				richTextBox1.Text = str;
-                //念のため
-                if (console.IsWaintingOnePhrase)
-                    last_inputed = "";
+				//念のため
+				if (console.IsWaintingOnePhrase)
+					last_inputed = "";
 				//右が押しっぱなしならスキップ追加。
 				if ((Control.MouseButtons & MouseButtons.Right) == MouseButtons.Right)
 					PressEnterKey(true, true);
@@ -687,27 +688,27 @@ namespace MinorShift.Emuera
 		private void vScrollBar_Scroll(object sender, ScrollEventArgs e)
 		{
 			//上端でも下端でもないなら描画を控えめに。
-            if (console == null)
-                return;
-            console.RefreshStrings((vScrollBar.Value == vScrollBar.Maximum) || (vScrollBar.Value == vScrollBar.Minimum));
+			if (console == null)
+				return;
+			console.RefreshStrings((vScrollBar.Value == vScrollBar.Maximum) || (vScrollBar.Value == vScrollBar.Minimum));
 		}
 
 		public void PressEnterKey(bool mesSkip, bool inputsByMouse)
 		{
-            if (console == null || console.IsInProcess)
-                return;
+			if (console == null || console.IsInProcess)
+				return;
 			//if (console.inProcess)
 			//{
 			//	richTextBox1.Text = "";
 			//	return;
 			//}
-            string str = richTextBox1.Text;
-            if (console.IsWaintingOnePhrase && last_inputed.Length > 0)
-            {
-                str = str.Remove(0, last_inputed.Length);
-                last_inputed = "";
-            }
-            changeTextbyMouse = false;
+			string str = richTextBox1.Text;
+			if (console.IsWaintingOnePhrase && last_inputed.Length > 0)
+			{
+				str = str.Remove(0, last_inputed.Length);
+				last_inputed = "";
+			}
+			changeTextbyMouse = false;
 			updateInputs(str);
 			console.PressEnterKey(mesSkip, str, inputsByMouse);
 		}
@@ -717,28 +718,28 @@ namespace MinorShift.Emuera
 		int lastSelected = 100;
 		void updateInputs(string cur)
 		{
-            if (string.IsNullOrEmpty(cur))
-            {
-                richTextBox1.Text = "";
-                return;
-            }
-            if (selectedInputs == prevInputs.Length || cur != prevInputs[prevInputs.Length - 1])
-            {
-                for (int i = 0; i < prevInputs.Length - 1; i++)
-                {
-                    prevInputs[i] = prevInputs[i + 1];
-                }
-                prevInputs[prevInputs.Length - 1] = cur;
-                //1729a eramakerと同じ処理系に変更 1730a 再修正
-                if (selectedInputs > 0 && selectedInputs != prevInputs.Length && cur == prevInputs[selectedInputs - 1])
-                    lastSelected = --selectedInputs;
-                else
-                    lastSelected = 100;
-            }
-            else
-            {
-                lastSelected = selectedInputs;
-            }
+			if (string.IsNullOrEmpty(cur))
+			{
+				richTextBox1.Text = "";
+				return;
+			}
+			if (selectedInputs == prevInputs.Length || cur != prevInputs[prevInputs.Length - 1])
+			{
+				for (int i = 0; i < prevInputs.Length - 1; i++)
+				{
+					prevInputs[i] = prevInputs[i + 1];
+				}
+				prevInputs[prevInputs.Length - 1] = cur;
+				//1729a eramakerと同じ処理系に変更 1730a 再修正
+				if (selectedInputs > 0 && selectedInputs != prevInputs.Length && cur == prevInputs[selectedInputs - 1])
+					lastSelected = --selectedInputs;
+				else
+					lastSelected = 100;
+			}
+			else
+			{
+				lastSelected = selectedInputs;
+			}
 			richTextBox1.Text = "";
 			selectedInputs = prevInputs.Length;
 		}
@@ -755,7 +756,7 @@ namespace MinorShift.Emuera
 				if (move == -1)
 					move = 0;
 				next = lastSelected + move;
-                lastSelected = prevInputs.Length;
+				lastSelected = prevInputs.Length;
 			}
 			else
 				next = selectedInputs + move;
@@ -767,9 +768,9 @@ namespace MinorShift.Emuera
 				richTextBox1.Text = "";
 				return;
 			}
-            if (string.IsNullOrEmpty(prevInputs[next]))
-                if (++next == prevInputs.Length)
-                    return;
+			if (string.IsNullOrEmpty(prevInputs[next]))
+				if (++next == prevInputs.Length)
+					return;
 
 			selectedInputs = next;
 			richTextBox1.Text = prevInputs[next];
@@ -809,30 +810,30 @@ namespace MinorShift.Emuera
 
 		public void Reboot()
 		{
-            console.forceStopTimer();
+			console.forceStopTimer();
 			Program.Reboot = true;
 			this.Close();
 		}
 
 		public void GotoTitle()
 		{
-            if (console == null)
-                return;
-            console.GotoTitle();
+			if (console == null)
+				return;
+			console.GotoTitle();
 		}
 
 		public void ReloadErb()
 		{
-            if (console == null)
-                return;
-            console.ReloadErb();
+			if (console == null)
+				return;
+			console.ReloadErb();
 		}
 
 		private void mainPicBox_MouseLeave(object sender, EventArgs e)
 		{
-            if (console == null)
-                return;
-            if (Config.UseMouse)
+			if (console == null)
+				return;
+			if (Config.UseMouse)
 				console.LeaveMouse();
 		}
 
@@ -847,14 +848,14 @@ namespace MinorShift.Emuera
 			ConfigDialog dialog = new ConfigDialog();
 			dialog.TranslateUI();
 			dialog.SetupLang(Lang.GetLangList());
-            dialog.StartPosition = FormStartPosition.CenterParent;
+			dialog.StartPosition = FormStartPosition.CenterParent;
 			dialog.SetConfig(this);
 			dialog.ShowDialog();
 			if (dialog.Result == ConfigDialogResult.SaveReboot)
 			{
-                console.forceStopTimer();
-                Program.Reboot = true;
-                this.Close();
+				console.forceStopTimer();
+				Program.Reboot = true;
+				this.Close();
 			}
 			if (Config.EmueraLang != lang)
 			{
@@ -871,17 +872,17 @@ namespace MinorShift.Emuera
 			if (console.IsInProcess)
 			{
 				MessageBox.Show(trmb.NotAvailableDuringScript.Text);
-                return;
-            }
-            if (console.notToTitle)
-            {
-                if (console.byError)
-                    MessageBox.Show(trmb.ErrorInAnalysisMode.Text);
-                else
-                    MessageBox.Show(trmb.CanNotReturnToTitle.Text);
-                return;
-            }
-            DialogResult result = MessageBox.Show(trmb.ReturnToTitleAsk.Text, trmb.ReturnToTitle.Text, MessageBoxButtons.OKCancel);
+				return;
+			}
+			if (console.notToTitle)
+			{
+				if (console.byError)
+					MessageBox.Show(trmb.ErrorInAnalysisMode.Text);
+				else
+					MessageBox.Show(trmb.CanNotReturnToTitle.Text);
+				return;
+			}
+			DialogResult result = MessageBox.Show(trmb.ReturnToTitleAsk.Text, trmb.ReturnToTitle.Text, MessageBoxButtons.OKCancel);
 			if (result != DialogResult.OK)
 				return;
 			this.GotoTitle();
@@ -894,9 +895,9 @@ namespace MinorShift.Emuera
 			if (console.IsInProcess)
 			{
 				MessageBox.Show(trmb.NotAvailableDuringScript.Text);
-                return;
-            }
-            DialogResult result = MessageBox.Show(trmb.ReloadErbAsk.Text, trmb.ReloadErb.Text, MessageBoxButtons.OKCancel);
+				return;
+			}
+			DialogResult result = MessageBox.Show(trmb.ReloadErbAsk.Text, trmb.ReloadErb.Text, MessageBoxButtons.OKCancel);
 			if (result != DialogResult.OK)
 				return;
 			this.ReloadErb();
@@ -905,9 +906,9 @@ namespace MinorShift.Emuera
 
 		private void mainPicBox_Paint(object sender, PaintEventArgs e)
 		{
-            if (console == null)
-                return;
-            console.OnPaint(e.Graphics);
+			if (console == null)
+				return;
+			console.OnPaint(e.Graphics);
 		}
 
 		private void ログを保存するSToolStripMenuItem_Click(object sender, EventArgs e)
@@ -935,18 +936,18 @@ namespace MinorShift.Emuera
 
 		private void ログをクリップボードにコピーToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-            try
-            {
-                ClipBoardDialog dialog = new ClipBoardDialog();
+			try
+			{
+				ClipBoardDialog dialog = new ClipBoardDialog();
 				dialog.Text = Lang.UI.ClipBoardDialog.Text;
-                dialog.Setup(console);
-                dialog.ShowDialog();
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(trmb.CanNotOpenClipboard.Text);
-                return;
-            }
+				dialog.Setup(console);
+				dialog.ShowDialog();
+			}
+			catch (Exception)
+			{
+				MessageBox.Show(trmb.CanNotOpenClipboard.Text);
+				return;
+			}
 		}
 
 		private void ファイルを読み直すFToolStripMenuItem_Click(object sender, EventArgs e)
@@ -954,11 +955,11 @@ namespace MinorShift.Emuera
 			if (console == null)
 				return;
 			if (console.IsInProcess)
-            {
+			{
 				MessageBox.Show(trmb.NotAvailableDuringScript.Text);
-                return;
-            }
-            DialogResult result = openFileDialog.ShowDialog();
+				return;
+			}
+			DialogResult result = openFileDialog.ShowDialog();
 			List<string> filepath = new List<string>();
 			if (result == DialogResult.OK)
 			{
@@ -983,10 +984,25 @@ namespace MinorShift.Emuera
 			}
 		}
 
+		private void リソースフォルダを読み直すToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (console == null)
+				return;
+			if (console.IsInProcess)
+			{
+				MessageBox.Show(trmb.NotAvailableDuringScript.Text);
+				return;
+			}
+			DialogResult result = MessageBox.Show(trmb.ReloadResourceAsk.Text, trmb.ReloadResource.Text, MessageBoxButtons.OKCancel);
+			if (result != DialogResult.OK)
+				return;
+			console.ReloadResource();
+		}
+
 		private void MainWindow_FormClosing(object sender, FormClosingEventArgs e)
 		{
-            if (Config.UseKeyMacro)
-                KeyMacro.SaveMacro();
+			if (Config.UseKeyMacro)
+				KeyMacro.SaveMacro();
 			if (console != null)
 			{
 				//ほっとしても勝手に閉じるが、その場合はDebugDialogのClosingイベントが発生しない
@@ -1001,12 +1017,12 @@ namespace MinorShift.Emuera
 		{
 			if (console == null)
 				return;
-            if (console.IsInProcess)
-            {
-                MessageBox.Show(trmb.NotAvailableDuringScript.Text);
-                return;
-            }
-            //List<KeyValuePair<string, string>> filepath = new List<KeyValuePair<string, string>>();
+			if (console.IsInProcess)
+			{
+				MessageBox.Show(trmb.NotAvailableDuringScript.Text);
+				return;
+			}
+			//List<KeyValuePair<string, string>> filepath = new List<KeyValuePair<string, string>>();
 			if (folderSelectDialog.ShowDialog() == DialogResult.OK)
 			{
 				console.ReloadFolder(folderSelectDialog.SelectedPath);
@@ -1058,52 +1074,52 @@ namespace MinorShift.Emuera
 			console.RefreshStrings(force_refresh);
 		}
 
-        private bool textBox_flag = true;
-        private string last_inputed = "";
+		private bool textBox_flag = true;
+		private string last_inputed = "";
 
-        public void update_lastinput()
-        {
-            richTextBox1.TextChanged -= new EventHandler(richTextBox1_TextChanged);
-            richTextBox1.KeyDown -= new System.Windows.Forms.KeyEventHandler(richTextBox1_KeyDown);
-            System.Windows.Forms.Application.DoEvents();
-            richTextBox1.TextChanged += new EventHandler(richTextBox1_TextChanged);
-            richTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(richTextBox1_KeyDown);
-            last_inputed = richTextBox1.Text;
-        }
+		public void update_lastinput()
+		{
+			richTextBox1.TextChanged -= new EventHandler(richTextBox1_TextChanged);
+			richTextBox1.KeyDown -= new System.Windows.Forms.KeyEventHandler(richTextBox1_KeyDown);
+			System.Windows.Forms.Application.DoEvents();
+			richTextBox1.TextChanged += new EventHandler(richTextBox1_TextChanged);
+			richTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(richTextBox1_KeyDown);
+			last_inputed = richTextBox1.Text;
+		}
 
-        public void clear_richText()
-        {
-            richTextBox1.Clear();
-        }
+		public void clear_richText()
+		{
+			richTextBox1.Clear();
+		}
 
-        private void richTextBox1_TextChanged(object sender, EventArgs e)
-        {
-            if (console == null || console.IsInProcess)
-                return;
-            if (!textBox_flag)
-                return;
-            if (!console.IsWaintingOnePhrase && !console.IsWaitAnyKey)
-                return;
-            if (string.IsNullOrEmpty(richTextBox1.Text))
-                return;
-            if (changeTextbyMouse)
-                return;
-            //テキストの削除orテキストに変化がない場合は入力されたとみなさない
-            if (richTextBox1.Text.Length <= last_inputed.Length)
-            {
-                last_inputed = richTextBox1.Text;
-                return;
-            }
-            textBox_flag = false;
-            if (console.IsWaitAnyKey)
-            {
-                richTextBox1.Clear();
-                last_inputed = "";
-            }
-            //if (richTextBox1.Text.Length > 1)
-            //    richTextBox1.Text = richTextBox1.Text.Remove(1);
-            PressEnterKey(false, false);
-            textBox_flag = true;
+		private void richTextBox1_TextChanged(object sender, EventArgs e)
+		{
+			if (console == null || console.IsInProcess)
+				return;
+			if (!textBox_flag)
+				return;
+			if (!console.IsWaintingOnePhrase && !console.IsWaitAnyKey)
+				return;
+			if (string.IsNullOrEmpty(richTextBox1.Text))
+				return;
+			if (changeTextbyMouse)
+				return;
+			//テキストの削除orテキストに変化がない場合は入力されたとみなさない
+			if (richTextBox1.Text.Length <= last_inputed.Length)
+			{
+				last_inputed = richTextBox1.Text;
+				return;
+			}
+			textBox_flag = false;
+			if (console.IsWaitAnyKey)
+			{
+				richTextBox1.Clear();
+				last_inputed = "";
+			}
+			//if (richTextBox1.Text.Length > 1)
+			//    richTextBox1.Text = richTextBox1.Text.Remove(1);
+			PressEnterKey(false, false);
+			textBox_flag = true;
 		}
 		#region EM_私家版_INPUT系機能拡張
 		Keys? modifiersWhileWaintingInputWithMouse = null;
@@ -1122,9 +1138,9 @@ namespace MinorShift.Emuera
 		#endregion
 
 		private void richTextBox1_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
-        {
-            if (console == null)
-                return;
+		{
+			if (console == null)
+				return;
 			//1823 INPUTMOUSEKEY Key入力全てを捕まえてERB側で処理する
 			//if (console.IsWaitingPrimitiveKey)
 			if (console.IsWaitingPrimitive)
@@ -1133,36 +1149,36 @@ namespace MinorShift.Emuera
 				console.PressPrimitiveKey(e.KeyCode, e.KeyData, e.Modifiers);
 				return;
 			}
-            if ((int)e.KeyData == (int)Keys.PageUp || (int)e.KeyData == (int)Keys.PageDown)
-            {
-                e.SuppressKeyPress = true;
-                int move = 10;
-                if ((int)e.KeyData == (int)Keys.PageUp)
-                    move *= -1;
-                //スクロールが必要ないならリターンする
-                if ((vScrollBar.Value == vScrollBar.Maximum && move > 0) || (vScrollBar.Value == vScrollBar.Minimum && move < 0))
-                    return;
-                int value = vScrollBar.Value + move;
-                if (value >= vScrollBar.Maximum)
-                    vScrollBar.Value = vScrollBar.Maximum;
-                else if (value <= vScrollBar.Minimum)
-                    vScrollBar.Value = vScrollBar.Minimum;
-                else
-                    vScrollBar.Value = value;
-                //上端でも下端でもないなら描画を控えめに。
-                console.RefreshStrings((vScrollBar.Value == vScrollBar.Maximum) || (vScrollBar.Value == vScrollBar.Minimum));
-                return;
-            }
-            else if (vScrollBar.Value != vScrollBar.Maximum)
-            {
-                vScrollBar.Value = vScrollBar.Maximum;
-                console.RefreshStrings(true);
-            }
+			if ((int)e.KeyData == (int)Keys.PageUp || (int)e.KeyData == (int)Keys.PageDown)
+			{
+				e.SuppressKeyPress = true;
+				int move = 10;
+				if ((int)e.KeyData == (int)Keys.PageUp)
+					move *= -1;
+				//スクロールが必要ないならリターンする
+				if ((vScrollBar.Value == vScrollBar.Maximum && move > 0) || (vScrollBar.Value == vScrollBar.Minimum && move < 0))
+					return;
+				int value = vScrollBar.Value + move;
+				if (value >= vScrollBar.Maximum)
+					vScrollBar.Value = vScrollBar.Maximum;
+				else if (value <= vScrollBar.Minimum)
+					vScrollBar.Value = vScrollBar.Minimum;
+				else
+					vScrollBar.Value = value;
+				//上端でも下端でもないなら描画を控えめに。
+				console.RefreshStrings((vScrollBar.Value == vScrollBar.Maximum) || (vScrollBar.Value == vScrollBar.Minimum));
+				return;
+			}
+			else if (vScrollBar.Value != vScrollBar.Maximum)
+			{
+				vScrollBar.Value = vScrollBar.Maximum;
+				console.RefreshStrings(true);
+			}
 			if (e.KeyCode == Keys.Return)
 			{
 				e.SuppressKeyPress = true;
 				if (!console.IsInProcess)
-                    PressEnterKey(false,false);
+					PressEnterKey(false, false);
 				return;
 			}
 			if (e.KeyCode == Keys.Escape)
@@ -1173,44 +1189,44 @@ namespace MinorShift.Emuera
 					PressEnterKey(true, false);
 				return;
 			}
-            if (e.KeyCode == Keys.Left || e.KeyCode == Keys.Home || e.KeyCode == Keys.Back)
+			if (e.KeyCode == Keys.Left || e.KeyCode == Keys.Home || e.KeyCode == Keys.Back)
 			{
 				if ((richTextBox1.SelectionStart == 0 && richTextBox1.SelectedText.Length == 0) || richTextBox1.Text.Length == 0)
-                {
-                    e.SuppressKeyPress = true;
-                    return;
-                }
-            }
-            if (e.KeyCode == Keys.Right || e.KeyCode == Keys.End)
-            {
-                if (richTextBox1.SelectionStart == richTextBox1.Text.Length || richTextBox1.Text.Length == 0)
-                {
-                    e.SuppressKeyPress = true;
-                    return;
-                }
-            }
+				{
+					e.SuppressKeyPress = true;
+					return;
+				}
+			}
+			if (e.KeyCode == Keys.Right || e.KeyCode == Keys.End)
+			{
+				if (richTextBox1.SelectionStart == richTextBox1.Text.Length || richTextBox1.Text.Length == 0)
+				{
+					e.SuppressKeyPress = true;
+					return;
+				}
+			}
 			if (e.KeyCode == Keys.Up)
 			{
 				e.SuppressKeyPress = true;
 				if (console.IsInProcess)
-                    return;
+					return;
 				movePrev(-1);
 				return;
 			}
-            if (e.KeyCode == Keys.Down)
-            {
-                e.SuppressKeyPress = true;
+			if (e.KeyCode == Keys.Down)
+			{
+				e.SuppressKeyPress = true;
 				if (console.IsInProcess)
-                    return;
-                movePrev(1);
-                return;
-            }
-            if (e.KeyCode == Keys.Insert)
-            {
-                e.SuppressKeyPress = true;
-                return;
-            }
-        }
+					return;
+				movePrev(1);
+				return;
+			}
+			if (e.KeyCode == Keys.Insert)
+			{
+				e.SuppressKeyPress = true;
+				return;
+			}
+		}
 
 		private void デバッグウインドウを開くToolStripMenuItem_Click(object sender, EventArgs e)
 		{
@@ -1255,7 +1271,7 @@ namespace MinorShift.Emuera
 				for (int i = 0; i < macroMenuItems.Length; i++)
 					macroMenuItems[i].Enabled = false;
 			}
-			if( richTextBox1.SelectedText.Length > 0)
+			if (richTextBox1.SelectedText.Length > 0)
 			{
 				切り取り.Enabled = true;
 				コピー.Enabled = true;
@@ -1267,7 +1283,7 @@ namespace MinorShift.Emuera
 				コピー.Enabled = false;
 				削除.Enabled = false;
 			}
-			if(Clipboard.ContainsText())
+			if (Clipboard.ContainsText())
 				貼り付け.Enabled = true;
 			else
 				貼り付け.Enabled = false;
@@ -1278,7 +1294,7 @@ namespace MinorShift.Emuera
 		{
 			if ((console == null) || (console.IsInProcess) || !切り取り.Enabled)
 				return;
-            if (richTextBox1.SelectedText.Length > 0)
+			if (richTextBox1.SelectedText.Length > 0)
 				richTextBox1.Cut();
 		}
 
@@ -1286,7 +1302,7 @@ namespace MinorShift.Emuera
 		{
 			if ((console == null) || (console.IsInProcess) || !コピー.Enabled)
 				return;
-            else if (richTextBox1.SelectedText.Length > 0)
+			else if (richTextBox1.SelectedText.Length > 0)
 				richTextBox1.Copy();
 		}
 
@@ -1296,10 +1312,10 @@ namespace MinorShift.Emuera
 				return;
 			if (Clipboard.GetDataObject() != null && Clipboard.ContainsText())
 			{
-                if (Clipboard.GetDataObject().GetDataPresent(DataFormats.Text))
-                    //Clipboard.SetText(Clipboard.GetText(TextDataFormat.UnicodeText));
-                    richTextBox1.Paste(DataFormats.GetFormat(DataFormats.UnicodeText));
-                //richTextBox1.Paste();
+				if (Clipboard.GetDataObject().GetDataPresent(DataFormats.Text))
+					//Clipboard.SetText(Clipboard.GetText(TextDataFormat.UnicodeText));
+					richTextBox1.Paste(DataFormats.GetFormat(DataFormats.UnicodeText));
+				//richTextBox1.Paste();
 				//if (richTextBox1.SelectedText.Length > 0)
 				//    richTextBox1.SelectedText = "";
 				//richTextBox1.AppendText(Clipboard.GetText());
@@ -1331,11 +1347,11 @@ namespace MinorShift.Emuera
 			ToolStripMenuItem item = (ToolStripMenuItem)sender;
 			int fkeynum = (int)item.ShortcutKeys - (int)Keys.F1;
 			string macro = KeyMacro.GetMacro(fkeynum, macroGroup);
-            if (macro.Length > 0)
-            {
-                richTextBox1.Text = macro;
-                this.richTextBox1.SelectionStart = this.richTextBox1.Text.Length;
-            }
+			if (macro.Length > 0)
+			{
+				richTextBox1.Text = macro;
+				this.richTextBox1.SelectionStart = this.richTextBox1.Text.Length;
+			}
 		}
 
 		private void グループToolStripMenuItem_Click(object sender, EventArgs e)
