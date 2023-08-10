@@ -467,10 +467,11 @@ namespace MinorShift.Emuera.GameView
 			Font font = Config.Font;
 			printCWidth = stringMeasure.GetDisplayLength(str, font);
 
-			str += " ";
+			//この処理要る？
+			//str += " ";
 			printCWidthL = stringMeasure.GetDisplayLength(str, font);
 
-			str += " ";
+			//str += " ";
 			printCWidthL2 = stringMeasure.GetDisplayLength(str, font);
 		}
 
