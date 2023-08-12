@@ -107,7 +107,6 @@ namespace MinorShift.Emuera
 			#endregion
 
 			Application.EnableVisualStyles();
-			Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
 			Application.SetCompatibleTextRenderingDefault(false);
 			ConfigData.Instance.LoadConfig();
 			

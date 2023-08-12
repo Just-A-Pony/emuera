@@ -1,0 +1,164 @@
+diff --git a/Emuera/Emuera.csproj b/Emuera/Emuera.csproj
+index b6fd987..fea5eed 100644
+--- a/Emuera/Emuera.csproj
++++ b/Emuera/Emuera.csproj
+@@ -12,6 +12,7 @@
+ 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+ 	  <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+ 	  <Deterministic>false</Deterministic>
++	  <ApplicationManifest>emuera.manifest</ApplicationManifest>
+ 	  
+ 	  <SelfContained>false</SelfContained>
+ 	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+diff --git a/Emuera/Forms/ClipBoardDialog.Designer.cs b/Emuera/Forms/ClipBoardDialog.Designer.cs
+index 55c1817..d54770f 100644
+--- a/Emuera/Forms/ClipBoardDialog.Designer.cs
++++ b/Emuera/Forms/ClipBoardDialog.Designer.cs
+@@ -46,7 +46,7 @@
+             // ClipBoardDialog
+             // 
+             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
++            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+             this.BackColor = System.Drawing.SystemColors.Window;
+             this.ClientSize = new System.Drawing.Size(760, 480);
+             this.Controls.Add(this.textBox1);
+diff --git a/Emuera/Forms/ColorBox.Designer.cs b/Emuera/Forms/ColorBox.Designer.cs
+index bda4bc3..bd3f435 100644
+--- a/Emuera/Forms/ColorBox.Designer.cs
++++ b/Emuera/Forms/ColorBox.Designer.cs
+@@ -52,7 +52,7 @@
+ 			// ColorBox
+ 			// 
+ 			resources.ApplyResources(this, "$this");
+-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
++			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+ 			this.Controls.Add(this.pictureBox1);
+ 			this.Controls.Add(this.button);
+ 			this.Name = "ColorBox";
+diff --git a/Emuera/Forms/ConfigDialog.Designer.cs b/Emuera/Forms/ConfigDialog.Designer.cs
+index 3a0acae..2393d33 100644
+--- a/Emuera/Forms/ConfigDialog.Designer.cs
++++ b/Emuera/Forms/ConfigDialog.Designer.cs
+@@ -1672,7 +1672,7 @@
+             // ConfigDialog
+             // 
+             resources.ApplyResources(this, "$this");
+-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
++            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+             this.Controls.Add(this.flowLayoutPanel1);
+             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+             this.MaximizeBox = false;
+diff --git a/Emuera/Forms/DebugConfigDialog.Designer.cs b/Emuera/Forms/DebugConfigDialog.Designer.cs
+index 2856982..57b2735 100644
+--- a/Emuera/Forms/DebugConfigDialog.Designer.cs
++++ b/Emuera/Forms/DebugConfigDialog.Designer.cs
+@@ -363,7 +363,7 @@
+             // DebugConfigDialog
+             // 
+             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
++            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+             this.AutoSize = true;
+             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+             this.ClientSize = new System.Drawing.Size(713, 648);
+diff --git a/Emuera/Forms/DebugDialog.Designer.cs b/Emuera/Forms/DebugDialog.Designer.cs
+index 057ee52..50ff15a 100644
+--- a/Emuera/Forms/DebugDialog.Designer.cs
++++ b/Emuera/Forms/DebugDialog.Designer.cs
+@@ -258,7 +258,7 @@
+             // DebugDialog
+             // 
+             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
+-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
++            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+             this.ClientSize = new System.Drawing.Size(384, 263);
+             this.Controls.Add(this.button2);
+             this.Controls.Add(this.button1);
+diff --git a/Emuera/Forms/RikaiDialog.Designer.cs b/Emuera/Forms/RikaiDialog.Designer.cs
+index 0cfade2..8b174ca 100644
+--- a/Emuera/Forms/RikaiDialog.Designer.cs
++++ b/Emuera/Forms/RikaiDialog.Designer.cs
+@@ -48,7 +48,7 @@ namespace MinorShift.Emuera.Forms
+             // RikaiDialog
+             // 
+             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
++            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+             this.ClientSize = new System.Drawing.Size(328, 184);
+             this.Controls.Add(this.label);
+             this.Name = "RikaiDialog";
+diff --git a/Emuera/Program.cs b/Emuera/Program.cs
+index 670702b..c1f638a 100644
+--- a/Emuera/Program.cs
++++ b/Emuera/Program.cs
+@@ -107,7 +107,6 @@ namespace MinorShift.Emuera
+ 			#endregion
+ 
+ 			Application.EnableVisualStyles();
+-			Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
+ 			Application.SetCompatibleTextRenderingDefault(false);
+ 			ConfigData.Instance.LoadConfig();
+ 			
+diff --git a/Emuera/emuera.manifest b/Emuera/emuera.manifest
+new file mode 100644
+index 0000000..31cd50b
+--- /dev/null
++++ b/Emuera/emuera.manifest
+@@ -0,0 +1,56 @@
++﻿<?xml version="1.0" encoding="utf-8"?>
++<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
++  <assemblyIdentity version="1.0.0.0" name="MyApplication.app"/>
++  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
++    <security>
++      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
++        <!-- UAC Manifest Options
++             If you want to change the Windows User Account Control level replace the 
++             requestedExecutionLevel node with one of the following.
++
++        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
++        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
++        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
++
++            Specifying requestedExecutionLevel element will disable file and registry virtualization. 
++            Remove this element if your application requires this virtualization for backwards
++            compatibility.
++        -->
++        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
++      </requestedPrivileges>
++    </security>
++  </trustInfo>
++
++  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
++    <application>
++      <!-- A list of the Windows versions that this application has been tested on
++           and is designed to work with. Uncomment the appropriate elements
++           and Windows will automatically select the most compatible environment. -->
++
++      <!-- Windows Vista -->
++      <supportedOS Id="{e2011457-1546-43c5-a5fe-008deee3d3f0}" />
++
++      <!-- Windows 7 -->
++      <supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}" />
++
++      <!-- Windows 8 -->
++      <supportedOS Id="{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}" />
++
++      <!-- Windows 8.1 -->
++      <supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}" />
++
++      <!-- Windows 10 -->
++      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
++
++    </application>
++  </compatibility>
++
++  <application xmlns="urn:schemas-microsoft-com:asm.v3">
++    <windowsSettings>
++      <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true</dpiAware>
++      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2</dpiAwareness>
++      <longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
++    </windowsSettings>
++  </application>
++
++</assembly>

@@ -12,6 +12,7 @@
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	  <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	  <Deterministic>false</Deterministic>
+	  <ApplicationManifest>emuera.manifest</ApplicationManifest>
 	  
 	  <SelfContained>false</SelfContained>
 	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
