@@ -649,10 +649,10 @@ namespace MinorShift.Emuera.GameProc
 						int num = (int)arrayArg.Num2.GetIntValue(exm);
 						if (start < 0)
 							throw new CodeEE(string.Format(trerror.ArgIsNegative.Text, "ARRAYREMOVE", "2", start.ToString()));
-						if (num < 0)
-							throw new CodeEE(string.Format(trerror.ArgIsNegative.Text, "ARRAYREMOVE", "3", start.ToString()));
-						if (num == 0)
-							break;
+						//if (num < 0)
+						//	throw new CodeEE(string.Format(trerror.ArgIsNegative.Text, "ARRAYREMOVE", "3", start.ToString()));
+						//if (num <= 0)
+						//	break;
 						vEvaluator.RemoveArray(p, start, num);
 						break;
 					}
