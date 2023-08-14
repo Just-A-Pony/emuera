@@ -229,7 +229,7 @@ namespace MinorShift.Emuera.GameView
 					delNum++;
 					logicalLineCount--;
 				}
-				if (displayLineList.Count == Config.MaxLog-2)
+				if (displayLineList.Count == Config.MaxLog - 2 && lineNo > displayLineList.Count)
 				{
 					ConsoleDisplayLine dummyline = BufferToSingleLine(true, false);
 					displayLineList.Insert(0, dummyline);
