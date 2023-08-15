@@ -328,6 +328,7 @@ namespace MinorShift.Emuera.GameData.Function
 				["GDRAWLINE"] = new GraphicsDrawLineMethod(),
 				["GETDISPLAYLINE"] = new GetDisplayLineMethod(),
 				["GDASHSTYLE"] = new GraphicsSetDashStyleMethod(),
+				["GETDOINGFUNCTION"] = new GetDoingFunctionMethod(),
 				#endregion
 			};
 

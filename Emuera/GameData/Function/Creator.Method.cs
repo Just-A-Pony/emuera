@@ -7350,5 +7350,24 @@ namespace MinorShift.Emuera.GameData.Function
 			}
 		}
 		#endregion
+		#region EE_GETDOINGFUNCTION
+		private sealed class GetDoingFunctionMethod : FunctionMethod
+		{
+			public GetDoingFunctionMethod()
+			{
+				ReturnType = typeof(string);
+				argumentTypeArray = new Type[] { };
+				CanRestructure = true;
+			}
+			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				LogicalLine line = exm.Process.GetScaningLine();
+				if ((line == null) || (line.ParentLabelLine == null))
+					return "";//システム待機中のデバッグモードから呼び出し
+				return line.ParentLabelLine.LabelName;
+			}
+		}
+
+		#endregion
 	}
 }
