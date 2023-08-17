@@ -39,7 +39,7 @@ namespace MinorShift.Emuera.Sub
 		{
 			this.file = file;
 			file.Seek(0, SeekOrigin.Begin);
-			reader = new StreamReader(file, Config.Encode);
+			reader = new StreamReader(file, EncodingHandler.DetectEncoding(file));
 		}
 		FileStream file;
 		StreamReader reader;
