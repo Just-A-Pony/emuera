@@ -6923,9 +6923,9 @@ namespace MinorShift.Emuera.GameData.Function
 					forceUTF8 = true;
 				}
 
-				Encoding encoding = forceUTF8 ?
-					Encoding.GetEncoding("UTF-8") :
-					Config.SaveEncode;
+				// Encoding encoding = forceUTF8 ?
+				// 	Encoding.GetEncoding("UTF-8") :
+				// 	Config.SaveEncode;
 				try
 				{
 					if (i64 >= 0)
@@ -6941,7 +6941,7 @@ namespace MinorShift.Emuera.GameData.Function
 							System.IO.Directory.CreateDirectory(filepath.Substring(0, filepath.LastIndexOf('\\')));
 					}
 
-					System.IO.File.WriteAllText(filepath, savText, encoding);
+					System.IO.File.WriteAllText(filepath, savText, Config.SaveEncode);
 				}
 				catch { return 0; }
 				#endregion
@@ -7026,17 +7026,13 @@ namespace MinorShift.Emuera.GameData.Function
 					string tmp = Path.HasExtension(filepath) ? Path.GetExtension(filepath).ToLower().Substring(1) : "";
 					if (!Config.ValidExtension.Contains(tmp))
 						return "";
-					forceUTF8 = true;
 				}
-
-				Encoding encoding = forceUTF8 ?
-					Encoding.GetEncoding("UTF-8") :
-					Config.SaveEncode;
+				
 				if (!System.IO.File.Exists(filepath))
 					return "";
 				try
 				{
-					ret = System.IO.File.ReadAllText(filepath, encoding);
+					ret = System.IO.File.ReadAllText(filepath, EncodingHandler.DetectEncoding(filepath));
 				}
 				catch { return ""; }
 				//一貫性の観点で\rには死んでもらう

@@ -111,7 +111,7 @@ namespace MinorShift.Emuera.Content
 					SpriteAnime currentAnime = null;
 					string directory = Path.GetDirectoryName(filepath).ToUpper() + "\\";
 					string filename = Path.GetFileName(filepath);
-					string[] lines = File.ReadAllLines(filepath, Config.Encode);
+					string[] lines = File.ReadAllLines(filepath, EncodingHandler.DetectEncoding(filepath));
 					int lineNo = 0;
 					if (reload)
 					{

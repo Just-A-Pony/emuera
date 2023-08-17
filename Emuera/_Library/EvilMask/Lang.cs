@@ -223,11 +223,7 @@ namespace EvilMask.Emuera
                     public static string Text { get { return trClass[typeof(System2)].Text; } }
                     [Managed] public static TranslatableString IgnoreTripleSymbol { get; } = new TranslatableString("FORM中の三連記号を展開しない");
                     [Managed] public static TranslatableString SaveInBinary { get; } = new TranslatableString("セーブデータをバイナリ形式で保存する");
-                    [Managed] public static TranslatableString SaveInUTF8 { get; } = new TranslatableString("セーブデータをUTF-8で保存する(非バイナリ時のみ)");
-					#region UTF-8(BOM無し)対応
-                    [Managed] public static TranslatableString FilesInUTF8 { get; } = new TranslatableString("UTF-8(BOM無し)でエンコードされたファイルを読み込む");
-					#endregion
-					[Managed] public static TranslatableString CompressSave { get; } = new TranslatableString("セーブデータを圧縮して保存する(バイナリ時のみ)");
+                    [Managed] public static TranslatableString CompressSave { get; } = new TranslatableString("セーブデータを圧縮して保存する(バイナリ時のみ)");
                     [Managed] public static TranslatableString NoAutoCompleteCVar { get; } = new TranslatableString("キャラクタ変数の引数を補完しない");
                     [Managed] public static TranslatableString DisallowUpdateCheck { get; } = new TranslatableString("UPDATECHECKを許可しない");
                     [Managed] public static TranslatableString UseERD { get; } = new TranslatableString("ERD機能を利用する");

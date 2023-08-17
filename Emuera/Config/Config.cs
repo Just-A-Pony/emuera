@@ -5,6 +5,7 @@ using System.IO;
 using System;
 using System.Windows.Forms;
 using MinorShift._Library;
+using MinorShift.Emuera.Sub;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
 
 namespace MinorShift.Emuera
@@ -14,8 +15,8 @@ namespace MinorShift.Emuera
 	{
 
 		#region config
-		public static Encoding Encode = Encoding.UTF8;
-		public static Encoding SaveEncode = Encoding.UTF8;
+		public static Encoding Encode = EncodingHandler.UTF8BOMEncoding;
+		public static Encoding SaveEncode = EncodingHandler.UTF8BOMEncoding;
 		private static Dictionary<ConfigCode, string> nameDic = null;
 		public static string GetConfigName(ConfigCode code)
 		{
@@ -108,14 +109,6 @@ namespace MinorShift.Emuera
 			//CompatiDRAWLINE = instance.GetConfigValue<bool>(ConfigCode.CompatiDRAWLINE);
 			CompatiLinefeedAs1739 = instance.GetConfigValue<bool>(ConfigCode.CompatiLinefeedAs1739);
 			SystemAllowFullSpace = instance.GetConfigValue<bool>(ConfigCode.SystemAllowFullSpace);
-			SystemSaveInUTF8 = instance.GetConfigValue<bool>(ConfigCode.SystemSaveInUTF8);
-			if (SystemSaveInUTF8)
-				SaveEncode = Encoding.GetEncoding("UTF-8");
-			#region UTF-8(BOM無し)対応
-			SystemFilesInUTF8 = instance.GetConfigValue<bool>(ConfigCode.SystemFilesInUTF8);
-	        if (SystemFilesInUTF8)
-				Encode = Encoding.GetEncoding("UTF-8");
-			#endregion
 			SystemSaveInBinary = instance.GetConfigValue<bool>(ConfigCode.SystemSaveInBinary);
 			SystemIgnoreTripleSymbol = instance.GetConfigValue<bool>(ConfigCode.SystemIgnoreTripleSymbol);
 			SystemIgnoreStringSet = instance.GetConfigValue<bool>(ConfigCode.SystemIgnoreStringSet);
@@ -577,8 +570,6 @@ namespace MinorShift.Emuera
 		//public static bool CompatiDRAWLINE { get; private set; }
 		public static bool CompatiLinefeedAs1739 { get; private set; }
 		public static bool SystemAllowFullSpace { get; private set; }
-		public static bool SystemSaveInUTF8 { get; private set; }
-		public static bool SystemFilesInUTF8 { get; private set; }
 		public static bool SystemSaveInBinary { get; private set; }
 		public static bool CompatiFuncArgAutoConvert { get; private set; }
 		public static bool CompatiFuncArgOptional { get; private set; }

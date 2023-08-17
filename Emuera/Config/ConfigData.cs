@@ -104,10 +104,6 @@ namespace MinorShift.Emuera
 			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiDRAWLINE, "DRAWLINEを常に新しい行で行う", "Always start DRAWLINE in a new line", false));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiFunctionNoignoreCase, "関数・属性については大文字小文字を無視しない", "Do not ignore case for functions and attributes", false));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.SystemAllowFullSpace, "全角スペースをホワイトスペースに含める", "Whitespace includes full-width space", true));
-			configArray.Add(new ConfigItem<bool>(ConfigCode.SystemSaveInUTF8, "セーブデータをUTF-8で保存する", "Use UTF8 for save data", false));
-			#region UTF-8(BOM無し)対応
-			configArray.Add(new ConfigItem<bool>(ConfigCode.SystemFilesInUTF8, "UTF-8(BOM無し)でエンコードされたファイルを読み込む", "Files encoded in UTF-8", false));
-			#endregion
 			configArray.Add(new ConfigItem<bool>(ConfigCode.CompatiLinefeedAs1739, "ver1739以前の非ボタン折り返しを再現する", "Reproduce wrapping behavior like in pre ver1739", false));
 			configArray.Add(new ConfigItem<UseLanguage>(ConfigCode.useLanguage, "内部で使用する東アジア言語", "Default ANSI encoding", UseLanguage.JAPANESE));
 			configArray.Add(new ConfigItem<bool>(ConfigCode.AllowLongInputByMouse, "ONEINPUT系命令でマウスによる2文字以上の入力を許可する", "Allow long input by mouse for ONEINPUT", false));
@@ -565,7 +561,7 @@ namespace MinorShift.Emuera
 			{
 				#region EM_私家版_Emuera多言語化改造
 				// writer = new StreamWriter(configPath, false, Config.Encode);
-				writer = new StreamWriter(configPath, false, new UTF8Encoding(true));
+				writer = new StreamWriter(configPath, false, Config.Encode);
 
 				// for (int i = 0; i < configArray.Length; i++)
 				for (int i = 0; i < configArray.Count; i++)
@@ -802,7 +798,7 @@ namespace MinorShift.Emuera
 			{
 				#region EM_私家版_Emuera多言語化改造
 				// writer = new StreamWriter(configdebugPath, false, Config.Encode);
-				writer = new StreamWriter(configdebugPath, false, new UTF8Encoding(true));
+				writer = new StreamWriter(configdebugPath, false, Config.Encode);
 
 				// for (int i = 0; i < debugArray.Length; i++)
 				for (int i = 0; i < debugArray.Count; i++)

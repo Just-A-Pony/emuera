@@ -58,7 +58,7 @@ namespace MinorShift.Emuera
 
 			try
 			{
-				writer = new StreamWriter(macroPath, false, Encoding.GetEncoding("UTF-8"));
+				writer = new StreamWriter(macroPath, false, Config.Encode);
 				for (int g = 0; g < MaxGroup; g++)
 				{
 					writer.WriteLine(gID + g.ToString() + ":" + groupName[g]);
