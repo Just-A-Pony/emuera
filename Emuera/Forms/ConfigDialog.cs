@@ -9,6 +9,8 @@ using System.Drawing.Text;
 using EvilMask.Emuera;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
 using System.IO;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 
 namespace MinorShift.Emuera.Forms
 {
@@ -944,7 +946,34 @@ namespace MinorShift.Emuera.Forms
 
 		private void rikaiNote2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
-			System.Diagnostics.Process.Start("https://wiki.eragames.rip/index.php/Emuera-Rikaichan");
+			var url = "https://wiki.eragames.rip/index.php/Emuera-Rikaichan";
+			try
+			{
+				System.Diagnostics.Process.Start(url);
+			}
+			catch
+			{
+				// https://stackoverflow.com/questions/4580263/how-to-open-in-default-browser-in-c-sharp
+				// linux makes life easier once again...
+				// hack because of this: https://github.com/dotnet/corefx/issues/10361
+				if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+				{
+					url = url.Replace("&", "^&");
+					Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+				}
+				else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+				{
+					Process.Start("xdg-open", url);
+				}
+				else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+				{
+					Process.Start("open", url);
+				}
+				else
+				{
+					throw;
+				}
+			}
 		}
 	}
 }
