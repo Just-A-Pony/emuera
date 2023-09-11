@@ -813,6 +813,7 @@ namespace MinorShift.Emuera.Forms
 
 			foreach (FontFamily ff in pfc.Families)
 			{
+				/**
 				if (!ff.IsStyleAvailable(FontStyle.Regular))
 					continue;
 				if (!ff.IsStyleAvailable(FontStyle.Bold))
@@ -823,6 +824,7 @@ namespace MinorShift.Emuera.Forms
 					continue;
 				if (!ff.IsStyleAvailable(FontStyle.Underline))
 					continue;
+				**/
 				comboBox2.Items.Add(ff.Name);
 			}
 			#endregion
