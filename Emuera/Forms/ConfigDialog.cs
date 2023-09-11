@@ -789,6 +789,7 @@ namespace MinorShift.Emuera.Forms
 			InstalledFontCollection ifc = new InstalledFontCollection();
 			foreach (FontFamily ff in ifc.Families)
 			{
+				/**
 				if (!ff.IsStyleAvailable(FontStyle.Regular))
 					continue;
 				if (!ff.IsStyleAvailable(FontStyle.Bold))
@@ -799,6 +800,7 @@ namespace MinorShift.Emuera.Forms
 					continue;
 				if (!ff.IsStyleAvailable(FontStyle.Underline))
 					continue;
+				**/
 				comboBox2.Items.Add(ff.Name);
 			}
 			#region EE_フォントファイル対応
