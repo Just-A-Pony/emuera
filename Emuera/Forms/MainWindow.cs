@@ -44,10 +44,7 @@ namespace MinorShift.Emuera
 			openFileDialog.FileName = "";
 			openFileDialog.Multiselect = true;
 			openFileDialog.RestoreDirectory = true;
-
-			string Emuera_verInfo = "Emuera Ver. " + emueraVer.FileVersion.Remove(5);
-			if (emueraVer.FileBuildPart > 0)
-				Emuera_verInfo += "+v" + emueraVer.FileBuildPart.ToString() + ((emueraVer.FilePrivatePart > 0) ? "." + emueraVer.FilePrivatePart.ToString() : "");
+			string Emuera_verInfo = "Emuera " + Application.ProductVersion;
 			EmuVerToolStripTextBox.Text = Emuera_verInfo;
 
 			timer.Enabled = true;
@@ -93,7 +90,7 @@ namespace MinorShift.Emuera
 		}
 		private ToolStripMenuItem[] macroMenuItems = new ToolStripMenuItem[KeyMacro.MaxFkey];
 		//private System.Diagnostics.FileVersionInfo emueraVer = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
-		private System.Diagnostics.FileVersionInfo emueraVer = System.Diagnostics.FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName);
+		private FileVersionInfo emueraVer = FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName);
 		public PictureBox MainPicBox { get { return mainPicBox; } }
 		public VScrollBar ScrollBar { get { return vScrollBar; } }
 		public RichTextBox TextBox { get { return richTextBox1; } }

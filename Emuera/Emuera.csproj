@@ -1,48 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net7.0-windows</TargetFramework>
-	  <RootNamespace>MinorShift.Emuera</RootNamespace>
-	  <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-	  <ApplicationRevision>0</ApplicationRevision>
-	  <UseWindowsForms>true</UseWindowsForms>
-	  <UseWPF>true</UseWPF>
-	  <Nullable>enable</Nullable>
-	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	  <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-	  <Deterministic>false</Deterministic>
-	  <ApplicationManifest>emuera.manifest</ApplicationManifest>
-	  
-	  <SelfContained>false</SelfContained>
-	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
-	  <PublishReadyToRun>false</PublishReadyToRun>
-	  <PublishSingleFile>true</PublishSingleFile>
-  </PropertyGroup>
-	<ItemGroup>
-		<COMReference Include="WMPLib">
-			<Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
-			<VersionMajor>1</VersionMajor>
-			<VersionMinor>0</VersionMinor>
-			<Lcid>0</Lcid>
-			<WrapperTool>tlbimp</WrapperTool>
-			<Isolated>False</Isolated>
-			<EmbedInteropTypes>True</EmbedInteropTypes>
-		</COMReference>
-	</ItemGroup>
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net7.0-windows</TargetFramework>
+        <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+        <UseWindowsForms>true</UseWindowsForms>
+        <UseWPF>true</UseWPF>
+    </PropertyGroup>
 
-	<ItemGroup>
-	  <Compile Update="Properties\Settings.Designer.cs">
-	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
-	    <AutoGen>True</AutoGen>
-	    <DependentUpon>Settings.settings</DependentUpon>
-	  </Compile>
-	</ItemGroup>
-	<ItemGroup>
-	  <None Update="Properties\Settings.settings">
-	    <Generator>SettingsSingleFileGenerator</Generator>
-	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-	  </None>
-	</ItemGroup>
+    <PropertyGroup>
+        <AssemblyName>Emuera</AssemblyName>
+        <RootNamespace>MinorShift.Emuera</RootNamespace>
+        <ApplicationManifest>emuera.manifest</ApplicationManifest>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <IncludeAllContentForSelfExtract>false</IncludeAllContentForSelfExtract>
+        <SelfContained>false</SelfContained>
+        <PublishReadyToRun>false</PublishReadyToRun>
+        <PublishSingleFile>true</PublishSingleFile>
+        <PublishTrimmed>false</PublishTrimmed>
+        <SelfContained>false</SelfContained>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <COMReference Include="WMPLib">
+            <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
+            <VersionMajor>1</VersionMajor>
+            <VersionMinor>0</VersionMinor>
+            <Lcid>0</Lcid>
+            <WrapperTool>tlbimp</WrapperTool>
+            <Isolated>False</Isolated>
+            <EmbedInteropTypes>True</EmbedInteropTypes>
+        </COMReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Properties\Settings.Designer.cs">
+            <DesignTimeSharedInput>True</DesignTimeSharedInput>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Settings.settings</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="Properties\Settings.settings">
+            <Generator>SettingsSingleFileGenerator</Generator>
+            <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+        </None>
+    </ItemGroup>
 
 </Project>
