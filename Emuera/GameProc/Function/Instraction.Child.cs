@@ -9,7 +9,6 @@ using MinorShift._Library;
 using MinorShift.Emuera.GameData.Function;
 using System.Drawing;
 using System.IO;
-using WMPLib;
 using System.Net;
 using System.Windows.Forms;
 using MinorShift.Emuera.GameView;
@@ -2223,8 +2222,8 @@ namespace MinorShift.Emuera.GameProc.Function
 		}
 		//ここからEnter版
 		#region EE
-		public static WindowsMediaPlayer[] sound = new WindowsMediaPlayer[10];
-		public static WindowsMediaPlayer bgm = new WindowsMediaPlayer();
+		public static Sound[] sound = new Sound[10];
+		public static Sound bgm = new Sound();
 		private sealed class PLAYSOUND_Instruction : AbstractInstruction
 		{
 
@@ -2246,21 +2245,16 @@ namespace MinorShift.Emuera.GameProc.Function
 				{
 					for (int i = 0; i < sound.Length; i++)
 					{
-						if (sound[i] == null) sound[i] = new WindowsMediaPlayer();
+						if (sound[i] == null) sound[i] = new Sound();
 						//未使用もしくは再生完了してる要素を使う
-						switch (sound[i].playState)
+						if (!sound[i].isPlaying())
 						{
-							case WMPPlayState.wmppsUndefined:
-							case WMPPlayState.wmppsStopped:
-							case WMPPlayState.wmppsMediaEnded:
-								sound[i].URL = filepath;
-								sound[i].controls.play();
-								return;
+							sound[i].play(filepath);
+							return;
 						}
 					}
 					//上を抜けてきたら適当に0に入れる
-					sound[0].URL = filepath;
-					sound[0].controls.play();
+					sound[0].play(filepath);
 					return;
 				}
 			}
@@ -2277,8 +2271,8 @@ namespace MinorShift.Emuera.GameProc.Function
 			{
 				for (int i = 0; i < sound.Length; i++)
 				{
-					if (sound[i] == null) sound[i] = new WindowsMediaPlayer();
-					if (sound[i].playState == WMPPlayState.wmppsPlaying) sound[i].controls.stop();
+					if (sound[i] == null) sound[i] = new Sound();
+					if (sound[i].isPlaying()) sound[i].stop();
 				}
 				return;
 			}
@@ -2303,9 +2297,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				string filepath = System.IO.Path.GetFullPath(".\\sound\\" + datFilename);
 				if (System.IO.File.Exists(filepath))
 				{
-					bgm.settings.setMode("loop", true);
-					bgm.URL = filepath;
-					bgm.controls.play();
+					bgm.play(filepath, true);
 					return;
 				}
 			}
@@ -2320,7 +2312,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			}
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-				bgm.controls.stop();
+				bgm.stop();
 				return;
 			}
 		}
@@ -2338,8 +2330,8 @@ namespace MinorShift.Emuera.GameProc.Function
 				Int32 vol = (Int32)intExpArg.Term.GetIntValue(exm);
 				for (int i = 0; i < sound.Length; i++)
 				{
-					if (sound[i] == null) sound[i] = new WindowsMediaPlayer();
-					sound[i].settings.volume = vol;
+					if (sound[i] == null) sound[i] = new Sound();
+					sound[i].setVolume(vol);
 				}
 				return;
 			}
@@ -2355,7 +2347,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			{
 				ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
 				Int32 vol = (Int32)intExpArg.Term.GetIntValue(exm);
-				bgm.settings.volume = vol;
+				bgm.setVolume(vol);
 				return;
 			}
 		}

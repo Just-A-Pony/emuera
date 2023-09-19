@@ -34,6 +34,9 @@
             <EmbedInteropTypes>True</EmbedInteropTypes>
         </COMReference>
     </ItemGroup>
+   <ItemGroup>
+     <Compile Remove="_Library\Sound.NAudio.cs" />
+   </ItemGroup>
 
     <ItemGroup>
         <Compile Update="Properties\Settings.Designer.cs">
