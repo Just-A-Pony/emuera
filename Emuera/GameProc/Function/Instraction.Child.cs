@@ -2522,6 +2522,22 @@ namespace MinorShift.Emuera.GameProc.Function
 				exm.Console.SetToolTipFormat(i.Term.GetIntValue(exm));
 			}
 		}
+		private sealed class TOOLTIP_IMG_Instruction : AbstractInstruction
+		{
+			public TOOLTIP_IMG_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
+				//スキップ不可
+				//flag = IS_PRINT | IS_INPUT | EXTENDED;
+				flag = EXTENDED;
+			}
+
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				ExpressionArgument i = (ExpressionArgument)func.Argument;
+				exm.Console.SetToolTipImg(i.Term.GetIntValue(exm) != 0);
+			}
+		}
 		#endregion
 
 		#endregion

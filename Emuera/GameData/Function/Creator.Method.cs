@@ -5132,6 +5132,19 @@ namespace MinorShift.Emuera.GameData.Function
 				throw new CodeEE(string.Format(Lang.Error.GIdIsTooLarge.Text, Name, target));
 			return AppContents.GetGraphics((int)target);
 		}
+		/// <summary>
+		/// 引数で指定したIDのGraphicsImageを読み取り、 GraphicsImage又はnullを返す。
+		/// </summary>
+		public static GraphicsImage ReadGraphics(int target)
+		{
+			if (target < 0)//funcname + "関数:GraphicsIDに負の値(" + target.ToString() + ")が指定されました"
+						   // throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGraphicsID0, Name, target));
+				throw new CodeEE(string.Format(Lang.Error.GIdIsNegative.Text, "HTML_PRINT", target));
+			else if (target > int.MaxValue)//funcname + "関数:GraphicsIDの値(" + target.ToString() + ")が大きすぎます"
+										   // throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGraphicsID1, Name, target));
+				throw new CodeEE(string.Format(Lang.Error.GIdIsTooLarge.Text, "HTML_PRINT", target));
+			return AppContents.GetGraphics((int)target);
+		}
 
 		/// <summary>
 		/// argNo番目の引数を整数値として読み取り、 アルファ値を含むColor構造体にして返す。

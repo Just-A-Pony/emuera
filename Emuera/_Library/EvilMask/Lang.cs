@@ -1171,6 +1171,7 @@ namespace EvilMask.Emuera
 			[Managed] public static TranslatableString NothingButtonBinput { get; } = new TranslatableString("デフォルト値が無く、ボタンが一つも無い状態で{0}が行われました。全ての入力を受け付けなくなります");
 			[Managed] public static TranslatableString DoNotInstallWMP { get; } = new TranslatableString("Windows Media Playerがインストールされていない可能性があります。正常に動作させるにはWindows Media Playerをインストールしてください");
 			[Managed] public static TranslatableString IsDefinedErdVariable { get; } = new TranslatableString("変数名\"{0}\"は既にERD変数\"{1}\"の定義に使われており、予期せぬ配列参照を引き起こす場合があります");
+			[Managed] public static TranslatableString CanNotParseStringToIntTooltipImg { get; } = new TranslatableString("\"{0}\"を数値型に変換できません（文字列型として使う場合はTOOLTIP_IMGをオフにしてください）");
 		}
 		[Managed]
         public sealed class MessageBox

@@ -375,6 +375,7 @@ namespace MinorShift.Emuera.GameProc.Function
 		TOOLTIP_SETFONTSIZE,
 		TOOLTIP_CUSTOM,
 		TOOLTIP_FORMAT,
+		TOOLTIP_IMG,
 		FLOWINPUT,
 		SKIPLOG,
 		BINPUT,

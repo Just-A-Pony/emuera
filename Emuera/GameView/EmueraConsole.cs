@@ -19,6 +19,9 @@ using trmb = EvilMask.Emuera.Lang.MessageBox;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using EvilMask.Emuera;
+//using System.Diagnostics.Eventing.Reader;
+//using System.Linq.Expressions;
+//using System.Windows;
 
 namespace MinorShift.Emuera.GameView
 {
@@ -1721,6 +1724,17 @@ namespace MinorShift.Emuera.GameView
 
 		private void ToolTip_Draw(object sender, DrawToolTipEventArgs e)
 		{
+			if (tooltip_img && int.TryParse(e.ToolTipText, out int i))
+			{
+				var g = GameData.Function.FunctionMethodCreator.ReadGraphics(i);
+				if (g.IsCreated)
+				{
+					Image img = g.Bitmap;
+					e.Graphics.DrawImage(img, 0, 0);
+					return;
+				}
+				
+			}
 			e.DrawBackground();
 			e.DrawBorder();
 			foreach (FontFamily ff in GlobalStatic.Pfc.Families)
@@ -1742,6 +1756,15 @@ namespace MinorShift.Emuera.GameView
 
 		private void ToolTip_Popup(object sender, PopupEventArgs e)
 		{
+			if (tooltip_img && int.TryParse((sender as ToolTip).GetToolTip(e.AssociatedControl), out int i))
+			{
+				var g = GameData.Function.FunctionMethodCreator.ReadGraphics(i);
+				if (g.IsCreated)
+				{
+					e.ToolTipSize = new Size(g.Width, g.Height);
+					return;
+				}
+			}
 			Font f;
 			foreach (FontFamily ff in GlobalStatic.Pfc.Families)
 			{
@@ -1777,6 +1800,7 @@ namespace MinorShift.Emuera.GameView
 		string tooltip_fontname = Config.FontName;
 		long tooltip_fontsize = Config.FontSize;
 		TextFormatFlags tooltip_format = 0;
+		bool tooltip_img = false;
 		public void SetToolTipDuration(int duration)
         {
             tooltip_duration = duration;
@@ -1793,6 +1817,10 @@ namespace MinorShift.Emuera.GameView
 		public void SetToolTipFormat(long f)
 		{
 			tooltip_format = (TextFormatFlags)f;
+		}
+		public void SetToolTipImg(bool b)
+		{
+			tooltip_img = b;
 		}
 
 		//private Graphics getGraphics()
