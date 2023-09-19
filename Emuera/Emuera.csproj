@@ -21,6 +21,7 @@
         <PublishSingleFile>true</PublishSingleFile>
         <PublishTrimmed>false</PublishTrimmed>
         <SelfContained>false</SelfContained>
+        <AssemblyVersion></AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>
@@ -52,5 +53,14 @@
             <LastGenOutput>Settings.Designer.cs</LastGenOutput>
         </None>
     </ItemGroup>
+    <PropertyGroup>
+      <Version>1.824.0</Version>
+      <InformationalVersion>1.824+v18+EMv17+EEv41</InformationalVersion>
+      <LangVersion>11</LangVersion>
+      <Nullable>disable</Nullable>
+      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+      <Product>Emuera</Product>
+      <Copyright>Copyright (C) 2008- MinorShift, 妊）|дﾟ)の中の人</Copyright>
+    </PropertyGroup>
 
 </Project>
