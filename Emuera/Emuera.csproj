@@ -6,12 +6,20 @@
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
         <UseWindowsForms>true</UseWindowsForms>
         <UseWPF>true</UseWPF>
+        <LangVersion>11</LangVersion>
+        <Nullable>disable</Nullable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Configurations>Debug;Release;Debug-NAudio;Release-NAudio</Configurations>
     </PropertyGroup>
 
     <PropertyGroup>
+        <Product>Emuera</Product>
         <AssemblyName>Emuera</AssemblyName>
         <RootNamespace>MinorShift.Emuera</RootNamespace>
         <ApplicationManifest>emuera.manifest</ApplicationManifest>
+        <Version>1.824.0</Version>
+        <InformationalVersion>1.824+v18+EMv17+EEv41</InformationalVersion>
+        <Copyright>Copyright (C) 2008- MinorShift, 妊）|дﾟ)の中の人</Copyright>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -21,10 +29,30 @@
         <PublishSingleFile>true</PublishSingleFile>
         <PublishTrimmed>false</PublishTrimmed>
         <SelfContained>false</SelfContained>
-        <AssemblyVersion></AssemblyVersion>
     </PropertyGroup>
 
-    <ItemGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug-NAudio' ">
+        <DebugSymbols>true</DebugSymbols>
+        <Optimize>false</Optimize>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release-NAudio' ">
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$(Configuration.Contains('NAudio'))">
+        <InformationalVersion>$(InformationalVersion) NAudio</InformationalVersion>
+    </PropertyGroup>
+
+    <ItemGroup Condition="$(Configuration.Contains('NAudio'))">
+        <Compile Remove="_Library\Sound.WMP.cs" />
+        <PackageReference Include="NAudio" Version="2.2.1" />
+        <PackageReference Include="NAudio.Extras" Version="2.2.1" />
+        <PackageReference Include="NAudio.Vorbis" Version="1.5.0" />
+    </ItemGroup>
+    
+    <ItemGroup Condition="!($(Configuration.Contains('NAudio')))">
+        <Compile Remove="_Library\Sound.NAudio.cs" />
         <COMReference Include="WMPLib">
             <Guid>{6BF52A50-394A-11D3-B153-00C04F79FAA6}</Guid>
             <VersionMajor>1</VersionMajor>
@@ -35,9 +63,6 @@
             <EmbedInteropTypes>True</EmbedInteropTypes>
         </COMReference>
     </ItemGroup>
-   <ItemGroup>
-     <Compile Remove="_Library\Sound.NAudio.cs" />
-   </ItemGroup>
 
     <ItemGroup>
         <Compile Update="Properties\Settings.Designer.cs">
@@ -53,14 +78,5 @@
             <LastGenOutput>Settings.Designer.cs</LastGenOutput>
         </None>
     </ItemGroup>
-    <PropertyGroup>
-      <Version>1.824.0</Version>
-      <InformationalVersion>1.824+v18+EMv17+EEv41</InformationalVersion>
-      <LangVersion>11</LangVersion>
-      <Nullable>disable</Nullable>
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-      <Product>Emuera</Product>
-      <Copyright>Copyright (C) 2008- MinorShift, 妊）|дﾟ)の中の人</Copyright>
-    </PropertyGroup>
 
 </Project>
