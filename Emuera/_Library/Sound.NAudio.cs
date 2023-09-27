@@ -1,87 +1,105 @@
 ﻿using System;
-using System.IO;
+using System.Linq;
 using NAudio.Wave;
-using NAudio.Vorbis;
+using NAudio.Wave.SampleProviders;
+using NAudio.CoreAudioApi;
 using NAudio.Extras;
-using MinorShift.Emuera.GameProc;
-using MinorShift.Emuera.GameView;
+using NAudio.Vorbis;
 
 namespace MinorShift._Library
 {
 	internal class Sound
 	{
-		private string _filename;
-		private WaveOutEvent player;
-		private WaveStream source;
-		private float _volume = 1.0f;
-		private bool is_loop_stream = false;
+		private const int sampleRate = 44100;
+
+		private static WasapiOut output;
+		private static MixingSampleProvider mixer;
+
+		private string filename;
+		private float volume = 1.0f;
+
+		private WaveStream stream;
+		private VolumeSampleProvider volumeProvider;
+
+		static Sound()
+		{
+			output = new WasapiOut(AudioClientShareMode.Shared, 50);
+
+			mixer = new MixingSampleProvider(WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, 2));
+			mixer.ReadFully = true;
+
+			output.Init(mixer);
+			output.Play();
+		}
+
 		public void play(string filename, bool loop = false)
 		{
-			if (source != null && (_filename != filename || is_loop_stream != loop)) {
-				source.Dispose();
-				source = null;
+			if (stream != null && filename == this.filename)
+			{
+				stop();
 			}
-			_filename = filename;
-			if (source == null) {
-				if (_filename.EndsWith(".ogg", StringComparison.OrdinalIgnoreCase)) {
-					source = new VorbisWaveReader(_filename);
+			else
+			{
+				this.filename = filename;
+				if (stream != null) stream.Dispose();
+				if (this.filename.EndsWith(".wav", StringComparison.OrdinalIgnoreCase))
+				{
+					stream = new WaveFileReader(this.filename);
 				}
-				else {
-					source = new AudioFileReader(_filename);
+				else if (this.filename.EndsWith(".ogg", StringComparison.OrdinalIgnoreCase))
+				{
+					stream = new VorbisWaveReader(this.filename);
 				}
-				if (loop) {
-					source = new LoopStream(source);
-				}
-				is_loop_stream = loop;
-				if (player != null) {
-					player.Dispose();
-				}
-				player = new WaveOutEvent();
-				player.Init(source);
-				player.Volume = _volume;
-			}
-			else {
-				player.Stop();
-				if (source.CanSeek) {
-					source.Seek(0, SeekOrigin.Begin);
+				else
+				{
+					// NOTE: MediaFoundationReader currently seems to only support 16 bit audio files on wine
+					var settings = new MediaFoundationReader.MediaFoundationReaderSettings();
+					settings.RequestFloatOutput = true;
+					stream = new MediaFoundationReader(this.filename, settings);
 				}
 			}
-			player.Play();
+
+			// MediaFoundationResampler is faster and possibly higher quality than WdlResamplingSampleProvider but currently doesn't seem to work on wine
+			// var resampler = new MediaFoundationResampler(loop ? new LoopStream(stream) : stream, WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, 2));
+			// volumeProvider = new VolumeSampleProvider(resampler.ToSampleProvider());
+
+			ISampleProvider sampleProvider = (loop ? new LoopStream(stream) : stream).ToSampleProvider();
+			if (sampleProvider.WaveFormat.SampleRate != sampleRate) sampleProvider = new WdlResamplingSampleProvider(sampleProvider, sampleRate);
+			if (sampleProvider.WaveFormat.Channels == 1) sampleProvider = sampleProvider.ToStereo();
+			volumeProvider = new VolumeSampleProvider(sampleProvider);
+
+			volumeProvider.Volume = volume;
+			mixer.AddMixerInput(volumeProvider);
 		}
 
 		public void stop()
 		{
-			if (player != null) {
-				player.Stop();
-				if (source != null && source.CanSeek) {
-					source.Seek(0, SeekOrigin.Begin);
-				}
-			}
+			if (volumeProvider != null) mixer.RemoveMixerInput(volumeProvider);
+			if (stream != null) stream.Position = 0;
 		}
 
 		public void close()
 		{
-			if (player != null) {
-				player.Stop();
-				player.Dispose();
-				player = null;
-			}
-			if (source != null) {
-				source.Dispose();
-				source = null;
+			stop();
+			filename = null;
+			volumeProvider = null;
+			if (stream != null)
+			{
+				stream.Dispose();
+				stream = null;
 			}
 		}
 
-		public bool isPlaying() {
-			return (player != null && player.PlaybackState == PlaybackState.Playing);
+		public bool isPlaying()
+		{
+			if (volumeProvider == null) return false;
+			lock (mixer.MixerInputs) { return mixer.MixerInputs.Contains(volumeProvider); }
 		}
 
 		public void setVolume(int volume)
 		{
-			_volume = volume / 100.0f;
-			if (player != null) {
-				player.Volume = _volume;
-			}
+			this.volume = Math.Clamp(volume, 0, 100) / 100.0f;
+			if (volumeProvider != null) volumeProvider.Volume = this.volume;
 		}
 	}
 }
