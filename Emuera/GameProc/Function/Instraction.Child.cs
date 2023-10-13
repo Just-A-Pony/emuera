@@ -2383,7 +2383,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				try
 				{
 					Stream st = wc.OpenRead(url);
-					StreamReader sr = new StreamReader(st, EncodingHandler.DetectEncoding(st));
+					StreamReader sr = new StreamReader(st);
 					try
 					{
 						var version = sr.ReadLine();
@@ -2409,7 +2409,11 @@ namespace MinorShift.Emuera.GameProc.Function
 							if (result == DialogResult.Yes)
 							{
 								exm.VEvaluator.RESULT = 2;
-								System.Diagnostics.Process.Start(link);
+								System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo{
+									UseShellExecute = true,
+									FileName = link, 
+								});
+								//System.Diagnostics.Process.Start(link);
 								st.Close();
 								wc.Dispose();
 								return;

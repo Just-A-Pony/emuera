@@ -6809,6 +6809,8 @@ namespace MinorShift.Emuera.GameData.Function
 				exm.Console.AlwaysRefresh = b;
 				if (exm.Console.PointingSring != null)
 				{
+					if (!exm.Console.PointingSring.IsButton)
+						return "";
 					if (exm.Console.PointingSring.IsInteger)
 						return exm.Console.PointingSring.Input.ToString();
 					return exm.Console.PointingSring.Inputs;
