@@ -187,6 +187,7 @@ namespace MinorShift.Emuera.Forms
 			this.tabPageDebug.Text = Lang.UI.ConfigDialog.Debug.Text;
 			this.checkBox23.Text = Lang.UI.ConfigDialog.Debug.CompatibilityWarn.Text;
 			this.checkBox13.Text = Lang.UI.ConfigDialog.Debug.LoadingReport.Text;
+			this.checkBox35.Text = Lang.UI.ConfigDialog.Debug.CheckDuplicateIdentifier.Text;
 			this.label12.Text = Lang.UI.ConfigDialog.Debug.ReduceArgs.Text;
 			this.comboBoxReduceArgumentOnLoad.Items[0] = Lang.UI.ConfigDialog.Debug.ReduceArgs.Never.Text;
 			this.comboBoxReduceArgumentOnLoad.Items[1] = Lang.UI.ConfigDialog.Debug.ReduceArgs.OnUpdate.Text;

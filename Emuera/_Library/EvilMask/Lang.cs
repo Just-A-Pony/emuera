@@ -256,8 +256,9 @@ namespace EvilMask.Emuera
                     public static string Text { get { return trClass[typeof(Debug)].Text; } }
                     [Managed] public static TranslatableString CompatibilityWarn { get; } = new TranslatableString("eramaker互換性に関する警告を表示する");
                     [Managed] public static TranslatableString LoadingReport { get; } = new TranslatableString("ロード時にレポートを表示する");
+					[Managed] public static TranslatableString CheckDuplicateIdentifier { get; } = new TranslatableString("ERDの識別子とローカル変数の重複を確認する");
 
-                    [Translate("ロード時に引数を解析する"), Managed]
+					[Translate("ロード時に引数を解析する"), Managed]
                     public sealed class ReduceArgs
                     {
                         public static string Text { get { return trClass[typeof(ReduceArgs)].Text; } }
