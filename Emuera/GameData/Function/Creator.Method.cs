@@ -6487,6 +6487,8 @@ namespace MinorShift.Emuera.GameData.Function
 				string imgname = arguments[0].GetStrValue(exm);
 				if (string.IsNullOrEmpty(imgname))
 					return 0;
+				if (AppContents.GetSprite(imgname) == null)
+					return 0;
 				SpriteAnime img = AppContents.GetSprite(imgname) as SpriteAnime;
 				if (img == null && !img.IsCreated)
 					return 0;
