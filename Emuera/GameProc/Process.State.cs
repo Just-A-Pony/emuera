@@ -7,6 +7,7 @@ using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.GameData.Variable;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
+using MinorShift.Emuera.Content;
 
 namespace MinorShift.Emuera.GameProc
 {
@@ -186,6 +187,8 @@ namespace MinorShift.Emuera.GameProc
 			switch (keyword)
 			{
 				case "SHOP":
+					Content.AppContents.UnloadTempLoadedConstImageNames();
+					Content.AppContents.UnloadTempLoadedGraphicsImageNames();
 					SetBegin(BeginType.SHOP, force); return;
 				case "TRAIN":
 					SetBegin(BeginType.TRAIN, force); return;
@@ -196,6 +199,8 @@ namespace MinorShift.Emuera.GameProc
 				case "TURNEND":
 					SetBegin(BeginType.TURNEND, force); return;
 				case "FIRST":
+					Content.AppContents.UnloadTempLoadedConstImageNames();
+					Content.AppContents.UnloadTempLoadedGraphicsImageNames();
 					SetBegin(BeginType.FIRST, force); return;
 				case "TITLE":
 					SetBegin(BeginType.TITLE, force); return;

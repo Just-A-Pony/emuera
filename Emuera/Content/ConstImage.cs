@@ -10,7 +10,7 @@ namespace MinorShift.Emuera.Content
 	internal abstract class AbstractImage : AContentFile
 	{
 		public const int MAX_IMAGESIZE = 8192;
-		public Bitmap Bitmap;
+		public abstract Bitmap Bitmap { get; set; }
 		public IntPtr GDIhDC { get; protected set; }
 		protected Graphics g;
 		protected IntPtr hBitmap;
@@ -21,26 +21,64 @@ namespace MinorShift.Emuera.Content
 	internal sealed class ConstImage : AbstractImage
 	{
 		public ConstImage(string name)
-		{ Name = name; }
-
+		{ Name = name; RealIsCreated = false; }
 
 		public readonly string Name;
+		public Bitmap RealBitmap;
+		public string Filepath;
+		public int Width;
+		public int Height;
+		public bool RealIsCreated;
 
-		internal void CreateFrom(Bitmap bmp, bool useGDI)
+		internal void CreateFrom(Bitmap bmp, string filepath, bool useGDI)
 		{
-			if (Bitmap != null)
+			if (RealBitmap != null || !string.IsNullOrEmpty(Filepath))
 				throw new Exception();
 			try
 			{
-				Bitmap = bmp;
+				RealBitmap = bmp;
+				Filepath = filepath;
+				Width = RealBitmap.Width;
+				Height = RealBitmap.Height;
 				if (useGDI)
 				{
 					gdi = true;
-					hBitmap = Bitmap.GetHbitmap();
-					g = Graphics.FromImage(Bitmap);
+					hBitmap = RealBitmap.GetHbitmap();
+					g = Graphics.FromImage(RealBitmap);
 					GDIhDC = g.GetHdc();
 					hDefaultImg = GDI.SelectObject(GDIhDC, hBitmap);
 				}
+
+				AppContents.tempLoadedConstImages.Add(this);
+				RealIsCreated = true;
+			}
+			catch
+			{
+				return;
+			}
+			return;
+		}
+
+		public void Load()
+		{
+			if (RealBitmap != null || !RealIsCreated)
+				return;
+			try
+			{
+				RealBitmap = ImgUtils.LoadImage(Filepath);
+				if (RealBitmap == null)
+				{
+					return;
+				}
+
+				if (gdi)
+				{
+					hBitmap = RealBitmap.GetHbitmap();
+					g = Graphics.FromImage(RealBitmap);
+					GDIhDC = g.GetHdc();
+					hDefaultImg = GDI.SelectObject(GDIhDC, hBitmap);
+				}
+				AppContents.tempLoadedConstImages.Add(this);
 			}
 			catch
 			{
@@ -74,7 +112,7 @@ namespace MinorShift.Emuera.Content
 
 		public override void Dispose()
 		{
-			if (Bitmap == null)
+			if (RealBitmap == null || !RealIsCreated)
 				return;
 			if (gdi)
 			{
@@ -89,10 +127,10 @@ namespace MinorShift.Emuera.Content
 				g.Dispose();
 				g = null;
 			}
-			if (Bitmap != null)
+			if (RealBitmap != null)
 			{
-				Bitmap.Dispose();
-				Bitmap = null;
+				RealBitmap.Dispose();
+				RealBitmap = null;
 			}
 		}
 
@@ -104,7 +142,23 @@ namespace MinorShift.Emuera.Content
 
 		public override bool IsCreated
 		{
-			get { return Bitmap != null; }
+			get
+			{
+				return RealIsCreated;
+			}
+		}
+
+		public override Bitmap Bitmap
+		{
+			set
+			{
+				RealBitmap = value;
+			}
+			get
+			{
+				Load();
+				return RealBitmap;
+			}
 		}
 	}
 }

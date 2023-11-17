@@ -38,6 +38,10 @@ namespace MinorShift.Emuera.Content
 
 		//Bitmap b;
 		//Graphics g;
+		// 当GraphicsImage是完全由图像拼接而成时，此处记录拼接图案的列表。
+		// 可清理图片来减少内存使用。在使用时按照此列表组合
+		public bool useImgList { get { return drawImgList != null; } }
+		public List<Tuple<ASprite, Rectangle>> drawImgList = null;
 
 
 		////bool created;
@@ -58,6 +62,17 @@ namespace MinorShift.Emuera.Content
 		//	//locked = false;
 		//}
 
+		public Bitmap RealBitmap;
+		public override Bitmap Bitmap
+		{
+			set { RealBitmap = value; }
+			get
+			{
+				Load();
+				return RealBitmap;
+			}
+		}
+
 		#region Bitmap書き込み・作成
 
 		/// <summary>
@@ -69,21 +84,23 @@ namespace MinorShift.Emuera.Content
 			if (useGDI)
 				throw new NotImplementedException();
 			this.GDispose();
-			Bitmap = new Bitmap(x, y, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+			RealBitmap = new Bitmap(x, y, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 			size = new Size(x, y);
-			g = Graphics.FromImage(Bitmap);
+			g = Graphics.FromImage(RealBitmap);
 			//こうしないとbmpファイルの拡縮が綺麗に出ない
 			g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
 			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Bicubic;
+			drawImgList = new List<Tuple<ASprite, Rectangle>>();
+			AppContents.tempLoadedGraphicsImages.Add(this);
 		}
 		internal void GCreateFromF(Bitmap bmp, bool useGDI)
 		{
 			if (useGDI)
 				throw new NotImplementedException();
 			this.GDispose();
-			Bitmap = new Bitmap(bmp.Width, bmp.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+			RealBitmap = new Bitmap(bmp.Width, bmp.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 			size = new Size(bmp.Width, bmp.Height);
-			g = Graphics.FromImage(Bitmap);
+			g = Graphics.FromImage(RealBitmap);
 			g.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height);
 			//こうしないとbmpファイルの拡縮が綺麗に出ない
 			g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
@@ -104,11 +121,13 @@ namespace MinorShift.Emuera.Content
 		#region EM_私家版_GCLEAR拡張
 		public void GClear(Color c, int x, int y, int w, int h)
 		{
+			Load();
 			if (g == null)
 				throw new NullReferenceException();
 			g.SetClip(new Rectangle(x, y, w, h), System.Drawing.Drawing2D.CombineMode.Replace);
 			g.Clear(c);
 			g.ResetClip();
+			drawImgList = null;
 		}
 		#endregion
 
@@ -119,8 +138,12 @@ namespace MinorShift.Emuera.Content
 		#region EE_GDRAWTEXT 元のソースコードにあったものを改良
 		public void GDrawString(string text, int x, int y)
 		{
+			Load();
 			if (g == null)
 				throw new NullReferenceException();
+
+			drawImgList = null;
+
 			Font usingFont = font;
 			var format = new StringFormat(StringFormat.GenericTypographic);
 			if (usingFont == null)
@@ -150,8 +173,12 @@ namespace MinorShift.Emuera.Content
 		/// </summary>
 		public void GDrawString(string text, int x, int y, int width, int height)
 		{
+			Load();
 			if (g == null)
 				throw new NullReferenceException();
+
+			drawImgList = null;
+
 			Font usingFont = font;
 			if (usingFont == null)
 				usingFont = Config.Font;
@@ -172,8 +199,12 @@ namespace MinorShift.Emuera.Content
 		/// </summary>
 		public void GDrawRectangle(Rectangle rect)
 		{
+			Load();
 			if (g == null)
 				throw new NullReferenceException();
+
+			drawImgList = null;
+
 			if (pen != null)
 			{
 				g.DrawRectangle(pen, rect);
@@ -191,8 +222,12 @@ namespace MinorShift.Emuera.Content
 		/// </summary>
 		public void GFillRectangle(Rectangle rect)
 		{
+			Load();
 			if (g == null)
 				throw new NullReferenceException();
+
+			drawImgList = null;
+
 			if (brush != null)
 			{
 				g.FillRectangle(brush, rect);
@@ -210,8 +245,55 @@ namespace MinorShift.Emuera.Content
 		/// </summary>
 		public void GDrawCImg(ASprite img, Rectangle destRect)
 		{
+			Load();
 			if (g == null)
 				throw new NullReferenceException();
+			if (useImgList)
+			{
+				if (img as SpriteG != null)
+				{
+					SpriteG imgG = img as SpriteG;
+					if (imgG.useImgList)
+					{
+						foreach (Tuple<ASprite, Rectangle> img_element in imgG.drawImgList)
+						{
+							if (imgG.isBaseImage(this))
+							{
+								drawImgList = null;
+								break;
+							}
+							drawImgList.Add(new Tuple<ASprite, Rectangle>(
+								img_element.Item1,
+								new Rectangle(
+									(img_element.Item2.X + destRect.X) * destRect.Width / imgG.DestBaseSize.Width,
+									(img_element.Item2.Y + destRect.Y) * destRect.Height / imgG.DestBaseSize.Height,
+									img_element.Item2.Width * destRect.Width / imgG.DestBaseSize.Width,
+									img_element.Item2.Height * destRect.Height / imgG.DestBaseSize.Height
+								)
+							));
+						}
+					}
+					else
+					{
+						drawImgList = null;
+					}
+				}
+				else if (img as SpriteF != null)
+				{
+					drawImgList.Add(
+						new Tuple<ASprite, Rectangle>(img, destRect)
+					);
+
+					if (drawImgList.Count > 50)
+					{
+						drawImgList = null;
+					}
+				}
+				else
+				{
+					drawImgList = null;
+				}
+			}
 			img.GraphicsDraw(g, destRect);
 		}
 
@@ -221,8 +303,12 @@ namespace MinorShift.Emuera.Content
 		/// </summary>
 		public void GDrawCImg(ASprite img, Rectangle destRect, float[][] cm)
 		{
+			Load();
 			if (g == null)
 				throw new NullReferenceException();
+
+			drawImgList = null;
+
 			ImageAttributes imageAttributes = new ImageAttributes();
 			ColorMatrix colorMatrix = new ColorMatrix(cm);
 			imageAttributes.SetColorMatrix(colorMatrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
@@ -236,8 +322,12 @@ namespace MinorShift.Emuera.Content
 		/// </summary>
 		public void GDrawG(GraphicsImage srcGra, Rectangle destRect, Rectangle srcRect)
 		{
+			Load();
 			if (g == null)
 				throw new NullReferenceException();
+
+			drawImgList = null;
+
 			Bitmap src = srcGra.GetBitmap();
 			g.DrawImage(src, destRect, srcRect, GraphicsUnit.Pixel);
 		}
@@ -249,8 +339,12 @@ namespace MinorShift.Emuera.Content
 		/// </summary>
 		public void GDrawG(GraphicsImage srcGra, Rectangle destRect, Rectangle srcRect, float[][] cm)
 		{
+			Load();
 			if (g == null)
 				throw new NullReferenceException();
+
+			drawImgList = null;
+
 			Bitmap src = srcGra.GetBitmap();
 			ImageAttributes imageAttributes = new ImageAttributes();
 			ColorMatrix colorMatrix = new ColorMatrix(cm);
@@ -267,12 +361,16 @@ namespace MinorShift.Emuera.Content
 		/// </summary>
 		public void GDrawGWithMask(GraphicsImage srcGra, GraphicsImage maskGra, Point destPoint)
 		{
+			Load();
 			if (g == null)
 				throw new NullReferenceException();
+
+			drawImgList = null;
+
 			Bitmap destImg = this.GetBitmap();
 			byte[] srcBytes = BytesFromBitmap(srcGra.GetBitmap());
 			byte[] srcMaskBytes = BytesFromBitmap(maskGra.GetBitmap());
-			//Rectangle destRect = new Rectangle(destPoint.X, destPoint.Y, srcGra.Width, srcGra.Height);
+			Rectangle destRect = new Rectangle(destPoint.X, destPoint.Y, srcGra.Width, srcGra.Height);
 
 			System.Drawing.Imaging.BitmapData bmpData =
 				destImg.LockBits(new Rectangle(0,0, destImg.Width,destImg.Height),
@@ -418,7 +516,135 @@ namespace MinorShift.Emuera.Content
 			pen.DashCap = cap;
 		}
 
+		#region Bitmap読み込み・削除
+		/// <summary>
+		/// 未作成ならエラー
+		/// </summary>
+		public Bitmap GetBitmap()
+		{
+			if (Bitmap == null)
+				throw new NullReferenceException();
+			//UnlockGraphics();
+			return Bitmap;
+		}
+		/// <summary>
+		/// GSETCOLOR(int ID, int cARGB, int x, int y)
+		/// エラーチェックは呼び出し元でのみ行う
+		/// </summary>
+		public void GSetColor(Color c, int x, int y)
+		{
+			if (Bitmap == null)
+				throw new NullReferenceException();
+			//UnlockGraphics();
+			Bitmap.SetPixel(x, y, c);
+		}
 
+		/// <summary>
+		/// GGETCOLOR(int ID, int x, int y)
+		/// エラーチェックは呼び出し元でのみ行う。特に画像範囲内であるかどうかチェックすること
+		/// </summary>
+		public Color GGetColor(int x, int y)
+		{
+			if (Bitmap == null)
+				throw new NullReferenceException();
+			//UnlockGraphics();
+			return Bitmap.GetPixel(x, y);
+		}
+
+		public void UnLoad()
+		{
+			if (RealBitmap == null)
+				return;
+
+			if (g != null)
+				g.Dispose();
+			if (RealBitmap != null)
+				RealBitmap.Dispose();
+			g = null;
+			RealBitmap = null;
+		}
+
+		/// <summary>
+		/// GDISPOSE(int ID)
+		/// </summary>
+		public void GDispose()
+		{
+			size = new Size(0, 0);
+			drawImgList = null;
+			if (RealBitmap == null)
+				return;
+			if (gdi)
+			{
+				GDI.SelectObject(GDIhDC, hDefaultImg);
+				GDI.DeleteObject(hBitmap);
+				g.ReleaseHdc(GDIhDC);
+			}
+			if (g != null)
+				g.Dispose();
+			if (RealBitmap != null)
+				RealBitmap.Dispose();
+			if (brush != null)
+				brush.Dispose();
+			if (pen != null)
+				pen.Dispose();
+			if (font != null)
+				font.Dispose();
+			g = null;
+			RealBitmap = null;
+			brush = null;
+			pen = null;
+			font = null;
+		}
+
+		public override void Dispose()
+		{
+			this.GDispose();
+		}
+
+		~GraphicsImage()
+		{
+			Dispose();
+		}
+		#endregion
+
+		#region 状態判定（Bitmap読み書きを伴わない）
+		public override bool IsCreated { get { return g != null || useImgList; } }
+		/// <summary>
+		/// int GWIDTH(int ID)
+		/// </summary>
+		public int Width { get { return size.Width; } }
+		/// <summary>
+		/// int GHEIGHT(int ID)
+		/// </summary>
+		public int Height { get { return size.Height; } }
+
+		#region EE_GDRAWTEXTに付随する様々な要素
+		public string Fontname { get { return font.Name; } }
+		public int Fontsize { get { return (int)font.Size; } }
+
+		public int Fontstyle
+		{
+			get
+			{
+				int ret = 0;
+				if ((style & FontStyle.Bold) == FontStyle.Bold)
+					ret |= 1;
+				if ((style & FontStyle.Italic) == FontStyle.Italic)
+					ret |= 2;
+				if ((style & FontStyle.Strikeout) == FontStyle.Strikeout)
+					ret |= 4;
+				if ((style & FontStyle.Underline) == FontStyle.Underline)
+					ret |= 8;
+				return (ret);
+			}
+		}
+
+		public Font Fnt { get { return font; } }
+		public Pen Pen { get { return pen; } }
+		public Brush Brush { get { return brush; } }
+		#endregion
+
+		#endregion
 
 
 		private static byte[] BytesFromBitmap(Bitmap bmp)
@@ -516,125 +742,24 @@ namespace MinorShift.Emuera.Content
 			return true;
 		}
 #endregion
-#region Bitmap読み込み・削除
-		/// <summary>
-		/// 未作成ならエラー
-		/// </summary>
-		public Bitmap GetBitmap()
-		{
-			if (Bitmap == null)
-				throw new NullReferenceException();
-			//UnlockGraphics();
-			return Bitmap;
-		}
-		/// <summary>
-		/// GSETCOLOR(int ID, int cARGB, int x, int y)
-		/// エラーチェックは呼び出し元でのみ行う
-		/// </summary>
-		public void GSetColor(Color c, int x, int y)
-		{
-			if (Bitmap == null)
-				throw new NullReferenceException();
-			//UnlockGraphics();
-			Bitmap.SetPixel(x, y, c);
-		}
 
-		/// <summary>
-		/// GGETCOLOR(int ID, int x, int y)
-		/// エラーチェックは呼び出し元でのみ行う。特に画像範囲内であるかどうかチェックすること
-		/// </summary>
-		public Color GGetColor(int x, int y)
+		public void Load()
 		{
-			if (Bitmap == null)
-				throw new NullReferenceException();
-			//UnlockGraphics();
-			return Bitmap.GetPixel(x, y);
-		}
-
-
-		/// <summary>
-		/// GDISPOSE(int ID)
-		/// </summary>
-		public void GDispose()
-		{
-			size = new Size(0, 0);
-			if (Bitmap == null)
+			if (RealBitmap != null)
 				return;
-			if (gdi)
-			{
-				GDI.SelectObject(GDIhDC, hDefaultImg);
-				GDI.DeleteObject(hBitmap);
-				g.ReleaseHdc(GDIhDC);
-			}
-			if (g != null)
-				g.Dispose();
-			if (Bitmap != null)
-				Bitmap.Dispose();
-			if (brush != null)
-				brush.Dispose();
-			if (pen != null)
-				pen.Dispose();
-			if (font != null)
-				font.Dispose();
-			g = null;
-			Bitmap = null;
-			brush = null;
-			pen = null;
-			font = null;
+
+			if (drawImgList == null)
+				return;
+
+			RealBitmap = new Bitmap(size.Width, size.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+			g = Graphics.FromImage(RealBitmap);
+
+			foreach (Tuple<ASprite, Rectangle> tuple in drawImgList)
+				tuple.Item1.GraphicsDraw(g, tuple.Item2);
+
+			AppContents.tempLoadedGraphicsImages.Add(this);
+			return;
 		}
-
-		public override void Dispose()
-		{
-			this.GDispose();
-		}
-
-        ~GraphicsImage()
-        {
-            Dispose();
-        }
-#endregion
-
-#region 状態判定（Bitmap読み書きを伴わない）
-		public override bool IsCreated { get { return g != null; } }
-		/// <summary>
-		/// int GWIDTH(int ID)
-		/// </summary>
-		public int Width { get { return size.Width; } }
-		/// <summary>
-		/// int GHEIGHT(int ID)
-		/// </summary>
-		public int Height { get { return size.Height; } }
-
-		#region EE_GDRAWTEXTに付随する様々な要素
-		public string Fontname { get { return font.Name; } }
-		public int Fontsize { get { return (int)font.Size; } }
-
-		public int Fontstyle
-		{
-			get
-			{
-				int ret = 0;
-				if ((style & FontStyle.Bold) == FontStyle.Bold)
-					ret |= 1;
-				if ((style & FontStyle.Italic) == FontStyle.Italic)
-					ret |= 2;
-				if ((style & FontStyle.Strikeout) == FontStyle.Strikeout)
-					ret |= 4;
-				if ((style & FontStyle.Underline) == FontStyle.Underline)
-					ret |= 8;
-				return (ret);
-			}
-		}
-
-		public Font Fnt { get { return font; } }
-		public Pen Pen { get { return pen; } }
-		public Brush Brush { get { return brush; } }
-		#endregion
-
-
-
-		#endregion
-
 
 	}
 }

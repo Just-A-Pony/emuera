@@ -3494,8 +3494,8 @@ namespace MinorShift.Emuera.GameData.Function
 					}
 					var resultArray = valueArray.Distinct();
 					if (resultArray.Count() != arguments.Length)
-						return 0L;
-				}
+							return 0L;
+					}
 				else
 				{
 					string[] stringArray = new string[arguments.Length];
@@ -6610,7 +6610,7 @@ namespace MinorShift.Emuera.GameData.Function
 					throw new CodeEE(string.Format(Lang.Error.GDIPlusOnly.Text, Name));
 
 				GraphicsImage g = ReadGraphics(Name, exm, arguments, 0);
-				if (!g.IsCreated)
+				if (!g.IsCreated || g.Bitmap == null)
 					return 0;
 				Point p = ReadPoint(Name, exm, arguments, 1);
 				Int64 z64 = arguments[3].GetIntValue(exm);
@@ -6641,7 +6641,7 @@ namespace MinorShift.Emuera.GameData.Function
 					throw new CodeEE(string.Format(Lang.Error.GDIPlusOnly.Text, Name));
 
 				GraphicsImage g = ReadGraphics(Name, exm, arguments, 0);
-				if (!g.IsCreated)
+				if (!g.IsCreated || g.Bitmap == null)
 					return 0;
 				exm.Console.CBG_SetButtonMap(g);
 				return 1;

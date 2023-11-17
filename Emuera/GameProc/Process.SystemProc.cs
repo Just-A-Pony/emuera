@@ -787,6 +787,8 @@ namespace MinorShift.Emuera.GameProc
 		}
 		void endSystemLoad()
 		{
+			Content.AppContents.UnloadTempLoadedConstImageNames();
+			Content.AppContents.UnloadTempLoadedGraphicsImageNames();
 			state.SystemState = SystemStateCode.LoadData_CallEventLoad;
 			//EVENTLOADを呼び出してLoadData_CallEventLoadへ移行。
 			if (!callFunction("EVENTLOAD", false, true))

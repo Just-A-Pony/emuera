@@ -15,10 +15,15 @@ namespace MinorShift.Emuera.Content
 		{
 			gList = new Dictionary<int, GraphicsImage>();
 		}
-		static readonly Dictionary<string, AContentFile> resourceDic = new Dictionary<string, AContentFile>();
+		static Dictionary<string, AContentFile> resourceDic = new Dictionary<string, AContentFile>();
 		static Dictionary<string, ASprite> imageDictionary = new Dictionary<string, ASprite>();
-		static readonly Dictionary<int, GraphicsImage> gList;
-		static readonly Dictionary<string, ASprite> resourceImageDictionary = new Dictionary<string, ASprite>();
+		static Dictionary<int, GraphicsImage> gList;
+		static Dictionary<string, ASprite> resourceImageDictionary = new Dictionary<string, ASprite>();
+
+		// the ConstImages that has been loaded into memory. will free them in every SetBegin(BeginType.SHOP)
+		public static HashSet<ConstImage> tempLoadedConstImages = new HashSet<ConstImage>();
+		public static HashSet<GraphicsImage> tempLoadedGraphicsImages = new HashSet<GraphicsImage>();
+
 
 		//static public T GetContent<T>(string name)where T :AContentItem
 		//{
@@ -76,7 +81,7 @@ namespace MinorShift.Emuera.Content
 			}
 		}
 
-		static public void CreateSpriteG(string imgName, GraphicsImage parent,Rectangle rect)
+		static public void CreateSpriteG(string imgName, GraphicsImage parent, Rectangle rect)
 		{
 			if (string.IsNullOrEmpty(imgName))
 				throw new ArgumentOutOfRangeException();
@@ -183,6 +188,21 @@ namespace MinorShift.Emuera.Content
 				graph.GDispose();
 			gList.Clear();
 		}
+		// used for clean ConstImage from memory
+		static public void UnloadTempLoadedConstImageNames()
+		{
+			foreach (ConstImage img in tempLoadedConstImages)
+				img.Dispose();
+			tempLoadedConstImages.Clear();
+		}
+		// used for clean GraphicsImage from memory
+		static public void UnloadTempLoadedGraphicsImageNames()
+		{
+			foreach (GraphicsImage img in tempLoadedGraphicsImages)
+				if (img.useImgList)
+					img.UnLoad();
+			tempLoadedGraphicsImages.Clear();
+		}
 		/// <summary>
 		/// resourcesフォルダ中のcsvの1行を読んで新しいリソースを作る(or既存のアニメーションスプライトに1フレーム追加する)
 		/// </summary>
@@ -257,38 +277,41 @@ namespace MinorShift.Emuera.Content
 					//return null;
 				}
 				ConstImage img = new ConstImage(parentName);
-				img.CreateFrom(bmp, Config.TextDrawingMode == TextDrawingMode.WINAPI);
+				img.CreateFrom(bmp, filepath, Config.TextDrawingMode == TextDrawingMode.WINAPI);
 				if (!img.IsCreated)
 				{
 					ParserMediator.Warn(string.Format(trerror.FailedCreateResource.Text, arg2), sp, 1);
 					return null;
 				}
 				resourceDic.Add(parentName, img);
+				img.Dispose();
 			}
 			if (!(resourceDic[parentName] is ConstImage parentImage) || !parentImage.IsCreated)
 			{
 				ParserMediator.Warn(string.Format(trerror.SpriteCreateFromFailedResource.Text, arg2), sp, 1);
 				return null;
 			}
-			Rectangle rect = new Rectangle(new Point(0, 0), parentImage.Bitmap.Size);
+			Rectangle rect = new Rectangle(new Point(0, 0), new Size(parentImage.Width, parentImage.Height));
+			Size size = rect.Size;
 			Point pos = new Point();
 			int delay = 1000;
-			//name,parentname, x,y,w,h ,offset_x,offset_y, delayTime
-			if(tokens.Length >= 6)//x,y,w,h
+			//name,parentname, x,y,w,h ,offset_x,offset_y, delayTime, destX,destY
+			if (tokens.Length >= 6)//x,y,w,h
 			{
-				int[] rectValue = new int[4];
+				int[] outValue = new int[4];
 				bool sccs = true;
 				for (int i = 0; i < 4; i++)
-					sccs &= int.TryParse(tokens[i + 2], out rectValue[i]);
+					sccs &= int.TryParse(tokens[i + 2], out outValue[i]);
 				if (sccs)
 				{
-					rect = new Rectangle(rectValue[0], rectValue[1], rectValue[2], rectValue[3]);
+					rect = new Rectangle(outValue[0], outValue[1], outValue[2], outValue[3]);
+					size = rect.Size;
 					if (rect.Width <= 0 || rect.Height <= 0)
 					{
 						ParserMediator.Warn(string.Format(trerror.SpriteSizeIsNegatibe.Text, name), sp, 1);
 						return null;
 					}
-					if (!rect.IntersectsWith(new Rectangle(0,0,parentImage.Bitmap.Width, parentImage.Bitmap.Height)))
+					if (!rect.IntersectsWith(new Rectangle(0, 0, parentImage.Width, parentImage.Height)))
 					{
 						ParserMediator.Warn(string.Format(trerror.OoRParentImage.Text, name), sp, 1);
 						return null;
@@ -298,9 +321,9 @@ namespace MinorShift.Emuera.Content
 				{
 					sccs = true;
 					for (int i = 0; i < 2; i++)
-						sccs &= int.TryParse(tokens[i + 6], out rectValue[i]);
+						sccs &= int.TryParse(tokens[i + 6], out outValue[i]);
 					if (sccs)
-						pos = new Point(rectValue[0], rectValue[1]);
+						pos = new Point(outValue[0], outValue[1]);
 					if (tokens.Length >= 9)
 					{
 						sccs = int.TryParse(tokens[8], out delay);
@@ -308,6 +331,14 @@ namespace MinorShift.Emuera.Content
 						{
 							ParserMediator.Warn(string.Format(trerror.FrameTimeIsNegative.Text, name), sp, 1);
 							return null;
+						}
+						if (tokens.Length >= 11)
+						{
+							sccs = true;
+							for (int i = 0; i < 2; i++)
+								sccs &= int.TryParse(tokens[i + 9], out outValue[i]);
+							if (sccs)
+								size = new Size(outValue[0], outValue[1]);
 						}
 					}
 				}
@@ -324,11 +355,8 @@ namespace MinorShift.Emuera.Content
 			}
 
 			//新規スプライト定義
-			ASprite image = new SpriteF(name, parentImage, rect, pos);
+			ASprite image = new SpriteF(name, parentImage, rect, pos, size);
 			return image;
 		}
-
-
-
 	}
 }

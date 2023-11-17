@@ -55,6 +55,12 @@ namespace MinorShift.Emuera.Content
 			SrcRectangle = rect;
 			BaseImage = img;
 		}
+		public ASpriteSingle(string name, AbstractImage img, Rectangle rect, Size destSize)
+			: base(name, destSize)
+		{
+			SrcRectangle = rect;
+			BaseImage = img;
+		}
 		public AbstractImage BaseImage;
 
 		/// <summary>
@@ -102,8 +108,10 @@ namespace MinorShift.Emuera.Content
 		{
 			if (!DestBasePosition.IsEmpty)
 			{
-				destRect.X = destRect.X + DestBasePosition.X * destRect.Width / SrcRectangle.Width;
-				destRect.Y = destRect.Y + DestBasePosition.Y * destRect.Height / SrcRectangle.Height;
+				destRect.X = destRect.X + DestBasePosition.X * destRect.Width / DestBaseSize.Width;
+				destRect.Y = destRect.Y + DestBasePosition.Y * destRect.Height / DestBaseSize.Height;
+				destRect.Width = destRect.Width * SrcRectangle.Width / DestBaseSize.Width;
+				destRect.Height = destRect.Height * SrcRectangle.Height / DestBaseSize.Height;
 			}
 			g.DrawImage(Bitmap, destRect, SrcRectangle, GraphicsUnit.Pixel);
 		}
@@ -112,8 +120,10 @@ namespace MinorShift.Emuera.Content
 		{
 			if (!DestBasePosition.IsEmpty)
 			{
-				destRect.X = destRect.X + DestBasePosition.X * destRect.Width / SrcRectangle.Width;
-				destRect.Y = destRect.Y + DestBasePosition.Y * destRect.Height / SrcRectangle.Height;
+				destRect.X = destRect.X + DestBasePosition.X * destRect.Width / DestBaseSize.Width;
+				destRect.Y = destRect.Y + DestBasePosition.Y * destRect.Height / DestBaseSize.Height;
+				destRect.Width = destRect.Width * SrcRectangle.Width / DestBaseSize.Width;
+				destRect.Height = destRect.Height * SrcRectangle.Height / DestBaseSize.Height;
 			}
 			//g.DrawImage(Bitmap, destRect, SrcRectangle, GraphicsUnit.Pixel, attr);←このパターンがない
 			g.DrawImage(Bitmap, destRect, SrcRectangle.X, SrcRectangle.Y, SrcRectangle.Width, SrcRectangle.Height, GraphicsUnit.Pixel, attr);
@@ -130,6 +140,12 @@ namespace MinorShift.Emuera.Content
 			: base(name, gra, rect)
 		{
 		}
+		public bool useImgList { get { return (BaseImage as GraphicsImage).useImgList; } }
+		public List<Tuple<ASprite, Rectangle>> drawImgList { get { return (BaseImage as GraphicsImage).drawImgList; } }
+		public bool isBaseImage(GraphicsImage gImg)
+		{
+			return (BaseImage as GraphicsImage) == gImg;
+		}
 
 	}
 
@@ -138,8 +154,8 @@ namespace MinorShift.Emuera.Content
 	/// </summary>
 	internal sealed class SpriteF : ASpriteSingle
 	{
-		public SpriteF(string name, ConstImage image, Rectangle rect, Point pos)
-			: base(name, image, rect)
+		public SpriteF(string name, ConstImage image, Rectangle rect, Point pos, Size destSize)
+			: base(name, image, rect, destSize)
 		{
 			this.DestBasePosition = pos;
 		}
@@ -289,7 +305,7 @@ namespace MinorShift.Emuera.Content
 		public override void GraphicsDraw(Graphics g, Point offset)
 		{
 			AnimeFrame frame = GetCurrentFrame();
-			if (frame == null || frame.BaseImage == null || !frame.BaseImage.IsCreated)
+			if (frame == null || frame.BaseImage == null || !frame.BaseImage.IsCreated || frame.BaseImage.Bitmap == null)
 				return;
 			offset.Offset(DestBasePosition);
 			offset.Offset(frame.Offset);
@@ -301,7 +317,7 @@ namespace MinorShift.Emuera.Content
 		public override void GraphicsDraw(Graphics g, Rectangle destRect)
 		{
 			AnimeFrame frame = GetCurrentFrame();
-			if (frame == null || frame.BaseImage == null || !frame.BaseImage.IsCreated)
+			if (frame == null || frame.BaseImage == null || !frame.BaseImage.IsCreated || frame.BaseImage.Bitmap == null)
 				return;
 			destRect.X = destRect.X + (DestBasePosition.X + frame.Offset.X) * destRect.Width / DestBaseSize.Width;
 			destRect.Y = destRect.Y + (DestBasePosition.Y + frame.Offset.Y) * destRect.Height / DestBaseSize.Height;
@@ -313,7 +329,7 @@ namespace MinorShift.Emuera.Content
 		public override void GraphicsDraw(Graphics g, Rectangle destRect, ImageAttributes attr)
 		{
 			AnimeFrame frame = GetCurrentFrame();
-			if (frame == null || frame.BaseImage == null || !frame.BaseImage.IsCreated)
+			if (frame == null || frame.BaseImage == null || !frame.BaseImage.IsCreated || frame.BaseImage.Bitmap == null)
 				return;
 			destRect.X = destRect.X + (DestBasePosition.X + frame.Offset.X) * destRect.Width / DestBaseSize.Width;
 			destRect.Y = destRect.Y + (DestBasePosition.Y + frame.Offset.Y) * destRect.Height / DestBaseSize.Height;
