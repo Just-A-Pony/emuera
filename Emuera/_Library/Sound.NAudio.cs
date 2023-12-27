@@ -326,6 +326,9 @@ namespace MinorShift._Library
 				stream = null;
 			}
 		}
+		public void setCount(int repeat)
+		{
+		}
 
 		public void close()
 		{
