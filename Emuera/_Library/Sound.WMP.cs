@@ -21,7 +21,11 @@ namespace MinorShift._Library
 		{
 			player.close();
 		}
-
+		public void setCount(int repeat)
+		{
+			if (repeat > 0)
+				player.settings.playCount = repeat;
+		}
 		public bool isPlaying()
 		{
 			switch (player.playState)

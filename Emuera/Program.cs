@@ -9,6 +9,7 @@ using System.IO;
 using EvilMask.Emuera;
 using System.Text;
 using MinorShift.Emuera.GameProc.Function;
+using MinorShift.Emuera.GameData.Function;
 
 namespace MinorShift.Emuera
 {
@@ -74,10 +75,10 @@ namespace MinorShift.Emuera
 			ExeName = Path.GetFileNameWithoutExtension(Sys.ExeName);
 
 			//WMPも終了しておく
-			FunctionIdentifier.bgm.close();
-			for (int i = 0; i < FunctionIdentifier.sound.Length; i++)
+			FunctionMethodCreator.bgm.close();
+			for (int i = 0; i < FunctionMethodCreator.sound.Length; i++)
 			{
-				if (FunctionIdentifier.sound[i] != null) FunctionIdentifier.sound[i].close();
+				if (FunctionMethodCreator.sound[i] != null) FunctionMethodCreator.sound[i].close();
 			}
 
 			//解析モードの判定だけ先に行う

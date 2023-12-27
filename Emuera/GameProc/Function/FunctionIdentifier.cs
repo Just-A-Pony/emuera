@@ -400,12 +400,14 @@ namespace MinorShift.Emuera.GameProc.Function
 			#endregion
 
 			#region EE
+			/*式中関数に移行
 			addFunction(FunctionCode.PLAYSOUND, new PLAYSOUND_Instruction());
 			addFunction(FunctionCode.STOPSOUND, new STOPSOUND_Instruction());
 			addFunction(FunctionCode.PLAYBGM, new PLAYBGM_Instruction());
 			addFunction(FunctionCode.STOPBGM, new STOPBGM_Instruction());
 			addFunction(FunctionCode.SETSOUNDVOLUME, new SETSOUNDVOLUME_Instruction());
 			addFunction(FunctionCode.SETBGMVOLUME, new SETBGMVOLUME_Instruction());
+			*/
 			addFunction(FunctionCode.TRYCALLF, new TRYCALLF_Instruction(false));
 			addFunction(FunctionCode.TRYCALLFORMF, new TRYCALLF_Instruction(true));
 			addFunction(FunctionCode.UPDATECHECK, new UPDATECHECK_Instruction());

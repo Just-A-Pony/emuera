@@ -19,6 +19,7 @@ using EvilMask.Emuera;
 using trerror = EvilMask.Emuera.Lang.Error;
 using System.Data;
 using static EvilMask.Emuera.Lang.UI.ConfigDialog;
+using System.Windows.Navigation;
 
 namespace MinorShift.Emuera.GameData.Function
 {
@@ -7381,6 +7382,139 @@ namespace MinorShift.Emuera.GameData.Function
 			}
 		}
 
+		#endregion
+		#region EE_SOUND系
+		public static Sound[] sound = new Sound[10];
+		public static Sound bgm = new Sound();
+		private sealed class PlaySoundMethod : FunctionMethod
+		{
+			public PlaySoundMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int}, OmitStart = 1 },
+				};
+				CanRestructure = true;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				string datFilename = arguments[0].GetStrValue(exm);
+				int repeat = 0;
+				if　(arguments.Length == 2)
+					repeat = (int)arguments[1].GetIntValue(exm);
+				string filepath = System.IO.Path.GetFullPath(".\\sound\\" + datFilename);
+				if (System.IO.File.Exists(filepath))
+				{
+					for (int i = 0; i < sound.Length; i++)
+					{
+						if (sound[i] == null)
+							sound[i] = new Sound();
+						//未使用もしくは再生完了してる要素を使う
+						if (!sound[i].isPlaying())
+						{
+							sound[i].setCount(repeat);
+							sound[i].play(filepath);
+							return 0;
+						}
+					}
+					//上を抜けてきたら適当に0に入れる
+					sound[0].setCount(repeat);
+					sound[0].play(filepath);
+				}
+				return 0;
+			}
+		}
+
+		private sealed class StopSoundMethod : FunctionMethod
+		{
+			public StopSoundMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { };
+				CanRestructure = true;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				for (int i = 0; i < sound.Length; i++)
+				{
+					if (sound[i] == null) sound[i] = new Sound();
+					if (sound[i].isPlaying()) sound[i].stop();
+				}
+				return 0;
+			}
+		}
+
+		private sealed class PlayBgmMethod : FunctionMethod
+		{
+			public PlayBgmMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int}, OmitStart = 1 },
+				};
+				CanRestructure = true;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				string datFilename = arguments[0].GetStrValue(exm);
+				string filepath = System.IO.Path.GetFullPath(".\\sound\\" + datFilename);
+				if (System.IO.File.Exists(filepath))
+				{
+					bgm.play(filepath, true);
+				}
+				return 0;
+			}
+		}
+
+		private sealed class StopBgmMethod : FunctionMethod
+		{
+			public StopBgmMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { };
+				CanRestructure = true;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				bgm.stop();
+				return 0;
+			}
+		}
+
+		private sealed class SetSoundVolumeMethod : FunctionMethod
+		{
+			public SetSoundVolumeMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(Int64) };
+				CanRestructure = true;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				int vol = (int)arguments[0].GetIntValue(exm);
+				for (int i = 0; i < sound.Length; i++)
+				{
+					if (sound[i] == null) sound[i] = new Sound();
+					sound[i].setVolume(vol);
+				}
+				return 0;
+			}
+		}
+		private sealed class SetBgmVolumeMethod : FunctionMethod
+		{
+			public SetBgmVolumeMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(Int64) };
+				CanRestructure = true;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				int vol = (int)arguments[0].GetIntValue(exm);
+				bgm.setVolume(vol);
+				return 0;
+			}
+		}
 		#endregion
 	}
 }
