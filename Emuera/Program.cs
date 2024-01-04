@@ -75,10 +75,10 @@ namespace MinorShift.Emuera
 			ExeName = Path.GetFileNameWithoutExtension(Sys.ExeName);
 
 			//WMPも終了しておく
-			FunctionMethodCreator.bgm.close();
-			for (int i = 0; i < FunctionMethodCreator.sound.Length; i++)
+			FunctionIdentifier.bgm.close();
+			for (int i = 0; i < FunctionIdentifier.sound.Length; i++)
 			{
-				if (FunctionMethodCreator.sound[i] != null) FunctionMethodCreator.sound[i].close();
+				if (FunctionIdentifier.sound[i] != null) FunctionIdentifier.sound[i].close();
 			}
 
 			//解析モードの判定だけ先に行う

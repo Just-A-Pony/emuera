@@ -329,12 +329,6 @@ namespace MinorShift.Emuera.GameData.Function
 				["GETDISPLAYLINE"] = new GetDisplayLineMethod(),
 				["GDASHSTYLE"] = new GraphicsSetDashStyleMethod(),
 				["GETDOINGFUNCTION"] = new GetDoingFunctionMethod(),
-				["PLAYSOUND"] = new PlaySoundMethod(),
-				["STOPSOUND"] = new StopSoundMethod(),
-				["PLAYBGM"] = new PlayBgmMethod(),
-				["STOPBGM"] = new StopBgmMethod(),
-				["SETSOUNDVOLUME"] = new SetSoundVolumeMethod(),
-				["SETBGMVOLUME"] = new SetBgmVolumeMethod(),
 				#endregion
 			};
 
