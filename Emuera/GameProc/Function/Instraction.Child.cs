@@ -2242,23 +2242,29 @@ namespace MinorShift.Emuera.GameProc.Function
 					datFilename = soundArg.Str.GetStrValue(exm);
 				int repeat = soundArg.Opt != null ? (int)Math.Max(soundArg.Opt.GetIntValue(exm), 1) : 1;
 				string filepath = System.IO.Path.GetFullPath(".\\sound\\" + datFilename);
-
-				if (System.IO.File.Exists(filepath))
+				try
 				{
-					int i;
-					for (i = 0; i < sound.Length; i++)
+					if (System.IO.File.Exists(filepath))
 					{
-						if (sound[i] == null)
-							sound[i] = new Sound();
-						//未使用もしくは再生完了してる要素を使う
-						if (!sound[i].isPlaying())
-							break;
-					}
-					// if no available sounds were found use sound 0
-					if (i >= sound.Length)
-						i = 0;
+						int i;
+						for (i = 0; i < sound.Length; i++)
+						{
+							if (sound[i] == null)
+								sound[i] = new Sound();
+							//未使用もしくは再生完了してる要素を使う
+							if (!sound[i].isPlaying())
+								break;
+						}
+						// if no available sounds were found use sound 0
+						if (i >= sound.Length)
+							i = 0;
 
-					sound[i].play(filepath, repeat);
+						sound[i].play(filepath, repeat);
+					}
+				}
+				catch
+				{
+					throw new CodeEE(trerror.ImcompatibleSoundFile.Text);
 				}
 			}
 		}
@@ -2300,8 +2306,15 @@ namespace MinorShift.Emuera.GameProc.Function
 					datFilename = arg.Term.GetStrValue(exm);
 				string filepath = System.IO.Path.GetFullPath(".\\sound\\" + datFilename);
 
-				if (System.IO.File.Exists(filepath))
-					bgm.play(filepath, -1); // -1 means repeat indefinitely
+				try
+				{
+					if (System.IO.File.Exists(filepath))
+						bgm.play(filepath, -1); // -1 means repeat indefinitely
+				}
+				catch
+				{
+					throw new CodeEE(trerror.ImcompatibleSoundFile.Text);
+				}
 			}
 		}
 
