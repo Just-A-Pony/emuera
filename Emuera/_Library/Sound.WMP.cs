@@ -5,10 +5,17 @@ namespace MinorShift._Library
 	internal class Sound
 	{
 		private WindowsMediaPlayer player = new WindowsMediaPlayer();
-		public void play(string filename, bool loop = false)
+		public void play(string filename, int repeat = 1)
 		{
 			player.URL = filename;
-			player.settings.setMode("loop", loop);
+			if (repeat == -1) {
+				player.settings.playCount = 1;
+				player.settings.setMode("loop", true);
+			}
+			else {
+				player.settings.setMode("loop", false);
+				player.settings.playCount = repeat;
+			}
 			player.controls.play();
 		}
 
@@ -21,11 +28,7 @@ namespace MinorShift._Library
 		{
 			player.close();
 		}
-		public void setCount(int repeat)
-		{
-			if (repeat > 0)
-				player.settings.playCount = repeat;
-		}
+
 		public bool isPlaying()
 		{
 			switch (player.playState)

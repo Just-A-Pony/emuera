@@ -196,6 +196,78 @@ namespace MinorShift._Library
 		}
 	}
 
+	internal class RepeatStream : WaveStream
+	{
+		readonly WaveStream sourceStream;
+		readonly int total_count;
+		int remaining_count;
+
+		public RepeatStream(WaveStream source, int count)
+		{
+			sourceStream = source;
+			total_count = count;
+			remaining_count = count;
+		}
+
+		public override WaveFormat WaveFormat
+		{
+			get { return sourceStream.WaveFormat; }
+		}
+
+		public override long Length
+		{
+			get { return sourceStream.Length * total_count; }
+		}
+
+		public override long Position
+		{
+			get
+			{
+				return (total_count - remaining_count) * sourceStream.Length + sourceStream.Position;
+			}
+			set
+			{
+				remaining_count = (int)(value / sourceStream.Length);
+				sourceStream.Position = value % sourceStream.Length;
+			}
+		}
+
+		public override bool HasData(int count)
+		{
+			return sourceStream.Position < sourceStream.Length;
+		}
+
+		public override int Read(byte[] buffer, int offset, int count)
+		{
+			int total_read = 0;
+			while (total_read < count)
+			{
+				int remaining = count - total_read;
+				int read = sourceStream.Read(buffer, offset + total_read, remaining);
+				if (read < remaining || sourceStream.Position >= sourceStream.Length)
+				{
+					if (remaining_count > 1)
+					{
+						remaining_count--;
+						sourceStream.Position = 0;
+					}
+					else
+					{
+						return total_read + read;
+					}
+				}
+				total_read += read;
+			}
+			return total_read;
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			sourceStream.Dispose();
+			base.Dispose(disposing);
+		}
+	}
+
 	internal static class SoundMixer
 	{
 		private static bool initialized = false;
@@ -275,7 +347,7 @@ namespace MinorShift._Library
 			return volumeProvider.Read(buffer, offset, count);
 		}
 
-		public void play(string filename, bool loop = false)
+		public void play(string filename, int repeat = 1)
 		{
 			if (!SoundMixer.Initialized)
 				SoundMixer.Initialize();
@@ -298,11 +370,18 @@ namespace MinorShift._Library
 				stream = new MediaFoundationReader(filename, settings);
 			}
 
+			WaveStream _stream = stream;
+			// LoopStream / RepeatStream might cause issues because they seek (see comment in stop method below)
+			if (repeat == -1)
+				_stream = new LoopStream(_stream);
+			else if (repeat > 1)
+				_stream = new RepeatStream(_stream, repeat);
+
 			// MediaFoundationResampler is faster and possibly higher quality than WdlResamplingSampleProvider but currently doesn't seem to work on wine
-			// var resampler = new MediaFoundationResampler(loop ? new LoopStream(stream) : stream, WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, 2));
+			// var resampler = new MediaFoundationResampler(_stream, WaveFormat.CreateIeeeFloatWaveFormat(sampleRate, 2));
 			// volumeProvider = new VolumeSampleProvider(resampler.ToSampleProvider());
 
-			ISampleProvider sampleProvider = (loop ? new LoopStream(stream) : stream).ToSampleProvider();
+			ISampleProvider sampleProvider = _stream.ToSampleProvider();
 			if (sampleProvider.WaveFormat.SampleRate != SoundMixer.SampleRate)
 				sampleProvider = new WdlResamplingSampleProvider(sampleProvider, SoundMixer.SampleRate);
 			if (sampleProvider.WaveFormat.Channels == 1)
@@ -325,9 +404,6 @@ namespace MinorShift._Library
 				stream.Dispose();
 				stream = null;
 			}
-		}
-		public void setCount(int repeat)
-		{
 		}
 
 		public void close()

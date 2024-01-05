@@ -2240,25 +2240,25 @@ namespace MinorShift.Emuera.GameProc.Function
 					datFilename = soundArg.ConstStr;
 				else
 					datFilename = soundArg.Str.GetStrValue(exm);
-				int repeat = soundArg.Opt != null ? (int)soundArg.Opt.GetIntValue(exm) : 1;
+				int repeat = soundArg.Opt != null ? (int)Math.Max(soundArg.Opt.GetIntValue(exm), 1) : 1;
 				string filepath = System.IO.Path.GetFullPath(".\\sound\\" + datFilename);
+
 				if (System.IO.File.Exists(filepath))
 				{
-					for (int i = 0; i < sound.Length; i++)
+					int i;
+					for (i = 0; i < sound.Length; i++)
 					{
-						if (sound[i] == null) sound[i] = new Sound();
+						if (sound[i] == null)
+							sound[i] = new Sound();
 						//未使用もしくは再生完了してる要素を使う
 						if (!sound[i].isPlaying())
-						{
-							sound[i].setCount(repeat);
-							sound[i].play(filepath);
-							return;
-						}
+							break;
 					}
-					//上を抜けてきたら適当に0に入れる
-					sound[0].setCount(repeat);
-					sound[0].play(filepath);
-					return;
+					// if no available sounds were found use sound 0
+					if (i >= sound.Length)
+						i = 0;
+
+					sound[i].play(filepath, repeat);
 				}
 			}
 		}
@@ -2274,10 +2274,11 @@ namespace MinorShift.Emuera.GameProc.Function
 			{
 				for (int i = 0; i < sound.Length; i++)
 				{
-					if (sound[i] == null) sound[i] = new Sound();
-					if (sound[i].isPlaying()) sound[i].stop();
+					if (sound[i] == null)
+						sound[i] = new Sound();
+					if (sound[i].isPlaying())
+						sound[i].stop();
 				}
-				return;
 			}
 		}
 
@@ -2298,11 +2299,9 @@ namespace MinorShift.Emuera.GameProc.Function
 				else
 					datFilename = arg.Term.GetStrValue(exm);
 				string filepath = System.IO.Path.GetFullPath(".\\sound\\" + datFilename);
+
 				if (System.IO.File.Exists(filepath))
-				{
-					bgm.play(filepath, true);
-					return;
-				}
+					bgm.play(filepath, -1); // -1 means repeat indefinitely
 			}
 		}
 
@@ -2316,7 +2315,6 @@ namespace MinorShift.Emuera.GameProc.Function
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
 				bgm.stop();
-				return;
 			}
 		}
 
@@ -2333,10 +2331,10 @@ namespace MinorShift.Emuera.GameProc.Function
 				Int32 vol = (Int32)intExpArg.Term.GetIntValue(exm);
 				for (int i = 0; i < sound.Length; i++)
 				{
-					if (sound[i] == null) sound[i] = new Sound();
+					if (sound[i] == null)
+						sound[i] = new Sound();
 					sound[i].setVolume(vol);
 				}
-				return;
 			}
 		}
 		public sealed class SETBGMVOLUME_Instruction : AbstractInstruction
@@ -2351,7 +2349,6 @@ namespace MinorShift.Emuera.GameProc.Function
 				ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
 				Int32 vol = (Int32)intExpArg.Term.GetIntValue(exm);
 				bgm.setVolume(vol);
-				return;
 			}
 		}
 
