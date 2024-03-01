@@ -139,15 +139,18 @@ namespace MinorShift.Emuera.GameView
 		public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)
 		{
 			if (GlobalStatic.MainWindow == null) return;
-			var rect = IsRelative ? new Rectangle(PointX + xOffset, pointY + PointY, width, Height) 
-				: new Rectangle(xOffset, GlobalStatic.MainWindow.MainPicBox.Height - PointY - Height, width, Height);
+			var rect = IsRelative ? new Rectangle(PointX + xOffset, pointY + PointY, width + 2, Height) 
+				: new Rectangle(xOffset, GlobalStatic.MainWindow.MainPicBox.Height - PointY - Height, width + 2, Height); // 何故か+2pxが必要，なぞ
 
 			if (margin != null)
 				rect = new Rectangle(rect.X + margin[Direction.Left], rect.Y + margin[Direction.Top],
 					 rect.Width - margin[Direction.Left] - margin[Direction.Right], rect.Height - margin[Direction.Top] - margin[Direction.Bottom]);
 			graph.SetClip(rect, CombineMode.Replace);
 
+			var pxMode = graph.PixelOffsetMode;
+			graph.PixelOffsetMode = PixelOffsetMode.HighQuality; // ここを高品質にしておく、全体的高品質してもいいかな？
 			Shape.BoxBorder.DrawBorder(graph, rect, border, radius, borderColors, backgroundColor);
+			graph.PixelOffsetMode = pxMode;
 
 			if (border != null)
 				rect = new Rectangle(rect.X + border[Direction.Left], rect.Y + border[Direction.Top],

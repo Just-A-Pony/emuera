@@ -186,7 +186,7 @@ namespace MinorShift.Emuera.GameView
 
 		#region EM_私家版_HTML_divタグ
 		//public static ConsoleDisplayLine[] ButtonsToDisplayLines(List<ConsoleButtonString> buttonList, StringMeasure stringMeasure, bool nobr, bool temporary)
-		public static ConsoleDisplayLine[] ButtonsToDisplayLines(List<ConsoleButtonString> buttonList, StringMeasure stringMeasure, bool nobr, bool temporary, int divWidth = 0)
+		public static ConsoleDisplayLine[] ButtonsToDisplayLines(List<ConsoleButtonString> buttonList, StringMeasure stringMeasure, bool nobr, bool temporary, bool subDiv = false, int divWidth = 0)
 		#endregion
 		{
 			if (buttonList.Count == 0)
@@ -196,9 +196,10 @@ namespace MinorShift.Emuera.GameView
 			List<ConsoleButtonString> lineButtonList = new List<ConsoleButtonString>();
 			#region EM_私家版_HTML_divタグ
 			// int windowWidth = Config.DrawableWidth;
+			// bool firstLine = true;
 			int windowWidth = divWidth > 0 ? divWidth : Config.DrawableWidth;
+			bool firstLine = !subDiv; // divの中にIsLogicalLineが常にFalse
 			#endregion
-			bool firstLine = true;
 			for (int i = 0; i < buttonList.Count; i++)
 			{
 				if (buttonList[i] == null)
