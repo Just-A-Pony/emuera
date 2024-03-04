@@ -1594,7 +1594,7 @@ namespace MinorShift.Emuera.GameData.Function
 					if (0 <= idx && idx < dt.Rows.Count && dt.Columns.Contains(name))
 					{
 						var v = dt.Rows[(int)idx][name];
-						if (v != DBNull.Value) return (string)v;
+						if (v != DBNull.Value) return v.ToString();
 					}
 				}
 				return string.Empty;
