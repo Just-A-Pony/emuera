@@ -470,6 +470,8 @@ namespace MinorShift.Emuera.GameView
 				state.CurrentDivTag = parent.State.CurrentDivTag;
 				state.StartingSubDivision = parent.State.StartingSubDivision;
 				// state.SubDivisionXOffset = parent.State.SubDivisionXOffset;
+				state.FlagClearButton = parent.State.FlagClearButton;
+				state.FlagClearButtonTooltip = parent.State.FlagClearButtonTooltip;
 			}
 			#endregion
 			while (!st.EOS)
