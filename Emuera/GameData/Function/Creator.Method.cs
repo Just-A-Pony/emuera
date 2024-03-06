@@ -657,6 +657,29 @@ namespace MinorShift.Emuera.GameData.Function
 				return output[0];
 			}
 		}
+		private sealed class HtmlStringLinesMethod : FunctionMethod
+		{
+			public HtmlStringLinesMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(string), typeof(Int64) };
+				CanRestructure = false;
+			}
+
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				string str = arguments[0].GetStrValue(exm);
+				if (string.IsNullOrEmpty(str)) return 0;
+				var ret = 0;
+				do
+				{
+					string[] strs = MinorShift.Emuera.GameView.HtmlManager.HtmlSubString(str, (int)arguments[1].GetIntValue(exm));
+					str = strs[1];
+					ret++;
+				} while(!string.IsNullOrEmpty(str));
+				return ret;
+			}
+		}
 		private sealed class RegexpMatchMethod : FunctionMethod
 		{
 			public RegexpMatchMethod()
