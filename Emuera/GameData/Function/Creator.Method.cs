@@ -5029,7 +5029,7 @@ namespace MinorShift.Emuera.GameData.Function
 				SingleTerm term = ConfigData.Instance.GetConfigValueInERB(str, ref errMes);
 				if(errMes != null)
 					// throw new CodeEE(funcname + "関数:" + errMes);
-					throw new CodeEE(string.Format(Lang.Error.FuncPrefix.Text, Name));
+					throw new CodeEE(errMes);
 				return term;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)

@@ -409,9 +409,9 @@ namespace MinorShift.Emuera
 				if (item == null)
 					continue;
 				if (item.Name == key)
-						return item;
+					return item;
 				if (item.Text == key)
-						return item;
+					return item;
 				if (item.EngText == key)
 					return item;
 			}
@@ -484,7 +484,7 @@ namespace MinorShift.Emuera
 				return null;
 			}
 			SingleTerm term;
-			switch(item.Code)
+			switch (item.Code)
 			{
 				//<bool>
 				case ConfigCode.AutoSave://"オートセーブを行なう"
@@ -544,9 +544,58 @@ namespace MinorShift.Emuera
 					break;
 				default:
 				{
-						errMes = string.Format(trerror.NotAllowGetConfigValue.Text, text);
-					return null;
-				}
+						if (Enum.IsDefined(typeof(ConfigCode), item.Code))
+						{
+							switch (item.ValueToString())
+							{
+								case "YES":
+									term = new SingleTerm(1);
+									break;
+								case "NO":
+									term = new SingleTerm(0);
+									break;
+								default:
+									string val = item.ValueToString();
+									if (long.TryParse(val, out long i))
+										term = new SingleTerm(i);
+									else
+										term = new SingleTerm(val);
+									break;
+							}
+						}
+						else
+						{
+							errMes = string.Format(trerror.NotAllowGetConfigValue.Text, text);
+							return null;
+						}
+						break;
+						/** try-catchで解決しようとした名残
+						try
+						{
+							term = item.GetValue<bool>() == true ? new SingleTerm(1) : new SingleTerm(0) ;
+						}
+						catch
+						{
+							try
+							{
+								term = new SingleTerm(item.GetValue<int>());
+							}
+							catch
+							{
+								try
+								{
+									term = new SingleTerm(item.GetValue<string>());
+								}
+								catch
+								{
+									errMes = string.Format(trerror.NotAllowGetConfigValue.Text, text);
+									return null;
+								}
+							}
+						}
+						break;
+						**/
+					}
 			}
 			return term;
 		}
