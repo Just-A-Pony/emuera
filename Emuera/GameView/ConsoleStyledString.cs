@@ -116,6 +116,26 @@ namespace MinorShift.Emuera.GameView
 			#endregion
 		}
 
+		//Bitmap Cache
+		public void DrawToBitmap(Graphics graph, bool isSelecting, bool isBackLog, TextDrawingMode mode, int xOffset)
+		{
+			if (this.Error)
+				return;
+			Color color = this.Color;
+			if (isSelecting)
+				color = this.ButtonColor;
+			else if (isBackLog && !colorChanged)
+				color = Config.LogColor;
+
+			#region EM_私家版_描画拡張
+			if (mode == TextDrawingMode.GRAPHICS)
+				graph.DrawString(Str, Font, new SolidBrush(color), new Point(xOffset, 0));
+			else
+				// TextRenderer.DrawText(graph, Str, Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
+				TextRenderer.DrawText(graph, Str, Font, new Point(xOffset, 0), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
+			#endregion
+		}
+
 		public override void GDIDrawTo(int pointY, bool isSelecting, bool isBackLog)
 		{
 			if (this.Error)
