@@ -113,8 +113,6 @@ internal sealed partial class EmueraConsole : IDisposable
 	//ConsoleButtonString selectingButton = null;
 	//ConsoleButtonString lastSelectingButton = null;
 
-	System.Threading.CancellationTokenSource _cancellationTokenSource = new();
-
 	class ClientBackGroundImage : IComparable<ClientBackGroundImage>
 	{
 		/// <summary>
@@ -429,7 +427,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		Debug.WriteLine("File:Preload:End " + boottimeDebugStopwatch.ElapsedMilliseconds + "ms");
 
 		GlobalStatic.Console = this;
-		//GlobalStatic.MainWindow = window;
+		// GlobalStatic.MainWindow = window;
 		process = new GameProc.Process(this);
 		GlobalStatic.Process = process;
 		if (Program.DebugMode && Config.DebugShowWindow)
@@ -438,7 +436,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			window.Focus();
 		}
 		ClearDisplay();
-		if (!await process.Initialize(_cancellationTokenSource.Token))
+		if (!await process.Initialize())
 		{
 			state = ConsoleState.Error;
 			OutputLog(null);
@@ -446,7 +444,6 @@ internal sealed partial class EmueraConsole : IDisposable
 			RefreshStrings(true);
 			return;
 		}
-		if (_cancellationTokenSource.Token.IsCancellationRequested) return;
 		RunEmueraProgram("");
 		RefreshStrings(true);
 
@@ -657,7 +654,7 @@ internal sealed partial class EmueraConsole : IDisposable
 
 	public void AddBackgroundImage(string name, long depth, float opacity)
 	{
-		var spr = AppContents.GetSprite(name) as SpriteF; 
+		var spr = AppContents.GetSprite(name) as SpriteF;
 		if (spr == null)
 		{
 			return;
@@ -665,17 +662,18 @@ internal sealed partial class EmueraConsole : IDisposable
 		var bg = new ConsoleBackground(spr, opacity);
 		var pair = new KeyValuePair<long, ConsoleBackground>(depth, bg);
 		backgroundList.Add(pair);
-		backgroundList.Sort((v1, v2) => (v1.Key >= v2.Key)?-1:1);
+		backgroundList.Sort((v1, v2) => (v1.Key >= v2.Key) ? -1 : 1);
 		BakeBackground();
 	}
-	
+
 	public void ClearBackgroundImage()
 	{
 		backgroundList.Clear();
 		BakeBackground();
 	}
 
-	public void RemoveBackground(string key) {
+	public void RemoveBackground(string key)
+	{
 		backgroundList.RemoveAt(backgroundList.FindIndex((v) => v.Value.bgImage.Name == key));
 		BakeBackground();
 	}
@@ -685,7 +683,8 @@ internal sealed partial class EmueraConsole : IDisposable
 		{
 			bakedBackground = new Bitmap(width, height);
 			BakeBackground();
-		} else if (bakedBackground.Width != width || bakedBackground.Height != height)
+		}
+		else if (bakedBackground.Width != width || bakedBackground.Height != height)
 		{
 			bakedBackground.Dispose();
 			bakedBackground = new Bitmap(width, height);
@@ -700,7 +699,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		}
 		var graph = Graphics.FromImage(bakedBackground);
 		graph.Clear(Color.Transparent);
-		foreach (var pair in backgroundList) 
+		foreach (var pair in backgroundList)
 		{
 			var bg = pair.Value.bgImage;
 			var scaleW = bakedBackground.Width / (float)bg.BaseImage.Bitmap.Width;
@@ -791,8 +790,8 @@ internal sealed partial class EmueraConsole : IDisposable
 			return;
 		if (state != ConsoleState.WaitInput || inputReq.Timelimit <= 0 || timerID != inputReq.ID)
 		{
-				stopTimer();
-				return;
+			stopTimer();
+			return;
 		}
 		var elapsedMs = _genericTimerStopwatch.ElapsedMilliseconds;
 		if (elapsedMs >= timer_endTime)
@@ -1290,7 +1289,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		{
 			FileName = Config.TextEditor
 		};
-		var ignoreCaseCmp = StringComparison.OrdinalIgnoreCase; 
+		var ignoreCaseCmp = StringComparison.OrdinalIgnoreCase;
 		string fname = pos.Value.Filename.ToUpper();
 		if (fname.EndsWith(".CSV", ignoreCaseCmp))
 		{
@@ -1648,7 +1647,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			{
 				graph.DrawImage(bakedBackground, 0, 0);
 			}
-			
+
 			//1823 cbg追加
 			#region EM_私家版_描画拡張
 			if (escapedParts == null) escapedParts = new Dictionary<int, List<AConsoleDisplayPart>>();
@@ -2515,7 +2514,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		state = ConsoleState.Initializing;
 		PrintSingleLine(trsl.ReloadingErb.Text, true);
 		force_temporary = true;
-		await process.ReloadErb(_cancellationTokenSource.Token);
+		await process.ReloadErb();
 		force_temporary = false;
 		PrintSingleLine(trsl.ReloadCompleted.Text, true);
 		RefreshStrings(true);
@@ -2566,7 +2565,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		state = ConsoleState.Initializing;
 		PrintSingleLine(trsl.ReloadingErb.Text, true);
 		force_temporary = true;
-		await process.ReloadPartialErb(path, _cancellationTokenSource.Token);
+		await process.ReloadPartialErb(path);
 		force_temporary = false;
 		PrintSingleLine(trsl.ReloadCompleted.Text, true);
 		RefreshStrings(true);
@@ -2593,7 +2592,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			genericTimer.Enabled = false;
 			timer_suspended = true;
 		}
-		List<string> paths = new List<string>();
+		List<string> paths = [];
 		SearchOption op = SearchOption.AllDirectories;
 		if (!Config.SearchSubdirectory)
 			op = SearchOption.TopDirectoryOnly;
@@ -2614,7 +2613,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		state = ConsoleState.Initializing;
 		PrintSingleLine(trsl.ReloadingErb.Text, true);
 		force_temporary = true;
-		await process.ReloadPartialErb(paths, _cancellationTokenSource.Token);
+		await process.ReloadPartialErb(paths);
 		force_temporary = false;
 		PrintSingleLine(trsl.ReloadCompleted.Text, true);
 		RefreshStrings(true);
@@ -2663,10 +2662,6 @@ internal sealed partial class EmueraConsole : IDisposable
 		if (notRedraw)
 			redraw = ConsoleRedraw.None;
 		*/
-	}
-	public void InitializeCancel()
-	{
-		_cancellationTokenSource.Cancel();
 	}
 
 	public void Dispose()
