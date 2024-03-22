@@ -331,6 +331,9 @@ namespace MinorShift.Emuera.GameData.Function
 				["GDASHSTYLE"] = new GraphicsSetDashStyleMethod(),
 				["GETDOINGFUNCTION"] = new GetDoingFunctionMethod(),
 				#endregion
+
+				//Bitmap Cache
+				["BITMAP_CACHE_ENABLE"] = new BitmapCacheEnableMethod(),
 			};
 
 

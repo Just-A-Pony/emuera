@@ -181,6 +181,8 @@ namespace MinorShift.Emuera.GameView
 			else
 				line.SetAlignment(alignment);
 			line.LineNo = lineNo;
+			//Bitmap Cache
+			line.bitmapCacheEnabled = GlobalStatic.Console.bitmapCacheEnabledForNextLine;
 			displayLineList.Add(line);
 			lineNo++;
 			if (line.IsLogicalLine)

@@ -279,12 +279,13 @@ namespace MinorShift.Emuera.GameView
 			//	css.DrawTo(graph, pointY, isSelecting, isBackLog, mode);
 
 			//Bitmap Cache
-			if (strArray.Length > 1)
+			if (this.ParentLine.bitmapCacheEnabled && strArray.Length > 1)
 			{
 				if (bitmapCache == null)
 				{
 					int width = this.Width+1;
 					//^ Without +1, some things get cropped. I don't know why, probably a bug somewhere.
+					//TODO
 					int height = Config.FontSize;
 					bitmapCache = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 					Graphics g = Graphics.FromImage(bitmapCache);
