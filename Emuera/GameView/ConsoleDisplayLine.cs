@@ -58,6 +58,8 @@ namespace MinorShift.Emuera.GameView
 		public ConsoleButtonString[] Buttons{get{return buttons;}}
 		public DisplayLineAlignment Align{get{return align;}}
 		bool aligned = false;
+		//Bitmap Cache
+		public bool bitmapCacheEnabled = false;
 		public void SetAlignment(DisplayLineAlignment align, int customWidth = -1/*, int xOffset = 0*/)
 		{
 			if (aligned)

@@ -103,6 +103,10 @@ namespace MinorShift.Emuera.GameView
 			}
 			return 0;
 		}
+
+		//Bitmap Cache
+		public Bitmap bitmapCache = null;
+
 		ConsoleImagePart mask = null;
 		#endregion
 
@@ -273,6 +277,45 @@ namespace MinorShift.Emuera.GameView
 			#region EM_私家版_描画拡張
 			//foreach (AConsoleDisplayPart css in strArray)
 			//	css.DrawTo(graph, pointY, isSelecting, isBackLog, mode);
+
+			//Bitmap Cache
+			if (this.ParentLine.bitmapCacheEnabled && strArray.Length > 1)
+			{
+				if (bitmapCache == null)
+				{
+					int width = this.Width+1;
+					//^ Without +1, some things get cropped. I don't know why, probably a bug somewhere.
+					//TODO
+					int height = Config.FontSize;
+					bitmapCache = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+					Graphics g = Graphics.FromImage(bitmapCache);
+
+					int xOffset = 0;
+					foreach (AConsoleDisplayPart css in strArray)
+					{
+						if (css is not ConsoleStyledString) continue;
+						ConsoleStyledString willDrawHere = css as ConsoleStyledString;
+						willDrawHere.DrawToBitmap(g, isSelecting, isBackLog, mode, xOffset);
+						xOffset += css.Width;
+					}
+
+					nint index = GlobalStatic.Console.bitmapCacheArrayIndex;
+					ConsoleButtonString last = GlobalStatic.Console.bitmapCacheArray[index];
+					if (last != null)
+					{
+						last.bitmapCache.Dispose();
+						last.bitmapCache = null;
+					}
+					GlobalStatic.Console.bitmapCacheArray[index] = this;
+					index++;
+					if (index >= EmueraConsole.bitmapCacheArrayCap) index = 0;
+					GlobalStatic.Console.bitmapCacheArrayIndex = index;
+
+				}
+				graph.DrawImageUnscaled(bitmapCache, PointX, pointY);
+				return;
+			}
+
 			foreach (AConsoleDisplayPart css in strArray)
 			{
 				if (css is ConsoleDivPart div) continue;

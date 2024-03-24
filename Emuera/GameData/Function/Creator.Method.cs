@@ -7406,5 +7406,27 @@ namespace MinorShift.Emuera.GameData.Function
 		}
 
 		#endregion
+
+		//Bitmap Cache
+		#region Bitmap Cache
+		private sealed class BitmapCacheEnableMethod : FunctionMethod
+		{
+			public BitmapCacheEnableMethod()
+			{
+				ReturnType = typeof(Int64);
+				// argumentTypeArray = null;
+				argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int }, OmitStart = 1 },
+				};
+				CanRestructure = false;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				Int64 argument0 = arguments[0].GetIntValue(exm);
+				GlobalStatic.Console.bitmapCacheEnabledForNextLine = (argument0 != 0);
+				return 0;
+			}
+		}
+		#endregion
 	}
 }

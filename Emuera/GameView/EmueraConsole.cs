@@ -69,6 +69,12 @@ namespace MinorShift.Emuera.GameView
 		public Rikaichan rikaichan = new Rikaichan();
 		#endregion
 
+		//Bitmap Cache
+		public const nint bitmapCacheArrayCap = 256;
+		public ConsoleButtonString[] bitmapCacheArray = new ConsoleButtonString[bitmapCacheArrayCap];
+		public nint bitmapCacheArrayIndex = 0;
+		public bool bitmapCacheEnabledForNextLine = false;
+
 		public EmueraConsole(MainWindow parent)
 		{
 			window = parent;
