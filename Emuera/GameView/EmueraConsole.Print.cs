@@ -266,19 +266,19 @@ namespace MinorShift.Emuera.GameView
 			}
 		}
 
-        //空行であるかのチェック
-        public bool LastLineIsEmpty
-        {
-            get
-            {
-                if (displayLineList.Count == 0)
-                    return false;
-                return string.IsNullOrEmpty(displayLineList[displayLineList.Count - 1].ToString().Trim());
-            }
-        }
+		//空行であるかのチェック
+		public bool LastLineIsEmpty
+		{
+			get
+			{
+				if (displayLineList.Count == 0)
+					return false;
+				return string.IsNullOrEmpty(displayLineList[displayLineList.Count - 1].ToString().Trim());
+			}
+		}
 
-        //最終行を書き換え＋次の行追加時にはその行を再利用するように設定
-        public void PrintTemporaryLine(string str)
+		//最終行を書き換え＋次の行追加時にはその行を再利用するように設定
+		public void PrintTemporaryLine(string str)
 		{
 			PrintSingleLine(str, true);
 		}
@@ -731,10 +731,10 @@ namespace MinorShift.Emuera.GameView
 				filename = Program.WorkingDir + "emuera.log";
 
 			if (!filename.StartsWith(Program.WorkingDir, StringComparison.CurrentCultureIgnoreCase))
-            {
-                MessageBox.Show(trmb.CanOnlyOutputToSubDirectory.Text, trmb.FailedOutputLog.Text);
-                return false;
-            }
+			{
+				MessageBox.Show(trmb.CanOnlyOutputToSubDirectory.Text, trmb.FailedOutputLog.Text);
+				return false;
+			}
 
 			if (outputLog(filename))
 			{
@@ -756,8 +756,8 @@ namespace MinorShift.Emuera.GameView
 				return;
 			for (int i = 0; i < displayLineList.Count; i++)
 			{
-                #region EE_AnchorのCB機能移植
-                //builder.AppendLine(displayLineList[i].ToString());]
+				#region EE_AnchorのCB機能移植
+				//builder.AppendLine(displayLineList[i].ToString());]
 				builder.AppendLine(ClipboardProcessor.StripHTML(displayLineList[i].ToString()));
 				#endregion
 			}

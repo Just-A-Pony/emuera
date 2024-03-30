@@ -46,8 +46,8 @@ namespace MinorShift.Emuera.GameView
 				Generation = parent.NewButtonGeneration;
 				console.UpdateGeneration();
 			}
-            ErrPos = null;
-        }
+			ErrPos = null;
+		}
 		public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, string inputs)
 			: this(console, strs)
 		{
@@ -60,8 +60,8 @@ namespace MinorShift.Emuera.GameView
 				Generation = parent.NewButtonGeneration;
 				console.UpdateGeneration();
 			}
-            ErrPos = null;
-        }
+			ErrPos = null;
+		}
 
 		public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, Int64 input, string inputs)
 			: this(console, strs)
@@ -76,22 +76,22 @@ namespace MinorShift.Emuera.GameView
 				Generation = parent.NewButtonGeneration;
 				console.UpdateGeneration();
 			}
-            ErrPos = null;
-        }
+			ErrPos = null;
+		}
 		public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, string inputs, ScriptPosition pos)
-            : this(console, strs)
-        {
-            this.Inputs = inputs;
-            IsButton = true;
-            IsInteger = false;
+			: this(console, strs)
+		{
+			this.Inputs = inputs;
+			IsButton = true;
+			IsInteger = false;
 			getLastImg();
 			if (console != null)
 			{
 				Generation = parent.NewButtonGeneration;
 				console.UpdateGeneration();
 			}
-            ErrPos = pos;
-        }
+			ErrPos = pos;
+		}
 		public Int64 GetMappedColor(int pointX, int pointY)
 		{
 			if (mask != null) 

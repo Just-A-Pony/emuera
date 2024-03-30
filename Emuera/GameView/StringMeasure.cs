@@ -81,7 +81,7 @@ namespace MinorShift.Emuera.GameView
 				GDI.GdiMesureTextEnd(graph);
 			graph.Dispose();
 			bmp.Dispose();
-            sf.Dispose();
+			sf.Dispose();
 		}
 	}
 }

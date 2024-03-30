@@ -105,31 +105,31 @@ namespace MinorShift.Emuera.GameProc
 		private LogicalLine currentLine;
 		//private LogicalLine nextLine;
 		public int lineCount = 0;
-        public int currentMin = 0;
-        //private bool sequential;
+		public int currentMin = 0;
+		//private bool sequential;
 
 		public bool ScriptEnd
 		{
 			get
 			{
-                return functionList.Count == currentMin;
-            }
+				return functionList.Count == currentMin;
+			}
 		}
 
-        public int functionCount
-        {
-            get
-            {
-                return functionList.Count;
-            }
-        }
+		public int functionCount
+		{
+			get
+			{
+				return functionList.Count;
+			}
+		}
 
 		SystemStateCode sysStateCode = SystemStateCode.Title_Begin;
 		BeginType begintype = BeginType.NULL;
 		public bool isBegun { get { return (begintype != BeginType.NULL) ? true : false; } }
 
-        public LogicalLine CurrentLine { get { return currentLine; } set { currentLine = value; } }
-        public LogicalLine ErrorLine
+		public LogicalLine CurrentLine { get { return currentLine; } set { currentLine = value; } }
+		public LogicalLine ErrorLine
 		{
 			get
 			{
@@ -161,10 +161,10 @@ namespace MinorShift.Emuera.GameProc
 
 		public void ShiftNextLine()
 		{
-            currentLine = currentLine.NextLine;
-            //nextLine = nextLine.NextLine;
-            //RunningLine = null;
-            //sequential = true;
+			currentLine = currentLine.NextLine;
+			//nextLine = nextLine.NextLine;
+			//RunningLine = null;
+			//sequential = true;
 			//GlobalStatic.Process.lineCount++;
 			lineCount++;
 		}
@@ -175,9 +175,9 @@ namespace MinorShift.Emuera.GameProc
 		/// <param name="line"></param>
 		public void JumpTo(LogicalLine line)
 		{
-            currentLine = line;
-            lineCount++;
-            //sequential = false;
+			currentLine = line;
+			lineCount++;
+			//sequential = false;
 			//ShfitNextLine();
 		}
 		#region EE_FORCE_QUIT系
@@ -259,8 +259,8 @@ namespace MinorShift.Emuera.GameProc
 			if (Program.DebugMode && !isClone && GlobalStatic.Process.MethodStack() == 0)
 				console.DebugClearTraceLog();
 			foreach (CalledFunction called in functionList)
-                if (called.CurrentLabel.hasPrivDynamicVar)
-                    called.CurrentLabel.Out();
+				if (called.CurrentLabel.hasPrivDynamicVar)
+					called.CurrentLabel.Out();
 			functionList.Clear();
 			begintype = BeginType.NULL;
 		}
@@ -314,8 +314,8 @@ namespace MinorShift.Emuera.GameProc
 				console.DebugAddTraceLog("BEGIN:" + begintype.ToString());
 			}
 			foreach (CalledFunction called in functionList)
-                if (called.CurrentLabel.hasPrivDynamicVar)
-                    called.CurrentLabel.Out();
+				if (called.CurrentLabel.hasPrivDynamicVar)
+					called.CurrentLabel.Out();
 			functionList.Clear();
 			begintype = BeginType.NULL;
 			return;
@@ -336,18 +336,18 @@ namespace MinorShift.Emuera.GameProc
 		{
 			get
 			{
-                if (functionList.Count == currentMin)
-                    return null;
+				if (functionList.Count == currentMin)
+					return null;
 				return functionList[functionList.Count - 1].ReturnAddress;
 			}
 		}
 
-        public LogicalLine GetReturnAddressSequensial(int curerntDepth)
-        {
-            if (functionList.Count == currentMin)
-                return null;
-            return functionList[functionList.Count - curerntDepth - 1].ReturnAddress;
-        }
+		public LogicalLine GetReturnAddressSequensial(int curerntDepth)
+		{
+			if (functionList.Count == currentMin)
+				return null;
+			return functionList[functionList.Count - curerntDepth - 1].ReturnAddress;
+		}
 
 		public string Scope
 		{
@@ -380,8 +380,8 @@ namespace MinorShift.Emuera.GameProc
 			CalledFunction called = functionList[functionList.Count - 1];
 			if (called.IsJump)
 			{//JUMPした場合。即座にRETURN RESULTする。
-                if (called.TopLabel.hasPrivDynamicVar)
-                    called.TopLabel.Out();
+				if (called.TopLabel.hasPrivDynamicVar)
+					called.TopLabel.Out();
 				functionList.Remove(called);
 				if (Program.DebugMode)
 					console.DebugRemoveTraceLog();
@@ -390,38 +390,38 @@ namespace MinorShift.Emuera.GameProc
 			}
 			if (!called.IsEvent)
 			{
-                if (called.TopLabel.hasPrivDynamicVar)
-                    called.TopLabel.Out();
-                currentLine = null;
-            }
+				if (called.TopLabel.hasPrivDynamicVar)
+					called.TopLabel.Out();
+				currentLine = null;
+			}
 			else
 			{
-                if (called.CurrentLabel.hasPrivDynamicVar)
-                    called.CurrentLabel.Out();
+				if (called.CurrentLabel.hasPrivDynamicVar)
+					called.CurrentLabel.Out();
 				//#Singleフラグ付き関数で1が返された。
 				//1752 非0ではなく1と等価であることを見るように修正
 				//1756 全てを終了ではなく#PRIや#LATERのグループごとに修正
-                if (called.IsOnly)
-                    called.FinishEvent();
+				if (called.IsOnly)
+					called.FinishEvent();
 				else if ((called.HasSingleFlag) && (ret == 1))
 					called.ShiftNextGroup();
 				else
-                    called.ShiftNext();//次の同名関数に進む。
-                currentLine = called.CurrentLabel;//関数の始点(@～～)へ移動。呼ぶべき関数が無ければnull
-                if (called.CurrentLabel != null)
-                {
-                    lineCount++;
-                    if (called.CurrentLabel.hasPrivDynamicVar)
-                        called.CurrentLabel.In();
-                }
-            }
+					called.ShiftNext();//次の同名関数に進む。
+				currentLine = called.CurrentLabel;//関数の始点(@～～)へ移動。呼ぶべき関数が無ければnull
+				if (called.CurrentLabel != null)
+				{
+					lineCount++;
+					if (called.CurrentLabel.hasPrivDynamicVar)
+						called.CurrentLabel.In();
+				}
+			}
 			if (Program.DebugMode)
 				console.DebugRemoveTraceLog();
 			//関数終了
-            if (currentLine == null)
-            {
-                currentLine = called.ReturnAddress;
-                functionList.RemoveAt(functionList.Count - 1);
+			if (currentLine == null)
+			{
+				currentLine = called.ReturnAddress;
+				functionList.RemoveAt(functionList.Count - 1);
 				if (currentLine == null)
 				{
 					//この時点でfunctionListは空のはず
@@ -432,18 +432,18 @@ namespace MinorShift.Emuera.GameProc
 					}
 					return;
 				}
-                lineCount++;
-                //ShfitNextLine();
-                return;
+				lineCount++;
+				//ShfitNextLine();
+				return;
 			}
 			else if (Program.DebugMode)
 			{
 				FunctionLabelLine label = called.CurrentLabel;
 				console.DebugAddTraceLog(string.Format(trsl.DebugTraceCall.Text, label.LabelName, label.Position.Filename, label.Position.ToString()));
 			}
-            lineCount++;
-            //ShfitNextLine();
-            return;
+			lineCount++;
+			//ShfitNextLine();
+			return;
 		}
 
 		public void IntoFunction(CalledFunction call, UserDefinedFunctionArgument srcArgs, ExpressionMediator exm)
@@ -465,47 +465,47 @@ namespace MinorShift.Emuera.GameProc
 				else
 					console.DebugAddTraceLog(string.Format(trsl.DebugTraceCall.Text, label.LabelName, label.Position.Filename, label.Position.ToString()));
 			}
-            if (srcArgs != null)
-            {
-                //引数の値を確定させる
-                srcArgs.SetTransporter(exm);
-                //プライベート変数更新
-                if (call.TopLabel.hasPrivDynamicVar)
-                    call.TopLabel.In();
-                //更新した変数へ引数を代入
-                for (int i = 0; i < call.TopLabel.Arg.Length; i++)
-                {
-                    if (srcArgs.Arguments[i] != null)
-                    {
+			if (srcArgs != null)
+			{
+				//引数の値を確定させる
+				srcArgs.SetTransporter(exm);
+				//プライベート変数更新
+				if (call.TopLabel.hasPrivDynamicVar)
+					call.TopLabel.In();
+				//更新した変数へ引数を代入
+				for (int i = 0; i < call.TopLabel.Arg.Length; i++)
+				{
+					if (srcArgs.Arguments[i] != null)
+					{
 						if (call.TopLabel.Arg[i].Identifier.IsReference)
 							((ReferenceToken)(call.TopLabel.Arg[i].Identifier)).SetRef(srcArgs.TransporterRef[i]);
-                        else if (srcArgs.Arguments[i].GetOperandType() == typeof(Int64))
-                            call.TopLabel.Arg[i].SetValue(srcArgs.TransporterInt[i], exm);
-                        else
-                            call.TopLabel.Arg[i].SetValue(srcArgs.TransporterStr[i], exm);
-                    }
-                }
-            }
-            else//こっちに来るのはシステムからの呼び出し=引数は存在しない関数のみ ifネストの外に出していい気もしないでもないがはてさて
-            {
-                //プライベート変数更新
-                if (call.TopLabel.hasPrivDynamicVar)
-                    call.TopLabel.In();
-            }
+						else if (srcArgs.Arguments[i].GetOperandType() == typeof(Int64))
+							call.TopLabel.Arg[i].SetValue(srcArgs.TransporterInt[i], exm);
+						else
+							call.TopLabel.Arg[i].SetValue(srcArgs.TransporterStr[i], exm);
+					}
+				}
+			}
+			else//こっちに来るのはシステムからの呼び出し=引数は存在しない関数のみ ifネストの外に出していい気もしないでもないがはてさて
+			{
+				//プライベート変数更新
+				if (call.TopLabel.hasPrivDynamicVar)
+					call.TopLabel.In();
+			}
 			functionList.Add(call);
 			//sequential = false;
-            currentLine = call.CurrentLabel;
-            lineCount++;
-            //ShfitNextLine();
-        }
+			currentLine = call.CurrentLabel;
+			lineCount++;
+			//ShfitNextLine();
+		}
 
 		#region userdifinedmethod
 		public bool IsFunctionMethod
 		{
 			get
 			{
-                return functionList[currentMin].TopLabel.IsMethod;
-            }
+				return functionList[currentMin].TopLabel.IsMethod;
+			}
 		}
 
 		public SingleTerm MethodReturnValue = null;
@@ -528,17 +528,17 @@ namespace MinorShift.Emuera.GameProc
 			}
 			//OutはGetValue側で行う
 			//functionList[0].TopLabel.Out();
-            currentLine = functionList[functionList.Count - 1].ReturnAddress;
-            functionList.RemoveAt(functionList.Count - 1);
-            //nextLine = null;
-            MethodReturnValue = ret;
-            return;
+			currentLine = functionList[functionList.Count - 1].ReturnAddress;
+			functionList.RemoveAt(functionList.Count - 1);
+			//nextLine = null;
+			MethodReturnValue = ret;
+			return;
 		}
 
 		#endregion
 
 		bool isClone = false;
-        public bool IsClone { get { return isClone; } set { isClone = value; } }
+		public bool IsClone { get { return isClone; } set { isClone = value; } }
 
 		// functionListのコピーを必要とする呼び出し元が無かったのでコピーしないことにする。
 		public ProcessState Clone()
@@ -549,8 +549,8 @@ namespace MinorShift.Emuera.GameProc
 			//foreach (CalledFunction func in functionList)
 			//	ret.functionList.Add(func.Clone());
 			ret.currentLine = this.currentLine;
-            //ret.nextLine = this.nextLine;
-            //ret.sequential = this.sequential;
+			//ret.nextLine = this.nextLine;
+			//ret.sequential = this.sequential;
 			ret.sysStateCode = this.sysStateCode;
 			ret.begintype = this.begintype;
 			//ret.MethodReturnValue = this.MethodReturnValue;

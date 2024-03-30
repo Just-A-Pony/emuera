@@ -249,7 +249,7 @@ namespace MinorShift.Emuera
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.AllowFunctionOverloading, "システム関数の上書きを許可する", true);
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.WarnFunctionOverloading, "システム関数が上書きされたとき警告を表示する", true);
 			configArray[i++] = new ConfigItem<string>(ConfigCode.TextEditor, "関連づけるテキストエディタ", "notepad");
-            configArray[i++] = new ConfigItem<TextEditorType>(ConfigCode.EditorType, "テキストエディタコマンドライン指定", TextEditorType.USER_SETTING);
+			configArray[i++] = new ConfigItem<TextEditorType>(ConfigCode.EditorType, "テキストエディタコマンドライン指定", TextEditorType.USER_SETTING);
 			configArray[i++] = new ConfigItem<string>(ConfigCode.EditorArgument, "エディタに渡す行指定引数", "");
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.WarnNormalFunctionOverloading, "同名の非イベント関数が複数定義されたとき警告する", false);
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.CompatiErrorLine, "解釈不可能な行があっても実行する", false);
@@ -261,8 +261,8 @@ namespace MinorShift.Emuera
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.SystemAllowFullSpace, "全角スペースをホワイトスペースに含める", true);
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.SystemSaveInUTF8, "セーブデータをUTF-8で保存する", false);
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.CompatiLinefeedAs1739, "ver1739以前の非ボタン折り返しを再現する", false);
-            configArray[i++] = new ConfigItem<UseLanguage>(ConfigCode.useLanguage, "内部で使用する東アジア言語", UseLanguage.JAPANESE);
-            configArray[i++] = new ConfigItem<bool>(ConfigCode.AllowLongInputByMouse, "ONEINPUT系命令でマウスによる2文字以上の入力を許可する", false);
+			configArray[i++] = new ConfigItem<UseLanguage>(ConfigCode.useLanguage, "内部で使用する東アジア言語", UseLanguage.JAPANESE);
+			configArray[i++] = new ConfigItem<bool>(ConfigCode.AllowLongInputByMouse, "ONEINPUT系命令でマウスによる2文字以上の入力を許可する", false);
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.CompatiCallEvent, "イベント関数のCALLを許可する", false);
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.CompatiSPChara, "SPキャラを使用する", false);
 			
@@ -270,8 +270,8 @@ namespace MinorShift.Emuera
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.CompatiFuncArgOptional, "ユーザー関数の全ての引数の省略を許可する", false);
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.CompatiFuncArgAutoConvert, "ユーザー関数の引数に自動的にTOSTRを補完する", false);
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.SystemIgnoreTripleSymbol, "FORM中の三連記号を展開しない", false);
-            configArray[i++] = new ConfigItem<bool>(ConfigCode.TimesNotRigorousCalculation, "TIMESの計算をeramakerにあわせる", false);
-            //一文字変数の禁止オプションを考えた名残
+			configArray[i++] = new ConfigItem<bool>(ConfigCode.TimesNotRigorousCalculation, "TIMESの計算をeramakerにあわせる", false);
+			//一文字変数の禁止オプションを考えた名残
 			//configArray[i++] = new ConfigItem<bool>(ConfigCode.ForbidOneCodeVariable, "一文字変数の使用を禁止する", false);
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.SystemNoTarget, "キャラクタ変数の引数を補完しない", false);
 			configArray[i++] = new ConfigItem<bool>(ConfigCode.SystemIgnoreStringSet, "文字列変数の代入に文字列式を強制する", false);
@@ -315,7 +315,7 @@ namespace MinorShift.Emuera
 			replaceArray[i++] = new ConfigItem<List<Int64>>(ConfigCode.ExpLvDef, "EXPLVの初期値", new List<long>(new Int64[] { 0, 1, 4, 20, 50, 200 }));
 			replaceArray[i++] = new ConfigItem<List<Int64>>(ConfigCode.PalamLvDef, "PALAMLVの初期値", new List<long>(new Int64[] { 0, 100, 500, 3000, 10000, 30000, 60000, 100000, 150000, 250000 }));
 			replaceArray[i++] = new ConfigItem<Int64>(ConfigCode.pbandDef, "PBANDの初期値", 4);
-            replaceArray[i++] = new ConfigItem<Int64>(ConfigCode.RelationDef, "RELATIONの初期値", 0);
+			replaceArray[i++] = new ConfigItem<Int64>(ConfigCode.RelationDef, "RELATIONの初期値", 0);
 		}
 		*/
 
@@ -356,23 +356,23 @@ namespace MinorShift.Emuera
 		public T GetConfigValue<T>(ConfigCode code)
 		{
 			AConfigItem item = GetItem(code);
-            //if ((item != null) && (item is ConfigItem<T>))
+			//if ((item != null) && (item is ConfigItem<T>))
 				return ((ConfigItem<T>)item).Value;
-            //throw new ExeEE("GetConfigValueのCodeまたは型が不適切");
+			//throw new ExeEE("GetConfigValueのCodeまたは型が不適切");
 		}
 
 #region getitem
 		public AConfigItem GetItem(ConfigCode code)
 		{
 			AConfigItem item = GetConfigItem(code);
-            if (item == null)
-            {
-                item = GetReplaceItem(code);
-	            if (item == null)
-	            {
-	                item = GetDebugItem(code);
-	            }
-            }
+			if (item == null)
+			{
+				item = GetReplaceItem(code);
+				if (item == null)
+				{
+					item = GetDebugItem(code);
+				}
+			}
 			return item;
 		}
 		public AConfigItem GetItem(string key)
@@ -381,11 +381,11 @@ namespace MinorShift.Emuera
 			if (item == null)
 			{
 				item = GetReplaceItem(key);
-	            if (item == null)
-	            {
+				if (item == null)
+				{
 					item = GetDebugItem(key);
-	            }
-	        }
+				}
+			}
 			return item;
 		}
 
@@ -667,19 +667,19 @@ namespace MinorShift.Emuera
 			return true;
 		}
 
-        public bool ReLoadConfig()
-        {
-            //_fixed.configの中身が変わった場合、非固定になったものが保持されてしまうので、ここで一旦すべて解除
-            foreach (AConfigItem item in configArray)
-            {
-                if (item == null)
-                    continue;
-                if (item.Fixed)
-                    item.Fixed = false;
-            }
-            LoadConfig();
-            return true;
-        }
+		public bool ReLoadConfig()
+		{
+			//_fixed.configの中身が変わった場合、非固定になったものが保持されてしまうので、ここで一旦すべて解除
+			foreach (AConfigItem item in configArray)
+			{
+				if (item == null)
+					continue;
+				if (item.Fixed)
+					item.Fixed = false;
+			}
+			LoadConfig();
+			return true;
+		}
 
 		public bool LoadConfig()
 		{
@@ -706,7 +706,7 @@ namespace MinorShift.Emuera
 			}
 			if (needSave)
 				SaveConfig();
-            return true;
+			return true;
 		}
 
 		private bool loadConfig(string confPath, bool fix)
@@ -770,11 +770,11 @@ namespace MinorShift.Emuera
 							((ConfigItem<string>)item).Value = tokens[1];
 							continue;
 						}
-                        if (item.Code == ConfigCode.MaxLog && Program.AnalysisMode)
-                        {
-                            //解析モード時はここを上書きして十分な長さを確保する
-                            tokens[1] = "10000";
-                        }
+						if (item.Code == ConfigCode.MaxLog && Program.AnalysisMode)
+						{
+							//解析モード時はここを上書きして十分な長さを確保する
+							tokens[1] = "10000";
+						}
 						if ((item.TryParse(tokens[1])) && (fix))
 							item.Fixed = true;
 					}
@@ -812,16 +812,16 @@ namespace MinorShift.Emuera
 					if ((line.Length == 0) || (line[0] == ';'))
 						continue;
 					pos = new ScriptPosition(eReader.Filename, eReader.LineNo);
-                    string[] tokens = line.Split(new char[] { ',', ':' });
+					string[] tokens = line.Split(new char[] { ',', ':' });
 					if (tokens.Length < 2)
 						continue;
-                    string itemName = tokens[0].Trim();
-                    tokens[1] = line.Substring(tokens[0].Length + 1);
-                    if (string.IsNullOrEmpty(tokens[1].Trim()))
-                        continue;
-                    AConfigItem item = GetReplaceItem(itemName);
-                    if (item != null)
-                        item.TryParse(tokens[1]);
+					string itemName = tokens[0].Trim();
+					tokens[1] = line.Substring(tokens[0].Length + 1);
+					if (string.IsNullOrEmpty(tokens[1].Trim()))
+						continue;
+					AConfigItem item = GetReplaceItem(itemName);
+					if (item != null)
+						item.TryParse(tokens[1]);
 				}
 			}
 			catch (EmueraException ee)
@@ -913,7 +913,7 @@ namespace MinorShift.Emuera
 			}
 			finally { eReader.Dispose(); }
 			Config.SetDebugConfig(this);
-            return true;
+			return true;
 		err:
 			Config.SetDebugConfig(this);
 			return false;

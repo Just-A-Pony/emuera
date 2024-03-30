@@ -21,13 +21,13 @@ namespace MinorShift.Emuera.GameProc
 			string token = LexicalAnalyzer.ReadSingleIdentifier(st);//#～自体にはマクロ非適用
 			if (Config.ICFunction)
 				token = token.ToUpper();
-            //#行として不正な行でもAnalyzeに行って引っかかることがあるので、先に存在しない#～は弾いてしまう
-            if (token == null || (token != "SINGLE" && token != "LATER" && token != "PRI" && token != "ONLY" && token != "FUNCTION" && token != "FUNCTIONS" 
-                && token != "LOCALSIZE" && token != "LOCALSSIZE" && token != "DIM" && token != "DIMS"))
-            {
-                ParserMediator.Warn(trerror.CanNotInterpretSharpLine.Text, position, 1);
-                return false;
-            }
+			//#行として不正な行でもAnalyzeに行って引っかかることがあるので、先に存在しない#～は弾いてしまう
+			if (token == null || (token != "SINGLE" && token != "LATER" && token != "PRI" && token != "ONLY" && token != "FUNCTION" && token != "FUNCTIONS" 
+				&& token != "LOCALSIZE" && token != "LOCALSSIZE" && token != "DIM" && token != "DIMS"))
+			{
+				ParserMediator.Warn(trerror.CanNotInterpretSharpLine.Text, position, 1);
+				return false;
+			}
 			try
 			{
 				WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AllowAssignment);
@@ -204,19 +204,19 @@ namespace MinorShift.Emuera.GameProc
 								ParserMediator.Warn(string.Format(trerror.SharpHasNotValidValue.Text, token), position, 2);
 								break;
 							}
-                            //イベント関数では指定しても無視される
-                            if (label.IsEvent)
-                            {
-                                ParserMediator.Warn(string.Format(trerror.EventFuncIgnoreSpecified.Text, token, token.Substring(0, token.Length - 4)), position, 1);
-                                break;
-                            }
+							//イベント関数では指定しても無視される
+							if (label.IsEvent)
+							{
+								ParserMediator.Warn(string.Format(trerror.EventFuncIgnoreSpecified.Text, token, token.Substring(0, token.Length - 4)), position, 1);
+								break;
+							}
 							IOperandTerm arg = ExpressionParser.ReduceIntegerTerm(wc, TermEndWith.EoL);
-                            if ((!(arg.Restructure(null) is SingleTerm sizeTerm)) || (sizeTerm.GetOperandType() != typeof(Int64)))
-                            {
-                                ParserMediator.Warn(string.Format(trerror.SharpHasNotValidValue.Text, token), position, 2);
-                                break;
-                            }
-                            if (sizeTerm.Int <= 0)
+							if ((!(arg.Restructure(null) is SingleTerm sizeTerm)) || (sizeTerm.GetOperandType() != typeof(Int64)))
+							{
+								ParserMediator.Warn(string.Format(trerror.SharpHasNotValidValue.Text, token), position, 2);
+								break;
+							}
+							if (sizeTerm.Int <= 0)
 							{
 								ParserMediator.Warn(string.Format(trerror.LocalsizeLessThan1.Text, token, sizeTerm.Int.ToString()), position, 1);
 								break;
@@ -295,7 +295,7 @@ namespace MinorShift.Emuera.GameProc
 			try
 			{
 				int warnLevel = -1;
-                stream.ShiftNext();//@か$を除去
+				stream.ShiftNext();//@か$を除去
 				WordCollection wc = LexicalAnalyzer.Analyse(stream, LexEndWith.EoL, LexAnalyzeFlag.AllowAssignment);
 				if (wc.EOL || !(wc.Current is IdentifierWord))
 				{
@@ -398,15 +398,15 @@ namespace MinorShift.Emuera.GameProc
 				{
 					char op = stream.Current;
 					WordCollection wc = LexicalAnalyzer.Analyse(stream, LexEndWith.EoL, LexAnalyzeFlag.None);
-                    if ((!(wc.Current is OperatorWord opWT)) || ((opWT.Code != OperatorCode.Increment) && (opWT.Code != OperatorCode.Decrement)))
-                    {
-                        if (op == '+')
-                            errMes = trerror.StartedPlusButNotIncrement.Text;
-                        else
-                            errMes = trerror.StartedMinusButNotDecrement.Text;
-                        goto err;
-                    }
-                    wc.ShiftNext();
+					if ((!(wc.Current is OperatorWord opWT)) || ((opWT.Code != OperatorCode.Increment) && (opWT.Code != OperatorCode.Decrement)))
+					{
+						if (op == '+')
+							errMes = trerror.StartedPlusButNotIncrement.Text;
+						else
+							errMes = trerror.StartedMinusButNotDecrement.Text;
+						goto err;
+					}
+					wc.ShiftNext();
 					//token = EpressionParser.単語一個分取得(wc)
 					//token非変数
 					//token文字列形

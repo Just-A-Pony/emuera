@@ -66,7 +66,7 @@ namespace MinorShift.Emuera.Sub
 			if (reader == null)
 				throw new FileEE(trerror.InvalidStream.Text);
 			string str = reader.ReadLine();
-            if (str == null)
+			if (str == null)
 				throw new FileEE(trerror.NoNumToRead.Text);
 			if (!Int64.TryParse(str, out long ret))
 				throw new FileEE(trerror.CanNotInterpretNum.Text);
@@ -82,21 +82,21 @@ namespace MinorShift.Emuera.Sub
 				throw new FileEE(trerror.InvalidArray.Text);
 			int i = -1;
 			string str;
-            while (true)
-            {
-                i++;
-                str = reader.ReadLine();
-                if (str == null)
-                    throw new FileEE(trerror.UnexpectedSaveDataEnd.Text);
-                if (str.Equals(FINISHER, StringComparison.Ordinal))
-                    break;
-                if (i >= array.Length)//配列を超えて保存されていても動じないで読み飛ばす。
-                    continue;
-                if (!Int64.TryParse(str, out long integer))
-                    throw new FileEE(trerror.InvalidArray.Text);
-                array[i] = integer;
-            }
-            for (; i < array.Length; i++)//保存されている値が無いなら0に初期化
+			while (true)
+			{
+				i++;
+				str = reader.ReadLine();
+				if (str == null)
+					throw new FileEE(trerror.UnexpectedSaveDataEnd.Text);
+				if (str.Equals(FINISHER, StringComparison.Ordinal))
+					break;
+				if (i >= array.Length)//配列を超えて保存されていても動じないで読み飛ばす。
+					continue;
+				if (!Int64.TryParse(str, out long integer))
+					throw new FileEE(trerror.InvalidArray.Text);
+				array[i] = integer;
+			}
+			for (; i < array.Length; i++)//保存されている値が無いなら0に初期化
 				array[i] = 0;
 		}
 
@@ -212,9 +212,9 @@ namespace MinorShift.Emuera.Sub
 					throw new FileEE(trerror.InvalidSaveDataFormat.Text);
 				string key = str.Substring(0, index);
 				string valueStr = str.Substring(index + 1, str.Length - index - 1);
-                if (!Int64.TryParse(valueStr, out long value))
-                    throw new FileEE(trerror.InvalidArray.Text);
-                if (!intList.ContainsKey(key))
+				if (!Int64.TryParse(valueStr, out long value))
+					throw new FileEE(trerror.InvalidArray.Text);
+				if (!intList.ContainsKey(key))
 					intList.Add(key, value);
 			}
 			return intList;
@@ -246,9 +246,9 @@ namespace MinorShift.Emuera.Sub
 						throw new FileEE(trerror.InvalidSaveDataFormat.Text);
 					if (str.Equals(FINISHER, StringComparison.Ordinal))
 						break;
-                    if (!Int64.TryParse(str, out long value))
-                        throw new FileEE(trerror.InvalidArray.Text);
-                    valueList.Add(value);
+					if (!Int64.TryParse(str, out long value))
+						throw new FileEE(trerror.InvalidArray.Text);
+					valueList.Add(value);
 				}
 				if (!ret.ContainsKey(key))
 					ret.Add(key, valueList);

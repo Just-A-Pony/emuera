@@ -293,11 +293,11 @@ namespace MinorShift.Emuera.Sub
 				//保存されたデータの方が大きいとき。レアケースのはず
 				if (length0 < saveLength0)
 				{
-                    oriArray = refArray;
-                    //1818修正 サイズ違いの時にあふれないように/配列は最大まで確保、作業するのは重複部分だけ
-                    refArray = new Int64[Math.Max(length0, saveLength0)];
+					oriArray = refArray;
+					//1818修正 サイズ違いの時にあふれないように/配列は最大まで確保、作業するのは重複部分だけ
+					refArray = new Int64[Math.Max(length0, saveLength0)];
 
-                    length0 = Math.Min(length0, saveLength0);
+					length0 = Math.Min(length0, saveLength0);
 				}
 				while (true)
 				{
@@ -350,12 +350,12 @@ namespace MinorShift.Emuera.Sub
 
 				if (length0 < saveLength0 || length1 < saveLength1)
 				{
-                    oriArray = refArray;
-                    //1818修正 サイズ違いの時にあふれないように/配列は最大まで確保、作業するのは重複部分だけ
-                    refArray = new Int64[Math.Max(length0, saveLength0), Math.Max(length1, saveLength1)];
+					oriArray = refArray;
+					//1818修正 サイズ違いの時にあふれないように/配列は最大まで確保、作業するのは重複部分だけ
+					refArray = new Int64[Math.Max(length0, saveLength0), Math.Max(length1, saveLength1)];
 
-                    length0 = Math.Min(length0, saveLength0);
-                    length1 = Math.Min(length1, saveLength1);
+					length0 = Math.Min(length0, saveLength0);
+					length1 = Math.Min(length1, saveLength1);
 				}
 
 				while (true)
@@ -446,12 +446,12 @@ namespace MinorShift.Emuera.Sub
 				if (length0 < saveLength0 || length1 < saveLength1 || length2 < saveLength2)
 				{
 					oriArray = refArray;
-                    //1818修正 サイズ違いの時にあふれないように/配列は最大まで確保、作業するのは重複部分だけ
-                    refArray = new Int64[Math.Max(length0, saveLength0), Math.Max(length1, saveLength1), Math.Max(length2, saveLength2)];
+					//1818修正 サイズ違いの時にあふれないように/配列は最大まで確保、作業するのは重複部分だけ
+					refArray = new Int64[Math.Max(length0, saveLength0), Math.Max(length1, saveLength1), Math.Max(length2, saveLength2)];
 
-                    length0 = Math.Min(length0, saveLength0);
-                    length1 = Math.Min(length1, saveLength1);
-                    length2 = Math.Min(length2, saveLength2);
+					length0 = Math.Min(length0, saveLength0);
+					length1 = Math.Min(length1, saveLength1);
+					length2 = Math.Min(length2, saveLength2);
 				}
 
 				while (true)
@@ -568,11 +568,11 @@ namespace MinorShift.Emuera.Sub
 				//保存されたデータの方が大きいとき。レアケースのはず
 				if (length0 < saveLength0)
 				{
-                    oriArray = refArray;
-                    //1818修正 サイズ違いの時にあふれないように/配列は最大まで確保、作業するのは重複部分だけ
-                    refArray = new string[Math.Max(length0, saveLength0)];
+					oriArray = refArray;
+					//1818修正 サイズ違いの時にあふれないように/配列は最大まで確保、作業するのは重複部分だけ
+					refArray = new string[Math.Max(length0, saveLength0)];
 
-                    length0 = Math.Min(length0, saveLength0);
+					length0 = Math.Min(length0, saveLength0);
 				}
 				while (true)
 				{
@@ -619,12 +619,12 @@ namespace MinorShift.Emuera.Sub
 
 				if (length0 < saveLength0 || length1 < saveLength1)
 				{
-                    oriArray = refArray;
-                    //1818修正 サイズ違いの時にあふれないように/配列は最大まで確保、作業するのは重複部分だけ
-                    refArray = new string[Math.Max(length0, saveLength0), Math.Max(length1, saveLength1)];
+					oriArray = refArray;
+					//1818修正 サイズ違いの時にあふれないように/配列は最大まで確保、作業するのは重複部分だけ
+					refArray = new string[Math.Max(length0, saveLength0), Math.Max(length1, saveLength1)];
 
-                    length0 = Math.Min(length0, saveLength0);
-                    length1 = Math.Min(length1, saveLength1);
+					length0 = Math.Min(length0, saveLength0);
+					length1 = Math.Min(length1, saveLength1);
 				}
 
 				while (true)
@@ -703,13 +703,13 @@ namespace MinorShift.Emuera.Sub
 
 				if (length0 < saveLength0 || length1 < saveLength1 || length2 < saveLength2)
 				{
-                    oriArray = refArray;
-                    //1818修正 サイズ違いの時にあふれないように/配列は最大まで確保、作業するのは重複部分だけ
-                    refArray = new string[Math.Max(length0, saveLength0), Math.Max(length1, saveLength1), Math.Max(length2, saveLength2)];
+					oriArray = refArray;
+					//1818修正 サイズ違いの時にあふれないように/配列は最大まで確保、作業するのは重複部分だけ
+					refArray = new string[Math.Max(length0, saveLength0), Math.Max(length1, saveLength1), Math.Max(length2, saveLength2)];
 
-                    length0 = Math.Min(length0, saveLength0);
-                    length1 = Math.Min(length1, saveLength1);
-                    length2 = Math.Min(length2, saveLength2);
+					length0 = Math.Min(length0, saveLength0);
+					length1 = Math.Min(length1, saveLength1);
+					length2 = Math.Min(length2, saveLength2);
 				}
 
 				while (true)

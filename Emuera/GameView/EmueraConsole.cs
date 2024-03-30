@@ -53,7 +53,7 @@ namespace MinorShift.Emuera.GameView
 		//WaitOneStringWithTimer = 17,
 		//WaitAnyKey = 18,
 
-    }
+	}
 
 	//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
 	[global::System.Reflection.Obfuscation(Exclude=false)]
@@ -78,8 +78,8 @@ namespace MinorShift.Emuera.GameView
 		public EmueraConsole(MainWindow parent)
 		{
 			window = parent;
-            #region EE_AnchorのCB機能移植
-            CBProc = new ClipboardProcessor(parent);
+			#region EE_AnchorのCB機能移植
+			CBProc = new ClipboardProcessor(parent);
 			#endregion
 
 			//1.713 この段階でsetStBarを使用してはいけない
@@ -243,7 +243,7 @@ namespace MinorShift.Emuera.GameView
 		#endregion
 
 		const string ErrorButtonsText = "__openFileWithDebug__";
-        private readonly MainWindow window;
+		private readonly MainWindow window;
 		#region EE_MOUSEB
 		public MainWindow Window { get { return window; } }
 		#endregion
@@ -589,9 +589,9 @@ namespace MinorShift.Emuera.GameView
 
 		public void WaitInput(InputRequest req)
 		{
-            #region EE_AnchorのCB機能移植
+			#region EE_AnchorのCB機能移植
 			if (Config.CBUseClipboard)
-	            CBProc.Check(ClipboardProcessor.CBTriggers.InputWait);
+				CBProc.Check(ClipboardProcessor.CBTriggers.InputWait);
 			#endregion
 			state = ConsoleState.WaitInput;
 			inputReq = req;
@@ -1678,7 +1678,7 @@ namespace MinorShift.Emuera.GameView
 					if (tooltip_duration == 0 || window.ToolTip.OwnerDraw == true)
 					{
 						if (window.ToolTip.OwnerDraw == true)
-                        {
+						{
 							window.ToolTip.Draw += new DrawToolTipEventHandler(ToolTip_Draw);
 							window.ToolTip.Popup += new PopupEventHandler(ToolTip_Popup);
 						}
@@ -1790,9 +1790,9 @@ namespace MinorShift.Emuera.GameView
 		}
 
 		public void CustomToolTip(bool b)
-        {
+		{
 			window.ToolTip.OwnerDraw = b;
-        }
+		}
 
 		public void SetToolTipColor(Color foreColor, Color backColor)
 		{
@@ -1805,20 +1805,20 @@ namespace MinorShift.Emuera.GameView
 			window.ToolTip.InitialDelay = delay;
 		}
 
-        int tooltip_duration = 0;
+		int tooltip_duration = 0;
 		string tooltip_fontname = Config.FontName;
 		long tooltip_fontsize = Config.FontSize;
 		TextFormatFlags tooltip_format = 0;
 		bool tooltip_img = false;
 		public void SetToolTipDuration(int duration)
-        {
-            tooltip_duration = duration;
+		{
+			tooltip_duration = duration;
 			window.ToolTip.AutoPopDelay = duration;
-        }
+		}
 		public void SetToolTipFontName(string fn)
-        {
+		{
 			tooltip_fontname = fn;
-        }
+		}
 		public void SetToolTipFontSize(long fs)
 		{
 			tooltip_fontsize = fs;
@@ -1951,9 +1951,9 @@ namespace MinorShift.Emuera.GameView
 		{
 			ConsoleState temp_state = state;
 			runningERBfromMemory = true;
-            //スクリプト等が失敗した場合に備えて念のための保存
-            GlobalStatic.Process.saveCurrentState(false);
-            try
+			//スクリプト等が失敗した場合に備えて念のための保存
+			GlobalStatic.Process.saveCurrentState(false);
+			try
 			{
 				//デバッグコマンドはReadEnabledLineを通してないのでRename変換を入れる
 				if (Config.UseRenameFile && (com.IndexOf("[[", StringComparison.Ordinal) >= 0) && (com.IndexOf("]]", StringComparison.Ordinal) >= 0))
@@ -2037,9 +2037,9 @@ namespace MinorShift.Emuera.GameView
 			}
 			finally
 			{
-                //確実に元の状態に戻す
-                GlobalStatic.Process.loadPrevState();
-                runningERBfromMemory = false;
+				//確実に元の状態に戻す
+				GlobalStatic.Process.loadPrevState();
+				runningERBfromMemory = false;
 				state = temp_state;
 			}
 		}
@@ -2390,21 +2390,21 @@ namespace MinorShift.Emuera.GameView
 			//{
 			//    MessageBox.Show("エラー発生時はこの機能は使えません");
 			//}
-            forceStopTimer();
+			forceStopTimer();
 			ClearDisplay();
 			//動的作成の分だけは削除する
 			AppContents.UnloadGraphicList();
-            redraw = ConsoleRedraw.Normal;
-            UseUserStyle = false;
-            userStyle = new StringStyle(Config.ForeColor, FontStyle.Regular, null);
-            emuera.BeginTitle();
+			redraw = ConsoleRedraw.Normal;
+			UseUserStyle = false;
+			userStyle = new StringStyle(Config.ForeColor, FontStyle.Regular, null);
+			emuera.BeginTitle();
 			ReadAnyKey(false, false);
 			callEmueraProgram("");
 			RefreshStrings(true);
 		}
 
 		bool force_temporary = false;
-        bool timer_suspended = false;
+		bool timer_suspended = false;
 		ConsoleState prevState;
 		InputRequest prevReq;
 
@@ -2420,43 +2420,43 @@ namespace MinorShift.Emuera.GameView
 				MessageBox.Show(trerror.CanNotUseWhenInitialize.Text);
 				return;
 			}
-            bool notRedraw = false;
-            if (redraw == ConsoleRedraw.None)
-            {
-                notRedraw = true;
-                redraw = ConsoleRedraw.Normal;
-            }
-            if (timer.Enabled)
-            {
+			bool notRedraw = false;
+			if (redraw == ConsoleRedraw.None)
+			{
+				notRedraw = true;
+				redraw = ConsoleRedraw.Normal;
+			}
+			if (timer.Enabled)
+			{
 				timer.Enabled = false;
-                timer_suspended = true;
-            }
-            prevState = state;
+				timer_suspended = true;
+			}
+			prevState = state;
 			prevReq = inputReq;
 			state = ConsoleState.Initializing;
 			PrintSingleLine(trsl.ReloadingErb.Text, true);
 			force_temporary = true;
 			emuera.ReloadErb();
 			force_temporary = false;
-            PrintSingleLine(trsl.ReloadCompleted.Text, true);
+			PrintSingleLine(trsl.ReloadCompleted.Text, true);
 			RefreshStrings(true);
-            //強制的にボタン世代が切り替わるのを防ぐ
-            updatedGeneration = true;
-            if (notRedraw)
-                redraw = ConsoleRedraw.None;
-        }
+			//強制的にボタン世代が切り替わるのを防ぐ
+			updatedGeneration = true;
+			if (notRedraw)
+				redraw = ConsoleRedraw.None;
+		}
 
 		public void ReloadErbFinished()
 		{
 			state = prevState;
 			inputReq = prevReq;
 			PrintSingleLine(" ");
-            if (timer_suspended)
-            {
-                timer_suspended = false;
-                timer.Enabled = true;
+			if (timer_suspended)
+			{
+				timer_suspended = false;
+				timer.Enabled = true;
 				//タイマー待機中の時間ずれは修正しない。タイマー中にリロードしたらほぼ強制タイムアウトする程度は仕様のうちであろう。
-            }
+			}
 		}
 
 		public void ReloadPartialErb(List<string> path)
@@ -2471,35 +2471,35 @@ namespace MinorShift.Emuera.GameView
 				MessageBox.Show(trerror.CanNotUseWhenInitialize.Text);
 				return;
 			}
-            bool notRedraw = false;
-            if (redraw == ConsoleRedraw.None)
-            {
-                notRedraw = true;
-                redraw = ConsoleRedraw.Normal;
-            }
-            if (timer.Enabled)
-            {
+			bool notRedraw = false;
+			if (redraw == ConsoleRedraw.None)
+			{
+				notRedraw = true;
+				redraw = ConsoleRedraw.Normal;
+			}
+			if (timer.Enabled)
+			{
 				timer.Enabled = false;
-                timer_suspended = true;
-            }
+				timer_suspended = true;
+			}
 			prevState = state;
 			prevReq = inputReq;
 			state = ConsoleState.Initializing;
-            PrintSingleLine(trsl.ReloadingErb.Text, true);
+			PrintSingleLine(trsl.ReloadingErb.Text, true);
 			force_temporary = true;
 			emuera.ReloadPartialErb(path);
 			force_temporary = false;
-            PrintSingleLine(trsl.ReloadCompleted.Text, true);
+			PrintSingleLine(trsl.ReloadCompleted.Text, true);
 			RefreshStrings(true);
-            //強制的にボタン世代が切り替わるのを防ぐ
-            updatedGeneration = true;
-            if (notRedraw)
-                redraw = ConsoleRedraw.None;
-        }
+			//強制的にボタン世代が切り替わるのを防ぐ
+			updatedGeneration = true;
+			if (notRedraw)
+				redraw = ConsoleRedraw.None;
+		}
 
 		public void ReloadFolder(string erbPath)
 		{
-            if (state == ConsoleState.Error)
+			if (state == ConsoleState.Error)
 			{
 				MessageBox.Show(trerror.CanNotUseWhenError.Text);
 				return;
@@ -2509,12 +2509,12 @@ namespace MinorShift.Emuera.GameView
 				MessageBox.Show(trerror.CanNotUseWhenInitialize.Text);
 				return;
 			}
-            if (timer.Enabled)
-            {
+			if (timer.Enabled)
+			{
 				timer.Enabled = false;
-                timer_suspended = true;
-            }
-            List<string> paths = new List<string>();
+				timer_suspended = true;
+			}
+			List<string> paths = new List<string>();
 			SearchOption op = SearchOption.AllDirectories;
 			if (!Config.SearchSubdirectory)
 				op = SearchOption.TopDirectoryOnly;
@@ -2522,26 +2522,26 @@ namespace MinorShift.Emuera.GameView
 			for (int i = 0; i < fnames.Length; i++)
 				if (Path.GetExtension(fnames[i]).ToUpper() == ".ERB")
 					paths.Add(fnames[i]);
-            bool notRedraw = false;
-            if (redraw == ConsoleRedraw.None)
-            {
-                notRedraw = true;
-                redraw = ConsoleRedraw.Normal;
-            }
+			bool notRedraw = false;
+			if (redraw == ConsoleRedraw.None)
+			{
+				notRedraw = true;
+				redraw = ConsoleRedraw.Normal;
+			}
 			prevState = state;
 			prevReq = inputReq;
 			state = ConsoleState.Initializing;
-            PrintSingleLine(trsl.ReloadingErb.Text, true);
+			PrintSingleLine(trsl.ReloadingErb.Text, true);
 			force_temporary = true;
-            emuera.ReloadPartialErb(paths);
+			emuera.ReloadPartialErb(paths);
 			force_temporary = false;
-            PrintSingleLine(trsl.ReloadCompleted.Text, true);
+			PrintSingleLine(trsl.ReloadCompleted.Text, true);
 			RefreshStrings(true);
-            //強制的にボタン世代が切り替わるのを防ぐ
-            updatedGeneration = true;
-            if (notRedraw)
-                redraw = ConsoleRedraw.None;
-        }
+			//強制的にボタン世代が切り替わるのを防ぐ
+			updatedGeneration = true;
+			if (notRedraw)
+				redraw = ConsoleRedraw.None;
+		}
 		public void ReloadResource()
 		{
 			/*

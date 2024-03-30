@@ -557,7 +557,7 @@ namespace MinorShift.Emuera.GameView
 			#endregion
 			string str = css.Str;
 			Font font = css.Font;
-            int highLength = str.Length;//widthLimitを超える最低の文字index(文字数-1)。
+			int highLength = str.Length;//widthLimitを超える最低の文字index(文字数-1)。
 			int lowLength = 0;//超えない最大の文字index。
 			//int i = (int)(widthLimit / fontDisplaySize);//およその文字数を推定
 			//if (i > str.Length - 1)//配列の外を参照しないように。
@@ -568,7 +568,7 @@ namespace MinorShift.Emuera.GameView
 			while ((highLength - lowLength) > 1)//差が一文字以下になるまで繰り返す。
 			{
 				test = str.Substring(0, i);
-                if (sm.GetDisplayLength(test, font) <= widthLimit)//サイズ内ならlowLengthを更新。文字数を増やす。
+				if (sm.GetDisplayLength(test, font) <= widthLimit)//サイズ内ならlowLengthを更新。文字数を増やす。
 				{
 					lowLength = i;
 					i++;

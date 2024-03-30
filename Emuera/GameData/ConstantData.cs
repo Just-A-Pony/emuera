@@ -79,7 +79,7 @@ namespace MinorShift.Emuera.GameData
 
 
 		public int[] MaxDataList = new int[countNameCsv];
-        readonly HashSet<VariableCode> changedCode = new HashSet<VariableCode>();
+		readonly HashSet<VariableCode> changedCode = new HashSet<VariableCode>();
 		
 		public int[] VariableIntArrayLength;
 		public int[] VariableStrArrayLength;
@@ -282,14 +282,14 @@ namespace MinorShift.Emuera.GameData
 				ParserMediator.Warn(string.Format(trerror.CanNotChangeVarSize.Text, id.ToString()), position, 1);
 				return;
 			}
-            int length2 = 0;
-            int length3 = 0;
+			int length2 = 0;
+			int length3 = 0;
 			if (!int.TryParse(tokens[1], out int length))
 			{
 				ParserMediator.Warn(string.Format(trerror.CanNotInterpretVarName.Text, "2"), position, 1);
 				return;
 			}
-            //1820a16 変数禁止指定 負の値を指定する
+			//1820a16 変数禁止指定 負の値を指定する
 			if (length <= 0)
 			{
 				if (length == 0)
@@ -302,17 +302,17 @@ namespace MinorShift.Emuera.GameData
 					ParserMediator.Warn(trerror.CanNotDisableVarArrayLengthIsNegative.Text, position, 2);
 					return;
 				}
-                if (tokens.Length > 2 && tokens[2].Length > 0 && tokens[2].Trim().Length > 0 && char.IsDigit((tokens[2].Trim())[0]))
-                {
-                    ParserMediator.Warn(string.Format(trerror.IgnoreNDData.Text, "1"), position, 0);
-                }
+				if (tokens.Length > 2 && tokens[2].Length > 0 && tokens[2].Trim().Length > 0 && char.IsDigit((tokens[2].Trim())[0]))
+				{
+					ParserMediator.Warn(string.Format(trerror.IgnoreNDData.Text, "1"), position, 0);
+				}
 				length = 0;
 				goto check1break;
 			}
 			if (id.IsArray1D)
 			{
-                if (tokens.Length > 2 && tokens[2].Length > 0 && tokens[2].Trim().Length > 0 && char.IsDigit((tokens[2].Trim())[0]))
-                {
+				if (tokens.Length > 2 && tokens[2].Length > 0 && tokens[2].Trim().Length > 0 && char.IsDigit((tokens[2].Trim())[0]))
+				{
 					ParserMediator.Warn(string.Format(trerror.IgnoreNDData.Text, "1"), position, 0);
 				}
 				if (id.IsLocal && length < 1)
@@ -338,8 +338,8 @@ namespace MinorShift.Emuera.GameData
 					ParserMediator.Warn(string.Format(trerror.MissingVarSizeArg.Text, "2"), position, 1);
 					return;
 				}
-                if (tokens.Length > 3 && tokens[3].Length > 0 && tokens[3].Trim().Length > 0 && char.IsDigit((tokens[3].Trim())[0]))
-                {
+				if (tokens.Length > 3 && tokens[3].Length > 0 && tokens[3].Trim().Length > 0 && char.IsDigit((tokens[3].Trim())[0]))
+				{
 					ParserMediator.Warn(string.Format(trerror.IgnoreNDData.Text, "2"), position, 0);
 				}
 				if (!int.TryParse(tokens[2], out length2))
@@ -370,8 +370,8 @@ namespace MinorShift.Emuera.GameData
 					ParserMediator.Warn(string.Format(trerror.MissingVarSizeArg.Text, "3"), position, 1);
 					return;
 				}
-                if (tokens.Length > 4 && tokens[4].Length > 0 && tokens[4].Trim().Length > 0 && char.IsDigit((tokens[4].Trim())[0]))
-                {
+				if (tokens.Length > 4 && tokens[4].Length > 0 && tokens[4].Trim().Length > 0 && char.IsDigit((tokens[4].Trim())[0]))
+				{
 					ParserMediator.Warn(string.Format(trerror.IgnoreNDData.Text, "3"), position, 0);
 				}
 				if (!int.TryParse(tokens[2], out length2))
@@ -529,7 +529,7 @@ namespace MinorShift.Emuera.GameData
 			_decideActualArraySize_sub(VariableCode.EXP, VariableCode.EXPNAME, CharacterIntArrayLength, position);
 			_decideActualArraySize_sub(VariableCode.MARK, VariableCode.MARKNAME, CharacterIntArrayLength, position);
 			_decideActualArraySize_sub(VariableCode.BASE, VariableCode.BASENAME, CharacterIntArrayLength, position);
-            _decideActualArraySize_sub(VariableCode.SOURCE, VariableCode.SOURCENAME, CharacterIntArrayLength, position);
+			_decideActualArraySize_sub(VariableCode.SOURCE, VariableCode.SOURCENAME, CharacterIntArrayLength, position);
 			_decideActualArraySize_sub(VariableCode.EX, VariableCode.EXNAME, CharacterIntArrayLength, position);
 			_decideActualArraySize_sub(VariableCode.EQUIP, VariableCode.EQUIPNAME, CharacterIntArrayLength, position);
 			_decideActualArraySize_sub(VariableCode.TEQUIP, VariableCode.TEQUIPNAME, CharacterIntArrayLength, position);
@@ -548,12 +548,12 @@ namespace MinorShift.Emuera.GameData
 			_decideActualArraySize_sub(VariableCode.DAY, VariableCode.DAYNAME, VariableIntArrayLength, position);
 			_decideActualArraySize_sub(VariableCode.TIME, VariableCode.TIMENAME, VariableIntArrayLength, position);
 			_decideActualArraySize_sub(VariableCode.MONEY, VariableCode.MONEYNAME, VariableIntArrayLength, position);
-            #endregion
+			#endregion
 
 
-            //PALAM(JUEL込み)
-            //PALAMかJUELが変わっているときは大きい方をとる
-            if (changedCode.Contains(VariableCode.PALAM) || changedCode.Contains(VariableCode.JUEL))
+			//PALAM(JUEL込み)
+			//PALAMかJUELが変わっているときは大きい方をとる
+			if (changedCode.Contains(VariableCode.PALAM) || changedCode.Contains(VariableCode.JUEL))
 			{
 				int palamJuelMax = Math.Max(CharacterIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.PALAM)]
 						, CharacterIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.JUEL)]);
@@ -694,9 +694,9 @@ namespace MinorShift.Emuera.GameData
 				if (!string.IsNullOrEmpty(tmpl.Name) && !relationDic.ContainsKey(tmpl.Name))
 					relationDic.Add(tmpl.Name, (int)tmpl.No);
 				if (!string.IsNullOrEmpty(tmpl.Callname) && !relationDic.ContainsKey(tmpl.Callname))
-                    relationDic.Add(tmpl.Callname, (int)tmpl.No);
+					relationDic.Add(tmpl.Callname, (int)tmpl.No);
 				if (!string.IsNullOrEmpty(tmpl.Nickname) && !relationDic.ContainsKey(tmpl.Nickname))
-                    relationDic.Add(tmpl.Nickname, (int)tmpl.No);
+					relationDic.Add(tmpl.Nickname, (int)tmpl.No);
 			}
 		}
 		#region EE_ERD
@@ -762,19 +762,19 @@ namespace MinorShift.Emuera.GameData
 		{
 			if (string.IsNullOrEmpty(str))
 				return false;
-            Dictionary<string, int> dic;
-            if (varCode == VariableCode.CDFLAG)
-            {
-                // dic = GetKeywordDictionary(out _, VariableCode.CDFLAGNAME1, -1);
+			Dictionary<string, int> dic;
+			if (varCode == VariableCode.CDFLAG)
+			{
+				// dic = GetKeywordDictionary(out _, VariableCode.CDFLAGNAME1, -1);
 				dic = GetKeywordDictionary(out _, VariableCode.CDFLAGNAME1, -1, null);
 				if ((dic == null) || (!dic.ContainsKey(str)))
-                   // dic = GetKeywordDictionary(out _, VariableCode.CDFLAGNAME2, -1);
+				   // dic = GetKeywordDictionary(out _, VariableCode.CDFLAGNAME2, -1);
 					dic = GetKeywordDictionary(out _, VariableCode.CDFLAGNAME2, -1, null);
 				if (dic == null)
-                    return false;
-                return dic.ContainsKey(str);
-            }
-            // dic = GetKeywordDictionary(out _, varCode, -1);
+					return false;
+				return dic.ContainsKey(str);
+			}
+			// dic = GetKeywordDictionary(out _, varCode, -1);
 			dic = GetKeywordDictionary(out _, varCode, -1, null);
 			if (dic == null)
 				return false;
@@ -789,9 +789,9 @@ namespace MinorShift.Emuera.GameData
 				throw new CodeEE(string.Format(Lang.Error.NotDefinedErdKey.Text, varname, str));
 			//CDFLAGの判定も割とガバガバなのでこれで良い（暴論）
 			if (dim == 2)
-            {
+			{
 				if (!erdNameToIntDics.ContainsKey(varname + "@1") || !erdNameToIntDics[varname + "@1"].ContainsKey(str))
-                {
+				{
 					if (!erdNameToIntDics.ContainsKey(varname + "@2") || !erdNameToIntDics[varname + "@2"].ContainsKey(str))
 						throw new CodeEE(string.Format(Lang.Error.NotDefinedErdKey.Text, varname, str));
 				}
@@ -801,7 +801,7 @@ namespace MinorShift.Emuera.GameData
 				if (!erdNameToIntDics.ContainsKey(varname + "@1") || !erdNameToIntDics[varname + "@1"].ContainsKey(str))
 				{
 					if (!erdNameToIntDics.ContainsKey(varname + "@2") || !erdNameToIntDics[varname + "@2"].ContainsKey(str))
-                    {
+					{
 						if (!erdNameToIntDics.ContainsKey(varname + "@3") || !erdNameToIntDics[varname + "@3"].ContainsKey(str))
 							throw new CodeEE(string.Format(Lang.Error.NotDefinedErdKey.Text, varname, str));
 					}
@@ -851,14 +851,14 @@ namespace MinorShift.Emuera.GameData
 				if (!erdNameToIntDics.ContainsKey(varname))
 					return false;
 				dic = erdNameToIntDics[varname];
-                try
-                {
+				try
+				{
 					ret = dic.First(x => x.Value == value).Key;
 				}
-                catch
-                {
+				catch
+				{
 					return false;
-                }
+				}
 				if (!string.IsNullOrEmpty(ret))
 					return true;
 			}
@@ -875,8 +875,8 @@ namespace MinorShift.Emuera.GameData
 			Dictionary<string, int> dic = GetKeywordDictionary(out string errPos, code, index, null);
 			#endregion
 			if (dic.TryGetValue(key, out int ret))
-                return ret;
-            if (errPos == null)
+				return ret;
+			if (errPos == null)
 				throw new CodeEE(string.Format(Lang.Error.CanNotSpecifiedByString.Text, code.ToString()));
 			else
 				throw new CodeEE(string.Format(Lang.Error.NotDefinedKey.Text, errPos, key));
@@ -1170,14 +1170,14 @@ namespace MinorShift.Emuera.GameData
 		}
 
 		#region EE_重複定義の確認
-        public bool IsDefinedCsvVar(string varname)
+		public bool IsDefinedCsvVar(string varname)
 		{
 			for (int i = (int)(VariableCode.ABLNAME & VariableCode.__LOWERCASE__); i < (int)(VariableCode.__COUNT_CSV_STRING_ARRAY_1D__ & VariableCode.__LOWERCASE__); i++)
 			{
 				var dic = nameToIntDics[i];
 				if (dic.ContainsKey(varname)){
 					return true;
-                }
+				}
 			}
 			return false;
 		}
@@ -1509,8 +1509,8 @@ namespace MinorShift.Emuera.GameData
 			if (chara == null)
 				return;
 			int length;
-            Dictionary<int, Int64> intArray = null;
-            Dictionary<int, string> strArray = null;
+			Dictionary<int, Int64> intArray = null;
+			Dictionary<int, string> strArray = null;
 			Dictionary<string, int> namearray;
 
 			string errPos = null;
@@ -1674,7 +1674,7 @@ namespace MinorShift.Emuera.GameData
 			if (!File.Exists(csvPath))
 				return;
 			string[] target = names[targetIndex];
-            HashSet<int> defined = new HashSet<int>();
+			HashSet<int> defined = new HashSet<int>();
 			EraStreamReader eReader = new EraStreamReader(false);
 			#region EE_ERD
 			// if (!eReader.Open(csvPath))
@@ -1702,12 +1702,12 @@ namespace MinorShift.Emuera.GameData
 						ParserMediator.Warn(trerror.MissingComma.Text, position, 1);
 						continue;
 					}
-                    if (!Int32.TryParse(tokens[0], out int index))
-                    {
-                        ParserMediator.Warn(trerror.FirstValueCanNotConvertToInt.Text, position, 1);
-                        continue;
-                    }
-                    if (target.Length == 0)
+					if (!Int32.TryParse(tokens[0], out int index))
+					{
+						ParserMediator.Warn(trerror.FirstValueCanNotConvertToInt.Text, position, 1);
+						continue;
+					}
+					if (target.Length == 0)
 					{
 						ParserMediator.Warn(trerror.ProhibitedArrayName.Text, position, 2);
 						break;
@@ -1717,19 +1717,19 @@ namespace MinorShift.Emuera.GameData
 						ParserMediator.Warn(string.Format(trerror.OoRArray.Text, index.ToString()), position, 1);
 						continue;
 					}
-                    if (!defined.Add(index))
-                        ParserMediator.Warn(string.Format(trerror.VarKeyAreadyDefined.Text, index.ToString()), position, 1);
+					if (!defined.Add(index))
+						ParserMediator.Warn(string.Format(trerror.VarKeyAreadyDefined.Text, index.ToString()), position, 1);
 					target[index] = tokens[1];
 					if ((targetI != null) && (tokens.Length >= 3))
 					{
 
-                        if (!Int64.TryParse(tokens[2].TrimEnd(), out long price))
-                        {
-                            ParserMediator.Warn(trerror.CanNotReadAmountOfMoney.Text, position, 1);
-                            continue;
-                        }
+						if (!Int64.TryParse(tokens[2].TrimEnd(), out long price))
+						{
+							ParserMediator.Warn(trerror.CanNotReadAmountOfMoney.Text, position, 1);
+							continue;
+						}
 
-                        targetI[index] = price;
+						targetI[index] = price;
 					}
 				}
 			}
@@ -1753,8 +1753,8 @@ namespace MinorShift.Emuera.GameData
 
 	internal sealed class CharacterTemplate
 	{
-        readonly int[] arraySize;
-        readonly int cstrSize;
+		readonly int[] arraySize;
+		readonly int cstrSize;
 
 		public string Name;
 		public string Callname;

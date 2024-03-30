@@ -15,7 +15,7 @@ namespace MinorShift.Emuera.Sub
 
 		string filepath;
 		string filename;
-        readonly bool useRename = false;
+		readonly bool useRename = false;
 		int curNo = 0;
 		int nextNo = 0;
 		StreamReader reader;
@@ -123,10 +123,10 @@ namespace MinorShift.Emuera.Sub
 							throw new CodeEE(trerror.CharacterAfterContinuationEnd.Text, new ScriptPosition(filename, nextNo));
 						break;
 					}
-                    //行連結文字なら1字でないとおかしい、というか、こうしないとFORMの数値変数処理が誤爆する。
-                    //{
-                    //A}
-                    //みたいなどうしようもないコードは知ったこっちゃない
+					//行連結文字なら1字でないとおかしい、というか、こうしないとFORMの数値変数処理が誤爆する。
+					//{
+					//A}
+					//みたいなどうしようもないコードは知ったこっちゃない
 					if (test[0] == '{' && test.Length == 1)
 						throw new CodeEE(trerror.UnexpectedContinuation.Text, new ScriptPosition(filename, nextNo));
 				}

@@ -24,28 +24,28 @@ namespace MinorShift.Emuera.GameData.Variable
 		Dictionary<string, LocalVariableToken> localVarTokens = new Dictionary<string, LocalVariableToken>();
 		public LocalVariableToken GetExistLocalVariableToken(string subKey)
 		{
-            if (localVarTokens.TryGetValue(subKey, out LocalVariableToken ret))
-                return ret;
-            return null;
+			if (localVarTokens.TryGetValue(subKey, out LocalVariableToken ret))
+				return ret;
+			return null;
 		}
 
-        public int GetDefaultSize()
-        {
-            return size;
-        }
+		public int GetDefaultSize()
+		{
+			return size;
+		}
 
-        public LocalVariableToken GetNewLocalVariableToken(string subKey, FunctionLabelLine func)
-        {
-            LocalVariableToken ret = null;
-            int newSize = 0;
-            if (varCode == VariableCode.LOCAL)
-                newSize = func.LocalLength;
-            else if (varCode == VariableCode.LOCALS)
-                newSize = func.LocalsLength;
-            else if (varCode == VariableCode.ARG)
-                newSize = func.ArgLength;
-            else if (varCode == VariableCode.ARGS)
-                newSize = func.ArgsLength;
+		public LocalVariableToken GetNewLocalVariableToken(string subKey, FunctionLabelLine func)
+		{
+			LocalVariableToken ret = null;
+			int newSize = 0;
+			if (varCode == VariableCode.LOCAL)
+				newSize = func.LocalLength;
+			else if (varCode == VariableCode.LOCALS)
+				newSize = func.LocalsLength;
+			else if (varCode == VariableCode.ARG)
+				newSize = func.ArgLength;
+			else if (varCode == VariableCode.ARGS)
+				newSize = func.ArgsLength;
 			if (newSize > 0)
 			{
 				if((newSize < size) && ((varCode == VariableCode.ARG) || (varCode == VariableCode.ARGS)))
@@ -58,52 +58,52 @@ namespace MinorShift.Emuera.GameData.Variable
 			{
 				ret = creater(varCode, subKey, size);
 				LogicalLine line = GlobalStatic.Process.GetScaningLine();
-                if (line != null)
-                {
-                    if (!func.IsSystem)
+				if (line != null)
+				{
+					if (!func.IsSystem)
 						ParserMediator.Warn(string.Format(trerror.UseArgVarInHasNotArgFunc.Text, varCode), line, 1, false, false);
-                    else
+					else
 						ParserMediator.Warn(string.Format(trerror.UseArgVarInSystemFunc.Text, func.LabelName, varCode), line, 1, false, false);
-                }
+				}
 				//throw new CodeEE("この関数に引数変数\"" + varCode + "\"は定義されていません");
 			}
-            localVarTokens.Add(subKey, ret);
-            return ret;
-        }
+			localVarTokens.Add(subKey, ret);
+			return ret;
+		}
 
-        public void ResizeLocalVariableToken(string subKey, int newSize)
-        {
-            if (localVarTokens.TryGetValue(subKey, out LocalVariableToken ret))
-            {
-                if (size < newSize)
-                    ret.resize(newSize);
-                else
-                    ret.resize(size);
-            }
-            else
-            {
-                if (newSize > size)
-                    ret = creater(varCode, subKey, newSize);
-                else if (newSize == 0)
-                    ret = creater(varCode, subKey, size);
-                else
-                    return;
-                localVarTokens.Add(subKey, ret);
-            }
-        }
+		public void ResizeLocalVariableToken(string subKey, int newSize)
+		{
+			if (localVarTokens.TryGetValue(subKey, out LocalVariableToken ret))
+			{
+				if (size < newSize)
+					ret.resize(newSize);
+				else
+					ret.resize(size);
+			}
+			else
+			{
+				if (newSize > size)
+					ret = creater(varCode, subKey, newSize);
+				else if (newSize == 0)
+					ret = creater(varCode, subKey, size);
+				else
+					return;
+				localVarTokens.Add(subKey, ret);
+			}
+		}
 
-        public void Clear()
+		public void Clear()
 		{
 			localVarTokens.Clear();
 		}
 
-        public void SetDefault()
+		public void SetDefault()
 		{
 			foreach (KeyValuePair<string, LocalVariableToken> pair in localVarTokens)
 				pair.Value.SetDefault();
 		}
-    }
+	}
 
-    
-    
+	
+	
 }

@@ -299,7 +299,7 @@ namespace MinorShift.Emuera.GameProc
 						{
 							string key;
 							if (data.Dimension == 1)
-                            {
+							{
 								key = data.Name.ToUpper();
 								if (erdFileNames.ContainsKey(key))
 								{
@@ -309,7 +309,7 @@ namespace MinorShift.Emuera.GameProc
 								System.Windows.Forms.Application.DoEvents();
 							}
 							else if (data.Dimension == 2)
-                            {
+							{
 								for (int dim = 1; dim < 3; dim++)
 								{
 									key = data.Name.ToUpper() + "@" + dim;

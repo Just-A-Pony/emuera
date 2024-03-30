@@ -38,7 +38,7 @@ namespace MinorShift.Emuera.GameData.Expression
 		RightBracket_Comma_Assignment = RightBracket | Comma | Assignment,//',' or ']' or '='終端
 	}
 
-    internal static class ExpressionParser
+	internal static class ExpressionParser
 	{
 		#region public Reduce
 		/// <summary>
@@ -58,9 +58,9 @@ namespace MinorShift.Emuera.GameData.Expression
 				case ArgsEndWith.EoL:
 					termEndWith = TermEndWith.Comma;
 					break;
-                //case ArgsEndWith.RightBracket:
-                //    termEndWith = TermEndWith.RightBracket_Comma;
-                //    break;
+				//case ArgsEndWith.RightBracket:
+				//    termEndWith = TermEndWith.RightBracket_Comma;
+				//    break;
 				case ArgsEndWith.RightParenthesis:
 					termEndWith = TermEndWith.RightParenthesis_Comma;
 					break;
@@ -72,8 +72,8 @@ namespace MinorShift.Emuera.GameData.Expression
 				switch (word.Type)
 				{
 					case '\0':
-                        if (endWith == ArgsEndWith.RightBracket)
-                            throw new CodeEE(trerror.NotCloseSBrackets.Text);
+						if (endWith == ArgsEndWith.RightBracket)
+							throw new CodeEE(trerror.NotCloseSBrackets.Text);
 						if (endWith == ArgsEndWith.RightParenthesis)
 							throw new CodeEE(trerror.NotCloseBrackets.Text);
 						goto end;
@@ -84,21 +84,21 @@ namespace MinorShift.Emuera.GameData.Expression
 							goto end;
 						}
 						throw new CodeEE(trerror.UnexpectedBrackets.Text);
-                    case ']':
-                        if (endWith == ArgsEndWith.RightBracket)
-                        {
-                            wc.ShiftNext();
-                            goto end;
-                        }
-                        throw new CodeEE(trerror.UnexpectedSBrackets.Text);
+					case ']':
+						if (endWith == ArgsEndWith.RightBracket)
+						{
+							wc.ShiftNext();
+							goto end;
+						}
+						throw new CodeEE(trerror.UnexpectedSBrackets.Text);
 				}
 				if(!isDefine)
 					terms.Add(ReduceExpressionTerm(wc, termEndWith));
 				else
 				{
 					terms.Add(ReduceExpressionTerm(wc, termEndWith_Assignment));
-                    if (terms[terms.Count - 1] == null)
-                        throw new CodeEE(trerror.CannotOmitFuncArg.Text);
+					if (terms[terms.Count - 1] == null)
+						throw new CodeEE(trerror.CannotOmitFuncArg.Text);
 					if (wc.Current is OperatorWord)
 					{//=がある
 						wc.ShiftNext();
@@ -121,7 +121,7 @@ namespace MinorShift.Emuera.GameData.Expression
 					wc.ShiftNext();
 			}
 		end:
-            IOperandTerm[] ret = new IOperandTerm[terms.Count];
+			IOperandTerm[] ret = new IOperandTerm[terms.Count];
 			terms.CopyTo(ret);
 			return ret;
 		}
@@ -133,11 +133,11 @@ namespace MinorShift.Emuera.GameData.Expression
 		/// </summary>
 		/// <param name="st"></param>
 		/// <returns></returns>
-        public static IOperandTerm ReduceExpressionTerm(WordCollection wc, TermEndWith endWith)
-        {
+		public static IOperandTerm ReduceExpressionTerm(WordCollection wc, TermEndWith endWith)
+		{
 			IOperandTerm term = reduceTerm(wc, false, endWith, VariableCode.__NULL__);
-            return term;
-        }
+			return term;
+		}
 
 
 		///// <summary>
@@ -157,18 +157,18 @@ namespace MinorShift.Emuera.GameData.Expression
 		public static IOperandTerm ReduceIntegerTerm(WordCollection wc, TermEndWith endwith)
 		{
 			IOperandTerm term = reduceTerm(wc, false, endwith, VariableCode.__NULL__);
-            if (term == null)
-                throw new CodeEE(trerror.CanNotInterpretedExpression.Text);
+			if (term == null)
+				throw new CodeEE(trerror.CanNotInterpretedExpression.Text);
 			if (term.GetOperandType() != typeof(Int64))
 				throw new CodeEE(trerror.ExpressionResultIsNotNumeric.Text);
 			return term;
 		}
 
 		
-        /// <summary>
-        /// 結果次第ではSingleTermを返すことがある。
-        /// </summary>
-        /// <returns></returns>
+		/// <summary>
+		/// 結果次第ではSingleTermを返すことがある。
+		/// </summary>
+		/// <returns></returns>
 		public static IOperandTerm ToStrFormTerm(StrFormWord sfw)
 		{
 			StrForm strf = StrForm.FromWordToken(sfw);
@@ -201,7 +201,7 @@ namespace MinorShift.Emuera.GameData.Expression
 			// IOperandTerm ret = reduceTerm(wc, false, TermEndWith.EoL, varCode);
 			IOperandTerm ret = reduceTerm(wc, false, TermEndWith.EoL, varCode, id);
 			if (ret == null)
-                throw new CodeEE(trerror.MissingArgAfterColon.Text);
+				throw new CodeEE(trerror.MissingArgAfterColon.Text);
 			return ret;
 		}
 		#endregion
@@ -282,9 +282,9 @@ namespace MinorShift.Emuera.GameData.Expression
 					return new SingleTerm(idStr);
 				#region EE_ERD
 				else if (varId != null)
-                {
+				{
 					switch (varId.Code)
-                    {
+					{
 						case VariableCode.VAR:
 						case VariableCode.VARS:
 						case VariableCode.CVAR:
@@ -376,9 +376,9 @@ namespace MinorShift.Emuera.GameData.Expression
 		#endregion
 		{
 			TermStack stack = new TermStack();
-            //int termCount = 0;
-            int ternaryCount = 0;
-            OperatorCode formerOp = OperatorCode.NULL;
+			//int termCount = 0;
+			int ternaryCount = 0;
+			OperatorCode formerOp = OperatorCode.NULL;
 			bool varArg = varCode != VariableCode.__NULL__;
 			do
 			{
@@ -458,9 +458,9 @@ namespace MinorShift.Emuera.GameData.Expression
 						}
 					case '(':
 						wc.ShiftNext();
-                        IOperandTerm inTerm = reduceTerm(wc, false, TermEndWith.RightParenthesis, VariableCode.__NULL__);
-                        if (inTerm == null)
-                            throw new CodeEE(trerror.NoContainExpressionInBrackets.Text);
+						IOperandTerm inTerm = reduceTerm(wc, false, TermEndWith.RightParenthesis, VariableCode.__NULL__);
+						if (inTerm == null)
+							throw new CodeEE(trerror.NoContainExpressionInBrackets.Text);
 						stack.Add(inTerm);
 						if (wc.Current.Type != ')')
 							throw new CodeEE(trerror.NotCloseBrackets.Text);
@@ -488,187 +488,187 @@ namespace MinorShift.Emuera.GameData.Expression
 				wc.ShiftNext();
 			} while (!varArg);
 		end:
-            if (ternaryCount > 0)
-                throw new CodeEE(trerror.TernaryBinaryError.Text);
-            return stack.ReduceAll();
-        }
-        
+			if (ternaryCount > 0)
+				throw new CodeEE(trerror.TernaryBinaryError.Text);
+			return stack.ReduceAll();
+		}
+		
 		#endregion
 
 		/// <summary>
-        /// 式解決用クラス
-        /// </summary>
-        private class TermStack
-        {
-            /// <summary>
-            /// 次に来るべきものの種類。
-            /// (前置)単項演算子か値待ちなら0、二項・三項演算子待ちなら1、値待ちなら2、++、--、!に対応する値待ちの場合は3。
-            /// </summary>
-            int state = 0;
-            bool hasBefore = false;
-            bool hasAfter = false;
-            bool waitAfter = false;
-            Stack<Object> stack = new Stack<Object>();
-            public void Add(OperatorCode op)
-            {
-                if (state == 2 || state == 3)
-                    throw new CodeEE(trerror.UnrecognizedSyntax.Text);
-                if (state == 0)
-                {
-                    if (!OperatorManager.IsUnary(op))
+		/// 式解決用クラス
+		/// </summary>
+		private class TermStack
+		{
+			/// <summary>
+			/// 次に来るべきものの種類。
+			/// (前置)単項演算子か値待ちなら0、二項・三項演算子待ちなら1、値待ちなら2、++、--、!に対応する値待ちの場合は3。
+			/// </summary>
+			int state = 0;
+			bool hasBefore = false;
+			bool hasAfter = false;
+			bool waitAfter = false;
+			Stack<Object> stack = new Stack<Object>();
+			public void Add(OperatorCode op)
+			{
+				if (state == 2 || state == 3)
+					throw new CodeEE(trerror.UnrecognizedSyntax.Text);
+				if (state == 0)
+				{
+					if (!OperatorManager.IsUnary(op))
 						throw new CodeEE(trerror.UnrecognizedSyntax.Text);
 					stack.Push(op);
-                    if (op == OperatorCode.Plus || op == OperatorCode.Minus || op == OperatorCode.BitNot)
-                        state = 2;
-                    else
-                        state = 3;
-                    return;
-                }
-                if (state == 1)
-                {
-                    //後置単項演算子の場合は特殊処理へ
-                    if (OperatorManager.IsUnaryAfter(op))
-                    {
-                        if (hasAfter)
-                        {
-                            hasAfter = false;
+					if (op == OperatorCode.Plus || op == OperatorCode.Minus || op == OperatorCode.BitNot)
+						state = 2;
+					else
+						state = 3;
+					return;
+				}
+				if (state == 1)
+				{
+					//後置単項演算子の場合は特殊処理へ
+					if (OperatorManager.IsUnaryAfter(op))
+					{
+						if (hasAfter)
+						{
+							hasAfter = false;
 							throw new CodeEE(trerror.MultipleUnaryOp.Text);
-                        }
-                        if (hasBefore)
-                        {
-                            hasBefore = false;
-                            throw new CodeEE(trerror.DuplicateIncrementDecrement.Text);
-                        }
-                        stack.Push(op);
-                        reduceUnaryAfter();
-                        //前置単項演算子が処理を待っている場合はここで解決
-                        if (waitAfter)
-                            reduceUnary();
-                        hasBefore = false;
-                        hasAfter = true;
-                        waitAfter = false;
-                        return;
-                    }
-                    if (!OperatorManager.IsBinary(op) && !OperatorManager.IsTernary(op))
+						}
+						if (hasBefore)
+						{
+							hasBefore = false;
+							throw new CodeEE(trerror.DuplicateIncrementDecrement.Text);
+						}
+						stack.Push(op);
+						reduceUnaryAfter();
+						//前置単項演算子が処理を待っている場合はここで解決
+						if (waitAfter)
+							reduceUnary();
+						hasBefore = false;
+						hasAfter = true;
+						waitAfter = false;
+						return;
+					}
+					if (!OperatorManager.IsBinary(op) && !OperatorManager.IsTernary(op))
 						throw new CodeEE(trerror.UnrecognizedSyntax.Text);
 					//先に未解決の前置演算子解決
 					if (waitAfter)
-                        reduceUnary();
-                    int priority = OperatorManager.GetPriority(op);
-                    //直前の計算の優先度が同じか高いなら還元。
-                    while (lastPriority() >= priority)
-                    {
-                        this.reduceLastThree();
-                    }
-                    stack.Push(op);
-                    state = 0;
-                    waitAfter = false;
-                    hasBefore = false;
-                    hasAfter = false;
-                    return;
-                }
+						reduceUnary();
+					int priority = OperatorManager.GetPriority(op);
+					//直前の計算の優先度が同じか高いなら還元。
+					while (lastPriority() >= priority)
+					{
+						this.reduceLastThree();
+					}
+					stack.Push(op);
+					state = 0;
+					waitAfter = false;
+					hasBefore = false;
+					hasAfter = false;
+					return;
+				}
 				throw new CodeEE(trerror.UnrecognizedSyntax.Text);
 			}
 			public void Add(Int64 i) { Add(new SingleTerm(i)); }
-            public void Add(string s) { Add(new SingleTerm(s)); }
-            public void Add(IOperandTerm term)
-            {
-                stack.Push(term);
-                if (state == 1)
+			public void Add(string s) { Add(new SingleTerm(s)); }
+			public void Add(IOperandTerm term)
+			{
+				stack.Push(term);
+				if (state == 1)
 					throw new CodeEE(trerror.UnrecognizedSyntax.Text);
 				if (state == 2)
-                    waitAfter = true;
-                if (state == 3)
-                {
-                    reduceUnary();
-                    hasBefore = true;
-                }
-                state = 1;
-                return;
-            }
+					waitAfter = true;
+				if (state == 3)
+				{
+					reduceUnary();
+					hasBefore = true;
+				}
+				state = 1;
+				return;
+			}
 
 
-            private int lastPriority()
-            {
-                if (stack.Count < 3)
-                    return -1;
-                object temp = (object)stack.Pop();
-                OperatorCode opCode = (OperatorCode)stack.Peek();
-                int priority = OperatorManager.GetPriority(opCode);
-                stack.Push(temp);
-                return priority;
-            }
+			private int lastPriority()
+			{
+				if (stack.Count < 3)
+					return -1;
+				object temp = (object)stack.Pop();
+				OperatorCode opCode = (OperatorCode)stack.Peek();
+				int priority = OperatorManager.GetPriority(opCode);
+				stack.Push(temp);
+				return priority;
+			}
 
-            public IOperandTerm ReduceAll()
-            {
-                if (stack.Count == 0)
-                    return null;
-                if (state != 1)
+			public IOperandTerm ReduceAll()
+			{
+				if (stack.Count == 0)
+					return null;
+				if (state != 1)
 					throw new CodeEE(trerror.UnrecognizedSyntax.Text);
 				//単項演算子の待ちが未解決の時はここで解決
 				if (waitAfter)
-                    reduceUnary();
-                waitAfter = false;
-                hasBefore = false;
-                hasAfter = false;
-                while (stack.Count > 1)
-                {
-                    reduceLastThree();
-                }
-                IOperandTerm retTerm = (IOperandTerm)stack.Pop();
-                return retTerm;
-            }
-
-            private void reduceUnary()
-            {
-                //if (stack.Count < 2)
-                //    throw new ExeEE("不正な時期の呼び出し");
-                IOperandTerm operand = (IOperandTerm)stack.Pop();
-                OperatorCode op = (OperatorCode)stack.Pop();
-                IOperandTerm newTerm = OperatorMethodManager.ReduceUnaryTerm(op, operand);
-                stack.Push(newTerm);
-            }
-
-            private void reduceUnaryAfter()
-            {
-                //if (stack.Count < 2)
-                //    throw new ExeEE("不正な時期の呼び出し");
-                OperatorCode op = (OperatorCode)stack.Pop();
-                IOperandTerm operand = (IOperandTerm)stack.Pop();
-                
-                IOperandTerm newTerm = OperatorMethodManager.ReduceUnaryAfterTerm(op, operand);
-                stack.Push(newTerm);
-				
-            }
-            private void reduceLastThree()
-            {
-                //if (stack.Count < 2)
-                //    throw new ExeEE("不正な時期の呼び出し");
-                IOperandTerm right = (IOperandTerm)stack.Pop();//後から入れたほうが右側
-                OperatorCode op = (OperatorCode)stack.Pop();
-                IOperandTerm left = (IOperandTerm)stack.Pop();
-                if (OperatorManager.IsTernary(op))
-                {
-                    if (stack.Count > 1)
-                    {
-                        reduceTernary(left, right);
-                        return;
-                    }
-                    throw new CodeEE(trerror.InsufficientExpression.Text);
-                }
-                
-                IOperandTerm newTerm = OperatorMethodManager.ReduceBinaryTerm(op, left, right);
-                stack.Push(newTerm);
+					reduceUnary();
+				waitAfter = false;
+				hasBefore = false;
+				hasAfter = false;
+				while (stack.Count > 1)
+				{
+					reduceLastThree();
+				}
+				IOperandTerm retTerm = (IOperandTerm)stack.Pop();
+				return retTerm;
 			}
 
-            private void reduceTernary(IOperandTerm left, IOperandTerm right)
-            {
-                _ = (OperatorCode)stack.Pop();
+			private void reduceUnary()
+			{
+				//if (stack.Count < 2)
+				//    throw new ExeEE("不正な時期の呼び出し");
+				IOperandTerm operand = (IOperandTerm)stack.Pop();
+				OperatorCode op = (OperatorCode)stack.Pop();
+				IOperandTerm newTerm = OperatorMethodManager.ReduceUnaryTerm(op, operand);
+				stack.Push(newTerm);
+			}
+
+			private void reduceUnaryAfter()
+			{
+				//if (stack.Count < 2)
+				//    throw new ExeEE("不正な時期の呼び出し");
+				OperatorCode op = (OperatorCode)stack.Pop();
+				IOperandTerm operand = (IOperandTerm)stack.Pop();
+				
+				IOperandTerm newTerm = OperatorMethodManager.ReduceUnaryAfterTerm(op, operand);
+				stack.Push(newTerm);
+				
+			}
+			private void reduceLastThree()
+			{
+				//if (stack.Count < 2)
+				//    throw new ExeEE("不正な時期の呼び出し");
+				IOperandTerm right = (IOperandTerm)stack.Pop();//後から入れたほうが右側
+				OperatorCode op = (OperatorCode)stack.Pop();
+				IOperandTerm left = (IOperandTerm)stack.Pop();
+				if (OperatorManager.IsTernary(op))
+				{
+					if (stack.Count > 1)
+					{
+						reduceTernary(left, right);
+						return;
+					}
+					throw new CodeEE(trerror.InsufficientExpression.Text);
+				}
+				
+				IOperandTerm newTerm = OperatorMethodManager.ReduceBinaryTerm(op, left, right);
+				stack.Push(newTerm);
+			}
+
+			private void reduceTernary(IOperandTerm left, IOperandTerm right)
+			{
+				_ = (OperatorCode)stack.Pop();
 				IOperandTerm newLeft = (IOperandTerm)stack.Pop();
 				
-                IOperandTerm newTerm = OperatorMethodManager.ReduceTernaryTerm(newLeft, left, right);
-                stack.Push(newTerm);
-            }
+				IOperandTerm newTerm = OperatorMethodManager.ReduceTernaryTerm(newLeft, left, right);
+				stack.Push(newTerm);
+			}
 
 /*			SingleTerm GetSingle(IOperandTerm oprand)
 			{
@@ -676,5 +676,5 @@ namespace MinorShift.Emuera.GameData.Expression
 			}
 */        }
 
-    }
+	}
 }

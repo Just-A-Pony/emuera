@@ -223,13 +223,13 @@ namespace MinorShift.Emuera.GameData.Variable
 				return ((Code & VariableCode.__LOCAL__) == VariableCode.__LOCAL__);
 			}
 		}
-        public bool CanForbid
-        {
-            get
-            {
-                return ((Code & VariableCode.__CAN_FORBID__) == VariableCode.__CAN_FORBID__);
-            }
-        }
+		public bool CanForbid
+		{
+			get
+			{
+				return ((Code & VariableCode.__CAN_FORBID__) == VariableCode.__CAN_FORBID__);
+			}
+		}
 		public bool IsForbid { get; protected set; }
 		public bool IsPrivate { get; protected set; }
 		public bool IsGlobal { get; protected set; }
@@ -1693,19 +1693,19 @@ namespace MinorShift.Emuera.GameData.Variable
 			}
 		}
 
-        private sealed class EMUERA_VERSIONToken : PseudoVariableToken
-        {
-            public EMUERA_VERSIONToken(VariableCode varCode, VariableData varData)
-                :base(varCode, varData)
-            {
-                CanRestructure = true;
-            }
-            public override string GetStrValue(ExpressionMediator exm, long[] arguments)
-            {
-                return GlobalStatic.MainWindow.InternalEmueraVer;
-            }
+		private sealed class EMUERA_VERSIONToken : PseudoVariableToken
+		{
+			public EMUERA_VERSIONToken(VariableCode varCode, VariableData varData)
+				:base(varCode, varData)
+			{
+				CanRestructure = true;
+			}
+			public override string GetStrValue(ExpressionMediator exm, long[] arguments)
+			{
+				return GlobalStatic.MainWindow.InternalEmueraVer;
+			}
 
-        }
+		}
 
 		#endregion
 		#region LOCAL

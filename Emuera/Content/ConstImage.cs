@@ -134,10 +134,10 @@ namespace MinorShift.Emuera.Content
 			}
 		}
 
-        ~ConstImage()
-        {
-            Dispose();
-        }
+		~ConstImage()
+		{
+			Dispose();
+		}
 
 
 		public override bool IsCreated

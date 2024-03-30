@@ -41,7 +41,7 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				int len = HtmlManager.HtmlLength(arguments[0].GetStrValue(exm));
 				if (arguments.Length == 1 || arguments[1].GetIntValue(exm) == 0)
-                {
+				{
 					if (len >= 0)
 						return 2 * len / Config.FontSize + ((2 * len % Config.FontSize != 0) ? 1 : 0);
 					else
@@ -601,13 +601,13 @@ namespace MinorShift.Emuera.GameData.Function
 							var idx1 = var.GetElementInt(0, exm);
 							var idx2 = var.GetElementInt(1, exm);
 							if (setAllDims)
-                            {
+							{
 								for (int j = 0; j < array.GetLength(0); j++)
 									for (int i = Math.Max(start, (int)idx2); i < end; i++)
 										array[j, i] = val;
 							}
 							else
-                            {
+							{
 								for (int i = Math.Max(start, (int)idx2); i < end; i++)
 									array[idx1, i] = val;
 							}
@@ -717,7 +717,7 @@ namespace MinorShift.Emuera.GameData.Function
 				var matches = reg.Matches(baseString);
 				var ret = matches.Count;
 				if (arguments.Length == 3 && arguments[2].GetIntValue(exm) != 0)
-                {
+				{
 					exm.VEvaluator.RESULT_ARRAY[1] = reg.GetGroupNumbers().Length;
 					if (ret > 0) Output(matches, reg, exm.VEvaluator.RESULTS_ARRAY);
 				}
@@ -5504,7 +5504,7 @@ namespace MinorShift.Emuera.GameData.Function
 		}
 		#endregion
 
-        public sealed class GraphicsSetPenMethod : FunctionMethod
+		public sealed class GraphicsSetPenMethod : FunctionMethod
 		{
 			public GraphicsSetPenMethod()
 			{
@@ -5610,7 +5610,7 @@ namespace MinorShift.Emuera.GameData.Function
 				var bitmap = new Bitmap(16, 16);
 				//Graphics canvas = Graphics.FromImage(bitmap);
 				var graphics = Graphics.FromImage(bitmap);
-                System.Drawing.Font font = g.Fnt;
+				System.Drawing.Font font = g.Fnt;
 				if (font == null)
 					font = new System.Drawing.Font(Config.FontName, 100, GlobalStatic.Console.StringStyle.FontStyle, GraphicsUnit.Pixel);
 				var size = graphics.MeasureString(text, font, int.MaxValue, StringFormat.GenericTypographic);
@@ -5775,22 +5775,22 @@ namespace MinorShift.Emuera.GameData.Function
 		#region EE_失敗作
 		//brushの参照がうまくいかないので保留
 		/**
-        public sealed class GraphicsGetBrushMethod : FunctionMethod
-        {
-            public GraphicsGetBrushMethod()
-            {
-                ReturnType = typeof(Int64);
-                argumentTypeArray = new Type[] { typeof(Int64) };
-                CanRestructure = false;
-            }
-            public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-            {
-                Color c = 
-                GraphicsImage g = ReadGraphics(Name, exm, arguments, 0);
-                return (SolidBrush());
-            }
-        }
-        **/
+		public sealed class GraphicsGetBrushMethod : FunctionMethod
+		{
+			public GraphicsGetBrushMethod()
+			{
+				ReturnType = typeof(Int64);
+				argumentTypeArray = new Type[] { typeof(Int64) };
+				CanRestructure = false;
+			}
+			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
+			{
+				Color c = 
+				GraphicsImage g = ReadGraphics(Name, exm, arguments, 0);
+				return (SolidBrush());
+			}
+		}
+		**/
 		#endregion
 		#region EE_GDRAWLINE
 		public sealed class GraphicsDrawLineMethod : FunctionMethod
@@ -7273,7 +7273,7 @@ namespace MinorShift.Emuera.GameData.Function
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				using (System.Diagnostics.Process memory = System.Diagnostics.Process.GetCurrentProcess())
-                {
+				{
 					return memory.WorkingSet64;
 				}
 			}
@@ -7295,7 +7295,7 @@ namespace MinorShift.Emuera.GameData.Function
 					long destmemorysize = destmemory.WorkingSet64;
 					GC.Collect();
 					using (System.Diagnostics.Process memory = System.Diagnostics.Process.GetCurrentProcess())
-                    {
+					{
 						return destmemorysize-memory.WorkingSet64;
 					}
 				}

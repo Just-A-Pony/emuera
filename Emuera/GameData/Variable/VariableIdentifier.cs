@@ -119,13 +119,13 @@ namespace MinorShift.Emuera.GameData.Variable
 		//        return ((code & VariableCode.__CONSTANT__) == VariableCode.__CONSTANT__);
 		//    }
 		//}
-        public bool CanForbid
-        {
-            get
-            {
-                return ((code & VariableCode.__CAN_FORBID__) == VariableCode.__CAN_FORBID__);
-            }
-        }
+		public bool CanForbid
+		{
+			get
+			{
+				return ((code & VariableCode.__CAN_FORBID__) == VariableCode.__CAN_FORBID__);
+			}
+		}
 		readonly static Dictionary<string, VariableCode> nameDic = new Dictionary<string, VariableCode>();
 		readonly static Dictionary<string, VariableCode> localvarNameDic = new Dictionary<string, VariableCode>();
 		readonly static Dictionary<VariableCode, List<VariableCode>> extSaveListDic = new Dictionary<VariableCode, List<VariableCode>>();

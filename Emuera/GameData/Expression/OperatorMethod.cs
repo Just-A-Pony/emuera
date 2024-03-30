@@ -83,12 +83,12 @@ namespace MinorShift.Emuera.GameData.Expression
 		
 		public static IOperandTerm ReduceUnaryTerm(OperatorCode op, IOperandTerm o1)
 		{
-            OperatorMethod method = null;
+			OperatorMethod method = null;
 			if (op == OperatorCode.Increment || op == OperatorCode.Decrement)
 			{
-                if (!(o1 is VariableTerm var))
-                    throw new CodeEE(trerror.IncrementNonVar.Text);
-                if (var.Identifier.IsConst)
+				if (!(o1 is VariableTerm var))
+					throw new CodeEE(trerror.IncrementNonVar.Text);
+				if (var.Identifier.IsConst)
 					throw new CodeEE(trerror.IncrementConst.Text);
 			}
 			if (o1.GetOperandType() == typeof(Int64))
@@ -100,25 +100,25 @@ namespace MinorShift.Emuera.GameData.Expression
 			}
 			if(method != null)
 				return new FunctionMethodTerm(method, new IOperandTerm[] { o1 });
-            string errMes;
+			string errMes;
 			if (o1.GetOperandType() == typeof(Int64))
 				errMes = trerror.NumericType.Text;
 			else if (o1.GetOperandType() == typeof(string))
 				errMes = trerror.StringType.Text;
 			else
 				errMes = trerror.UnknownType.Text;
-            errMes = string.Format(trerror.CanNotAppliedUnaryOp.Text, errMes, OperatorManager.ToOperatorString(op));
-            throw new CodeEE(errMes);
+			errMes = string.Format(trerror.CanNotAppliedUnaryOp.Text, errMes, OperatorManager.ToOperatorString(op));
+			throw new CodeEE(errMes);
 		}
 		
 		public static IOperandTerm ReduceUnaryAfterTerm(OperatorCode op, IOperandTerm o1)
 		{
-            OperatorMethod method = null;
+			OperatorMethod method = null;
 			if (op == OperatorCode.Increment || op == OperatorCode.Decrement)
 			{
-                if (!(o1 is VariableTerm var))
-                    throw new CodeEE(trerror.IncrementNonVar.Text);
-                if (var.Identifier.IsConst)
+				if (!(o1 is VariableTerm var))
+					throw new CodeEE(trerror.IncrementNonVar.Text);
+				if (var.Identifier.IsConst)
 					throw new CodeEE(trerror.IncrementConst.Text);
 			}
 			if (o1.GetOperandType() == typeof(Int64))
@@ -128,20 +128,20 @@ namespace MinorShift.Emuera.GameData.Expression
 			}
 			if (method != null)
 				return new FunctionMethodTerm(method, new IOperandTerm[] { o1 });
-            string errMes;
-            if (o1.GetOperandType() == typeof(Int64))
-                errMes = trerror.NumericType.Text;
-            else if (o1.GetOperandType() == typeof(string))
-                errMes = trerror.StringType.Text;
-            else
-                errMes = trerror.UnknownType.Text;
-            errMes = string.Format(trerror.CanNotAppliedUnaryOp.Text, errMes, OperatorManager.ToOperatorString(op));
+			string errMes;
+			if (o1.GetOperandType() == typeof(Int64))
+				errMes = trerror.NumericType.Text;
+			else if (o1.GetOperandType() == typeof(string))
+				errMes = trerror.StringType.Text;
+			else
+				errMes = trerror.UnknownType.Text;
+			errMes = string.Format(trerror.CanNotAppliedUnaryOp.Text, errMes, OperatorManager.ToOperatorString(op));
 			throw new CodeEE(errMes);
 		}
 		
 		public static IOperandTerm ReduceBinaryTerm(OperatorCode op, IOperandTerm left, IOperandTerm right)
 		{
-            OperatorMethod method = null;
+			OperatorMethod method = null;
 			if ((left.GetOperandType() == typeof(Int64)) && (right.GetOperandType() == typeof(Int64)))
 			{
 				if (binaryIntIntDic.ContainsKey(op))
@@ -179,7 +179,7 @@ namespace MinorShift.Emuera.GameData.Expression
 		
 		public static IOperandTerm ReduceTernaryTerm(IOperandTerm o1, IOperandTerm o2, IOperandTerm o3)
 		{
-            OperatorMethod method = null;
+			OperatorMethod method = null;
 			if ((o1.GetOperandType() == typeof(Int64)) && (o2.GetOperandType() == typeof(Int64)) && (o3.GetOperandType() == typeof(Int64)))
 				method = ternaryIntIntInt;
 			else if ((o1.GetOperandType() == typeof(Int64)) && (o2.GetOperandType() == typeof(string)) && (o3.GetOperandType() == typeof(string)))
@@ -258,29 +258,29 @@ namespace MinorShift.Emuera.GameData.Expression
 			}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
-                string str;
-                long value;
-                if (arguments[0].GetOperandType() == typeof(Int64))
-                {
-                    value = arguments[0].GetIntValue(exm);
-                    str = arguments[1].GetStrValue(exm);
-                }
-                else
-                {
-                    str = arguments[0].GetStrValue(exm);
-                    value = arguments[1].GetIntValue(exm);
-                }
-                if (value < 0)
+				string str;
+				long value;
+				if (arguments[0].GetOperandType() == typeof(Int64))
+				{
+					value = arguments[0].GetIntValue(exm);
+					str = arguments[1].GetStrValue(exm);
+				}
+				else
+				{
+					str = arguments[0].GetStrValue(exm);
+					value = arguments[1].GetIntValue(exm);
+				}
+				if (value < 0)
 					throw new CodeEE(string.Format(trerror.MultiplyNegativeToStr.Text, value.ToString()));
 				if (value >= 10000)
 					throw new CodeEE(string.Format(trerror.Multiply10kToStr.Text, value.ToString()));
 				if ((str == "") || (value == 0))
 					return "";
-                StringBuilder builder = new StringBuilder
-                {
-                    Capacity = str.Length * (int)value
-                };
-                for (int i = 0; i < value; i++)
+				StringBuilder builder = new StringBuilder
+				{
+					Capacity = str.Length * (int)value
+				};
+				for (int i = 0; i < value; i++)
 				{
 					builder.Append(str);
 				}
@@ -297,7 +297,7 @@ namespace MinorShift.Emuera.GameData.Expression
 			}
 
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-	        {
+			{
 				Int64 right = arguments[1].GetIntValue(exm);
 				if (right == 0)
 					throw new CodeEE(trerror.DivideByZero.Text);
@@ -314,7 +314,7 @@ namespace MinorShift.Emuera.GameData.Expression
 			}
 
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-	        {
+			{
 				Int64 right = arguments[1].GetIntValue(exm);
 				if (right == 0)
 					throw new CodeEE(trerror.DivideByZero.Text);

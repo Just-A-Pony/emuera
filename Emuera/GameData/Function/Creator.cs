@@ -337,10 +337,10 @@ namespace MinorShift.Emuera.GameData.Function
 			};
 
 
-            //1823 自分の関数名を知っていた方が何かと便利なので覚えさせることにした
-            foreach (var pair in methodList)
+			//1823 自分の関数名を知っていた方が何かと便利なので覚えさせることにした
+			foreach (var pair in methodList)
 				pair.Value.SetMethodName(pair.Key);
-        }
+		}
 
 		private static readonly Dictionary<string, FunctionMethod> methodList;
 		public static Dictionary<string, FunctionMethod> GetMethodList()

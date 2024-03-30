@@ -35,7 +35,7 @@ namespace MinorShift.Emuera.GameData.Variable
 		Dictionary<string, int> dic = null;
 		string errPos = null;
 		
-        public override Int64 GetIntValue(ExpressionMediator exm)
+		public override Int64 GetIntValue(ExpressionMediator exm)
 		{
 			if (dic == null)
 				#region EE_ERD
@@ -51,17 +51,17 @@ namespace MinorShift.Emuera.GameData.Variable
 			#endregion
 
 			if (!dic.TryGetValue(key, out int i))
-            {
-                if (errPos == null)
-                    throw new CodeEE(string.Format(trerror.CanNotSpecifiedByString.Text, parentCode.ToString()));
-                else
-                    throw new CodeEE(string.Format(trerror.NotDefinedKey.Text, errPos, key));
-            }
-            return i;
-        }
+			{
+				if (errPos == null)
+					throw new CodeEE(string.Format(trerror.CanNotSpecifiedByString.Text, parentCode.ToString()));
+				else
+					throw new CodeEE(string.Format(trerror.NotDefinedKey.Text, errPos, key));
+			}
+			return i;
+		}
 		
-        public override IOperandTerm Restructure(ExpressionMediator exm)
-        {
+		public override IOperandTerm Restructure(ExpressionMediator exm)
+		{
 			if (dic == null)
 				#region EE_ERD
 				// dic = exm.VEvaluator.Constant.GetKeywordDictionary(out errPos, parentCode, index);
@@ -72,7 +72,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			if (!(strTerm is SingleTerm))
 				return this;
 			return new SingleTerm(this.GetIntValue(exm));
-        }
+		}
 	}
 
 }

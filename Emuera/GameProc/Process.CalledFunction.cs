@@ -115,15 +115,15 @@ namespace MinorShift.Emuera.GameProc
 				}
 				return null;
 			}
-            else if (labelline.IsMethod)
-            {
-                throw new CodeEE(string.Format(trerror.CallToUserFunc.Text, labelline.LabelName, labelline.Position.Filename, labelline.Position.LineNo.ToString()));
-            }
+			else if (labelline.IsMethod)
+			{
+				throw new CodeEE(string.Format(trerror.CallToUserFunc.Text, labelline.LabelName, labelline.Position.Filename, labelline.Position.LineNo.ToString()));
+			}
 			called.TopLabel = labelline;
 			called.CurrentLabel = labelline;
 			called.returnAddress = retAddress;
 			called.IsEvent = false;
-            return called;
+			return called;
 		}
 
 		public static CalledFunction CreateCalledFunctionMethod(FunctionLabelLine labelline, string label)
@@ -140,19 +140,19 @@ namespace MinorShift.Emuera.GameProc
 		static FunctionMethod tostrMethod = null;
 		/// <summary>
 		/// 1803beta005 予め引数の数を合わせて規定値を代入しておく
-        /// 1806+v6.99 式中関数の引数に無効な#DIM変数を与えている場合に例外になるのを修正
+		/// 1806+v6.99 式中関数の引数に無効な#DIM変数を与えている場合に例外になるのを修正
 		/// 1808beta009 REF型に対応
 		/// </summary>
 		public UserDefinedFunctionArgument ConvertArg(IOperandTerm[] srcArgs, out string errMes)
 		{
 			errMes = null;
-            if (TopLabel.IsError)
-            {
-                errMes = TopLabel.ErrMes;
-                return null;
-            }
-            FunctionLabelLine func = TopLabel;
-            IOperandTerm[] convertedArg = new IOperandTerm[func.Arg.Length];
+			if (TopLabel.IsError)
+			{
+				errMes = TopLabel.ErrMes;
+				return null;
+			}
+			FunctionLabelLine func = TopLabel;
+			IOperandTerm[] convertedArg = new IOperandTerm[func.Arg.Length];
 			if(convertedArg.Length < srcArgs.Length)
 			{
 				errMes = string.Format(trerror.TooManyFuncArgs.Text, func.LabelName);
@@ -227,10 +227,10 @@ namespace MinorShift.Emuera.GameProc
 			return parent.LabelDictionary.GetLabelDollar(label, this.CurrentLabel);
 		}
 
-        public void updateRetAddress(LogicalLine line)
-        {
-            returnAddress = line;
-        }
+		public void updateRetAddress(LogicalLine line)
+		{
+			returnAddress = line;
+		}
 
 		public CalledFunction Clone()
 		{
@@ -297,26 +297,26 @@ namespace MinorShift.Emuera.GameProc
 		{
 			counter = -1;
 			group++;
-            if (group >= 4)
-            {
-                CurrentLabel = null;
-                return;
-            }
+			if (group >= 4)
+			{
+				CurrentLabel = null;
+				return;
+			}
 			ShiftNext();
 		}
 
-        public void FinishEvent()
-        {
-            group = 4;
-            counter = -1;
-            CurrentLabel = null;
-            return;
-        }
+		public void FinishEvent()
+		{
+			group = 4;
+			counter = -1;
+			CurrentLabel = null;
+			return;
+		}
 
-        public bool IsOnly
-        {
-            get { return CurrentLabel.IsOnly; }
-        }
+		public bool IsOnly
+		{
+			get { return CurrentLabel.IsOnly; }
+		}
 		#endregion
 	}
 }

@@ -16,8 +16,8 @@ namespace MinorShift.Emuera.GameView
 		private ConsoleStyledString() { }
 		public ConsoleStyledString(string str, StringStyle style)
 		{
-            //if ((StaticConfig.TextDrawingMode != TextDrawingMode.GRAPHICS) && (str.IndexOf('\t') >= 0))
-            //    str = str.Replace("\t", "");
+			//if ((StaticConfig.TextDrawingMode != TextDrawingMode.GRAPHICS) && (str.IndexOf('\t') >= 0))
+			//    str = str.Replace("\t", "");
 			this.Str = str;
 			this.StringStyle = style;
 			Font = Config.GetFont(style.Fontname, style.FontStyle);
@@ -28,7 +28,7 @@ namespace MinorShift.Emuera.GameView
 			}
 			Color = style.Color;
 			ButtonColor = style.ButtonColor;
-            colorChanged = style.ColorChanged;
+			colorChanged = style.ColorChanged;
 			if (!colorChanged && Color != Config.ForeColor)
 				colorChanged = true;
 			PointX = -1;
@@ -105,7 +105,7 @@ namespace MinorShift.Emuera.GameView
 			if(isSelecting)
 				color = this.ButtonColor;
 			else if (isBackLog && !colorChanged)
-                color = Config.LogColor;
+				color = Config.LogColor;
 
 			#region EM_私家版_描画拡張
 			if (mode == TextDrawingMode.GRAPHICS)
@@ -142,9 +142,9 @@ namespace MinorShift.Emuera.GameView
 				return;
 			Color color = this.Color;
 			if(isSelecting)
-                color = this.ButtonColor;
+				color = this.ButtonColor;
 			else if (isBackLog && !colorChanged)
-                color = Config.LogColor;
+				color = Config.LogColor;
 			GDI.TabbedTextOutFull(Font,color,Str, PointX, pointY);
 			//GDI.SetFont(Font);
 			//GDI.SetTextColor(color);

@@ -113,16 +113,16 @@ namespace MinorShift.Emuera.GameView
 		}
 
 		public void ChangeStr(ConsoleButtonString[] newButtons)
-        {
-            buttons = null;
+		{
+			buttons = null;
 			foreach (ConsoleButtonString button in newButtons)
 				button.ParentLine = this;
 			buttons = newButtons;
-        }
+		}
 
 		public void Clear(Brush brush, Graphics graph, int pointY)
 		{
-            Rectangle rect = new Rectangle(0, pointY, Config.WindowX, Config.LineHeight);
+			Rectangle rect = new Rectangle(0, pointY, Config.WindowX, Config.LineHeight);
 			graph.FillRectangle(brush, rect);
 		}
 
@@ -146,8 +146,8 @@ namespace MinorShift.Emuera.GameView
 
 		public void DrawTo(Graphics graph, int pointY, bool isBackLog, bool force, TextDrawingMode mode)
 		{
-            foreach (ConsoleButtonString button in buttons)
-                button.DrawTo(graph, pointY, isBackLog, mode);
+			foreach (ConsoleButtonString button in buttons)
+				button.DrawTo(graph, pointY, isBackLog, mode);
 		}
 		
 		public void GDIDrawTo(int pointY, bool isBackLog)

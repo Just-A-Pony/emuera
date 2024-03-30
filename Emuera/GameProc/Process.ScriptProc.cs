@@ -111,9 +111,9 @@ namespace MinorShift.Emuera.GameProc
 					{
 						if (skipPrint)
 							break;
-                        exm.Console.UseUserStyle = true;
-                        exm.Console.UseSetColorStyle = true;
-                        SpButtonArgument bArg = (SpButtonArgument)func.Argument;
+						exm.Console.UseUserStyle = true;
+						exm.Console.UseSetColorStyle = true;
+						SpButtonArgument bArg = (SpButtonArgument)func.Argument;
 						str = bArg.PrintStrTerm.GetStrValue(exm);
 						//ボタン処理に絡んで表示がおかしくなるため、PRINTBUTTONでの改行コードはオミット
 						str = str.Replace("\n", "");
@@ -128,9 +128,9 @@ namespace MinorShift.Emuera.GameProc
 					{
 						if (skipPrint)
 							break;
-                        exm.Console.UseUserStyle = true;
-                        exm.Console.UseSetColorStyle = true;
-                        SpButtonArgument bArg = (SpButtonArgument)func.Argument;
+						exm.Console.UseUserStyle = true;
+						exm.Console.UseSetColorStyle = true;
+						SpButtonArgument bArg = (SpButtonArgument)func.Argument;
 						str = bArg.PrintStrTerm.GetStrValue(exm);
 						//ボタン処理に絡んで表示がおかしくなるため、PRINTBUTTONでの改行コードはオミット
 						str = str.Replace("\n", "");
@@ -146,9 +146,9 @@ namespace MinorShift.Emuera.GameProc
 					{
 						if (skipPrint)
 							break;
-                        exm.Console.UseUserStyle = true;
-                        exm.Console.UseSetColorStyle = true;
-                        term = ((ExpressionArgument)func.Argument).Term;
+						exm.Console.UseUserStyle = true;
+						exm.Console.UseSetColorStyle = true;
+						term = ((ExpressionArgument)func.Argument).Term;
 						exm.Console.PrintPlain(term.GetStrValue(exm));
 					}
 					break;
@@ -777,7 +777,7 @@ namespace MinorShift.Emuera.GameProc
 					}
 				#region EE_SysteInput拡張
 				case FunctionCode.FLOWINPUT:
-                    {
+					{
 						SpInputsArgument arg = (SpInputsArgument)func.Argument;
 						flowinputdef = arg.Def.GetIntValue(exm);
 						flowinput = arg.Mouse != null && arg.Mouse.GetIntValue(exm) != 0;

@@ -661,8 +661,8 @@ namespace MinorShift.Emuera
 		#endregion
 		#region EE版_ERDConfig
 		public static bool UseERD { get; private set; }
-        #endregion
-        #region EE_ERDNAME
+		#endregion
+		#region EE_ERDNAME
 		public static bool VarsizeDimConfig { get; private set; }
 		#endregion
 		#region EE_重複定義の確認

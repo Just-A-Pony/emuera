@@ -30,9 +30,9 @@ namespace MinorShift.Emuera
 		と言う予定だったが改変するうちに境界が曖昧になってしまった。
 		 
 		後にEmueraConsoleを追加し、それに入出力を担当させることに。
-        
-        1750 DebugConsole追加
-         Debugを全て切り離すことはできないので一部EmueraConsoleにも担当させる
+		
+		1750 DebugConsole追加
+		 Debugを全て切り離すことはできないので一部EmueraConsoleにも担当させる
 		
 		TODO: 1819 MainWindow & Consoleの入力・表示組とProcess&Dataのデータ処理組だけでも分離したい
 
@@ -86,7 +86,7 @@ namespace MinorShift.Emuera
 			#region EM_私家版_Emuera多言語化改造
 			List<string> otherArgs = new List<string>();
 			foreach (var arg in args)
-            {
+			{
 				//if ((args.Length > 0) && (args[0].Equals("-DEBUG", StringComparison.CurrentCultureIgnoreCase)))
 				if (arg.Equals("-DEBUG", StringComparison.CurrentCultureIgnoreCase))
 				{

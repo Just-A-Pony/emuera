@@ -83,7 +83,7 @@ namespace MinorShift._Library
 
 	internal static class GDI
 	{
-        [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
+		[DllImport("gdi32.dll", CharSet = CharSet.Auto)]
 		static extern bool TextOut(IntPtr hdc, int nXStart, int nYStart, string lpString, int cbString);
 		[DllImport("gdi32.dll")]
 		static extern uint SetTextColor(IntPtr hdc, int crColor);
@@ -99,7 +99,7 @@ namespace MinorShift._Library
 		static extern IntPtr CreateSolidBrush(int crColor);
 		[DllImport("gdi32.dll")]
 		static extern IntPtr CreatePen(int fnPenStyle, int nWidth, int crColor);
-        [DllImport("gdi32.dll", CharSet = CharSet.Auto)]
+		[DllImport("gdi32.dll", CharSet = CharSet.Auto)]
 		static extern bool GetTextExtentPoint32(IntPtr hdc, string lpString, int cbString, out Size lpSize);
 		[DllImport("gdi32.dll")]
 		static extern bool BitBlt(IntPtr hObject, int nXDest, int nYDest, int nWidth,
@@ -112,10 +112,10 @@ namespace MinorShift._Library
 		[DllImport("gdi32.dll")]
 		static extern bool SetStretchBltMode(IntPtr hdc, StretchMode iStretchMode);
 
-        [DllImport("user32", EntryPoint = "TabbedTextOut", CharSet = CharSet.Auto)]
-        static extern int TabbedTextOutW(IntPtr hdc, int x, int y, string lpString, int nCount, int nTabPositions, ref int lpnTabStopPositions, int nTabOrigin);
-        [DllImport("user32", EntryPoint = "GetTabbedTextExtent", CharSet = CharSet.Auto)]
-        static extern int GetTabbedTextExtentW(IntPtr hdc, string lpString, int nCount, int nTabPositions, ref int lpnTabStopPositions);
+		[DllImport("user32", EntryPoint = "TabbedTextOut", CharSet = CharSet.Auto)]
+		static extern int TabbedTextOutW(IntPtr hdc, int x, int y, string lpString, int nCount, int nTabPositions, ref int lpnTabStopPositions, int nTabOrigin);
+		[DllImport("user32", EntryPoint = "GetTabbedTextExtent", CharSet = CharSet.Auto)]
+		static extern int GetTabbedTextExtentW(IntPtr hdc, string lpString, int nCount, int nTabPositions, ref int lpnTabStopPositions);
 		[DllImport("gdi32.dll")]
 		static extern IntPtr GetStockObject(StockObjects fnObject);
 		[DllImport("gdi32.dll")]

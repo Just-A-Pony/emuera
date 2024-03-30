@@ -45,10 +45,10 @@ namespace MinorShift.Emuera.GameData
 			VariableTerm nameassi = new VariableTerm(nameID, new IOperandTerm[] { assi });
 			VariableTerm callnametarget = new VariableTerm(callnameID, new IOperandTerm[] { target });
 			NameTarget = new FunctionMethodTerm(formatPercent, new IOperandTerm[] { nametarget, null, null });
-            CallnameMaster = new FunctionMethodTerm(formatPercent, new IOperandTerm[] { callnamemaster, null, null });
-            CallnamePlayer = new FunctionMethodTerm(formatPercent, new IOperandTerm[] { callnameplayer, null, null });
-            NameAssi = new FunctionMethodTerm(formatPercent, new IOperandTerm[] { nameassi, null, null });
-            CallnameTarget = new FunctionMethodTerm(formatPercent, new IOperandTerm[] { callnametarget, null, null });
+			CallnameMaster = new FunctionMethodTerm(formatPercent, new IOperandTerm[] { callnamemaster, null, null });
+			CallnamePlayer = new FunctionMethodTerm(formatPercent, new IOperandTerm[] { callnameplayer, null, null });
+			NameAssi = new FunctionMethodTerm(formatPercent, new IOperandTerm[] { nameassi, null, null });
+			CallnameTarget = new FunctionMethodTerm(formatPercent, new IOperandTerm[] { callnametarget, null, null });
 		}
 
 		public static StrForm FromWordToken(StrFormWord wt)
@@ -82,20 +82,20 @@ namespace MinorShift.Emuera.GameData
 					}
 					throw new ExeEE("何かおかしい");
 				}
-                WordCollection wc;
+				WordCollection wc;
 				IOperandTerm operand;
 				YenAtSubWord yenat = SWT as YenAtSubWord;
 				if (yenat != null)
 				{
 					wc = yenat.Words;
-                    if (wc != null)
-                    {
-                        operand = ExpressionParser.ReduceIntegerTerm(wc, TermEndWith.EoL);
-                        if (!wc.EOL)
-                            throw new CodeEE(trerror.AbnormalFirstOperand.Text);
-                    }
-                    else
-                        operand = new SingleTerm(0);
+					if (wc != null)
+					{
+						operand = ExpressionParser.ReduceIntegerTerm(wc, TermEndWith.EoL);
+						if (!wc.EOL)
+							throw new CodeEE(trerror.AbnormalFirstOperand.Text);
+					}
+					else
+						operand = new SingleTerm(0);
 					IOperandTerm left = new StrFormTerm(StrForm.FromWordToken(yenat.Left));
 					IOperandTerm right;
 					if (yenat.Right == null)
@@ -105,37 +105,37 @@ namespace MinorShift.Emuera.GameData
 					termArray[i] = new FunctionMethodTerm(formatYenAt, new IOperandTerm[] { operand, left, right });
 					continue;
 				}
-                wc = SWT.Words;
-                operand = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.Comma);
-                if (operand == null)
-                {
-                    if (SWT is CurlyBraceSubWord)
-                        throw new CodeEE(trerror.EmptyBrace.Text);
-                    else
-                        throw new CodeEE(trerror.EmptyPer.Text);
-                }
-                IOperandTerm second = null;
+				wc = SWT.Words;
+				operand = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.Comma);
+				if (operand == null)
+				{
+					if (SWT is CurlyBraceSubWord)
+						throw new CodeEE(trerror.EmptyBrace.Text);
+					else
+						throw new CodeEE(trerror.EmptyPer.Text);
+				}
+				IOperandTerm second = null;
 				SingleTerm third = null;
 				wc.ShiftNext();
-                if (!wc.EOL)
-                {
-                    second = ExpressionParser.ReduceIntegerTerm(wc, TermEndWith.Comma);
+				if (!wc.EOL)
+				{
+					second = ExpressionParser.ReduceIntegerTerm(wc, TermEndWith.Comma);
 
-                    wc.ShiftNext();
-                    if (!wc.EOL)
-                    {
-                        IdentifierWord id = wc.Current as IdentifierWord;
-                        if (id == null)
-                            throw new CodeEE(trerror.NotSpecifiedLR.Text);
-                        if (string.Equals(id.Code, "LEFT", Config.SCVariable))//標準RIGHT
-                            third = new SingleTerm(1);
-                        else if (!string.Equals(id.Code, "RIGHT", Config.SCVariable))
-                            throw new CodeEE(trerror.OtherThanLR.Text);
-                        wc.ShiftNext();
-                    }
-                    if (!wc.EOL)
-                        throw new CodeEE(trerror.ExtraCharacterLR.Text);
-                }
+					wc.ShiftNext();
+					if (!wc.EOL)
+					{
+						IdentifierWord id = wc.Current as IdentifierWord;
+						if (id == null)
+							throw new CodeEE(trerror.NotSpecifiedLR.Text);
+						if (string.Equals(id.Code, "LEFT", Config.SCVariable))//標準RIGHT
+							third = new SingleTerm(1);
+						else if (!string.Equals(id.Code, "RIGHT", Config.SCVariable))
+							throw new CodeEE(trerror.OtherThanLR.Text);
+						wc.ShiftNext();
+					}
+					if (!wc.EOL)
+						throw new CodeEE(trerror.ExtraCharacterLR.Text);
+				}
 				if (SWT is CurlyBraceSubWord)
 				{
 					if (operand.GetOperandType() != typeof(Int64))
@@ -147,7 +147,7 @@ namespace MinorShift.Emuera.GameData
 					throw new CodeEE(trerror.IsNotStringPer.Text);
 				termArray[i] = new FunctionMethodTerm(formatPercent, new IOperandTerm[] { operand, second, third });
 			}
-            ret.terms = termArray;
+			ret.terms = termArray;
 			return ret;
 		}
 		#endregion

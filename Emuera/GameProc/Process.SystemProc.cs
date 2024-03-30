@@ -108,8 +108,8 @@ namespace MinorShift.Emuera.GameProc
 		void setWaitInput()
 		{
 			InputRequest req = new InputRequest();
-            #region EE_SystemInput拡張
-            if (flowinput)
+			#region EE_SystemInput拡張
+			if (flowinput)
 			{
 				req.HasDefValue = true;
 				req.DefIntValue = flowinputdef;
@@ -510,11 +510,11 @@ namespace MinorShift.Emuera.GameProc
 		{
 			if (console.LastLineIsTemporary && !isCTrain && needCheck)
 			{
-                if (console.LastLineIsEmpty)
-                {
-                    console.deleteLine(2);
-                    console.PrintTemporaryLine(trerror.InvalidValue.Text);
-                }
+				if (console.LastLineIsEmpty)
+				{
+					console.deleteLine(2);
+					console.PrintTemporaryLine(trerror.InvalidValue.Text);
+				}
 				console.updatedGeneration = true;
 				endCallShowUserCom();
 			}
@@ -611,11 +611,11 @@ namespace MinorShift.Emuera.GameProc
 		{
 			if (console.LastLineIsTemporary)
 			{
-                if (console.LastLineIsEmpty)
-                {
-                    console.deleteLine(2);
-                    console.PrintTemporaryLine("無効な値です");
-                }
+				if (console.LastLineIsEmpty)
+				{
+					console.deleteLine(2);
+					console.PrintTemporaryLine("無効な値です");
+				}
 				console.updatedGeneration = true;
 				endCallShowAblupSelect();
 			}
@@ -762,11 +762,11 @@ namespace MinorShift.Emuera.GameProc
 		{
 			if (console.LastLineIsTemporary)
 			{
-                if (console.LastLineIsEmpty)
-                {
-                    console.deleteLine(2);
-                    console.PrintTemporaryLine(trerror.InvalidValue.Text);
-                }
+				if (console.LastLineIsEmpty)
+				{
+					console.deleteLine(2);
+					console.PrintTemporaryLine(trerror.InvalidValue.Text);
+				}
 				console.updatedGeneration = true;
 				endCallShowShop();
 			}

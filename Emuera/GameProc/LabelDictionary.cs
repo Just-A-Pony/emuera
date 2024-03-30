@@ -75,8 +75,8 @@ namespace MinorShift.Emuera.GameProc
 				if (!list[0].IsEvent)
 				{
 					noneventLabelDic.Add(key, list[0]);
-                    GlobalStatic.IdentifierDictionary.resizeLocalVars("ARG", list[0].LabelName, list[0].ArgLength);
-                    GlobalStatic.IdentifierDictionary.resizeLocalVars("ARGS", list[0].LabelName, list[0].ArgsLength);
+					GlobalStatic.IdentifierDictionary.resizeLocalVars("ARG", list[0].LabelName, list[0].ArgLength);
+					GlobalStatic.IdentifierDictionary.resizeLocalVars("ARGS", list[0].LabelName, list[0].ArgsLength);
 					continue;
 				}
 				//1810alpha010 オプションによりイベント関数をイベント関数でないかのように呼び出すことを許可
@@ -84,20 +84,20 @@ namespace MinorShift.Emuera.GameProc
 				if (Config.CompatiCallEvent)
 					noneventLabelDic.Add(key, list[0]);
 				List<FunctionLabelLine>[] eventLabels = new List<FunctionLabelLine>[4];
-                List<FunctionLabelLine> onlylist = new List<FunctionLabelLine>();
+				List<FunctionLabelLine> onlylist = new List<FunctionLabelLine>();
 				List<FunctionLabelLine> prilist = new List<FunctionLabelLine>();
 				List<FunctionLabelLine> normallist = new List<FunctionLabelLine>();
 				List<FunctionLabelLine> laterlist = new List<FunctionLabelLine>();
-                int localMax = 0;
-                int localsMax = 0;
+				int localMax = 0;
+				int localsMax = 0;
 				for (int i = 0; i < list.Count; i++)
 				{
-                    if (list[i].LocalLength > localMax)
-                        localMax = list[i].LocalLength;
-                    if (list[i].LocalsLength > localsMax)
-                        localsMax = list[i].LocalsLength;
-                    if (list[i].IsOnly)
-                        onlylist.Add(list[i]);
+					if (list[i].LocalLength > localMax)
+						localMax = list[i].LocalLength;
+					if (list[i].LocalsLength > localsMax)
+						localsMax = list[i].LocalsLength;
+					if (list[i].IsOnly)
+						onlylist.Add(list[i]);
 					if (list[i].IsPri)
 						prilist.Add(list[i]);
 					if (list[i].IsLater)
@@ -105,23 +105,23 @@ namespace MinorShift.Emuera.GameProc
 					if ((!list[i].IsPri) && (!list[i].IsLater))
 						normallist.Add(list[i]);
 				}
-                if (localMax < GlobalStatic.IdentifierDictionary.getLocalDefaultSize("LOCAL"))
-                    localMax = GlobalStatic.IdentifierDictionary.getLocalDefaultSize("LOCAL");
-                if (localsMax < GlobalStatic.IdentifierDictionary.getLocalDefaultSize("LOCALS"))
-                    localsMax = GlobalStatic.IdentifierDictionary.getLocalDefaultSize("LOCALS");
-                eventLabels[0] = onlylist;
+				if (localMax < GlobalStatic.IdentifierDictionary.getLocalDefaultSize("LOCAL"))
+					localMax = GlobalStatic.IdentifierDictionary.getLocalDefaultSize("LOCAL");
+				if (localsMax < GlobalStatic.IdentifierDictionary.getLocalDefaultSize("LOCALS"))
+					localsMax = GlobalStatic.IdentifierDictionary.getLocalDefaultSize("LOCALS");
+				eventLabels[0] = onlylist;
 				eventLabels[1] = prilist;
 				eventLabels[2] = normallist;
 				eventLabels[3] = laterlist;
-                for (int i = 0; i < 4; i++)
-                {
-                    for (int j = 0; j < eventLabels[i].Count; j++)
-                    {
-                        eventLabels[i][j].LocalLength = localMax;
-                        eventLabels[i][j].LocalsLength = localsMax;
-                    }
-                }
-                eventLabelDic.Add(key, eventLabels);
+				for (int i = 0; i < 4; i++)
+				{
+					for (int j = 0; j < eventLabels[i].Count; j++)
+					{
+						eventLabels[i][j].LocalLength = localMax;
+						eventLabels[i][j].LocalsLength = localsMax;
+					}
+				}
+				eventLabelDic.Add(key, eventLabels);
 			}
 		}
 
@@ -184,13 +184,13 @@ namespace MinorShift.Emuera.GameProc
 
 		public void AddFilename(string filename)
 		{
-            if (loadedFileDic.TryGetValue(filename, out int curCount))
-            {
-                currentFileCount = curCount;
-                RemoveLabelWithPath(filename);
-                return;
-            }
-            totalFileCount++;
+			if (loadedFileDic.TryGetValue(filename, out int curCount))
+			{
+				currentFileCount = curCount;
+				RemoveLabelWithPath(filename);
+				return;
+			}
+			totalFileCount++;
 			currentFileCount = totalFileCount;
 			loadedFileDic.Add(filename, totalFileCount);
 		}
@@ -229,19 +229,19 @@ namespace MinorShift.Emuera.GameProc
 		
 		public List<FunctionLabelLine>[] GetEventLabels(string key)
 		{
-            if (eventLabelDic.TryGetValue(key, out List<FunctionLabelLine>[] ret))
-                return ret;
-            else
-                return null;
-        }
+			if (eventLabelDic.TryGetValue(key, out List<FunctionLabelLine>[] ret))
+				return ret;
+			else
+				return null;
+		}
 
 		public FunctionLabelLine GetNonEventLabel(string key)
 		{
-            if (noneventLabelDic.TryGetValue(key, out FunctionLabelLine ret))
-                return ret;
-            else
-                return null;
-        }
+			if (noneventLabelDic.TryGetValue(key, out FunctionLabelLine ret))
+				return ret;
+			else
+				return null;
+		}
 
 		public List<FunctionLabelLine> GetAllLabels(bool getInvalidList)
 		{
@@ -267,5 +267,5 @@ namespace MinorShift.Emuera.GameProc
 		{
 			invalidList.Add(invalidLabelLine);
 		}
-    }
+	}
 }

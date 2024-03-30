@@ -6,7 +6,7 @@ using trerror = EvilMask.Emuera.Lang.Error;
 namespace MinorShift.Emuera.Sub
 {
 	[Serializable]
-    internal abstract class EmueraException : ApplicationException
+	internal abstract class EmueraException : ApplicationException
 	{
 		protected EmueraException(string errormes, ScriptPosition position)
 			: base(errormes)
@@ -24,8 +24,8 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// emuera本体に起因すると思われるエラー
 	/// </summary>
-    [Serializable]
-    internal sealed class ExeEE : EmueraException
+	[Serializable]
+	internal sealed class ExeEE : EmueraException
 	{
 		public ExeEE(string errormes)
 			: base(errormes)
@@ -40,8 +40,8 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// スクリプト側に起因すると思われるエラー
 	/// </summary>
-    [Serializable]
-    internal class CodeEE : EmueraException
+	[Serializable]
+	internal class CodeEE : EmueraException
 	{
 		public CodeEE(string errormes, ScriptPosition position)
 			: base(errormes, position)
@@ -72,8 +72,8 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// 未実装エラー
 	/// </summary>
-    [Serializable]
-    internal sealed class NotImplCodeEE : CodeEE
+	[Serializable]
+	internal sealed class NotImplCodeEE : CodeEE
 	{
 		public NotImplCodeEE(ScriptPosition position)
 			: base(trerror.CanNotUseFuncCurrentVer.Text, position)
@@ -88,8 +88,8 @@ namespace MinorShift.Emuera.Sub
 	/// <summary>
 	/// Save, Load中のエラー
 	/// </summary>
-    [Serializable]
-    internal sealed class FileEE : EmueraException
+	[Serializable]
+	internal sealed class FileEE : EmueraException
 	{
 		public FileEE(string errormes)
 			: base(errormes)
@@ -109,10 +109,10 @@ namespace MinorShift.Emuera.Sub
 		public ScriptPosition(string srcFile, int srcLineNo)
 		{
 			LineNo = srcLineNo;
-            if (srcFile == null)
+			if (srcFile == null)
 				Filename = "";
-            else
-                Filename = srcFile;
+			else
+				Filename = srcFile;
 		}
 		public readonly int LineNo;
 		public readonly string Filename;

@@ -20,7 +20,7 @@ namespace MinorShift.Emuera.GameData
 		//1.713 上の変更とあわせて。セーブデータのバージョンが1000であり、現在のバージョンが未定義である場合、セーブデータのバージョンを同じとみなす
 		public bool ScriptVersionDefined = false;
 		public Int64 ScriptCompatibleMinVersion = -1;
-        public string Compatible_EmueraVer = "0.000.0.0";
+		public string Compatible_EmueraVer = "0.000.0.0";
 		#region EE_UPDATECHECK
 		public string UpdateCheckURL = "";
 		public string VersionName = "";
@@ -90,10 +90,10 @@ namespace MinorShift.Emuera.GameData
 		/// <returns>読み込み続行するなら真、エラー終了なら偽</returns>
 		public bool LoadGameBaseCsv(string basePath)
 		{
-            if (!File.Exists(basePath))
-            {
-                return true;
-            }
+			if (!File.Exists(basePath))
+			{
+				return true;
+			}
 			ScriptPosition pos = null;
 			EraStreamReader eReader = new EraStreamReader(false);
 			if (!eReader.Open(basePath))
@@ -148,21 +148,21 @@ namespace MinorShift.Emuera.GameData
 							ScriptWindowTitle = tokens[1];
 							break;
 							
-                        case "動作に必要なEmueraのバージョン":
-                            Compatible_EmueraVer = tokens[1];
-                            if (!Regex.IsMatch(Compatible_EmueraVer, @"^\d+\.\d+\.\d+\.\d+$"))
-                            {
-                                ParserMediator.Warn(trerror.CanNotReadVersion.Text, pos, 0);
-                                break;
-                            }
-                            Version curerntVersion = new Version(GlobalStatic.MainWindow.InternalEmueraVer);
-                            Version targetVersoin = new Version(Compatible_EmueraVer);
-                            if (curerntVersion < targetVersoin)
-                            {
-                                ParserMediator.Warn(string.Format(trerror.RequireLaterEmuera.Text, GlobalStatic.MainWindow.EmueraVerText), pos, 2);
-                                return false;
-                            }
-                            break;
+						case "動作に必要なEmueraのバージョン":
+							Compatible_EmueraVer = tokens[1];
+							if (!Regex.IsMatch(Compatible_EmueraVer, @"^\d+\.\d+\.\d+\.\d+$"))
+							{
+								ParserMediator.Warn(trerror.CanNotReadVersion.Text, pos, 0);
+								break;
+							}
+							Version curerntVersion = new Version(GlobalStatic.MainWindow.InternalEmueraVer);
+							Version targetVersoin = new Version(Compatible_EmueraVer);
+							if (curerntVersion < targetVersoin)
+							{
+								ParserMediator.Warn(string.Format(trerror.RequireLaterEmuera.Text, GlobalStatic.MainWindow.EmueraVerText), pos, 2);
+								return false;
+							}
+							break;
 						#region EE_UPDATECHECK
 						case "バージョン情報URL":
 							UpdateCheckURL = tokens[1];
@@ -176,7 +176,7 @@ namespace MinorShift.Emuera.GameData
 			}
 			catch
 			{
-                ParserMediator.Warn(trerror.SomethingErrorInGamebase.Text, pos, 1);
+				ParserMediator.Warn(trerror.SomethingErrorInGamebase.Text, pos, 1);
 				return true;
 			}
 			finally

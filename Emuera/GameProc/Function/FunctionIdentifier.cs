@@ -324,8 +324,8 @@ namespace MinorShift.Emuera.GameProc.Function
 			addFunction(FunctionCode.ARRAYSORT, argb[FunctionArgType.SP_SORTARRAY], METHOD_SAFE | EXTENDED);
 			addFunction(FunctionCode.ARRAYCOPY, argb[FunctionArgType.SP_COPY_ARRAY], METHOD_SAFE | EXTENDED);
 
-            #region EE_SystemInput拡張
-            addFunction(FunctionCode.FLOWINPUT, argb[FunctionArgType.SP_INPUT], METHOD_SAFE | EXTENDED);
+			#region EE_SystemInput拡張
+			addFunction(FunctionCode.FLOWINPUT, argb[FunctionArgType.SP_INPUT], METHOD_SAFE | EXTENDED);
 			#endregion
 			#region EE_SKIPLOG
 			addFunction(FunctionCode.SKIPLOG, argb[FunctionArgType.INT_EXPRESSION], METHOD_SAFE | EXTENDED);
@@ -386,7 +386,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			
 			addFunction(FunctionCode.TOOLTIP_SETCOLOR, new TOOLTIP_SETCOLOR_Instruction());
 			addFunction(FunctionCode.TOOLTIP_SETDELAY, new TOOLTIP_SETDELAY_Instruction());
-            addFunction(FunctionCode.TOOLTIP_SETDURATION, new TOOLTIP_SETDURATION_Instruction());
+			addFunction(FunctionCode.TOOLTIP_SETDURATION, new TOOLTIP_SETDURATION_Instruction());
 
 			addFunction(FunctionCode.INPUTMOUSEKEY, new INPUTMOUSEKEY_Instruction());
 			addFunction(FunctionCode.AWAIT, new AWAIT_Instruction());
@@ -475,30 +475,30 @@ namespace MinorShift.Emuera.GameProc.Function
 
 		internal static string getMatchFunction(FunctionCode func)
 		{
-            if (funcMatch.TryGetValue(func, out string ret))
-                return ret;
-            else
-                return null;
-        }
+			if (funcMatch.TryGetValue(func, out string ret))
+				return ret;
+			else
+				return null;
+		}
 
 
 		internal static FunctionCode getParentFunc(FunctionCode func)
 		{
-            //1755 どうもenum.ToString()が遅いようなので先に逆引き辞書を作ることに
-            if (funcParent.TryGetValue(func, out FunctionCode ret))
-                return ret;
-            else
-                return FunctionCode.__NULL__;
-            //if (funcMatch.ContainsValue(func.ToString()))
-            //{
-            //    foreach (FunctionCode pFunc in funcMatch.Keys)
-            //    {
-            //        if (funcMatch[pFunc] == func.ToString())
-            //            return pFunc;
-            //    }
-            //}
-            //return FunctionCode.__NULL__;
-        }
+			//1755 どうもenum.ToString()が遅いようなので先に逆引き辞書を作ることに
+			if (funcParent.TryGetValue(func, out FunctionCode ret))
+				return ret;
+			else
+				return FunctionCode.__NULL__;
+			//if (funcMatch.ContainsValue(func.ToString()))
+			//{
+			//    foreach (FunctionCode pFunc in funcMatch.Keys)
+			//    {
+			//        if (funcMatch[pFunc] == func.ToString())
+			//            return pFunc;
+			//    }
+			//}
+			//return FunctionCode.__NULL__;
+		}
 		#endregion
 
 		private FunctionIdentifier(string name, FunctionCode code, AbstractInstruction instruction)

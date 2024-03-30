@@ -167,19 +167,19 @@ namespace MinorShift.Emuera.GameData.Variable
 			{
 				if (op2 != null)
 					throw new CodeEE(string.Format(trerror.TooMany1DVarArg.Text, id.Name));
-                if (op1 == null)
-                {
-                    op1 = ZeroTerm;
-                    if (!Config.CompatiRAND && id.Code == VariableCode.RAND)
-                    {
-                        throw new CodeEE(trerror.OmittedRandArg.Text);
-                    }
-                }
-                if (!Config.CompatiRAND && op1 is SingleTerm && id.Code == VariableCode.RAND)
-                {
-                    if (((SingleTerm)op1).Int == 0)
-                        throw new CodeEE(trerror.RandArgIsZero.Text);
-                }
+				if (op1 == null)
+				{
+					op1 = ZeroTerm;
+					if (!Config.CompatiRAND && id.Code == VariableCode.RAND)
+					{
+						throw new CodeEE(trerror.OmittedRandArg.Text);
+					}
+				}
+				if (!Config.CompatiRAND && op1 is SingleTerm && id.Code == VariableCode.RAND)
+				{
+					if (((SingleTerm)op1).Int == 0)
+						throw new CodeEE(trerror.RandArgIsZero.Text);
+				}
 				terms = new IOperandTerm[1];
 				terms[0] = op1;
 			}

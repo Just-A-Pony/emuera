@@ -218,7 +218,7 @@ namespace MinorShift.Emuera
 			}
 			if (char.IsDigit(labelName[0]) && (labelName[0].ToString()).Length == LangManager.GetStrlenLang(labelName[0].ToString()))
 			{
-                errMes = string.Format(treer.LabelStartedHalfDigit.Text, labelName);
+				errMes = string.Format(treer.LabelStartedHalfDigit.Text, labelName);
 				warnLevel = 0;
 				return;
 			}
@@ -429,7 +429,7 @@ namespace MinorShift.Emuera
 						errMes = string.Format(treer.VarNameAlreadyUsedRefFunction.Text, varName);
 						warnLevel = 2;
 						break;
-                }
+				}
 			}
 			privateDimList.Add(varName);
 		}
@@ -479,9 +479,9 @@ namespace MinorShift.Emuera
 		public VariableToken GetVariableToken(string key, string subKey, bool allowPrivate)
 		{
 			VariableToken ret;
-            if (Config.ICVariable)
-                key = key.ToUpper();
-            if (allowPrivate)
+			if (Config.ICVariable)
+				key = key.ToUpper();
+			if (allowPrivate)
 			{
 				LogicalLine line = GlobalStatic.Process.GetScaningLine();
 				if ((line != null) && (line.ParentLabelLine != null))
@@ -498,9 +498,9 @@ namespace MinorShift.Emuera
 			if (localvarTokenDic.ContainsKey(key))
 			{
 				if (localvarTokenDic[key].IsForbid)
-                {
+				{
 					throw new CodeEE(string.Format(treer.UsedProhibitedVar.Text, key));
-                }
+				}
 				LogicalLine line = GlobalStatic.Process.GetScaningLine();
 				if (string.IsNullOrEmpty(subKey))
 				{
@@ -515,26 +515,26 @@ namespace MinorShift.Emuera
 					if (Config.ICFunction)
 						subKey = subKey.ToUpper();
 				}
-                LocalVariableToken retLocal = localvarTokenDic[key].GetExistLocalVariableToken(subKey);
-                if (retLocal == null)
-                    retLocal = localvarTokenDic[key].GetNewLocalVariableToken(subKey, line.ParentLabelLine);
-                return retLocal;
+				LocalVariableToken retLocal = localvarTokenDic[key].GetExistLocalVariableToken(subKey);
+				if (retLocal == null)
+					retLocal = localvarTokenDic[key].GetNewLocalVariableToken(subKey, line.ParentLabelLine);
+				return retLocal;
 			}
 			if (varTokenDic.TryGetValue(key, out ret))
 			{
-                //一文字変数の禁止オプションを考えた名残
-                //if (Config.ForbidOneCodeVariable && ret.CanForbid)
-                //    throw new CodeEE("設定によりシステム一文字数値変数の使用が禁止されています(呼び出された変数：" + ret.Name +")");
-                if (ret.IsForbid)
-                {
+				//一文字変数の禁止オプションを考えた名残
+				//if (Config.ForbidOneCodeVariable && ret.CanForbid)
+				//    throw new CodeEE("設定によりシステム一文字数値変数の使用が禁止されています(呼び出された変数：" + ret.Name +")");
+				if (ret.IsForbid)
+				{
 					if(!ret.CanForbid)
 						throw new ExeEE(string.Format(treer.InvalidProhibitedVar.Text, ret.Name));
 					throw new CodeEE(string.Format(treer.UsedProhibitedVar.Text, ret.Name));
-                }
+				}
 				if (subKey != null)
 					throw new CodeEE(string.Format(treer.UsedAtForGlobalVar.Text, key));
-                return ret;
-            }
+				return ret;
+			}
 			if (subKey != null)
 				throw new CodeEE(treer.InvalidAt.Text);
 			return null;
@@ -543,9 +543,9 @@ namespace MinorShift.Emuera
 		public FunctionIdentifier GetFunctionIdentifier(string str)
 		{
 			string key = str;
-            if (string.IsNullOrEmpty(key))
-                return null;
-            if (Config.ICFunction)
+			if (string.IsNullOrEmpty(key))
+				return null;
+			if (Config.ICFunction)
 				key = key.ToUpper();
 			if (instructionDic.TryGetValue(key, out FunctionIdentifier ret))
 				return ret;
@@ -613,9 +613,9 @@ namespace MinorShift.Emuera
 			}
 			if (userDefinedOnly)
 				return null;
-            if (!methodDic.TryGetValue(codeStr, out FunctionMethod method))
-                return null;
-            string errmes = method.CheckArgumentType(codeStr, arguments);
+			if (!methodDic.TryGetValue(codeStr, out FunctionMethod method))
+				return null;
+			string errmes = method.CheckArgumentType(codeStr, arguments);
 			if (errmes != null)
 				throw new CodeEE(errmes);
 			return new FunctionMethodTerm(method, arguments);
@@ -664,31 +664,31 @@ namespace MinorShift.Emuera
 		}
 		#endregion
 
-        #region util
-        public void resizeLocalVars(string key, string subKey, int newSize)
-        {
-            localvarTokenDic[key].ResizeLocalVariableToken(subKey, newSize);
-        }
+		#region util
+		public void resizeLocalVars(string key, string subKey, int newSize)
+		{
+			localvarTokenDic[key].ResizeLocalVariableToken(subKey, newSize);
+		}
 
-        public int getLocalDefaultSize(string key)
-        {
-            return localvarTokenDic[key].GetDefaultSize();
-        }
+		public int getLocalDefaultSize(string key)
+		{
+			return localvarTokenDic[key].GetDefaultSize();
+		}
 
 		public bool getLocalIsForbid(string key)
 		{
 			return localvarTokenDic[key].IsForbid;
 		}
-        public bool getVarTokenIsForbid(string key)
-        {
-            if (localvarTokenDic.ContainsKey(key))
-                return localvarTokenDic[key].IsForbid;
+		public bool getVarTokenIsForbid(string key)
+		{
+			if (localvarTokenDic.ContainsKey(key))
+				return localvarTokenDic[key].IsForbid;
 			varTokenDic.TryGetValue(key, out VariableToken var);
-            if (var != null)
-                    return var.IsForbid;
-            return true;
-        }
-        #endregion
+			if (var != null)
+					return var.IsForbid;
+			return true;
+		}
+		#endregion
 
 
 	}

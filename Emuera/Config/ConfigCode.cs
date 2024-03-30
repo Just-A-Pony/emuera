@@ -154,8 +154,8 @@ namespace MinorShift.Emuera
 		#endregion
 		#region EE_ERDConfig
 		UseERD,
-        #endregion
-        #region EE_ERDNAME
+		#endregion
+		#region EE_ERDNAME
 		VarsizeDimConfig,
 		#endregion
 		#region EE_重複定義の確認

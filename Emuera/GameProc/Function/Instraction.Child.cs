@@ -114,8 +114,8 @@ namespace MinorShift.Emuera.GameProc.Function
 			readonly bool isForms;
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                if (GlobalStatic.Process.SkipPrint)
-                    return;
+				if (GlobalStatic.Process.SkipPrint)
+					return;
 				exm.Console.UseUserStyle = true;
 				exm.Console.UseSetColorStyle = !func.Function.IsPrintDFunction();
 				string str;
@@ -197,9 +197,9 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                if (GlobalStatic.Process.SkipPrint)
-                    return;
-                exm.Console.UseUserStyle = true;
+				if (GlobalStatic.Process.SkipPrint)
+					return;
+				exm.Console.UseUserStyle = true;
 				exm.Console.UseSetColorStyle = !func.Function.IsPrintDFunction();
 				//表示データが空なら何もしないで飛ぶ
 				if (func.dataList.Count == 0)
@@ -257,10 +257,10 @@ namespace MinorShift.Emuera.GameProc.Function
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
 				if (GlobalStatic.Process.SkipPrint)
-                    return;
+					return;
 				#region EM_私家版_HTML_PRINT拡張
 				var arg = (SpHtmlPrint)func.Argument;
-                // string str;
+				// string str;
 				if (arg.IsConst) exm.Console.PrintHtml(arg.ConstStr, arg.ConstInt != 0);
 				else exm.Console.PrintHtml(arg.Str.GetStrValue(exm), arg.Opt == null ? false : arg.Opt.GetIntValue(exm) != 0);
 				//if (func.Argument.IsConst)
@@ -312,8 +312,8 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                if (GlobalStatic.Process.SkipPrint)
-                    return;
+				if (GlobalStatic.Process.SkipPrint)
+					return;
 				#region EM_私家版_HTMLパラメータ拡張
 				//string str;
 				//if (func.Argument.IsConst)
@@ -351,8 +351,8 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                if (GlobalStatic.Process.SkipPrint)
-                    return;
+				if (GlobalStatic.Process.SkipPrint)
+					return;
 				#region EM_私家版_HTMLパラメータ拡張
 				//ExpressionArrayArgument intExpArg = (ExpressionArrayArgument)func.Argument;
 				//int[] param = new int[intExpArg.TermList.Length];
@@ -384,8 +384,8 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-                if (GlobalStatic.Process.SkipPrint)
-                    return;
+				if (GlobalStatic.Process.SkipPrint)
+					return;
 				#region EM_私家版_HTMLパラメータ拡張
 				//Int64 param;
 				//if (func.Argument.IsConst)
@@ -1189,27 +1189,27 @@ namespace MinorShift.Emuera.GameProc.Function
 			{
 				SpTimesArgument timesArg = (SpTimesArgument)func.Argument;
 				VariableTerm var = timesArg.VariableDest;
-                if (Config.TimesNotRigorousCalculation)
-                {
-                    double d = (double)var.GetIntValue(exm) * timesArg.DoubleValue;
-                    unchecked
-                    {
-                        var.SetValue((Int64)d, exm);
-                    }
-                }
-                else
-                {
-                    decimal d = var.GetIntValue(exm) * (decimal)timesArg.DoubleValue;
-                    unchecked
-                    {
-                        //decimal型は強制的にOverFlowExceptionを投げるので対策が必要
-                        //OverFlowの場合は昔の挙動に近づけてみる
-                        if (d <= Int64.MaxValue && d >= Int64.MinValue)
-                            var.SetValue((Int64)d, exm);
-                        else
-                            var.SetValue((Int64)((double)d), exm);
-                    }
-                }
+				if (Config.TimesNotRigorousCalculation)
+				{
+					double d = (double)var.GetIntValue(exm) * timesArg.DoubleValue;
+					unchecked
+					{
+						var.SetValue((Int64)d, exm);
+					}
+				}
+				else
+				{
+					decimal d = var.GetIntValue(exm) * (decimal)timesArg.DoubleValue;
+					unchecked
+					{
+						//decimal型は強制的にOverFlowExceptionを投げるので対策が必要
+						//OverFlowの場合は昔の挙動に近づけてみる
+						if (d <= Int64.MaxValue && d >= Int64.MinValue)
+							var.SetValue((Int64)d, exm);
+						else
+							var.SetValue((Int64)((double)d), exm);
+					}
+				}
 			}
 		}
 
@@ -1894,29 +1894,29 @@ namespace MinorShift.Emuera.GameProc.Function
 			}
 		}
 
-        private sealed class TOOLTIP_SETDURATION_Instruction : AbstractInstruction
-        {
-            public TOOLTIP_SETDURATION_Instruction()
-            {
-                ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
-                flag = METHOD_SAFE | EXTENDED;
-            }
-            public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
-            {
-                ExpressionArgument arg = (ExpressionArgument)func.Argument;
-                long duration;
-                if (arg.IsConst)
-                    duration = arg.ConstInt;
-                else
-                    duration = arg.Term.GetIntValue(exm);
-                if (duration < 0 || duration > int.MaxValue)
-                    throw new CodeEE(trerror.ArgIsOoR.Text);
-                if (duration > short.MaxValue)
-                    duration = short.MaxValue;
-                exm.Console.SetToolTipDuration((int)duration);
-                return;
-            }
-        }
+		private sealed class TOOLTIP_SETDURATION_Instruction : AbstractInstruction
+		{
+			public TOOLTIP_SETDURATION_Instruction()
+			{
+				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.INT_EXPRESSION);
+				flag = METHOD_SAFE | EXTENDED;
+			}
+			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+			{
+				ExpressionArgument arg = (ExpressionArgument)func.Argument;
+				long duration;
+				if (arg.IsConst)
+					duration = arg.ConstInt;
+				else
+					duration = arg.Term.GetIntValue(exm);
+				if (duration < 0 || duration > int.MaxValue)
+					throw new CodeEE(trerror.ArgIsOoR.Text);
+				if (duration > short.MaxValue)
+					duration = short.MaxValue;
+				exm.Console.SetToolTipDuration((int)duration);
+				return;
+			}
+		}
 		
 		private sealed class INPUTMOUSEKEY_Instruction : AbstractInstruction
 		{
@@ -1941,11 +1941,11 @@ namespace MinorShift.Emuera.GameProc.Function
 				exm.Console.WaitInput(req);
 			}
 		}
-        #region EE_INPUTANY
+		#region EE_INPUTANY
 		private sealed class INPUTANY_Instruction : AbstractInstruction
-        {
+		{
 			public INPUTANY_Instruction()
-            {
+			{
 				ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.VOID);
 				//スキップ不可
 				//flag = IS_PRINT | IS_INPUT | EXTENDED;
