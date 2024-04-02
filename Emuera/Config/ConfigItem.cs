@@ -82,17 +82,21 @@ namespace MinorShift.Emuera
 
 		public override void SetValue<U>(U p)
 		{
-			//if (this is ConfigItem<U>)
-				((ConfigItem<U>)(AConfigItem)this).Value = p;
-			//else
-			//    throw new ExeEE("型が一致しない");
+			////if (this is ConfigItem<U>)
+			//	((ConfigItem<U>)(AConfigItem)this).Value = p;
+			////else
+			////	throw new ExeEE("型が一致しない");
+
+			((ConfigItem<U>)(AConfigItem)this).Value = p;
 		}
 
 		public override U GetValue<U>()
 		{
-			////if (this is ConfigItem<U>)
-				return ((ConfigItem<U>)(AConfigItem)this).Value;
-			//throw new ExeEE("型が一致しない");
+			//////if (this is ConfigItem<U>)
+			//	return ((ConfigItem<U>)(AConfigItem)this).Value;
+			////throw new ExeEE("型が一致しない");
+
+			return ((ConfigItem<U>)(AConfigItem)this).Value;
 		}
 
 		public override string ValueToString()

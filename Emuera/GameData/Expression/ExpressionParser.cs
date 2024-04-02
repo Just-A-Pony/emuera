@@ -670,11 +670,11 @@ namespace MinorShift.Emuera.GameData.Expression
 				stack.Push(newTerm);
 			}
 
-/*			SingleTerm GetSingle(IOperandTerm oprand)
-			{
-				return (SingleTerm)oprand;
-			}
-*/        }
+			//SingleTerm GetSingle(IOperandTerm oprand)
+			//{
+			//	return (SingleTerm)oprand;
+			//}
+		}
 
 	}
 }

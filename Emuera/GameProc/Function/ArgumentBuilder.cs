@@ -54,14 +54,16 @@ namespace MinorShift.Emuera.GameProc.Function
 				warn(trerror.MissingArg.Text, line, 2, false);
 				return false;
 			}
-			if ( arguments.Length < minArg || 
-				((arguments.Length < argumentTypeArray.Length) && (minArg < 0)) )
+			if (
+				arguments.Length < minArg ||
+				((arguments.Length < argumentTypeArray.Length) && (minArg < 0))
+				)
 			{
 				warn(trerror.NotEnoughArguments.Text, line, 2, false);
 				return false;
 			}
 			int length = arguments.Length;
-			if ((arguments.Length > argumentTypeArray.Length)&&(!argAny))
+			if ((arguments.Length > argumentTypeArray.Length) && (!argAny))
 			{
 				warn(trerror.TooManyArg.Text, line, 1, false);
 				length = argumentTypeArray.Length;
@@ -132,7 +134,7 @@ namespace MinorShift.Emuera.GameProc.Function
 	internal static partial class ArgumentParser
 	{
 		readonly static Dictionary<FunctionArgType, ArgumentBuilder> argb = new Dictionary<FunctionArgType, ArgumentBuilder>();
-		
+
 		public static Dictionary<FunctionArgType, ArgumentBuilder> GetArgumentBuilderDictionary()
 		{
 			return argb;
@@ -287,12 +289,12 @@ namespace MinorShift.Emuera.GameProc.Function
 							warn(string.Format(trerror.IncorrectArg.Text, argCount), line, 2, false);
 							return null;
 						}
-						switch(argCount)
+						switch (argCount)
 						{
-							case 2: nameb = arg;break;
-							case 3: namem = arg;break;
+							case 2: nameb = arg; break;
+							case 3: namem = arg; break;
 						}
-					} 
+					}
 					else
 						param.Add(new MixedIntegerExprTerm { num = arg, isPx = (wc.Current.Type != '\0' && wc.Current.Type != ',') });
 					if (wc.Current.Type != '\0' && wc.Current.Type != ',') wc.ShiftNext();
@@ -325,7 +327,7 @@ namespace MinorShift.Emuera.GameProc.Function
 					if (wc.Current.Type != '\0' && wc.Current.Type != ',') wc.ShiftNext();
 					wc.ShiftNext();
 
-					if (param.Count>this.maxArg)
+					if (param.Count > this.maxArg)
 					{
 						warn(trerror.TooManyArg.Text, line, 1, false);
 					}
@@ -383,7 +385,7 @@ namespace MinorShift.Emuera.GameProc.Function
 					if (i == 1 && !(args[i] is SingleTerm)) constInt = false;
 				}
 				var ret = new SpHtmlPrint(args[0], args.Length > 1 ? args[1] : null);
-				if (constStr&&constInt)
+				if (constStr && constInt)
 				{
 					ret.ConstInt = args.Length > 1 ? args[1].GetIntValue(exm) : 0;
 					ret.ConstStr = args[0].GetStrValue(exm);
@@ -497,10 +499,13 @@ namespace MinorShift.Emuera.GameProc.Function
 				StringStream st = line.PopArgumentPrimitive();
 				WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AnalyzePrintV);
 				IOperandTerm[] args = ExpressionParser.ReduceArguments(wc, ArgsEndWith.EoL, false);
-				for(int i = 0; i< args.Length;i++)
+				for (int i = 0; i < args.Length; i++)
 				{
-					if(args[i] == null)
-						{warn(string.Format(trerror.CanNotOmitArg.Text, i + 1), line, 2, false); return null;}
+					if (args[i] == null)
+					{
+						warn(string.Format(trerror.CanNotOmitArg.Text, i + 1), line, 2, false);
+						return null; 
+					}
 					else
 						args[i] = args[i].Restructure(exm);
 				}
@@ -516,8 +521,11 @@ namespace MinorShift.Emuera.GameProc.Function
 				WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.Comma, LexAnalyzeFlag.None);
 				st.ShiftNext();
 				if (st.EOS)
-					{warn(trerror.NotEnoughArguments.Text, line, 2, false); return null;}
-				double d ;
+				{
+					warn(trerror.NotEnoughArguments.Text, line, 2, false);
+					return null;
+				}
+				double d;
 				try
 				{
 					LexicalAnalyzer.SkipWhiteSpace(st);
@@ -543,7 +551,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				return new SpTimesArgument(varTerm, d);
 			}
 		}
-		
+
 		private sealed class FORM_STR_ANY_ArgumentBuilder : ArgumentBuilder
 		{
 			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -586,7 +594,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				return new ExpressionArrayArgument(termList);
 			}
 		}
-	
+
 		private sealed class VOID_ArgumentBuilder : ArgumentBuilder
 		{
 			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -610,7 +618,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 			{
 				StringStream st = line.PopArgumentPrimitive();
-					string rowStr;
+				string rowStr;
 				if (st.EOS)
 				{
 					if (!nullable)
@@ -660,7 +668,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				Argument ret;
 				if (st.EOS)
 				{
-					if(!nullable)
+					if (!nullable)
 					{
 						warn(trerror.MissingArg.Text, line, 2, false);
 						return null;
@@ -678,7 +686,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				IOperandTerm term = ExpressionParser.ToStrFormTerm(sfwt);
 				term = term.Restructure(exm);
 				ret = new ExpressionArgument(term);
-				if(term is SingleTerm)
+				if (term is SingleTerm)
 				{
 					ret.ConstStr = term.GetStrValue(exm);
 					ret.IsConst = true;
@@ -712,7 +720,7 @@ namespace MinorShift.Emuera.GameProc.Function
 
 		private sealed class SP_SORTCHARA_ArgumentBuilder : ArgumentBuilder
 		{
-			
+
 			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 			{
 				VariableTerm varTerm = new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("NO"), new IOperandTerm[] { new SingleTerm(0) });
@@ -866,7 +874,7 @@ namespace MinorShift.Emuera.GameProc.Function
 					if (!wc.EOL)
 					{
 						if (wc.Current.Type != '(')
-						wc.ShiftNext();
+							wc.ShiftNext();
 						args = ExpressionParser.ReduceArguments(wc, ArgsEndWith.RightParenthesis, false);
 					}
 				}
@@ -883,14 +891,14 @@ namespace MinorShift.Emuera.GameProc.Function
 					subNames = new IOperandTerm[0];
 				if (args == null)
 					args = new IOperandTerm[0];
-				for(int i = 0; i < subNames.Length; i++)
+				for (int i = 0; i < subNames.Length; i++)
 					if (subNames != null)
 						subNames[i] = subNames[i].Restructure(exm);
-				for(int i = 0; i < args.Length; i++)
+				for (int i = 0; i < args.Length; i++)
 					if (args[i] != null)
 						args[i] = args[i].Restructure(exm);
 				Argument ret;
-				if(callf)
+				if (callf)
 					ret = new SpCallFArgment(funcname, subNames, args);
 				else
 					ret = new SpCallArgment(funcname, subNames, args);
@@ -916,25 +924,31 @@ namespace MinorShift.Emuera.GameProc.Function
 				CaseExpression[] args = ExpressionParser.ReduceCaseExpressions(wc);
 				if ((!wc.EOL) || (args.Length == 0))
 				{ warn(trerror.WrongFormat.Text, line, 2, false); return null; }
-				for(int i = 0; i < args.Length; i++)
+				for (int i = 0; i < args.Length; i++)
 					args[i].Reduce(exm);
 				return new CaseArgument(args);
 			}
 		}
-		
+
 		private sealed class SP_SET_ArgumentBuilder : ArgumentBuilder
 		{
-			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm) 
+			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 			{
 				WordCollection destWc = line.PopAssignmentDestStr();
 				IOperandTerm[] destTerms = ExpressionParser.ReduceArguments(destWc, ArgsEndWith.EoL, false);
 				SpSetArgument ret;
 				if ((destTerms.Length == 0) || (destTerms[0] == null))
-				{ assignwarn(trerror.CanNotReadLeft.Text, line, 2, false); return null; }
+				{
+					assignwarn(trerror.CanNotReadLeft.Text, line, 2, false);
+					return null;
+				}
 				if (destTerms.Length != 1)
-					{assignwarn(trerror.LeftHasExtraComma.Text, line, 2, false); return null;}
+				{
+					assignwarn(trerror.LeftHasExtraComma.Text, line, 2, false);
+					return null;
+				}
 				if (!(destTerms[0] is VariableTerm varTerm))
-				{//
+				{
 					assignwarn(trerror.LeftIsNotVar.Text, line, 2, false);
 					return null;
 				}
@@ -949,19 +963,28 @@ namespace MinorShift.Emuera.GameProc.Function
 					st = new StringStream("");
 				OperatorCode op = line.AssignOperator;
 				IOperandTerm src;
-				if(varTerm.IsInteger)
+				if (varTerm.IsInteger)
 				{
 					if (op == OperatorCode.AssignmentStr)
-						{ assignwarn(string.Format(trerror.InvalidOpWithInt.Text, OperatorManager.ToOperatorString(op)), line, 2, false); return null; }
-					if((op == OperatorCode.Increment)||(op == OperatorCode.Decrement))
+					{
+						assignwarn(string.Format(trerror.InvalidOpWithInt.Text, OperatorManager.ToOperatorString(op)), line, 2, false);
+						return null;
+					}
+					if ((op == OperatorCode.Increment) || (op == OperatorCode.Decrement))
 					{
 						LexicalAnalyzer.SkipWhiteSpace(st);
 						if (!st.EOS)
 						{
 							if (op == OperatorCode.Increment)
-								{assignwarn(trerror.InvalidOpWithIncrement.Text, line, 2, false);return null;}
+							{
+								assignwarn(trerror.InvalidOpWithIncrement.Text, line, 2, false);
+								return null;
+							}
 							else
-								{assignwarn(trerror.InvalidOpWithDecrement.Text, line, 2, false);return null;}
+							{
+								assignwarn(trerror.InvalidOpWithDecrement.Text, line, 2, false);
+								return null;
+							}
 						}
 						ret = new SpSetArgument(varTerm, null)
 						{
@@ -973,21 +996,33 @@ namespace MinorShift.Emuera.GameProc.Function
 					}
 					WordCollection srcWc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
 					IOperandTerm[] srcTerms = ExpressionParser.ReduceArguments(srcWc, ArgsEndWith.EoL, false);
-					
+
 					if ((srcTerms.Length == 0) || (srcTerms[0] == null))
-						{assignwarn(trerror.CanNotReadRight.Text, line, 2, false); return null;}
+					{
+						assignwarn(trerror.CanNotReadRight.Text, line, 2, false);
+						return null;
+					}
 					if (srcTerms.Length != 1)
 					{
-						if(op != OperatorCode.Assignment)
-						{assignwarn(trerror.CanNotContainMultipleValue.Text, line, 2, false); return null;}
+						if (op != OperatorCode.Assignment)
+						{
+							assignwarn(trerror.CanNotContainMultipleValue.Text, line, 2, false);
+							return null;
+						}
 						bool allConst = true;
 						Int64[] constValues = new Int64[srcTerms.Length];
 						for (int i = 0; i < srcTerms.Length; i++)
 						{
 							if (srcTerms[i] == null)
-							{ assignwarn(trerror.CanNotOmitRight.Text, line, 2, false); return null; }
+							{
+								assignwarn(trerror.CanNotOmitRight.Text, line, 2, false);
+								return null;
+							}
 							if (!srcTerms[i].IsInteger)
-							{ assignwarn(trerror.CanNotAssignStrToInt.Text, line, 2, false); return null; }
+							{
+								assignwarn(trerror.CanNotAssignStrToInt.Text, line, 2, false);
+								return null;
+							}
 							srcTerms[i] = srcTerms[i].Restructure(exm);
 							if (allConst && (srcTerms[i] is SingleTerm))
 								constValues[i] = srcTerms[i].GetIntValue(null);
@@ -1000,13 +1035,16 @@ namespace MinorShift.Emuera.GameProc.Function
 						};
 						return arrayarg;
 					}
-					if(!srcTerms[0].IsInteger)
-						{assignwarn(trerror.CanNotAssignStrToInt.Text, line, 2, false); return null;}
+					if (!srcTerms[0].IsInteger)
+					{
+						assignwarn(trerror.CanNotAssignStrToInt.Text, line, 2, false);
+						return null;
+					}
 					src = srcTerms[0].Restructure(exm);
-					if(op == OperatorCode.Assignment)
+					if (op == OperatorCode.Assignment)
 					{
 						ret = new SpSetArgument(varTerm, src);
-						if(src is SingleTerm)
+						if (src is SingleTerm)
 						{
 							ret.IsConst = true;
 							ret.AddConst = false;
@@ -1014,9 +1052,9 @@ namespace MinorShift.Emuera.GameProc.Function
 						}
 						return ret;
 					}
-					if((op == OperatorCode.Plus)||(op == OperatorCode.Minus))
+					if ((op == OperatorCode.Plus) || (op == OperatorCode.Minus))
 					{
-						if(src is SingleTerm)
+						if (src is SingleTerm)
 						{
 							ret = new SpSetArgument(varTerm, null)
 							{
@@ -1027,18 +1065,21 @@ namespace MinorShift.Emuera.GameProc.Function
 							return ret;
 						}
 					}
-					src = OperatorMethodManager.ReduceBinaryTerm(op,varTerm, src);
+					src = OperatorMethodManager.ReduceBinaryTerm(op, varTerm, src);
 					return new SpSetArgument(varTerm, src);
-					
+
 				}
 				else
 				{
 					if (op == OperatorCode.Assignment)
 					{
 						if (Config.SystemIgnoreStringSet)
-						{ assignwarn(trerror.StrAssignIsPrihibited.Text, line, 2, false); return null; }
+						{
+							assignwarn(trerror.StrAssignIsPrihibited.Text, line, 2, false);
+							return null;
+						}
 						LexicalAnalyzer.SkipHalfSpace(st);//文字列の代入なら半角スペースだけを読み飛ばす
-						//eramakerは代入文では妙なTrim()をする。半端にしか再現できないがとりあえずtrim = true
+														  //eramakerは代入文では妙なTrim()をする。半端にしか再現できないがとりあえずtrim = true
 						StrFormWord sfwt = LexicalAnalyzer.AnalyseFormattedString(st, FormStrEndWith.EoL, true);
 						IOperandTerm term = ExpressionParser.ToStrFormTerm(sfwt);
 						src = term.Restructure(exm);
@@ -1051,19 +1092,25 @@ namespace MinorShift.Emuera.GameProc.Function
 						}
 						return ret;
 					}
-					else if ((op == OperatorCode.Mult)||(op == OperatorCode.Plus)||(op == OperatorCode.AssignmentStr))
+					else if ((op == OperatorCode.Mult) || (op == OperatorCode.Plus) || (op == OperatorCode.AssignmentStr))
 					{
 						WordCollection srcWc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
 						IOperandTerm[] srcTerms = ExpressionParser.ReduceArguments(srcWc, ArgsEndWith.EoL, false);
-						
+
 						if ((srcTerms.Length == 0) || (srcTerms[0] == null))
-							{assignwarn(trerror.CanNotReadRight.Text, line, 2, false); return null;}
+						{
+							assignwarn(trerror.CanNotReadRight.Text, line, 2, false);
+							return null;
+						}
 						if (op == OperatorCode.AssignmentStr)
 						{
 							if (srcTerms.Length == 1)
 							{
 								if (srcTerms[0].IsInteger)
-								{ assignwarn(trerror.CanNotAssignIntToStr.Text, line, 2, false); return null; }
+								{
+									assignwarn(trerror.CanNotAssignIntToStr.Text, line, 2, false);
+									return null;
+								}
 								src = srcTerms[0].Restructure(exm);
 								ret = new SpSetArgument(varTerm, src);
 								if (src is SingleTerm)
@@ -1079,9 +1126,15 @@ namespace MinorShift.Emuera.GameProc.Function
 							for (int i = 0; i < srcTerms.Length; i++)
 							{
 								if (srcTerms[i] == null)
-								{ assignwarn(trerror.CanNotOmitRight.Text, line, 2, false); return null; }
+								{
+									assignwarn(trerror.CanNotOmitRight.Text, line, 2, false);
+									return null;
+								}
 								if (srcTerms[i].IsInteger)
-								{ assignwarn(trerror.CanNotAssignIntToStr.Text, line, 2, false); return null; }
+								{
+									assignwarn(trerror.CanNotAssignIntToStr.Text, line, 2, false);
+									return null;
+								}
 								srcTerms[i] = srcTerms[i].Restructure(exm);
 								if (allConst && (srcTerms[i] is SingleTerm))
 									constValues[i] = srcTerms[i].GetStrValue(null);
@@ -1095,8 +1148,11 @@ namespace MinorShift.Emuera.GameProc.Function
 							return arrayarg;
 						}
 						if (srcTerms.Length != 1)
-						{ assignwarn(trerror.RightHasExtraComma.Text, line, 2, false); return null; }
-							
+						{
+							assignwarn(trerror.RightHasExtraComma.Text, line, 2, false);
+							return null;
+						}
+
 						src = srcTerms[0].Restructure(exm);
 						src = OperatorMethodManager.ReduceBinaryTerm(op, varTerm, src);
 						return new SpSetArgument(varTerm, src);
@@ -1106,7 +1162,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				}
 			}
 		}
-				
+
 		private sealed class METHOD_ArgumentBuilder : ArgumentBuilder
 		{
 			public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -1200,7 +1256,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				return ret;
 			}
 		}
-		
+
 		#region 正規型 popTerms()とcheckArgumentType()を両方行うもの。考えることは最低限でよい。
 
 		private sealed class INT_EXPRESSION_ArgumentBuilder : ArgumentBuilder
@@ -1236,7 +1292,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				{
 					term = terms[0];
 				}
-				
+
 				if (line.FunctionCode == FunctionCode.REPEAT)
 				{
 					if (GlobalStatic.IdentifierDictionary.getVarTokenIsForbid("COUNT"))
@@ -1326,7 +1382,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				return ret;
 			}
 		}
-		
+
 		private sealed class STR_EXPRESSION_ArgumentBuilder : ArgumentBuilder
 		{
 			public STR_EXPRESSION_ArgumentBuilder(bool nullable)
@@ -1608,7 +1664,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				return new SpSwapVarArgument(x, y);
 			}
 		}
-		
+
 		private sealed class VAR_INT_ArgumentBuilder : ArgumentBuilder
 		{
 			public VAR_INT_ArgumentBuilder()
@@ -1872,11 +1928,11 @@ namespace MinorShift.Emuera.GameProc.Function
 					return null;
 				if (!x.Identifier.IsArray1D && !x.Identifier.IsArray2D && !x.Identifier.IsArray3D)
 				{ warn(string.Format(trerror.ArgIsNotArrayVar.Text, "3"), line, 2, false); return null; }
-				VariableTerm term = (terms.Length >= 4) ? getChangeableVariable(terms, 4, line) : new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("RESULT"), new IOperandTerm[]{new SingleTerm(0)});
+				VariableTerm term = (terms.Length >= 4) ? getChangeableVariable(terms, 4, line) : new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("RESULT"), new IOperandTerm[] { new SingleTerm(0) });
 				return new SpSplitArgument(terms[0], terms[1], x.Identifier, term);
 			}
 		}
-		
+
 		private sealed class SP_HTMLSPLIT_ArgumentBuilder : ArgumentBuilder
 		{
 			public SP_HTMLSPLIT_ArgumentBuilder()
@@ -1910,7 +1966,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				return new SpHtmlSplitArgument(terms[0], destVar, term);
 			}
 		}
-		
+
 		private sealed class SP_GETINT_ArgumentBuilder : ArgumentBuilder
 		{
 			public SP_GETINT_ArgumentBuilder()
@@ -1924,7 +1980,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				if (terms.Length == 0)
 				{
 					VariableToken varToken = GlobalStatic.VariableData.GetSystemVariableToken("RESULT");
-					return new SpGetIntArgument(new VariableTerm(varToken, new IOperandTerm[]{new SingleTerm(0)}));
+					return new SpGetIntArgument(new VariableTerm(varToken, new IOperandTerm[] { new SingleTerm(0) }));
 				}
 				if (!checkArgumentType(line, exm, terms))
 					return null;
@@ -1987,7 +2043,7 @@ namespace MinorShift.Emuera.GameProc.Function
 		{
 			public SP_SAVEVAR_ArgumentBuilder()
 			{
-				argumentTypeArray = new Type[] { typeof(string), typeof(string), typeof(void)};
+				argumentTypeArray = new Type[] { typeof(string), typeof(string), typeof(void) };
 				argAny = true;
 				minArg = 3;
 			}
@@ -2156,7 +2212,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			public SP_INPUT_ArgumentBuilder()
 			{
 				#region EM_私家版_INPUT系機能拡張
-				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64)};
+				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64) };
 				#endregion
 				//if (nullable)妥協
 				minArg = 0;
@@ -2202,7 +2258,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				//	ret.IsConst = true;
 				//}
 				IOperandTerm[] terms = popTerms(line);
-				for (int i = 0; i<terms.Length;i++)
+				for (int i = 0; i < terms.Length; i++)
 				{
 					if (terms[i] != null && terms[i].GetOperandType() != typeof(Int64))
 					{
@@ -2303,7 +2359,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				return new SpCopyArrayArgument(terms[0], terms[1]);
 			}
 		}
-		#endregion		
+		#endregion
 
 		/// <summary>
 		/// 一般型。数式と文字列式の組み合わせのみを引数とし、特殊なチェックが必要ないもの

@@ -76,10 +76,10 @@ namespace MinorShift.Emuera.GameView
 		public override int PointX {
 			get { return pointX; }
 			set { pointX = value;
+				#region EE_div各要素の修正
 				foreach (var child in children)
-					#region EE_div各要素の修正
 					child.ShiftPositionX(value + xOffset + divXOffset);
-					#endregion
+				#endregion
 			} }
 		int PointY;
 		int Height;

@@ -1445,12 +1445,11 @@ namespace MinorShift.Emuera.GameData.Variable
 			public override Int32 GetLength(int dimension)
 			{ throw new CodeEE(string.Format(trerror.GetSizePseudoVar.Text, varName)); }
 			public override object GetArray()
-			{ throw new CodeEE(string.Format(trerror.GetDimPseudoVar.Text, varName));
+			{ throw new CodeEE(string.Format(trerror.GetDimPseudoVar.Text, varName)); }
 		}
-	}
 
 
-	private sealed class RandToken : PseudoVariableToken
+		private sealed class RandToken : PseudoVariableToken
 		{
 			public RandToken(VariableCode varCode, VariableData varData)
 				: base(varCode, varData)
