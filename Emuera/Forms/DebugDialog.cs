@@ -46,7 +46,7 @@ namespace MinorShift.Emuera.Forms
 		public void TranslateUI()
 		{
 			this.Text = Lang.UI.DebugDialog.Text;
-			
+
 			this.toolStripMenuItem1.Text = Lang.UI.MainWindow.File.Text;
 			this.ウォッチリストの保存ToolStripMenuItem.Text = Lang.UI.DebugDialog.File.SaveWatchList.Text;
 			this.ウォッチリストの読込ToolStripMenuItem.Text = Lang.UI.DebugDialog.File.LoadWatchList.Text;
@@ -103,7 +103,7 @@ namespace MinorShift.Emuera.Forms
 		private void updateTrace()
 		{
 			string str = mainConsole.GetDebugTraceLog(false);
-			if(str != null)
+			if (str != null)
 				textBoxTrace.Text = str;
 			//textBoxTrace.SelectionStart = textBoxTrace.Text.Length;
 			//textBoxTrace.Focus();
@@ -120,7 +120,7 @@ namespace MinorShift.Emuera.Forms
 
 		private void updateVarWatch()
 		{
-            GlobalStatic.Process.saveCurrentState(false);
+			GlobalStatic.Process.saveCurrentState(false);
 			for (int i = 0; i < listViewWatch.Items.Count - 1; i++)
 			{//無名のアイテムを削除
 				if (listViewWatch.Items[i].Text.Length == 0)
@@ -135,12 +135,12 @@ namespace MinorShift.Emuera.Forms
 				newLVI.SubItems.Add(new ListViewItem.ListViewSubItem(newLVI, ""));
 				listViewWatch.Items.Add(newLVI);
 			}
-			foreach(ListViewItem lvi in listViewWatch.Items)
+			foreach (ListViewItem lvi in listViewWatch.Items)
 			{
 				lvi.SubItems[1].Text = getValueString(lvi.Text);
 			}
 			GlobalStatic.Process.clearMethodStack();
-            GlobalStatic.Process.loadPrevState();
+			GlobalStatic.Process.loadPrevState();
 			this.Update();
 		}
 		private string getValueString(string str)
@@ -176,8 +176,8 @@ namespace MinorShift.Emuera.Forms
 		{
 			if (string.IsNullOrEmpty(e.Label))
 			{
-			//	if (e.Item != listViewWatch.Items.Count - 1)
-			//		listViewWatch.Items.RemoveAt(e.Item);
+				//	if (e.Item != listViewWatch.Items.Count - 1)
+				//		listViewWatch.Items.RemoveAt(e.Item);
 			}
 			else
 			{
@@ -191,31 +191,31 @@ namespace MinorShift.Emuera.Forms
 			}
 		}
 
-        private void checkBoxTopMost_CheckedChanged(object sender, EventArgs e)
-        {
-            this.TopMost = checkBoxTopMost.Checked;
-        }
+		private void checkBoxTopMost_CheckedChanged(object sender, EventArgs e)
+		{
+			this.TopMost = checkBoxTopMost.Checked;
+		}
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+		private void button1_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
 
-        private void 閉じるToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+		private void 閉じるToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
 
-        private void ウォッチリストの読込ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+		private void ウォッチリストの読込ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
 			loadWatchList();
 			updateVarWatch();
-        }
+		}
 
-        private void ウォッチリストの保存ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+		private void ウォッチリストの保存ToolStripMenuItem_Click(object sender, EventArgs e)
+		{
 			saveWatchList();
-        }
+		}
 
 
 		private readonly string watchFilepath = Program.DebugDir + "watchlist.csv";
@@ -321,10 +321,10 @@ namespace MinorShift.Emuera.Forms
 			}
 		}
 
-        private void DebugDialog_Activated(object sender, EventArgs e)
-        {
-            UpdateData();
-        }
+		private void DebugDialog_Activated(object sender, EventArgs e)
+		{
+			UpdateData();
+		}
 
 
 		private void updateSize()
@@ -334,7 +334,7 @@ namespace MinorShift.Emuera.Forms
 
 			if (tabControlMain.SelectedTab == tabPageConsole)
 			{//タブ切り替え直後の時点ではtabPageConsole.Heightは更新されていないのでtabControlMain.Heightより推定するしかない
-				//textBoxConsole.Height = tabPageConsole.Height - textBoxCommand.Height - 9;
+			 //textBoxConsole.Height = tabPageConsole.Height - textBoxCommand.Height - 9;
 				textBoxConsole.Height = tabControlMain.Height - 26 - textBoxCommand.Height - 9;
 			}
 		}
@@ -346,7 +346,7 @@ namespace MinorShift.Emuera.Forms
 			//環境依存かもしれない。誰かに指摘されたら考えよう。
 			tabControlMain.Height = this.Size.Height - 103;
 			updateSize();
-			
+
 		}
 
 		private void listViewWatch_KeyUp(object sender, KeyEventArgs e)
@@ -482,7 +482,7 @@ namespace MinorShift.Emuera.Forms
 			this.TopMost = false;
 			DebugConfigDialog dialog = new DebugConfigDialog();
 			dialog.TranslateUI();
-            dialog.StartPosition = FormStartPosition.CenterParent;
+			dialog.StartPosition = FormStartPosition.CenterParent;
 			dialog.SetConfig(this);
 			dialog.ShowDialog();
 			this.TopMost = tempTopMost;
