@@ -292,7 +292,7 @@ namespace MinorShift.Emuera.GameData.Variable
 		}
 	}
 
-	
+
 	internal sealed class FixedVariableTerm : VariableTerm
 	{
 		public FixedVariableTerm(VariableToken token)
@@ -308,21 +308,21 @@ namespace MinorShift.Emuera.GameData.Variable
 			allArgIsConst = true;
 			this.Identifier = token;
 			transporter = new Int64[3];
-			for(int i = 0;i< args.Length;i++)
+			for (int i = 0; i < args.Length; i++)
 				transporter[i] = args[i];
 		}
-		public Int64 Index1{get{return transporter[0];} set{transporter[0] = value;}}
-		public Int64 Index2{get{return transporter[1];} set{transporter[1] = value;}}
-		public Int64 Index3{get{return transporter[2];} set{transporter[2] = value;}}
-		
-		
+		public Int64 Index1 { get { return transporter[0]; } set { transporter[0] = value; } }
+		public Int64 Index2 { get { return transporter[1]; } set { transporter[1] = value; } }
+		public Int64 Index3 { get { return transporter[2]; } set { transporter[2] = value; } }
+
+
 		public override Int64 GetIntValue(ExpressionMediator exm)
 		{
 			try
 			{
 				return Identifier.GetIntValue(exm, transporter);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				if ((e is IndexOutOfRangeException) || (e is ArgumentOutOfRangeException) || (e is OverflowException))
 					Identifier.CheckElement(transporter);
@@ -338,7 +338,7 @@ namespace MinorShift.Emuera.GameData.Variable
 					return "";
 				return ret;
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				if ((e is IndexOutOfRangeException) || (e is ArgumentOutOfRangeException) || (e is OverflowException))
 					Identifier.CheckElement(transporter);
@@ -352,7 +352,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			{
 				Identifier.SetValue(value, transporter);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				if ((e is IndexOutOfRangeException) || (e is ArgumentOutOfRangeException) || (e is OverflowException))
 					Identifier.CheckElement(transporter);
@@ -365,7 +365,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			{
 				Identifier.SetValue(value, transporter);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				if ((e is IndexOutOfRangeException) || (e is ArgumentOutOfRangeException) || (e is OverflowException))
 					Identifier.CheckElement(transporter);
@@ -379,21 +379,21 @@ namespace MinorShift.Emuera.GameData.Variable
 			{
 				return Identifier.PlusValue(value, transporter);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				if ((e is IndexOutOfRangeException) || (e is ArgumentOutOfRangeException) || (e is OverflowException))
 					Identifier.CheckElement(transporter);
 				throw;
 			}
 		}
-		
+
 		public override IOperandTerm Restructure(ExpressionMediator exm)
 		{
 			if (Identifier.CanRestructure)
 				return GetValue(exm);
 			return this;
 		}
-		
+
 		public void IsArrayRangeValid(Int64 index1, Int64 index2, string funcName, Int64 i1, Int64 i2)
 		{
 			Identifier.IsArrayRangeValid(transporter, index1, index2, funcName, i1, i2);
@@ -440,7 +440,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			return this;
 		}
 
-	
+
 
 	}
 }

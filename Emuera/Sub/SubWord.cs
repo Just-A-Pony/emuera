@@ -16,9 +16,9 @@ namespace MinorShift.Emuera.Sub
 		public virtual void SetIsMacro()
 		{
 			IsMacro = true;
-			if(Words != null)
+			if (Words != null)
 				Words.SetIsMacro();
-			
+
 		}
 	}
 

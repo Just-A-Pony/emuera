@@ -27,13 +27,13 @@ namespace MinorShift.Emuera.GameData.Expression
 		public readonly VariableEvaluator VEvaluator;
 		public readonly Process Process;
 		public readonly EmueraConsole Console;
-		
-		
-		
+
+
+
 		private bool forceHiragana;
 		private bool forceKatakana;
 		private bool halftoFull;
-		
+
 		public void ForceKana(Int64 flag)
 		{
 			if (flag < 0 || flag > 3)
@@ -42,7 +42,7 @@ namespace MinorShift.Emuera.GameData.Expression
 			forceHiragana = (flag > 1) ? true : false;
 			halftoFull = (flag == 3) ? true : false;
 		}
-		
+
 		public bool ForceKana()
 		{
 			return (forceHiragana | forceKatakana | halftoFull);

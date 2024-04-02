@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace MinorShift.Emuera.Forms
 {
-	internal sealed class EraPictureBox:PictureBox
+	internal sealed class EraPictureBox : PictureBox
 	{
 		public EraPictureBox()
 		{

@@ -70,7 +70,7 @@ namespace MinorShift.Emuera.GameProc
 			{
 				string key = pair.Key;
 				List<FunctionLabelLine> list = pair.Value;
-				if(list.Count > 1)
+				if (list.Count > 1)
 					list.Sort();
 				if (!list[0].IsEvent)
 				{
@@ -226,7 +226,7 @@ namespace MinorShift.Emuera.GameProc
 
 		#endregion
 
-		
+
 		public List<FunctionLabelLine>[] GetEventLabels(string key)
 		{
 			if (eventLabelDic.TryGetValue(key, out List<FunctionLabelLine>[] ret))
@@ -248,7 +248,7 @@ namespace MinorShift.Emuera.GameProc
 			List<FunctionLabelLine> ret = new List<FunctionLabelLine>();
 			foreach (List<FunctionLabelLine> list in labelAtDic.Values)
 				ret.AddRange(list);
-			if(getInvalidList)
+			if (getInvalidList)
 				ret.AddRange(invalidList);
 			return ret;
 		}
@@ -262,7 +262,7 @@ namespace MinorShift.Emuera.GameProc
 			}
 			return null;
 		}
-		
+
 		internal void AddInvalidLabel(FunctionLabelLine invalidLabelLine)
 		{
 			invalidList.Add(invalidLabelLine);

@@ -42,7 +42,7 @@ namespace EvilMask.Emuera
 			dt.Columns.Add("depth", typeof(int)); // divの奥行き
 			dt.Columns.Add("top", typeof(int)); // divの一行目がこの行より下回る
 			dt.Columns.Add("bottom", typeof(int)); // divの一行目がこの行より上回る
-			dt.Columns.Add("id", typeof(Int64));　// ユニークID（保存時点のTimeStamp）
+			dt.Columns.Add("id", typeof(Int64)); // ユニークID（保存時点のTimeStamp）
 			dt.Columns.Add("div", typeof(sbyte)); //　divの種類（display:absoluteかdisplay:relativeか）
 		}
 		public static void Clear()
@@ -62,7 +62,7 @@ namespace EvilMask.Emuera
 			row[ROW_BOTTOM] = bottom;
 			row[ROW_ID] = id;
 			if (part is ConsoleDivPart div)
-				row[ROW_DIVTYPE] = (!div.IsRelative ? 2 : 0) | 1;　// bit1 : divであるなら1　bit2 : divがdisplay:absoluteなら1
+				row[ROW_DIVTYPE] = (!div.IsRelative ? 2 : 0) | 1; // bit1 : divであるなら1　bit2 : divがdisplay:absoluteなら1
 			else
 				row[ROW_DIVTYPE] = 0;
 			dt.Rows.Add(row);

@@ -243,7 +243,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				//state.RunningLine = null;
 			}
 		}
-		
+
 		private sealed class HTML_PRINT_Instruction : AbstractInstruction
 		{
 			public HTML_PRINT_Instruction()
@@ -284,21 +284,21 @@ namespace MinorShift.Emuera.GameProc.Function
 				SpHtmlSplitArgument spSplitArg = (SpHtmlSplitArgument)func.Argument;
 				string str = spSplitArg.TargetStr.GetStrValue(exm);
 				string[] strs = MinorShift.Emuera.GameView.HtmlManager.HtmlTagSplit(str);
-				
+
 				if (strs == null)
 				{
 					spSplitArg.Num.SetValue(-1, exm);
 					return;
 				}
-				
+
 				spSplitArg.Num.SetValue(strs.Length, exm);
 				string[] output = (string[])spSplitArg.Var.GetArray();
 				int outputlength = Math.Min(output.Length, strs.Length);
 				Array.Copy(strs, output, outputlength);
 			}
 		}
-		
-		
+
+
 		private sealed class PRINT_IMG_Instruction : AbstractInstruction
 		{
 			public PRINT_IMG_Instruction()
@@ -675,7 +675,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			}
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-				exm.Console.ReadAnyKey(true,false);
+				exm.Console.ReadAnyKey(true, false);
 			}
 		}
 
@@ -1176,7 +1176,7 @@ namespace MinorShift.Emuera.GameProc.Function
 					exm.Console.NewLine();
 			}
 		}
-		
+
 		private sealed class TIMES_Instruction : AbstractInstruction
 		{
 			public TIMES_Instruction()
@@ -1228,7 +1228,7 @@ namespace MinorShift.Emuera.GameProc.Function
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
-				if(!Config.CompatiSPChara && isSp)
+				if (!Config.CompatiSPChara && isSp)
 					throw new CodeEE(trerror.SPCharaConfigIsOff.Text);
 				ExpressionArrayArgument intExpArg = (ExpressionArrayArgument)func.Argument;
 				Int64 integer;
@@ -1244,7 +1244,7 @@ namespace MinorShift.Emuera.GameProc.Function
 					}
 					else
 					{
-						if(Config.CompatiSPChara)
+						if (Config.CompatiSPChara)
 							exm.VEvaluator.AddCharacter_UseSp(integer, isSp);
 						else
 							exm.VEvaluator.AddCharacter(integer);
@@ -1252,7 +1252,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				}
 				if (isDel)
 				{
-					if(charaNoList.Length == 1)
+					if (charaNoList.Length == 1)
 						exm.VEvaluator.DelCharacter(charaNoList[0]);
 					else
 						exm.VEvaluator.DelCharacter(charaNoList);
@@ -1865,8 +1865,8 @@ namespace MinorShift.Emuera.GameProc.Function
 					throw new CodeEE(string.Format(trerror.ArgIsOoRColorCode.Text, "1"));
 				if (backColor < 0 || backColor > 0xFFFFFF)
 					throw new CodeEE(string.Format(trerror.ArgIsOoRColorCode.Text, "2"));
-				Color fc = Color.FromArgb((int)foreColor >>16, (int)foreColor>>8 &0xFF,(int)foreColor &0xFF);
-				Color bc = Color.FromArgb((int)backColor >>16, (int)backColor>>8 &0xFF,(int)backColor &0xFF);
+				Color fc = Color.FromArgb((int)foreColor >> 16, (int)foreColor >> 8 & 0xFF, (int)foreColor & 0xFF);
+				Color bc = Color.FromArgb((int)backColor >> 16, (int)backColor >> 8 & 0xFF, (int)backColor & 0xFF);
 				exm.Console.SetToolTipColor(fc, bc);
 				return;
 			}
@@ -1883,7 +1883,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			{
 				ExpressionArgument arg = (ExpressionArgument)func.Argument;
 				long delay;
-				if(arg.IsConst)
+				if (arg.IsConst)
 					delay = arg.ConstInt;
 				else
 					delay = arg.Term.GetIntValue(exm);
@@ -1917,7 +1917,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				return;
 			}
 		}
-		
+
 		private sealed class INPUTMOUSEKEY_Instruction : AbstractInstruction
 		{
 			public INPUTMOUSEKEY_Instruction()
@@ -1925,7 +1925,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				ArgBuilder = ArgumentParser.GetNormalArgumentBuilder("I", 0);
 				//スキップ不可
 				//flag = IS_PRINT | IS_INPUT | EXTENDED;
-				flag =EXTENDED;
+				flag = EXTENDED;
 			}
 
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
@@ -1935,7 +1935,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				if (arg.ArgumentArray.Length > 0)
 					time = arg.ArgumentArray[0].GetIntValue(exm);
 				InputRequest req = new InputRequest();
-				req.InputType = InputType.PrimitiveMouseKey; 
+				req.InputType = InputType.PrimitiveMouseKey;
 				if (time > 0)
 					req.Timelimit = (int)time;
 				exm.Console.WaitInput(req);
@@ -2009,7 +2009,7 @@ namespace MinorShift.Emuera.GameProc.Function
 								count++;
 						}
 					}
-					loopep:
+				loopep:
 					List<AConsoleDisplayPart> ep;
 					foreach (var value in exm.Console.EscapedParts)
 					{
@@ -2177,7 +2177,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				foreach (var opt in arg.Options)
 				{
 					var v = arg.Values[idx];
-					switch(opt)
+					switch (opt)
 					{
 						case SpDtColumnOptions.DTOptions.Default:
 							if (v.GetOperandType() != (isString ? typeof(string) : typeof(Int64)))
@@ -2422,9 +2422,10 @@ namespace MinorShift.Emuera.GameProc.Function
 							if (result == DialogResult.Yes)
 							{
 								exm.VEvaluator.RESULT = 2;
-								System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo{
+								System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+								{
 									UseShellExecute = true,
-									FileName = link, 
+									FileName = link,
 								});
 								//System.Diagnostics.Process.Start(link);
 								st.Close();
@@ -2744,11 +2745,11 @@ namespace MinorShift.Emuera.GameProc.Function
 			public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 			{
 				LogicalLine ifJumpto = func.JumpTo;//ENDIF
-				//チェック済み
-				//if (func.IfCaseList == null)
-				//	throw new ExeEE("IFのIF-ELSEIFリストが適正に作成されていない");
-				//if (func.JumpTo == null)
-				//	throw new ExeEE("IFに対応するENDIFが設定されていない");
+												   //チェック済み
+												   //if (func.IfCaseList == null)
+												   //	throw new ExeEE("IFのIF-ELSEIFリストが適正に作成されていない");
+												   //if (func.JumpTo == null)
+												   //	throw new ExeEE("IFに対応するENDIFが設定されていない");
 
 				InstructionLine line;
 				for (int i = 0; i < func.IfCaseList.Count; i++)

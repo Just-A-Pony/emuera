@@ -17,7 +17,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			this.creater = creater;
 		}
 		readonly int size;
-		public bool IsForbid { get {return size == 0;}}
+		public bool IsForbid { get { return size == 0; } }
 		VariableCode varCode;
 		//VariableData varData;
 		CreateLocalVariableToken creater;
@@ -48,7 +48,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				newSize = func.ArgsLength;
 			if (newSize > 0)
 			{
-				if((newSize < size) && ((varCode == VariableCode.ARG) || (varCode == VariableCode.ARGS)))
+				if ((newSize < size) && ((varCode == VariableCode.ARG) || (varCode == VariableCode.ARGS)))
 					newSize = size;
 				ret = creater(varCode, subKey, newSize);
 			}
@@ -104,6 +104,6 @@ namespace MinorShift.Emuera.GameData.Variable
 		}
 	}
 
-	
-	
+
+
 }

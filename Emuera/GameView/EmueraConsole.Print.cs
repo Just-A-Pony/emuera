@@ -436,7 +436,7 @@ namespace MinorShift.Emuera.GameView
 				return;
 			if (toPrintBuffer)
 			{
-				foreach(var button in HtmlManager.Html2ButtonList(str, stringMeasure, this))
+				foreach (var button in HtmlManager.Html2ButtonList(str, stringMeasure, this))
 					printBuffer.AppendButton(button);
 			}
 			else
@@ -790,8 +790,8 @@ namespace MinorShift.Emuera.GameView
 				return null;
 			if (printBuffer.IsEmpty)
 				return null;
-			return  printBuffer.Flush(stringMeasure, force_temporary);
+			return printBuffer.Flush(stringMeasure, force_temporary);
 		}
-		
+
 	}
 }

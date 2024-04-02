@@ -6,14 +6,14 @@ namespace MinorShift.Emuera.GameData.Expression
 {
 	internal enum OperatorCode
 	{
-		
+
 		//単項 > "*/%" > "+-" > 比較                > ビット演算  > 論理演算 > 代入
 		//xx   > 90    > 80   > 65,60(不等価優先)   > 50          > 40       > xx
 		//優先順は本家に準拠
 		NULL = 0,
 		__PRIORITY_MASK__ = 0xFF,
 		__UNARY__ = 0x10000,//単項
-		__BINARY__ =  0x20000,//2項
+		__BINARY__ = 0x20000,//2項
 		__TERNARY__ = 0x40000,//3項
 		__UNARY_AFTER__ = 0x80000,//後置単項
 		Plus = 0x0100 + 0x80 | __UNARY__ | __BINARY__,//"+"単項可
@@ -56,7 +56,7 @@ namespace MinorShift.Emuera.GameData.Expression
 		readonly static Dictionary<string, OperatorCode> opDictionary;
 		static OperatorManager()
 		{
-		
+
 			opDictionary = new Dictionary<string, OperatorCode>();
 			opDictionary.Add("+", OperatorCode.Plus);
 			opDictionary.Add("-", OperatorCode.Minus);
@@ -94,9 +94,9 @@ namespace MinorShift.Emuera.GameData.Expression
 		{
 			if (op == OperatorCode.NULL)
 				return "";
-			foreach(KeyValuePair<string, OperatorCode> pair in opDictionary)
+			foreach (KeyValuePair<string, OperatorCode> pair in opDictionary)
 			{
-				if(op == pair.Value)
+				if (op == pair.Value)
 					return pair.Key;
 			}
 			return "";

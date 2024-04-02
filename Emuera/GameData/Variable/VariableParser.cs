@@ -194,7 +194,7 @@ namespace MinorShift.Emuera.GameData.Variable
 					#region EE_ERD
 					// terms[i] = new VariableStrArgTerm(id.Code, terms[i], i);
 					terms[i] = new VariableStrArgTerm(id.Code, terms[i], i, id.Name);
-					#endregion
+			#endregion
 
 			return new VariableTerm(id, terms);
 		}

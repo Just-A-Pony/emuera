@@ -8,11 +8,13 @@ namespace MinorShift._Library
 		public void play(string filename, int repeat = 1)
 		{
 			player.URL = filename;
-			if (repeat == -1) {
+			if (repeat == -1)
+			{
 				player.settings.playCount = 1;
 				player.settings.setMode("loop", true);
 			}
-			else {
+			else
+			{
 				player.settings.setMode("loop", false);
 				player.settings.playCount = repeat;
 			}

@@ -85,7 +85,7 @@ namespace MinorShift.Emuera.GameView
 			//負の値が指定される可能性があるが、最終的なWidthは正の値になるようにあとで調整する。
 			//if (raw_width == 0)
 			if (raw_width == null || raw_width.num == 0)
-				{
+			{
 				Width = cImage.DestBaseSize.Width * height / cImage.DestBaseSize.Height;
 				XsubPixel = ((float)cImage.DestBaseSize.Width * height) / cImage.DestBaseSize.Height - Width;
 			}
@@ -137,14 +137,14 @@ namespace MinorShift.Emuera.GameView
 		private readonly int top;
 		private readonly int bottom;
 		private readonly Rectangle destRect;
-//#pragma warning disable CS0649 // フィールド 'ConsoleImagePart.ia' は割り当てられません。常に既定値 null を使用します。
-//		private readonly ImageAttributes ia;
-//#pragma warning restore CS0649 // フィールド 'ConsoleImagePart.ia' は割り当てられません。常に既定値 null を使用します。
+		//#pragma warning disable CS0649 // フィールド 'ConsoleImagePart.ia' は割り当てられません。常に既定値 null を使用します。
+		//		private readonly ImageAttributes ia;
+		//#pragma warning restore CS0649 // フィールド 'ConsoleImagePart.ia' は割り当てられません。常に既定値 null を使用します。
 		public readonly string ResourceName;
 		public readonly string ButtonResourceName;
 		public override int Top { get { return top; } }
 		public override int Bottom { get { return bottom; } }
-		
+
 		public override bool CanDivide { get { return false; } }
 		public override void SetWidth(StringMeasure sm, float subPixel)
 		{

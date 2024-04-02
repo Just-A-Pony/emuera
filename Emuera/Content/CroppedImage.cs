@@ -43,7 +43,7 @@ namespace MinorShift.Emuera.Content
 		public abstract void GraphicsDraw(Graphics g, Rectangle destRect);
 		public abstract void GraphicsDraw(Graphics g, Rectangle destRect, ImageAttributes attr);
 		public abstract void Dispose();
-		public void Move(Point point){ DestBasePosition.Offset(point); }
+		public void Move(Point point) { DestBasePosition.Offset(point); }
 	}
 
 
@@ -172,7 +172,7 @@ namespace MinorShift.Emuera.Content
 			FrameList = new List<AnimeFrame>();
 			totaltime = 0;
 		}
-		private sealed class AnimeFrame :IDisposable
+		private sealed class AnimeFrame : IDisposable
 		{
 			public int index;
 			public AbstractImage BaseImage;
@@ -207,7 +207,7 @@ namespace MinorShift.Emuera.Content
 			frame.BaseImage = parentImage;
 			frame.SrcRectangle = rect;
 			frame.Offset = pos;
-			if(delay <= 0)
+			if (delay <= 0)
 				delay = 1;
 			frame.DelayTimeMs = delay;
 			frame.Normalize(DestBaseSize);
@@ -215,7 +215,7 @@ namespace MinorShift.Emuera.Content
 			FrameList.Add(frame);
 			return true;
 		}
-		
+
 		/// <summary>
 		/// アニメの経過時間を削除して最初からやり直す
 		/// </summary>
@@ -257,9 +257,9 @@ namespace MinorShift.Emuera.Content
 			//winmmtimerは一周して0になることがあり得るのでその場合の対策。C#の剰余の結果の符号は左辺値の符号に等しい。
 			if (time < 0)
 				time += totaltime;
-			foreach(AnimeFrame frame in FrameList)
+			foreach (AnimeFrame frame in FrameList)
 			{
-				time -=frame.DelayTimeMs;
+				time -= frame.DelayTimeMs;
 				if (time <= 0)
 				{
 					lastFrame = frame.index;

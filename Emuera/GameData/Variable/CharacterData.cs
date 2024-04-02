@@ -461,12 +461,12 @@ namespace MinorShift.Emuera.GameData.Variable
 					case VariableCode.__STRING__ | VariableCode.__ARRAY_2D__:
 						writer.WriteWithKey(code.ToString(), dataStringArray2D[CodeInt]);
 						break;
-					//case VariableCode.__INTEGER__ | VariableCode.__ARRAY_3D__:
-					//    writer.Write(code.ToString(), dataIntegerArray3D[CodeInt]);
-					//    break;
-					//case VariableCode.__STRING__ | VariableCode.__ARRAY_3D__:
-					//    writer.Write(code.ToString(), dataStringArray3D[CodeInt]);
-					//    break;
+						//case VariableCode.__INTEGER__ | VariableCode.__ARRAY_3D__:
+						//    writer.Write(code.ToString(), dataIntegerArray3D[CodeInt]);
+						//    break;
+						//case VariableCode.__STRING__ | VariableCode.__ARRAY_3D__:
+						//    writer.Write(code.ToString(), dataStringArray3D[CodeInt]);
+						//    break;
 				}
 			}
 

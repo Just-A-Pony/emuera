@@ -38,7 +38,7 @@ namespace MinorShift.Emuera.Content
 		{
 			if (gList.ContainsKey(i))
 				return gList[i];
-			GraphicsImage g =  new GraphicsImage(i);
+			GraphicsImage g = new GraphicsImage(i);
 			gList[i] = g;
 			return g;
 		}
@@ -77,7 +77,7 @@ namespace MinorShift.Emuera.Content
 			else
 			{
 				imageDictionary = new Dictionary<string, ASprite>(resourceImageDictionary);
-				return sprites-csprites;
+				return sprites - csprites;
 			}
 		}
 
@@ -98,7 +98,7 @@ namespace MinorShift.Emuera.Content
 			SpriteAnime newCImg = new SpriteAnime(imgName, new Size(w, h));
 			imageDictionary[imgName] = newCImg;
 		}
-		
+
 		static public bool LoadContents(bool reload)
 		{
 			if (!Directory.Exists(Program.ContentDir))
@@ -213,7 +213,7 @@ namespace MinorShift.Emuera.Content
 		/// <returns></returns>
 		static private AContentItem CreateFromCsv(string[] tokens, string dir, SpriteAnime currentAnime, ScriptPosition sp)
 		{
-			if(tokens.Length < 2)
+			if (tokens.Length < 2)
 				return null;
 			string name = tokens[0].Trim().ToUpper();//
 			string arg2 = tokens[1].ToUpper();//画像ファイル名
@@ -237,13 +237,13 @@ namespace MinorShift.Emuera.Content
 					ParserMediator.Warn(trerror.InvalidAnimationSpriteSize.Text, sp, 1);
 					return null;
 				}
-				SpriteAnime anime = new SpriteAnime(name, new Size(sizeValue[0],sizeValue[1]));
+				SpriteAnime anime = new SpriteAnime(name, new Size(sizeValue[0], sizeValue[1]));
 
 				return anime;
 			}
 			//アニメ宣言以外（アニメ用フレーム含む
 
-			if(arg2.IndexOf('.', StringComparison.Ordinal) < 0)
+			if (arg2.IndexOf('.', StringComparison.Ordinal) < 0)
 			{
 				ParserMediator.Warn(string.Format(trerror.MissingSecondArgumentExtension.Text, arg2), sp, 1);
 				return null;
@@ -317,7 +317,7 @@ namespace MinorShift.Emuera.Content
 						return null;
 					}
 				}
-				if(tokens.Length >= 8)
+				if (tokens.Length >= 8)
 				{
 					sccs = true;
 					for (int i = 0; i < 2; i++)
@@ -346,7 +346,7 @@ namespace MinorShift.Emuera.Content
 			//既存のスプライトに対するフレーム追加
 			if (currentAnime != null && currentAnime.Name == name)
 			{
-				if(!currentAnime.AddFrame(parentImage, rect, pos, delay))
+				if (!currentAnime.AddFrame(parentImage, rect, pos, delay))
 				{
 					ParserMediator.Warn(string.Format(trerror.FailedAddSpriteFrame.Text, arg2), sp, 1);
 					return null;

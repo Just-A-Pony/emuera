@@ -27,7 +27,7 @@ namespace MinorShift.Emuera.GameView
 {
 	//入出力待ちの状況。
 	//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
-	[global::System.Reflection.Obfuscation(Exclude=false)]
+	[global::System.Reflection.Obfuscation(Exclude = false)]
 	internal enum ConsoleState
 	{
 		Initializing = 0,
@@ -56,7 +56,7 @@ namespace MinorShift.Emuera.GameView
 	}
 
 	//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
-	[global::System.Reflection.Obfuscation(Exclude=false)]
+	[global::System.Reflection.Obfuscation(Exclude = false)]
 	internal enum ConsoleRedraw
 	{
 		None = 0,
@@ -258,10 +258,12 @@ namespace MinorShift.Emuera.GameView
 		// ConsoleState state = ConsoleState.Initializing;
 		#region EM_私家版_描画拡張
 		ConsoleState _state = ConsoleState.Initializing;
-		ConsoleState state {
+		ConsoleState state
+		{
 			get { return _state; }
-			set { 
-				switch(value)
+			set
+			{
+				switch (value)
 				{
 					case ConsoleState.Quit:
 					case ConsoleState.Error:
@@ -507,23 +509,23 @@ namespace MinorShift.Emuera.GameView
 				//古い選択肢を選択できないように。INPUTで使った選択肢をINPUTSには流用できないように。
 				case InputType.IntValue:
 				case InputType.IntButton:
-						if (lastButtonGeneration == newButtonGeneration)
-							unchecked { newButtonGeneration++; }
-						else if (!lastButtonIsInput)
-							lastButtonGeneration = newButtonGeneration;
-						lastButtonIsInput = true;
-						break;
+					if (lastButtonGeneration == newButtonGeneration)
+						unchecked { newButtonGeneration++; }
+					else if (!lastButtonIsInput)
+						lastButtonGeneration = newButtonGeneration;
+					lastButtonIsInput = true;
+					break;
 				case InputType.StrValue:
 				#region EE_INPUTANY
 				case InputType.AnyValue:
 				#endregion
 				case InputType.StrButton:
-						if (lastButtonGeneration == newButtonGeneration)
-							unchecked { newButtonGeneration++; }
-						else if (lastButtonIsInput)
-							lastButtonGeneration = newButtonGeneration;
-						lastButtonIsInput = false;
-						break;
+					if (lastButtonGeneration == newButtonGeneration)
+						unchecked { newButtonGeneration++; }
+					else if (lastButtonIsInput)
+						lastButtonGeneration = newButtonGeneration;
+					lastButtonIsInput = false;
+					break;
 			}
 			#endregion
 		}
@@ -562,7 +564,7 @@ namespace MinorShift.Emuera.GameView
 
 		public InputRequest inputReq = null;
 		#region EE_INPUT第二引数修正
-		public InputType NowInputType{ get { return inputReq.InputType;	} }
+		public InputType NowInputType { get { return inputReq.InputType; } }
 		#endregion
 		public void Await(int time)
 		{
@@ -879,7 +881,7 @@ namespace MinorShift.Emuera.GameView
 									goto loopepint;
 							}
 						}
-						loopepint:
+					loopepint:
 						foreach (var value in escapedParts)
 						{
 							ep = value.Value;
@@ -1533,7 +1535,7 @@ namespace MinorShift.Emuera.GameView
 
 			//デバッグ用。描画が超重い環境を想定1
 			//System.Threading.Thread.Sleep(100);
-			
+
 			//描画中にEmueraが閉じられると廃棄されたPictureBoxにアクセスしてしまったりするので
 			//OnPaintからgraphをもらった直後だから大丈夫だとは思うけど一応
 			if (!this.Enabled)
@@ -1724,7 +1726,7 @@ namespace MinorShift.Emuera.GameView
 			System.Threading.Thread.Sleep(50);
 			*/
 			forceTextBoxColor = false;
-			if(need_settimer)
+			if (need_settimer)
 			{
 				need_settimer = false;
 				setTimer();
@@ -1742,7 +1744,7 @@ namespace MinorShift.Emuera.GameView
 					e.Graphics.DrawImage(img, 0, 0);
 					return;
 				}
-				
+
 			}
 			e.DrawBackground();
 			e.DrawBorder();
@@ -1784,7 +1786,7 @@ namespace MinorShift.Emuera.GameView
 				}
 			}
 			f = new Font(tooltip_fontname, tooltip_fontsize);
-			foundfont:
+		foundfont:
 			var size = TextRenderer.MeasureText((sender as ToolTip).GetToolTip(e.AssociatedControl), f, new Size(int.MaxValue, int.MaxValue), tooltip_format);
 			e.ToolTipSize = new Size((int)size.Width, (int)size.Height);
 		}
@@ -1936,8 +1938,8 @@ namespace MinorShift.Emuera.GameView
 			if (!Program.DebugMode || runningERBfromMemory)
 				return;
 			dTraceLogChanged = true;
-			if(dTraceLogList.Count > 0)
-				dTraceLogList.RemoveAt(dTraceLogList.Count-1);
+			if (dTraceLogList.Count > 0)
+				dTraceLogList.RemoveAt(dTraceLogList.Count - 1);
 		}
 		public void DebugClearTraceLog()
 		{
@@ -2006,7 +2008,7 @@ namespace MinorShift.Emuera.GameView
 					throw new CodeEE(string.Format(trerror.CanNotUseInstruction.Text, func.Function.Name));
 				switch (func.FunctionCode)
 				{//取りこぼし
-					//逆にOUTPUTLOG、QUITはDebugCommandの前に捕まえる
+				 //逆にOUTPUTLOG、QUITはDebugCommandの前に捕まえる
 					case FunctionCode.PUTFORM:
 					case FunctionCode.UPCHECK:
 					case FunctionCode.CUPCHECK:
@@ -2126,7 +2128,7 @@ namespace MinorShift.Emuera.GameView
 			//スクリプト実行中は無視//入力・マクロ処理中は無視
 			#region EE_MOUSEB
 			if (this.IsInProcess && AlwaysRefresh == false)
-			#endregion
+				#endregion
 				goto end;
 			//履歴表示中は無視
 			//if (window.ScrollBar.Value != window.ScrollBar.Maximum)
@@ -2138,7 +2140,7 @@ namespace MinorShift.Emuera.GameView
 			int bottomLineNo = window.ScrollBar.Value - 1;
 			if (displayLineList.Count - 1 < bottomLineNo)
 				bottomLineNo = displayLineList.Count - 1;//1820 この処理不要な気がするけどエラー報告があったので入れとく
-			int topLineNo = bottomLineNo - (window.MainPicBox.Height/ Config.LineHeight);
+			int topLineNo = bottomLineNo - (window.MainPicBox.Height / Config.LineHeight);
 			if (topLineNo < 0)
 				topLineNo = 0;
 			int relPointY = pointY - window.MainPicBox.Height;
@@ -2239,22 +2241,22 @@ namespace MinorShift.Emuera.GameView
 					eidx++;
 				}
 			}
-			#endregion
+		#endregion
 
 
-			//int posy_bottom2up = window.MainPicBox.Height - pointY;
-			//int logNum = window.ScrollBar.Maximum - window.ScrollBar.Value;
-			////表示中の一番下の行番号
-			//int curBottomLineNo = displayLineList.Count - logNum;
-			//int curPointingLineNo = curBottomLineNo - (posy_bottom2up / Config.LineHeight + 1);
-			//if ((curPointingLineNo < 0) || (curPointingLineNo >= displayLineList.Count))
-			//	curLine = null;
-			//else
-			//	curLine =  displayLineList[curPointingLineNo];
-			//if (curLine == null)
-			//	goto end;
-			
-			//pointing = curLine.GetPointingButton(pointX);
+		//int posy_bottom2up = window.MainPicBox.Height - pointY;
+		//int logNum = window.ScrollBar.Maximum - window.ScrollBar.Value;
+		////表示中の一番下の行番号
+		//int curBottomLineNo = displayLineList.Count - logNum;
+		//int curPointingLineNo = curBottomLineNo - (posy_bottom2up / Config.LineHeight + 1);
+		//if ((curPointingLineNo < 0) || (curPointingLineNo >= displayLineList.Count))
+		//	curLine = null;
+		//else
+		//	curLine =  displayLineList[curPointingLineNo];
+		//if (curLine == null)
+		//	goto end;
+
+		//pointing = curLine.GetPointingButton(pointX);
 		breakfor:
 			if ((pointing == null) || (pointing.Generation != lastButtonGeneration))
 				canSelect = false;
@@ -2586,7 +2588,7 @@ namespace MinorShift.Emuera.GameView
 
 		public void Dispose()
 		{
-			if(timer != null)
+			if (timer != null)
 				timer.Dispose();
 			//timer = null;
 			//stringMeasure.Dispose();

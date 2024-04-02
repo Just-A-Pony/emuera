@@ -23,7 +23,7 @@ namespace MinorShift.Emuera.GameData
 		MASTERNAME = 3,
 		CSTR = 4,
 	}
-	
+
 	//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
 	[global::System.Reflection.Obfuscation(Exclude = false)]
 	internal enum CharacterIntData
@@ -37,9 +37,9 @@ namespace MinorShift.Emuera.GameData
 		CFLAG = 6,
 		EQUIP = 7,
 		JUEL = 8,
-		
+
 	}
-	
+
 	internal sealed class ConstantData
 	{
 
@@ -80,7 +80,7 @@ namespace MinorShift.Emuera.GameData
 
 		public int[] MaxDataList = new int[countNameCsv];
 		readonly HashSet<VariableCode> changedCode = new HashSet<VariableCode>();
-		
+
 		public int[] VariableIntArrayLength;
 		public int[] VariableStrArrayLength;
 		public Int64[] VariableIntArray2DLength;
@@ -108,7 +108,7 @@ namespace MinorShift.Emuera.GameData
 		//private readonly GameBase gamebase;
 		//private readonly string[][] names = new string[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__][];
 		#region EE_ERD
-		private const int ERD_NAMES_INDEX = (int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__; 
+		private const int ERD_NAMES_INDEX = (int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__;
 		private readonly string[][] names = new string[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__ + 1][]; // 元より1増やす
 		private readonly Dictionary<string, Dictionary<string, int>> erdNameToIntDics = new Dictionary<string, Dictionary<string, int>>();
 		#endregion
@@ -120,10 +120,10 @@ namespace MinorShift.Emuera.GameData
 		}
 
 		public Int64[] ItemPrice;
-		
+
 		private readonly List<CharacterTemplate> CharacterTmplList;
 		private EmueraConsole output;
-		
+
 		public ConstantData()
 		{
 			//this.gamebase = gamebase;
@@ -297,7 +297,7 @@ namespace MinorShift.Emuera.GameData
 					ParserMediator.Warn(trerror.ArrayLengthIs0.Text, position, 2);
 					return;
 				}
-				if(!id.CanForbid)
+				if (!id.CanForbid)
 				{
 					ParserMediator.Warn(trerror.CanNotDisableVarArrayLengthIsNegative.Text, position, 2);
 					return;
@@ -401,7 +401,7 @@ namespace MinorShift.Emuera.GameData
 					return;
 				}
 			}
-			check1break:
+		check1break:
 			switch (id.Code)
 			{
 				//1753a PALAMだけ仕様が違うのはかえって問題なので、変数と要素文字列配列数の同期は全部バックアウト
@@ -443,7 +443,7 @@ namespace MinorShift.Emuera.GameData
 				case VariableCode.DAYNAME:
 				case VariableCode.TIMENAME:
 				case VariableCode.MONEYNAME:
-				#endregion
+					#endregion
 					MaxDataList[(int)(id.Code & VariableCode.__LOWERCASE__)] = length;
 					break;
 				default:
@@ -521,7 +521,7 @@ namespace MinorShift.Emuera.GameData
 			else if (!changedCode.Contains(nameCode) && changedCode.Contains(mainCode))
 				MaxDataList[nameIndex] = arraylength[mainLengthIndex];
 		}
-		
+
 		private void decideActualArraySize(ScriptPosition position)
 		{
 			_decideActualArraySize_sub(VariableCode.ABL, VariableCode.ABLNAME, CharacterIntArrayLength, position);
@@ -558,15 +558,15 @@ namespace MinorShift.Emuera.GameData
 				int palamJuelMax = Math.Max(CharacterIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.PALAM)]
 						, CharacterIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.JUEL)]);
 				//PALAMNAMEが変わっているなら、それと比較して大きい方を採用
-				if(changedCode.Contains(VariableCode.PALAMNAME))
+				if (changedCode.Contains(VariableCode.PALAMNAME))
 				{
 					if (MaxDataList[paramIndex] != palamJuelMax)
 					{
 						int i = Math.Max(MaxDataList[paramIndex], palamJuelMax);
 						MaxDataList[paramIndex] = i;
-						if(CharacterIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.PALAM)] == palamJuelMax)
+						if (CharacterIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.PALAM)] == palamJuelMax)
 							CharacterIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.PALAM)] = i;
-						if(CharacterIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.JUEL)] == palamJuelMax)
+						if (CharacterIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.JUEL)] == palamJuelMax)
 							CharacterIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.JUEL)] = i;
 						//1803beta004 不適切な指定として警告Lv1の対象にする
 						ParserMediator.Warn(trerror.InappropriatePalamJuelPalamname.Text, position, 1);
@@ -625,7 +625,7 @@ namespace MinorShift.Emuera.GameData
 		{
 			output = console;
 			loadVariableSizeData(csvDir + "VariableSize.CSV", disp);
-			for(int i = 0; i< countNameCsv;i++)
+			for (int i = 0; i < countNameCsv; i++)
 			{
 				names[i] = new string[MaxDataList[i]];
 				nameToIntDics[i] = new Dictionary<string, int>();
@@ -635,35 +635,35 @@ namespace MinorShift.Emuera.GameData
 			loadDataTo(csvDir + "ABL.CSV", ablIndex, null, disp);
 			loadDataTo(csvDir + "EXP.CSV", expIndex, null, disp);
 			loadDataTo(csvDir + "TALENT.CSV", talentIndex, null, disp);
-			loadDataTo(csvDir + "PALAM.CSV", paramIndex, null,  disp);
-			loadDataTo(csvDir + "TRAIN.CSV", trainIndex, null,  disp);
-			loadDataTo(csvDir + "MARK.CSV", markIndex, null,  disp);
-			loadDataTo(csvDir + "ITEM.CSV", itemIndex, ItemPrice,  disp);
-			loadDataTo(csvDir + "BASE.CSV", baseIndex, null,  disp);
-			loadDataTo(csvDir + "SOURCE.CSV", sourceIndex, null,  disp);
-			loadDataTo(csvDir + "EX.CSV", exIndex, null,  disp);
-			loadDataTo(csvDir + "STR.CSV", strIndex, null,  disp);
-			loadDataTo(csvDir + "EQUIP.CSV", equipIndex, null,  disp);
-			loadDataTo(csvDir + "TEQUIP.CSV", tequipIndex, null,  disp);
-			loadDataTo(csvDir + "FLAG.CSV", flagIndex, null,  disp);
-			loadDataTo(csvDir + "TFLAG.CSV", tflagIndex, null,  disp);
-			loadDataTo(csvDir + "CFLAG.CSV", cflagIndex, null,  disp);
-			loadDataTo(csvDir + "TCVAR.CSV", tcvarIndex, null,  disp);
-			loadDataTo(csvDir + "CSTR.CSV", cstrIndex, null,  disp);
-			loadDataTo(csvDir + "STAIN.CSV", stainIndex, null,  disp);
-			loadDataTo(csvDir + "CDFLAG1.CSV", cdflag1Index, null,  disp);
-			loadDataTo(csvDir + "CDFLAG2.CSV", cdflag2Index, null,  disp);
-			
-			loadDataTo(csvDir + "STRNAME.CSV", strnameIndex, null,  disp);
-			loadDataTo(csvDir + "TSTR.CSV", tstrnameIndex, null,  disp);
-			loadDataTo(csvDir + "SAVESTR.CSV", savestrnameIndex, null,  disp);
-			loadDataTo(csvDir + "GLOBAL.CSV", globalIndex, null,  disp);
-			loadDataTo(csvDir + "GLOBALS.CSV", globalsIndex, null,  disp);
+			loadDataTo(csvDir + "PALAM.CSV", paramIndex, null, disp);
+			loadDataTo(csvDir + "TRAIN.CSV", trainIndex, null, disp);
+			loadDataTo(csvDir + "MARK.CSV", markIndex, null, disp);
+			loadDataTo(csvDir + "ITEM.CSV", itemIndex, ItemPrice, disp);
+			loadDataTo(csvDir + "BASE.CSV", baseIndex, null, disp);
+			loadDataTo(csvDir + "SOURCE.CSV", sourceIndex, null, disp);
+			loadDataTo(csvDir + "EX.CSV", exIndex, null, disp);
+			loadDataTo(csvDir + "STR.CSV", strIndex, null, disp);
+			loadDataTo(csvDir + "EQUIP.CSV", equipIndex, null, disp);
+			loadDataTo(csvDir + "TEQUIP.CSV", tequipIndex, null, disp);
+			loadDataTo(csvDir + "FLAG.CSV", flagIndex, null, disp);
+			loadDataTo(csvDir + "TFLAG.CSV", tflagIndex, null, disp);
+			loadDataTo(csvDir + "CFLAG.CSV", cflagIndex, null, disp);
+			loadDataTo(csvDir + "TCVAR.CSV", tcvarIndex, null, disp);
+			loadDataTo(csvDir + "CSTR.CSV", cstrIndex, null, disp);
+			loadDataTo(csvDir + "STAIN.CSV", stainIndex, null, disp);
+			loadDataTo(csvDir + "CDFLAG1.CSV", cdflag1Index, null, disp);
+			loadDataTo(csvDir + "CDFLAG2.CSV", cdflag2Index, null, disp);
+
+			loadDataTo(csvDir + "STRNAME.CSV", strnameIndex, null, disp);
+			loadDataTo(csvDir + "TSTR.CSV", tstrnameIndex, null, disp);
+			loadDataTo(csvDir + "SAVESTR.CSV", savestrnameIndex, null, disp);
+			loadDataTo(csvDir + "GLOBAL.CSV", globalIndex, null, disp);
+			loadDataTo(csvDir + "GLOBALS.CSV", globalsIndex, null, disp);
 			#endregion
 			#region EE_CSV機能拡張
-			loadDataTo(csvDir + "DAY.CSV", dayIndex, null,  disp);
-			loadDataTo(csvDir + "TIME.CSV", timeIndex, null,  disp);
-			loadDataTo(csvDir + "MONEY.CSV", moneyIndex, null,  disp);
+			loadDataTo(csvDir + "DAY.CSV", dayIndex, null, disp);
+			loadDataTo(csvDir + "TIME.CSV", timeIndex, null, disp);
+			loadDataTo(csvDir + "MONEY.CSV", moneyIndex, null, disp);
 			#endregion
 			//逆引き辞書を作成
 			for (int i = 0; i < names.Length; i++)
@@ -683,7 +683,7 @@ namespace MinorShift.Emuera.GameData
 			}
 			//if (!Program.AnalysisMode)
 			loadCharacterData(csvDir, disp);
-			
+
 			#region EM_私家版_セーブ拡張
 			loadGlobalVarExSetting(csvDir, disp);
 			#endregion
@@ -700,7 +700,7 @@ namespace MinorShift.Emuera.GameData
 			}
 		}
 		#region EE_ERD
-		private struct ErdDictInfo 
+		private struct ErdDictInfo
 		{
 			public int num;
 			public string path;
@@ -722,7 +722,7 @@ namespace MinorShift.Emuera.GameData
 					if (!string.IsNullOrEmpty(nameArray[j]))
 					{
 						if (!preDict.ContainsKey(nameArray[j]))
-						{ 
+						{
 							preDict[nameArray[j]] = new ErdDictInfo() { num = j, path = filepath };
 						}
 						else
@@ -738,7 +738,7 @@ namespace MinorShift.Emuera.GameData
 				throw new CodeEE(string.Format(Lang.Error.DuplicateVariableDefine.Text, varname), sc);
 
 			var dict = new Dictionary<string, int>();
-			foreach(var pair in preDict)
+			foreach (var pair in preDict)
 				dict.Add(pair.Key, pair.Value.num);
 			erdNameToIntDics.Add(varname, dict);
 		}
@@ -768,7 +768,7 @@ namespace MinorShift.Emuera.GameData
 				// dic = GetKeywordDictionary(out _, VariableCode.CDFLAGNAME1, -1);
 				dic = GetKeywordDictionary(out _, VariableCode.CDFLAGNAME1, -1, null);
 				if ((dic == null) || (!dic.ContainsKey(str)))
-				   // dic = GetKeywordDictionary(out _, VariableCode.CDFLAGNAME2, -1);
+					// dic = GetKeywordDictionary(out _, VariableCode.CDFLAGNAME2, -1);
 					dic = GetKeywordDictionary(out _, VariableCode.CDFLAGNAME2, -1, null);
 				if (dic == null)
 					return false;
@@ -1017,23 +1017,23 @@ namespace MinorShift.Emuera.GameData
 					allowIndex = 0;
 					break;
 				case VariableCode.CDFLAG:
-				{
-					if (index == 1)
 					{
-						ret = nameToIntDics[cdflag1Index];//CDFlagName1
-						errPos = "cdflag1.csv";
+						if (index == 1)
+						{
+							ret = nameToIntDics[cdflag1Index];//CDFlagName1
+							errPos = "cdflag1.csv";
+						}
+						else if (index == 2)
+						{
+							ret = nameToIntDics[cdflag2Index];//CDFlagName2
+							errPos = "cdflag2.csv";
+						}
+						else if (index >= 0)
+							throw new CodeEE(string.Format(Lang.Error.CannotIndexSpecifiedByString.Text, code.ToString(), (index + 1).ToString()));
+						else
+							throw new CodeEE(Lang.Error.UseCdflagname.Text);
+						return ret;
 					}
-					else if (index == 2)
-					{
-						ret = nameToIntDics[cdflag2Index];//CDFlagName2
-						errPos = "cdflag2.csv";
-					}
-					else if (index >= 0)
-						throw new CodeEE(string.Format(Lang.Error.CannotIndexSpecifiedByString.Text, code.ToString(), (index + 1).ToString()));
-					else
-						throw new CodeEE(Lang.Error.UseCdflagname.Text);
-					return ret;
-				}
 				case VariableCode.STR:
 					ret = nameToIntDics[strnameIndex];
 					errPos = "strname.csv";
@@ -1085,7 +1085,7 @@ namespace MinorShift.Emuera.GameData
 					errPos = "money.csv";
 					allowIndex = 0;
 					break;
-				#endregion
+					#endregion
 
 			}
 
@@ -1144,7 +1144,7 @@ namespace MinorShift.Emuera.GameData
 							}
 						case VariableCode.VAR3D:
 						case VariableCode.VARS3D:
-							string varname3d = varname + "@" + (index+1);
+							string varname3d = varname + "@" + (index + 1);
 							if (!erdNameToIntDics.ContainsKey(varname3d))
 								return ret;
 
@@ -1175,7 +1175,8 @@ namespace MinorShift.Emuera.GameData
 			for (int i = (int)(VariableCode.ABLNAME & VariableCode.__LOWERCASE__); i < (int)(VariableCode.__COUNT_CSV_STRING_ARRAY_1D__ & VariableCode.__LOWERCASE__); i++)
 			{
 				var dic = nameToIntDics[i];
-				if (dic.ContainsKey(varname)){
+				if (dic.ContainsKey(varname))
+				{
 					return true;
 				}
 			}
@@ -1192,7 +1193,7 @@ namespace MinorShift.Emuera.GameData
 			}
 			return null;
 		}
-		
+
 		public CharacterTemplate GetCharacterTemplate_UseSp(Int64 index, bool sp)
 		{
 			foreach (CharacterTemplate chara in CharacterTmplList)
@@ -1248,15 +1249,15 @@ namespace MinorShift.Emuera.GameData
 			Dictionary<Int64, CharacterTemplate> spList = new Dictionary<Int64, CharacterTemplate>();
 			foreach (CharacterTemplate tmpl in CharacterTmplList)
 			{
-				Dictionary<Int64, CharacterTemplate>  targetList = nList;
-				if(Config.CompatiSPChara && tmpl.IsSpchara)
+				Dictionary<Int64, CharacterTemplate> targetList = nList;
+				if (Config.CompatiSPChara && tmpl.IsSpchara)
 				{
 					targetList = spList;
 				}
 				if (targetList.ContainsKey(tmpl.No))
 				{
 
-					if (!Config.CompatiSPChara && (tmpl.IsSpchara!= targetList[tmpl.No].IsSpchara))
+					if (!Config.CompatiSPChara && (tmpl.IsSpchara != targetList[tmpl.No].IsSpchara))
 						ParserMediator.Warn(string.Format(trerror.DuplicateCharaDefine1.Text, tmpl.No.ToString()), null, 1);
 					else
 						ParserMediator.Warn(string.Format(trerror.DuplicateCharaDefine2.Text, tmpl.No.ToString()), null, 1);
@@ -1432,7 +1433,7 @@ namespace MinorShift.Emuera.GameData
 							tmpl.csvNo = Convert.ToInt64(sb.ToString());
 						else
 							tmpl.csvNo = 0;
-							//tmpl.csvNo = index;
+						//tmpl.csvNo = index;
 						CharacterTmplList.Add(tmpl);
 						continue;
 					}
@@ -1688,7 +1689,7 @@ namespace MinorShift.Emuera.GameData
 			#region EE_ERD
 			// if (disp || Program.AnalysisMode)
 			if ((disp || Program.AnalysisMode) && output != null)
-			#endregion
+				#endregion
 				output.PrintSystemLine(string.Format(trsl.LoadingFile.Text, eReader.Filename));
 			try
 			{
@@ -1773,7 +1774,7 @@ namespace MinorShift.Emuera.GameData
 		public readonly Dictionary<Int32, string> CStr = new Dictionary<Int32, string>();
 		public Int64 csvNo;
 		public bool IsSpchara { get; private set; }
-		
+
 		public CharacterTemplate(Int64 index, ConstantData constant)
 		{
 			arraySize = constant.CharacterIntArrayLength;

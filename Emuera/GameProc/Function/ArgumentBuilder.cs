@@ -504,7 +504,7 @@ namespace MinorShift.Emuera.GameProc.Function
 					if (args[i] == null)
 					{
 						warn(string.Format(trerror.CanNotOmitArg.Text, i + 1), line, 2, false);
-						return null; 
+						return null;
 					}
 					else
 						args[i] = args[i].Restructure(exm);

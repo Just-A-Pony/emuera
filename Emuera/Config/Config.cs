@@ -112,7 +112,7 @@ namespace MinorShift.Emuera
 			SystemSaveInBinary = instance.GetConfigValue<bool>(ConfigCode.SystemSaveInBinary);
 			SystemIgnoreTripleSymbol = instance.GetConfigValue<bool>(ConfigCode.SystemIgnoreTripleSymbol);
 			SystemIgnoreStringSet = instance.GetConfigValue<bool>(ConfigCode.SystemIgnoreStringSet);
-			
+
 			CompatiFuncArgAutoConvert = instance.GetConfigValue<bool>(ConfigCode.CompatiFuncArgAutoConvert);
 			CompatiFuncArgOptional = instance.GetConfigValue<bool>(ConfigCode.CompatiFuncArgOptional);
 			CompatiCallEvent = instance.GetConfigValue<bool>(ConfigCode.CompatiCallEvent);
@@ -183,7 +183,7 @@ namespace MinorShift.Emuera
 				case UseLanguage.JAPANESE:
 					Language = 0x0411; LangManager.setEncode(932); break;
 				case UseLanguage.KOREAN:
-					Language = 0x0412; LangManager.setEncode(949);  break;
+					Language = 0x0412; LangManager.setEncode(949); break;
 				case UseLanguage.CHINESE_HANS:
 					Language = 0x0804; LangManager.setEncode(936); break;
 				case UseLanguage.CHINESE_HANT:
@@ -234,7 +234,7 @@ namespace MinorShift.Emuera
 				createSavDirAndMoveFiles();
 		}
 		#region EM_私家版_Emuera多言語化改造
-		public static void UpdateLangSetting(ConfigData instance) 
+		public static void UpdateLangSetting(ConfigData instance)
 		{
 			EnglishConfigOutput = instance.GetConfigValue<bool>(ConfigCode.EnglishConfigOutput);
 			EmueraLang = instance.GetConfigValue<string>(ConfigCode.EmueraLang);
@@ -274,7 +274,7 @@ namespace MinorShift.Emuera
 				{
 					return null;
 				}
-				foundfont:
+			foundfont:
 				#endregion
 				fontStyleDic.Add(style, styledFont);
 			}
@@ -459,14 +459,14 @@ namespace MinorShift.Emuera
 					retList.Add(new KeyValuePair<string, string>(RelativePath + Path.GetFileName(filepaths[i]), filepaths[i]));
 			return retList;
 		}
-		
+
 
 		/// <summary>
 		/// IgnoreCaseはprivateに。代わりにICFunctionかICVariableを使う。
 		/// </summary>
 		private static bool IgnoreCase { get; set; }
 		private static bool CompatiFunctionNoignoreCase { get; set; }
-		
+
 
 		/// <summary>
 		/// 関数名・属性名的な名前のIgnoreCaseフラグ
@@ -474,7 +474,7 @@ namespace MinorShift.Emuera
 		/// どうせeramaker用の互換処理なのでEmuera専用構文については適当に。
 		/// </summary>
 		public static bool ICFunction { get; private set; }
-		
+
 		/// <summary>
 		/// 変数名、命令名的な名前のIgnoreCaseフラグ 
 		/// 変数・命令・$ラベル名、GOTOの引数 

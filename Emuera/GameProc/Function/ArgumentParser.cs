@@ -34,7 +34,7 @@ namespace MinorShift.Emuera.GameProc.Function
 				else
 					arg = line.Function.Instruction.CreateArgument(line, GlobalStatic.EMediator);
 			}
-			catch (EmueraException e)           
+			catch (EmueraException e)
 			{
 				errmes = e.Message;
 				goto error;

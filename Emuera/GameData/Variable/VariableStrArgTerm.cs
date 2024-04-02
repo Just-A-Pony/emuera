@@ -8,7 +8,7 @@ using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.GameData.Variable
 {
-	
+
 	//変数の引数のうち文字列型のもの。
 	internal sealed class VariableStrArgTerm : IOperandTerm
 	{
@@ -34,14 +34,14 @@ namespace MinorShift.Emuera.GameData.Variable
 		#endregion
 		Dictionary<string, int> dic = null;
 		string errPos = null;
-		
+
 		public override Int64 GetIntValue(ExpressionMediator exm)
 		{
 			if (dic == null)
 				#region EE_ERD
 				// dic = exm.VEvaluator.Constant.GetKeywordDictionary(out errPos, parentCode, index);
 				dic = exm.VEvaluator.Constant.GetKeywordDictionary(out errPos, parentCode, index, varname);
-				#endregion
+			#endregion
 			string key = strTerm.GetStrValue(exm);
 			if (key == "")
 				throw new CodeEE(trerror.KeywordCanNotEmpty.Text);
@@ -59,14 +59,14 @@ namespace MinorShift.Emuera.GameData.Variable
 			}
 			return i;
 		}
-		
+
 		public override IOperandTerm Restructure(ExpressionMediator exm)
 		{
 			if (dic == null)
 				#region EE_ERD
 				// dic = exm.VEvaluator.Constant.GetKeywordDictionary(out errPos, parentCode, index);
 				dic = exm.VEvaluator.Constant.GetKeywordDictionary(out errPos, parentCode, index, null);
-				#endregion
+			#endregion
 
 			strTerm = strTerm.Restructure(exm);
 			if (!(strTerm is SingleTerm))

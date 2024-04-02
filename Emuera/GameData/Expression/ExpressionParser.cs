@@ -49,7 +49,7 @@ namespace MinorShift.Emuera.GameData.Expression
 		/// <returns></returns>
 		public static IOperandTerm[] ReduceArguments(WordCollection wc, ArgsEndWith endWith, bool isDefine)
 		{
-			if(wc == null)
+			if (wc == null)
 				throw new ExeEE(trerror.EmptyStream.Text);
 			List<IOperandTerm> terms = new List<IOperandTerm>();
 			TermEndWith termEndWith = TermEndWith.EoL;
@@ -92,7 +92,7 @@ namespace MinorShift.Emuera.GameData.Expression
 						}
 						throw new CodeEE(trerror.UnexpectedSBrackets.Text);
 				}
-				if(!isDefine)
+				if (!isDefine)
 					terms.Add(ReduceExpressionTerm(wc, termEndWith));
 				else
 				{
@@ -164,7 +164,7 @@ namespace MinorShift.Emuera.GameData.Expression
 			return term;
 		}
 
-		
+
 		/// <summary>
 		/// 結果次第ではSingleTermを返すことがある。
 		/// </summary>
@@ -172,7 +172,7 @@ namespace MinorShift.Emuera.GameData.Expression
 		public static IOperandTerm ToStrFormTerm(StrFormWord sfw)
 		{
 			StrForm strf = StrForm.FromWordToken(sfw);
-			if(strf.IsConst)
+			if (strf.IsConst)
 				return new SingleTerm(strf.GetString(null));
 			return new StrFormTerm(strf);
 		}
@@ -492,7 +492,7 @@ namespace MinorShift.Emuera.GameData.Expression
 				throw new CodeEE(trerror.TernaryBinaryError.Text);
 			return stack.ReduceAll();
 		}
-		
+
 		#endregion
 
 		/// <summary>
@@ -635,10 +635,10 @@ namespace MinorShift.Emuera.GameData.Expression
 				//    throw new ExeEE("不正な時期の呼び出し");
 				OperatorCode op = (OperatorCode)stack.Pop();
 				IOperandTerm operand = (IOperandTerm)stack.Pop();
-				
+
 				IOperandTerm newTerm = OperatorMethodManager.ReduceUnaryAfterTerm(op, operand);
 				stack.Push(newTerm);
-				
+
 			}
 			private void reduceLastThree()
 			{
@@ -656,7 +656,7 @@ namespace MinorShift.Emuera.GameData.Expression
 					}
 					throw new CodeEE(trerror.InsufficientExpression.Text);
 				}
-				
+
 				IOperandTerm newTerm = OperatorMethodManager.ReduceBinaryTerm(op, left, right);
 				stack.Push(newTerm);
 			}
@@ -665,7 +665,7 @@ namespace MinorShift.Emuera.GameData.Expression
 			{
 				_ = (OperatorCode)stack.Pop();
 				IOperandTerm newLeft = (IOperandTerm)stack.Pop();
-				
+
 				IOperandTerm newTerm = OperatorMethodManager.ReduceTernaryTerm(newLeft, left, right);
 				stack.Push(newTerm);
 			}

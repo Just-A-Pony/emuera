@@ -19,7 +19,7 @@ namespace MinorShift.Emuera.GameView
 			sb.Append("<shape type='");
 			sb.Append(type);
 			sb.Append("' param='");
-			for (int i = 0; i < param.Length;i++ )
+			for (int i = 0; i < param.Length; i++)
 			{
 				// sb.Append(param[i].ToString());
 				sb.Append(param[i].num.ToString());
@@ -28,13 +28,13 @@ namespace MinorShift.Emuera.GameView
 					sb.Append(", ");
 			}
 			sb.Append("'");
-			if(colorchanged)
+			if (colorchanged)
 			{
 				sb.Append(" color='");
 				sb.Append(HtmlManager.GetColorToString(color));
 				sb.Append("'");
 			}
-			if(bcolor != Config.FocusColor)
+			if (bcolor != Config.FocusColor)
 			{
 				sb.Append(" bcolor='");
 				sb.Append(HtmlManager.GetColorToString(bcolor));
@@ -187,7 +187,7 @@ namespace MinorShift.Emuera.GameView
 		public override void DrawTo(System.Drawing.Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode) { }
 
 		public override void GDIDrawTo(int pointY, bool isSelecting, bool isBackLog) { }
-		public override void SetWidth(StringMeasure sm,float subPixel)
+		public override void SetWidth(StringMeasure sm, float subPixel)
 		{
 			float widF = (subPixel + WidthF);
 			Width = (int)(widF);

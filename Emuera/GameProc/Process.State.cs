@@ -230,9 +230,9 @@ namespace MinorShift.Emuera.GameProc
 				//1.729 BEGIN TITLEはどこでも使えるように
 				case BeginType.TITLE:
 					break;
-				//BEGINの処理中でチェック済み
-				//default:
-				//    throw new ExeEE("不適当なBEGIN呼び出し");
+					//BEGINの処理中でチェック済み
+					//default:
+					//    throw new ExeEE("不適当なBEGIN呼び出し");
 			}
 			begintype = type;
 			return;
@@ -304,9 +304,9 @@ namespace MinorShift.Emuera.GameProc
 				case BeginType.TITLE:
 					sysStateCode = SystemStateCode.Title_Begin;
 					break;
-				//セット時に判定してるので、ここには来ないはず
-				//default:
-				//    throw new ExeEE("不適当なBEGIN呼び出し");
+					//セット時に判定してるので、ここには来ないはず
+					//default:
+					//    throw new ExeEE("不適当なBEGIN呼び出し");
 			}
 			if (Program.DebugMode)
 			{

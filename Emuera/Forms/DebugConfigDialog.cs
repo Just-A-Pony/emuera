@@ -24,7 +24,7 @@ namespace MinorShift.Emuera.Forms
 		}
 
 		public void TranslateUI()
-        {
+		{
 			this.Text = Lang.UI.DebugConfigDialog.Text;
 			this.tabPageDebug3.Text = Lang.UI.DebugConfigDialog.Name.Text;
 			this.label29.Text = Lang.UI.DebugConfigDialog.Warning.Text;
@@ -136,7 +136,7 @@ namespace MinorShift.Emuera.Forms
 		DebugDialog dd;
 		private void button6_Click(object sender, EventArgs e)
 		{
-			if ((dd == null)||(!dd.Created))
+			if ((dd == null) || (!dd.Created))
 				return;
 			if (numericUpDownDWW.Enabled)
 				numericUpDownDWW.Value = dd.Width;

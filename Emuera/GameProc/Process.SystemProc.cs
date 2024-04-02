@@ -781,7 +781,7 @@ namespace MinorShift.Emuera.GameProc
 		void beginDataLoaded()
 		{
 			state.SystemState = SystemStateCode.LoadData_CallSystemLoad;
-			
+
 			if (!callFunction("SYSTEM_LOADEND", false, false))
 				endSystemLoad();//存在しなければスキップ
 		}
@@ -963,7 +963,7 @@ namespace MinorShift.Emuera.GameProc
 		{
 			if (systemResult == 100)
 			{//キャンセルなら
-				//オープニングならオープニングへ戻る
+			 //オープニングならオープニングへ戻る
 				if (state.SystemState == SystemStateCode.LoadGameOpenning_WaitInput)
 				{
 					beginTitle();

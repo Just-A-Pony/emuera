@@ -216,7 +216,7 @@ namespace MinorShift.Emuera.GameData.Function
 				["HTML_STRINGLEN"] = new HtmlStringLenMethod(),
 				["HTML_SUBSTRING"] = new HtmlSubStringMethod(),
 				["HTML_STRINGLINES"] = new HtmlStringLinesMethod(),
-				
+
 				["EXISTFILE"] = new ExistFileMethod(),
 				["EXISTVAR"] = new ExistVarMethod(),
 				["ISDEFINED"] = new IsDefinedMethod(),

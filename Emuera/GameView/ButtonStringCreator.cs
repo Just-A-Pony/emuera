@@ -23,7 +23,7 @@ namespace MinorShift.Emuera.GameView
 		{
 			List<ButtonPrimitive> list = syn(printBuffer);
 			List<string> ret = new List<string>();
-			foreach(ButtonPrimitive p in list)
+			foreach (ButtonPrimitive p in list)
 				ret.Add(p.Str);
 			return ret;
 		}
@@ -114,7 +114,7 @@ namespace MinorShift.Emuera.GameView
 				{//ただの空白
 					if (((state & 3) == 3) && (alignmentEtc) && (strs[i].Length >= 2))
 					{//核と説明を含んだものが完成していればボタン生成。
-						//一文字以下のスペースはキニシナイ。キャラ購入画面対策
+					 //一文字以下のスペースはキニシナイ。キャラ購入画面対策
 						reduce();
 						buffer.Append(strs[i]);
 						state = 0;
@@ -125,7 +125,7 @@ namespace MinorShift.Emuera.GameView
 					}
 					continue;
 				}
-				if(isButtonCore(strs[i], ref inpL))
+				if (isButtonCore(strs[i], ref inpL))
 				{
 					buttonCount++;
 					if (((state & 1) == 1) || alignmentRight)
@@ -155,11 +155,11 @@ namespace MinorShift.Emuera.GameView
 				}
 				//else
 				//{//選択肢の説明になるかもしれない文字列
-					
-					buffer.Append(strs[i]);
-					state |= 2;
+
+				buffer.Append(strs[i]);
+				state |= 2;
 				//}
-				
+
 			};
 			reduce();
 			return ret;
@@ -193,7 +193,7 @@ namespace MinorShift.Emuera.GameView
 		/// <returns></returns>
 		private static bool isButtonCore(string str, ref long input)
 		{
-			if((str == null)||(str.Length < 3)||(str[0] != '[')||(str[str.Length-1] != ']'))
+			if ((str == null) || (str.Length < 3) || (str[0] != '[') || (str[str.Length - 1] != ']'))
 				return false;
 			if (!isNumericWord(str))
 				return false;
@@ -206,7 +206,7 @@ namespace MinorShift.Emuera.GameView
 			}
 			catch
 			{
-				return false; 
+				return false;
 			}
 			return true;
 		}

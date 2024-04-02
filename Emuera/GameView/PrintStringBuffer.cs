@@ -391,7 +391,7 @@ namespace MinorShift.Emuera.GameView
 						int used = buttonEndCharIndex - cssStartCharIndex;
 						if (used > 0 && css.CanDivide)
 						{//cssの区切りの途中でボタンの区切りがある。
-							
+
 							ConsoleStyledString newCss = ((ConsoleStyledString)css).DivideAt(used);
 							if (newCss != null)
 							{
@@ -447,7 +447,7 @@ namespace MinorShift.Emuera.GameView
 				subPixel = button.XsubPixel;
 			}
 			return;
-			
+
 			//1815 バグバグなのでコメントアウト Width測定の省略はいずれやりたい
 			////1815 alignLeft, nobrを前提にした新方式
 			////PointXの直接指定を可能にし、Width測定を一部省略
@@ -519,7 +519,7 @@ namespace MinorShift.Emuera.GameView
 			{
 				// if (pointX + css.Width > Config.DrawableWidth)
 				if (pointX + css.Width > divWidth)
-					{
+				{
 					if (index == 0 && !css.CanDivide)
 						continue;
 					divCss = css;
@@ -559,9 +559,9 @@ namespace MinorShift.Emuera.GameView
 			Font font = css.Font;
 			int highLength = str.Length;//widthLimitを超える最低の文字index(文字数-1)。
 			int lowLength = 0;//超えない最大の文字index。
-			//int i = (int)(widthLimit / fontDisplaySize);//およその文字数を推定
-			//if (i > str.Length - 1)//配列の外を参照しないように。
-			//	i = str.Length - 1;
+							  //int i = (int)(widthLimit / fontDisplaySize);//およその文字数を推定
+							  //if (i > str.Length - 1)//配列の外を参照しないように。
+							  //	i = str.Length - 1;
 			int i = lowLength;//およその文字数を推定←やめた
 
 			string test;

@@ -27,8 +27,8 @@ namespace MinorShift.Emuera.GameData.Variable
 		readonly string[][] dataStringArray;
 		readonly Int64[][,] dataIntegerArray2D;
 		readonly string[][,] dataStringArray2D;
-		readonly Int64[][, ,] dataIntegerArray3D;
-		readonly string[][, ,] dataStringArray3D;
+		readonly Int64[][,,] dataIntegerArray3D;
+		readonly string[][,,] dataStringArray3D;
 		//readonly VariableLocal<Int64, Int64Calculator> localVars;
 		//readonly VariableLocal<string, StringCalculator> localString;
 		//readonly VariableLocal<Int64, Int64Calculator> argVars;
@@ -40,8 +40,8 @@ namespace MinorShift.Emuera.GameData.Variable
 		public string[][] DataStringArray { get { return dataStringArray; } }
 		public Int64[][,] DataIntegerArray2D { get { return dataIntegerArray2D; } }
 		public string[][,] DataStringArray2D { get { return dataStringArray2D; } }
-		public Int64[][, ,] DataIntegerArray3D { get { return dataIntegerArray3D; } }
-		public string[][, ,] DataStringArray3D { get { return dataStringArray3D; } }
+		public Int64[][,,] DataIntegerArray3D { get { return dataIntegerArray3D; } }
+		public string[][,,] DataStringArray3D { get { return dataStringArray3D; } }
 		//public VariableLocal<Int64, Int64Calculator> LocalVars { get { return localVars; } }
 		//public VariableLocal<string, StringCalculator> LocalString { get { return localString; } }
 		//public VariableLocal<Int64, Int64Calculator> ArgVars { get { return argVars; } }
@@ -119,7 +119,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				int length2 = (int)(length64 & 0x7FFFFFFF);
 				dataStringArray2D[i] = new string[length, length2];
 			}
-			dataIntegerArray3D = new Int64[(int)VariableCode.__COUNT_INTEGER_ARRAY_3D__][, ,];
+			dataIntegerArray3D = new Int64[(int)VariableCode.__COUNT_INTEGER_ARRAY_3D__][,,];
 			for (int i = 0; i < dataIntegerArray3D.Length; i++)
 			{
 				Int64 length64 = constant.VariableIntArray3DLength[i];
@@ -128,7 +128,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				int length3 = (int)(length64 & 0xFFFFF);
 				dataIntegerArray3D[i] = new Int64[length, length2, length3];
 			}
-			dataStringArray3D = new string[(int)VariableCode.__COUNT_STRING_ARRAY_3D__][, ,];
+			dataStringArray3D = new string[(int)VariableCode.__COUNT_STRING_ARRAY_3D__][,,];
 			for (int i = 0; i < dataStringArray3D.Length; i++)
 			{
 				Int64 length64 = constant.VariableStrArray3DLength[i];
@@ -615,7 +615,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			}
 			for (int i = 0; i < dataIntegerArray3D.Length; i++)
 			{
-				Int64[, ,] array3D = dataIntegerArray3D[i];
+				Int64[,,] array3D = dataIntegerArray3D[i];
 				int length0 = array3D.GetLength(0);
 				int length1 = array3D.GetLength(1);
 				int length2 = array3D.GetLength(2);
@@ -626,7 +626,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			}
 			for (int i = 0; i < dataStringArray3D.Length; i++)
 			{
-				string[, ,] array3D = dataStringArray3D[i];
+				string[,,] array3D = dataStringArray3D[i];
 				int length0 = array3D.GetLength(0);
 				int length1 = array3D.GetLength(1);
 				int length2 = array3D.GetLength(2);
@@ -773,8 +773,8 @@ namespace MinorShift.Emuera.GameData.Variable
 						case 1: writer.WriteExtended(var.Name, (Int64[])var.GetArray()); break;
 						case 2: writer.WriteExtended(var.Name, (string[,])var.GetArray()); break;
 						case 3: writer.WriteExtended(var.Name, (Int64[,])var.GetArray()); break;
-						case 4: writer.WriteExtended(var.Name, (string[, ,])var.GetArray()); break;
-						case 5: writer.WriteExtended(var.Name, (Int64[, ,])var.GetArray()); break;
+						case 4: writer.WriteExtended(var.Name, (string[,,])var.GetArray()); break;
+						case 5: writer.WriteExtended(var.Name, (Int64[,,])var.GetArray()); break;
 					}
 				}
 				writer.EmuSeparete();
@@ -870,12 +870,12 @@ namespace MinorShift.Emuera.GameData.Variable
 			varList = userDefinedSaveVarList[i]; i++;
 			foreach (UserDefinedVariableToken var in varList)
 				if (str3DListDic.ContainsKey(var.Name))
-					copyListToArray3D(str3DListDic[var.Name], (string[, ,])var.GetArray());
+					copyListToArray3D(str3DListDic[var.Name], (string[,,])var.GetArray());
 
 			varList = userDefinedSaveVarList[i];// i++;
 			foreach (UserDefinedVariableToken var in varList)
 				if (int3DListDic.ContainsKey(var.Name))
-					copyListToArray3D(int3DListDic[var.Name], (Int64[, ,])var.GetArray());
+					copyListToArray3D(int3DListDic[var.Name], (Int64[,,])var.GetArray());
 		}
 
 		private void copyListToArray<T>(List<T> srcList, T[] destArray)
@@ -901,7 +901,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				}
 			}
 		}
-		private void copyListToArray3D<T>(List<List<T[]>> srcList, T[, ,] destArray)
+		private void copyListToArray3D<T>(List<List<T[]>> srcList, T[,,] destArray)
 		{
 			int countX = Math.Min(srcList.Count, destArray.GetLength(0));
 			int dLength1 = destArray.GetLength(1);
@@ -948,8 +948,8 @@ namespace MinorShift.Emuera.GameData.Variable
 						case 1: writer.WriteExtended(var.Name, (Int64[])var.GetArray()); break;
 						case 2: writer.WriteExtended(var.Name, (string[,])var.GetArray()); break;
 						case 3: writer.WriteExtended(var.Name, (Int64[,])var.GetArray()); break;
-						case 4: writer.WriteExtended(var.Name, (string[, ,])var.GetArray()); break;
-						case 5: writer.WriteExtended(var.Name, (Int64[, ,])var.GetArray()); break;
+						case 4: writer.WriteExtended(var.Name, (string[,,])var.GetArray()); break;
+						case 5: writer.WriteExtended(var.Name, (Int64[,,])var.GetArray()); break;
 					}
 				}
 				writer.EmuSeparete();
@@ -991,12 +991,12 @@ namespace MinorShift.Emuera.GameData.Variable
 			varList = userDefinedGlobalSaveVarList[i]; i++;
 			foreach (UserDefinedVariableToken var in varList)
 				if (str3DListDic.ContainsKey(var.Name))
-					copyListToArray3D(str3DListDic[var.Name], (string[, ,])var.GetArray());
+					copyListToArray3D(str3DListDic[var.Name], (string[,,])var.GetArray());
 
 			varList = userDefinedGlobalSaveVarList[i];// i++;
 			foreach (UserDefinedVariableToken var in varList)
 				if (int3DListDic.ContainsKey(var.Name))
-					copyListToArray3D(int3DListDic[var.Name], (Int64[, ,])var.GetArray());
+					copyListToArray3D(int3DListDic[var.Name], (Int64[,,])var.GetArray());
 		}
 
 		#region EM_私家版_セーブ拡張
@@ -1066,7 +1066,7 @@ namespace MinorShift.Emuera.GameData.Variable
 					writer.WriteWithKey(var.Name, var.GetArray());
 			}
 		}
-		
+
 		public void SaveToStreamBinary(EraBinaryDataWriter writer)
 		{
 			foreach (KeyValuePair<string, VariableToken> pair in varTokenDic)
@@ -1166,7 +1166,7 @@ namespace MinorShift.Emuera.GameData.Variable
 					if (vToken == null || !vToken.IsInteger || vToken.Dimension != 3)
 						reader.ReadIntArray3D(null, true);
 					else
-						reader.ReadIntArray3D((long[, ,])vToken.GetArray(), true);
+						reader.ReadIntArray3D((long[,,])vToken.GetArray(), true);
 					break;
 				case EraSaveDataType.StrArray:
 					if (vToken == null || !vToken.IsString || vToken.Dimension != 1)
@@ -1184,7 +1184,7 @@ namespace MinorShift.Emuera.GameData.Variable
 					if (vToken == null || !vToken.IsString || vToken.Dimension != 3)
 						reader.ReadStrArray3D(null, true);
 					else
-						reader.ReadStrArray3D((string[, ,])vToken.GetArray(), true);
+						reader.ReadStrArray3D((string[,,])vToken.GetArray(), true);
 					break;
 				default:
 					throw new FileEE(trerror.AbnormalData.Text);

@@ -67,7 +67,7 @@ namespace MinorShift.Emuera.Forms
 
 			rikaiSendIndex(edictind);
 		}
-		
+
 		private void bwProgressChanged(object sender, ProgressChangedEventArgs e)
 		{
 			var per = e.ProgressPercentage;

@@ -43,14 +43,14 @@ namespace MinorShift.Emuera.Sub
 				return source[pointer];
 			}
 		}
-		
+
 		public void AppendString(string str)
 		{
 			if (pointer > source.Length)
 				pointer = source.Length;
 			source += " " + str;
 		}
-		
+
 		/// <summary>
 		/// 文字列終端に達した
 		/// </summary>
@@ -131,7 +131,7 @@ namespace MinorShift.Emuera.Sub
 			if (pointer + rother.Length > source.Length)
 				return false;
 
-			for (int i = 0;  i < rother.Length;i++)
+			for (int i = 0; i < rother.Length; i++)
 			{
 				if (source[pointer + i] != rother[i])
 					return false;

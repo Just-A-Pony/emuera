@@ -188,7 +188,7 @@ namespace MinorShift.Emuera.GameProc
 	/// ファイルの始端と終端
 	/// </summary>
 	internal sealed class NullLine : LogicalLine { }
-	
+
 	/// <summary>
 	/// ラベルがエラーになっている関数行専用のクラス
 	/// </summary>

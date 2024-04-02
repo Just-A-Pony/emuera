@@ -5,7 +5,7 @@ namespace MinorShift.Emuera.GameProc.Function
 	/// 命令の引数タイプ
 	/// </summary>
 	//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
-	[global::System.Reflection.Obfuscation(Exclude=false)]
+	[global::System.Reflection.Obfuscation(Exclude = false)]
 	enum FunctionArgType
 	{//数値不要
 		__NULL__ = 0x0000,//未設定。エラー。引数がないならばVOIDを指定すること。
@@ -46,7 +46,7 @@ namespace MinorShift.Emuera.GameProc.Function
 		EXPRESSION,//<式>、変数の型は不問
 		EXPRESSION_NULLABLE,//<式>、変数の型は不問
 		CASE,//<CASE条件式>(, <CASE条件式>...)
-		
+
 
 		//TODO　省略時の処理に違いがあるが統合可能なはず
 		VAR_INT,//<可変数値変数> //引数は省略可

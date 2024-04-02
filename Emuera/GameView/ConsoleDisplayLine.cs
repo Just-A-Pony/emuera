@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace MinorShift.Emuera.GameView
 {
 	//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
-	[global::System.Reflection.Obfuscation(Exclude=false)]
+	[global::System.Reflection.Obfuscation(Exclude = false)]
 	internal enum DisplayLineLastState
 	{
 		None = 0,
@@ -16,9 +16,9 @@ namespace MinorShift.Emuera.GameView
 		Selected = 2,
 		BackLog = 3,
 	}
-	
+
 	//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
-	[global::System.Reflection.Obfuscation(Exclude=false)]
+	[global::System.Reflection.Obfuscation(Exclude = false)]
 	internal enum DisplayLineAlignment
 	{
 		LEFT = 0,
@@ -30,7 +30,7 @@ namespace MinorShift.Emuera.GameView
 	/// </summary>
 	internal sealed class ConsoleDisplayLine
 	{
-		
+
 		//public ConsoleDisplayLine(EmueraConsole parentWindow, ConsoleButtonString[] buttons, bool isLogical, bool temporary)
 		public ConsoleDisplayLine(ConsoleButtonString[] buttons, bool isLogical, bool temporary)
 		{
@@ -48,15 +48,15 @@ namespace MinorShift.Emuera.GameView
 			IsTemporary = temporary;
 		}
 		public int LineNo = -1;
-		
+
 		///論理行の最初となる場合だけtrue。表示の都合で改行された2行目以降はfalse
 		readonly public bool IsLogicalLine = true;
 		readonly public bool IsTemporary = false;
 		//EmueraConsole parent;
 		ConsoleButtonString[] buttons;
 		DisplayLineAlignment align;
-		public ConsoleButtonString[] Buttons{get{return buttons;}}
-		public DisplayLineAlignment Align{get{return align;}}
+		public ConsoleButtonString[] Buttons { get { return buttons; } }
+		public DisplayLineAlignment Align { get { return align; } }
 		bool aligned = false;
 		//Bitmap Cache
 		public bool bitmapCacheEnabled = false;
@@ -84,7 +84,7 @@ namespace MinorShift.Emuera.GameView
 					return;
 				#region EE_div各要素の修正
 				movetoX = 0; // xOffsetをここに入らないで
-				//movetoX = 0+xOffset;
+							 //movetoX = 0+xOffset;
 				#endregion
 
 			}
@@ -98,11 +98,11 @@ namespace MinorShift.Emuera.GameView
 				// movetoX = Config.WindowX - width;
 				#region EE_div各要素の修正
 				movetoX = (customWidth > 0 ? customWidth : Config.DrawableWidth) - width/* + xOffset*/;
-				#endregion
+			#endregion
 			#endregion
 			//移動距離
 			int shiftX = movetoX - pointX;
-			if(shiftX != 0)
+			if (shiftX != 0)
 				this.ShiftPositionX(shiftX);
 		}
 
@@ -149,7 +149,7 @@ namespace MinorShift.Emuera.GameView
 			foreach (ConsoleButtonString button in buttons)
 				button.DrawTo(graph, pointY, isBackLog, mode);
 		}
-		
+
 		public void GDIDrawTo(int pointY, bool isBackLog)
 		{
 			foreach (ConsoleButtonString button in buttons)

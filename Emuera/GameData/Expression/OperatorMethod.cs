@@ -78,9 +78,9 @@ namespace MinorShift.Emuera.GameData.Expression
 			ternaryIntIntInt = new TernaryIntIntInt();
 			ternaryIntStrStr = new TernaryIntStrStr();
 		}
-		
-		
-		
+
+
+
 		public static IOperandTerm ReduceUnaryTerm(OperatorCode op, IOperandTerm o1)
 		{
 			OperatorMethod method = null;
@@ -98,7 +98,7 @@ namespace MinorShift.Emuera.GameData.Expression
 				if (unaryDic.ContainsKey(op))
 					method = unaryDic[op];
 			}
-			if(method != null)
+			if (method != null)
 				return new FunctionMethodTerm(method, new IOperandTerm[] { o1 });
 			string errMes;
 			if (o1.GetOperandType() == typeof(Int64))
@@ -110,7 +110,7 @@ namespace MinorShift.Emuera.GameData.Expression
 			errMes = string.Format(trerror.CanNotAppliedUnaryOp.Text, errMes, OperatorManager.ToOperatorString(op));
 			throw new CodeEE(errMes);
 		}
-		
+
 		public static IOperandTerm ReduceUnaryAfterTerm(OperatorCode op, IOperandTerm o1)
 		{
 			OperatorMethod method = null;
@@ -138,7 +138,7 @@ namespace MinorShift.Emuera.GameData.Expression
 			errMes = string.Format(trerror.CanNotAppliedUnaryOp.Text, errMes, OperatorManager.ToOperatorString(op));
 			throw new CodeEE(errMes);
 		}
-		
+
 		public static IOperandTerm ReduceBinaryTerm(OperatorCode op, IOperandTerm left, IOperandTerm right)
 		{
 			OperatorMethod method = null;
@@ -176,7 +176,7 @@ namespace MinorShift.Emuera.GameData.Expression
 			errMes = string.Format(trerror.CanNotAppliedBinaryOp.Text, typeName1, typeName2, OperatorManager.ToOperatorString(op));
 			throw new CodeEE(errMes);
 		}
-		
+
 		public static IOperandTerm ReduceTernaryTerm(IOperandTerm o1, IOperandTerm o2, IOperandTerm o3)
 		{
 			OperatorMethod method = null;
@@ -187,7 +187,7 @@ namespace MinorShift.Emuera.GameData.Expression
 			if (method != null)
 				return new FunctionMethodTerm(method, new IOperandTerm[] { o1, o2, o3 });
 			throw new CodeEE(trerror.InvalidTernaryOp.Text);
-			
+
 		}
 
 		#region OperatorMethod SubClasses

@@ -61,8 +61,8 @@ namespace MinorShift.Emuera.GameProc
 				}
 				else if ((line is NullLine) || (line is FunctionLabelLine))
 				{//（関数終端） or ファイル終端
-					//if (sequential)
-					//{//流れ落ちてきた
+				 //if (sequential)
+				 //{//流れ落ちてきた
 					if (!state.IsFunctionMethod)
 						vEvaluator.RESULT = 0;
 					state.Return(0);
@@ -787,11 +787,11 @@ namespace MinorShift.Emuera.GameProc
 				#endregion
 				#region EE_SKIPLOG
 				case FunctionCode.SKIPLOG:
-				{
-					iValue = (func.Argument.IsConst) ? func.Argument.ConstInt : ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
-					console.MesSkip = (iValue != 0);
-					break;
-				}
+					{
+						iValue = (func.Argument.IsConst) ? func.Argument.ConstInt : ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
+						console.MesSkip = (iValue != 0);
+						break;
+					}
 				#endregion
 #if DEBUG
 				default:
@@ -908,12 +908,12 @@ namespace MinorShift.Emuera.GameProc
 							//case SystemStateCode.Train_Begin://BEGIN TRAINから。
 							case SystemStateCode.Train_CallEventTrain://@EVENTTRAINの呼び出し中。スキップ可能
 							case SystemStateCode.Train_CallShowStatus://@SHOW_STATUSの呼び出し中
-							//case SystemStateCode.Train_CallComAbleXX://@COM_ABLExxの呼び出し中。
+																	  //case SystemStateCode.Train_CallComAbleXX://@COM_ABLExxの呼び出し中。
 							case SystemStateCode.Train_CallShowUserCom://@SHOW_USERCOMの呼び出し中
-							//case SystemStateCode.Train_WaitInput://入力待ち状態。選択が実行可能ならEVENTCOMからCOMxx、そうでなければ@USERCOMにRESULTを渡す
-							//case SystemStateCode.Train_CallEventCom://@EVENTCOMの呼び出し中
-							//case SystemStateCode.Train_CallComXX://@COMxxの呼び出し中
-							//case SystemStateCode.Train_CallSourceCheck://@SOURCE_CHECKの呼び出し中
+																	   //case SystemStateCode.Train_WaitInput://入力待ち状態。選択が実行可能ならEVENTCOMからCOMxx、そうでなければ@USERCOMにRESULTを渡す
+																	   //case SystemStateCode.Train_CallEventCom://@EVENTCOMの呼び出し中
+																	   //case SystemStateCode.Train_CallComXX://@COMxxの呼び出し中
+																	   //case SystemStateCode.Train_CallSourceCheck://@SOURCE_CHECKの呼び出し中
 							case SystemStateCode.Train_CallEventComEnd://@EVENTCOMENDの呼び出し中。スキップ可能。Train_CallEventTrainへ帰る。@USERCOMの呼び出し中もここ
 								break;
 							default:

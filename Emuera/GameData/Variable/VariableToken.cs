@@ -743,7 +743,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				array = varData.DataIntegerArray3D[VarCodeInt];
 				IsForbid = array.Length == 0;
 			}
-			Int64[, ,] array;
+			Int64[,,] array;
 			public override Int64 GetIntValue(ExpressionMediator exm, Int64[] arguments)
 			{
 				return array[arguments[0], arguments[1], arguments[2]];
@@ -960,7 +960,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				array = varData.DataStringArray3D[VarCodeInt];
 				IsForbid = array.Length == 0;
 			}
-			string[, ,] array;
+			string[,,] array;
 			public override string GetStrValue(ExpressionMediator exm, Int64[] arguments)
 			{
 				return array[arguments[0], arguments[1], arguments[2]];
@@ -990,7 +990,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			}
 			public override Int32 GetLength()
 			{ throw new CodeEE(string.Format(trerror.GetSizeDimError.Text, "3", varName)); }
-		public override Int32 GetLength(int dimension)
+			public override Int32 GetLength(int dimension)
 			{
 				if ((dimension == 0) || (dimension == 1) || (dimension == 2))
 					return array.GetLength(dimension);
@@ -1695,7 +1695,7 @@ namespace MinorShift.Emuera.GameData.Variable
 		private sealed class EMUERA_VERSIONToken : PseudoVariableToken
 		{
 			public EMUERA_VERSIONToken(VariableCode varCode, VariableData varData)
-				:base(varCode, varData)
+				: base(varCode, varData)
 			{
 				CanRestructure = true;
 			}
@@ -1958,7 +1958,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				IsStatic = true;
 				array = new Int64[sizes[0], sizes[1], sizes[2]];
 			}
-			Int64[, ,] array = null;
+			Int64[,,] array = null;
 			public override void SetDefault()
 			{
 				Array.Clear(array, 0, totalSize);
@@ -2100,7 +2100,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				IsStatic = true;
 				array = new string[sizes[0], sizes[1], sizes[2]];
 			}
-			string[, ,] array = null;
+			string[,,] array = null;
 			public override void SetDefault()
 			{
 				Array.Clear(array, 0, totalSize);
@@ -2283,10 +2283,10 @@ namespace MinorShift.Emuera.GameData.Variable
 			{
 				int[] sizes = data.Lengths;
 				IsStatic = false;
-				arrayList = new List<Int64[, ,]>();
+				arrayList = new List<Int64[,,]>();
 			}
-			readonly List<Int64[, ,]> arrayList = null;
-			Int64[, ,] array = null;
+			readonly List<Int64[,,]> arrayList = null;
+			Int64[,,] array = null;
 			//int counter = 0;
 			public override void SetDefault() { }
 			public override Int64 GetIntValue(ExpressionMediator exm, Int64[] arguments)
@@ -2483,11 +2483,11 @@ namespace MinorShift.Emuera.GameData.Variable
 			{
 				int[] sizes = data.Lengths;
 				IsStatic = false;
-				arrayList = new List<string[, ,]>();
+				arrayList = new List<string[,,]>();
 			}
 			//int counter = 0;
-			readonly List<string[, ,]> arrayList = null;
-			string[, ,] array = null;
+			readonly List<string[,,]> arrayList = null;
+			string[,,] array = null;
 			public override void SetDefault() { }
 
 			public override string GetStrValue(ExpressionMediator exm, Int64[] arguments)
@@ -2664,14 +2664,14 @@ namespace MinorShift.Emuera.GameData.Variable
 			{
 				if (array == null)
 					throw new CodeEE(string.Format(trerror.EmptyRefVar.Text, varName));
-				return ((Int64[, ,])array)[arguments[0], arguments[1], arguments[2]];
+				return ((Int64[,,])array)[arguments[0], arguments[1], arguments[2]];
 			}
 
 			public override void SetValue(Int64 value, Int64[] arguments)
 			{
 				if (array == null)
 					throw new CodeEE(string.Format(trerror.EmptyRefVar.Text, varName));
-				((Int64[, ,])array)[arguments[0], arguments[1], arguments[2]] = value;
+				((Int64[,,])array)[arguments[0], arguments[1], arguments[2]] = value;
 			}
 
 			public override void SetValue(Int64[] values, Int64[] arguments)
@@ -2681,7 +2681,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				int start = (int)arguments[2];
 				int end = start + values.Length;
 				for (int i = start; i < end; i++)
-					((Int64[, ,])array)[arguments[0], arguments[1], i] = values[i - start];
+					((Int64[,,])array)[arguments[0], arguments[1], i] = values[i - start];
 			}
 
 			public override void SetValueAll(long value, int start, int end, int charaPos)
@@ -2694,7 +2694,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				for (int i = 0; i < a1; i++)
 					for (int j = 0; j < a2; j++)
 						for (int k = 0; k < a3; k++)
-							((Int64[, ,])array)[i, j, k] = value;
+							((Int64[,,])array)[i, j, k] = value;
 			}
 
 
@@ -2702,8 +2702,8 @@ namespace MinorShift.Emuera.GameData.Variable
 			{
 				if (array == null)
 					throw new CodeEE(string.Format(trerror.EmptyRefVar.Text, varName));
-				((Int64[, ,])array)[arguments[0], arguments[1], arguments[2]] += value;
-				return ((Int64[, ,])array)[arguments[0], arguments[1], arguments[2]];
+				((Int64[,,])array)[arguments[0], arguments[1], arguments[2]] += value;
+				return ((Int64[,,])array)[arguments[0], arguments[1], arguments[2]];
 			}
 
 		}
@@ -2804,14 +2804,14 @@ namespace MinorShift.Emuera.GameData.Variable
 			{
 				if (array == null)
 					throw new CodeEE(string.Format(trerror.EmptyRefVar.Text, varName));
-				return ((string[, ,])array)[arguments[0], arguments[1], arguments[2]];
+				return ((string[,,])array)[arguments[0], arguments[1], arguments[2]];
 			}
 
 			public override void SetValue(string value, Int64[] arguments)
 			{
 				if (array == null)
 					throw new CodeEE(string.Format(trerror.EmptyRefVar.Text, varName));
-				((string[, ,])array)[arguments[0], arguments[1], arguments[2]] = value;
+				((string[,,])array)[arguments[0], arguments[1], arguments[2]] = value;
 			}
 
 			public override void SetValue(string[] values, Int64[] arguments)
@@ -2821,7 +2821,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				int start = (int)arguments[2];
 				int end = start + values.Length;
 				for (int i = start; i < end; i++)
-					((string[, ,])array)[arguments[0], arguments[1], i] = values[i - start];
+					((string[,,])array)[arguments[0], arguments[1], i] = values[i - start];
 			}
 
 			public override void SetValueAll(string value, int start, int end, int charaPos)
@@ -2834,7 +2834,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				for (int i = 0; i < a1; i++)
 					for (int j = 0; j < a2; j++)
 						for (int k = 0; k < a3; k++)
-							((string[, ,])array)[i, j, k] = value;
+							((string[,,])array)[i, j, k] = value;
 			}
 
 		}

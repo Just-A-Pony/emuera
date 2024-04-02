@@ -29,15 +29,17 @@ http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/SFMT/
  *     2007/10/6 initial release.
  * 
  */
- 
+
 #define MT19937
 using System;
-namespace MinorShift._Library{
+namespace MinorShift._Library
+{
 
 	/// <summary>
 	/// SFMTの擬似乱数ジェネレータークラス。
 	/// </summary>
-	public sealed class MTRandom {
+	public sealed class MTRandom
+	{
 
 		/// <summary>
 		/// 現在時刻を種とした、(2^19937-1)周期のSFMT擬似乱数ジェネレーターを初期化します。
@@ -54,44 +56,44 @@ namespace MinorShift._Library{
 				init_gen_rand((UInt32)seed);
 			}
 		}
-		
-		
+
+
 		//maxが2^nでない大きい値であると値が偏る。
 		public Int64 NextInt64(Int64 max)
 		{
-			if(max <= 0)
+			if (max <= 0)
 				throw new ArgumentOutOfRangeException();
 			return (Int64)(NextUInt64() % (UInt64)max);
 		}
-		
+
 		public Int64 NextInt64()
 		{
-			unchecked{return (Int64)NextUInt64();}
+			unchecked { return (Int64)NextUInt64(); }
 		}
-		
+
 		public UInt64 NextUInt64()
 		{
 			UInt64 ret = NextUInt32();
-			ret = (ret << 32) +  NextUInt32();
+			ret = (ret << 32) + NextUInt32();
 			return ret;
 		}
-		
+
 		/// <summary>
 		/// [0,1) 範囲で乱数生成 ←0は含む,1は含まないの意味
 		/// </summary>
 		/// <returns></returns>
 		public double NextDouble()
 		{
-			return (double)NextUInt32() * ((double)1.0/4294967296.0); 
+			return (double)NextUInt32() * ((double)1.0 / 4294967296.0);
 			/* divided by 2^32 */
 		}
-		
+
 		public void SetRand(Int64[] array)
 		{
-			if((array == null)|| (array.Length != (N32 + 1)))
+			if ((array == null) || (array.Length != (N32 + 1)))
 				throw new ArgumentOutOfRangeException();
-			
-			for(int i = 0;i<N32;i++)
+
+			for (int i = 0; i < N32; i++)
 				sfmt[i] = (UInt32)array[i];
 			idx = (int)array[N32];
 		}
@@ -100,14 +102,14 @@ namespace MinorShift._Library{
 		{
 			if ((array == null) || (array.Length != (N32 + 1)))
 				throw new ArgumentOutOfRangeException();
-			for(int i = 0;i<N32;i++)
+			for (int i = 0; i < N32; i++)
 				array[i] = sfmt[i];
 			array[N32] = idx;
 		}
-		
-		
-#region private/protected
-		#if MT607
+
+
+		#region private/protected
+#if MT607
 			private const int MEXP = 607;
 			private const int POS1 = 2;
 			private const int SL1 = 15;
@@ -122,7 +124,7 @@ namespace MinorShift._Library{
 			private const UInt32 PARITY2 = 0x00000000U;
 			private const UInt32 PARITY3 = 0x00000000U;
 			private const UInt32 PARITY4 = 0x5986f054U;
-		#elif MT1279
+#elif MT1279
 			private const int MEXP = 1279;
 			private const int POS1 = 7;
 			private const int SL1 = 14;
@@ -137,7 +139,7 @@ namespace MinorShift._Library{
 			private const UInt32 PARITY2 = 0x00000000U;
 			private const UInt32 PARITY3 = 0x00000000U;
 			private const UInt32 PARITY4 = 0x20000000U;
-		#elif MT2281
+#elif MT2281
 			private const int MEXP = 2281;
 			private const int POS1 = 12;
 			private const int SL1 = 19;
@@ -152,7 +154,7 @@ namespace MinorShift._Library{
 			private const UInt32 PARITY2 = 0x00000000U;
 			private const UInt32 PARITY3 = 0x00000000U;
 			private const UInt32 PARITY4 = 0x41dfa600U;
-		#elif MT4253
+#elif MT4253
 			private const int MEXP = 4253;
 			private const int POS1 = 17;
 			private const int SL1 = 20;
@@ -167,7 +169,7 @@ namespace MinorShift._Library{
 			private const UInt32 PARITY2 = 0xaf5390a3U;
 			private const UInt32 PARITY3 = 0xb740b3f8U;
 			private const UInt32 PARITY4 = 0x6c11486dU;
-		#elif MT11213
+#elif MT11213
 			private const int MEXP = 11213;
 			private const int POS1 = 68;
 			private const int SL1 = 14;
@@ -182,23 +184,23 @@ namespace MinorShift._Library{
 			private const UInt32 PARITY2 = 0x00000000U;
 			private const UInt32 PARITY3 = 0xe8148000U;
 			private const UInt32 PARITY4 = 0xd0c7afa3U;
-		#elif MT19937
-			private const int MEXP = 19937;
-			private const int POS1 = 122;
-			private const int SL1 = 18;
-			private const int SL2 = 1;
-			private const int SR1 = 11;
-			private const int SR2 = 1;
-			private const UInt32 MSK1 = 0xdfffffefU;
-			private const UInt32 MSK2 = 0xddfecb7fU;
-			private const UInt32 MSK3 = 0xbffaffffU;
-			private const UInt32 MSK4 = 0xbffffff6U;
-			private const UInt32 PARITY1 = 0x00000001U;
-			private const UInt32 PARITY2 = 0x00000000U;
-			private const UInt32 PARITY3 = 0x00000000U;
-			private const UInt32 PARITY4 = 0x13c9e684U;
-			//private const UInt32 PARITY4 = 0x20000000U;
-		#elif MT44497
+#elif MT19937
+		private const int MEXP = 19937;
+		private const int POS1 = 122;
+		private const int SL1 = 18;
+		private const int SL2 = 1;
+		private const int SR1 = 11;
+		private const int SR2 = 1;
+		private const UInt32 MSK1 = 0xdfffffefU;
+		private const UInt32 MSK2 = 0xddfecb7fU;
+		private const UInt32 MSK3 = 0xbffaffffU;
+		private const UInt32 MSK4 = 0xbffffff6U;
+		private const UInt32 PARITY1 = 0x00000001U;
+		private const UInt32 PARITY2 = 0x00000000U;
+		private const UInt32 PARITY3 = 0x00000000U;
+		private const UInt32 PARITY4 = 0x13c9e684U;
+		//private const UInt32 PARITY4 = 0x20000000U;
+#elif MT44497
 			private const int MEXP = 44497;
 			private const int POS1 = 330;
 			private const int SL1 = 5;
@@ -213,7 +215,7 @@ namespace MinorShift._Library{
 			private const UInt32 PARITY2 = 0x00000000U;
 			private const UInt32 PARITY3 = 0xa3ac4000U;
 			private const UInt32 PARITY4 = 0xecc1327aU;
-		#elif MT86243
+#elif MT86243
 			private const int MEXP = 86243;
 			private const int POS1 = 366;
 			private const int SL1 = 6;
@@ -228,7 +230,7 @@ namespace MinorShift._Library{
 			private const UInt32 PARITY2 = 0x00000000U;
 			private const UInt32 PARITY3 = 0x00000000U;
 			private const UInt32 PARITY4 = 0xe9528d85U;
-		#elif MT132049
+#elif MT132049
 			private const int MEXP = 132049;
 			private const int POS1 = 110;
 			private const int SL1 = 19;
@@ -243,7 +245,7 @@ namespace MinorShift._Library{
 			private const UInt32 PARITY2 = 0x00000000U;
 			private const UInt32 PARITY3 = 0xcb520000U;
 			private const UInt32 PARITY4 = 0xc7e91c7dU;
-		#elif MT216091
+#elif MT216091
 			private const int MEXP = 216091;
 			private const int POS1 = 627;
 			private const int SL1 = 11;
@@ -259,7 +261,7 @@ namespace MinorShift._Library{
 			private const UInt32 PARITY3 = 0x3bd2b64bU;
 			private const UInt32 PARITY4 = 0x0c64b1e4U;
 		}
-		#endif
+#endif
 
 		private const int N = MEXP / 128 + 1;
 		private const int N32 = N * 4;
@@ -267,7 +269,7 @@ namespace MinorShift._Library{
 		private const int SR2_x8 = SR2 * 8;
 		private const int SL2_ix8 = 64 - SL2 * 8;
 		private const int SR2_ix8 = 64 - SR2 * 8;
-		
+
 		/// <summary>
 		/// 内部状態ベクトル。
 		/// </summary>
@@ -276,13 +278,14 @@ namespace MinorShift._Library{
 		/// 内部状態ベクトルのうち、次に乱数として使用するインデックス。
 		/// </summary>
 		private int idx;
-		
+
 		/// <summary>
 		/// 符号なし32bitの擬似乱数を取得します。
 		/// </summary>
 		private UInt32 NextUInt32()
 		{
-			if (idx >= N32) {
+			if (idx >= N32)
+			{
 				gen_rand_all();
 				idx = 0;
 			}
@@ -324,10 +327,13 @@ namespace MinorShift._Library{
 			// check OK
 			if (inner == 1) return;
 			// check NG, and modification
-			for (i = 0; i < 4; i++) {
+			for (i = 0; i < 4; i++)
+			{
 				work = 1;
-				for (j = 0; j < 32; j++) {
-					if ((work & PARITY[i]) != 0) {
+				for (j = 0; j < 32; j++)
+				{
+					if ((work & PARITY[i]) != 0)
+					{
 						sfmt[i] ^= work;
 						return;
 					}
@@ -397,7 +403,8 @@ namespace MinorShift._Library{
 			b = cPOS1 * 4;
 			c = (cN - 2) * 4;
 			d = (cN - 1) * 4;
-			do {
+			do
+			{
 				p[a + 3] = p[a + 3] ^ (p[a + 3] << 8) ^ (p[a + 2] >> 24) ^ (p[c + 3] >> 8) ^ ((p[b + 3] >> cSR1) & cMSK4) ^ (p[d + 3] << cSL1);
 				p[a + 2] = p[a + 2] ^ (p[a + 2] << 8) ^ (p[a + 1] >> 24) ^ (p[c + 3] << 24) ^ (p[c + 2] >> 8) ^ ((p[b + 2] >> cSR1) & cMSK3) ^ (p[d + 2] << cSL1);
 				p[a + 1] = p[a + 1] ^ (p[a + 1] << 8) ^ (p[a + 0] >> 24) ^ (p[c + 2] << 24) ^ (p[c + 1] >> 8) ^ ((p[b + 1] >> cSR1) & cMSK2) ^ (p[d + 1] << cSL1);
@@ -406,7 +413,7 @@ namespace MinorShift._Library{
 				if (b >= cN32) b = 0;
 			} while (a < cN32);
 		}
-#endregion
+		#endregion
 	}
 
 }

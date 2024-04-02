@@ -442,7 +442,7 @@ namespace MinorShift.Emuera.GameProc
 			}
 			return;
 		}
-		
+
 		private LogicalLine addLine(LogicalLine nextLine, LogicalLine lastLine)
 		{
 			if (nextLine == null)
@@ -912,7 +912,7 @@ namespace MinorShift.Emuera.GameProc
 								|| (currentBaseFunc.FunctionCode == FunctionCode.TRYCALLLIST)
 								|| (currentBaseFunc.FunctionCode == FunctionCode.TRYJUMPLIST)
 								|| (currentBaseFunc.FunctionCode == FunctionCode.TRYGOTOLIST))
-								//|| (currentBaseFunc.FunctionCode == FunctionCode.SELECTCASE))
+							//|| (currentBaseFunc.FunctionCode == FunctionCode.SELECTCASE))
 							{
 								ParserMediator.Warn(string.Format(trerror.CanNotLabelDefineInSyntax.Text, currentBaseFunc.Function.Name), nextLine, 2, true, false);
 							}
@@ -924,7 +924,7 @@ namespace MinorShift.Emuera.GameProc
 				InstructionLine baseFunc = nestStack.Count == 0 ? null : nestStack.Peek();
 				if (baseFunc != null)
 				{
-					if ((baseFunc.Function.IsPrintData() || baseFunc.FunctionCode == FunctionCode.STRDATA) )
+					if ((baseFunc.Function.IsPrintData() || baseFunc.FunctionCode == FunctionCode.STRDATA))
 					{
 						if ((func.FunctionCode != FunctionCode.DATA) && (func.FunctionCode != FunctionCode.DATAFORM) && (func.FunctionCode != FunctionCode.DATALIST)
 							&& (func.FunctionCode != FunctionCode.ENDLIST) && (func.FunctionCode != FunctionCode.ENDDATA))
@@ -1134,7 +1134,7 @@ namespace MinorShift.Emuera.GameProc
 									nestStack.Pop();
 									//if (nestStack.Count > 0)　//空になってるかは下で判定できるので、これを見る必要がない
 									selectLine = nestStack.Count == 0 ? null : nestStack.Peek(); //ちなみにnullになることはない（SELECTCASEがない場合は上で弾けるから）
-								} while (selectLine != null && selectLine.FunctionCode != FunctionCode.SELECTCASE);　
+								} while (selectLine != null && selectLine.FunctionCode != FunctionCode.SELECTCASE);
 								//とりあえず、対応するSELECTCASE跨ぎは閉じる
 								SelectcaseStack.Pop();
 								//こっちでも抜かないとSELECTCASEが2つのENDSELECTに対応してしまう

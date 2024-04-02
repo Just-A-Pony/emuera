@@ -123,11 +123,11 @@ namespace MinorShift.Emuera.Sub
 				writer.Write(key);
 				writeData((Int64[,])v);
 			}
-			else if (v is Int64[, ,])
+			else if (v is Int64[,,])
 			{
 				writer.Write((byte)EraSaveDataType.IntArray3D);
 				writer.Write(key);
-				writeData((Int64[, ,])v);
+				writeData((Int64[,,])v);
 			}
 			else if (v is string)
 			{
@@ -147,11 +147,11 @@ namespace MinorShift.Emuera.Sub
 				writer.Write(key);
 				writeData((string[,])v);
 			}
-			else if (v is string[, ,])
+			else if (v is string[,,])
 			{
 				writer.Write((byte)EraSaveDataType.StrArray3D);
 				writer.Write(key);
-				writeData((string[, ,])v);
+				writeData((string[,,])v);
 			}
 			#region EM_私家版_セーブ拡張
 			else if (v is Dictionary<string, string> map)
@@ -222,7 +222,7 @@ namespace MinorShift.Emuera.Sub
 			//配列の記憶。0が連続する場合には圧縮を試みる。
 			writer.Write((Int32)array.Length);
 			int countZero = 0;//0については0が連続する数を記憶する。その他の数はそのまま記憶する。
-			for(int x = 0; x < array.Length; x++)
+			for (int x = 0; x < array.Length; x++)
 			{
 				if (array[x] == 0)
 					countZero++;
@@ -249,12 +249,12 @@ namespace MinorShift.Emuera.Sub
 			int length1 = array.GetLength(1);
 			writer.Write(length0);
 			writer.Write(length1);
-			
-			for(int x = 0; x < length0; x++)
+
+			for (int x = 0; x < length0; x++)
 			{
-				for(int y = 0; y < length1; y++)
+				for (int y = 0; y < length1; y++)
 				{
-					if (array[x,y] == 0)
+					if (array[x, y] == 0)
 						countZero++;
 					else
 					{
@@ -270,7 +270,7 @@ namespace MinorShift.Emuera.Sub
 							this.m_WriteInt(countZero);
 							countZero = 0;
 						}
-						this.m_WriteInt(array[x,y]);
+						this.m_WriteInt(array[x, y]);
 					}
 				}
 				if (countZero == length1)//列の要素が全部0
@@ -282,7 +282,7 @@ namespace MinorShift.Emuera.Sub
 			writer.Write(Ebdb.EoD);
 		}
 
-		private void writeData(Int64[, ,] array)
+		private void writeData(Int64[,,] array)
 		{
 			int countZero = 0;//0については0が連続する数を記憶する。その他はそのまま記憶する。
 			int countAllZero = 0;//列の要素が全て0である列の連続する数を記憶する。列の要素に一つでも非0があるなら通常の記憶方式。
@@ -293,13 +293,13 @@ namespace MinorShift.Emuera.Sub
 			writer.Write(length0);
 			writer.Write(length1);
 			writer.Write(length2);
-			for(int x = 0; x < length0; x++)
+			for (int x = 0; x < length0; x++)
 			{
-				for(int y = 0; y < length1; y++)
+				for (int y = 0; y < length1; y++)
 				{
-					for(int z = 0; z < length2; z++)
+					for (int z = 0; z < length2; z++)
 					{
-						if (array[x,y,z] == 0)
+						if (array[x, y, z] == 0)
 							countZero++;
 						else
 						{
@@ -321,7 +321,7 @@ namespace MinorShift.Emuera.Sub
 								this.m_WriteInt(countZero);
 								countZero = 0;
 							}
-							this.m_WriteInt(array[x,y,z]);
+							this.m_WriteInt(array[x, y, z]);
 						}
 					}
 					if (countZero == length2)
@@ -351,7 +351,7 @@ namespace MinorShift.Emuera.Sub
 		{
 			int countZero = 0;
 			writer.Write((int)array.Length);
-			for(int x = 0; x < array.Length; x++)
+			for (int x = 0; x < array.Length; x++)
 			{
 				if (array[x] == null || array[x].Length == 0)
 					countZero++;
@@ -378,11 +378,11 @@ namespace MinorShift.Emuera.Sub
 			int length1 = array.GetLength(1);
 			writer.Write(length0);
 			writer.Write(length1);
-			for(int x = 0; x < length0; x++)
+			for (int x = 0; x < length0; x++)
 			{
-				for(int y = 0; y < length1; y++)
+				for (int y = 0; y < length1; y++)
 				{
-					if (array[x,y] == null || array[x,y].Length == 0)
+					if (array[x, y] == null || array[x, y].Length == 0)
 						countZero++;
 					else
 					{
@@ -399,7 +399,7 @@ namespace MinorShift.Emuera.Sub
 							countZero = 0;
 						}
 						writer.Write(Ebdb.String);
-						writer.Write(array[x,y]);
+						writer.Write(array[x, y]);
 					}
 				}
 				if (countZero == length1)
@@ -411,7 +411,7 @@ namespace MinorShift.Emuera.Sub
 			writer.Write(Ebdb.EoD);
 		}
 
-		private void writeData(string[, ,] array)
+		private void writeData(string[,,] array)
 		{
 			int countZero = 0;
 			int countAllZero = 0;
@@ -422,13 +422,13 @@ namespace MinorShift.Emuera.Sub
 			writer.Write(length0);
 			writer.Write(length1);
 			writer.Write(length2);
-			for(int x = 0; x < length0; x++)
+			for (int x = 0; x < length0; x++)
 			{
-				for(int y = 0; y < length1; y++)
+				for (int y = 0; y < length1; y++)
 				{
-					for(int z = 0; z < length2; z++)
+					for (int z = 0; z < length2; z++)
 					{
-						if (array[x,y,z] == null || array[x,y,z].Length == 0)
+						if (array[x, y, z] == null || array[x, y, z].Length == 0)
 							countZero++;
 						else
 						{
@@ -451,7 +451,7 @@ namespace MinorShift.Emuera.Sub
 								countZero = 0;
 							}
 							writer.Write(Ebdb.String);
-							writer.Write(array[x,y,z]);
+							writer.Write(array[x, y, z]);
 						}
 					}
 					if (countZero == length2)

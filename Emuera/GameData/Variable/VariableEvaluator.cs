@@ -214,7 +214,7 @@ namespace MinorShift.Emuera.GameData.Variable
 		public Int64 GetArraySum(FixedVariableTerm p, Int64 index1, Int64 index2)
 		{
 			Int64 sum = 0;
-			
+
 			if (p.Identifier.IsCharacterData)
 			{
 				if (p.Identifier.IsArray1D)
@@ -253,7 +253,7 @@ namespace MinorShift.Emuera.GameData.Variable
 		public Int64 GetArraySumChara(FixedVariableTerm p, Int64 index1, Int64 index2)
 		{
 			Int64 sum = 0;
-			
+
 			for (int i = (int)index1; i < (int)index2; i++)
 			{
 				sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { i, p.Index2 });
@@ -287,7 +287,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				if (p.Identifier.IsArray1D)
 				{
 					for (int i = 0; i < (int)length; i++)
-						sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] {  index1 + i })).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
+						sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { index1 + i })).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
 				}
 				else if (p.Identifier.IsArray2D)
 				{
@@ -515,7 +515,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				if (value >= min && value < max)
 					ret++;
 			}
-			
+
 			return ret;
 		}
 
@@ -736,7 +736,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				if (order == SortOrder.ASCENDING)
 					Array.Sort(temp);
 				else if (order == SortOrder.DESENDING)
-					Array.Sort(temp, delegate(Int64 a, Int64 b) { return b.CompareTo(a); });
+					Array.Sort(temp, delegate (Int64 a, Int64 b) { return b.CompareTo(a); });
 				Array.Copy(temp, 0, array, start, num);
 			}
 			else
@@ -757,7 +757,7 @@ namespace MinorShift.Emuera.GameData.Variable
 				if (order == SortOrder.ASCENDING)
 					Array.Sort(temp);
 				else if (order == SortOrder.DESENDING)
-					Array.Sort(temp, delegate(string a, string b) { return b.CompareTo(a); });
+					Array.Sort(temp, delegate (string a, string b) { return b.CompareTo(a); });
 				Array.Copy(temp, 0, array, start, num);
 			}
 		}
@@ -790,8 +790,8 @@ namespace MinorShift.Emuera.GameData.Variable
 				}
 				else
 				{
-					Int64[, ,] array1 = (Int64[, ,])var1.GetArray();
-					Int64[, ,] array2 = (Int64[, ,])var2.GetArray();
+					Int64[,,] array1 = (Int64[,,])var1.GetArray();
+					Int64[,,] array2 = (Int64[,,])var2.GetArray();
 					int length1 = (array1.GetLength(0) >= array2.GetLength(0)) ? array2.GetLength(0) : array1.GetLength(0);
 					int length2 = (array1.GetLength(1) >= array2.GetLength(1)) ? array2.GetLength(1) : array1.GetLength(1);
 					int length3 = (array1.GetLength(2) >= array2.GetLength(2)) ? array2.GetLength(2) : array1.GetLength(2);
@@ -829,8 +829,8 @@ namespace MinorShift.Emuera.GameData.Variable
 				}
 				else
 				{
-					string[, ,] array1 = (string[, ,])var1.GetArray();
-					string[, ,] array2 = (string[, ,])var2.GetArray();
+					string[,,] array1 = (string[,,])var1.GetArray();
+					string[,,] array2 = (string[,,])var2.GetArray();
 					int length1 = (array1.GetLength(0) >= array2.GetLength(0)) ? array2.GetLength(0) : array1.GetLength(0);
 					int length2 = (array1.GetLength(1) >= array2.GetLength(1)) ? array2.GetLength(1) : array1.GetLength(1);
 					int length3 = (array1.GetLength(2) >= array2.GetLength(2)) ? array2.GetLength(2) : array1.GetLength(2);
@@ -966,9 +966,9 @@ namespace MinorShift.Emuera.GameData.Variable
 						builder.Append(" ");
 					}
 					break;
-				//現状ここに来ることはないはず
-				//default:
-				//    throw new ExeEE("未定義の関数");
+					//現状ここに来ることはないはず
+					//default:
+					//    throw new ExeEE("未定義の関数");
 			}
 			return builder.ToString();
 		}
@@ -1072,7 +1072,7 @@ namespace MinorShift.Emuera.GameData.Variable
 		public void DelCharacter(Int64[] charaNoList)
 		{
 			List<CharacterData> DelList = new List<CharacterData>();
-			foreach(Int64 charaNo in charaNoList)
+			foreach (Int64 charaNo in charaNoList)
 			{
 				if ((charaNo < 0) || (charaNo >= varData.CharacterList.Count))
 					throw new CodeEE(string.Format(trerror.OoRDelChara.Text, charaNoList.ToString()));
@@ -1317,7 +1317,7 @@ namespace MinorShift.Emuera.GameData.Variable
 			}
 			return -1;
 		}
-		
+
 		public Int64 GetChara_UseSp(Int64 charaNo, bool getSp)
 		{
 			//後天的にNOを変更する場合も考慮し、chara*.csvで定義されているかどうかは調べない。

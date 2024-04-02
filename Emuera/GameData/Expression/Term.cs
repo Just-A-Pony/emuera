@@ -7,7 +7,7 @@ using MinorShift.Emuera.GameProc;
 namespace MinorShift.Emuera.GameData.Expression
 {
 
-	internal sealed class NullTerm : IOperandTerm 
+	internal sealed class NullTerm : IOperandTerm
 	{
 		public NullTerm(Int64 i)
 			: base(typeof(Int64))
@@ -88,7 +88,7 @@ namespace MinorShift.Emuera.GameData.Expression
 				return sValue.ToString();
 			return base.ToString();
 		}
-		
+
 		public override IOperandTerm Restructure(ExpressionMediator exm)
 		{
 			return this;
@@ -122,14 +122,14 @@ namespace MinorShift.Emuera.GameData.Expression
 		{
 			return new SingleTerm(sfValue.GetString(exm));
 		}
-		
+
 		public override IOperandTerm Restructure(ExpressionMediator exm)
 		{
 			sfValue.Restructure(exm);
-			if(sfValue.IsConst)
+			if (sfValue.IsConst)
 				return new SingleTerm(sfValue.GetString(exm));
 			IOperandTerm term = sfValue.GetIOperandTerm();
-			if(term != null)
+			if (term != null)
 				return term;
 			return this;
 		}

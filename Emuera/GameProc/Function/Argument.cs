@@ -444,10 +444,10 @@ namespace MinorShift.Emuera.GameProc.Function
 		readonly public VariableToken Var;
 		readonly public VariableTerm Num;
 	}
-	
+
 	internal sealed class SpHtmlSplitArgument : Argument
 	{
-		public SpHtmlSplitArgument(IOperandTerm s1,VariableToken varId, VariableTerm num)
+		public SpHtmlSplitArgument(IOperandTerm s1, VariableToken varId, VariableTerm num)
 		{
 			TargetStr = s1;
 			Var = varId;
@@ -553,7 +553,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			RefMethodToken = udrm;
 			SrcTerm = src;
 		}
-		
+
 		public RefArgument(ReferenceToken vt, VariableToken src)
 		{
 			RefVarToken = vt;

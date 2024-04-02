@@ -35,8 +35,8 @@ namespace MinorShift.Emuera.Sub
 			{
 				if (Pointer >= Collection.Count)
 					return nullToken;
-				return Collection[Pointer]; 
-			} 
+				return Collection[Pointer];
+			}
 		}
 		#region EM_私家版_HTMLパラメータ拡張
 		public Word Next
@@ -63,22 +63,22 @@ namespace MinorShift.Emuera.Sub
 		{
 			Collection.RemoveAt(Pointer);
 		}
-		
+
 		public void SetIsMacro()
 		{
-			foreach(Word word in Collection)
+			foreach (Word word in Collection)
 			{
 				word.SetIsMacro();
 			}
 		}
-		
+
 		public WordCollection Clone()
 		{
 			WordCollection ret = new WordCollection();
-			for(int i = 0;i < this.Collection.Count;i++)
+			for (int i = 0; i < this.Collection.Count; i++)
 			{
 				ret.Collection.Add(this.Collection[i]);
-			} 
+			}
 			return ret;
 		}
 		public WordCollection Clone(int start, int count)
@@ -89,13 +89,13 @@ namespace MinorShift.Emuera.Sub
 			int end = start + count;
 			if (end > this.Collection.Count)
 				end = this.Collection.Count;
-			for(int i = start;i < end;i++)
+			for (int i = start; i < end; i++)
 			{
 				ret.Collection.Add(this.Collection[i]);
-			} 
+			}
 			return ret;
 		}
-		
+
 	}
 }
 

@@ -34,8 +34,8 @@ namespace MinorShift.Emuera.GameView
 			PointX = -1;
 			Width = -1;
 		}
-		public Font Font{ get; private set;}
-		public StringStyle StringStyle{ get; private set;}
+		public Font Font { get; private set; }
+		public StringStyle StringStyle { get; private set; }
 		public override bool CanDivide
 		{
 			get { return true; }
@@ -102,7 +102,7 @@ namespace MinorShift.Emuera.GameView
 			if (this.Error)
 				return;
 			Color color = this.Color;
-			if(isSelecting)
+			if (isSelecting)
 				color = this.ButtonColor;
 			else if (isBackLog && !colorChanged)
 				color = Config.LogColor;
@@ -141,11 +141,11 @@ namespace MinorShift.Emuera.GameView
 			if (this.Error)
 				return;
 			Color color = this.Color;
-			if(isSelecting)
+			if (isSelecting)
 				color = this.ButtonColor;
 			else if (isBackLog && !colorChanged)
 				color = Config.LogColor;
-			GDI.TabbedTextOutFull(Font,color,Str, PointX, pointY);
+			GDI.TabbedTextOutFull(Font, color, Str, PointX, pointY);
 			//GDI.SetFont(Font);
 			//GDI.SetTextColor(color);
 			//GDI.TabbedTextOut(Str, PointX, pointY);

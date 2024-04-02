@@ -14,7 +14,7 @@ namespace MinorShift.Emuera.GameData.Function
 			: base(returnType)
 		{
 		}
-		public abstract UserDefinedFunctionArgument Argument { get;}
+		public abstract UserDefinedFunctionArgument Argument { get; }
 		public abstract CalledFunction Call { get; }
 		public override long GetIntValue(ExpressionMediator exm)
 		{
@@ -46,7 +46,7 @@ namespace MinorShift.Emuera.GameData.Function
 
 	internal sealed class UserDefinedMethodTerm : SuperUserDefinedMethodTerm
 	{
-		
+
 		/// <summary>
 		/// エラーならnullを返す。
 		/// </summary>
@@ -77,7 +77,7 @@ namespace MinorShift.Emuera.GameData.Function
 		}
 
 
-		
+
 	}
 	internal sealed class UserDefinedRefMethodTerm : SuperUserDefinedMethodTerm
 	{

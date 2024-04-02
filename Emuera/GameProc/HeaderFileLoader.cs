@@ -56,7 +56,7 @@ namespace MinorShift.Emuera.GameProc
 					if (!noError)
 						break;
 					System.Windows.Forms.Application.DoEvents();
-				}	
+				}
 				//エラーが起きてる場合でも読み込めてる分だけはチェックする
 				if (dimlines.Count > 0)
 				{
@@ -177,9 +177,9 @@ namespace MinorShift.Emuera.GameProc
 					return;
 				}
 			}
-			
+
 			bool hasArg = st.Current == '(';//引数を指定する場合には直後に(が続いていなければならない。ホワイトスペースも禁止。
-			//1808a3 代入演算子許可（関数宣言用）
+											//1808a3 代入演算子許可（関数宣言用）
 			WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AllowAssignment);
 			if (wc.EOL)
 			{
@@ -316,7 +316,7 @@ namespace MinorShift.Emuera.GameProc
 									if (erdFileNames.ContainsKey(key))
 									{
 										var info = erdFileNames[key];
-										GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name + "@" + dim, data.Lengths[dim-1], Config.DisplayReport, dimline.SC);
+										GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name + "@" + dim, data.Lengths[dim - 1], Config.DisplayReport, dimline.SC);
 									}
 									System.Windows.Forms.Application.DoEvents();
 								}
@@ -329,7 +329,7 @@ namespace MinorShift.Emuera.GameProc
 									if (erdFileNames.ContainsKey(key))
 									{
 										var info = erdFileNames[key];
-										GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name + "@" + dim, data.Lengths[dim-1], Config.DisplayReport, dimline.SC);
+										GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name + "@" + dim, data.Lengths[dim - 1], Config.DisplayReport, dimline.SC);
 									}
 									System.Windows.Forms.Application.DoEvents();
 								}

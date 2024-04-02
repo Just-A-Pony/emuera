@@ -23,7 +23,7 @@ namespace MinorShift.Emuera.GameProc
 		PrimitiveMouseKey = 11,
 
 	}
-	
+
 
 	// 1819追加 入力・表示系とData、Process系の結合を弱くしよう計画の一つ
 	// できるだけ間にクッションをおいていきたい。最終的には別スレッドに
@@ -38,8 +38,8 @@ namespace MinorShift.Emuera.GameProc
 		public readonly Int64 ID;
 		public InputType InputType;
 		public bool NeedValue
-		{ 
-			get 
+		{
+			get
 			{
 				#region EE_INPUTANY
 				return (InputType == InputType.IntValue || InputType == InputType.StrValue

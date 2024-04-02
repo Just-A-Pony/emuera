@@ -40,7 +40,7 @@ namespace EvilMask.Emuera
 		sealed class Managed : Attribute { }
 
 		[AttributeUsage(AttributeTargets.Class)]
-		sealed class Translate : Attribute 
+		sealed class Translate : Attribute
 		{
 			public Translate(string text)
 			{
@@ -114,7 +114,7 @@ namespace EvilMask.Emuera
 					[Managed] public static TranslatableString NoErbFolder { get; } = new TranslatableString("erbフォルダが見つかりません");
 					[Managed] public static TranslatableString FailedCreateDebugFolder { get; } = new TranslatableString("debugフォルダの作成に失敗しました");
 					[Managed] public static TranslatableString ArgPathNotExists { get; } = new TranslatableString("与えられたファイル・フォルダは存在しません");
-					[Managed] public static TranslatableString InvalidArg{ get; } = new TranslatableString("ドロップ可能なファイルはERBファイルのみです");
+					[Managed] public static TranslatableString InvalidArg { get; } = new TranslatableString("ドロップ可能なファイルはERBファイルのみです");
 				}
 
 				[Managed] public static TranslatableString FileFilter { get; } = new TranslatableString("ERBファイル");
@@ -1162,11 +1162,11 @@ namespace EvilMask.Emuera
 			[Managed] public static TranslatableString ImgRefOutOfRange { get; } = new TranslatableString("{0}関数: 画像の範囲外が指定されています");
 
 			[Managed] public static TranslatableString MinInt64CanNotApplyABS { get; } = new TranslatableString("{0}関数: 符号付き64bit整数の最小値({1})に対して絶対値を取ることはできません");
-			
+
 			[Managed] public static TranslatableString UnsupportedType { get; } = new TranslatableString("{0}関数: 対応していない型が指定されています");
 			[Managed] public static TranslatableString ArgsNotFitExpr { get; } = new TranslatableString("{0}関数: 引数の数({1})が{2}+{3}nではありません");
 			[Managed] public static TranslatableString DTLackOfNamedColumn { get; } = new TranslatableString("{0}関数: DataTable(\"{1}\")に\"{2}\"を名前とした列がありません");
-			[Managed] public static TranslatableString DTInvalidDataType{ get; } = new TranslatableString("{0}関数: DataTable(\"{1}\")の\"{2}\"列に違う型の値を指定しようとしています");
+			[Managed] public static TranslatableString DTInvalidDataType { get; } = new TranslatableString("{0}関数: DataTable(\"{1}\")の\"{2}\"列に違う型の値を指定しようとしています");
 			[Managed] public static TranslatableString DTCanNotEditIdColumn { get; } = new TranslatableString("{0}関数: DataTable(\"{1}\")の\"id\"列は変更できません");
 			[Managed] public static TranslatableString IsDefinedCsvVariable { get; } = new TranslatableString("変数名\"{0}\"は既にCSV変数の定義に使われており、予期せぬ配列参照を引き起こす場合があります");
 			[Managed] public static TranslatableString NothingButtonBinput { get; } = new TranslatableString("デフォルト値が無く、ボタンが一つも無い状態で{0}が行われました。全ての入力を受け付けなくなります");
@@ -1312,7 +1312,7 @@ namespace EvilMask.Emuera
 					if (node != null)
 					{
 						var langName = node.InnerText.Trim();
-						if (langName.IndexOf('\n', StringComparison.Ordinal) <0 && !langList.ContainsKey(langName))
+						if (langName.IndexOf('\n', StringComparison.Ordinal) < 0 && !langList.ContainsKey(langName))
 						{
 							langList.Add(langName, path);
 							var fontName = node.InnerText.Trim();

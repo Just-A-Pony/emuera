@@ -17,7 +17,7 @@ namespace MinorShift.Emuera.GameData
 		public Int64 ScriptUniqueCode = 0;
 		//1.713 訂正。eramakerのバージョンの初期値は1000ではなく0だった
 		public Int64 ScriptVersion = 0;//1000;
-		//1.713 上の変更とあわせて。セーブデータのバージョンが1000であり、現在のバージョンが未定義である場合、セーブデータのバージョンを同じとみなす
+									   //1.713 上の変更とあわせて。セーブデータのバージョンが1000であり、現在のバージョンが未定義である場合、セーブデータのバージョンを同じとみなす
 		public bool ScriptVersionDefined = false;
 		public Int64 ScriptCompatibleMinVersion = -1;
 		public string Compatible_EmueraVer = "0.000.0.0";
@@ -118,7 +118,7 @@ namespace MinorShift.Emuera.GameData
 							{
 								if (ScriptUniqueCode == 0L)
 									ParserMediator.Warn(trerror.SaveCodeIs0.Text, pos, 0);
-							}							
+							}
 							break;
 						case "バージョン":
 							ScriptVersionDefined = tryatoi(tokens[1], out ScriptVersion);
@@ -147,7 +147,7 @@ namespace MinorShift.Emuera.GameData
 						case "ウィンドウタイトル":
 							ScriptWindowTitle = tokens[1];
 							break;
-							
+
 						case "動作に必要なEmueraのバージョン":
 							Compatible_EmueraVer = tokens[1];
 							if (!Regex.IsMatch(Compatible_EmueraVer, @"^\d+\.\d+\.\d+\.\d+$"))
@@ -170,7 +170,7 @@ namespace MinorShift.Emuera.GameData
 						case "バージョン名":
 							VersionName = tokens[1];
 							break;
-						#endregion
+							#endregion
 					}
 				}
 			}

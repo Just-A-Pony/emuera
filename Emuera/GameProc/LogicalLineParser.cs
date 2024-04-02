@@ -22,7 +22,7 @@ namespace MinorShift.Emuera.GameProc
 			if (Config.ICFunction)
 				token = token.ToUpper();
 			//#行として不正な行でもAnalyzeに行って引っかかることがあるので、先に存在しない#～は弾いてしまう
-			if (token == null || (token != "SINGLE" && token != "LATER" && token != "PRI" && token != "ONLY" && token != "FUNCTION" && token != "FUNCTIONS" 
+			if (token == null || (token != "SINGLE" && token != "LATER" && token != "PRI" && token != "ONLY" && token != "FUNCTION" && token != "FUNCTIONS"
 				&& token != "LOCALSIZE" && token != "LOCALSSIZE" && token != "DIM" && token != "DIMS"))
 			{
 				ParserMediator.Warn(trerror.CanNotInterpretSharpLine.Text, position, 1);
@@ -278,7 +278,7 @@ namespace MinorShift.Emuera.GameProc
 		err:
 			return false;
 		}
-		
+
 		public static LogicalLine ParseLine(string str, EmueraConsole console)
 		{
 			ScriptPosition position = new ScriptPosition();
@@ -375,14 +375,14 @@ namespace MinorShift.Emuera.GameProc
 			System.Media.SystemSounds.Hand.Play();
 			if (isFunction)
 			{
-				if(labelName.Length == 0)
+				if (labelName.Length == 0)
 					labelName = "<Error>";
 				return new InvalidLabelLine(position, labelName, errMes);
 			}
 			return new InvalidLine(position, errMes);
 		}
-		
-		
+
+
 		public static LogicalLine ParseLine(StringStream stream, ScriptPosition position, EmueraConsole console)
 		{
 			//int lineNo = position.LineNo;
@@ -453,7 +453,7 @@ namespace MinorShift.Emuera.GameProc
 				{
 					assignOP = LexicalAnalyzer.ReadAssignmentOperator(stream);
 				}
-				catch(CodeEE)
+				catch (CodeEE)
 				{
 					errMes = trerror.CanNotInterpretedLine.Text;
 					goto err;
@@ -485,6 +485,6 @@ namespace MinorShift.Emuera.GameProc
 				return new InvalidLine(position, e.Message);
 			}
 		}
-		
+
 	}
 }

@@ -163,7 +163,7 @@ namespace MinorShift.Emuera.Content
 				g.DrawPath(pen, gp);
 			else
 				g.DrawPath(new Pen(Config.ForeColor), gp);
-			
+
 		}
 		#endregion
 
@@ -184,7 +184,7 @@ namespace MinorShift.Emuera.Content
 				usingFont = Config.Font;
 			if (brush != null)
 			{
-				g.DrawString(text, usingFont, brush, new RectangleF(x,y,width,height));
+				g.DrawString(text, usingFont, brush, new RectangleF(x, y, width, height));
 			}
 			else
 			{
@@ -348,7 +348,7 @@ namespace MinorShift.Emuera.Content
 			Bitmap src = srcGra.GetBitmap();
 			ImageAttributes imageAttributes = new ImageAttributes();
 			ColorMatrix colorMatrix = new ColorMatrix(cm);
-			imageAttributes.SetColorMatrix(colorMatrix, ColorMatrixFlag.Default,ColorAdjustType.Bitmap);
+			imageAttributes.SetColorMatrix(colorMatrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
 			//g.DrawImage(img.Bitmap, destRect, srcRect, GraphicsUnit.Pixel, imageAttributes);なんでこのパターンないのさ
 			g.DrawImage(src, destRect, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, GraphicsUnit.Pixel, imageAttributes);
 
@@ -373,7 +373,7 @@ namespace MinorShift.Emuera.Content
 			Rectangle destRect = new Rectangle(destPoint.X, destPoint.Y, srcGra.Width, srcGra.Height);
 
 			System.Drawing.Imaging.BitmapData bmpData =
-				destImg.LockBits(new Rectangle(0,0, destImg.Width,destImg.Height),
+				destImg.LockBits(new Rectangle(0, 0, destImg.Width, destImg.Height),
 				System.Drawing.Imaging.ImageLockMode.ReadWrite,
 				PixelFormat.Format32bppArgb);
 			try
@@ -461,7 +461,7 @@ namespace MinorShift.Emuera.Content
 
 			if (pen != null)
 			{
-				g.DrawLine(pen, fromX, fromY, forX, forY); 
+				g.DrawLine(pen, fromX, fromY, forX, forY);
 			}
 			else
 			{
@@ -658,7 +658,7 @@ namespace MinorShift.Emuera.Content
 				throw new Exception();//変な形式のが送られてくることはありえないはずだが一応
 			byte[] pixels = new byte[bmpData.Stride * bmp.Height];
 			try
-			{ 
+			{
 				IntPtr ptr = bmpData.Scan0;
 				System.Runtime.InteropServices.Marshal.Copy(ptr, pixels, 0, pixels.Length);
 			}
@@ -741,7 +741,7 @@ namespace MinorShift.Emuera.Content
 			Bitmap.UnlockBits(bmpData);
 			return true;
 		}
-#endregion
+		#endregion
 
 		public void Load()
 		{

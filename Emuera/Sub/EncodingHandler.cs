@@ -8,8 +8,8 @@ namespace MinorShift.Emuera.Sub
 		public static Encoding UTF8Encoding = new UTF8Encoding(false, true);
 		public static Encoding shiftjisEncoding = GetEncoding(932);
 		public static Encoding UTF8BOMEncoding = new UTF8Encoding(true, true);
-		
-		
+
+
 		public static Encoding DetectEncoding(string filePath)
 		{
 			try
@@ -29,13 +29,13 @@ namespace MinorShift.Emuera.Sub
 				return shiftjisEncoding;
 			}
 		}
-		
+
 		public static Encoding DetectEncoding(Stream stream)
 		{
 			var pos = stream.Position;
 			try
 			{
-				using var sr = new StreamReader(stream, UTF8Encoding, true, -1 ,true);
+				using var sr = new StreamReader(stream, UTF8Encoding, true, -1, true);
 				sr.Peek();
 				if (!UTF8Encoding.Equals(sr.CurrentEncoding))
 				{

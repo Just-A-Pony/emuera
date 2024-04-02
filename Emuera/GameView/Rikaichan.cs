@@ -79,7 +79,8 @@ namespace MinorShift.Emuera.GameView
 			{
 				edictind = File.ReadAllBytes(Config.RikaiFilename + ".ind");
 				return;
-			} else
+			}
+			else
 			{
 				//var dialog = new ConfigDialog { StartPosition = FormStartPosition.CenterParent };
 				var dialog = new RikaiDialog(Config.RikaiFilename, edict, ReceiveIndex);
@@ -94,7 +95,7 @@ namespace MinorShift.Emuera.GameView
 
 				//GenerateIndex();
 			}
-			
+
 
 		}
 
@@ -930,7 +931,8 @@ namespace MinorShift.Emuera.GameView
 					y -= 20 * linenum; //LATER: use proper line height
 					graph.FillRectangle(blueBrush, x_offset, y, box_length_max, 20 * linenum);
 				}
-			} else
+			}
+			else
 			{
 				int linesTotal = 0;
 				foreach (int linenum in linesPerBox)

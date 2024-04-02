@@ -215,9 +215,9 @@ namespace EvilMask.Emuera
 		}
 		public static string GetValidPath(string path)
 		{
-			path =  path.Replace('/', '\\').Replace("..\\", "");
+			path = path.Replace('/', '\\').Replace("..\\", "");
 			try
-			{ 
+			{
 				if (Path.GetPathRoot(path) != string.Empty)
 					return null;
 			}
@@ -258,7 +258,7 @@ namespace EvilMask.Emuera
 					bmp = new Bitmap(filepath);
 				}
 			}
-			catch{ }
+			catch { }
 			return bmp;
 
 		}
@@ -266,14 +266,14 @@ namespace EvilMask.Emuera
 		public static Icon MakeIconFromBmpFile(Bitmap bmp)
 		{
 			Image img = bmp;
- 
+
 			Bitmap bitmap = new Bitmap(256, 256, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 			Graphics g = Graphics.FromImage(bitmap);
 			g.DrawImage(img, new Rectangle(0, 0, 256, 256));
 			g.Dispose();
- 
+
 			Icon icon = Icon.FromHandle(bitmap.GetHicon());
- 
+
 			img.Dispose();
 			bitmap.Dispose();
 			return icon;

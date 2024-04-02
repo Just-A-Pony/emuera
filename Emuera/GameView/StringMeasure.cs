@@ -21,7 +21,7 @@ namespace MinorShift.Emuera.GameView
 			layoutSize = new Size(Config.WindowX * 2, Config.LineHeight);
 			layoutRect = new RectangleF(0, 0, Config.WindowX * 2, Config.LineHeight);
 			fontDisplaySize = Config.Font.Size / 2 * 1.04f;//実際には指定したフォントより若干幅をとる？
-			//bmp = new Bitmap(Config.WindowX, Config.LineHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+														   //bmp = new Bitmap(Config.WindowX, Config.LineHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 			bmp = new Bitmap(16, 16, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 			graph = Graphics.FromImage(bmp);
 			if (textDrawingMode == TextDrawingMode.WINAPI)

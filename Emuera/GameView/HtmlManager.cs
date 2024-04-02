@@ -386,7 +386,7 @@ namespace MinorShift.Emuera.GameView
 
 				}
 			}
-			if(needPandN)
+			if (needPandN)
 			{
 				b.Append("</nobr>");
 				b.Append("</p>");
@@ -413,7 +413,7 @@ namespace MinorShift.Emuera.GameView
 					st.CurrentPosition += found;
 				}
 				found = st.Find('>');
-				if(found < 0)
+				if (found < 0)
 					return null;
 				found++;
 				strList.Add(st.Substring(st.CurrentPosition, found));
@@ -763,7 +763,7 @@ namespace MinorShift.Emuera.GameView
 			if (state.LastButtonTag != null)
 			{
 				ret.Title = state.LastButtonTag.ButtonTitle;
-				if(state.LastButtonTag.PointXisLocked)
+				if (state.LastButtonTag.PointXisLocked)
 				{
 					ret.LockPointX(state.LastButtonTag.PointX);
 				}
@@ -781,7 +781,7 @@ namespace MinorShift.Emuera.GameView
 		}
 		private static string getStringStyleStartingTag(StringStyle style)
 		{
-			bool fontChanged = !((style.Fontname == null || style.Fontname == Config.FontName)&& !style.ColorChanged && (style.ButtonColor == Config.FocusColor));
+			bool fontChanged = !((style.Fontname == null || style.Fontname == Config.FontName) && !style.ColorChanged && (style.ButtonColor == Config.FocusColor));
 			if (!fontChanged && style.FontStyle == FontStyle.Regular)
 				return "";
 			StringBuilder b = new StringBuilder();
@@ -951,12 +951,12 @@ namespace MinorShift.Emuera.GameView
 					if ((state.FontStyle & newStyle) != FontStyle.Regular)
 						throw new CodeEE(string.Format(trerror.DuplicateTag.Text, tag));
 					state.FontStyle |= newStyle;
-						return null;
+					return null;
 				case "br":
 					if (wc != null)
 						throw new CodeEE(string.Format(trerror.AttributeSetToTag.Text, tag));
 					state.FlagBr = true;
-						return null;
+					return null;
 				case "nobr":
 					if (wc != null)
 						throw new CodeEE(string.Format(trerror.AttributeSetToTag.Text, tag));
@@ -965,7 +965,7 @@ namespace MinorShift.Emuera.GameView
 					if (state.FlagNobr)
 						throw new CodeEE(string.Format(trerror.DuplicateTag.Text, "nobr"));
 					state.FlagNobr = true;
-						return null;
+					return null;
 				case "p":
 					{
 						if (wc == null)
@@ -1093,7 +1093,7 @@ namespace MinorShift.Emuera.GameView
 							attrValue = Unescape(attr.Str);
 							if (word.Code.Equals("height", StringComparison.OrdinalIgnoreCase))
 							{
-								Utils.ParseMixedNum(ref height, tag, word.Code,  attrValue);
+								Utils.ParseMixedNum(ref height, tag, word.Code, attrValue);
 							}
 							else if (word.Code.Equals("width", StringComparison.OrdinalIgnoreCase))
 							{
@@ -1345,7 +1345,7 @@ namespace MinorShift.Emuera.GameView
 					{
 						if (state.FlagClearButton)
 							throw new CodeEE(string.Format(trerror.NestedTag.Text, "clearbutton"));
-						if (wc!=null)
+						if (wc != null)
 							while (!wc.EOL)
 							{
 								word = wc.Current as IdentifierWord;
@@ -1356,7 +1356,7 @@ namespace MinorShift.Emuera.GameView
 								wc.ShiftNext();
 								if (word == null || op == null || op.Code != OperatorCode.Assignment || attr == null)
 									goto error;
-								if (word.Code.ToLower()=="notooltip")
+								if (word.Code.ToLower() == "notooltip")
 								{
 									var val = attr.Str.ToLower();
 									if (val == "true")
@@ -1445,7 +1445,7 @@ namespace MinorShift.Emuera.GameView
 
 		private static int stringToColorInt32(string str)
 		{
-			if(str.Length == 0)
+			if (str.Length == 0)
 				throw new CodeEE(trerror.RequireColorCode.Text);
 			int i;
 			if (str[0] == '#')
@@ -1467,7 +1467,7 @@ namespace MinorShift.Emuera.GameView
 				Color color = Color.FromName(str);
 				if (color.A == 0)//色名として解釈失敗 エラー確定
 				{
-					if(str.Equals("transparent", StringComparison.OrdinalIgnoreCase))
+					if (str.Equals("transparent", StringComparison.OrdinalIgnoreCase))
 						throw new CodeEE(trerror.TransparentUnsupported.Text);
 					try
 					{

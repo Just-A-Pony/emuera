@@ -115,7 +115,7 @@ namespace MinorShift.Emuera.GameData.Function
 					throw new CodeEE(string.Format(trerror.XmlGetPathError.Text, path, e.Message));
 				}
 				long outputStyle = arguments.Length == 4 ? arguments[3].GetIntValue(exm) : 0;
-				
+
 				if (arguments.Length >= 3)
 				{
 					if (arguments[2].GetOperandType() == typeof(Int64) && arguments[2].GetIntValue(exm) != 0)
@@ -167,7 +167,7 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				ReturnType = typeof(Int64);
 				CanRestructure = false;
-				argumentTypeArrayEx = new ArgTypeList[] { 
+				argumentTypeArrayEx = new ArgTypeList[] {
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D }, OmitStart = 1 },
 				};
 				this.type = type;
@@ -224,7 +224,7 @@ namespace MinorShift.Emuera.GameData.Function
 			public EnumFilesMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArrayEx = new ArgTypeList[] { 
+				argumentTypeArrayEx = new ArgTypeList[] {
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Int, ArgType.RefString1D }, OmitStart = 1 },
 				};
 				CanRestructure = false;
@@ -499,7 +499,7 @@ namespace MinorShift.Emuera.GameData.Function
 			public SetVarMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArrayEx = new ArgTypeList[] { 
+				argumentTypeArrayEx = new ArgTypeList[] {
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Any } },
 				};
 				CanRestructure = false;
@@ -676,7 +676,7 @@ namespace MinorShift.Emuera.GameData.Function
 					string[] strs = MinorShift.Emuera.GameView.HtmlManager.HtmlSubString(str, (int)arguments[1].GetIntValue(exm));
 					str = strs[1];
 					ret++;
-				} while(!string.IsNullOrEmpty(str));
+				} while (!string.IsNullOrEmpty(str));
 				return ret;
 			}
 		}
@@ -1367,7 +1367,8 @@ namespace MinorShift.Emuera.GameData.Function
 				{
 					if (arguments[2].GetOperandType() == typeof(string)) t = Utils.DataTable.NameToType(arguments[2].GetStrValue(exm));
 					else t = Utils.DataTable.IntToType(arguments[2].GetIntValue(exm));
-					if (t == null) {
+					if (t == null)
+					{
 						throw new CodeEE(string.Format(Lang.Error.UnsupportedType.Text, Name));
 					}
 				}
@@ -1459,11 +1460,11 @@ namespace MinorShift.Emuera.GameData.Function
 					row[0] = Utils.TimePoint();
 				}
 				if (arguments.Length == b + 4)
-				{ 
+				{
 					var names = (arguments[b + 1] as VariableTerm).Identifier.GetArray() as string[];
 					var count = Math.Min(names.Length, arguments[b + 3].GetIntValue(exm));
 					if (arguments[b + 2].GetOperandType() == typeof(string))
-					{ 
+					{
 						var vals = (arguments[b + 2] as VariableTerm).Identifier.GetArray() as string[];
 						count = Math.Min(vals.Length, count);
 						for (int i = 0; i < count; i++)
@@ -1487,7 +1488,7 @@ namespace MinorShift.Emuera.GameData.Function
 						var name = arguments[pos].GetStrValue(exm);
 						SetValue(row, dt, name, key, exm, arguments[pos + 1]);
 						pos += 2;
-						cCount ++;
+						cCount++;
 					}
 				}
 				if (op == Operation.Add)
@@ -1744,7 +1745,7 @@ namespace MinorShift.Emuera.GameData.Function
 				var key = arguments[0].GetStrValue(exm);
 				var dict = exm.VEvaluator.VariableData.DataDataTables;
 				DataTable dt;
-				try 
+				try
 				{
 					dt = new DataTable(key);
 					using (var reader = new StringReader(arguments[1].GetStrValue(exm)))
@@ -1801,7 +1802,7 @@ namespace MinorShift.Emuera.GameData.Function
 				switch (type)
 				{
 					case Operation.Set:
-						argumentTypeArray = new Type[] { typeof(string), typeof(string), typeof(string) };break;
+						argumentTypeArray = new Type[] { typeof(string), typeof(string), typeof(string) }; break;
 					case Operation.Has:
 					case Operation.Remove:
 						argumentTypeArray = new Type[] { typeof(string), typeof(string) }; break;
@@ -1839,17 +1840,17 @@ namespace MinorShift.Emuera.GameData.Function
 			public MapGetStrMethod(Operation type)
 			{
 				ReturnType = typeof(string);
-				switch(type)
+				switch (type)
 				{
 					case Operation.Get:
-						argumentTypeArray = new Type[] { typeof(string), typeof(string) };break;
+						argumentTypeArray = new Type[] { typeof(string), typeof(string) }; break;
 					case Operation.ToXml:
 						argumentTypeArray = new Type[] { typeof(string) }; break;
 					case Operation.GetKeys:
 						argumentTypeArrayEx = new ArgTypeList[] {
 							new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int }, OmitStart = 1 },
 							new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D, ArgType.Int } },
-						};break;
+						}; break;
 				}
 				CanRestructure = false;
 				op = type;
@@ -1989,7 +1990,7 @@ namespace MinorShift.Emuera.GameData.Function
 				};
 				CanRestructure = false;
 			}
-			
+
 			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 			//{
 			//	//通常２つ、１つ省略可能で１～２の引数が必要。
@@ -2042,7 +2043,7 @@ namespace MinorShift.Emuera.GameData.Function
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
-				if(!Config.CompatiSPChara)
+				if (!Config.CompatiSPChara)
 					// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
 					throw new CodeEE(Lang.Error.SPCharacterFeatureDisabled.Text);
 				Int64 integer = arguments[0].GetIntValue(exm);
@@ -2136,7 +2137,7 @@ namespace MinorShift.Emuera.GameData.Function
 				long x = arguments[0].GetIntValue(exm);
 				long y = arguments[1].GetIntValue(exm);
 				long z = (arguments.Length == 3 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : 0;
-				if(!Config.CompatiSPChara && z != 0)
+				if (!Config.CompatiSPChara && z != 0)
 					// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
 					throw new CodeEE(Lang.Error.SPCharacterFeatureDisabled.Text);
 				return exm.VEvaluator.GetCharacterStrfromCSVData(x, CharacterStrData.CSTR, (z != 0), y);
@@ -2308,8 +2309,8 @@ namespace MinorShift.Emuera.GameData.Function
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				Int64 no = arguments[0].GetIntValue(exm);
-				bool isSp =(arguments.Length == 2 && arguments[1] != null) ? (arguments[1].GetIntValue(exm) != 0) : false;
-				if(!Config.CompatiSPChara && isSp)
+				bool isSp = (arguments.Length == 2 && arguments[1] != null) ? (arguments[1].GetIntValue(exm) != 0) : false;
+				if (!Config.CompatiSPChara && isSp)
 					// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
 					throw new CodeEE(Lang.Error.SPCharacterFeatureDisabled.Text);
 
@@ -2515,7 +2516,7 @@ namespace MinorShift.Emuera.GameData.Function
 				return filepathes.Count;
 			}
 		}
-		
+
 
 		private sealed class IsSkipMethod : FunctionMethod
 		{
@@ -2736,11 +2737,11 @@ namespace MinorShift.Emuera.GameData.Function
 			public override long GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				long r = arguments[0].GetIntValue(exm);
-				if(r < 0 || r > 255)
+				if (r < 0 || r > 255)
 					// throw new CodeEE("第１引数が0から255の範囲外です");
 					throw new CodeEE(string.Format(Lang.Error.ArgIsOutOfRange.Text, Name, 1, r, 0, 255));
 				long g = arguments[1].GetIntValue(exm);
-				if(g< 0 || g > 255)
+				if (g < 0 || g > 255)
 					// throw new CodeEE("第２引数が0から255の範囲外です");
 					throw new CodeEE(string.Format(Lang.Error.ArgIsOutOfRange.Text, Name, 2, g, 0, 255));
 				long b = arguments[2].GetIntValue(exm);
@@ -3518,8 +3519,8 @@ namespace MinorShift.Emuera.GameData.Function
 					}
 					var resultArray = valueArray.Distinct();
 					if (resultArray.Count() != arguments.Length)
-							return 0L;
-					}
+						return 0L;
+				}
 				else
 				{
 					string[] stringArray = new string[arguments.Length];
@@ -3746,7 +3747,7 @@ namespace MinorShift.Emuera.GameData.Function
 				string varname = "";
 				#region EE_ERD
 				if (arguments.Length > 2)
-					varname = vToken.Identifier.Name+"@"+arguments[2].GetIntValue(exm);
+					varname = vToken.Identifier.Name + "@" + arguments[2].GetIntValue(exm);
 				else
 					varname = vToken.Identifier.Name;
 				#endregion
@@ -3754,7 +3755,7 @@ namespace MinorShift.Emuera.GameData.Function
 				#region EE_ERD
 				// if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, varCode, key, -1))
 				if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, varCode, key, -1, varname))
-				#endregion
+					#endregion
 					return ret;
 				else
 					return -1;
@@ -3937,8 +3938,8 @@ namespace MinorShift.Emuera.GameData.Function
 					return exm.VEvaluator.FindElement(p, targetString, start, end, isExact, isLast);
 				}
 			}
-			
-			
+
+
 			public override bool UniqueRestructure(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				arguments[0].Restructure(exm);
@@ -4121,7 +4122,7 @@ namespace MinorShift.Emuera.GameData.Function
 							#region EM_私家版_ARRAYMSORT_文字列配列処理修正
 							//return 0;
 							break;
-							#endregion
+						#endregion
 						sortList.Add(new KeyValuePair<string, int>(array[i], i));
 					}
 					sortList.Sort((a, b) => { return a.Key.CompareTo(b.Key); });
@@ -4179,8 +4180,8 @@ namespace MinorShift.Emuera.GameData.Function
 					{
 						if (term.IsInteger)
 						{
-							var array = (Int64[, ,])term.Identifier.GetArray();
-							var clone = (Int64[, ,])array.Clone();
+							var array = (Int64[,,])term.Identifier.GetArray();
+							var clone = (Int64[,,])array.Clone();
 							if (array.GetLength(0) < sortedArray.Length)
 								return 0;
 							for (int i = 0; i < sortedArray.Length; i++)
@@ -4190,8 +4191,8 @@ namespace MinorShift.Emuera.GameData.Function
 						}
 						else
 						{
-							var array = (string[, ,])term.Identifier.GetArray();
-							var clone = (string[, ,])array.Clone();
+							var array = (string[,,])term.Identifier.GetArray();
+							var clone = (string[,,])array.Clone();
 							if (array.GetLength(0) < sortedArray.Length)
 								return 0;
 							for (int i = 0; i < sortedArray.Length; i++)
@@ -4604,7 +4605,7 @@ namespace MinorShift.Emuera.GameData.Function
 
 			public override bool UniqueRestructure(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
-				return (arguments.Length < 4 || arguments[3].GetIntValue(exm) != 1) ;
+				return (arguments.Length < 4 || arguments[3].GetIntValue(exm) != 1);
 			}
 			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 			//{
@@ -4641,13 +4642,14 @@ namespace MinorShift.Emuera.GameData.Function
 				{
 					switch (type)
 					{
-						case 1: 
+						case 1:
 							{
 								if (!(arguments[2] is VariableTerm varTerm) || varTerm.Identifier.IsCalc || !varTerm.Identifier.IsArray1D || !varTerm.Identifier.IsString || varTerm.Identifier.IsConst)
 									throw new CodeEE(string.Format(Lang.Error.ArgIsNotNDStrArray.Text, Name, 3, 1));
 								var items = (arguments[2] as VariableTerm).Identifier.GetArray() as string[];
 								int idx = 0;
-								return reg.Replace(baseString, (Match match) => {
+								return reg.Replace(baseString, (Match match) =>
+								{
 									if (idx < items.Length)
 									{
 										return items[idx++];
@@ -4655,7 +4657,8 @@ namespace MinorShift.Emuera.GameData.Function
 									return string.Empty;
 								});
 							}
-						case 2: {
+						case 2:
+							{
 								// 正規表現を使わず
 								return baseString.Replace(arguments[1].GetStrValue(exm), arguments[2].GetStrValue(exm));
 							}
@@ -4686,7 +4689,7 @@ namespace MinorShift.Emuera.GameData.Function
 				if ((i < 0x001F && i != 0x000A && i != 0x000D) || (i >= 0x007F && i <= 0x009F))
 				{
 					//コード実行中の場合
-					if(GlobalStatic.Process.getCurrentLine != null)
+					if (GlobalStatic.Process.getCurrentLine != null)
 						// GlobalStatic.Console.PrintSystemLine("注意:" + GlobalStatic.Process.getCurrentLine.Position.Filename + "の" + GlobalStatic.Process.getCurrentLine.Position.LineNo.ToString() + "行目でUNICODE関数に制御文字に対応する値(0x" + String.Format("{0:X}", i) + ")が渡されました");
 						GlobalStatic.Console.PrintSystemLine(string.Format(Lang.Error.WarnPrefix.Text,
 							GlobalStatic.Process.getCurrentLine.Position.Filename,
@@ -4892,7 +4895,7 @@ namespace MinorShift.Emuera.GameData.Function
 					StrForm strForm = StrForm.FromWordToken(wt);
 					destStr = strForm.GetString(exm);
 				}
-				catch(CodeEE e)
+				catch (CodeEE e)
 				{
 					// throw new CodeEE("STRFORM関数:文字列\"" + str + "\"の展開エラー:" + e.Message);
 					throw new CodeEE(string.Format(Lang.Error.InvalidFormString.Text, Name, str, e.Message));
@@ -4986,7 +4989,7 @@ namespace MinorShift.Emuera.GameData.Function
 				return (exm.VEvaluator.GetJoinedStr(p, delimiter, index1, index2));
 			}
 			public override bool UniqueRestructure(ExpressionMediator exm, IOperandTerm[] arguments)
-			{                
+			{
 				//第1変数は変数名なので、定数文字列変数だと事故が起こるので独自対応
 				VariableTerm varTerm = (VariableTerm)arguments[0];
 				bool canRerstructure = varTerm.Identifier.IsConst;
@@ -5000,12 +5003,12 @@ namespace MinorShift.Emuera.GameData.Function
 				return canRerstructure;
 			}
 		}
-		
+
 		public sealed class GetConfigMethod : FunctionMethod
 		{
 			public GetConfigMethod(bool typeisInt)
 			{
-				if(typeisInt)
+				if (typeisInt)
 				{
 					funcname = "GETCONFIG";
 					ReturnType = typeof(Int64);
@@ -5022,29 +5025,29 @@ namespace MinorShift.Emuera.GameData.Function
 			private SingleTerm GetSingleTerm(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				string str = arguments[0].GetStrValue(exm);
-				if(str == null || str.Length == 0)
+				if (str == null || str.Length == 0)
 					// throw new CodeEE(funcname + "関数に空文字列が渡されました");
 					throw new CodeEE(string.Format(Lang.Error.ArgIsEmptyString.Text, Name, 1));
 				string errMes = null;
 				SingleTerm term = ConfigData.Instance.GetConfigValueInERB(str, ref errMes);
-				if(errMes != null)
+				if (errMes != null)
 					// throw new CodeEE(funcname + "関数:" + errMes);
 					throw new CodeEE(errMes);
 				return term;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
-				if(ReturnType != typeof(Int64))
+				if (ReturnType != typeof(Int64))
 					throw new ExeEE(funcname + "関数:不正な呼び出し");
 				SingleTerm term = GetSingleTerm(exm, arguments);
-				if(term.GetOperandType() != typeof(Int64))
+				if (term.GetOperandType() != typeof(Int64))
 					// throw new CodeEE(funcname + "関数:型が違います（GETCONFIGS関数を使用してください）");
 					throw new CodeEE(string.Format(Lang.Error.InvalidType.Text, Name, "GETCONFIGS"));
 				return term.Int;
 			}
 			public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
-				if(ReturnType != typeof(string))
+				if (ReturnType != typeof(string))
 					throw new ExeEE(funcname + "関数:不正な呼び出し");
 				SingleTerm term = GetSingleTerm(exm, arguments);
 				if (term.GetOperandType() != typeof(string))
@@ -5149,10 +5152,10 @@ namespace MinorShift.Emuera.GameData.Function
 		{
 			Int64 target = arguments[argNo].GetIntValue(exm);
 			if (target < 0)//funcname + "関数:GraphicsIDに負の値(" + target.ToString() + ")が指定されました"
-				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGraphicsID0, Name, target));
+						   // throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGraphicsID0, Name, target));
 				throw new CodeEE(string.Format(Lang.Error.GIdIsNegative.Text, Name, target));
 			else if (target > int.MaxValue)//funcname + "関数:GraphicsIDの値(" + target.ToString() + ")が大きすぎます"
-				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGraphicsID1, Name, target));
+										   // throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGraphicsID1, Name, target));
 				throw new CodeEE(string.Format(Lang.Error.GIdIsTooLarge.Text, Name, target));
 			return AppContents.GetGraphics((int)target);
 		}
@@ -5191,7 +5194,7 @@ namespace MinorShift.Emuera.GameData.Function
 			if (x64 < int.MinValue || x64 > int.MaxValue)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodDefaultArgumentOutOfRange0, Name,x64, argNo+1));
 				throw new CodeEE(string.Format(Lang.Error.ArgIsOutOfRange.Text, Name, argNo + 1, x64, int.MinValue, int.MaxValue));
-			Int64 y64 = arguments[argNo+1].GetIntValue(exm);
+			Int64 y64 = arguments[argNo + 1].GetIntValue(exm);
 			if (y64 < int.MinValue || y64 > int.MaxValue)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodDefaultArgumentOutOfRange0, Name,y64, argNo+1+1));
 				throw new CodeEE(string.Format(Lang.Error.ArgIsOutOfRange.Text, Name, argNo + 2, y64, int.MinValue, int.MaxValue));
@@ -5255,13 +5258,13 @@ namespace MinorShift.Emuera.GameData.Function
 					cm[x] = new float[5];
 					for (int y = 0; y < 5; y++)
 					{
-						cm[x][y] = ((float)array[e1+x, e2+y]) / 256f;
+						cm[x][y] = ((float)array[e1 + x, e2 + y]) / 256f;
 					}
 				}
 			}
-			if(p.Identifier.IsArray3D)
+			if (p.Identifier.IsArray3D)
 			{
-				Int64[, ,] array; Int64 e3;
+				Int64[,,] array; Int64 e3;
 				if (p.Identifier.IsCharacterData)
 				{
 					throw new NotImplCodeEE();
@@ -5284,7 +5287,7 @@ namespace MinorShift.Emuera.GameData.Function
 					cm[x] = new float[5];
 					for (int y = 0; y < 5; y++)
 					{
-						cm[x][y] = ((float)array[e1,e2+x, e3+y]) / 256f;
+						cm[x][y] = ((float)array[e1, e2 + x, e3 + y]) / 256f;
 					}
 				}
 			}
@@ -5327,7 +5330,7 @@ namespace MinorShift.Emuera.GameData.Function
 					case "GGETBRUSH":
 						SolidBrush b = (SolidBrush)g.Brush;
 						return b.Color.ToArgb() & 0xffffffffL;
-					#endregion
+						#endregion
 				}
 				throw new ExeEE("GraphicsState:" + Name + ":異常な分岐");
 			}
@@ -5379,7 +5382,7 @@ namespace MinorShift.Emuera.GameData.Function
 				Point p = ReadPoint(Name, exm, arguments, 1);
 				if (p.X < 0 || p.X >= g.Width || p.X < 0 || p.Y >= g.Height)
 					return -1;
-				Color c = g.GGetColor(p.X,p.Y);
+				Color c = g.GGetColor(p.X, p.Y);
 				//Color.ToArgb()はInt32の負の値をとることがあり、Int64にうまく変換できない?（と思ったが気のせいだった
 				return ((Int64)c.ToArgb()) & 0xFFFFFFFFL;
 			}
@@ -5409,7 +5412,7 @@ namespace MinorShift.Emuera.GameData.Function
 				return 1;
 			}
 		}
-		
+
 		public sealed class GraphicsSetBrushMethod : FunctionMethod
 		{
 			public GraphicsSetBrushMethod()
@@ -5495,7 +5498,7 @@ namespace MinorShift.Emuera.GameData.Function
 				{
 					return 0;
 				}
-				foundfont:
+			foundfont:
 				#endregion
 				// g.GSetFont(styledFont);
 				g.GSetFont(styledFont, fs);
@@ -5524,7 +5527,7 @@ namespace MinorShift.Emuera.GameData.Function
 					return 0;
 				Color c = ReadColor(Name, exm, arguments, 1);
 				Int64 width = arguments[2].GetIntValue(exm);
-				g.GSetPen(new Pen(c,width));
+				g.GSetPen(new Pen(c, width));
 				return 1;
 			}
 		}
@@ -5546,7 +5549,7 @@ namespace MinorShift.Emuera.GameData.Function
 				GraphicsImage g = ReadGraphics(Name, exm, arguments, 0);
 				if (!g.IsCreated)
 					return 0;
-				
+
 				g.GDashStyle(arguments[1].GetIntValue(exm), arguments[2].GetIntValue(exm));
 				return 1;
 			}
@@ -5852,7 +5855,7 @@ namespace MinorShift.Emuera.GameData.Function
 			public SpriteSetPosMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = new Type[] { typeof(string) , typeof(Int64),typeof(Int64) };
+				argumentTypeArray = new Type[] { typeof(string), typeof(Int64), typeof(Int64) };
 				CanRestructure = false;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
@@ -5906,7 +5909,7 @@ namespace MinorShift.Emuera.GameData.Function
 			public ClientSizeMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = new Type[] {};
+				argumentTypeArray = new Type[] { };
 				CanRestructure = false;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
@@ -5942,16 +5945,16 @@ namespace MinorShift.Emuera.GameData.Function
 				Point p = ReadPoint(Name, exm, arguments, 1);
 				int width = p.X; int height = p.Y;
 				if (width <= 0)//{0}関数:GraphicsのWidthに0以下の値({1})が指定されました
-					// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGWidth0, Name, width));
+							   // throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGWidth0, Name, width));
 					throw new CodeEE(string.Format(Lang.Error.GParamIsNegative.Text, Name, "Width", width));
 				else if (width > AbstractImage.MAX_IMAGESIZE)//{0}関数:GraphicsのWidthに{2}以上の値({1})が指定されました
-					// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGWidth1, Name, width, AbstractImage.MAX_IMAGESIZE));
+															 // throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGWidth1, Name, width, AbstractImage.MAX_IMAGESIZE));
 					throw new CodeEE(string.Format(Lang.Error.GParamTooLarge.Text, Name, "Width", AbstractImage.MAX_IMAGESIZE, width));
 				if (height <= 0)//{0}関数:GraphicsのHeightに0以下の値({1})が指定されました
-					// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGHeight0, Name, height));
+								// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGHeight0, Name, height));
 					throw new CodeEE(string.Format(Lang.Error.GParamIsNegative.Text, Name, "Height", height));
 				else if (height > AbstractImage.MAX_IMAGESIZE)//{0}関数:GraphicsのHeightに{2}以上の値({1})が指定されました
-					// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGHeight1, Name, height, AbstractImage.MAX_IMAGESIZE));
+															  // throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGHeight1, Name, height, AbstractImage.MAX_IMAGESIZE));
 					throw new CodeEE(string.Format(Lang.Error.GParamTooLarge.Text, Name, "Height", AbstractImage.MAX_IMAGESIZE, height));
 
 				g.GCreate(width, height, false);
@@ -6103,7 +6106,7 @@ namespace MinorShift.Emuera.GameData.Function
 					return 0;
 
 				Rectangle rect = new Rectangle(0, 0, g.Width, g.Height);
-				if(arguments.Length == 6)
+				if (arguments.Length == 6)
 				{//四角形は正でも負でもよいが親画像の外を指してはいけない
 					rect = ReadRectangle(Name, exm, arguments, 2);
 					#region EM_私家版_SPRITECREATE範囲制限緩和
@@ -6249,7 +6252,7 @@ namespace MinorShift.Emuera.GameData.Function
 				CanRestructure = false;
 				HasUniqueRestructure = true;
 			}
-			
+
 			//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 			//{
 			//	if (arguments.Length < 10)
@@ -6307,7 +6310,7 @@ namespace MinorShift.Emuera.GameData.Function
 				return false;
 			}
 		}
-		
+
 		/// <summary>
 		/// GDRAWGWITHMASK(int ID, int srcID, int maskID, int destX, int destY)
 		/// </summary>
@@ -6319,7 +6322,7 @@ namespace MinorShift.Emuera.GameData.Function
 				argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64) };
 				CanRestructure = false;
 			}
-			
+
 
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
@@ -6382,7 +6385,7 @@ namespace MinorShift.Emuera.GameData.Function
 			//	{
 			//		if (arguments[i] == null)
 			//			return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, i + 1);
-					
+
 			//		if (i < argumentTypeArray.Length && argumentTypeArray[i] != arguments[i].GetOperandType())
 			//			return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentType0, name, i + 1);
 			//	}
@@ -6474,16 +6477,16 @@ namespace MinorShift.Emuera.GameData.Function
 					return 0;
 				Point pos = ReadPoint(Name, exm, arguments, 1);
 				if (pos.X <= 0)//{0}関数:GraphicsのWidthに0以下の値({1})が指定されました
-					// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGWidth0, Name, pos.X));
+							   // throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGWidth0, Name, pos.X));
 					throw new CodeEE(string.Format(Lang.Error.GParamIsNegative.Text, Name, "Width", pos.X));
 				else if (pos.X > AbstractImage.MAX_IMAGESIZE)//{0}関数:GraphicsのWidthに{2}以上の値({1})が指定されました
-					// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGWidth1, Name, pos.X, AbstractImage.MAX_IMAGESIZE));
+															 // throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGWidth1, Name, pos.X, AbstractImage.MAX_IMAGESIZE));
 					throw new CodeEE(string.Format(Lang.Error.GParamTooLarge.Text, Name, "Width", AbstractImage.MAX_IMAGESIZE, pos.X));
 				if (pos.Y <= 0)//{0}関数:GraphicsのHeightに0以下の値({1})が指定されました
-					// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGHeight0, Name, pos.Y));
+							   // throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGHeight0, Name, pos.Y));
 					throw new CodeEE(string.Format(Lang.Error.GParamIsNegative.Text, Name, "Height", pos.Y));
 				else if (pos.Y > AbstractImage.MAX_IMAGESIZE)//{0}関数:GraphicsのHeightに{2}以上の値({1})が指定されました
-					// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGHeight1, Name, pos.Y, AbstractImage.MAX_IMAGESIZE));
+															 // throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGHeight1, Name, pos.Y, AbstractImage.MAX_IMAGESIZE));
 					throw new CodeEE(string.Format(Lang.Error.GParamTooLarge.Text, Name, "Height", AbstractImage.MAX_IMAGESIZE, pos.Y));
 				AppContents.CreateSpriteAnime(imgname, pos.X, pos.Y);
 				return 1;
@@ -6524,7 +6527,7 @@ namespace MinorShift.Emuera.GameData.Function
 				if (rect.Width <= 0 || rect.Height <= 0 ||
 					rect.X < 0 || rect.X + rect.Width > g.Width || rect.Y < 0 || rect.Y + rect.Height > g.Height)
 					return 0;
-					//throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodCIMGCreateOutOfRange0, Name));
+				//throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodCIMGCreateOutOfRange0, Name));
 				Point offset = ReadPoint(Name, exm, arguments, 6);
 				Int64 delay = arguments[8].GetIntValue(exm);
 				if (delay <= 0 || delay > int.MaxValue)
@@ -6543,7 +6546,7 @@ namespace MinorShift.Emuera.GameData.Function
 			public CBGClearMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = new Type[] {};
+				argumentTypeArray = new Type[] { };
 				CanRestructure = false;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
@@ -6655,7 +6658,7 @@ namespace MinorShift.Emuera.GameData.Function
 			public CBGSetBMapGMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = new Type[] { typeof(Int64)};
+				argumentTypeArray = new Type[] { typeof(Int64) };
 				CanRestructure = false;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
@@ -6698,7 +6701,7 @@ namespace MinorShift.Emuera.GameData.Function
 				if (z64 < int.MinValue || z64 > int.MaxValue || z64 == 0)
 					// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodDefaultArgumentOutOfRange0, Name, z64, 3 + 1));
 					throw new CodeEE(string.Format(Lang.Error.ArgIsOutOfRangeExcept.Text, Name, 4, z64, int.MinValue, int.MaxValue, 0));
-				if (!exm.Console.CBG_SetImage(img, p.X,p.Y, (int)z64))
+				if (!exm.Console.CBG_SetImage(img, p.X, p.Y, (int)z64))
 					return 0;
 				return 1;
 
@@ -6759,7 +6762,7 @@ namespace MinorShift.Emuera.GameData.Function
 					// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodDefaultArgumentOutOfRange0, Name, z64, 5 + 1));
 					throw new CodeEE(string.Format(Lang.Error.ArgIsOutOfRangeExcept.Text, Name, 6, z64, int.MinValue, int.MaxValue, 0));
 				string tooltip = null;
-				if(arguments.Length > 6)
+				if (arguments.Length > 6)
 					tooltip = arguments[6].GetStrValue(exm);
 				if (!exm.Console.CBG_SetButtonImage((int)b64, imgN, imgB, p.X, p.Y, (int)z64, tooltip))
 					return 0;
@@ -6787,7 +6790,7 @@ namespace MinorShift.Emuera.GameData.Function
 				short s = WinInput.GetKeyState((int)keycode);
 				short toggle = keytoggle[keycode];
 				keytoggle[keycode] = (short)((s & 1) + 1);//初期値0、トグル状態に応じて1か2を代入。
-				switch(Name)
+				switch (Name)
 				{
 					case "GETKEY": return (s < 0) ? 1 : 0;
 					case "GETKEYTRIGGERED": return (s < 0) && (toggle != keytoggle[keycode]) ? 1 : 0;//初回はtrue、2回目以降はトグル状態が前回と違う場合のみ1
@@ -6806,7 +6809,7 @@ namespace MinorShift.Emuera.GameData.Function
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
-				switch(Name)
+				switch (Name)
 				{
 					case "MOUSEX": return exm.Console.GetMousePosition().X;
 					case "MOUSEY": return exm.Console.GetMousePosition().Y;
@@ -6866,7 +6869,7 @@ namespace MinorShift.Emuera.GameData.Function
 			public SetAnimeTimerMethod()
 			{
 				ReturnType = typeof(Int64);
-				argumentTypeArray = new Type[] {typeof(Int64) };
+				argumentTypeArray = new Type[] { typeof(Int64) };
 				CanRestructure = false;
 			}
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
@@ -7068,7 +7071,7 @@ namespace MinorShift.Emuera.GameData.Function
 					if (!Config.ValidExtension.Contains(tmp))
 						return "";
 				}
-				
+
 				if (!System.IO.File.Exists(filepath))
 					return "";
 				try
@@ -7217,7 +7220,7 @@ namespace MinorShift.Emuera.GameData.Function
 			public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 			{
 				string functionname = arguments[0].GetStrValue(exm);
-				if (arguments.Length == 1 ||  arguments[1].GetIntValue(exm) == 0)
+				if (arguments.Length == 1 || arguments[1].GetIntValue(exm) == 0)
 				{
 					FunctionLabelLine func;
 					if (Config.SCFunction == StringComparison.OrdinalIgnoreCase)
@@ -7296,7 +7299,7 @@ namespace MinorShift.Emuera.GameData.Function
 					GC.Collect();
 					using (System.Diagnostics.Process memory = System.Diagnostics.Process.GetCurrentProcess())
 					{
-						return destmemorysize-memory.WorkingSet64;
+						return destmemorysize - memory.WorkingSet64;
 					}
 				}
 			}

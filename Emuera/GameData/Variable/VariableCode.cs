@@ -5,7 +5,7 @@ using System.Text;
 namespace MinorShift.Emuera.GameData.Variable
 {
 	//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
-	[global::System.Reflection.Obfuscation(Exclude=true)]
+	[global::System.Reflection.Obfuscation(Exclude = true)]
 	internal enum VariableCode
 	{
 		__NULL__ = 0x00000000,
@@ -21,7 +21,7 @@ namespace MinorShift.Emuera.GameData.Variable
 		__GLOBAL__ = 0x04000000,//グローバル変数。
 		__ARRAY_2D__ = 0x08000000,//二次元配列。キャラクタ変数フラグと排他
 		__SAVE_EXTENDED__ = 0x10000000,//拡張セーブ機能によってセーブするべき変数。
-							//このフラグを立てておけば勝手にセーブされる(はず)。名前を変えると正常にロードできなくなるので注意。
+									   //このフラグを立てておけば勝手にセーブされる(はず)。名前を変えると正常にロードできなくなるので注意。
 		__ARRAY_3D__ = 0x20000000,//三次元配列
 		__CONSTANT__ = 0x40000000,//完全定数CSVから読み込まれる～NAME系がこれに該当
 
@@ -196,7 +196,7 @@ namespace MinorShift.Emuera.GameData.Variable
 
 		//CALCな変数については番号順はどうでもいい。
 		//1803beta004 ～～NAME系については番号順をConstantDataが使用するので重要
-		
+
 		RAND = 0x00 | __INTEGER__ | __ARRAY_1D__ | __CALC__ | __UNCHANGEABLE__,//乱数。０～引数-1までの値を返す。
 		CHARANUM = 0x01 | __INTEGER__ | __CALC__ | __UNCHANGEABLE__,//キャラクタ数。キャラクタ登録数を返す。
 
@@ -246,7 +246,7 @@ namespace MinorShift.Emuera.GameData.Variable
 		GAMEBASE_VERSIONNAME = 0x0C | __STRING__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//文字列型。バージョン名
 		#endregion
 		WINDOW_TITLE = 0x05 | __STRING__ | __CALC__ | __EXTENDED__,//文字列型。ウインドウのタイトル。変更可能。
-		//アンダースコア2つで囲まれた変数を追加したらVariableTokenに特別な処理が必要。
+																   //アンダースコア2つで囲まれた変数を追加したらVariableTokenに特別な処理が必要。
 		__FILE__ = 0x06 | __STRING__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//現在実行中のファイル名
 		__FUNCTION__ = 0x07 | __STRING__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//現在実行中の関数名
 		MONEYLABEL = 0x08 | __STRING__ | __CALC__ | __UNCHANGEABLE__ | __EXTENDED__,//お金のラベル
@@ -274,8 +274,8 @@ namespace MinorShift.Emuera.GameData.Variable
 		CVARS = 0xFC | __STRING__ | __CHARACTER_DATA__ | __ARRAY_1D__ | __EXTENDED__,//ユーザー定義変数
 		CVAR2D = 0xFC | __INTEGER__ | __CHARACTER_DATA__ | __ARRAY_2D__ | __EXTENDED__,//ユーザー定義変数
 		CVARS2D = 0xFC | __STRING__ | __CHARACTER_DATA__ | __ARRAY_2D__ | __EXTENDED__,//ユーザー定義変数
-		//CVAR3D = 0xFC | __INTEGER__ | __ARRAY_3D__ | __EXTENDED__,//ユーザー定義変数
-		//CVARS3D = 0xFC | __STRING__ | __ARRAY_3D__ | __EXTENDED__,//ユーザー定義変数
+																					   //CVAR3D = 0xFC | __INTEGER__ | __ARRAY_3D__ | __EXTENDED__,//ユーザー定義変数
+																					   //CVARS3D = 0xFC | __STRING__ | __ARRAY_3D__ | __EXTENDED__,//ユーザー定義変数
 		REF = 0xFD | __INTEGER__ | __ARRAY_1D__ | __EXTENDED__,//参照型
 		REFS = 0xFD | __STRING__ | __ARRAY_1D__ | __EXTENDED__,
 		REF2D = 0xFD | __INTEGER__ | __ARRAY_2D__ | __EXTENDED__,
@@ -288,12 +288,12 @@ namespace MinorShift.Emuera.GameData.Variable
 		VARS2D = 0xFE | __STRING__ | __ARRAY_2D__ | __EXTENDED__,//ユーザー定義変数
 		VAR3D = 0xFE | __INTEGER__ | __ARRAY_3D__ | __EXTENDED__,//ユーザー定義変数
 		VARS3D = 0xFE | __STRING__ | __ARRAY_3D__ | __EXTENDED__,//ユーザー定義変数
-		//PRIVATE = 0xFF | __INTEGER__ | __ARRAY_1D__ | __EXTENDED__,//プライベート変数
-		//PRIVATES = 0xFF | __STRING__ | __ARRAY_1D__ | __EXTENDED__,//プライベート変数
-		//PRIVATE2D = 0xFF | __INTEGER__ | __ARRAY_2D__ | __EXTENDED__,//プライベート変数
-		//PRIVATES2D = 0xFF | __STRING__ | __ARRAY_2D__ | __EXTENDED__,//プライベート変数
-		//PRIVATE3D = 0xFF | __INTEGER__ | __ARRAY_3D__ | __EXTENDED__,//プライベート変数
-		//PRIVATES3D = 0xFF | __STRING__ | __ARRAY_3D__ | __EXTENDED__,//プライベート変数
+																 //PRIVATE = 0xFF | __INTEGER__ | __ARRAY_1D__ | __EXTENDED__,//プライベート変数
+																 //PRIVATES = 0xFF | __STRING__ | __ARRAY_1D__ | __EXTENDED__,//プライベート変数
+																 //PRIVATE2D = 0xFF | __INTEGER__ | __ARRAY_2D__ | __EXTENDED__,//プライベート変数
+																 //PRIVATES2D = 0xFF | __STRING__ | __ARRAY_2D__ | __EXTENDED__,//プライベート変数
+																 //PRIVATE3D = 0xFF | __INTEGER__ | __ARRAY_3D__ | __EXTENDED__,//プライベート変数
+																 //PRIVATES3D = 0xFF | __STRING__ | __ARRAY_3D__ | __EXTENDED__,//プライベート変数
 	}
 }
 

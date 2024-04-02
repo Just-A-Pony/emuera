@@ -15,7 +15,7 @@ namespace MinorShift._Library
 	///     rectangle to achieve the final color.
 	/// </summary>
 	/// 
-	[global::System.Reflection.Obfuscation(Exclude=false)]
+	[global::System.Reflection.Obfuscation(Exclude = false)]
 	internal enum TernaryRasterOperations : uint
 	{
 		/// <summary>dest = source</summary>
@@ -295,7 +295,7 @@ namespace MinorShift._Library
 		/// <summary>
 		/// 必要に応じてStretch。アルファブレンドなし。
 		/// </summary>
-		public static void DrawImage(int destX, int destY,int width, int height, IntPtr srchDC, Rectangle srcRect)
+		public static void DrawImage(int destX, int destY, int width, int height, IntPtr srchDC, Rectangle srcRect)
 		{
 			if (srcRect.Height == height && srcRect.Width == width)
 				BitBlt(hDC, destX, destY, width, height, srchDC, srcRect.X, srcRect.Y, TernaryRasterOperations.SRCCOPY);

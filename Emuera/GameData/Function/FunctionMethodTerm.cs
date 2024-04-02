@@ -29,7 +29,7 @@ namespace MinorShift.Emuera.GameData.Function
 		{
 			return method.GetReturnValue(exm, arguments);
 		}
-		
+
 		public override IOperandTerm Restructure(ExpressionMediator exm)
 		{
 			if (method.HasUniqueRestructure)
@@ -39,9 +39,9 @@ namespace MinorShift.Emuera.GameData.Function
 				return this;
 			}
 			bool argIsConst = true;
-			for(int i = 0; i< arguments.Length;i++)
+			for (int i = 0; i < arguments.Length; i++)
 			{
-				if(arguments[i] == null)
+				if (arguments[i] == null)
 					continue;
 				arguments[i] = arguments[i].Restructure(exm);
 				argIsConst &= arguments[i] is SingleTerm;
@@ -49,8 +49,8 @@ namespace MinorShift.Emuera.GameData.Function
 			if ((method.CanRestructure) && (argIsConst))
 				return GetValue(exm);
 			return this;
-			
+
 		}
-		
+
 	}
 }

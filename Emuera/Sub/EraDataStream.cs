@@ -476,7 +476,7 @@ namespace MinorShift.Emuera.Sub
 			this.file = file;
 			writer = new StreamWriter(file, Config.SaveEncode);
 		}
-		
+
 		public const string FINISHER = EraDataReader.FINISHER;
 		public const string EMU_START = EraDataReader.EMU_1808_START;
 		public const string EMU_SEPARATOR = EraDataReader.EMU_SEPARATOR;
@@ -661,7 +661,7 @@ namespace MinorShift.Emuera.Sub
 			throw new NotImplementedException(trerror.NotImplement.Text);
 		}
 
-		public void WriteExtended(string key, Int64[, ,] array3D)
+		public void WriteExtended(string key, Int64[,,] array3D)
 		{
 			if (writer == null)
 				throw new FileEE(trerror.InvalidStream.Text);
@@ -720,7 +720,7 @@ namespace MinorShift.Emuera.Sub
 			writer.WriteLine(FINISHER);
 		}
 
-		public void WriteExtended(string key, string[, ,] array2D)
+		public void WriteExtended(string key, string[,,] array2D)
 		{
 			throw new NotImplementedException(trerror.NotImplement.Text);
 		}

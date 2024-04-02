@@ -29,7 +29,7 @@ namespace MinorShift.Emuera.GameProc
 		public bool Private = false;
 		public bool CharaData = false;
 		public bool Const = false;
-		
+
 		//1822 Privateの方もDIMだけ遅延させようとしたけどちょっと課題がおおいのでやめとく
 		public static UserDefinedVariableData Create(DimLineWC dimline)
 		{

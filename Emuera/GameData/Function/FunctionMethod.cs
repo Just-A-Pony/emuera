@@ -15,19 +15,19 @@ namespace MinorShift.Emuera.GameData.Function
 		protected string Name { get; private set; }
 		#region EM_私家版_Emuera多言語化改造
 		protected enum ArgType
-		{ 
+		{
 			Invalid = 0,
 
 			Any = 1,
-			Int = 1<<1,
-			String = 1<<2,
-			Ref = 1<<3,
-			Array = 1<<4,
-			Array1D = 1<<5,
-			Array2D = 1<<6,
-			Array3D = 1<<7,
-			Variadic = 1<<8,
-			SameAsFirst = 1<<9,
+			Int = 1 << 1,
+			String = 1 << 2,
+			Ref = 1 << 3,
+			Array = 1 << 4,
+			Array1D = 1 << 5,
+			Array2D = 1 << 6,
+			Array3D = 1 << 7,
+			Variadic = 1 << 8,
+			SameAsFirst = 1 << 9,
 			CharacterData = Ref | 1 << 10,
 			AllowConstRef = 1 << 11,
 			DisallowVoid = 1 << 12,
@@ -74,10 +74,16 @@ namespace MinorShift.Emuera.GameData.Function
 			public bool Variadic { get { return (type & ArgType.Variadic) != 0; } }
 			public bool SameAsFirst { get { return (type & ArgType.SameAsFirst) != 0; } }
 			public bool CharacterData { get { return ((int)type & (1 << 10)) != 0; } }
-			public int ArrayDims { get { return this.Array ? -1 
-						: (this.Array1D ? 1 
+			public int ArrayDims
+			{
+				get
+				{
+					return this.Array ? -1
+						: (this.Array1D ? 1
 						: (this.Array2D ? 2
-						: (this.Array3D ? 3 : 0))); } }
+						: (this.Array3D ? 3 : 0)));
+				}
+			}
 
 			public static implicit operator _ArgType(ArgType value)
 			{
@@ -90,9 +96,10 @@ namespace MinorShift.Emuera.GameData.Function
 			public int OmitStart { get; set; } = -1;
 			public bool MatchVariadicGroup { get; set; } = false;
 
-			public _ArgType[] LastVariadics 
-			{ 
-				get {
+			public _ArgType[] LastVariadics
+			{
+				get
+				{
 					int count = 0;
 					for (int i = ArgTypes.Count - 1; i >= 0; i--)
 					{
@@ -260,7 +267,7 @@ namespace MinorShift.Emuera.GameData.Function
 			{
 				return CheckArgumentTypeEx(name, arguments);
 			}
-			else if (argumentTypeArray!=null)
+			else if (argumentTypeArray != null)
 			{
 				if (arguments.Length != argumentTypeArray.Length)
 				// return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum0, name);

@@ -47,7 +47,7 @@ namespace MinorShift.Emuera.GameView
 			if ((obj == null) || (!(obj is StringStyle)))
 				return false;
 			StringStyle ss = (StringStyle)obj;
-			return ((this.Color == ss.Color) && (this.ButtonColor == ss.ButtonColor) && (this.ColorChanged == ss.ColorChanged) && (this.FontStyle == ss.FontStyle) && (this.Fontname.Equals(ss.Fontname,  Config.SCIgnoreCase)));
+			return ((this.Color == ss.Color) && (this.ButtonColor == ss.ButtonColor) && (this.ColorChanged == ss.ColorChanged) && (this.FontStyle == ss.FontStyle) && (this.Fontname.Equals(ss.Fontname, Config.SCIgnoreCase)));
 		}
 		public override int GetHashCode()
 		{

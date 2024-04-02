@@ -48,7 +48,7 @@ namespace MinorShift.Emuera.GameView
 			Str = string.Empty;
 			xOffset = MixedNum.ToPixel(xPos, 0);
 			#region EE_div各要素の修正
-			if (margin != null)	divXOffset += margin[Direction.Left];
+			if (margin != null) divXOffset += margin[Direction.Left];
 			if (padding != null) divXOffset += padding[Direction.Left];
 			if (border != null) divXOffset += border[Direction.Left];
 			#endregion
@@ -73,14 +73,18 @@ namespace MinorShift.Emuera.GameView
 		int yOffset;
 		#endregion
 		int width;
-		public override int PointX {
+		public override int PointX
+		{
 			get { return pointX; }
-			set { pointX = value;
+			set
+			{
+				pointX = value;
 				#region EE_div各要素の修正
 				foreach (var child in children)
 					child.ShiftPositionX(value + xOffset + divXOffset);
 				#endregion
-			} }
+			}
+		}
 		int PointY;
 		int Height;
 		int[] margin, padding, radius, border;
@@ -139,7 +143,7 @@ namespace MinorShift.Emuera.GameView
 		public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)
 		{
 			if (GlobalStatic.MainWindow == null) return;
-			var rect = IsRelative ? new Rectangle(PointX + xOffset, pointY + PointY, width + 2, Height) 
+			var rect = IsRelative ? new Rectangle(PointX + xOffset, pointY + PointY, width + 2, Height)
 				: new Rectangle(xOffset, GlobalStatic.MainWindow.MainPicBox.Height - PointY - Height, width + 2, Height); // 何故か+2pxが必要，なぞ
 
 			if (margin != null)

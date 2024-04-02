@@ -119,11 +119,11 @@ namespace EvilMask.Emuera
 				using (var cornerEllipse = new GraphicsPath())
 				{
 					cornerEllipse.AddEllipse(new Rectangle(
-						flipX ? cornerRect.X - cornerRect.Width: cornerRect.X,
-						flipY ? cornerRect.Y - cornerRect.Height: cornerRect.Y,
+						flipX ? cornerRect.X - cornerRect.Width : cornerRect.X,
+						flipY ? cornerRect.Y - cornerRect.Height : cornerRect.Y,
 						cornerRect.Width * 2 - 1,
 						cornerRect.Height * 2 - 1));
-					bool hasInnerEllipse = (border != null ? border[flipX ? Direction.Left : Direction.Right] : 0) < radius[corner] 
+					bool hasInnerEllipse = (border != null ? border[flipX ? Direction.Left : Direction.Right] : 0) < radius[corner]
 						&& (border != null ? border[flipY ? Direction.Bottom : Direction.Top] : 0) < radius[corner];
 					Rectangle innerEllipseRect = radius != null ? new Rectangle(
 						flipX ? rect.X + rect.Width - radius[corner] : rect.X + (border != null ? border[Direction.Left] : 0),
@@ -134,15 +134,15 @@ namespace EvilMask.Emuera
 					{
 						innerEllipse = new GraphicsPath();
 						innerEllipse.AddEllipse(new Rectangle(
-							flipX ? innerEllipseRect.X - innerEllipseRect.Width: innerEllipseRect.X,
-							flipY ? innerEllipseRect.Y - innerEllipseRect.Height: innerEllipseRect.Y,
+							flipX ? innerEllipseRect.X - innerEllipseRect.Width : innerEllipseRect.X,
+							flipY ? innerEllipseRect.Y - innerEllipseRect.Height : innerEllipseRect.Y,
 							innerEllipseRect.Width * 2 - 1,
 							innerEllipseRect.Height * 2 - 1));
 					}
 					if (bgColor != Color.Transparent)
 					{
 						// 1/4の背景を描画
-						var bWidth = rect.Width - (border!=null ? border[Direction.Left] + border[Direction.Right] : 0);
+						var bWidth = rect.Width - (border != null ? border[Direction.Left] + border[Direction.Right] : 0);
 						var bHalfWidth = bWidth / 2;
 						var bHeigh = rect.Height - (border != null ? border[Direction.Top] + border[Direction.Bottom] : 0);
 						var bHalfHeigh = bHeigh / 2;

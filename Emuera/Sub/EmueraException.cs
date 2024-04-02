@@ -119,7 +119,7 @@ namespace MinorShift.Emuera.Sub
 
 		public override string ToString()
 		{
-			if(LineNo == -1)
+			if (LineNo == -1)
 				return base.ToString();
 			return Filename + ":" + LineNo.ToString();
 		}
@@ -128,7 +128,7 @@ namespace MinorShift.Emuera.Sub
 
 		public bool Equals(ScriptPosition x, ScriptPosition y)
 		{
-			if((x == null)||(y == null))
+			if ((x == null) || (y == null))
 				return false;
 			return ((x.Filename == y.Filename) && (x.LineNo == y.LineNo));
 		}

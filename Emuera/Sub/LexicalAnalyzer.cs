@@ -19,7 +19,7 @@ namespace MinorShift.Emuera.Sub
 		Percent,//%により終了。%～～%
 		RightCurlyBrace,//}により終了。{～～}
 		Comma,//,により終了。TIMES第一引数
-		//Single,//Identifier一つで終了//1807 Single削除
+			  //Single,//Identifier一つで終了//1807 Single削除
 		GreaterThan,//'>'により終了。Htmlタグ解析
 	}
 
@@ -72,7 +72,7 @@ namespace MinorShift.Emuera.Sub
 		//readonly static IList<char> decimalDigits = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', };
 		readonly static IList<char> hexadecimalDigits = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D', 'E', 'F' };
 
-	//1819 正規表現使うとやや遅い。いずれdoubleにも対応させたい。そのうち考える
+		//1819 正規表現使うとやや遅い。いずれdoubleにも対応させたい。そのうち考える
 		//readonly static Regex DigitsReg = new Regex("" +
 		//	"(" +
 		//	"((?<simple>[-]?[0-9]+)([^.xXbBeEpP]|$))" +
@@ -376,7 +376,7 @@ namespace MinorShift.Emuera.Sub
 			}
 			return new IdentifierWord(str);
 		}
-		
+
 		/// <summary>
 		/// 単語を文字列で取得。マクロ適用なし
 		/// </summary>
@@ -784,7 +784,7 @@ namespace MinorShift.Emuera.Sub
 		#endregion
 
 		#region analyse
-		
+
 		/// <summary>
 		/// 解析できるものは関数宣言や式のみ。FORM文字列や普通の文字列を送ってはいけない
 		/// return時にはendWithの文字がCurrentになっているはず。終端の適切さの検証は呼び出し元が行う。
@@ -825,7 +825,7 @@ namespace MinorShift.Emuera.Sub
 						ret.Add(new LiteralIntegerWord(ReadInt64(st, false)));
 						break;
 					case '>':
-						if(endWith == LexEndWith.GreaterThan)
+						if (endWith == LexEndWith.GreaterThan)
 							goto end;
 						goto case '+';
 					case '+':
@@ -905,7 +905,7 @@ namespace MinorShift.Emuera.Sub
 						if ((flag & LexAnalyzeFlag.AnalyzePrintV) != LexAnalyzeFlag.AnalyzePrintV)
 						{
 							//AssignmentStr用特殊処理 代入文の代入演算子を探索中で'=の場合のみ許可
-							if ((endWith == LexEndWith.Operator) && (nestBracketS == 0) && (nestBracketL == 0) && st.Next == '=' )
+							if ((endWith == LexEndWith.Operator) && (nestBracketS == 0) && (nestBracketL == 0) && st.Next == '=')
 								goto end;
 							throw new CodeEE(string.Format(trerror.UnexpectedCharacter.Text, st.Current));
 						}

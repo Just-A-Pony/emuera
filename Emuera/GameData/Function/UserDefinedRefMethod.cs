@@ -55,7 +55,7 @@ namespace MinorShift.Emuera.GameData.Function
 				}
 				else
 				{
-					if (vToken.IsInteger && ArgTypeList[i] !=  UserDifinedFunctionDataArgType.Int)
+					if (vToken.IsInteger && ArgTypeList[i] != UserDifinedFunctionDataArgType.Int)
 						return false;
 					if (vToken.IsString && ArgTypeList[i] != UserDifinedFunctionDataArgType.Str)
 						return false;

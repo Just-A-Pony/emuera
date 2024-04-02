@@ -130,10 +130,10 @@ namespace MinorShift.Emuera
 				warningList.Add(new ParserWarning(str, line.Position, level, stack));
 			//				console.PrintWarning(str, line.Position, level);
 		}
-		
+
 		private static List<ParserWarning> warningList = new List<ParserWarning>();
 
-		public static bool HasWarning{get {return warningList.Count > 0;}}
+		public static bool HasWarning { get { return warningList.Count > 0; } }
 		public static void ClearWarningList()
 		{
 			warningList.Clear();

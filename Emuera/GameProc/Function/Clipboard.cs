@@ -57,7 +57,7 @@ namespace MinorShift.Emuera.GameProc.Function
 			if (!useCB) return;
 
 			lineBuffer = new CircularBuffer<string>(Config.CBBufferSize);
-			minTimer = new System.Timers.Timer(Config.CBMinTimer) {AutoReset = false};
+			minTimer = new System.Timers.Timer(Config.CBMinTimer) { AutoReset = false };
 			minTimer.Elapsed += MinTimerDone;
 			OldText = new StringBuilder();
 		}

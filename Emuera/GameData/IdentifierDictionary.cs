@@ -53,7 +53,7 @@ namespace MinorShift.Emuera
 		readonly static Regex regexComAble = new Regex("^COM_ABLE[0-9]+$");
 		readonly static Regex regexAblup = new Regex("^ABLUP[0-9]+$");
 		#region static
-		
+
 		public static bool IsEventLabelName(string labelName)
 		{
 			switch (labelName)
@@ -169,7 +169,7 @@ namespace MinorShift.Emuera
 			methodDic = FunctionMethodCreator.GetMethodList();
 			refmethodDic = new Dictionary<string, UserDefinedRefMethod>();
 
-			foreach(KeyValuePair<string, FunctionMethod> pair in methodDic)
+			foreach (KeyValuePair<string, FunctionMethod> pair in methodDic)
 			{
 				nameDic.Add(pair.Key, DefinedNameType.SystemMethod);
 			}
@@ -179,7 +179,7 @@ namespace MinorShift.Emuera
 				//RANDが衝突している
 				//1808a3 GLOBAL、PRIVATEも
 				//1808beta009 REFも
-				if (!nameDic.ContainsKey(pair.Key)) 
+				if (!nameDic.ContainsKey(pair.Key))
 					nameDic.Add(pair.Key, DefinedNameType.SystemVariable);
 			}
 
@@ -196,11 +196,11 @@ namespace MinorShift.Emuera
 					nameDic.Add(pair.Key, DefinedNameType.SystemInstrument);
 			}
 		}
-		
+
 		//public void SetSystemInstrumentName(List<string> names)
 		//{
 		//}
-		
+
 		public void CheckUserLabelName(ref string errMes, ref int warnLevel, bool isFunction, string labelName)
 		{
 			if (labelName.Length == 0)
@@ -275,7 +275,7 @@ namespace MinorShift.Emuera
 				}
 			}
 		}
-		
+
 		public void CheckUserVarName(ref string errMes, ref int warnLevel, string varName)
 		{
 			//if (varName.Length == 0)
@@ -396,9 +396,9 @@ namespace MinorShift.Emuera
 				warnLevel = 2;
 				return;
 			}
-			if(nameDic.ContainsKey(varName))
+			if (nameDic.ContainsKey(varName))
 			{
-				switch(nameDic[varName])
+				switch (nameDic[varName])
 				{
 					case DefinedNameType.Reserved:
 						errMes = string.Format(treer.VarConflictReservedWord.Text, varName);
@@ -487,7 +487,7 @@ namespace MinorShift.Emuera
 				if ((line != null) && (line.ParentLabelLine != null))
 				{
 					ret = line.ParentLabelLine.GetPrivateVariable(key);
-					if(ret != null)
+					if (ret != null)
 					{
 						if (subKey != null)
 							throw new CodeEE(string.Format(treer.UsedAtForPrivVar.Text, key));
@@ -527,7 +527,7 @@ namespace MinorShift.Emuera
 				//    throw new CodeEE("設定によりシステム一文字数値変数の使用が禁止されています(呼び出された変数：" + ret.Name +")");
 				if (ret.IsForbid)
 				{
-					if(!ret.CanForbid)
+					if (!ret.CanForbid)
 						throw new ExeEE(string.Format(treer.InvalidProhibitedVar.Text, ret.Name));
 					throw new CodeEE(string.Format(treer.UsedProhibitedVar.Text, ret.Name));
 				}
@@ -602,7 +602,7 @@ namespace MinorShift.Emuera
 					{
 						string errMes;
 						IOperandTerm ret = UserDefinedMethodTerm.Create(func, arguments, out errMes);
-						if(ret == null)
+						if (ret == null)
 							throw new CodeEE(errMes);
 						return ret;
 					}
@@ -627,7 +627,7 @@ namespace MinorShift.Emuera
 		public void ThrowException(string str, bool isFunc)
 		{
 			string idStr = str;
-			if(Config.ICFunction || Config.ICVariable) //片方だけなのは互換性用オプションなのでレアケースのはず。対応しない。
+			if (Config.ICFunction || Config.ICVariable) //片方だけなのは互換性用オプションなのでレアケースのはず。対応しない。
 				idStr = idStr.ToUpper();
 			if (disableList.Contains(idStr))
 				throw new CodeEE(string.Format(treer.DeclaringDisable.Text, str));
@@ -685,7 +685,7 @@ namespace MinorShift.Emuera
 				return localvarTokenDic[key].IsForbid;
 			varTokenDic.TryGetValue(key, out VariableToken var);
 			if (var != null)
-					return var.IsForbid;
+				return var.IsForbid;
 			return true;
 		}
 		#endregion

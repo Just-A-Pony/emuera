@@ -119,7 +119,7 @@ namespace MinorShift.Emuera.Content
 				GDI.SelectObject(GDIhDC, hDefaultImg);
 				GDI.DeleteObject(hBitmap);
 				//gがすでに死んでると例外になる
-				if(g != null)
+				if (g != null)
 					g.ReleaseHdc(GDIhDC);
 			}
 			if (g != null)

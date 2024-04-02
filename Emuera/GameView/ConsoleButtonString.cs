@@ -34,7 +34,7 @@ namespace MinorShift.Emuera.GameView
 			ErrPos = null;
 		}
 		public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, Int64 input)
-			:this(console, strs)
+			: this(console, strs)
 		{
 			this.Input = input;
 			Inputs = input.ToString();
@@ -94,7 +94,7 @@ namespace MinorShift.Emuera.GameView
 		}
 		public Int64 GetMappedColor(int pointX, int pointY)
 		{
-			if (mask != null) 
+			if (mask != null)
 			{
 				var offsetX = pointX - PointX - mask.PointX - Config.DrawingParam_ShapePositionShift;
 				var offsetY = pointY - parent.GetLinePointY(ParentLine.LineNo) - mask.Top;
@@ -202,7 +202,7 @@ namespace MinorShift.Emuera.GameView
 			this.strArray = cssArrayA;
 			ConsoleButtonString ret = new ConsoleButtonString(null, cssArrayB);
 			this.CalcWidth(sm, XsubPixel);
-			ret.CalcWidth(sm,0);
+			ret.CalcWidth(sm, 0);
 			this.CalcPointX(this.PointX);
 			ret.CalcPointX(this.PointX + this.Width);
 			ret.parent = this.parent;
@@ -225,8 +225,8 @@ namespace MinorShift.Emuera.GameView
 				Width = 0;
 				foreach (AConsoleDisplayPart css in strArray)
 				{
-					if(css.Width <= 0)
-						css.SetWidth(sm,subpixel);
+					if (css.Width <= 0)
+						css.SetWidth(sm, subpixel);
 					Width += css.Width;
 					subpixel = css.XsubPixel;
 				}
@@ -283,7 +283,7 @@ namespace MinorShift.Emuera.GameView
 			{
 				if (bitmapCache == null)
 				{
-					int width = this.Width+1;
+					int width = this.Width + 1;
 					//^ Without +1, some things get cropped. I don't know why, probably a bug somewhere.
 					//TODO
 					int height = Config.FontSize;

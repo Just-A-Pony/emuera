@@ -110,7 +110,7 @@ namespace MinorShift.Emuera
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			ConfigData.Instance.LoadConfig();
-			
+
 
 			#region EM_私家版_Emuera多言語化改造
 			Lang.LoadLanguageFile();
@@ -245,7 +245,7 @@ namespace MinorShift.Emuera
 				ParserMediator.Initialize(null);
 				GlobalStatic.Reset();
 				//GC.Collect();
-			#region EE_メモリリークの解決
+				#region EE_メモリリークの解決
 				ConfigData.Instance.ReLoadConfig();
 				break;
 			}

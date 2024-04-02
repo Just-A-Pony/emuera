@@ -62,7 +62,7 @@ namespace MinorShift.Emuera.GameProc
 			{
 				if (Arguments[i] == null)
 					continue;
-				if(isRef[i])
+				if (isRef[i])
 					Arguments[i].Restructure(exm);
 				else
 					Arguments[i] = Arguments[i].Restructure(exm);
@@ -135,8 +135,8 @@ namespace MinorShift.Emuera.GameProc
 			called.IsEvent = false;
 			return called;
 		}
-		
-		
+
+
 		static FunctionMethod tostrMethod = null;
 		/// <summary>
 		/// 1803beta005 予め引数の数を合わせて規定値を代入しておく
@@ -153,7 +153,7 @@ namespace MinorShift.Emuera.GameProc
 			}
 			FunctionLabelLine func = TopLabel;
 			IOperandTerm[] convertedArg = new IOperandTerm[func.Arg.Length];
-			if(convertedArg.Length < srcArgs.Length)
+			if (convertedArg.Length < srcArgs.Length)
 			{
 				errMes = string.Format(trerror.TooManyFuncArgs.Text, func.LabelName);
 				return null;
@@ -190,8 +190,8 @@ namespace MinorShift.Emuera.GameProc
 				else if (term == null)//引数が省略されたとき
 				{
 					term = func.Def[i];//デフォルト値を代入
-					//1808beta001 デフォルト値がない場合はエラーにする
-					//一応逃がす
+									   //1808beta001 デフォルト値がない場合はエラーにする
+									   //一応逃がす
 					if (term == null && !Config.CompatiFuncArgOptional)
 					{
 						errMes = string.Format(trerror.CanNotOmitArgWithMessage.Text, func.LabelName, (i + 1).ToString(), Config.GetConfigName(ConfigCode.CompatiFuncArgOptional));
@@ -259,7 +259,7 @@ namespace MinorShift.Emuera.GameProc
 		{
 			get { return returnAddress; }
 		}
-		public bool IsEvent{get; private set;}
+		public bool IsEvent { get; private set; }
 
 		public bool HasSingleFlag
 		{

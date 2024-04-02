@@ -2,7 +2,7 @@
 namespace MinorShift.Emuera
 {
 	//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
-	[global::System.Reflection.Obfuscation(Exclude=true)]
+	[global::System.Reflection.Obfuscation(Exclude = true)]
 	internal enum DisplayWarningFlag
 	{
 		IGNORE = 0,
@@ -11,7 +11,7 @@ namespace MinorShift.Emuera
 		DISPLAY = 3,
 	}
 
-	[global::System.Reflection.Obfuscation(Exclude=true)]
+	[global::System.Reflection.Obfuscation(Exclude = true)]
 	internal enum ReduceArgumentOnLoadFlag
 	{
 		YES = 0,
@@ -19,7 +19,7 @@ namespace MinorShift.Emuera
 		NO = 2,
 	}
 
-	[global::System.Reflection.Obfuscation(Exclude=true)]
+	[global::System.Reflection.Obfuscation(Exclude = true)]
 	internal enum TextDrawingMode
 	{
 		GRAPHICS = 0,
@@ -33,7 +33,7 @@ namespace MinorShift.Emuera
 		JAPANESE = 0,
 		KOREAN = 1,
 		CHINESE_HANS = 2,
-		CHINESE_HANT = 3,        
+		CHINESE_HANT = 3,
 	}
 
 	[global::System.Reflection.Obfuscation(Exclude = true)]

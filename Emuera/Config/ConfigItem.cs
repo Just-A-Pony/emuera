@@ -28,7 +28,7 @@ namespace MinorShift.Emuera
 		#region EM_私家版_Emuera多言語化改造
 		public static ConfigItem<T> Copy<T>(ConfigItem<T> other)
 		{
-			if(other == null)
+			if (other == null)
 				return null;
 			//ConfigItem<T> ret = new ConfigItem<T>(other.Code, other.Text, other.Value);
 			ConfigItem<T> ret = new ConfigItem<T>(other.Code, other.Text, other.EngText, other.Value);
@@ -50,11 +50,11 @@ namespace MinorShift.Emuera
 		#endregion
 		public bool Fixed;
 	}
-	
+
 	internal sealed class ConfigItem<T> : AConfigItem
 	{
 		#region EM_私家版_Emuera多言語化改造
-		public ConfigItem(ConfigCode code,string text, string etext, T t):base(code, text, etext)
+		public ConfigItem(ConfigCode code, string text, string etext, T t) : base(code, text, etext)
 		#endregion
 		{
 			this.val = t;
@@ -62,10 +62,10 @@ namespace MinorShift.Emuera
 		private T val;
 		public T Value
 		{
-			get{return val;}
+			get { return val; }
 			set
 			{
-				if(Fixed)
+				if (Fixed)
 					return;
 				val = value;
 			}
@@ -101,7 +101,7 @@ namespace MinorShift.Emuera
 
 		public override string ValueToString()
 		{
-			if(this is ConfigItem<bool>)
+			if (this is ConfigItem<bool>)
 			{
 				//ConfigItem<T>をConfigItem<bool>に直接キャストすることはできない
 				bool b = ((ConfigItem<bool>)(AConfigItem)this).Value;
@@ -131,8 +131,8 @@ namespace MinorShift.Emuera
 			#endregion
 			return val.ToString();
 		}
-		
-		
+
+
 		public override string ToString()
 		{
 			#region EM_私家版_Emuera多言語化改造
@@ -148,7 +148,7 @@ namespace MinorShift.Emuera
 			bool ret = false;
 			if ((param == null) || (param.Length == 0))
 				return false;
-			if(this.Fixed)
+			if (this.Fixed)
 				return false;
 			string str = param.Trim();
 			if (this is ConfigItem<bool>)
