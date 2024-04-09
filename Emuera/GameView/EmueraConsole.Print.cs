@@ -48,6 +48,9 @@ internal sealed partial class EmueraConsole : IDisposable
 		ConsoleEscapedParts.Clear();
 		#endregion
 		logicalLineCount = 0;
+		#region GETDISPLAYLINE修正
+		deletedLines = 0;
+		#endregion
 		lineNo = 0;
 		lastDrawnLineNo = -1;
 		verticalScrollBarUpdate();
@@ -125,7 +128,13 @@ internal sealed partial class EmueraConsole : IDisposable
 	int lineNo = 0;
 	public int GetLineNo { get { return lineNo; } }
 	Int64 logicalLineCount = 0;
+	#region GETDISPLAYLINE修正
+	Int64 deletedLines = 0;
+	#endregion
 	public long LineCount { get { return logicalLineCount; } }
+	#region GETDISPLAYLINE修正
+	public long DeletedLines { get{ return deletedLines; } }
+	#endregion
 	private void addRangeDisplayLine(ConsoleDisplayLine[] lineList)
 	{
 		for (int i = 0; i < lineList.Length; i++)
@@ -203,6 +212,9 @@ internal sealed partial class EmueraConsole : IDisposable
 			if (Config.TextDrawingMode != TextDrawingMode.WINAPI)
 				ConsoleEscapedParts.RemoveAt(displayLineList[0].LineNo);
 			displayLineList.RemoveAt(0);
+			#region GETDISPLAYLINE修正
+			deletedLines++;
+			#endregion
 		}
 		#endregion
 	}
@@ -231,6 +243,11 @@ internal sealed partial class EmueraConsole : IDisposable
 				delNum++;
 				logicalLineCount--;
 			}
+			#region GETDISPLAYLINE修正
+			//MaxLog状態からのRemoveはdummylineの挿入が無いのでdeletedLineを加算
+			if (displayLineList.Count == Config.MaxLog - 1)
+				deletedLines++;
+			#endregion
 			if (displayLineList.Count == Config.MaxLog - 2 && lineNo > displayLineList.Count)
 			{
 				ConsoleDisplayLine dummyline = BufferToSingleLine(true, false);
@@ -253,6 +270,9 @@ internal sealed partial class EmueraConsole : IDisposable
 		//MaxLog超過時の補充はCLEARLINEで改行が入るため1つだけ消す
 		if (displayLineList.Count == Config.MaxLog)
 			displayLineList.RemoveAt(0);
+		#region GETDISPLAYLINE修正
+		deletedLines -= num;
+		#endregion
 		//RefreshStrings(true);
 	}
 

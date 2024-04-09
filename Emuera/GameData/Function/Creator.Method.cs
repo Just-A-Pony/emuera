@@ -7381,7 +7381,7 @@ internal static partial class FunctionMethodCreator
 		}
 		public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 		{
-			long num = arguments[0].GetIntValue(exm);
+			long num = arguments[0].GetIntValue(exm)-exm.Console.DeletedLines;
 			if (num < 0 || num >= exm.Console.DisplayLineList.Count)
 				return "";
 			else
