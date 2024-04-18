@@ -278,9 +278,9 @@ internal abstract class CharaVariableToken : VariableToken
 		if (doCheck[0] && ((arguments[0] < 0) || (arguments[0] >= varData.CharacterList.Count)))
 			throw new CodeEE(string.Format(trerror.OoRCharaVarArg.Text, varName, "1", arguments[0].ToString()));
 		if (doCheck.Length > 1 && sizes.Length > 0 && doCheck[1] && ((arguments[1] < 0) || (arguments[1] >= sizes[0])))
-			throw new CodeEE(string.Format(trerror.OoRCharaVarArg.Text, varName, "2", arguments[0].ToString()));
+			throw new CodeEE(string.Format(trerror.OoRCharaVarArg.Text, varName, "2", arguments[1].ToString()));
 		if (doCheck.Length > 2 && sizes.Length > 1 && doCheck[2] && ((arguments[2] < 0) || (arguments[2] >= sizes[1])))
-			throw new CodeEE(string.Format(trerror.OoRCharaVarArg.Text, varName, "3", arguments[0].ToString()));
+			throw new CodeEE(string.Format(trerror.OoRCharaVarArg.Text, varName, "3", arguments[2].ToString()));
 	}
 
 	public override void IsArrayRangeValid(Int64[] arguments, Int64 index1, Int64 index2, string funcName, Int64 i1, Int64 i2)
