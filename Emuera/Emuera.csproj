@@ -18,7 +18,7 @@
         <RootNamespace>MinorShift.Emuera</RootNamespace>
         <ApplicationManifest>emuera.manifest</ApplicationManifest>
         <Version>1.824.0</Version>
-        <InformationalVersion>1.824+v18+EMv18+EEv45</InformationalVersion>
+        <InformationalVersion>1.824+v21+EMv18+EEv46</InformationalVersion>
         <Copyright>Copyright (C) 2008- MinorShift, 妊）|дﾟ)の中の人</Copyright>
     </PropertyGroup>
 

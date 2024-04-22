@@ -775,16 +775,6 @@ internal sealed partial class Process
 					state.JumpTo(func.JumpTo);
 					break;
 				}
-			#region EE_SysteInput拡張
-			case FunctionCode.FLOWINPUT:
-				{
-					SpInputsArgument arg = (SpInputsArgument)func.Argument;
-					flowinputdef = arg.Def.GetIntValue(exm);
-					flowinput = arg.Mouse != null && arg.Mouse.GetIntValue(exm) != 0;
-					flowinputcanskip = arg.CanSkip != null && arg.CanSkip.GetIntValue(exm) != 0;
-					break;
-				}
-			#endregion
 			#region EE_SKIPLOG
 			case FunctionCode.SKIPLOG:
 				{

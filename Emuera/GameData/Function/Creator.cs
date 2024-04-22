@@ -329,6 +329,8 @@ internal static partial class FunctionMethodCreator
 			["GETDISPLAYLINE"] = new GetDisplayLineMethod(),
 			["GDASHSTYLE"] = new GraphicsSetDashStyleMethod(),
 			["GETDOINGFUNCTION"] = new GetDoingFunctionMethod(),
+			["FLOWINPUT"] = new FlowInputMethod(),
+			["FLOWINPUTS"] = new FlowInputsMethod(),
 			#endregion
 
 			//Bitmap Cache

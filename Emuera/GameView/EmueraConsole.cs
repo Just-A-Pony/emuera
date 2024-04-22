@@ -913,6 +913,9 @@ internal sealed partial class EmueraConsole : IDisposable
 					//空入力と時間切れ
 					if (str == null)
 						str = "";
+					//SHOP等の数値を求められる場面用にFLOWINPUTでINPUTSにしててもRESULTを処理する
+					if (inputReq.IsSystemInput)
+						emuera.InputSystemInteger(inputReq.DefIntValue);
 					emuera.InputString(str);
 					break;
 				#region EE_BINPUT

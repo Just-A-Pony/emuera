@@ -45,7 +45,9 @@ namespace MinorShift.Emuera
 			openFileDialog.Multiselect = true;
 			openFileDialog.RestoreDirectory = true;
 			string Emuera_verInfo = "Emuera " + Application.ProductVersion;
-			EmuVerToolStripTextBox.Text = Emuera_verInfo;
+			//なんか変な文字列になるのでしばらく手動
+			//EmuVerToolStripTextBox.Text = Emuera_verInfo;
+			EmuVerToolStripTextBox.Text = "Emuera 1.824+v21+EMv18+EEv46";
 
 			timer.Enabled = true;
 			console = new EmueraConsole(this);
