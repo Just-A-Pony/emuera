@@ -1130,7 +1130,8 @@ internal sealed partial class EmueraConsole : IDisposable
 			{ text = new string[] { str }; }
 			else
 			{
-				if (str.StartsWith("@") && !inputReq.OneInput)
+				//INPUTSでも"@"のみが弾かれないようにおまじない
+				if (str.StartsWith("@") && str.Length > 1 && !inputReq.OneInput)
 				{
 					doSystemCommand(str);
 					return;

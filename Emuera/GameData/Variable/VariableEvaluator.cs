@@ -728,6 +728,8 @@ internal sealed class VariableEvaluator : IDisposable
 
 			if (start >= array.Length)
 				throw new CodeEE(string.Format(trerror.OoRArraySort.Text, start.ToString(), p.Identifier.Name));
+			if (start + num > array.Length)
+				throw new CodeEE(string.Format(trerror.OoRSumArray.Text, start.ToString(), num.ToString(), p.Identifier.Name));
 			if (num <= 0)
 				num = array.Length - start;
 			Int64[] temp = new Int64[num];
@@ -749,6 +751,8 @@ internal sealed class VariableEvaluator : IDisposable
 
 			if (start >= array.Length)
 				throw new CodeEE(string.Format(trerror.OoRArraySort.Text, start.ToString(), p.Identifier.Name));
+			if (start + num > array.Length)
+				throw new CodeEE(string.Format(trerror.OoRSumArray.Text, start.ToString(), num.ToString(), p.Identifier.Name));
 			if (num <= 0)
 				num = array.Length - start;
 			string[] temp = new string[num];
