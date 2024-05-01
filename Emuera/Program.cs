@@ -65,20 +65,32 @@ static class Program
 		rootCommand.AddOption(genLangOption);
 
 		var result = rootCommand.Parse(args);
-		ExeDir = Path.Join(
-					(result.CommandResult.GetValueForOption(exeDirOption)
-					?? (Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location))).AsSpan(),
-					[Path.DirectorySeparatorChar]
-					);
 
-		CsvDir = WorkingDir + "csv\\";
-		ErbDir = WorkingDir + "erb\\";
-		DebugDir = WorkingDir + "debug\\";
-		DatDir = WorkingDir + "dat\\";
-		ContentDir = WorkingDir + "resources\\";
-		#region EE_フォントファイル対応
-		FontDir = WorkingDir + "font\\";
-		#endregion
+		//実行ディレクトリが引数で与えられた場合
+		if (result.HasOption(exeDirOption))
+		{
+			ExeDir = Path.Join(result.CommandResult.GetValueForOption(exeDirOption).AsSpan(), [Path.DirectorySeparatorChar]);
+
+			CsvDir = Path.Join(ExeDir.AsSpan(), "csv", [Path.DirectorySeparatorChar]);
+			ErbDir = Path.Join(ExeDir.AsSpan(), "erb", [Path.DirectorySeparatorChar]);
+			DebugDir = Path.Join(ExeDir.AsSpan(), "debug", [Path.DirectorySeparatorChar]);
+			DatDir = Path.Join(ExeDir.AsSpan(), "dat", [Path.DirectorySeparatorChar]);
+			ContentDir = Path.Join(ExeDir.AsSpan(), "resources", [Path.DirectorySeparatorChar]);
+			#region EE_フォントファイル対応
+			FontDir = Path.Join(ExeDir.AsSpan(), "font", [Path.DirectorySeparatorChar]);
+			#endregion
+			/*
+			CsvDir = WorkingDir + "csv\\";
+			ErbDir = WorkingDir + "erb\\";
+			DebugDir = WorkingDir + "debug\\";
+			DatDir = WorkingDir + "dat\\";
+			ContentDir = WorkingDir + "resources\\";
+			#region EE_フォントファイル対応
+			FontDir = WorkingDir + "font\\";
+			#endregion
+			*/
+		}
+
 		#endregion
 		//エラー出力用
 		//1815 .exeが東方板のNGワードに引っかかるそうなので除去
@@ -237,15 +249,17 @@ static class Program
 			#endregion
 		}
 
+		var winState = FormWindowState.Normal;
+		var rebootFlag = false;
+		var rebootClientHeight = 0;
+		var rebootLocation = Point.Empty;
+
 		while (true)
 		{
 			//必要なソースファイルを事前にメモリに一気に読み込む
 			Preload.Load(ErbDir);
 			Preload.Load(CsvDir);
 
-			var winState = FormWindowState.Normal;
-			var rebootClientHeight = 0;
-			var rebootLocation = Point.Empty;
 			using var win = new MainWindow(winState, rebootLocation, rebootClientHeight, (_) =>
 			{
 				rebootFlag = true;
@@ -257,10 +271,13 @@ static class Program
 			if (icon != null)
 				win.SetupIcon(icon);
 			#endregion
+
 			Application.Run(win);
+
 			Content.AppContents.UnloadContents();
 			if (!rebootFlag)
 				break;
+
 			RebootWinState = win.WindowState;
 			if (win.WindowState == FormWindowState.Normal)
 			{
@@ -349,5 +366,22 @@ static class Program
 	//public static bool debugMode = false;
 	//public static bool DebugMode { get { return debugMode; } }
 	public static bool DebugMode { get; private set; }
+
+	static Program()
+	{
+		ExeDir = Path.Join(
+			Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).AsSpan(),
+			[Path.DirectorySeparatorChar]
+		);
+
+		CsvDir = Path.Join(ExeDir.AsSpan(), "csv", [Path.DirectorySeparatorChar]);
+		ErbDir = Path.Join(ExeDir.AsSpan(), "erb", [Path.DirectorySeparatorChar]);
+		DebugDir = Path.Join(ExeDir.AsSpan(), "debug", [Path.DirectorySeparatorChar]);
+		DatDir = Path.Join(ExeDir.AsSpan(), "dat", [Path.DirectorySeparatorChar]);
+		ContentDir = Path.Join(ExeDir.AsSpan(), "resources", [Path.DirectorySeparatorChar]);
+		#region EE_フォントファイル対応
+		FontDir = Path.Join(ExeDir.AsSpan(), "font", [Path.DirectorySeparatorChar]);
+		#endregion
+	}
 
 }
