@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using trerror = EvilMask.Emuera.Lang.Error;
+using Emuera;
 
 namespace MinorShift.Emuera.Sub;
 
@@ -46,6 +47,16 @@ internal sealed class EraStreamReader : IDisposable
 		}
 		return true;
 	}
+	public bool OpenOnCache(string path, string name)
+	{
+		filepath = path;
+		filename = name;
+		nextNo = 0;
+		curNo = 0;
+		_fileLine = Preload.files[path];
+		return true;
+	}
+
 
 	public string ReadLine()
 	{

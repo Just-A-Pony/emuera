@@ -8,6 +8,7 @@ using EvilMask.Emuera;
 using MinorShift.Emuera.GameProc.Function;
 using System.CommandLine;
 using System.CommandLine.Parsing;
+using Emuera;
 
 namespace MinorShift.Emuera;
 #nullable enable
@@ -193,6 +194,7 @@ static class Program
 				}
 			}
 		}
+
 		if (AnalysisMode)
 		{
 			AnalysisFiles = new List<string>();
@@ -230,8 +232,12 @@ static class Program
 			}
 			#endregion
 		}
+
 		while (true)
 		{
+			//必要なソースファイルを事前にメモリに一気に読み込む
+			Preload.Load(ErbDir);
+
 			var winState = FormWindowState.Normal;
 			var rebootClientHeight = 0;
 			var rebootLocation = Point.Empty;

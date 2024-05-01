@@ -303,7 +303,7 @@ internal sealed class ErbLoader
 		labelDic.AddFilename(filename);
 		var eReader = new EraStreamReader(Config.UseRenameFile && ParserMediator.RenameDic != null);
 
-		if (!eReader.Open(filepath, filename))
+		if (!eReader.OpenOnCache(filepath, filename))
 		{
 			output.PrintError(string.Format(trerror.FailedOpenFile.Text, eReader.Filename));
 		}
