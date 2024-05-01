@@ -46,6 +46,7 @@ static class Program
 		var rootCommand = new RootCommand("Emuera");
 
 		#region eee_カレントディレクトリー
+		WorkingDir = Sys.WorkingDir;
 
 		var exeDirOption = new Option<string>(
 			name: "--exeDir"
