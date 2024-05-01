@@ -34,8 +34,8 @@ internal sealed class EraStreamReader : IDisposable
 		//    throw new ExeEE("使用中のオブジェクトを別用途に再利用しようとした");
 		filepath = path;
 		filename = name;
-		nextNo = 0;
 		curNo = 0;
+		nextNo = 0;
 		try
 		{
 			_fileLine = File.ReadAllLines(filepath, Config.Encode);
@@ -57,8 +57,8 @@ internal sealed class EraStreamReader : IDisposable
 	{
 		filepath = path;
 		filename = name;
-		nextNo = 0;
 		curNo = 0;
+		nextNo = 0;
 		_fileLine = Preload.files[path.ToUpperInvariant()]; 
 		return true;
 	}
@@ -67,11 +67,11 @@ internal sealed class EraStreamReader : IDisposable
 	public string ReadLine()
 	{
 		string ret = null;
+		curNo = nextNo;
 		if (_fileLine.Length > curNo)
 		{
 			ret = _fileLine[curNo];
 			nextNo++;
-			curNo = nextNo;
 		}
 		return ret;
 	}
@@ -83,7 +83,6 @@ internal sealed class EraStreamReader : IDisposable
 	{
 		string line;
 		StringStream st;
-		curNo = nextNo;
 		while (true)
 		{
 			line = ReadLine(); 
@@ -120,7 +119,6 @@ internal sealed class EraStreamReader : IDisposable
 		while (true)
 		{
 			line = ReadLine();
-			nextNo++;
 			if (line == null)
 			{
 				throw new CodeEE(trerror.NotCloseLineContinuation.Text, new ScriptPosition(filename, curNo));
@@ -137,7 +135,7 @@ internal sealed class EraStreamReader : IDisposable
 				if (test[0] == '}')
 				{
 					if (test.Trim() != "}")
-						throw new CodeEE(trerror.CharacterAfterContinuationEnd.Text, new ScriptPosition(filename, nextNo));
+						throw new CodeEE(trerror.CharacterAfterContinuationEnd.Text, new ScriptPosition(filename, curNo));
 					break;
 				}
 				//行連結文字なら1字でないとおかしい、というか、こうしないとFORMの数値変数処理が誤爆する。
@@ -145,7 +143,7 @@ internal sealed class EraStreamReader : IDisposable
 				//A}
 				//みたいなどうしようもないコードは知ったこっちゃない
 				if (test[0] == '{' && test.Length == 1)
-					throw new CodeEE(trerror.UnexpectedContinuation.Text, new ScriptPosition(filename, nextNo));
+					throw new CodeEE(trerror.UnexpectedContinuation.Text, new ScriptPosition(filename, curNo));
 			}
 			b.Append(line);
 			b.Append(" ");
