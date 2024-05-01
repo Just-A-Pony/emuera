@@ -1278,7 +1278,7 @@ internal sealed class ConstantData
 		StaticXmls.Clear();
 		foreach (var path in Directory.GetFiles(csvPath, "VarExt*.csv", SearchOption.AllDirectories))
 		{
-			EraStreamReader eReader = new EraStreamReader(false);
+			EraStreamReader eReader = new(false);
 			if (!eReader.Open(path))
 			{
 				output.PrintError(string.Format(trerror.FailedOpenFile.Text, eReader.Filename));
@@ -1380,7 +1380,7 @@ internal sealed class ConstantData
 	{
 		CharacterTemplate tmpl = null;
 		EraStreamReader eReader = new(false);
-		if (!eReader.Open(csvPath, csvName))
+		if (!eReader.OpenOnCache(csvPath, csvName))
 		{
 			output.PrintError(string.Format(trerror.FailedOpenFile.Text, eReader.Filename));
 			return;
@@ -1679,6 +1679,8 @@ internal sealed class ConstantData
 		EraStreamReader eReader = new(false);
 		#region EE_ERD
 		// if (!eReader.Open(csvPath))
+		// ERD機能と競合するっぽいので一旦保留
+		// if (!eReader.OpenOnCache(csvPath) && output != null)
 		if (!eReader.Open(csvPath) && output != null)
 		#endregion
 		{

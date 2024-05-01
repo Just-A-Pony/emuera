@@ -47,13 +47,19 @@ internal sealed class EraStreamReader : IDisposable
 		}
 		return true;
 	}
+	public bool OpenOnCache(string path)
+	{
+
+		return OpenOnCache(path, Path.GetFileName(path));
+	}
+
 	public bool OpenOnCache(string path, string name)
 	{
 		filepath = path;
 		filename = name;
 		nextNo = 0;
 		curNo = 0;
-		_fileLine = Preload.files[path];
+		_fileLine = Preload.files[path.ToUpperInvariant()]; 
 		return true;
 	}
 
