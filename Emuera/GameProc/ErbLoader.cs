@@ -7,9 +7,9 @@ using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameData.Variable;
 using MinorShift.Emuera.GameProc.Function;
 using MinorShift._Library;
-using MinorShift.Emuera.GameData;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using trerror = EvilMask.Emuera.Lang.Error;
+using System.Windows.Forms;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -24,7 +24,7 @@ internal sealed class ErbLoader
 	readonly Process parentProcess;
 	readonly ExpressionMediator exm;
 	readonly EmueraConsole output;
-	readonly List<string> ignoredFNFWarningFileList = new List<string>();
+	readonly List<string> ignoredFNFWarningFileList = [];
 	int ignoredFNFWarningCount = 0;
 
 	int enabledLineCount = 0;
@@ -43,9 +43,9 @@ internal sealed class ErbLoader
 		labelDic = labelDictionary;
 		labelDic.Initialized = false;
 		List<KeyValuePair<string, string>> erbFiles = Config.GetFiles(erbDir, "*.ERB");
-		List<string> isOnlyEvent = new List<string>();
+		List<string> isOnlyEvent = [];
 		noError = true;
-		uint starttime = WinmmTimer.TickCount;
+		var starttime = DateTime.Now;
 		try
 		{
 			labelDic.RemoveAll();
@@ -55,7 +55,7 @@ internal sealed class ErbLoader
 				string file = erbFiles[i].Value;
 #if DEBUG
 				if (displayReport)
-					output.PrintSystemLine(string.Format(trsl.ElapsedTimeLoad.Text, (WinmmTimer.TickCount - starttime).ToString("D4"), filename));
+					output.PrintSystemLine(string.Format(trsl.ElapsedTimeLoad.Text, (DateTime.Now - starttime).TotalMilliseconds, filename));
 #else
 					if (displayReport)
 						output.PrintSystemLine(string.Format(trsl.LoadingFile.Text, filename));
@@ -65,7 +65,7 @@ internal sealed class ErbLoader
 			}
 			ParserMediator.FlushWarningList();
 #if DEBUG
-			output.PrintSystemLine(string.Format(trsl.ElapsedTime.Text, (WinmmTimer.TickCount - starttime).ToString("D4")));
+			output.PrintSystemLine(string.Format(trsl.ElapsedTime.Text, (DateTime.Now - starttime).TotalMilliseconds));
 #endif
 			if (displayReport)
 				output.PrintSystemLine(trsl.BuildingUserFunc.Text);
@@ -73,7 +73,7 @@ internal sealed class ErbLoader
 			ParserMediator.FlushWarningList();
 			labelDic.Initialized = true;
 #if DEBUG
-			output.PrintSystemLine(string.Format(trsl.ElapsedTime.Text, (WinmmTimer.TickCount - starttime).ToString("D4")));
+			output.PrintSystemLine(string.Format(trsl.ElapsedTime.Text, (DateTime.Now - starttime).TotalMilliseconds));
 #endif
 			if (displayReport)
 				output.PrintSystemLine(trsl.CheckingSyntax.Text);
@@ -81,7 +81,7 @@ internal sealed class ErbLoader
 			ParserMediator.FlushWarningList();
 
 #if DEBUG
-			output.PrintSystemLine(string.Format(trsl.ElapsedTime.Text, (WinmmTimer.TickCount - starttime).ToString("D4")));
+			output.PrintSystemLine(string.Format(trsl.ElapsedTime.Text, (DateTime.Now - starttime).TotalMilliseconds));
 #endif
 			if (displayReport)
 				output.PrintSystemLine(trsl.LoadComplete.Text);
@@ -90,7 +90,7 @@ internal sealed class ErbLoader
 		{
 			ParserMediator.FlushWarningList();
 			System.Media.SystemSounds.Hand.Play();
-			output.PrintError(string.Format(trerror.UnexpectedErrorFrom.Text, Program.ExeName));
+			output.PrintError(string.Format(trerror.UnexpectedErrorFrom.Text, _Library.Sys.ExeName));
 			output.PrintError(e.GetType().ToString() + ":" + e.Message);
 			return false;
 		}
@@ -109,14 +109,14 @@ internal sealed class ErbLoader
 	public bool loadErbs(List<string> path, LabelDictionary labelDictionary)
 	{
 		string fname;
-		List<string> isOnlyEvent = new List<string>();
+		List<string> isOnlyEvent = [];
 		noError = true;
 		labelDic = labelDictionary;
 		labelDic.Initialized = false;
 		foreach (string fpath in path)
 		{
 			if (fpath.StartsWith(Program.ErbDir, Config.SCIgnoreCase) && !Program.AnalysisMode)
-				fname = fpath.Substring(Program.ErbDir.Length);
+				fname = fpath[Program.ErbDir.Length..];         
 			else
 				fname = fpath;
 			if (Program.AnalysisMode)
@@ -142,9 +142,9 @@ internal sealed class ErbLoader
 		bool skip = false;
 		bool done = false;
 		public bool Disabled = false;
-		readonly Stack<bool> disabledStack = new Stack<bool>();
-		readonly Stack<bool> doneStack = new Stack<bool>();
-		readonly Stack<string> ppMatch = new Stack<string>();
+		readonly Stack<bool> disabledStack = new();
+		readonly Stack<bool> doneStack = new();
+		readonly Stack<string> ppMatch = new();
 
 		internal void AddKeyWord(string token, string token2, ScriptPosition position)
 		{
@@ -300,7 +300,7 @@ internal sealed class ErbLoader
 		//読み込んだファイルのパスを記録
 		//一部ファイルの再読み込み時の処理用
 		labelDic.AddFilename(filename);
-		EraStreamReader eReader = new EraStreamReader(Config.UseRenameFile && ParserMediator.RenameDic != null);
+		var eReader = new EraStreamReader(Config.UseRenameFile && ParserMediator.RenameDic != null);
 		if (!eReader.Open(filepath, filename))
 		{
 			output.PrintError(string.Format(trerror.FailedOpenFile.Text, eReader.Filename));
@@ -308,7 +308,7 @@ internal sealed class ErbLoader
 		}
 		try
 		{
-			PPState ppstate = new PPState();
+			PPState ppstate = new();
 			LogicalLine nextLine = new NullLine();
 			LogicalLine lastLine = new NullLine();
 			FunctionLabelLine lastLabelLine = null;
@@ -328,7 +328,7 @@ internal sealed class ErbLoader
 					string token = LexicalAnalyzer.ReadSingleIdentifier(st);
 					LexicalAnalyzer.SkipWhiteSpace(st);
 					string token2 = LexicalAnalyzer.ReadSingleIdentifier(st);
-					if ((string.IsNullOrEmpty(token)) || (st.Current != ']'))
+					if (string.IsNullOrEmpty(token) || (st.Current != ']'))
 						ParserMediator.Warn(trerror.InvalidSBrackets.Text, position, 1);
 					ppstate.AddKeyWord(token, token2, position);
 					st.ShiftNext();
@@ -355,7 +355,7 @@ internal sealed class ErbLoader
 				}
 				if ((st.Current == '$') || (st.Current == '@'))
 				{
-					bool isFunction = (st.Current == '@');
+					bool isFunction = st.Current == '@';
 					nextLine = LogicalLineParser.ParseLabelLine(st, position, output);
 					if (isFunction)
 					{
@@ -381,7 +381,7 @@ internal sealed class ErbLoader
 								}
 							}
 							funcCount++;
-							if (Program.AnalysisMode && (Config.PrintCPerLine > 0 && (funcCount % Config.PrintCPerLine) == 0))
+							if (Program.AnalysisMode && Config.PrintCPerLine > 0 && (funcCount % Config.PrintCPerLine) == 0)
 							{
 								output.NewLine();
 								output.PrintSystemLine("　");
@@ -575,7 +575,7 @@ internal sealed class ErbLoader
 						if (maxArgs < vTerm.getEl1forArg + 1)
 							maxArgs = vTerm.getEl1forArg + 1;
 					}
-					bool canDef = (vTerm.Identifier.Code == VariableCode.ARG || vTerm.Identifier.Code == VariableCode.ARGS || vTerm.Identifier.IsPrivate);
+					bool canDef = vTerm.Identifier.Code == VariableCode.ARG || vTerm.Identifier.Code == VariableCode.ARGS || vTerm.Identifier.IsPrivate;
 					term = argsRow[i * 2 + 1];
 					if (term is NullTerm)
 					{
@@ -649,7 +649,7 @@ internal sealed class ErbLoader
 				break;
 		}
 		labelDepth = -1;
-		List<string> ignoredFNCWarningFileList = new List<string>();
+		List<string> ignoredFNCWarningFileList = [];
 		int ignoredFNCWarningCount = 0;
 
 		bool ignoreAll = false;
@@ -772,7 +772,7 @@ internal sealed class ErbLoader
 	}
 
 
-	public Dictionary<string, Int64> warningDic = new Dictionary<string, Int64>();
+	public Dictionary<string, Int64> warningDic = [];
 	private void printFunctionNotFoundWarning(string str, LogicalLine line, int level, bool isError)
 	{
 		if (Program.AnalysisMode)
@@ -881,9 +881,9 @@ internal sealed class ErbLoader
 		//IF-ELSEIF-ENDIF、REPEAT-RENDの対応チェックなど
 		//PRINTDATA系もここでチェック
 		LogicalLine nextLine = label;
-		List<InstructionLine> tempLineList = new List<InstructionLine>();
-		Stack<InstructionLine> nestStack = new Stack<InstructionLine>();
-		Stack<InstructionLine> SelectcaseStack = new Stack<InstructionLine>();
+		List<InstructionLine> tempLineList = [];
+		Stack<InstructionLine> nestStack = new();
+		Stack<InstructionLine> SelectcaseStack = new();
 		InstructionLine pairLine = null;
 		while (true)
 		{
@@ -924,7 +924,7 @@ internal sealed class ErbLoader
 			InstructionLine baseFunc = nestStack.Count == 0 ? null : nestStack.Peek();
 			if (baseFunc != null)
 			{
-				if ((baseFunc.Function.IsPrintData() || baseFunc.FunctionCode == FunctionCode.STRDATA))
+				if (baseFunc.Function.IsPrintData() || baseFunc.FunctionCode == FunctionCode.STRDATA)
 				{
 					if ((func.FunctionCode != FunctionCode.DATA) && (func.FunctionCode != FunctionCode.DATAFORM) && (func.FunctionCode != FunctionCode.DATALIST)
 						&& (func.FunctionCode != FunctionCode.ENDLIST) && (func.FunctionCode != FunctionCode.ENDDATA))
@@ -986,14 +986,14 @@ internal sealed class ErbLoader
 					break;
 				case FunctionCode.IF:
 					nestStack.Push(func);
-					func.IfCaseList = new List<InstructionLine>
-						{
+					func.IfCaseList =
+						[
 							func
-						};
+						];
 					break;
 				case FunctionCode.SELECTCASE:
 					nestStack.Push(func);
-					func.IfCaseList = new List<InstructionLine>();
+					func.IfCaseList = [];
 					SelectcaseStack.Push(func);
 					break;
 				case FunctionCode.FOR:
@@ -1241,7 +1241,7 @@ internal sealed class ErbLoader
 						}
 						if (func.IsError)
 							break;
-						func.dataList = new List<List<InstructionLine>>();
+						func.dataList = [];
 						nestStack.Push(func);
 						break;
 					}
@@ -1262,7 +1262,7 @@ internal sealed class ErbLoader
 						}
 						if (func.IsError)
 							break;
-						func.dataList = new List<List<InstructionLine>>();
+						func.dataList = [];
 						nestStack.Push(func);
 						break;
 					}
@@ -1274,7 +1274,7 @@ internal sealed class ErbLoader
 							ParserMediator.Warn(trerror.UnexpectedDatalist.Text, func, 2, true, false);
 							break;
 						}
-						tempLineList = new List<InstructionLine>();
+						tempLineList = [];
 						nestStack.Push(func);
 
 						break;
@@ -1301,7 +1301,7 @@ internal sealed class ErbLoader
 							ParserMediator.Warn(string.Format(trerror.MissingPrintdata.Text, func.Function.Name), func, 2, true, false);
 							break;
 						}
-						List<InstructionLine> iList = new List<InstructionLine>();
+						List<InstructionLine> iList = [];
 						if (pdata.FunctionCode != FunctionCode.DATALIST)
 						{
 							iList.Add(func);
@@ -1340,7 +1340,7 @@ internal sealed class ErbLoader
 					}
 					if (func.IsError)
 						break;
-					func.callList = new List<InstructionLine>();
+					func.callList = [];
 					nestStack.Push(func);
 					break;
 				case FunctionCode.FUNC:

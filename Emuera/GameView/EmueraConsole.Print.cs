@@ -12,6 +12,7 @@ using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using EvilMask.Emuera;
 using static EvilMask.Emuera.Utils;
+using System.Runtime.Versioning;
 
 namespace MinorShift.Emuera.GameView;
 
@@ -27,7 +28,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	#region EE_BINPUT
 	public PrintStringBuffer PrintBuffer { get { return printBuffer; } }
 	#endregion
-	readonly StringMeasure stringMeasure = new StringMeasure();
+	readonly StringMeasure stringMeasure = new();
 
 	#region EM_私家版_StringMeasure獲得
 	public StringMeasure StrMeasure
@@ -63,8 +64,8 @@ internal sealed partial class EmueraConsole : IDisposable
 	//private bool useUserStyle = true;
 	public bool UseUserStyle { get; set; }
 	public bool UseSetColorStyle { get; set; }
-	private StringStyle defaultStyle = new StringStyle(Config.ForeColor, FontStyle.Regular, null);
-	private StringStyle userStyle = new StringStyle(Config.ForeColor, FontStyle.Regular, null);
+	private StringStyle defaultStyle = new(Config.ForeColor, FontStyle.Regular, null);
+	private StringStyle userStyle = new(Config.ForeColor, FontStyle.Regular, null);
 	//private StringStyle style = new StringStyle(Config.ForeColor, FontStyle.Regular, null);
 	private StringStyle Style
 	{
@@ -83,7 +84,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	//private StringStyle Style { get { return (useUserStyle ? userStyle : defaultStyle); } }
 	public StringStyle StringStyle { get { return userStyle; } }
 	public void SetStringStyle(FontStyle fs) { userStyle.FontStyle = fs; }
-	public void SetStringStyle(Color color) { userStyle.Color = color; userStyle.ColorChanged = (color != Config.ForeColor); }
+	public void SetStringStyle(Color color) { userStyle.Color = color; userStyle.ColorChanged = color != Config.ForeColor; }
 	public void SetFont(string fontname) { if (!string.IsNullOrEmpty(fontname)) userStyle.Fontname = fontname; else userStyle.Fontname = Config.FontName; }
 	private DisplayLineAlignment alignment = DisplayLineAlignment.LEFT;
 	public DisplayLineAlignment Alignment { get { return alignment; } set { alignment = value; } }
@@ -100,7 +101,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	/// </summary>
 	string stBar = null;
 
-	uint lastBgColorChange = 0;
+	int lastBgColorChange = 0;
 	bool forceTextBoxColor = false;
 	public void SetBgColor(Color color)
 	{
@@ -110,15 +111,15 @@ internal sealed partial class EmueraConsole : IDisposable
 		//最初の再描画時に現在の背景色に合わせる
 		if (redraw == ConsoleRedraw.None && window.ScrollBar.Value == window.ScrollBar.Maximum)
 			return;
-		uint sec = WinmmTimer.TickCount - lastBgColorChange;
+		var sec = DateTime.Now.Millisecond - lastBgColorChange;
 		//色変化が速くなりすぎないように一定時間以内の再呼び出しは強制待ちにする
 		while (sec < 200)
 		{
 			Application.DoEvents();
-			sec = WinmmTimer.TickCount - lastBgColorChange;
+			sec = DateTime.Now.Millisecond - lastBgColorChange;
 		}
 		RefreshStrings(true);
-		lastBgColorChange = WinmmTimer.TickCount;
+		lastBgColorChange = DateTime.Now.Millisecond;
 	}
 
 	/// <summary>
@@ -485,7 +486,7 @@ internal sealed partial class EmueraConsole : IDisposable
 
 	private void calcPrintCWidth(StringMeasure stringMeasure)
 	{
-		string str = new string(' ', Config.PrintCLength);
+		string str = new(' ', Config.PrintCLength);
 		Font font = Config.Font;
 		printCWidth = stringMeasure.GetDisplayLength(str, font);
 
@@ -519,7 +520,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			return str;
 		}
 
-		if ((alignmentRight) && (length < printcLength))
+		if (alignmentRight && (length < printcLength))
 		{
 			str = new string(' ', printcLength - length) + str;
 			width = stringMeasure.GetDisplayLength(str, font);
@@ -665,7 +666,7 @@ internal sealed partial class EmueraConsole : IDisposable
 
 	public string getStBar(string barStr)
 	{
-		StringBuilder bar = new StringBuilder();
+		StringBuilder bar = new();
 		bar.Append(barStr);
 		int width = 0;
 		Font font = Config.Font;
@@ -689,6 +690,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	#endregion
 
 
+	[SupportedOSPlatform("windows")]
 	private bool outputLog(string fullpath)
 	{
 		StreamWriter writer = null;
@@ -788,7 +790,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		if (lineNo < 0 || lineNo > displayLineList.Count)
 			return null;
 		int count = 0;
-		List<ConsoleDisplayLine> list = new List<ConsoleDisplayLine>();
+		List<ConsoleDisplayLine> list = [];
 		for (int i = displayLineList.Count - 1; i >= 0; i--)
 		{
 			if (count == lineNo)

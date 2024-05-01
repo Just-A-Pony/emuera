@@ -25,12 +25,12 @@ internal sealed class LabelDictionary
 	/// <summary>
 	/// 本体。全てのFunctionLabelLineを記録
 	/// </summary>
-	Dictionary<string, List<FunctionLabelLine>> labelAtDic = new Dictionary<string, List<FunctionLabelLine>>();
-	List<FunctionLabelLine> invalidList = new List<FunctionLabelLine>();
-	List<GotoLabelLine> labelDollarList = new List<GotoLabelLine>();
+	Dictionary<string, List<FunctionLabelLine>> labelAtDic = [];
+	List<FunctionLabelLine> invalidList = [];
+	List<GotoLabelLine> labelDollarList = [];
 	int count;
 
-	Dictionary<string, int> loadedFileDic = new Dictionary<string, int>();
+	Dictionary<string, int> loadedFileDic = [];
 	int currentFileCount = 0;
 	int totalFileCount = 0;
 
@@ -56,8 +56,8 @@ internal sealed class LabelDictionary
 	}
 
 
-	Dictionary<string, List<FunctionLabelLine>[]> eventLabelDic = new Dictionary<string, List<FunctionLabelLine>[]>();
-	Dictionary<string, FunctionLabelLine> noneventLabelDic = new Dictionary<string, FunctionLabelLine>();
+	Dictionary<string, List<FunctionLabelLine>[]> eventLabelDic = [];
+	Dictionary<string, FunctionLabelLine> noneventLabelDic = [];
 
 	public void SortLabels()
 	{
@@ -84,10 +84,10 @@ internal sealed class LabelDictionary
 			if (Config.CompatiCallEvent)
 				noneventLabelDic.Add(key, list[0]);
 			List<FunctionLabelLine>[] eventLabels = new List<FunctionLabelLine>[4];
-			List<FunctionLabelLine> onlylist = new List<FunctionLabelLine>();
-			List<FunctionLabelLine> prilist = new List<FunctionLabelLine>();
-			List<FunctionLabelLine> normallist = new List<FunctionLabelLine>();
-			List<FunctionLabelLine> laterlist = new List<FunctionLabelLine>();
+			List<FunctionLabelLine> onlylist = [];
+			List<FunctionLabelLine> prilist = [];
+			List<FunctionLabelLine> normallist = [];
+			List<FunctionLabelLine> laterlist = [];
 			int localMax = 0;
 			int localsMax = 0;
 			for (int i = 0; i < list.Count; i++)
@@ -148,8 +148,8 @@ internal sealed class LabelDictionary
 	public void RemoveLabelWithPath(string fname)
 	{
 		List<FunctionLabelLine> labelLines;
-		List<FunctionLabelLine> removeLine = new List<FunctionLabelLine>();
-		List<string> removeKey = new List<string>();
+		List<FunctionLabelLine> removeLine = [];
+		List<string> removeKey = [];
 		foreach (KeyValuePair<string, List<FunctionLabelLine>> pair in labelAtDic)
 		{
 			string key = pair.Key;
@@ -206,8 +206,7 @@ internal sealed class LabelDictionary
 		}
 		else
 		{
-			List<FunctionLabelLine> labelList = new List<FunctionLabelLine>();
-			labelList.Add(point);
+			List<FunctionLabelLine> labelList = [point]; 
 			labelAtDic.Add(id, labelList);
 		}
 	}
@@ -245,7 +244,7 @@ internal sealed class LabelDictionary
 
 	public List<FunctionLabelLine> GetAllLabels(bool getInvalidList)
 	{
-		List<FunctionLabelLine> ret = new List<FunctionLabelLine>();
+		List<FunctionLabelLine> ret = [];
 		foreach (List<FunctionLabelLine> list in labelAtDic.Values)
 			ret.AddRange(list);
 		if (getInvalidList)

@@ -245,7 +245,7 @@ internal sealed class SpTInputsArgument : Argument
 }
 
 //難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
-[global::System.Reflection.Obfuscation(Exclude = false)]
+//[global::System.Reflection.Obfuscation(Exclude = false)]
 internal enum SortOrder
 {
 	UNDEF = 0,

@@ -38,8 +38,10 @@ internal sealed class UserDefinedVariableData
 	public static UserDefinedVariableData Create(WordCollection wc, bool dims, bool isPrivate, ScriptPosition sc)
 	{
 		string dimtype = dims ? "#DIM" : "#DIMS";
-		UserDefinedVariableData ret = new UserDefinedVariableData();
-		ret.TypeIsStr = dims;
+		UserDefinedVariableData ret = new()
+		{
+			TypeIsStr = dims
+		};
 
 		IdentifierWord idw;
 		bool staticDefined = false;
@@ -193,7 +195,7 @@ internal sealed class UserDefinedVariableData
 		}
 
 
-		List<int> sizeNum = new List<int>();
+		List<int> sizeNum = [];
 		if (wc.EOL)//サイズ省略
 		{
 			if (ret.Const)
