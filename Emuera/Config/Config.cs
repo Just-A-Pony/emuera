@@ -426,17 +426,7 @@ internal static class Config
 	{
 		StringComparison strComp = StringComparison.OrdinalIgnoreCase;
 		List<KeyValuePair<string, string>> retList = new List<KeyValuePair<string, string>>();
-		if (!toponly)
-		{//サブフォルダ内の検索
-			string[] dirList = Directory.GetDirectories(dir, "*", SearchOption.TopDirectoryOnly);
-			if (dirList.Length > 0)
-			{
-				if (sort)
-					Array.Sort(dirList, ignoreCaseComparer);
-				for (int i = 0; i < dirList.Length; i++)
-					retList.AddRange(getFiles(dirList[i], rootdir, pattern, toponly, sort));
-			}
-		}
+
 		string RelativePath;//相対ディレクトリ名
 		if (string.Equals(dir, rootdir, strComp))//現在のパスが検索ルートパスに等しい
 			RelativePath = "";
@@ -452,10 +442,23 @@ internal static class Config
 		//filepathsは完全パスである
 		string[] filepaths = Directory.GetFiles(dir, pattern, SearchOption.TopDirectoryOnly);
 		if (sort)
-			Array.Sort(filepaths, ignoreCaseComparer);
+			Array.Sort(filepaths);
 		for (int i = 0; i < filepaths.Length; i++)
 			if (Path.GetExtension(filepaths[i]).Length <= 4)//".erb"や".csv"であること。放置すると".erb*"等を拾う。
 				retList.Add(new KeyValuePair<string, string>(RelativePath + Path.GetFileName(filepaths[i]), filepaths[i]));
+
+		if (!toponly)
+		{//サブフォルダ内の検索
+			string[] dirList = Directory.GetDirectories(dir, "*", SearchOption.TopDirectoryOnly);
+			if (dirList.Length > 0)
+			{
+				if (sort)
+					Array.Sort(dirList);
+				for (int i = 0; i < dirList.Length; i++)
+					retList.AddRange(getFiles(dirList[i], rootdir, pattern, toponly, sort));
+			}
+		}
+
 		return retList;
 	}
 
