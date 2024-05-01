@@ -120,10 +120,11 @@ internal sealed class ErbLoader
 			else
 				fname = fpath;
 			if (Program.AnalysisMode)
+			{
 				output.PrintSystemLine(string.Format(trsl.LoadingFile.Text, fname));
-			System.Windows.Forms.Application.DoEvents();
+			}
 			loadErb(fpath, fname, isOnlyEvent);
-		}
+		};
 		if (Program.AnalysisMode)
 			output.NewLine();
 		ParserMediator.FlushWarningList();
@@ -301,10 +302,10 @@ internal sealed class ErbLoader
 		//一部ファイルの再読み込み時の処理用
 		labelDic.AddFilename(filename);
 		var eReader = new EraStreamReader(Config.UseRenameFile && ParserMediator.RenameDic != null);
+
 		if (!eReader.Open(filepath, filename))
 		{
 			output.PrintError(string.Format(trerror.FailedOpenFile.Text, eReader.Filename));
-			return;
 		}
 		try
 		{
