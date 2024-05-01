@@ -52,7 +52,7 @@ static class Program
 		);
 		rootCommand.AddOption(exeDirOption);
 
-		var debugModeOption = new Option<List<string>>(
+		var debugModeOption = new Option<bool>(
 			name: "-DEBUG"
 		);
 		rootCommand.AddOption(debugModeOption);
@@ -63,7 +63,7 @@ static class Program
 		rootCommand.AddOption(genLangOption);
 
 		var result = rootCommand.Parse(args);
-		ExeDir = (result.CommandResult.GetValueForOption(exeDirOption) ?? "") + "\\";
+		ExeDir = Path.Join((result.CommandResult.GetValueForOption(exeDirOption) ?? "").AsSpan(), [Path.DirectorySeparatorChar]);
 
 		CsvDir = WorkingDir + "csv\\";
 		ErbDir = WorkingDir + "erb\\";
@@ -93,8 +93,11 @@ static class Program
 		#region EM_私家版_Emuera多言語化改造
 		List<string> otherArgs = [];
 
-		var analysisRequestFiles = result.UnmatchedTokens;
-		if (analysisRequestFiles.Count > 0)
+		var matchFiles = result.CommandResult.GetValueForOption(debugModeOption);
+
+		//引数の後ろにある他のフラグにマッチしなかった文字列を解析指定されたファイルとみなす
+		var analysisRequestPaths = result.UnmatchedTokens;
+		if (analysisRequestPaths.Count > 0)
 		{
 			/*
 			foreach (var arg in args)
@@ -194,19 +197,19 @@ static class Program
 			AnalysisFiles = new List<string>();
 			#region EM_私家版_Emuera多言語化改造
 			// for (int i = argsStart; i < args.Length; i++)
-			foreach (var item in analysisRequestFiles)
+			foreach (var path in analysisRequestPaths)
 			{
 				//if (!File.Exists(args[i]) && !Directory.Exists(args[i]))
-				if (!File.Exists(item) && !Directory.Exists(item))
+				if (!File.Exists(path) && !Directory.Exists(path))
 				{
 					MessageBox.Show(Lang.UI.MainWindow.MsgBox.ArgPathNotExists.Text);
 					return;
 				}
 				//if ((File.GetAttributes(args[i]) & FileAttributes.Directory) == FileAttributes.Directory)
-				if ((File.GetAttributes(item) & FileAttributes.Directory) == FileAttributes.Directory)
+				if ((File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory)
 				{
 					//List<KeyValuePair<string, string>> fnames = Config.GetFiles(args[i] + "\\", "*.ERB");
-					List<KeyValuePair<string, string>> fnames = Config.GetFiles(item + "\\", "*.ERB");
+					List<KeyValuePair<string, string>> fnames = Config.GetFiles(path + "\\", "*.ERB");
 					for (int j = 0; j < fnames.Count; j++)
 					{
 						AnalysisFiles.Add(fnames[j].Value);
@@ -215,13 +218,13 @@ static class Program
 				else
 				{
 					//if (Path.GetExtension(args[i]).ToUpper() != ".ERB")
-					if (Path.GetExtension(item).ToUpper() != ".ERB")
+					if (Path.GetExtension(path).ToUpper() != ".ERB")
 					{
 						MessageBox.Show(Lang.UI.MainWindow.MsgBox.InvalidArg.Text);
 						return;
 					}
 					//AnalysisFiles.Add(args[i]);
-					AnalysisFiles.Add(item);
+					AnalysisFiles.Add(path);
 				}
 			}
 			#endregion
