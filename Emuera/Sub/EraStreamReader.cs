@@ -18,9 +18,7 @@ internal sealed class EraStreamReader : IDisposable
 	readonly bool useRename = false;
 	int curNo = 0;
 	int nextNo = 0;
-	StreamReader reader;
-	FileStream stream;
-
+	string[] _fileLine;
 	public bool Open(string path)
 	{
 		return Open(path, Path.GetFileName(path));
@@ -39,8 +37,7 @@ internal sealed class EraStreamReader : IDisposable
 		curNo = 0;
 		try
 		{
-			stream = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-			reader = new StreamReader(stream, EncodingHandler.DetectEncoding(stream));
+			_fileLine = File.ReadAllLines(filepath, Config.Encode);
 		}
 		catch
 		{
@@ -52,9 +49,14 @@ internal sealed class EraStreamReader : IDisposable
 
 	public string ReadLine()
 	{
-		nextNo++;
-		curNo = nextNo;
-		return reader.ReadLine();
+		string ret = null;
+		if (_fileLine.Length > curNo)
+		{
+			ret = _fileLine[curNo];
+			nextNo++;
+			curNo = nextNo;
+		}
+		return ret;
 	}
 
 	/// <summary>
@@ -67,9 +69,7 @@ internal sealed class EraStreamReader : IDisposable
 		curNo = nextNo;
 		while (true)
 		{
-			line = reader.ReadLine();
-			curNo++;
-			nextNo++;
+			line = ReadLine(); 
 			if (line == null)
 				return null;
 			if (line.Length == 0)
@@ -102,7 +102,7 @@ internal sealed class EraStreamReader : IDisposable
 		StringBuilder b = new();
 		while (true)
 		{
-			line = reader.ReadLine();
+			line = ReadLine();
 			nextNo++;
 			if (line == null)
 			{
@@ -166,14 +166,8 @@ internal sealed class EraStreamReader : IDisposable
 	{
 		if (disposed)
 			return;
-		if (reader != null)
-			reader.Close();
-		else if (stream != null)
-			stream.Close();
 		filepath = null;
 		filename = null;
-		reader = null;
-		stream = null;
 		disposed = true;
 	}
 
