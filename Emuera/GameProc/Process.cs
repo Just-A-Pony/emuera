@@ -278,11 +278,11 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 		vEvaluator.RESULTS = s;
 	}
 
-	private int startTime = 0;
+	DateTime startTime;
 
 	public void DoScript()
 	{
-		startTime = DateTime.Now.Millisecond;
+		startTime = DateTime.Now;
 		state.lineCount = 0;
 		bool systemProcRunning = true;
 		try
@@ -320,7 +320,7 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 
 	public void UpdateCheckInfiniteLoopState()
 	{
-		startTime = DateTime.Now.Millisecond;
+		startTime = DateTime.Now;
 		state.lineCount = 0;
 	}
 
@@ -337,8 +337,8 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 		//    console.ReadAnyKey();
 		//    return;
 		//}
-		var time = DateTime.Now.Millisecond - startTime;
-		if (time < Config.InfiniteLoopAlertTime)
+		var elapsedTime = (DateTime.Now - startTime).TotalMilliseconds;
+		if (elapsedTime < Config.InfiniteLoopAlertTime)
 			return;
 		LogicalLine currentLine = state.CurrentLine;
 		if ((currentLine == null) || (currentLine is NullLine))
@@ -348,7 +348,7 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 		string caption = string.Format(trmb.InfiniteLoop.Text);
 		string text = string.Format(
 			trmb.TooLongLoop.Text,
-			currentLine.Position.Filename, currentLine.Position.LineNo, state.lineCount, time);
+			currentLine.Position.Filename, currentLine.Position.LineNo, state.lineCount, elapsedTime);
 		DialogResult result = MessageBox.Show(text, caption, MessageBoxButtons.YesNo);
 		if (result == DialogResult.Yes)
 		{
@@ -357,7 +357,7 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 		else
 		{
 			state.lineCount = 0;
-			startTime = DateTime.Now.Millisecond;
+			startTime = DateTime.Now;
 		}
 	}
 
