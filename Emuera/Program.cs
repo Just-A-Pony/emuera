@@ -55,10 +55,12 @@ static class Program
 		var debugModeOption = new Option<List<string>>(
 			name: "-DEBUG"
 		);
+		rootCommand.AddOption(debugModeOption);
 
 		var genLangOption = new Option<List<string>>(
 			name: "-GENLANG"
 		);
+		rootCommand.AddOption(genLangOption);
 
 		var result = rootCommand.Parse(args);
 		ExeDir = (result.CommandResult.GetValueForOption(exeDirOption) ?? "") + "\\";
