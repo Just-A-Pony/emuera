@@ -6,9 +6,11 @@ using MinorShift._Library;
 using System.IO;
 using EvilMask.Emuera;
 using MinorShift.Emuera.GameProc.Function;
+using System.CommandLine;
+using System.CommandLine.Parsing;
 
 namespace MinorShift.Emuera;
-
+#nullable enable
 static class Program
 {
 	/*
@@ -41,25 +43,26 @@ static class Program
 	{
 		// memo: Shift-JISを扱うためのおまじない
 		System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+		var rootCommand = new RootCommand("Emuera");
 
-
-		// ExeDir = Sys.ExeDir;
 		#region eee_カレントディレクトリー
-		WorkingDir = Sys.WorkingDir;
-#if DEBUG
-		//debugMode = true;
 
-		//ExeDirにバリアントのパスを代入することでテスト実行するためのコード。
-		//ローカルパスの末尾には\必須。
-		//ローカルパスを記載した場合は頒布前に削除すること。
-		// ExeDir = @"";
+		var exeDirOption = new Option<string>(
+			name: "--exeDir"
+		);
+		rootCommand.AddOption(exeDirOption);
 
-#endif
-		//CsvDir = ExeDir + "csv\\";
-		//ErbDir = ExeDir + "erb\\";
-		//DebugDir = ExeDir + "debug\\";
-		//DatDir = ExeDir + "dat\\";
-		//ContentDir = ExeDir + "resources\\";
+		var debugModeOption = new Option<List<string>>(
+			name: "-DEBUG"
+		);
+
+		var genLangOption = new Option<List<string>>(
+			name: "-GENLANG"
+		);
+
+		var result = rootCommand.Parse(args);
+		ExeDir = (result.CommandResult.GetValueForOption(exeDirOption) ?? "") + "\\";
+
 		CsvDir = WorkingDir + "csv\\";
 		ErbDir = WorkingDir + "erb\\";
 		DebugDir = WorkingDir + "debug\\";
@@ -81,28 +84,39 @@ static class Program
 		}
 
 		//解析モードの判定だけ先に行う
-		//int argsStart = 0;
+		DebugMode = result.HasOption(debugModeOption);
+		if (result.HasOption(genLangOption))
+			Lang.GenerateDefaultLangFile();
+
 		#region EM_私家版_Emuera多言語化改造
-		List<string> otherArgs = new List<string>();
-		foreach (var arg in args)
+		List<string> otherArgs = [];
+
+		var analysisRequestFiles = result.UnmatchedTokens;
+		if (analysisRequestFiles.Count > 0)
 		{
-			//if ((args.Length > 0) && (args[0].Equals("-DEBUG", StringComparison.CurrentCultureIgnoreCase)))
-			if (arg.Equals("-DEBUG", StringComparison.CurrentCultureIgnoreCase))
+			/*
+			foreach (var arg in args)
 			{
-				// argsStart = 1;//デバッグモードかつ解析モード時に最初の1っこ(-DEBUG)を飛ばす
-				DebugMode = true;
+
+				//if ((args.Length > 0) && (args[0].Equals("-DEBUG", StringComparison.CurrentCultureIgnoreCase)))
+				if (arg.Equals("-DEBUG", StringComparison.CurrentCultureIgnoreCase))
+				{
+					// argsStart = 1;//デバッグモードかつ解析モード時に最初の1っこ(-DEBUG)を飛ばす
+					DebugMode = true;
+				}
+				else if (arg.Equals("-GENLANG", StringComparison.CurrentCultureIgnoreCase))
+				{
+					Lang.GenerateDefaultLangFile();
+				}
+				else otherArgs.Add(arg);
 			}
-			else if (arg.Equals("-GENLANG", StringComparison.CurrentCultureIgnoreCase))
+			//if (args.Length > argsStart)
+			if (otherArgs.Count > 0)
 			{
-				Lang.GenerateDefaultLangFile();
-			}
-			else otherArgs.Add(arg);
-		}
-		//if (args.Length > argsStart)
-		if (otherArgs.Count > 0)
-		{
+			*/
 			//必要なファイルのチェックにはConfig読み込みが必須なので、ここではフラグだけ立てておく
 			AnalysisMode = true;
+			//}
 		}
 		#endregion
 
@@ -178,19 +192,19 @@ static class Program
 			AnalysisFiles = new List<string>();
 			#region EM_私家版_Emuera多言語化改造
 			// for (int i = argsStart; i < args.Length; i++)
-			foreach (var arg in otherArgs)
+			foreach (var item in analysisRequestFiles)
 			{
 				//if (!File.Exists(args[i]) && !Directory.Exists(args[i]))
-				if (!File.Exists(arg) && !Directory.Exists(arg))
+				if (!File.Exists(item) && !Directory.Exists(item))
 				{
 					MessageBox.Show(Lang.UI.MainWindow.MsgBox.ArgPathNotExists.Text);
 					return;
 				}
 				//if ((File.GetAttributes(args[i]) & FileAttributes.Directory) == FileAttributes.Directory)
-				if ((File.GetAttributes(arg) & FileAttributes.Directory) == FileAttributes.Directory)
+				if ((File.GetAttributes(item) & FileAttributes.Directory) == FileAttributes.Directory)
 				{
 					//List<KeyValuePair<string, string>> fnames = Config.GetFiles(args[i] + "\\", "*.ERB");
-					List<KeyValuePair<string, string>> fnames = Config.GetFiles(arg + "\\", "*.ERB");
+					List<KeyValuePair<string, string>> fnames = Config.GetFiles(item + "\\", "*.ERB");
 					for (int j = 0; j < fnames.Count; j++)
 					{
 						AnalysisFiles.Add(fnames[j].Value);
@@ -199,13 +213,13 @@ static class Program
 				else
 				{
 					//if (Path.GetExtension(args[i]).ToUpper() != ".ERB")
-					if (Path.GetExtension(arg).ToUpper() != ".ERB")
+					if (Path.GetExtension(item).ToUpper() != ".ERB")
 					{
 						MessageBox.Show(Lang.UI.MainWindow.MsgBox.InvalidArg.Text);
 						return;
 					}
 					//AnalysisFiles.Add(args[i]);
-					AnalysisFiles.Add(arg);
+					AnalysisFiles.Add(item);
 				}
 			}
 			#endregion
@@ -289,7 +303,7 @@ static class Program
 	/// <summary>
 	/// 実行ファイルのディレクトリ。最後に\を付けたstring
 	/// </summary>
-	// public static string ExeDir { get; private set; }
+	public static string ExeDir { get; private set; }
 	public static string WorkingDir { get; private set; }
 	#endregion
 	public static string CsvDir { get; private set; }
