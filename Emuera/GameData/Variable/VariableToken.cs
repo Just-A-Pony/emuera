@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using EnumsNET;
 using MinorShift.Emuera.Sub;
 using MinorShift.Emuera.GameProc;
 using MinorShift.Emuera.GameData.Expression;
@@ -17,7 +17,7 @@ internal abstract class VariableToken
 		Code = varCode;
 		VariableType = ((varCode & VariableCode.__INTEGER__) == VariableCode.__INTEGER__) ? typeof(Int64) : typeof(string);
 		VarCodeInt = (int)(varCode & VariableCode.__LOWERCASE__);
-		varName = varCode.ToString();
+		varName = Enums.AsString(varCode);
 		this.varData = varData;
 		IsForbid = false;
 		IsPrivate = false;
