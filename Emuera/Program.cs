@@ -309,21 +309,35 @@ static class Program
 	/// <summary>
 	/// 実行ファイルのディレクトリ。最後に\を付けたstring
 	/// </summary>
-	public static string? ExeDir { get; private set; }
-	public static string? WorkingDir { get; private set; }
+	public static string ExeDir { get; private set; }
+	public static string WorkingDir { get; private set; }
 	#endregion
-	public static string? CsvDir { get; private set; }
-	public static string? ErbDir { get; private set; }
-	public static string? DebugDir { get; private set; }
-	public static string? DatDir { get; private set; }
-	public static string? ContentDir { get; private set; }
-	public static string? ExeName { get; private set; }
+	public static string CsvDir { get; private set; }
+	public static string ErbDir { get; private set; }
+	public static string DebugDir { get; private set; }
+	public static string DatDir { get; private set; }
+	public static string ContentDir { get; private set; }
+	public static string ExeName { get; private set; }
 	#region EE_PLAYSOUND系
 	//public static string? MusicDir { get; private set; }
 	#endregion
 	#region EE_フォントファイル対応
-	public static string? FontDir { get; private set; }
+	public static string FontDir { get; private set; }
 	#endregion
+
+	static Program()
+	{
+		ExeDir = "";
+
+		CsvDir = WorkingDir + "csv\\";
+		ErbDir = WorkingDir + "erb\\";
+		DebugDir = WorkingDir + "debug\\";
+		DatDir = WorkingDir + "dat\\";
+		ContentDir = WorkingDir + "resources\\";
+		#region EE_フォントファイル対応
+		FontDir = WorkingDir + "font\\";
+		#endregion
+	}
 
 
 	public static bool rebootFlag = false;
