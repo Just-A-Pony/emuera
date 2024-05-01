@@ -30,7 +30,7 @@ namespace MinorShift.Emuera
 		private void InitializeComponent()
 		{
 			components = new System.ComponentModel.Container();
-			timer = new System.Windows.Forms.Timer(components);
+			//timer = new System.Windows.Forms.Timer(components);
 			vScrollBar = new System.Windows.Forms.VScrollBar();
 			menuStrip = new System.Windows.Forms.MenuStrip();
 			fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -96,7 +96,10 @@ namespace MinorShift.Emuera
 			// 
 			// timer
 			// 
-			timer.Tick += timer_Tick;
+			//timer.Tick += timer_Tick;
+
+			//初期化処理
+			this.Shown += Init;
 			// 
 			// vScrollBar
 			// 

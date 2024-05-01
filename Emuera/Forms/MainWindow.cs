@@ -58,7 +58,6 @@ namespace MinorShift.Emuera
 			//EmuVerToolStripTextBox.Text = Emuera_verInfo;
 			EmuVerToolStripTextBox.Text = "Emuera 1.824+v21+EMv18+EEv46";
 
-			timer.Enabled = true;
 			console = new EmueraConsole(this);
 			macroMenuItems[0] = マクロ01ToolStripMenuItem;
 			macroMenuItems[1] = マクロ02ToolStripMenuItem;
@@ -476,11 +475,10 @@ namespace MinorShift.Emuera
 			base.WndProc(ref m);
 		}
 
-		private void timer_Tick(object sender, EventArgs e)
+		private void Init(object sender, EventArgs e)
 		{
 			if (!Created)
-				return;
-			timer.Enabled = false;
+				throw new Exception("初期化の呼び出しが早すぎて、コントロールが生成されていない"); 
 			console.Initialize();
 		}
 
