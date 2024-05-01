@@ -65,7 +65,11 @@ static class Program
 		rootCommand.AddOption(genLangOption);
 
 		var result = rootCommand.Parse(args);
-		ExeDir = Path.Join((result.CommandResult.GetValueForOption(exeDirOption) ?? "").AsSpan(), [Path.DirectorySeparatorChar]);
+		ExeDir = Path.Join(
+					(result.CommandResult.GetValueForOption(exeDirOption)
+					?? (Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location))).AsSpan(),
+					[Path.DirectorySeparatorChar]
+					);
 
 		CsvDir = WorkingDir + "csv\\";
 		ErbDir = WorkingDir + "erb\\";
@@ -237,6 +241,7 @@ static class Program
 		{
 			//必要なソースファイルを事前にメモリに一気に読み込む
 			Preload.Load(ErbDir);
+			Preload.Load(CsvDir);
 
 			var winState = FormWindowState.Normal;
 			var rebootClientHeight = 0;
@@ -330,20 +335,6 @@ static class Program
 	#region EE_フォントファイル対応
 	public static string FontDir { get; private set; }
 	#endregion
-
-	static Program()
-	{
-		ExeDir = "";
-
-		CsvDir = WorkingDir + "csv\\";
-		ErbDir = WorkingDir + "erb\\";
-		DebugDir = WorkingDir + "debug\\";
-		DatDir = WorkingDir + "dat\\";
-		ContentDir = WorkingDir + "resources\\";
-		#region EE_フォントファイル対応
-		FontDir = WorkingDir + "font\\";
-		#endregion
-	}
 
 
 	public static bool rebootFlag = false;
