@@ -37,7 +37,6 @@ internal sealed class VariableEvaluator : IDisposable
 	public void Randomize(long seed)
 	{
 		rand = new((int)seed);
-		File.WriteAllText("rand.json", JsonSerializer.Serialize(rand));
 	}
 
 	public void InitRanddata()
