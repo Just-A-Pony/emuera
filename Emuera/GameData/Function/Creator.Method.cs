@@ -4562,7 +4562,7 @@ internal static partial class FunctionMethodCreator
 				case StrFormType.Lower:
 					return str.ToLower();
 				case StrFormType.Half:
-					return Microsoft.VisualBasic.Strings.StrConv(str, Microsoft.VisualBasic.VbStrConv.Narrow, Config.Language));
+					return Microsoft.VisualBasic.Strings.StrConv(str, Microsoft.VisualBasic.VbStrConv.Narrow, Config.Language);
 				case StrFormType.Full:
 					return Microsoft.VisualBasic.Strings.StrConv(str, Microsoft.VisualBasic.VbStrConv.Wide, Config.Language);
 			}

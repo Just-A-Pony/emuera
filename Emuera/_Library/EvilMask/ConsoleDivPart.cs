@@ -175,11 +175,6 @@ class ConsoleDivPart : AConsoleDisplayPart
 		graph.ResetClip();
 	}
 
-	public override void GDIDrawTo(int pointY, bool isSelecting, bool isBackLog)
-	{
-		// WINAPI では使えない
-	}
-
 	public override void SetWidth(StringMeasure sm, float subPixel)
 	{
 	}
