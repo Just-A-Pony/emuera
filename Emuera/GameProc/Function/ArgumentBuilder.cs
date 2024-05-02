@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using Microsoft.VisualBasic;
 using MinorShift.Emuera.Sub;
 using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameData.Variable;
@@ -1738,7 +1737,7 @@ internal static partial class ArgumentParser
 					Int64 bit = term.Int;
 					if ((bit < 0) || (bit > 63))
 					{
-						warn(string.Format(trerror.ArgIsOoRBit.Text, Strings.StrConv((i + 2).ToString(), VbStrConv.Wide, Config.Language), bit.ToString()), line, 2, false);
+						warn(string.Format(trerror.ArgIsOoRBit.Text, i + 2, bit.ToString()), line, 2, false);
 						return null;
 					}
 				}

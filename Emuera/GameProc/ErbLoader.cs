@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.VisualBasic;
 using MinorShift.Emuera.Sub;
 using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.GameData.Expression;
@@ -564,7 +563,7 @@ internal sealed class ErbLoader
 					for (int j = 0; j < i; j++)
 					{
 						if (vTerm.checkSameTerm(args[j]))
-							ParserMediator.Warn(string.Format(trerror.DuplicateArg.Text, Strings.StrConv((i + 1).ToString(), VbStrConv.Wide, Config.Language), vTerm.GetFullString(), Strings.StrConv((j + 1).ToString(), VbStrConv.Wide, Config.Language)), label, 1, false, false);
+							ParserMediator.Warn(string.Format(trerror.DuplicateArg.Text, i + 1, vTerm.GetFullString(), j + 1), label, 1, false, false);
 					}
 					if (vTerm.Identifier.Code == VariableCode.ARG)
 					{

@@ -8,7 +8,6 @@ using MinorShift.Emuera.GameProc;
 using MinorShift._Library;
 using MinorShift.Emuera.GameData.Variable;
 using System.Drawing;
-using Microsoft.VisualBasic;
 using System.Windows.Forms;
 using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.Content;
@@ -18,10 +17,6 @@ using System.IO;
 using EvilMask.Emuera;
 using trerror = EvilMask.Emuera.Lang.Error;
 using System.Data;
-using static EvilMask.Emuera.Lang.UI.ConfigDialog;
-using System.Windows.Navigation;
-using MinorShift.Emuera.GameProc.Function;
-using System.DirectoryServices;
 
 namespace MinorShift.Emuera.GameData.Function;
 
@@ -4563,13 +4558,13 @@ internal static partial class FunctionMethodCreator
 			switch (strType)
 			{
 				case StrFormType.Upper:
-					return (str.ToUpper());
+					return str.ToUpper();
 				case StrFormType.Lower:
-					return (str.ToLower());
+					return str.ToLower();
 				case StrFormType.Half:
-					return (Strings.StrConv(str, VbStrConv.Narrow, Config.Language));
+					return Microsoft.VisualBasic.Strings.StrConv(str, Microsoft.VisualBasic.VbStrConv.Narrow, Config.Language));
 				case StrFormType.Full:
-					return (Strings.StrConv(str, VbStrConv.Wide, Config.Language));
+					return Microsoft.VisualBasic.Strings.StrConv(str, Microsoft.VisualBasic.VbStrConv.Wide, Config.Language);
 			}
 			return ("");
 		}
