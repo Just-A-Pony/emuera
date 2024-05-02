@@ -246,11 +246,42 @@ internal static class Config
 	#endregion
 
 
-	static readonly Dictionary<string, Dictionary<FontStyle, Font>> fontDic = new Dictionary<string, Dictionary<FontStyle, Font>>();
+	static readonly Dictionary<(string fontname, FontStyle fontStyle), Font> fontDic = []; 
 	public static Font Font { get { return GetFont(null, FontStyle.Regular); } }
 
-	public static Font GetFont(string theFontname, FontStyle style)
+	public static Font GetFont(string requestFontName, FontStyle style)
 	{
+		string fontname = requestFontName;
+		if (string.IsNullOrEmpty(requestFontName))
+			fontname = FontName;
+		if (!fontDic.ContainsKey((fontname, style)))
+		{
+			var font = new Font(fontname, FontSize, style, GraphicsUnit.Pixel);
+			if (font == null)
+			{
+				return null;
+			}
+			else
+			{
+				fontDic.Add((fontname, style), font);
+			}
+
+		}
+		#region EE_フォントファイル対応
+		int fontsize = FontSize;
+		Font styledFont;
+		foreach (FontFamily ff in GlobalStatic.Pfc.Families)
+		{
+			if (ff.Name == fontname)
+			{
+				styledFont = new Font(ff, fontsize, style, GraphicsUnit.Pixel);
+				break;
+			}
+		}
+		#endregion
+		return fontDic[(fontname, style)];
+
+		/**
 		string fn = theFontname;
 		if (string.IsNullOrEmpty(theFontname))
 			fn = FontName;
@@ -258,21 +289,21 @@ internal static class Config
 			fontDic.Add(fn, new Dictionary<FontStyle, Font>());
 		Dictionary<FontStyle, Font> fontStyleDic = fontDic[fn];
 		if (!fontStyleDic.ContainsKey(style))
-		{
+			{
 			int fontsize = FontSize;
 			Font styledFont;
 			try
 			{
-				#region EE_フォントファイル対応
-				foreach (FontFamily ff in GlobalStatic.Pfc.Families)
-				{
+			#region EE_フォントファイル対応
+			foreach (FontFamily ff in GlobalStatic.Pfc.Families)
+			{
 					if (ff.Name == fn)
-					{
-						styledFont = new Font(ff, fontsize, style, GraphicsUnit.Pixel);
-						goto foundfont;
-					}
+				{
+					styledFont = new Font(ff, fontsize, style, GraphicsUnit.Pixel);
+					goto foundfont;
 				}
-				styledFont = new Font(fn, fontsize, style, GraphicsUnit.Pixel);
+			}
+			styledFont = new Font(fn, fontsize, style, GraphicsUnit.Pixel);
 			}
 			catch
 			{
@@ -281,19 +312,15 @@ internal static class Config
 		foundfont:
 			#endregion
 			fontStyleDic.Add(style, styledFont);
-		}
 		return fontStyleDic[style];
+		**/
 	}
 
 	public static void ClearFont()
 	{
-		foreach (KeyValuePair<string, Dictionary<FontStyle, Font>> fontStyleDicPair in fontDic)
+		foreach (var font in fontDic)
 		{
-			foreach (KeyValuePair<FontStyle, Font> pair in fontStyleDicPair.Value)
-			{
-				pair.Value.Dispose();
-			}
-			fontStyleDicPair.Value.Clear();
+			font.Value.Dispose();
 		}
 		fontDic.Clear();
 	}
