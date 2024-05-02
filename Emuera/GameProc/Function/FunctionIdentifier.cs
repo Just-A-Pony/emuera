@@ -470,36 +470,6 @@ internal sealed partial class FunctionIdentifier
 		funcParent[FunctionCode.NEXT] = FunctionCode.FOR;
 		funcParent[FunctionCode.WEND] = FunctionCode.WHILE;
 		funcParent[FunctionCode.LOOP] = FunctionCode.DO;
-
-		//Load plugins test
-
-		string[] plugins = Directory.GetFiles("Plugins", "*.dll");
-
-		foreach (var pluginPath in plugins)
-		{
-			Assembly DLL = Assembly.LoadFrom(pluginPath);
-			var manifestType = DLL.GetTypes().Where((v) => v.Name == "PluginManifest").FirstOrDefault();
-			if (manifestType == null)
-			{
-				//throw warning
-				continue;
-			}
-
-			BasePluginManifest manifest = (BasePluginManifest)Activator.CreateInstance(manifestType);
-			if (manifest == null)
-			{
-				//throw warning
-				continue;
-			}
-
-			var methods = manifest.GetPluginMethods();
-			var pluginManager = PluginManager.GetInstance();
-			foreach (var method in methods)
-			{
-				pluginManager.AddMethod(method);	
-			}
-		}
-
 	}
 
 	private static FunctionIdentifier setFunc;

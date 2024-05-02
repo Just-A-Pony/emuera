@@ -6,6 +6,7 @@ using MinorShift._Library;
 using System.IO;
 using EvilMask.Emuera;
 using MinorShift.Emuera.GameProc.Function;
+using MinorShift.Emuera.GameProc.PluginSystem;
 
 namespace MinorShift.Emuera;
 
@@ -109,6 +110,7 @@ static class Program
 		ApplicationConfiguration.Initialize();
 		Application.SetCompatibleTextRenderingDefault(false);
 		ConfigData.Instance.LoadConfig();
+		PluginManager.GetInstance().LoadPlugins();
 
 
 		#region EM_私家版_Emuera多言語化改造
