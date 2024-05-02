@@ -7,14 +7,6 @@ using System.Windows.Forms;
 
 namespace MinorShift.Emuera.Content;
 
-internal abstract class AbstractImage : AContentFile
-{
-	public const int MAX_IMAGESIZE = 8192;
-	public abstract Bitmap Bitmap { get; set; }
-	public IntPtr GDIhDC { get; protected set; }
-	protected Graphics g;
-}
-
 internal sealed class ConstImage : AbstractImage
 {
 	public ConstImage(string name)

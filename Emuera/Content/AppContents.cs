@@ -15,7 +15,7 @@ static class AppContents
 	{
 		gList = [];
 	}
-	static Dictionary<string, AContentFile> resourceDic = [];
+	static Dictionary<string, AbstractImage> resourceDic = [];
 	static Dictionary<string, ASprite> imageDictionary = [];
 	static Dictionary<int, GraphicsImage> gList;
 	static Dictionary<string, ASprite> resourceImageDictionary = new Dictionary<string, ASprite>();
