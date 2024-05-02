@@ -21,7 +21,7 @@ namespace MinorShift.Emuera;
 
 //1756 新設。
 //また、使用されている名前を記憶し衝突を検出する。
-internal sealed class IdentifierDictionary
+internal partial class IdentifierDictionary
 {
 	#region EM_私家版_辞書獲得
 	public string[] VarKeys => varTokenDic.Keys.ToArray();
@@ -48,9 +48,9 @@ internal sealed class IdentifierDictionary
 			'\\', '@', '$', '#', '?', ';', '\'',
 		//'_'はOK
 	};
-	readonly static Regex regexCom = new("^COM[0-9]+$");
-	readonly static Regex regexComAble = new("^COM_ABLE[0-9]+$");
-	readonly static Regex regexAblup = new("^ABLUP[0-9]+$");
+	readonly static Regex regexCom = preCompiledComRegex();
+	readonly static Regex regexComAble = preCompiledComAbleRegex();
+	readonly static Regex regexAblup = preCompiledAblupRegex();
 	#region static
 
 	public static bool IsEventLabelName(string labelName)
@@ -661,6 +661,12 @@ internal sealed class IdentifierDictionary
 		}
 		throw new IdentifierNotFoundCodeEE(string.Format(treer.CanNotInterpreted.Text, idStr));
 	}
+	[GeneratedRegex("^COM[0-9]+$")]
+	private static partial Regex preCompiledComRegex();
+	[GeneratedRegex("^COM_ABLE[0-9]+$")]
+	private static partial Regex preCompiledComAbleRegex();
+	[GeneratedRegex("^ABLUP[0-9]+$")]
+	private static partial Regex preCompiledAblupRegex();
 	#endregion
 
 	#region util

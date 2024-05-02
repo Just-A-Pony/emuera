@@ -4,10 +4,12 @@ using System.Text;
 using System.IO;
 using trerror = EvilMask.Emuera.Lang.Error;
 using Emuera;
+using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace MinorShift.Emuera.Sub;
 
-internal sealed class EraStreamReader : IDisposable
+internal sealed partial class EraStreamReader : IDisposable
 {
 	public EraStreamReader(bool useRename)
 	{
@@ -76,6 +78,9 @@ internal sealed class EraStreamReader : IDisposable
 		return ret;
 	}
 
+	[GeneratedRegex(@"\[\[.*?\]\]")]
+	private static partial Regex regexRenameIdentifer();
+
 	/// <summary>
 	/// 次の有効な行を読む。LexicalAnalyzer経由でConfigを参照するのでConfig完成までつかわないこと。
 	/// </summary>
@@ -91,10 +96,21 @@ internal sealed class EraStreamReader : IDisposable
 			if (line.Length == 0)
 				continue;
 
-			if (useRename && (line.IndexOf("[[", StringComparison.Ordinal) >= 0) && (line.IndexOf("]]", StringComparison.Ordinal) >= 0))
+			//Ordinal消して大丈夫なのかわからないのでコメントアウト
+			//if (useRename && (line.IndexOf("[[", StringComparison.Ordinal) >= 0) && (line.IndexOf("]]", StringComparison.Ordinal) >= 0))
+			if (useRename && regexRenameIdentifer().IsMatch(line))
 			{
-				foreach (KeyValuePair<string, string> pair in ParserMediator.RenameDic)
-					line = line.Replace(pair.Key, pair.Value);
+				var match = regexRenameIdentifer().Match(line);
+				while (match.Success)
+				{
+					//この段階でマッチしないパターンもある
+					if (ParserMediator.RenameDic.TryGetValue(match.Value, out var targetStr))
+					{
+						line = line.Replace(match.Value, targetStr);
+					}
+
+					match = match.NextMatch();
+				}
 			}
 			st = new StringStream(line);
 			LexicalAnalyzer.SkipWhiteSpace(st);
