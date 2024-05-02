@@ -416,8 +416,8 @@ internal sealed partial class EmueraConsole : IDisposable
 	public void Initialize()
 	{
 		GlobalStatic.Console = this;
-		GlobalStatic.MainWindow = window;
-		emuera = new GameProc.Process(this, Program.AnalysisMode);
+		//GlobalStatic.MainWindow = window;
+		emuera = new GameProc.Process(this);
 		GlobalStatic.Process = emuera;
 		if (Program.DebugMode && Config.DebugShowWindow)
 		{

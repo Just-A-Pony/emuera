@@ -596,6 +596,10 @@ internal sealed partial class EmueraConsole : IDisposable
 		ConsoleDisplayLine dispLine = printBuffer.FlushSingleLine(stringMeasure, temporary | force_temporary);
 		return dispLine;
 	}
+	public void ClearText()
+	{
+		window.clear_richText();
+	}
 
 	internal ConsoleDisplayLine PrintPlainwithSingleLine(string str)
 	{

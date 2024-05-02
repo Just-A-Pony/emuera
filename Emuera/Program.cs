@@ -47,7 +47,7 @@ static class Program
 		var rootCommand = new RootCommand("Emuera");
 
 		#region eee_カレントディレクトリー
-		WorkingDir = Sys.WorkingDir;
+		WorkingDir = AssemblyData.WorkingDir;
 
 		var exeDirOption = new Option<string>(
 			name: "--exeDir"
@@ -94,7 +94,7 @@ static class Program
 		#endregion
 		//エラー出力用
 		//1815 .exeが東方板のNGワードに引っかかるそうなので除去
-		ExeName = Path.GetFileNameWithoutExtension(Sys.ExeName);
+		ExeName = Path.GetFileNameWithoutExtension(AssemblyData.ExeName);
 
 		//WMPも終了しておく
 		FunctionIdentifier.bgm.close();
@@ -164,7 +164,7 @@ static class Program
 		#endregion
 
 		//二重起動の禁止かつ二重起動
-		if ((!Config.AllowMultipleInstances) && Sys.PrevInstance())
+		if ((!Config.AllowMultipleInstances) && AssemblyData.PrevInstance())
 		{
 			//System.Windows.MessageBox.Show("多重起動を許可する場合、emuera.configを書き換えて下さい", "既に起動しています");
 			System.Windows.MessageBox.Show(Lang.UI.MainWindow.MsgBox.MultiInstanceInfo.Text, Lang.UI.MainWindow.MsgBox.InstaceExists.Text);

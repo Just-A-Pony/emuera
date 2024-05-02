@@ -167,7 +167,6 @@ internal sealed partial class Process
 	}
 
 	//CheckState()から呼ばれる関数群。ScriptEndに達したときの処理。
-	[SupportedOSPlatform("windows")]
 	void beginTitle()
 	{
 		//連続調教コマンド処理中の状態が持ち越されていたらここで消しておく
@@ -177,7 +176,7 @@ internal sealed partial class Process
 		skipPrint = false;
 		console.ResetStyle();
 		deleteAllPrevState();
-		if (analysisMode)
+		if (Program.AnalysisMode)
 		{
 			console.PrintSystemLine(trsl.AnalysisCompleted.Text);
 			#region EE_OUTPUTLOG

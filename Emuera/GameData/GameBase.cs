@@ -5,6 +5,9 @@ using System.Text.RegularExpressions;
 using System.IO;
 using MinorShift.Emuera.Sub;
 using trerror = EvilMask.Emuera.Lang.Error;
+using System.Reflection;
+using MinorShift._Library;
+
 
 namespace MinorShift.Emuera.GameData;
 
@@ -151,11 +154,11 @@ internal sealed class GameBase
 							ParserMediator.Warn(trerror.CanNotReadVersion.Text, pos, 0);
 							break;
 						}
-						Version curerntVersion = new(GlobalStatic.MainWindow.InternalEmueraVer);
+						Version curerntVersion = AssemblyData.emueraVer; 
 						Version targetVersoin = new(Compatible_EmueraVer);
 						if (curerntVersion < targetVersoin)
 						{
-							ParserMediator.Warn(string.Format(trerror.RequireLaterEmuera.Text, GlobalStatic.MainWindow.EmueraVerText), pos, 2);
+							ParserMediator.Warn(string.Format(trerror.RequireLaterEmuera.Text, targetVersoin), pos, 2);
 							return false;
 						}
 						break;

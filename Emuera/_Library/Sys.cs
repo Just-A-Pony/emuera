@@ -1,12 +1,13 @@
 ﻿using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
+using System;
 
 namespace MinorShift._Library;
 
-public static class Sys
+public static class AssemblyData
 {
-	static Sys()
+	static AssemblyData()
 	{
 		ExePath = Assembly.GetEntryAssembly().Location; 
 		#region eee_カレントディレクトリー
@@ -20,6 +21,8 @@ public static class Sys
 	/// 実行ファイルのパス
 	/// </summary>
 	public static readonly string ExePath;
+
+	public static Version emueraVer = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version ?? new Version(0, 0, 0);
 
 	/// <summary>
 	/// 実行ファイルのディレクトリ。最後に\を付けたstring

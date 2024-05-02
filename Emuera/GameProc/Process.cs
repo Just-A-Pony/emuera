@@ -18,9 +18,8 @@ using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.GameProc;
 
-internal sealed partial class Process(EmueraConsole view, bool analysisMode)
+internal sealed partial class Process(EmueraConsole view)
 {
-	readonly bool analysisMode = analysisMode;
 	public LogicalLine getCurrentLine { get { return state.CurrentLine; } }
 
 	/// <summary>
@@ -76,7 +75,7 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 			ParserMediator.FlushWarningList();
 			//キーマクロ読み込み
 			#region eee_カレントディレクトリー
-			if (Config.UseKeyMacro && !analysisMode)
+			if (Config.UseKeyMacro && !Program.AnalysisMode)
 			{
 				//if (File.Exists(Program.ExeDir + "macro.txt"))
 				if (File.Exists(Program.WorkingDir + "macro.txt"))
@@ -89,7 +88,7 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 			}
 			#endregion
 			//_replace.csv読み込み
-			if (Config.UseReplaceFile && !analysisMode)
+			if (Config.UseReplaceFile && !Program.AnalysisMode)
 			{
 				if (File.Exists(Program.CsvDir + "_Replace.csv"))
 				{
@@ -117,7 +116,7 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 			{
 				if (File.Exists(Program.CsvDir + "_Rename.csv"))
 				{
-					if (Config.DisplayReport || analysisMode)
+					if (Config.DisplayReport || Program.AnalysisMode)
 						console.PrintSystemLine(trsl.LoadingRename.Text);
 					ParserMediator.LoadEraExRenameFile(Program.CsvDir + "_Rename.csv");
 				}
@@ -177,7 +176,7 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 
 			//ERB読込
 			var loader = new ErbLoader(console, exm, this);
-			if (analysisMode)
+			if (Program.AnalysisMode)
 				noError = loader.loadErbs(Program.AnalysisFiles, labelDic);
 			else
 				noError = loader.LoadErbFiles(Program.ErbDir, Config.DisplayReport, labelDic);
@@ -437,17 +436,17 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 		console.ThrowError(playSound);
 		if (exc is CodeEE)
 		{
-			console.PrintError(string.Format(trerror.FuncEndError.Text, Sys.ExeName));
+			console.PrintError(string.Format(trerror.FuncEndError.Text, AssemblyData.ExeName));
 			console.PrintError(exc.Message);
 		}
 		else if (exc is ExeEE)
 		{
-			console.PrintError(string.Format(trerror.FuncEndEmueraError.Text, Sys.ExeName));
+			console.PrintError(string.Format(trerror.FuncEndEmueraError.Text, AssemblyData.ExeName));
 			console.PrintError(exc.Message);
 		}
 		else
 		{
-			console.PrintError(string.Format(trerror.FuncEndUnexpectedError.Text, Sys.ExeName));
+			console.PrintError(string.Format(trerror.FuncEndUnexpectedError.Text, AssemblyData.ExeName));
 			console.PrintError(exc.GetType().ToString() + ":" + exc.Message);
 			string[] stack = exc.StackTrace.Split('\n');
 			for (int i = 0; i < stack.Length; i++)
@@ -486,7 +485,7 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 				}
 				else
 				{
-					console.PrintErrorButton(string.Format(trerror.HasError.Text, posString, Sys.ExeName), position);
+					console.PrintErrorButton(string.Format(trerror.HasError.Text, posString, AssemblyData.ExeName), position);
 					printRawLine(position);
 					console.PrintError(string.Format(trerror.ErrorMessage.Text, exc.Message));
 				}
@@ -504,18 +503,18 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 			}
 			else
 			{
-				console.PrintError(string.Format(trerror.HasError.Text, posString, Sys.ExeName));
+				console.PrintError(string.Format(trerror.HasError.Text, posString, AssemblyData.ExeName));
 				console.PrintError(exc.Message);
 			}
 		}
 		else if (exc is ExeEE)
 		{
-			console.PrintError(string.Format(trerror.HasEmueraError.Text, posString, Sys.ExeName));
+			console.PrintError(string.Format(trerror.HasEmueraError.Text, posString, AssemblyData.ExeName));
 			console.PrintError(exc.Message);
 		}
 		else
 		{
-			console.PrintError(string.Format(trerror.HasUnexpectedError.Text, posString, Sys.ExeName));
+			console.PrintError(string.Format(trerror.HasUnexpectedError.Text, posString, AssemblyData.ExeName));
 			console.PrintError(exc.GetType().ToString() + ":" + exc.Message);
 			string[] stack = exc.StackTrace.Split('\n');
 			for (int i = 0; i < stack.Length; i++)

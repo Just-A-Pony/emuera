@@ -34,7 +34,7 @@ namespace MinorShift.Emuera
 			if (Program.DebugMode)
 				デバッグToolStripMenuItem.Visible = true;
 
-			((EraPictureBox)mainPicBox).SetStyle();
+			mainPicBox.SetStyle();
 			initControlSizeAndLocation(windowLocation, windowHeight);
 			richTextBox1.ForeColor = Config.ForeColor;
 			richTextBox1.BackColor = Config.BackColor;
@@ -101,12 +101,9 @@ namespace MinorShift.Emuera
 		}
 		private ToolStripMenuItem[] macroMenuItems = new ToolStripMenuItem[KeyMacro.MaxFkey];
 		//private System.Diagnostics.FileVersionInfo emueraVer = System.Diagnostics.FileVersionInfo.GetVersionInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
-		private FileVersionInfo emueraVer = FileVersionInfo.GetVersionInfo(Process.GetCurrentProcess().MainModule.FileName);
 		public PictureBox MainPicBox { get { return mainPicBox; } }
 		public VScrollBar ScrollBar { get { return vScrollBar; } }
 		public RichTextBox TextBox { get { return richTextBox1; } }
-		public string InternalEmueraVer { get { return emueraVer.FileVersion; } }
-		public string EmueraVerText { get { return EmuVerToolStripTextBox.Text; } }
 		public ToolTip ToolTip { get { return toolTipButton; } }
 		private EmueraConsole console = null;
 
@@ -366,7 +363,7 @@ namespace MinorShift.Emuera
 						int keyCode = (int)(keyData & Keys.KeyCode);
 						bool shiftPressed = (keyData & Keys.Modifiers) == Keys.Shift;
 						bool ctrlPressed = (keyData & Keys.Modifiers) == Keys.Control;
-						bool unPressed = (int)(keyData & Keys.Modifiers) == 0;
+						bool unPressed = (keyData & Keys.Modifiers) == 0;
 						if (keyCode >= (int)Keys.F1 && keyCode <= (int)Keys.F12)
 						{
 							int macroNum = keyCode - (int)Keys.F1;
@@ -838,8 +835,6 @@ namespace MinorShift.Emuera
 
 		private void mainPicBox_MouseLeave(object sender, EventArgs e)
 		{
-			if (console == null)
-				return;
 			if (Config.UseMouse)
 				console.LeaveMouse();
 		}

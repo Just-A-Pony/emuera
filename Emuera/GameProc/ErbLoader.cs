@@ -89,7 +89,7 @@ internal sealed class ErbLoader
 		{
 			ParserMediator.FlushWarningList();
 			System.Media.SystemSounds.Hand.Play();
-			output.PrintError(string.Format(trerror.UnexpectedErrorFrom.Text, _Library.Sys.ExeName));
+			output.PrintError(string.Format(trerror.UnexpectedErrorFrom.Text, _Library.AssemblyData.ExeName));
 			output.PrintError(e.GetType().ToString() + ":" + e.Message);
 			return false;
 		}

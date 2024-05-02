@@ -5,6 +5,7 @@ using MinorShift.Emuera.Sub;
 using MinorShift.Emuera.GameProc;
 using MinorShift.Emuera.GameData.Expression;
 using trerror = EvilMask.Emuera.Lang.Error;
+using MinorShift._Library;
 
 namespace MinorShift.Emuera.GameData.Variable;
 
@@ -1701,7 +1702,7 @@ internal sealed partial class VariableData
 		}
 		public override string GetStrValue(ExpressionMediator exm, long[] arguments)
 		{
-			return GlobalStatic.MainWindow.InternalEmueraVer;
+			return AssemblyData.emueraVer.ToString();
 		}
 
 	}
