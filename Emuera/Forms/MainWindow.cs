@@ -1,24 +1,14 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using System.Windows.Input;
-using MinorShift._Library;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData;
 using MinorShift.Emuera.GameProc.Function;
 using MinorShift.Emuera.GameView;
-using MinorShift.Emuera.Forms;
 using EvilMask.Emuera;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
-using System.Runtime.Versioning;
 
-namespace MinorShift.Emuera
+namespace MinorShift.Emuera.Forms
 {
 	internal sealed partial class MainWindow : Form
 	{

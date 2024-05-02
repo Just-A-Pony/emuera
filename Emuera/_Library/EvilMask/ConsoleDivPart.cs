@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using static EvilMask.Emuera.Shape;
 using static EvilMask.Emuera.Utils;
+using MinorShift.Emuera.Forms;
+using System.Windows;
 
 namespace MinorShift.Emuera.GameView;
 
@@ -142,9 +144,9 @@ class ConsoleDivPart : AConsoleDisplayPart
 	}
 	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)
 	{
-		if (GlobalStatic.MainWindow == null) return;
+		if (GlobalStatic.EMediator.Console.Window == null) return;
 		var rect = IsRelative ? new Rectangle(PointX + xOffset, pointY + PointY, width + 2, Height)
-			: new Rectangle(xOffset, GlobalStatic.MainWindow.MainPicBox.Height - PointY - Height, width + 2, Height); // 何故か+2pxが必要，なぞ
+			: new Rectangle(xOffset, GlobalStatic.EMediator.Console.Window.MainPicBox.Height - PointY - Height, width + 2, Height); // 何故か+2pxが必要，なぞ
 
 		if (margin != null)
 			rect = new Rectangle(rect.X + margin[Direction.Left], rect.Y + margin[Direction.Top],

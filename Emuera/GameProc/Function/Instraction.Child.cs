@@ -745,7 +745,7 @@ internal sealed partial class FunctionIdentifier
 			{
 				req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
 			}
-			GlobalStatic.MainWindow.ApplyTextBoxChanges();
+			exm.Console.Window.ApplyTextBoxChanges();
 			#endregion
 			#region EE_INPUT機能拡張
 			if (arg.CanSkip != null && GlobalStatic.Console.MesSkip)
@@ -800,7 +800,7 @@ internal sealed partial class FunctionIdentifier
 			{
 				req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
 			}
-			GlobalStatic.MainWindow.ApplyTextBoxChanges();
+			exm.Console.Window.ApplyTextBoxChanges();
 			#endregion
 			#region EE_INPUT機能拡張
 			if (arg.CanSkip != null && GlobalStatic.Console.MesSkip)
@@ -2001,7 +2001,7 @@ internal sealed partial class FunctionIdentifier
 			{
 				req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
 			}
-			GlobalStatic.MainWindow.ApplyTextBoxChanges();
+			exm.Console.Window.ApplyTextBoxChanges();
 			int count = 0;
 			if (arg.CanSkip != null && GlobalStatic.Console.MesSkip)
 			{
@@ -2102,7 +2102,7 @@ internal sealed partial class FunctionIdentifier
 			{
 				req.MouseInput = arg.Mouse.GetIntValue(exm) != 0;
 			}
-			GlobalStatic.MainWindow.ApplyTextBoxChanges();
+			exm.Console.Window.ApplyTextBoxChanges();
 			int count = 0;
 			if (arg.CanSkip != null && GlobalStatic.Console.MesSkip)
 			{

@@ -17,6 +17,7 @@ using System.IO;
 using EvilMask.Emuera;
 using trerror = EvilMask.Emuera.Lang.Error;
 using System.Data;
+using MinorShift.Emuera.Forms;
 
 namespace MinorShift.Emuera.GameData.Function;
 
@@ -1964,8 +1965,8 @@ internal static partial class FunctionMethodCreator
 		bool resume;
 		public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 		{
-			if (resume) GlobalStatic.MainWindow.ResetTextBoxPos();
-			else GlobalStatic.MainWindow.SetTextBoxPos(
+			if (resume) exm.Console.Window.ResetTextBoxPos();
+			else exm.Console.Window.SetTextBoxPos(
 				(int)arguments[0].GetIntValue(exm),
 				(int)arguments[1].GetIntValue(exm),
 				(int)arguments[2].GetIntValue(exm));
@@ -7312,7 +7313,7 @@ internal static partial class FunctionMethodCreator
 		}
 		public override string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments)
 		{
-			return GlobalStatic.MainWindow.TextBox.Text;
+			return exm.Console.Window.TextBox.Text;
 		}
 	}
 	private sealed class ChangeTextBoxMethod : FunctionMethod
@@ -7325,7 +7326,7 @@ internal static partial class FunctionMethodCreator
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
 		{
-			GlobalStatic.MainWindow.ChangeTextBox(arguments[0].GetStrValue(exm));
+			exm.Console.Window.ChangeTextBox(arguments[0].GetStrValue(exm));
 			return 1;
 		}
 	}

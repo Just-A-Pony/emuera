@@ -11,7 +11,7 @@ internal class ClipboardProcessor
 	private readonly bool useCB;
 	private readonly bool classicMode; // New Lines Only mode
 
-	private readonly MainWindow mainWin;
+	private readonly Forms.MainWindow mainWin;
 
 	private bool minTimePassed; //Has enough time passed since the last Clipboard update?
 	private bool postWaiting; //Is there text waiting to be sent to clipboard?
@@ -38,7 +38,7 @@ internal class ClipboardProcessor
 
 	private delegate void SetClipboardDelegate(string text, bool copy, int times, int delay); //Just for using the timer to set the clipboard.
 
-	public ClipboardProcessor(MainWindow parent)
+	public ClipboardProcessor(Forms.MainWindow parent)
 	{
 		useCB = Config.CBUseClipboard;
 		classicMode = Config.CBNewLinesOnly;
