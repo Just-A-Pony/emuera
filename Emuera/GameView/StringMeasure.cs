@@ -23,8 +23,6 @@ internal sealed class StringMeasure : IDisposable
 													   //bmp = new Bitmap(Config.WindowX, Config.LineHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 		bmp = new Bitmap(16, 16, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 		graph = Graphics.FromImage(bmp);
-		if (textDrawingMode == TextDrawingMode.WINAPI)
-			GDI.GdiMesureTextStart(graph);
 	}
 
 	readonly TextDrawingMode textDrawingMode;
@@ -61,8 +59,7 @@ internal sealed class StringMeasure : IDisposable
 		}
 		else// if (StaticConfig.TextDrawingMode == TextDrawingMode.WINAPI)
 		{
-			Size size = GDI.MeasureText(s, font);
-			return size.Width;
+			throw new Exception("WIN32APIモードはサポートされていません");
 		}
 		//来るわけがない
 		//else
@@ -76,8 +73,6 @@ internal sealed class StringMeasure : IDisposable
 		if (disposed)
 			return;
 		disposed = true;
-		if (textDrawingMode == TextDrawingMode.WINAPI)
-			GDI.GdiMesureTextEnd(graph);
 		graph.Dispose();
 		bmp.Dispose();
 		sf.Dispose();

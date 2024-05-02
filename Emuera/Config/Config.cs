@@ -214,6 +214,11 @@ internal static class Config
 			System.Windows.MessageBox.Show(trmb.TooSmallLogSize.Text, trmb.ConfigError.Text);
 			MaxLog = 500;
 		}
+		if (TextDrawingMode == TextDrawingMode.WINAPI)
+		{
+			System.Windows.MessageBox.Show(trmb.DoNotSupportWINAPI.Text);
+			TextDrawingMode = TextDrawingMode.TEXTRENDERER;
+		}
 
 		DrawingParam_ShapePositionShift = 0;
 		if (TextDrawingMode != TextDrawingMode.WINAPI)

@@ -13,9 +13,6 @@ internal abstract class AbstractImage : AContentFile
 	public abstract Bitmap Bitmap { get; set; }
 	public IntPtr GDIhDC { get; protected set; }
 	protected Graphics g;
-	protected IntPtr hBitmap;
-	protected IntPtr hDefaultImg;
-	protected bool gdi;
 }
 
 internal sealed class ConstImage : AbstractImage
@@ -40,15 +37,6 @@ internal sealed class ConstImage : AbstractImage
 			Filepath = filepath;
 			Width = RealBitmap.Width;
 			Height = RealBitmap.Height;
-			if (useGDI)
-			{
-				gdi = true;
-				hBitmap = RealBitmap.GetHbitmap();
-				g = Graphics.FromImage(RealBitmap);
-				GDIhDC = g.GetHdc();
-				hDefaultImg = GDI.SelectObject(GDIhDC, hBitmap);
-			}
-
 			AppContents.tempLoadedConstImages.Add(this);
 			RealIsCreated = true;
 		}
@@ -69,14 +57,6 @@ internal sealed class ConstImage : AbstractImage
 			if (RealBitmap == null)
 			{
 				return;
-			}
-
-			if (gdi)
-			{
-				hBitmap = RealBitmap.GetHbitmap();
-				g = Graphics.FromImage(RealBitmap);
-				GDIhDC = g.GetHdc();
-				hDefaultImg = GDI.SelectObject(GDIhDC, hBitmap);
 			}
 			AppContents.tempLoadedConstImages.Add(this);
 		}
@@ -114,14 +94,6 @@ internal sealed class ConstImage : AbstractImage
 	{
 		if (RealBitmap == null || !RealIsCreated)
 			return;
-		if (gdi)
-		{
-			GDI.SelectObject(GDIhDC, hDefaultImg);
-			GDI.DeleteObject(hBitmap);
-			//gがすでに死んでると例外になる
-			if (g != null)
-				g.ReleaseHdc(GDIhDC);
-		}
 		if (g != null)
 		{
 			g.Dispose();

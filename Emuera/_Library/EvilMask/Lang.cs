@@ -1225,6 +1225,7 @@ internal sealed class Lang
 		[Managed] public static TranslatableString UnableChangeSetting { get; } = new TranslatableString("設定変更不可");
 		[Managed] public static TranslatableString ReloadResourceAsk { get; } = new TranslatableString("リソースフォルダを読み直します");
 		[Managed] public static TranslatableString ReloadResource { get; } = new TranslatableString("リソースフォルダを読み直します");
+		[Managed] public static TranslatableString DoNotSupportWINAPI { get; } = new TranslatableString("WINAPIモードはサポートされていません");
 		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
 		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
 		//[Managed] public static TranslatableString { get; } = new TranslatableString("");

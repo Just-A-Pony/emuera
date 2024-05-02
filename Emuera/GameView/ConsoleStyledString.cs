@@ -135,20 +135,4 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 			TextRenderer.DrawText(graph, Str, Font, new Point(xOffset, 0), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
 		#endregion
 	}
-
-	public override void GDIDrawTo(int pointY, bool isSelecting, bool isBackLog)
-	{
-		if (this.Error)
-			return;
-		Color color = this.Color;
-		if (isSelecting)
-			color = this.ButtonColor;
-		else if (isBackLog && !colorChanged)
-			color = Config.LogColor;
-		GDI.TabbedTextOutFull(Font, color, Str, PointX, pointY);
-		//GDI.SetFont(Font);
-		//GDI.SetTextColor(color);
-		//GDI.TabbedTextOut(Str, PointX, pointY);
-	}
-
 }

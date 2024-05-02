@@ -324,13 +324,6 @@ internal sealed class ConsoleButtonString
 		#endregion
 	}
 
-	public void GDIDrawTo(int pointY, bool isBackLog)
-	{
-		bool isSelecting = IsButton && parent.ButtonIsSelected(this);
-		foreach (AConsoleDisplayPart css in strArray)
-			css.GDIDrawTo(pointY, isSelecting, isBackLog);
-	}
-
 	#region EM_私家版_描画拡張
 	public void DrawPartTo(Graphics graph, AConsoleDisplayPart css, int pointY, bool isBackLog, TextDrawingMode mode)
 	{

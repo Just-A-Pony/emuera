@@ -573,12 +573,6 @@ internal sealed class GraphicsImage : AbstractImage
 		drawImgList = null;
 		if (RealBitmap == null)
 			return;
-		if (gdi)
-		{
-			GDI.SelectObject(GDIhDC, hDefaultImg);
-			GDI.DeleteObject(hBitmap);
-			g.ReleaseHdc(GDIhDC);
-		}
 		if (g != null)
 			g.Dispose();
 		if (RealBitmap != null)
