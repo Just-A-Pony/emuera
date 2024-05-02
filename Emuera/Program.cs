@@ -250,12 +250,12 @@ static class Program
 		}
 
 		var winState = FormWindowState.Normal;
-		var rebootFlag = false;
 		var rebootClientHeight = 0;
 		var rebootLocation = Point.Empty;
 
 		while (true)
 		{
+			var rebootFlag = false;
 			//必要なソースファイルを事前にメモリに一気に読み込む
 			Preload.Load(ErbDir);
 			Preload.Load(CsvDir);
@@ -326,6 +326,8 @@ static class Program
 			//GC.Collect();
 			#region EE_メモリリークの解決
 			ConfigData.Instance.ReLoadConfig();
+
+			Preload.Clear();
 			break;
 		}
 		if (rebootFlag)
