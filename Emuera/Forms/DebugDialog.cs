@@ -235,7 +235,7 @@ namespace MinorShift.Emuera.Forms
 			//}
 			//catch
 			//{
-			//    MessageBox.Show("トレースログの保存に失敗しました", "デバッグウインドウ");
+			//    System.Windows.MessageBox.Show("トレースログの保存に失敗しました", "デバッグウインドウ");
 			//    return;
 			//}
 			//finally
@@ -251,7 +251,7 @@ namespace MinorShift.Emuera.Forms
 			}
 			catch
 			{
-				MessageBox.Show("コンソールログの保存に失敗しました", "デバッグウインドウ");
+				System.Windows.MessageBox.Show("コンソールログの保存に失敗しました", "デバッグウインドウ");
 				return;
 			}
 			finally
@@ -273,7 +273,7 @@ namespace MinorShift.Emuera.Forms
 			}
 			catch
 			{
-				MessageBox.Show("変数ウォッチリストの保存に失敗しました", "デバッグウインドウ");
+				System.Windows.MessageBox.Show("変数ウォッチリストの保存に失敗しました", "デバッグウインドウ");
 				return;
 			}
 			finally
@@ -300,7 +300,7 @@ namespace MinorShift.Emuera.Forms
 			}
 			catch
 			{
-				MessageBox.Show("変数ウォッチリストの読込に失敗しました", "デバッグウインドウ");
+				System.Windows.MessageBox.Show("変数ウォッチリストの読込に失敗しました", "デバッグウインドウ");
 				return;
 			}
 			finally

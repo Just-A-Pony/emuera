@@ -1779,7 +1779,7 @@ internal sealed class VariableEvaluator : IDisposable
 		}
 		catch
 		{
-			System.Windows.Forms.MessageBox.Show(trerror.FailedCreateDataFolder.Text);
+			System.Windows.MessageBox.Show(trerror.FailedCreateDataFolder.Text);
 			throw new CodeEE(trerror.FailedCreateDataFolder.Text);
 		}
 	}

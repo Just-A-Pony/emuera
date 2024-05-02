@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameData;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.Sub;

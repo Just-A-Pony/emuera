@@ -445,13 +445,13 @@ internal sealed partial class EmueraConsole : IDisposable
 
 		if (GlobalStatic.ForceQuitAndRestart == true)
 		{
-			DialogResult result = MessageBox.Show(trmb.ForceQuitAndRestart.Text,
+			var result = System.Windows.MessageBox.Show(trmb.ForceQuitAndRestart.Text,
 				"FORCE_QUIT_AND_RESTART",
-				MessageBoxButtons.YesNo,
-				MessageBoxIcon.None,
-				MessageBoxDefaultButton.Button1
+				System.Windows.MessageBoxButton.YesNo
+				//System.Windows.MessageBoxIcon.None,
+				//System.Windows.MessageBoxDefaultButton.Button1
 				);
-			if (result == DialogResult.Yes)
+			if (result == System.Windows.MessageBoxResult.Yes)
 			{
 				Program.rebootFlag = false;
 				throw new CodeEE(trerror.ForceQuitAndRestartError.Text);
@@ -2402,7 +2402,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	{
 		//if (state == ConsoleState.Error)
 		//{
-		//    MessageBox.Show("エラー発生時はこの機能は使えません");
+		//    System.Windows.MessageBox.Show("エラー発生時はこの機能は使えません");
 		//}
 		forceStopTimer();
 		ClearDisplay();
@@ -2426,12 +2426,12 @@ internal sealed partial class EmueraConsole : IDisposable
 	{
 		if (state == ConsoleState.Error)
 		{
-			MessageBox.Show(trerror.CanNotUseWhenError.Text);
+			System.Windows.MessageBox.Show(trerror.CanNotUseWhenError.Text);
 			return;
 		}
 		if (state == ConsoleState.Initializing)
 		{
-			MessageBox.Show(trerror.CanNotUseWhenInitialize.Text);
+			System.Windows.MessageBox.Show(trerror.CanNotUseWhenInitialize.Text);
 			return;
 		}
 		bool notRedraw = false;
@@ -2477,12 +2477,12 @@ internal sealed partial class EmueraConsole : IDisposable
 	{
 		if (state == ConsoleState.Error)
 		{
-			MessageBox.Show(trerror.CanNotUseWhenError.Text);
+			System.Windows.MessageBox.Show(trerror.CanNotUseWhenError.Text);
 			return;
 		}
 		if (state == ConsoleState.Initializing)
 		{
-			MessageBox.Show(trerror.CanNotUseWhenInitialize.Text);
+			System.Windows.MessageBox.Show(trerror.CanNotUseWhenInitialize.Text);
 			return;
 		}
 		bool notRedraw = false;
@@ -2515,12 +2515,12 @@ internal sealed partial class EmueraConsole : IDisposable
 	{
 		if (state == ConsoleState.Error)
 		{
-			MessageBox.Show(trerror.CanNotUseWhenError.Text);
+			System.Windows.MessageBox.Show(trerror.CanNotUseWhenError.Text);
 			return;
 		}
 		if (state == ConsoleState.Initializing)
 		{
-			MessageBox.Show(trerror.CanNotUseWhenInitialize.Text);
+			System.Windows.MessageBox.Show(trerror.CanNotUseWhenInitialize.Text);
 			return;
 		}
 		if (timer.Enabled)
@@ -2561,12 +2561,12 @@ internal sealed partial class EmueraConsole : IDisposable
 		/*
 		if (state == ConsoleState.Error)
 		{
-			MessageBox.Show(trerror.CanNotUseWhenError.Text);
+			System.Windows.MessageBox.Show(trerror.CanNotUseWhenError.Text);
 			return;
 		}
 		if (state == ConsoleState.Initializing)
 		{
-			MessageBox.Show(trerror.CanNotUseWhenInitialize.Text);
+			System.Windows.MessageBox.Show(trerror.CanNotUseWhenInitialize.Text);
 			return;
 		}
 		if (timer.Enabled)

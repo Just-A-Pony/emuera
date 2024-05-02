@@ -166,20 +166,20 @@ static class Program
 		//二重起動の禁止かつ二重起動
 		if ((!Config.AllowMultipleInstances) && Sys.PrevInstance())
 		{
-			//MessageBox.Show("多重起動を許可する場合、emuera.configを書き換えて下さい", "既に起動しています");
-			MessageBox.Show(Lang.UI.MainWindow.MsgBox.MultiInstanceInfo.Text, Lang.UI.MainWindow.MsgBox.InstaceExists.Text);
+			//System.Windows.MessageBox.Show("多重起動を許可する場合、emuera.configを書き換えて下さい", "既に起動しています");
+			System.Windows.MessageBox.Show(Lang.UI.MainWindow.MsgBox.MultiInstanceInfo.Text, Lang.UI.MainWindow.MsgBox.InstaceExists.Text);
 			return;
 		}
 		if (!Directory.Exists(CsvDir))
 		{
-			//MessageBox.Show("csvフォルダが見つかりません", "フォルダなし");
-			MessageBox.Show(Lang.UI.MainWindow.MsgBox.NoCsvFolder.Text, Lang.UI.MainWindow.MsgBox.FolderNotFound.Text);
+			//System.Windows.MessageBox.Show("csvフォルダが見つかりません", "フォルダなし");
+			System.Windows.MessageBox.Show(Lang.UI.MainWindow.MsgBox.NoCsvFolder.Text, Lang.UI.MainWindow.MsgBox.FolderNotFound.Text);
 			return;
 		}
 		if (!Directory.Exists(ErbDir))
 		{
-			//MessageBox.Show("erbフォルダが見つかりません", "フォルダなし");
-			MessageBox.Show(Lang.UI.MainWindow.MsgBox.NoErbFolder.Text, Lang.UI.MainWindow.MsgBox.FolderNotFound.Text);
+			//System.Windows.MessageBox.Show("erbフォルダが見つかりません", "フォルダなし");
+			System.Windows.MessageBox.Show(Lang.UI.MainWindow.MsgBox.NoErbFolder.Text, Lang.UI.MainWindow.MsgBox.FolderNotFound.Text);
 			return;
 		}
 		#region EE_フォントファイル対応
@@ -205,7 +205,7 @@ static class Program
 				}
 				catch
 				{
-					MessageBox.Show(Lang.UI.MainWindow.MsgBox.FailedCreateDebugFolder.Text, Lang.UI.MainWindow.MsgBox.FolderNotFound.Text);
+					System.Windows.MessageBox.Show(Lang.UI.MainWindow.MsgBox.FailedCreateDebugFolder.Text, Lang.UI.MainWindow.MsgBox.FolderNotFound.Text);
 					return;
 				}
 			}
@@ -221,7 +221,7 @@ static class Program
 				//if (!File.Exists(args[i]) && !Directory.Exists(args[i]))
 				if (!File.Exists(path) && !Directory.Exists(path))
 				{
-					MessageBox.Show(Lang.UI.MainWindow.MsgBox.ArgPathNotExists.Text);
+					System.Windows.MessageBox.Show(Lang.UI.MainWindow.MsgBox.ArgPathNotExists.Text);
 					return;
 				}
 				//if ((File.GetAttributes(args[i]) & FileAttributes.Directory) == FileAttributes.Directory)
@@ -239,7 +239,7 @@ static class Program
 					//if (Path.GetExtension(args[i]).ToUpper() != ".ERB")
 					if (Path.GetExtension(path).ToUpper() != ".ERB")
 					{
-						MessageBox.Show(Lang.UI.MainWindow.MsgBox.InvalidArg.Text);
+						System.Windows.MessageBox.Show(Lang.UI.MainWindow.MsgBox.InvalidArg.Text);
 						return;
 					}
 					//AnalysisFiles.Add(args[i]);

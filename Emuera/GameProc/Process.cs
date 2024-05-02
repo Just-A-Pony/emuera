@@ -59,8 +59,8 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 			if (ParserMediator.HasWarning)
 			{
 				ParserMediator.FlushWarningList();
-				if (MessageBox.Show(trmb.ConfigFileError.Text, trmb.ConfigError.Text, MessageBoxButtons.YesNo)
-					== DialogResult.Yes)
+				if (System.Windows.MessageBox.Show(trmb.ConfigFileError.Text, trmb.ConfigError.Text, System.Windows.MessageBoxButton.YesNo)
+					== System.Windows.MessageBoxResult.Yes)
 				{
 					console.PrintSystemLine(trsl.SelectExitConfigMB.Text);
 					return false;
@@ -99,8 +99,8 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 					if (ParserMediator.HasWarning)
 					{
 						ParserMediator.FlushWarningList();
-						if (MessageBox.Show(trmb.ReplaceFileError.Text, trmb.ReplaceError.Text, MessageBoxButtons.YesNo)
-							== DialogResult.Yes)
+						if (System.Windows.MessageBox.Show(trmb.ReplaceFileError.Text, trmb.ReplaceError.Text, System.Windows.MessageBoxButton.YesNo)
+							== System.Windows.MessageBoxResult.Yes)
 						{
 							console.PrintSystemLine(trsl.SelectExitReplaceMB.Text);
 							return false;
@@ -344,13 +344,13 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 		if ((currentLine == null) || (currentLine is NullLine))
 			return;//現在の行が特殊な状態ならスルー
 		if (!console.Enabled)
-			return;//クローズしてるとMessageBox.Showができないので。
+			return;//クローズしてるとSystem.Windows.MessageBox.Showができないので。
 		string caption = string.Format(trmb.InfiniteLoop.Text);
 		string text = string.Format(
 			trmb.TooLongLoop.Text,
 			currentLine.Position.Filename, currentLine.Position.LineNo, state.lineCount, elapsedTime);
-		DialogResult result = MessageBox.Show(text, caption, MessageBoxButtons.YesNo);
-		if (result == DialogResult.Yes)
+		var result = System.Windows.MessageBox.Show(text, caption, System.Windows.MessageBoxButton.YesNo);
+		if (result == System.Windows.MessageBoxResult.Yes)
 		{
 			throw new CodeEE(trerror.SelectExitInfiniteLoopMB.Text);
 		}

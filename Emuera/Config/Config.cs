@@ -191,27 +191,27 @@ internal static class Config
 
 		if (FontSize < 8)
 		{
-			MessageBox.Show(trmb.TooSmallFontSize.Text, trmb.ConfigError.Text);
+			System.Windows.MessageBox.Show(trmb.TooSmallFontSize.Text, trmb.ConfigError.Text);
 			FontSize = 8;
 		}
 		if (LineHeight < FontSize)
 		{
-			MessageBox.Show(trmb.LineHeightLessThanFontSize.Text, trmb.ConfigError.Text);
+			System.Windows.MessageBox.Show(trmb.LineHeightLessThanFontSize.Text, trmb.ConfigError.Text);
 			LineHeight = FontSize;
 		}
 		if (SaveDataNos < 20)
 		{
-			MessageBox.Show(trmb.TooSmallDisplaySaveData.Text, trmb.ConfigError.Text);
+			System.Windows.MessageBox.Show(trmb.TooSmallDisplaySaveData.Text, trmb.ConfigError.Text);
 			SaveDataNos = 20;
 		}
 		if (SaveDataNos > 80)
 		{
-			MessageBox.Show(trmb.TooLargeDisplaySaveData.Text, trmb.ConfigError.Text);
+			System.Windows.MessageBox.Show(trmb.TooLargeDisplaySaveData.Text, trmb.ConfigError.Text);
 			SaveDataNos = 80;
 		}
 		if (MaxLog < 500)
 		{
-			MessageBox.Show(trmb.TooSmallLogSize.Text, trmb.ConfigError.Text);
+			System.Windows.MessageBox.Show(trmb.TooSmallLogSize.Text, trmb.ConfigError.Text);
 			MaxLog = 500;
 		}
 
@@ -323,7 +323,7 @@ internal static class Config
 		}
 		catch
 		{
-			MessageBox.Show(trmb.FailedCreateSavFolder.Text, trmb.FolderCreationFailure.Text);
+			System.Windows.MessageBox.Show(trmb.FailedCreateSavFolder.Text, trmb.FolderCreationFailure.Text);
 			return;
 		}
 		#region eee_カレントディレクトリー
@@ -334,13 +334,13 @@ internal static class Config
 		#endregion
 		if (!existGlobal && savFiles.Length == 0)
 			return;
-		DialogResult result = MessageBox.Show(trmb.SavFolderCreated.Text, trmb.DataTransfer.Text, MessageBoxButtons.YesNo);
-		if (result != DialogResult.Yes)
+		var result = System.Windows.MessageBox.Show(trmb.SavFolderCreated.Text, trmb.DataTransfer.Text, System.Windows.MessageBoxButton.YesNo);
+		if (result != System.Windows.MessageBoxResult.Yes)
 			return;
 		//ダイアログが開いている間にフォルダを消してしまうような邪悪なユーザーがいるかもしれない
 		if (!Directory.Exists(SavDir))
 		{
-			MessageBox.Show(trmb.MissingSavFolder.Text, trmb.DataTransferFailure.Text);
+			System.Windows.MessageBox.Show(trmb.MissingSavFolder.Text, trmb.DataTransferFailure.Text);
 			return;
 		}
 		//ダイアログが開いている間にファイルを変更するような邪悪なユーザーがいるかもしれない
@@ -359,7 +359,7 @@ internal static class Config
 		}
 		catch
 		{
-			MessageBox.Show(trmb.FailedMoveSavFiles.Text, trmb.DataTransferFailure.Text);
+			System.Windows.MessageBox.Show(trmb.FailedMoveSavFiles.Text, trmb.DataTransferFailure.Text);
 		}
 	}
 	//先にSetConfigを呼ぶこと
