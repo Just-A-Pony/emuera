@@ -1161,7 +1161,7 @@ internal sealed partial class FunctionIdentifier
 			SpCallSharpArgment arg = (SpCallSharpArgment)func.Argument;
 			var manager = PluginManager.GetInstance();
 
-			var pluginArgs = arg.RowArgs.Select((val) => OperandAdapter.ToPluginParameter(val, exm)).ToArray();
+			var pluginArgs = arg.RowArgs.Select((term) => new PluginMethodParameter(term.GetStrValue(exm))).ToArray();
 			arg.CallFunc.Execute(pluginArgs);
 			for (var i = 0; i < pluginArgs.Count(); ++i)
 			{

@@ -7,14 +7,6 @@ using MinorShift.Emuera.GameProc.PluginSystem;
 
 namespace MinorShift.Emuera.GameData.Expression;
 
-internal static class OperandAdapter
-{
-	internal static PluginMethodParameter ToPluginParameter(IOperandTerm term, ExpressionMediator exm)
-	{
-		return new PluginMethodParameter(term.GetStrValue(exm));
-	}
-}
-
 internal sealed class NullTerm : IOperandTerm
 {
 	public NullTerm(Int64 i)
