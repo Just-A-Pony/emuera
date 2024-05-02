@@ -17,6 +17,7 @@ using trmb = EvilMask.Emuera.Lang.MessageBox;
 using EvilMask.Emuera;
 using static EvilMask.Emuera.Utils;
 using System.Linq;
+using MinorShift.Emuera.GameProc.PluginSystem;
 
 namespace MinorShift.Emuera.GameProc.Function;
 
@@ -1107,6 +1108,70 @@ internal sealed partial class FunctionIdentifier
 			if (mToken == null)
 				throw new CodeEE(string.Format(trerror.NotDefinedUserFunc.Text, labelName));
 			mToken.GetValue(exm);
+		}
+	}
+
+	private sealed class CALLSHARP_Instruction : AbstractInstruction
+	{
+		public CALLSHARP_Instruction()
+		{
+			ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_CALLCSHARP);
+			flag = EXTENDED | METHOD_SAFE | FORCE_SETARG;
+		}
+
+		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
+		{
+			StringStream st = line.PopArgumentPrimitive();
+			string rowStr;
+			if (st.EOS)
+				throw new CodeEE("引数が設定されていません");
+			else
+				rowStr = st.Substring();
+			rowStr = GlobalStatic.Console.getStBar(rowStr);
+			Argument ret = new ExpressionArgument(new SingleTerm(rowStr))
+			{
+				ConstStr = rowStr,
+				IsConst = true
+			};
+			return ret;
+		}
+
+		public override void SetJumpTo(ref bool useCallForm, InstructionLine func, int currentDepth, ref string FunctionoNotFoundName)
+		{
+			if (!func.Argument.IsConst)
+			{
+				useCallForm = true;
+				return;
+			}
+
+			SpCallSharpArgment arg = (SpCallSharpArgment)func.Argument;
+			var manager = PluginManager.GetInstance();
+			if (!manager.HasMethod(arg.ConstStr))
+			{
+				ParserMediator.Warn(string.Format("No native method {0} found", arg.ConstStr), func, 2, true, false);
+				return;
+			}
+
+			arg.CallFunc = manager.GetMethod(func.Argument.ConstStr);
+		}
+
+		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+		{
+
+			SpCallSharpArgment arg = (SpCallSharpArgment)func.Argument;
+			var manager = PluginManager.GetInstance();
+
+			var pluginArgs = arg.RowArgs.Select((val) => OperandAdapter.ToPluginParameter(val, exm)).ToArray();
+			arg.CallFunc.Execute(pluginArgs);
+			for (var i = 0; i < pluginArgs.Count(); ++i)
+			{
+				var rowArg = arg.RowArgs[i];
+				if (rowArg is VariableTerm)
+				{
+					var varTerm = (VariableTerm)rowArg;
+					varTerm.SetValue(pluginArgs[i].value, exm);
+				}
+			}
 		}
 	}
 

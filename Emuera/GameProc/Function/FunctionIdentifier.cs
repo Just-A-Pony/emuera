@@ -1,5 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using MinorShift.Emuera.GameData.Function;
+using MinorShift.Emuera.GameProc.PluginSystem;
 
 namespace MinorShift.Emuera.GameProc.Function;
 
@@ -344,6 +349,7 @@ internal sealed partial class FunctionIdentifier
 		addFunction(FunctionCode.CALLEVENT, new CALLEVENT_Instruction());
 		addFunction(FunctionCode.CALLF, new CALLF_Instruction(false));
 		addFunction(FunctionCode.CALLFORMF, new CALLF_Instruction(true));
+		addFunction(FunctionCode.CALLSHARP, new CALLSHARP_Instruction());
 		addFunction(FunctionCode.RESTART, new RESTART_Instruction());//関数の再開。関数の最初に戻る。
 		addFunction(FunctionCode.GOTO, new GOTO_Instruction(false, false, false));//$ラベルへジャンプ
 		addFunction(FunctionCode.TRYGOTO, new GOTO_Instruction(false, true, false), EXTENDED);
@@ -464,6 +470,36 @@ internal sealed partial class FunctionIdentifier
 		funcParent[FunctionCode.NEXT] = FunctionCode.FOR;
 		funcParent[FunctionCode.WEND] = FunctionCode.WHILE;
 		funcParent[FunctionCode.LOOP] = FunctionCode.DO;
+
+		//Load plugins test
+
+		string[] plugins = Directory.GetFiles("Plugins", "*.dll");
+
+		foreach (var pluginPath in plugins)
+		{
+			Assembly DLL = Assembly.LoadFrom(pluginPath);
+			var manifestType = DLL.GetTypes().Where((v) => v.Name == "PluginManifest").FirstOrDefault();
+			if (manifestType == null)
+			{
+				//throw warning
+				continue;
+			}
+
+			BasePluginManifest manifest = (BasePluginManifest)Activator.CreateInstance(manifestType);
+			if (manifest == null)
+			{
+				//throw warning
+				continue;
+			}
+
+			var methods = manifest.GetPluginMethods();
+			var pluginManager = PluginManager.GetInstance();
+			foreach (var method in methods)
+			{
+				pluginManager.AddMethod(method);	
+			}
+		}
+
 	}
 
 	private static FunctionIdentifier setFunc;
