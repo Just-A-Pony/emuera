@@ -425,7 +425,7 @@ namespace MinorShift.Emuera
 							case SC_MAXIMIZE:
 								if (Screen.AllScreens.Length == 1)
 								{
-									MaximizedBounds = new Rectangle(Left, 0, Config.WindowX, Screen.PrimaryScreen.WorkingArea.Height);
+									MaximizedBounds = new Rectangle(Left, 0, Config.WindowX, Screen.PrimaryScreen!.WorkingArea.Height);
 								}
 								else
 								{
@@ -1036,7 +1036,7 @@ namespace MinorShift.Emuera
 			}
 		}
 
-		void richTextBox1_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+		void richTextBox1_MouseWheel(object? sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			//if (!Config.UseMouse)
 			//	return;
@@ -1099,7 +1099,7 @@ namespace MinorShift.Emuera
 			richTextBox1.Clear();
 		}
 
-		private void richTextBox1_TextChanged(object sender, EventArgs e)
+		private void richTextBox1_TextChanged(object? sender, EventArgs e)
 		{
 			if (console == null || console.IsInProcess)
 				return;
@@ -1144,7 +1144,7 @@ namespace MinorShift.Emuera
 		}
 		#endregion
 
-		private void richTextBox1_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+		private void richTextBox1_KeyDown(object? sender, System.Windows.Forms.KeyEventArgs e)
 		{
 			if (console == null)
 				return;
@@ -1319,7 +1319,7 @@ namespace MinorShift.Emuera
 				return;
 			if (Clipboard.GetDataObject() != null && Clipboard.ContainsText())
 			{
-				if (Clipboard.GetDataObject().GetDataPresent(DataFormats.Text))
+				if (Clipboard.GetDataObject()!.GetDataPresent(DataFormats.Text))
 					//Clipboard.SetText(Clipboard.GetText(TextDataFormat.UnicodeText));
 					richTextBox1.Paste(DataFormats.GetFormat(DataFormats.UnicodeText));
 				//richTextBox1.Paste();
@@ -1345,19 +1345,21 @@ namespace MinorShift.Emuera
 		}
 
 		int macroGroup = 0;
-		private void マクロToolStripMenuItem_Click(object sender, EventArgs e)
+		private void マクロToolStripMenuItem_Click(object? sender, EventArgs e)
 		{
 			if ((console == null) || console.IsInProcess)
 				return;
 			if (!Config.UseKeyMacro)
 				return;
-			ToolStripMenuItem item = (ToolStripMenuItem)sender;
-			int fkeynum = (int)item.ShortcutKeys - (int)Keys.F1;
-			string macro = KeyMacro.GetMacro(fkeynum, macroGroup);
-			if (macro.Length > 0)
+			if (sender is ToolStripMenuItem item)
 			{
-				richTextBox1.Text = macro;
-				richTextBox1.SelectionStart = richTextBox1.Text.Length;
+				int fkeynum = (int)item.ShortcutKeys - (int)Keys.F1;
+				string macro = KeyMacro.GetMacro(fkeynum, macroGroup);
+				if (macro.Length > 0)
+				{
+					richTextBox1.Text = macro;
+					richTextBox1.SelectionStart = richTextBox1.Text.Length;
+				}
 			}
 		}
 
@@ -1367,8 +1369,17 @@ namespace MinorShift.Emuera
 				return;
 			if (!Config.UseKeyMacro)
 				return;
-			ToolStripMenuItem item = (ToolStripMenuItem)sender;
-			setNewMacroGroup(int.Parse((string)item.Tag));//とても無駄なキャスト&Parse
+			if (sender is ToolStripMenuItem item)
+			{
+				if (item.Tag is string tag)
+				{
+					setNewMacroGroup(int.Parse(tag));//とても無駄なキャスト&Parse
+				}
+				else
+				{
+					throw new Exception();
+				}
+			}
 		}
 
 		private void timerKeyMacroChanged_Tick(object sender, EventArgs e)
