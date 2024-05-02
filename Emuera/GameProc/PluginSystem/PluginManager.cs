@@ -61,7 +61,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 					continue;
 				}
 
-				BasePluginManifest manifest = (BasePluginManifest)Activator.CreateInstance(manifestType);
+				PluginManifestAbstract manifest = (PluginManifestAbstract)Activator.CreateInstance(manifestType);
 				if (manifest == null)
 				{
 					//TODO: throw warning

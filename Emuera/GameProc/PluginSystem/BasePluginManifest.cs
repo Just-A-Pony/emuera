@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 namespace MinorShift.Emuera.GameProc.PluginSystem
 {
-	public class BasePluginManifest
+	public abstract class PluginManifestAbstract
 	{
-		public BasePluginManifest() { }
+		//For future cases
+		public abstract string PluginName { get; }
+		public abstract string PluginDescription { get; }
+		public abstract string PluginVersion { get; }
+		public abstract string PluginAuthor { get; }
+
+		public PluginManifestAbstract() { }
 
 		public List<IPluginMethod> GetPluginMethods()
 		{
