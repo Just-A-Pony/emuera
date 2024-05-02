@@ -1,4 +1,6 @@
 ﻿using MinorShift.Emuera.GameData.Expression;
+using MinorShift.Emuera.GameProc.Function;
+using MinorShift.Emuera.Sub;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,6 +27,26 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 		}
 
 		static private PluginManager instance = null;
+
+		/// <summary>
+		/// Unsafe rudimentary method to execute ERB line of code from Plugin.
+		/// Instead of using this method better implement direct API call that works directly with game state, bypassing ERB interpreter
+		/// </summary>
+		/// <param name="line">Line of code to execute</param>
+		public void ExecuteLine(string line)
+		{
+			var logicalLine = LogicalLineParser.ParseLine(line, null);
+			InstructionLine func = (InstructionLine)logicalLine;
+			ArgumentParser.SetArgumentTo(func);
+			func.Function.Instruction.DoInstruction(expressionMediator, func, processState);
+		}
+
+		internal void SetParent(Process process, ProcessState processState, ExpressionMediator expressionMediator)
+		{
+			this.process = process;
+			this.processState = processState;
+			this.expressionMediator = expressionMediator;
+		}
 
 		public void LoadPlugins()
 		{
@@ -91,6 +113,9 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 		}
 
 		private Dictionary<string, IPluginMethod> methods = new Dictionary<string, IPluginMethod>();
+		private Process process;
+		private ProcessState processState;
+		private ExpressionMediator expressionMediator;
 
 	}
 }

@@ -15,6 +15,7 @@ using System.Linq;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using trerror = EvilMask.Emuera.Lang.Error;
+using MinorShift.Emuera.GameProc.PluginSystem;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -163,6 +164,9 @@ internal sealed partial class Process(EmueraConsole view, bool analysisMode)
 			HeaderFileLoader hLoader = new(console, idDic, this);
 
 			LexicalAnalyzer.UseMacro = false;
+
+			PluginManager.GetInstance().SetParent(this, state, exm);
+			PluginManager.GetInstance().LoadPlugins();
 
 			//ERH読込
 			if (!hLoader.LoadHeaderFiles(Program.ErbDir, Config.DisplayReport))
