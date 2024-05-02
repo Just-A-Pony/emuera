@@ -13,9 +13,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 {
 	public class PluginManager
 	{
-		private PluginManager() {
 
-		}
 		public static PluginManager GetInstance()
 		{
 			if (instance == null)
@@ -24,6 +22,11 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 			}
 
 			return instance;
+		}
+
+		private PluginManager()
+		{
+
 		}
 
 		static private PluginManager instance = null;
@@ -41,13 +44,9 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 			func.Function.Instruction.DoInstruction(expressionMediator, func, processState);
 		}
 
-		internal void SetParent(Process process, ProcessState processState, ExpressionMediator expressionMediator)
-		{
-			this.process = process;
-			this.processState = processState;
-			this.expressionMediator = expressionMediator;
-		}
-
+		/// <summary>
+		/// Load all DLL plugins from Plugins directory of the game
+		/// </summary>
 		public void LoadPlugins()
 		{
 			string[] plugins = Directory.GetFiles("Plugins", "*.dll");
@@ -58,14 +57,14 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 				var manifestType = DLL.GetTypes().Where((v) => v.Name == "PluginManifest").FirstOrDefault();
 				if (manifestType == null)
 				{
-					//throw warning
+					//TODO: throw warning
 					continue;
 				}
 
 				BasePluginManifest manifest = (BasePluginManifest)Activator.CreateInstance(manifestType);
 				if (manifest == null)
 				{
-					//throw warning
+					//TODO: throw warning
 					continue;
 				}
 
@@ -75,21 +74,6 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 					AddMethod(method);
 				}
 			}
-		}
-
-		public void ClearMethods()
-		{
-			methods.Clear();
-		}
-
-		public void AddMethod(IPluginMethod method)
-		{
-			var key = method.Name;
-			if (Config.ICFunction)
-			{
-				key = key.ToUpper();
-			}
-			methods.Add(key, method);
 		}
 
 		public IPluginMethod GetMethod(string name)
@@ -110,6 +94,28 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 				key = key.ToUpper();
 			}
 			return methods.ContainsKey(key);
+		}
+
+		internal void SetParent(Process process, ProcessState processState, ExpressionMediator expressionMediator)
+		{
+			this.process = process;
+			this.processState = processState;
+			this.expressionMediator = expressionMediator;
+		}
+
+		private void ClearMethods()
+		{
+			methods.Clear();
+		}
+
+		private void AddMethod(IPluginMethod method)
+		{
+			var key = method.Name;
+			if (Config.ICFunction)
+			{
+				key = key.ToUpper();
+			}
+			methods.Add(key, method);
 		}
 
 		private Dictionary<string, IPluginMethod> methods = new Dictionary<string, IPluginMethod>();
