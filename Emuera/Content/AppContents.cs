@@ -255,15 +255,19 @@ static class AppContents
 		if (!resourceDic.TryGetValue(parentName, out AbstractImage value))
 		{
 			string filepath = parentName;
-			if (!File.Exists(filepath))
+			Bitmap bmp;
+			try
+			{
+				#region EM_私家版_webp
+				// Bitmap bmp = new Bitmap(filepath);
+				bmp = Utils.LoadImage(filepath);
+				#endregion
+			}
+			catch (FileNotFoundException)
 			{
 				ParserMediator.Warn(string.Format(trerror.NotExistImageFile.Text, arg2), sp, 1);
 				return null;
 			}
-			#region EM_私家版_webp
-			// Bitmap bmp = new Bitmap(filepath);
-			var bmp = Utils.LoadImage(filepath);
-			#endregion
 			if (bmp == null)
 			{
 				ParserMediator.Warn(string.Format(trerror.FailedLoadFile.Text, arg2), sp, 1);
