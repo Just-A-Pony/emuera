@@ -102,16 +102,12 @@ internal partial class IdentifierDictionary
 				return true;
 		}
 
-		if (labelName.StartsWith("COM"))
-		{
-			if (regexCom.IsMatch(labelName))
-				return true;
-			if (regexComAble.IsMatch(labelName))
-				return true;
-		}
-		if (labelName.StartsWith("ABLUP"))
-			if (regexAblup.IsMatch(labelName))
-				return true;
+		if (regexCom.IsMatch(labelName))
+			return true;
+		if (regexComAble.IsMatch(labelName))
+			return true;
+		if (regexAblup.IsMatch(labelName))
+			return true;
 		return false;
 	}
 	#endregion
@@ -667,6 +663,9 @@ internal partial class IdentifierDictionary
 	private static partial Regex preCompiledComAbleRegex();
 	[GeneratedRegex("^ABLUP[0-9]+$")]
 	private static partial Regex preCompiledAblupRegex();
+
+	[GeneratedRegex("COM.*")]
+	private static partial Regex preCompiledCOMRegex();
 	#endregion
 
 	#region util

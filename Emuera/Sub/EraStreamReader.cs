@@ -140,10 +140,20 @@ internal sealed partial class EraStreamReader : IDisposable
 				throw new CodeEE(trerror.NotCloseLineContinuation.Text, new ScriptPosition(filename, curNo));
 			}
 
-			if (useRename && (line.IndexOf("[[", StringComparison.Ordinal) >= 0) && (line.IndexOf("]]", StringComparison.Ordinal) >= 0))
+			//if (useRename && (line.IndexOf("[[", StringComparison.Ordinal) >= 0) && (line.IndexOf("]]", StringComparison.Ordinal) >= 0))
+			if (useRename && regexRenameIdentifer().IsMatch(line))
 			{
-				foreach (KeyValuePair<string, string> pair in ParserMediator.RenameDic)
-					line = line.Replace(pair.Key, pair.Value);
+				var match = regexRenameIdentifer().Match(line);
+				while (match.Success)
+				{
+					//この段階でマッチしないパターンもある
+					if (ParserMediator.RenameDic.TryGetValue(match.Value, out var targetStr))
+					{
+						line = line.Replace(match.Value, targetStr);
+					}
+
+					match = match.NextMatch();
+				}
 			}
 			string test = line.TrimStart();
 			if (test.Length > 0)
