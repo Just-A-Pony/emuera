@@ -252,7 +252,7 @@ static class AppContents
 
 
 		//親画像のロードConstImage
-		if (!resourceDic.ContainsKey(parentName))
+		if (!resourceDic.TryGetValue(parentName, out AbstractImage value))
 		{
 			string filepath = parentName;
 			if (!File.Exists(filepath))
@@ -283,10 +283,11 @@ static class AppContents
 				ParserMediator.Warn(string.Format(trerror.FailedCreateResource.Text, arg2), sp, 1);
 				return null;
 			}
-			resourceDic.Add(parentName, img);
+			value = img;
+			resourceDic.Add(parentName, value);
 			img.Dispose();
 		}
-		if (!(resourceDic[parentName] is ConstImage parentImage) || !parentImage.IsCreated)
+		if (value is not ConstImage parentImage || !parentImage.IsCreated)
 		{
 			ParserMediator.Warn(string.Format(trerror.SpriteCreateFromFailedResource.Text, arg2), sp, 1);
 			return null;
