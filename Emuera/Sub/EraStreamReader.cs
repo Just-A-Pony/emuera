@@ -61,7 +61,7 @@ internal sealed partial class EraStreamReader : IDisposable
 		filename = name;
 		curNo = 0;
 		nextNo = 0;
-		_fileLine = Preload.files[path.ToUpperInvariant()]; 
+		_fileLine = Preload.GetFileLines(path.ToUpperInvariant());
 		return true;
 	}
 
