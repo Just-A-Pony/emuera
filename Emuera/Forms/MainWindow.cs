@@ -7,6 +7,7 @@ using MinorShift.Emuera.GameProc.Function;
 using MinorShift.Emuera.GameView;
 using EvilMask.Emuera;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
+using Emuera;
 
 namespace MinorShift.Emuera.Forms
 {
@@ -464,9 +465,15 @@ namespace MinorShift.Emuera.Forms
 
 		private void Init(object sender, EventArgs e)
 		{
+			Console.WriteLine("Init:Start");
+			//必要なソースファイルを事前にメモリに一気に読み込む
+			Preload.Clear();
+			Preload.Load(Program.ErbDir, Application.DoEvents);
+			Preload.Load(Program.CsvDir, Application.DoEvents);
 			if (!Created)
 				throw new Exception("初期化の呼び出しが早すぎて、コントロールが生成されていない"); 
 			console.Initialize();
+			Console.WriteLine("Init:End");
 		}
 
 		/// <summary>

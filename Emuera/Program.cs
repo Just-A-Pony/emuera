@@ -256,9 +256,6 @@ static class Program
 		while (true)
 		{
 			var rebootFlag = false;
-			//必要なソースファイルを事前にメモリに一気に読み込む
-			Preload.Load(ErbDir);
-			Preload.Load(CsvDir);
 
 			using var win = new Forms.MainWindow(winState, rebootLocation, rebootClientHeight, (_) =>
 			{
@@ -327,7 +324,6 @@ static class Program
 			#region EE_メモリリークの解決
 			ConfigData.Instance.ReLoadConfig();
 
-			Preload.Clear();
 			break;
 		}
 		if (rebootFlag)
