@@ -92,11 +92,11 @@ internal sealed class VariableEvaluator : IDisposable
 				if (start != 0 || end != p.Identifier.GetLength())
 					p.IsArrayRangeValid((Int64)start, (Int64)end, "VARSET", 3L, 4L);
 				else if (p.Identifier.IsCharacterData)
-					p.Identifier.CheckElement(new Int64[] { p.Index1, p.Index2 });
+					p.Identifier.CheckElement([p.Index1, p.Index2]);
 			}
 			else if (p.Identifier.IsCharacterData)
 			{
-				p.Identifier.CheckElement(new Int64[] { p.Index1, p.Index2, p.Index3 });
+				p.Identifier.CheckElement([p.Index1, p.Index2, p.Index3]);
 			}
 			p.Identifier.SetValueAll(srcValue, start, end, (int)p.Index1);
 			return;
@@ -128,11 +128,11 @@ internal sealed class VariableEvaluator : IDisposable
 				if (start != 0 || end != p.Identifier.GetLength())
 					p.IsArrayRangeValid((Int64)start, (Int64)end, "VARSET", 3L, 4L);
 				else if (p.Identifier.IsCharacterData)
-					p.Identifier.CheckElement(new Int64[] { p.Index1, p.Index2 });
+					p.Identifier.CheckElement([p.Index1, p.Index2 ]);
 			}
 			else if (p.Identifier.IsCharacterData)
 			{
-				p.Identifier.CheckElement(new Int64[] { p.Index1, p.Index2, p.Index3 });
+				p.Identifier.CheckElement([p.Index1, p.Index2, p.Index3]);
 			}
 			p.Identifier.SetValueAll(srcValue, start, end, (int)p.Index1);
 			return;
@@ -167,7 +167,7 @@ internal sealed class VariableEvaluator : IDisposable
 
 		for (int i = start; i < end; i++)
 		{
-			p.Identifier.SetValue(srcValue, new long[] { i, indexNum });
+			p.Identifier.SetValue(srcValue, [i, indexNum ]);
 		}
 	}
 
@@ -205,7 +205,7 @@ internal sealed class VariableEvaluator : IDisposable
 
 		for (int i = start; i < end; i++)
 		{
-			p.Identifier.SetValue(srcValue, new long[] { i, indexNum });
+			p.Identifier.SetValue(srcValue, [i, indexNum ]);
 		}
 	}
 
@@ -218,12 +218,12 @@ internal sealed class VariableEvaluator : IDisposable
 			if (p.Identifier.IsArray1D)
 			{
 				for (int i = (int)index1; i < (int)index2; i++)
-					sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { p.Index1, i });
+					sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, [p.Index1, i]);
 			}
 			else
 			{
 				for (int i = (int)index1; i < (int)index2; i++)
-					sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { p.Index1, p.Index2, i });
+					sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, [p.Index1, p.Index2, i]);
 			}
 		}
 		else
@@ -231,17 +231,17 @@ internal sealed class VariableEvaluator : IDisposable
 			if (p.Identifier.IsArray1D)
 			{
 				for (int i = (int)index1; i < (int)index2; i++)
-					sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { i });
+					sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, [i]);
 			}
 			else if (p.Identifier.IsArray2D)
 			{
 				for (int i = (int)index1; i < (int)index2; i++)
-					sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { p.Index1, i });
+					sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, [p.Index1, i]);
 			}
 			else
 			{
 				for (int i = (int)index1; i < (int)index2; i++)
-					sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { p.Index1, p.Index2, i });
+					sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, [p.Index1, p.Index2, i]);
 			}
 		}
 
@@ -254,7 +254,7 @@ internal sealed class VariableEvaluator : IDisposable
 
 		for (int i = (int)index1; i < (int)index2; i++)
 		{
-			sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { i, p.Index2 });
+			sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, [i, p.Index2]);
 		}
 		return sum;
 	}
@@ -272,12 +272,12 @@ internal sealed class VariableEvaluator : IDisposable
 			else if (p.Identifier.IsArray2D)
 			{
 				for (int i = 0; i < (int)length; i++)
-					sum += p.Identifier.GetStrValue(GlobalStatic.EMediator, new long[] { p.Index1, index1 + i }) + ((i < ((int)length - 1)) ? delimiter : "");
+					sum += p.Identifier.GetStrValue(GlobalStatic.EMediator, [p.Index1, index1 + i]) + ((i < ((int)length - 1)) ? delimiter : "");
 			}
 			else
 			{
 				for (int i = 0; i < (int)length; i++)
-					sum += p.Identifier.GetStrValue(GlobalStatic.EMediator, new long[] { p.Index1, p.Index2, index1 + i }) + ((i < ((int)length - 1)) ? delimiter : "");
+					sum += p.Identifier.GetStrValue(GlobalStatic.EMediator, [p.Index1, p.Index2, index1 + i]) + ((i < ((int)length - 1)) ? delimiter : "");
 			}
 		}
 		else
@@ -285,17 +285,17 @@ internal sealed class VariableEvaluator : IDisposable
 			if (p.Identifier.IsArray1D)
 			{
 				for (int i = 0; i < (int)length; i++)
-					sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { index1 + i })).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
+					sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, [index1 + i])).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
 			}
 			else if (p.Identifier.IsArray2D)
 			{
 				for (int i = 0; i < (int)length; i++)
-					sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { p.Index1, index1 + i })).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
+					sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, [p.Index1, index1 + i])).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
 			}
 			else
 			{
 				for (int i = 0; i < (int)length; i++)
-					sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { p.Index1, p.Index2, index1 + i })).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
+					sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, [p.Index1, p.Index2, index1 + i])).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
 			}
 		}
 		return sum;
@@ -306,7 +306,7 @@ internal sealed class VariableEvaluator : IDisposable
 		Int64 ret = 0;
 
 		for (int i = (int)start; i < (int)end; i++)
-			if (p.Identifier.GetIntValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? new long[] { p.Index1, i } : new long[] { i }) == target)
+			if (p.Identifier.GetIntValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? [p.Index1, i] : [i]) == target)
 				ret++;
 
 		return ret;
@@ -318,7 +318,7 @@ internal sealed class VariableEvaluator : IDisposable
 		bool targetIsNullOrEmpty = string.IsNullOrEmpty(target);
 
 		for (int i = (int)start; i < (int)end; i++)
-			if ((p.Identifier.GetStrValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? new long[] { p.Index1, i } : new long[] { i }) == target) || (targetIsNullOrEmpty && string.IsNullOrEmpty(p.Identifier.GetStrValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? new long[] { p.Index1, i } : new long[] { i }))))
+			if ((p.Identifier.GetStrValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? [p.Index1, i] : [i]) == target) || (targetIsNullOrEmpty && string.IsNullOrEmpty(p.Identifier.GetStrValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? [p.Index1, i] :[i]))))
 				ret++;
 
 		return ret;
@@ -330,7 +330,7 @@ internal sealed class VariableEvaluator : IDisposable
 
 		for (int i = (int)start; i < (int)end; i++)
 		{
-			if (p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { i, p.Index2, p.Index3 }) == target)
+			if (p.Identifier.GetIntValue(GlobalStatic.EMediator, [i, p.Index2, p.Index3]) == target)
 				ret++;
 		}
 
@@ -344,7 +344,7 @@ internal sealed class VariableEvaluator : IDisposable
 
 		for (int i = (int)start; i < (int)end; i++)
 		{
-			if ((p.Identifier.GetStrValue(GlobalStatic.EMediator, new long[] { i, p.Index2, p.Index3 }) == target) || (targetIsNullOrEmpty && string.IsNullOrEmpty(p.Identifier.GetStrValue(GlobalStatic.EMediator, new long[] { i, p.Index2, p.Index3 }))))
+			if ((p.Identifier.GetStrValue(GlobalStatic.EMediator, [i, p.Index2, p.Index3]) == target) || (targetIsNullOrEmpty && string.IsNullOrEmpty(p.Identifier.GetStrValue(GlobalStatic.EMediator, [i, p.Index2, p.Index3]))))
 				ret++;
 		}
 
@@ -444,10 +444,10 @@ internal sealed class VariableEvaluator : IDisposable
 	public Int64 GetMaxArray(FixedVariableTerm p, Int64 start, Int64 end, bool isMax)
 	{
 		Int64 value;
-		Int64 ret = p.Identifier.GetIntValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? new long[] { p.Index1, start } : new long[] { start });
+		Int64 ret = p.Identifier.GetIntValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? [p.Index1, start] : [start]);
 		for (int i = (int)start + 1; i < (int)end; i++)
 		{
-			value = p.Identifier.GetIntValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? new long[] { p.Index1, i } : new long[] { i });
+			value = p.Identifier.GetIntValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? [p.Index1, i] : [i]);
 			if (isMax)
 			{
 				if (value > ret)
@@ -467,10 +467,10 @@ internal sealed class VariableEvaluator : IDisposable
 		Int64 ret;
 		Int64 value;
 
-		ret = p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { start, p.Index2, p.Index3 });
+		ret = p.Identifier.GetIntValue(GlobalStatic.EMediator, [start, p.Index2, p.Index3]);
 		for (int i = (int)start + 1; i < (int)end; i++)
 		{
-			value = p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { i, p.Index2, p.Index3 });
+			value = p.Identifier.GetIntValue(GlobalStatic.EMediator, [i, p.Index2, p.Index3]);
 
 			if (isMax)
 			{
@@ -494,7 +494,7 @@ internal sealed class VariableEvaluator : IDisposable
 
 		for (int i = (int)start; i < (int)end; i++)
 		{
-			value = p.Identifier.GetIntValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? new long[] { p.Index1, i } : new long[] { i });
+			value = p.Identifier.GetIntValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? [p.Index1, i] : [i]);
 			if (value >= min && value < max)
 				ret++;
 		}
@@ -509,7 +509,7 @@ internal sealed class VariableEvaluator : IDisposable
 
 		for (int i = (int)start; i < (int)end; i++)
 		{
-			value = p.Identifier.GetIntValue(GlobalStatic.EMediator, new long[] { i, p.Index2, p.Index3 });
+			value = p.Identifier.GetIntValue(GlobalStatic.EMediator, [i, p.Index2, p.Index3]);
 			if (value >= min && value < max)
 				ret++;
 		}

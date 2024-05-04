@@ -235,7 +235,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		{
 			if (displayLineList.Count == 0)
 				break;
-			ConsoleDisplayLine line = displayLineList[displayLineList.Count - 1];
+			ConsoleDisplayLine line = displayLineList[^1];
 			deleted = true;
 			displayLineList.RemoveAt(displayLineList.Count - 1);
 			lineNo--;
@@ -283,7 +283,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		{
 			if (displayLineList.Count == 0)
 				return false;
-			return displayLineList[displayLineList.Count - 1].IsTemporary;
+			return displayLineList[^1].IsTemporary;
 		}
 	}
 
@@ -294,7 +294,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		{
 			if (displayLineList.Count == 0)
 				return false;
-			return string.IsNullOrEmpty(displayLineList[displayLineList.Count - 1].ToString().Trim());
+			return string.IsNullOrEmpty(displayLineList[^1].ToString().Trim());
 		}
 	}
 
@@ -415,12 +415,12 @@ internal sealed partial class EmueraConsole : IDisposable
 		if (str.Contains("\n"))
 		{
 			int newline = str.IndexOf('\n', StringComparison.Ordinal);
-			string upper = str.Substring(0, newline);
+			string upper = str[..newline];
 			printBuffer.Append(upper, Style);
 			NewLine();
 			if (newline < str.Length - 1)
 			{
-				string lower = str.Substring(newline + 1);
+				string lower = str[(newline + 1)..];
 				Print(lower);
 			}
 			return;
@@ -538,7 +538,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			width = stringMeasure.GetDisplayLength(str, font);
 			while (width > printCWidthL)
 			{
-				if (str[str.Length - 1] != ' ')
+				if (str[^1] != ' ') 
 					break;
 				str = str.Remove(str.Length - 1, 1);
 				width = stringMeasure.GetDisplayLength(str, font);

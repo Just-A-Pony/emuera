@@ -72,7 +72,7 @@ internal sealed class PrintStringBuffer
 			if (builder.Length > 2000)
 				return;
 			if (builder.Length + str.Length > 2000)
-				str = str.Substring(0, 2000 - builder.Length) + trerror.BufferOverFlow.Text;
+				str = str[..(2000 - builder.Length)] + trerror.BufferOverFlow.Text;
 			builder.Append(str);
 			lastStringStyle = style;
 		}
@@ -567,7 +567,7 @@ internal sealed class PrintStringBuffer
 		string test;
 		while ((highLength - lowLength) > 1)//差が一文字以下になるまで繰り返す。
 		{
-			test = str.Substring(0, i);
+			test = str[..i]; 
 			if (sm.GetDisplayLength(test, font) <= widthLimit)//サイズ内ならlowLengthを更新。文字数を増やす。
 			{
 				lowLength = i;

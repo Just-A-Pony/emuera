@@ -724,11 +724,11 @@ namespace MinorShift.Emuera.Forms
 				richTextBox1.Text = "";
 				return;
 			}
-			if (selectedInputs == prevInputs.Length || cur != prevInputs[prevInputs.Length - 1])
+			if (selectedInputs == prevInputs.Length || cur != prevInputs[^1])
 			{
 				for (int i = 0; i < prevInputs.Length - 1; i++)
 				{
-					prevInputs[i] = prevInputs[i + 1];
+					prevInputs[^1] = cur;
 				}
 				prevInputs[prevInputs.Length - 1] = cur;
 				//1729a eramakerと同じ処理系に変更 1730a 再修正
@@ -975,7 +975,7 @@ namespace MinorShift.Emuera.Forms
 						return;
 					}
 					if (fname.StartsWith(Program.ErbDir, StringComparison.OrdinalIgnoreCase))
-						filepath.Add(Program.ErbDir + fname.Substring(Program.ErbDir.Length));
+						filepath.Add(Program.ErbDir + fname[Program.ErbDir.Length..]);
 					else
 						filepath.Add(fname);
 				}

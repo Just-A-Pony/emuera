@@ -184,7 +184,7 @@ internal sealed class EraDataReader : IDisposable
 			int index = str.IndexOf(':', StringComparison.Ordinal);
 			if (index < 0)
 				throw new FileEE(trerror.InvalidSaveDataFormat.Text);
-			string key = str.Substring(0, index);
+			string key = str[..index];
 			string value = str.Substring(index + 1, str.Length - index - 1);
 			if (!strList.ContainsKey(key))
 				strList.Add(key, value);
@@ -209,7 +209,7 @@ internal sealed class EraDataReader : IDisposable
 			int index = str.IndexOf(':', StringComparison.Ordinal);
 			if (index < 0)
 				throw new FileEE(trerror.InvalidSaveDataFormat.Text);
-			string key = str.Substring(0, index);
+			string key = str[..index];
 			string valueStr = str.Substring(index + 1, str.Length - index - 1);
 			if (!Int64.TryParse(valueStr, out long value))
 				throw new FileEE(trerror.InvalidArray.Text);

@@ -101,13 +101,13 @@ internal static class KeyMacro
 						continue;
 					if (line[gID.Length + 1] != ':')
 						continue;
-					groupName[num] = line.Substring(gID.Length + 2);
+					groupName[num] = line[(gID.Length + 2)..];
 				}
 				for (int i = 0; i < MaxMacro; i++)
 				{
 					if (line.StartsWith(macroName[i]))
 					{
-						macro[i] = line.Substring(macroName[i].Length);
+						macro[i] = line[macroName[i].Length..]; 
 						break;
 					}
 				}

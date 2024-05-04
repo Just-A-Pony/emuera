@@ -213,7 +213,7 @@ internal sealed class CalledFunction
 					}
 					if (tostrMethod == null)
 						tostrMethod = FunctionMethodCreator.GetMethodList()["TOSTR"];
-					term = new FunctionMethodTerm(tostrMethod, new IOperandTerm[] { term });
+					term = new FunctionMethodTerm(tostrMethod, [term]);
 				}
 			}
 			convertedArg[i] = term;

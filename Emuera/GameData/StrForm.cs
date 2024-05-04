@@ -213,10 +213,10 @@ internal sealed class StrForm
 		StringBuilder builder = new(100);
 		for (int i = 0; i < strs.Length - 1; i++)
 		{
-			builder.Append(strs[i]);
+			builder.Append(strs[i]); 
 			builder.Append(terms[i].GetStrValue(exm));
 		}
-		builder.Append(strs[strs.Length - 1]);
+		builder.Append(strs[^1]);
 		return builder.ToString();
 	}
 

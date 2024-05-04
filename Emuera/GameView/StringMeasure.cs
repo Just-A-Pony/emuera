@@ -27,7 +27,7 @@ internal sealed class StringMeasure : IDisposable
 
 	readonly TextDrawingMode textDrawingMode;
 	readonly StringFormat sf = new(StringFormatFlags.MeasureTrailingSpaces);
-	readonly CharacterRange[] ranges = new CharacterRange[] { new(0, 1) };
+	readonly CharacterRange[] ranges = [new(0, 1)];
 	readonly Size layoutSize;
 	readonly RectangleF layoutRect;
 	readonly float fontDisplaySize;

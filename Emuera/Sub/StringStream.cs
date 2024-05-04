@@ -73,7 +73,7 @@ internal sealed class StringStream
 			return "";
 		else if (pointer == 0)
 			return source;
-		return source.Substring(pointer);
+		return source[pointer..];
 	}
 
 	public string Substring(int start, int length)

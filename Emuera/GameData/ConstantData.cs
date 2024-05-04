@@ -1421,7 +1421,7 @@ internal sealed class ConstantData
 					}
 					tmpl = new CharacterTemplate(index, this);
 					string no = eReader.Filename.ToUpper();
-					no = no.Substring(no.IndexOf("CHARA", StringComparison.Ordinal) + 5);
+					no = no[(no.IndexOf("CHARA") + 5)..]; 
 					StringBuilder sb = new();
 					StringStream ss = new(no);
 					while (!ss.EOS && char.IsDigit(ss.Current))

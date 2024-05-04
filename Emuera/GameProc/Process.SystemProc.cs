@@ -880,14 +880,14 @@ internal sealed partial class Process
 			console.Print(string.Format(trsl.DisplaySaveSlot.Text, (i + 1) * 20, (i + 1) * 20 + 19));
 		}
 		//オートセーブの処理は別途切り出し（表示処理の都合上）
-		dataIsAvailable[dataIsAvailable.Length - 1] = false;
+		dataIsAvailable[^1] = false;
 		if (state.SystemState != SystemStateCode.SaveGame_Begin)
 		{
 			dataNo = AutoSaveIndex;
 			console.PrintFlush(false);
 			console.Print(string.Format("[{0, 2}] ", dataNo));
 			if (writeSavedataTextFrom(dataNo))
-				dataIsAvailable[dataIsAvailable.Length - 1] = true;
+				dataIsAvailable[^1] = true;
 		}
 		console.RefreshStrings(false);
 		//描画全部終わり
@@ -1006,7 +1006,7 @@ internal sealed partial class Process
 		if ((systemResult >= 0) && (systemResult < dataIsAvailable.Length - 1))
 			available = dataIsAvailable[systemResult];
 		else if (systemResult == AutoSaveIndex)
-			available = dataIsAvailable[dataIsAvailable.Length - 1];
+			available = dataIsAvailable[^1];
 		else
 		{//入力しなおし
 			console.deleteLine(1);

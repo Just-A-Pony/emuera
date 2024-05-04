@@ -207,7 +207,7 @@ internal static class LogicalLineParser
 						//イベント関数では指定しても無視される
 						if (label.IsEvent)
 						{
-							ParserMediator.Warn(string.Format(trerror.EventFuncIgnoreSpecified.Text, token, token.Substring(0, token.Length - 4)), position, 1);
+							ParserMediator.Warn(string.Format(trerror.EventFuncIgnoreSpecified.Text, token, token[..^4]), position, 1);
 							break;
 						}
 						IOperandTerm arg = ExpressionParser.ReduceIntegerTerm(wc, TermEndWith.EoL);

@@ -984,7 +984,7 @@ internal static partial class LexicalAnalyzer
 						throw new CodeEE(string.Format(trerror.UnexpectedCharacter.Text, st.Current));
 					{
 						st.Jump(2);
-						ret.Add(new StrFormWord(new string[] { "", "" }, new SubWord[] { AnalyseYenAt(st) }));
+						ret.Add(new StrFormWord(["", ""], [AnalyseYenAt(st)]));
 					}
 					break;
 				case '{':
@@ -1255,8 +1255,8 @@ internal static partial class LexicalAnalyzer
 		SWTs.CopyTo(retSWTs);
 		if (trim && retStr.Length > 0)
 		{
-			retStr[0] = retStr[0].TrimStart(new char[] { ' ', '\t' });
-			retStr[retStr.Length - 1] = retStr[retStr.Length - 1].TrimEnd(new char[] { ' ', '\t' });
+			retStr[0] = retStr[0].TrimStart([' ', '\t']);
+			retStr[^1] = retStr[^1].TrimEnd([' ', '\t']);
 		}
 		return new StrFormWord(retStr, retSWTs);
 	}

@@ -73,7 +73,7 @@ internal abstract class ArgumentBuilder
 			if ((!argAny) && (argumentTypeArray[i] == null))
 				continue;
 			else if (argAny && i >= argumentTypeArray.Length)
-				allowType = argumentTypeArray[argumentTypeArray.Length - 1];
+				allowType = argumentTypeArray[^1];
 			else
 				allowType = argumentTypeArray[i];
 			if (arguments[i] == null)
