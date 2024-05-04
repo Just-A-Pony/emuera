@@ -864,8 +864,8 @@ internal sealed class VariableEvaluator : IDisposable
 			count++;
 			if (itemnames[i] != null)
 				builder.Append(itemnames[i]);
-			builder.Append("(");
-			builder.Append(array[i].ToString());
+			builder.Append('(');
+			builder.Append(array[i]);
 			builder.Append(") ");
 		}
 		if (count == 0)
@@ -914,8 +914,8 @@ internal sealed class VariableEvaluator : IDisposable
 						continue;
 					builder.Append(arrayName[i]);
 					builder.Append("LV");
-					builder.Append(array[i].ToString());
-					builder.Append(" ");
+					builder.Append(array[i]);
+					builder.Append(' ');
 
 				}
 				break;
@@ -930,9 +930,9 @@ internal sealed class VariableEvaluator : IDisposable
 						continue;
 					if (string.IsNullOrEmpty(arrayName[i]))
 						continue;
-					builder.Append("[");
+					builder.Append('[');
 					builder.Append(arrayName[i]);
-					builder.Append("]");
+					builder.Append(']');
 				}
 				break;
 			case FunctionCode.PRINT_MARK:
@@ -948,8 +948,8 @@ internal sealed class VariableEvaluator : IDisposable
 						continue;
 					builder.Append(arrayName[i]);
 					builder.Append("LV");
-					builder.Append(array[i].ToString());
-					builder.Append(" ");
+					builder.Append(array[i]);
+					builder.Append(' ');
 				}
 				break;
 			case FunctionCode.PRINT_EXP:
@@ -964,8 +964,8 @@ internal sealed class VariableEvaluator : IDisposable
 					if (string.IsNullOrEmpty(arrayName[i]))
 						continue;
 					builder.Append(arrayName[i]);
-					builder.Append(array[i].ToString());
-					builder.Append(" ");
+					builder.Append(array[i]);
+					builder.Append(' ');
 				}
 				break;
 				//現状ここに来ることはないはず
@@ -1563,23 +1563,23 @@ internal sealed class VariableEvaluator : IDisposable
 			{
 				builder.Append(paramname[i]);
 				builder.Append(' ');
-				builder.Append(param[i].ToString());
+				builder.Append(param[i]);
 				if (up[i] > 0)
 				{
 					builder.Append('+');
-					builder.Append(up[i].ToString());
+					builder.Append(up[i]);
 				}
 				if (down[i] > 0)
 				{
 					builder.Append('-');
-					builder.Append(down[i].ToString());
+					builder.Append(down[i]);
 				}
 			}
 			unchecked { param[i] += up[i] - down[i]; }
 			if (!skipPrint)
 			{
 				builder.Append('=');
-				builder.Append(param[i].ToString());
+				builder.Append(param[i]);
 				window.Print(builder.ToString());
 				window.NewLine();
 			}
@@ -1618,23 +1618,23 @@ internal sealed class VariableEvaluator : IDisposable
 			{
 				builder.Append(paramname[i]);
 				builder.Append(' ');
-				builder.Append(param[i].ToString());
+				builder.Append(param[i]);
 				if (up[i] > 0)
 				{
 					builder.Append('+');
-					builder.Append(up[i].ToString());
+					builder.Append(up[i]);
 				}
 				if (down[i] > 0)
 				{
 					builder.Append('-');
-					builder.Append(down[i].ToString());
+					builder.Append(down[i]);
 				}
 			}
 			unchecked { param[i] += up[i] - down[i]; }
 			if (!skipPrint)
 			{
 				builder.Append('=');
-				builder.Append(param[i].ToString());
+				builder.Append(param[i]);
 				window.Print(builder.ToString());
 				window.NewLine();
 			}

@@ -412,7 +412,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	{
 		if (string.IsNullOrEmpty(str))
 			return;
-		if (str.Contains("\n"))
+		if (str.Contains('\n'))
 		{
 			int newline = str.IndexOf('\n', StringComparison.Ordinal);
 			string upper = str[..newline];

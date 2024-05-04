@@ -41,7 +41,7 @@ internal sealed class StringMeasure : IDisposable
 			return 0;
 		if (textDrawingMode == TextDrawingMode.GRAPHICS)
 		{
-			if (s.Contains("\t"))
+			if (s.Contains('\t'))
 				s = s.Replace("\t", "        ");
 			ranges[0].Length = s.Length;
 			//CharacterRange[] ranges = new CharacterRange[] { new CharacterRange(0, s.Length) };

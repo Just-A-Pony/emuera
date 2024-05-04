@@ -969,7 +969,7 @@ namespace MinorShift.Emuera.Forms
 						System.Windows.MessageBox.Show(trmb.FileNotFound.Text, trmb.FileNotFound.Text);
 						return;
 					}
-					if (Path.GetExtension(fname).ToUpper() != ".ERB")
+					if (Path.GetExtension(fname).Equals(".ERB", StringComparison.InvariantCultureIgnoreCase))
 					{
 						System.Windows.MessageBox.Show(trmb.IsNotErb.Text, trmb.FileFormatError.Text);
 						return;

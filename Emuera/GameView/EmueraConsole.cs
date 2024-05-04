@@ -1226,11 +1226,12 @@ internal sealed partial class EmueraConsole : IDisposable
 		{
 			FileName = Config.TextEditor
 		};
+		var ignoreCaseCmp = StringComparison.InvariantCultureIgnoreCase; 
 		string fname = pos.Filename.ToUpper();
-		if (fname.EndsWith(".CSV"))
+		if (fname.EndsWith(".CSV", ignoreCaseCmp))
 		{
-			if (fname.Contains(Program.CsvDir, StringComparison.CurrentCultureIgnoreCase))
-				fname = fname.Replace(Program.CsvDir.ToUpper(), "");
+			if (fname.Contains(Program.CsvDir, ignoreCaseCmp))
+				fname = fname.Replace(Program.CsvDir, "", ignoreCaseCmp);
 			fname = Program.CsvDir + fname;
 		}
 		else
@@ -1238,8 +1239,8 @@ internal sealed partial class EmueraConsole : IDisposable
 			//解析モードの場合は見ているファイルがERB\の下にあるとは限らないかつフルパスを持っているのでこの補正はしなくてよい
 			if (!Program.AnalysisMode)
 			{
-				if (fname.Contains(Program.ErbDir, StringComparison.CurrentCultureIgnoreCase))
-					fname = fname.Replace(Program.ErbDir.ToUpper(), "");
+				if (fname.Contains(Program.ErbDir, ignoreCaseCmp))
+					fname = fname.Replace(Program.ErbDir, "", ignoreCaseCmp);
 				fname = Program.ErbDir + fname;
 			}
 		}
@@ -2520,7 +2521,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			op = SearchOption.TopDirectoryOnly;
 		string[] fnames = Directory.GetFiles(erbPath, "*.ERB", op);
 		for (int i = 0; i < fnames.Length; i++)
-			if (Path.GetExtension(fnames[i]).ToUpper() == ".ERB")
+			if (Path.GetExtension(fnames[i]).Equals(".ERB", StringComparison.InvariantCultureIgnoreCase))
 				paths.Add(fnames[i]);
 		bool notRedraw = false;
 		if (redraw == ConsoleRedraw.None)
