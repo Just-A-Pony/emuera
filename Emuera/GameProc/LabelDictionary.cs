@@ -27,7 +27,7 @@ internal sealed class LabelDictionary
 	/// </summary>
 	Dictionary<string, List<FunctionLabelLine>> labelAtDic = [];
 	List<FunctionLabelLine> invalidList = [];
-	List<GotoLabelLine> labelDollarList = [];
+	Dictionary<string, Dictionary<FunctionLabelLine, GotoLabelLine>> labelDollarList = []; 
 	int count;
 
 	Dictionary<string, int> loadedFileDic = [];
@@ -129,15 +129,17 @@ internal sealed class LabelDictionary
 	{
 		Initialized = false;
 		count = 0;
-		foreach (KeyValuePair<string, List<FunctionLabelLine>[]> pair in eventLabelDic)
-			foreach (List<FunctionLabelLine> list in pair.Value)
+		foreach ((_, var array) in eventLabelDic)
+			foreach (var list in array)
 				list.Clear();
 		eventLabelDic.Clear();
 		noneventLabelDic.Clear();
 
-		foreach (KeyValuePair<string, List<FunctionLabelLine>> pair in labelAtDic)
-			pair.Value.Clear();
+		foreach ((_, var value) in labelAtDic)
+			value.Clear();
 		labelAtDic.Clear();
+		foreach ((_, var value) in labelDollarList)
+			value.Clear();
 		labelDollarList.Clear();
 		loadedFileDic.Clear();
 		invalidList.Clear();
@@ -169,7 +171,11 @@ internal sealed class LabelDictionary
 		}
 		foreach (string rKey in removeKey)
 		{
-			labelAtDic.Remove(rKey);
+			labelAtDic.Remove(rKey, out var value);
+			if (value == null)
+			{
+				throw new Exception($"{value}");
+			}
 		}
 		for (int i = 0; i < invalidList.Count; i++)
 		{
@@ -192,7 +198,7 @@ internal sealed class LabelDictionary
 		}
 		totalFileCount++;
 		currentFileCount = totalFileCount;
-		loadedFileDic.Add(filename, totalFileCount);
+		loadedFileDic[filename] = totalFileCount;
 	}
 	public void AddLabel(FunctionLabelLine point)
 	{
@@ -200,26 +206,24 @@ internal sealed class LabelDictionary
 		point.FileIndex = currentFileCount;
 		count++;
 		string id = point.LabelName;
-		if (labelAtDic.ContainsKey(id))
+		if (labelAtDic.TryGetValue(id, out List<FunctionLabelLine> labelList))
 		{
-			labelAtDic[id].Add(point);
+			labelList.Add(point);
 		}
 		else
 		{
-			List<FunctionLabelLine> labelList = [point]; 
-			labelAtDic.Add(id, labelList);
+			labelAtDic.TryAdd(id, [point]);
 		}
 	}
 
 	public bool AddLabelDollar(GotoLabelLine point)
 	{
 		string id = point.LabelName;
-		foreach (GotoLabelLine label in labelDollarList)
+		if (labelDollarList.TryGetValue(id, out var label))
 		{
-			if (label.LabelName == id && label.ParentLabelLine == point.ParentLabelLine)
-				return false;
-		}
-		labelDollarList.Add(point);
+			return label.TryAdd(point.ParentLabelLine, point);
+		};
+		labelDollarList.TryAdd(id, new() { { point.ParentLabelLine, point }, });
 		return true;
 	}
 
@@ -254,9 +258,9 @@ internal sealed class LabelDictionary
 
 	public GotoLabelLine GetLabelDollar(string key, FunctionLabelLine labelAtLine)
 	{
-		foreach (GotoLabelLine label in labelDollarList)
+		if (labelDollarList.TryGetValue(key, out var labels))
 		{
-			if ((label.LabelName == key) && (label.ParentLabelLine == labelAtLine))
+			if (labels.TryGetValue(labelAtLine, out var label))
 				return label;
 		}
 		return null;

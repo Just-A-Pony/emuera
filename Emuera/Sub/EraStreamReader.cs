@@ -160,7 +160,7 @@ internal sealed partial class EraStreamReader : IDisposable
 			{
 				if (test[0] == '}')
 				{
-					if (test.Trim() != "}")
+					if (test.TrimEnd() != "}") 
 						throw new CodeEE(trerror.CharacterAfterContinuationEnd.Text, new ScriptPosition(filename, curNo));
 					break;
 				}
@@ -168,7 +168,7 @@ internal sealed partial class EraStreamReader : IDisposable
 				//{
 				//A}
 				//みたいなどうしようもないコードは知ったこっちゃない
-				if (test[0] == '{' && test.Length == 1)
+				if (test == "{")
 					throw new CodeEE(trerror.UnexpectedContinuation.Text, new ScriptPosition(filename, curNo));
 			}
 			b.Append($"{line} ");

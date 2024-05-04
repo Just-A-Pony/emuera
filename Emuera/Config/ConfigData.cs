@@ -808,7 +808,8 @@ internal sealed class ConfigData
 			string line = null;
 			while ((line = eReader.ReadLine()) != null)
 			{
-				if ((line.Length == 0) || (line[0] == ';'))
+				line = line.Trim();
+				if (line[0] == ';')
 					continue;
 				pos = new ScriptPosition(eReader.Filename, eReader.LineNo);
 				string[] tokens = line.Split(',', ':' );

@@ -262,7 +262,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	public readonly ClipboardProcessor CBProc;
 	#endregion
 
-	MinorShift.Emuera.GameProc.Process emuera;
+	MinorShift.Emuera.GameProc.Process process;
 	// ConsoleState state = ConsoleState.Initializing;
 	#region EM_私家版_描画拡張
 	ConsoleState _state = ConsoleState.Initializing;
@@ -417,15 +417,15 @@ internal sealed partial class EmueraConsole : IDisposable
 	{
 		GlobalStatic.Console = this;
 		//GlobalStatic.MainWindow = window;
-		emuera = new GameProc.Process(this);
-		GlobalStatic.Process = emuera;
+		process = new GameProc.Process(this);
+		GlobalStatic.Process = process;
 		if (Program.DebugMode && Config.DebugShowWindow)
 		{
 			OpenDebugDialog();
 			window.Focus();
 		}
 		ClearDisplay();
-		if (!emuera.Initialize())
+		if (!process.Initialize())
 		{
 			state = ConsoleState.Error;
 			OutputLog(null);
@@ -503,14 +503,14 @@ internal sealed partial class EmueraConsole : IDisposable
 		//値の入力を求められない時は更新は必要ないはず
 		if (state != ConsoleState.WaitInput || !inputReq.NeedValue)
 			return;
-		if (!updatedGeneration && emuera.getCurrentLine != lastInputLine)
+		if (!updatedGeneration && process.getCurrentLine != lastInputLine)
 		{
 			//ボタン無しで次の入力に来たなら強制で世代更新
 			lastButtonGeneration = newButtonGeneration;
 		}
 		else
 			updatedGeneration = false;
-		lastInputLine = emuera.getCurrentLine;
+		lastInputLine = process.getCurrentLine;
 		#region EE_BINPUT
 		switch (inputReq.InputType)
 		{
@@ -583,7 +583,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		}
 		RefreshStrings(true);
 		state = ConsoleState.Sleep;
-		emuera.UpdateCheckInfiniteLoopState();
+		process.UpdateCheckInfiniteLoopState();
 		System.Windows.Forms.Application.DoEvents();
 		if (time > 0)
 			System.Threading.Thread.Sleep(time);
@@ -635,7 +635,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		req.StopMesskip = stopMesskip;
 		inputReq = req;
 		state = ConsoleState.WaitInput;
-		emuera.NeedWaitToEventComEnd = false;
+		process.NeedWaitToEventComEnd = false;
 	}
 
 
@@ -824,7 +824,7 @@ internal sealed partial class EmueraConsole : IDisposable
 				return;
 		}
 		state = ConsoleState.Running;
-		emuera.DoScript();
+		process.DoScript();
 		if (state == ConsoleState.Running)
 		{//RunningならProcessは処理を継続するべき
 			state = ConsoleState.Error;
@@ -860,9 +860,9 @@ internal sealed partial class EmueraConsole : IDisposable
 					else if (!Int64.TryParse(str, out inputValue))
 						return false;
 					if (inputReq.IsSystemInput)
-						emuera.InputSystemInteger(inputValue);
+						process.InputSystemInteger(inputValue);
 					else
-						emuera.InputInteger(inputValue);
+						process.InputInteger(inputValue);
 					break;
 				#region EE_BINPUT
 				case InputType.IntButton:
@@ -880,7 +880,7 @@ internal sealed partial class EmueraConsole : IDisposable
 						{
 							if (button.IsInteger && button.Generation == lastButtonGeneration && button.Input == inputValue)
 							{
-								emuera.InputInteger(inputValue);
+								process.InputInteger(inputValue);
 								goto loopendint;
 							}
 							//後ろから回してるので世代が違うボタンに到達したらもう無い
@@ -902,7 +902,7 @@ internal sealed partial class EmueraConsole : IDisposable
 									{
 										if (button.IsInteger && button.Input == inputValue)
 										{
-											emuera.InputInteger(inputValue);
+											process.InputInteger(inputValue);
 											goto loopendint;
 										}
 									}
@@ -922,8 +922,8 @@ internal sealed partial class EmueraConsole : IDisposable
 						str = "";
 					//SHOP等の数値を求められる場面用にFLOWINPUTでINPUTSにしててもRESULTを処理する
 					if (inputReq.IsSystemInput)
-						emuera.InputSystemInteger(inputReq.DefIntValue);
-					emuera.InputString(str);
+						process.InputSystemInteger(inputReq.DefIntValue);
+					process.InputString(str);
 					break;
 				#region EE_BINPUT
 				case InputType.StrButton:
@@ -938,7 +938,7 @@ internal sealed partial class EmueraConsole : IDisposable
 						{
 							if (button.Generation == lastButtonGeneration && (button.Input.ToString() == str || button.Inputs == str))
 							{
-								emuera.InputString(str);
+								process.InputString(str);
 								goto loopendstr;
 							}
 							//後ろから回してるので世代が違うボタンに到達したらもう無い
@@ -961,7 +961,7 @@ internal sealed partial class EmueraConsole : IDisposable
 									{
 										if ((button.IsInteger && button.Input.ToString() == str) || button.Inputs == str)
 										{
-											emuera.InputString(str);
+											process.InputString(str);
 											goto loopendint;
 										}
 									}
@@ -978,13 +978,13 @@ internal sealed partial class EmueraConsole : IDisposable
 					if (Int64.TryParse(str, out inputValue))
 					{
 						if (inputReq.IsSystemInput)
-							emuera.InputSystemInteger(inputValue);
+							process.InputSystemInteger(inputValue);
 						else
-							emuera.InputInteger(inputValue);
+							process.InputInteger(inputValue);
 					}
 					else
 					{
-						emuera.InputString(str);
+						process.InputString(str);
 					}
 					break;
 					#endregion
@@ -1087,7 +1087,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	internal void InputMouseKey(int type, int result1, int result2, int result3, int result4, long result5)
 	{
 		// emuera.InputResult5(type, result1, result2, result3, result4);
-		emuera.InputResult5(type, result1, result2, result3, result4, result5);
+		process.InputResult5(type, result1, result2, result3, result4, result5);
 		inProcess = true;
 		try
 		{
@@ -1860,7 +1860,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		//if (!dTraceLogChanged && !force)
 		//	return null;
 		StringBuilder builder = new("");
-		LogicalLine line = emuera.GetScaningLine();
+		LogicalLine line = process.GetScaningLine();
 		builder.AppendLine(trsl.Processing.Text);
 		if ((line == null) || (line.Position == null))
 		{
@@ -1899,7 +1899,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			}
 		}
 		dd = new DebugDialog();
-		dd.SetParent(this, emuera);
+		dd.SetParent(this, process);
 		dd.TranslateUI();
 		dd.Show();
 	}
@@ -2017,7 +2017,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			ArgumentParser.SetArgumentTo(func);
 			if (func.IsError)
 				throw new CodeEE(func.ErrMes);
-			emuera.DoDebugNormalFunction(func, munchkin);
+			process.DoDebugNormalFunction(func, munchkin);
 			if (func.FunctionCode == FunctionCode.SET)
 			{
 				if (!outputDebugConsole)
@@ -2034,7 +2034,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			}
 			else
 				PrintError(e.Message);
-			emuera.clearMethodStack();
+			process.clearMethodStack();
 		}
 		finally
 		{
@@ -2398,7 +2398,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		redraw = ConsoleRedraw.Normal;
 		UseUserStyle = false;
 		userStyle = new StringStyle(Config.ForeColor, FontStyle.Regular, null);
-		emuera.BeginTitle();
+		process.BeginTitle();
 		ReadAnyKey(false, false);
 		callEmueraProgram("");
 		RefreshStrings(true);
@@ -2437,7 +2437,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		state = ConsoleState.Initializing;
 		PrintSingleLine(trsl.ReloadingErb.Text, true);
 		force_temporary = true;
-		emuera.ReloadErb();
+		process.ReloadErb();
 		force_temporary = false;
 		PrintSingleLine(trsl.ReloadCompleted.Text, true);
 		RefreshStrings(true);
@@ -2488,7 +2488,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		state = ConsoleState.Initializing;
 		PrintSingleLine(trsl.ReloadingErb.Text, true);
 		force_temporary = true;
-		emuera.ReloadPartialErb(path);
+		process.ReloadPartialErb(path);
 		force_temporary = false;
 		PrintSingleLine(trsl.ReloadCompleted.Text, true);
 		RefreshStrings(true);
@@ -2534,7 +2534,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		state = ConsoleState.Initializing;
 		PrintSingleLine(trsl.ReloadingErb.Text, true);
 		force_temporary = true;
-		emuera.ReloadPartialErb(paths);
+		process.ReloadPartialErb(paths);
 		force_temporary = false;
 		PrintSingleLine(trsl.ReloadCompleted.Text, true);
 		RefreshStrings(true);

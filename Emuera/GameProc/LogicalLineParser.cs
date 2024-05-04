@@ -394,17 +394,17 @@ internal static class LogicalLineParser
 		try
 		{
 			#region 前置インクリメント、デクリメント行
-			if (stream.Current == '+' || stream.Current == '-')
+			var op = stream.Current;
+			if (op == '+' || op == '-')
 			{
-				char op = stream.Current;
 				WordCollection wc = LexicalAnalyzer.Analyse(stream, LexEndWith.EoL, LexAnalyzeFlag.None);
-				if ((!(wc.Current is OperatorWord opWT)) || ((opWT.Code != OperatorCode.Increment) && (opWT.Code != OperatorCode.Decrement)))
+				if ((wc.Current is not OperatorWord opWT) || ((opWT.Code != OperatorCode.Increment) && (opWT.Code != OperatorCode.Decrement)))
 				{
 					if (op == '+')
 						errMes = trerror.StartedPlusButNotIncrement.Text;
 					else
 						errMes = trerror.StartedMinusButNotDecrement.Text;
-					goto err;
+					return new InvalidLine(position, errMes);
 				}
 				wc.ShiftNext();
 				//token = EpressionParser.単語一個分取得(wc)
@@ -425,13 +425,14 @@ internal static class LogicalLineParser
 				{
 					if (stream.EOS) //引数の無い関数
 						return new InstructionLine(position, func, stream);
-					if ((stream.Current != ';') && (stream.Current != ' ') && (stream.Current != '\t') && (!Config.SystemAllowFullSpace || (stream.Current != '　')))
+					var current = stream.Current;
+					if ((current != ';') && (current != ' ') && (current != '\t') && (!Config.SystemAllowFullSpace || (current != ' ')))
 					{
-						if (stream.Current == '　')
+						if (current == '　') 
 							errMes = string.Format(trerror.InvalidCharacterAfterInstruction1.Text, Config.GetConfigName(ConfigCode.SystemAllowFullSpace));
 						else
 							errMes = trerror.InvalidCharacterAfterInstruction2.Text;
-						goto err;
+						return new InvalidLine(position, errMes);
 					}
 					stream.ShiftNext();
 					return new InstructionLine(position, func, stream);
@@ -441,7 +442,7 @@ internal static class LogicalLineParser
 			if (stream.EOS)
 			{
 				errMes = trerror.CanNotInterpretedLine.Text;
-				goto err;
+				return new InvalidLine(position, errMes);
 			}
 			//命令行ではない→代入行のはず
 			stream.Seek(0, System.IO.SeekOrigin.Begin);
@@ -456,7 +457,7 @@ internal static class LogicalLineParser
 			catch (CodeEE)
 			{
 				errMes = trerror.CanNotInterpretedLine.Text;
-				goto err;
+				return new InvalidLine(position, errMes);
 			}
 			//eramaker互換警告
 			//stream.Jump(-1);
