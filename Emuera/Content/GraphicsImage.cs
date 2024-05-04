@@ -188,8 +188,8 @@ internal sealed class GraphicsImage : AbstractImage
 		}
 		else
 		{
-			using (SolidBrush b = new(Config.ForeColor))
-				g.DrawString(text, usingFont, b, new RectangleF(x, y, width, height));
+			using var b = new SolidBrush(Config.ForeColor);
+			g.DrawString(text, usingFont, b, x, y);
 		}
 	}
 
@@ -211,8 +211,8 @@ internal sealed class GraphicsImage : AbstractImage
 		}
 		else
 		{
-			using (Pen p = new(Config.ForeColor))
-				g.DrawRectangle(p, rect);
+			using var p = new Pen(Config.ForeColor);
+			g.DrawRectangle(p, rect);
 		}
 	}
 
@@ -234,8 +234,8 @@ internal sealed class GraphicsImage : AbstractImage
 		}
 		else
 		{
-			using (SolidBrush b = new(Config.BackColor))
-				g.FillRectangle(b, rect);
+			using var b = new SolidBrush(Config.BackColor);
+			g.FillRectangle(b, rect);
 		}
 	}
 
@@ -593,6 +593,7 @@ internal sealed class GraphicsImage : AbstractImage
 	public override void Dispose()
 	{
 		this.GDispose();
+		GC.SuppressFinalize(this);
 	}
 
 	~GraphicsImage()
