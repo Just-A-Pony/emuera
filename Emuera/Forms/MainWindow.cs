@@ -470,8 +470,6 @@ namespace MinorShift.Emuera.Forms
 			Preload.Clear();
 			Preload.Load(Program.ErbDir, Application.DoEvents);
 			Preload.Load(Program.CsvDir, Application.DoEvents);
-			if (!Created)
-				throw new Exception("初期化の呼び出しが早すぎて、コントロールが生成されていない"); 
 			console.Initialize();
 			Console.WriteLine("Init:End");
 		}
