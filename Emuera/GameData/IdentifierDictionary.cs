@@ -466,8 +466,8 @@ internal partial class IdentifierDictionary
 	{
 		if (Config.ICVariable)
 			key = key.ToUpper();
-		if (macroDic.ContainsKey(key))
-			return macroDic[key];
+		if (macroDic.TryGetValue(key, out var value))
+			return value;
 		return null;
 	}
 
