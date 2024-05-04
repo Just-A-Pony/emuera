@@ -98,7 +98,7 @@ internal sealed partial class EraStreamReader : IDisposable
 
 			//Ordinal消して大丈夫なのかわからないのでコメントアウト
 			//if (useRename && (line.IndexOf("[[", StringComparison.Ordinal) >= 0) && (line.IndexOf("]]", StringComparison.Ordinal) >= 0))
-			if (useRename && regexRenameIdentifer().IsMatch(line))
+			if (useRename)
 			{
 				var match = regexRenameIdentifer().Match(line);
 				while (match.Success)
@@ -141,12 +141,12 @@ internal sealed partial class EraStreamReader : IDisposable
 			}
 
 			//if (useRename && (line.IndexOf("[[", StringComparison.Ordinal) >= 0) && (line.IndexOf("]]", StringComparison.Ordinal) >= 0))
-			if (useRename && regexRenameIdentifer().IsMatch(line))
+			if (useRename)
 			{
+				//この段階でマッチしないパターンもある
 				var match = regexRenameIdentifer().Match(line);
 				while (match.Success)
 				{
-					//この段階でマッチしないパターンもある
 					if (ParserMediator.RenameDic.TryGetValue(match.Value, out var targetStr))
 					{
 						line = line.Replace(match.Value, targetStr);
@@ -171,8 +171,7 @@ internal sealed partial class EraStreamReader : IDisposable
 				if (test[0] == '{' && test.Length == 1)
 					throw new CodeEE(trerror.UnexpectedContinuation.Text, new ScriptPosition(filename, curNo));
 			}
-			b.Append(line);
-			b.Append(" ");
+			b.Append($"{line} ");
 		}
 		st = new StringStream(b.ToString());
 		LexicalAnalyzer.SkipWhiteSpace(st);
