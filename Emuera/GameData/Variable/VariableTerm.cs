@@ -112,7 +112,7 @@ internal class VariableTerm : IOperandTerm
 		{
 			if ((e is IndexOutOfRangeException) || (e is ArgumentOutOfRangeException) || (e is OverflowException))
 				Identifier.CheckElement(transporter);
-			throw e;
+			throw;
 		}
 	}
 
