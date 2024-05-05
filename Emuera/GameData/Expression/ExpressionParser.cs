@@ -393,17 +393,17 @@ internal static class ExpressionParser
 				case '\0':
 					goto end;
 				case '"'://LiteralStringWT
-					stack.Add(((LiteralStringWord)token).Str);
+					stack.Add((token as LiteralStringWord).Str); 
 					break;
 				case '0'://LiteralIntegerWT
-					stack.Add(((LiteralIntegerWord)token).Int);
+					stack.Add((token as LiteralIntegerWord).Int);
 					break;
 				case 'F'://FormattedStringWT
-					stack.Add(ToStrFormTerm((StrFormWord)token));
+					stack.Add(ToStrFormTerm(token as StrFormWord));
 					break;
 				case 'A'://IdentifierWT
 					{
-						string idStr = ((IdentifierWord)token).Code;
+						string idStr = (token as IdentifierWord).Code;
 						if (idStr.Equals("TO", Config.SCVariable))
 						{
 							if (allowKeywordTo)
@@ -431,7 +431,7 @@ internal static class ExpressionParser
 					{
 						if (varArg)
 							throw new CodeEE(trerror.UnexpectedOpInVarArg.Text);
-						OperatorCode op = ((OperatorWord)token).Code;
+						OperatorCode op = (token as OperatorWord).Code;
 						if (op == OperatorCode.Assignment)
 						{
 							if ((endWith & TermEndWith.Assignment) == TermEndWith.Assignment)
