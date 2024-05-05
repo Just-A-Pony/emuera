@@ -56,8 +56,8 @@ internal sealed partial class Process(EmueraConsole view)
 		initialiing = true;
 		try
 		{
-			Console.WriteLine("Proc:Init:Start " + stopWatch.ElapsedMilliseconds + "ms");
-			Console.WriteLine("Proc:Init:Parser:Start " + stopWatch.ElapsedMilliseconds + "ms");
+			Debug.WriteLine("Proc:Init:Start " + stopWatch.ElapsedMilliseconds + "ms");
+			Debug.WriteLine("Proc:Init:Parser:Start " + stopWatch.ElapsedMilliseconds + "ms");
 			ParserMediator.Initialize(console);
 			//コンフィグファイルに関するエラーの処理（コンフィグファイルはこの関数に入る前に読込済み）
 			if (ParserMediator.HasWarning)
@@ -70,9 +70,9 @@ internal sealed partial class Process(EmueraConsole view)
 					return false;
 				}
 			}
-			Console.WriteLine("Proc:Init:Parser:End " + stopWatch.ElapsedMilliseconds + "ms");
+			Debug.WriteLine("Proc:Init:Parser:End " + stopWatch.ElapsedMilliseconds + "ms");
 
-			Console.WriteLine("Proc:Init:Image:Start " + stopWatch.ElapsedMilliseconds + "ms");
+			Debug.WriteLine("Proc:Init:Image:Start " + stopWatch.ElapsedMilliseconds + "ms");           
 			//リソースフォルダ読み込み
 			if (!Content.AppContents.LoadContents(false))
 			{
@@ -81,9 +81,9 @@ internal sealed partial class Process(EmueraConsole view)
 				return false;
 			}
 			ParserMediator.FlushWarningList();
-			Console.WriteLine("Proc:Init:Image:End " + stopWatch.ElapsedMilliseconds + "ms");
+			Debug.WriteLine("Proc:Init:Image:End " + stopWatch.ElapsedMilliseconds + "ms");
 
-			Console.WriteLine("Proc:Init:KeyMacro:Start " + stopWatch.ElapsedMilliseconds + "ms");
+			Debug.WriteLine("Proc:Init:KeyMacro:Start " + stopWatch.ElapsedMilliseconds + "ms");
 			//キーマクロ読み込み
 			#region eee_カレントディレクトリー
 			if (Config.UseKeyMacro && !Program.AnalysisMode)
@@ -98,9 +98,9 @@ internal sealed partial class Process(EmueraConsole view)
 				}
 			}
 			#endregion
-			Console.WriteLine("Proc:Init:KeyMacro:End " + stopWatch.ElapsedMilliseconds + "ms");
+			Debug.WriteLine("Proc:Init:KeyMacro:End " + stopWatch.ElapsedMilliseconds + "ms");
 
-			Console.WriteLine("Proc:Init:Replace:Start " + stopWatch.ElapsedMilliseconds + "ms");
+			Debug.WriteLine("Proc:Init:Replace:Start " + stopWatch.ElapsedMilliseconds + "ms");
 			//_replace.csv読み込み
 			if (Config.UseReplaceFile && !Program.AnalysisMode)
 			{
@@ -121,7 +121,7 @@ internal sealed partial class Process(EmueraConsole view)
 					}
 				}
 			}
-			Console.WriteLine("Proc:Init:Replace:End " + stopWatch.ElapsedMilliseconds + "ms");
+			Debug.WriteLine("Proc:Init:Replace:End " + stopWatch.ElapsedMilliseconds + "ms");
 
 			Config.SetReplace(ConfigData.Instance);
 			//ここでBARを設定すれば、いいことに気づいた予感
@@ -190,20 +190,20 @@ internal sealed partial class Process(EmueraConsole view)
 
 			//TODO:ユーザー定義変数用のcsvの適用
 
-			Console.WriteLine("Proc:Init:ERB:Start " + stopWatch.ElapsedMilliseconds + "ms");
+			Debug.WriteLine("Proc:Init:ERB:Start " + stopWatch.ElapsedMilliseconds + "ms");
 			//ERB読込
-			Console.WriteLine("Proc:Init:ERB:Load:Start " + stopWatch.ElapsedMilliseconds + "ms");
+			Debug.WriteLine("Proc:Init:ERB:Load:Start " + stopWatch.ElapsedMilliseconds + "ms");
 			var loader = new ErbLoader(console, exm, this);
 			if (Program.AnalysisMode)
 				noError = loader.loadErbs(Program.AnalysisFiles, labelDic);
 			else
 				noError = loader.LoadErbFiles(Program.ErbDir, Config.DisplayReport, labelDic);
-			Console.WriteLine("Proc:Init:ERB:Load:End " + stopWatch.ElapsedMilliseconds + "ms");
+			Debug.WriteLine("Proc:Init:ERB:Load:End " + stopWatch.ElapsedMilliseconds + "ms");
 			initSystemProcess();
 			initialiing = false;
-			Console.WriteLine("Proc:Init:ERB:End " + stopWatch.ElapsedMilliseconds + "ms");
+			Debug.WriteLine("Proc:Init:ERB:End " + stopWatch.ElapsedMilliseconds + "ms");
 
-			Console.WriteLine("Proc:Init:End " + stopWatch.ElapsedMilliseconds + "ms");
+			Debug.WriteLine("Proc:Init:End " + stopWatch.ElapsedMilliseconds + "ms");
 		}
 		catch (Exception e)
 		{
