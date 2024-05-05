@@ -42,6 +42,10 @@ static class Program
 	[STAThread]
 	static void Main(string[] args)
 	{
+		// var summary = BenchmarkRunner.Run<PreloadInstance>();
+
+		// return;
+
 		// memo: Shift-JISを扱うためのおまじない
 		System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
 		var rootCommand = new RootCommand("Emuera");
@@ -50,17 +54,20 @@ static class Program
 		WorkingDir = AssemblyData.WorkingDir;
 
 		var exeDirOption = new Option<string>(
-			name: "--exeDir"
+			name: "--ExeDir",
+			description: "与えられたフォルダのEraを起動します"
 		);
 		rootCommand.AddOption(exeDirOption);
 
 		var debugModeOption = new Option<bool>(
-			name: "-DEBUG"
+			name: "-Debug",
+			description: "デバッグモード"
 		);
 		rootCommand.AddOption(debugModeOption);
 
 		var genLangOption = new Option<List<string>>(
-			name: "-GENLANG"
+			name: "-GenLang",
+			description: "言語ファイルテンプレ生成"
 		);
 		rootCommand.AddOption(genLangOption);
 
