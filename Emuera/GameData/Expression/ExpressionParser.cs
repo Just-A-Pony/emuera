@@ -125,10 +125,8 @@ internal static class ExpressionParser
 
 			}
 		}
-		local(); 
-		IOperandTerm[] ret = new IOperandTerm[terms.Count];
-		terms.CopyTo(ret);
-		return ret;
+		local();
+		return [.. terms];
 	}
 
 
