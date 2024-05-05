@@ -113,7 +113,7 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 			graph.DrawString(Str, Font, new SolidBrush(color), new Point(PointX, pointY));
 		else
 			// TextRenderer.DrawText(graph, Str, Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
-			TextRenderer.DrawText(graph, Str, Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
+			TextRenderer.DrawText(graph, Str.AsSpan(), Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
 		#endregion
 	}
 
@@ -133,7 +133,7 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 			graph.DrawString(Str, Font, new SolidBrush(color), new Point(xOffset, 0));
 		else
 			// TextRenderer.DrawText(graph, Str, Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
-			TextRenderer.DrawText(graph, Str, Font, new Point(xOffset, 0), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
+			TextRenderer.DrawText(graph, Str.AsSpan(), Font, new Point(xOffset, 0), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
 		#endregion
 	}
 }
