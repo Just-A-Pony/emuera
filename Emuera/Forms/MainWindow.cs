@@ -9,6 +9,7 @@ using EvilMask.Emuera;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
 using Emuera;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace MinorShift.Emuera.Forms
 {
@@ -466,14 +467,20 @@ namespace MinorShift.Emuera.Forms
 
 		private void Init(object sender, EventArgs e)
 		{
-			var startTime = DateTime.Now;
+			var stopWatch = new Stopwatch();
+			stopWatch.Start();
 			Console.WriteLine("Init:Start");
+			Console.WriteLine("File:Preload:Start");
 			//必要なソースファイルを事前にメモリに一気に読み込む
 			Preload.Clear();
 			Preload.Load(Program.ErbDir);
 			Preload.Load(Program.CsvDir);
+
+			Console.WriteLine("File:Preload:End " + stopWatch.ElapsedMilliseconds + "ms");
+
 			console.Initialize();
-			Console.WriteLine("Init:End " + (DateTime.Now - startTime).TotalMilliseconds + "ms");
+
+			Console.WriteLine("Init:End " + stopWatch.ElapsedMilliseconds + "ms");
 		}
 
 		/// <summary>
@@ -969,7 +976,7 @@ namespace MinorShift.Emuera.Forms
 						System.Windows.MessageBox.Show(trmb.FileNotFound.Text, trmb.FileNotFound.Text);
 						return;
 					}
-					if (Path.GetExtension(fname).Equals(".ERB", StringComparison.InvariantCultureIgnoreCase))
+					if (Path.GetExtension(fname).Equals(".ERB", StringComparison.OrdinalIgnoreCase))
 					{
 						System.Windows.MessageBox.Show(trmb.IsNotErb.Text, trmb.FileFormatError.Text);
 						return;
