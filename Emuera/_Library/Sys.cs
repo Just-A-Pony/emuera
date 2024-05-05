@@ -1,6 +1,5 @@
 ﻿using System.Windows.Forms;
 using System.IO;
-using System.Reflection;
 using System;
 
 namespace MinorShift._Library;
@@ -9,12 +8,13 @@ public static class AssemblyData
 {
 	static AssemblyData()
 	{
-		ExePath = Assembly.GetEntryAssembly().Location; 
+		ExePath = Environment.ProcessPath;
 		#region eee_カレントディレクトリー
 		WorkingDir = Directory.GetCurrentDirectory() + "\\";
 		#endregion
 		ExeDir = Path.GetDirectoryName(ExePath) + "\\";
 		ExeName = Path.GetFileName(ExePath);
+		emueraVer = typeof(AssemblyData).Assembly.GetName().Version;
 	}
 
 	/// <summary>
@@ -22,7 +22,7 @@ public static class AssemblyData
 	/// </summary>
 	public static readonly string ExePath;
 
-	public static Version emueraVer = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version ?? new Version(0, 0, 0);
+	public static Version emueraVer;
 
 	/// <summary>
 	/// 実行ファイルのディレクトリ。最後に\を付けたstring

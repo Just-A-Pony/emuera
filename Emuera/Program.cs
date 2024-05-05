@@ -368,8 +368,8 @@ static class Program
 	static Program()
 	{
 		ExeDir = Path.Join(
-			Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location).AsSpan(),
-			[Path.DirectorySeparatorChar]
+		AppContext.BaseDirectory.AsSpan(), 
+		[Path.DirectorySeparatorChar]
 		);
 
 		CsvDir = Path.Join(ExeDir.AsSpan(), "csv", [Path.DirectorySeparatorChar]);
