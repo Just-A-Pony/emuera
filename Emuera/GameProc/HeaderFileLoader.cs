@@ -89,7 +89,7 @@ internal sealed class HeaderFileLoader
 		//eramakerEXの仕様的には.ERHに適用するのはおかしいけど、もうEmueraの仕様になっちゃってるのでしかたないか
 		EraStreamReader eReader = new(true);
 
-		if (!eReader.Open(filepath, filename))
+		if (!eReader.OpenOnCache(filepath, filename))
 		{
 			throw new CodeEE(string.Format(trerror.FailedOpenFile.Text, eReader.Filename));
 			//return false;
@@ -105,14 +105,18 @@ internal sealed class HeaderFileLoader
 				if (st.Current != '#')
 					throw new CodeEE(trerror.NotStartedSharpLineInHeader.Text, position);
 				st.ShiftNext();
-				string sharpID = LexicalAnalyzer.ReadSingleIdentifier(st);
-				if (sharpID == null)
+				var sharpID = LexicalAnalyzer.ReadSingleIdentifierROS(st);
+				if (sharpID.IsEmpty)
 				{
 					ParserMediator.Warn(trerror.CanNotInterpretSharpLine.Text, position, 1);
 					return false;
 				}
 				if (Config.ICFunction)
-					sharpID = sharpID.ToUpper();
+				{
+					Span<char> dest = new char[sharpID.Length];
+					sharpID.ToUpperInvariant(dest);
+					sharpID = dest;
+				}
 				LexicalAnalyzer.SkipWhiteSpace(st);
 				switch (sharpID)
 				{
@@ -128,12 +132,12 @@ internal sealed class HeaderFileLoader
 						//1822 #DIMは保留しておいて後でまとめてやる
 						{
 							WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AllowAssignment);
-							dimlines.Enqueue(new DimLineWC(wc, sharpID == "DIMS", false, position));
+							dimlines.Enqueue(new DimLineWC(wc, sharpID.SequenceEqual("DIMS"), false, position));
 						}
 						//analyzeSharpDim(st, position, sharpID == "DIMS");
 						break;
 					default:
-						throw new CodeEE(string.Format(trerror.UnknownPreprocessorInSharpLine.Text, sharpID), position);
+						throw new CodeEE(string.Format(trerror.UnknownPreprocessorInSharpLine.Text, sharpID.ToString()), position);
 				}
 			}
 		}

@@ -23,9 +23,17 @@ namespace MinorShift.Emuera;
 //また、使用されている名前を記憶し衝突を検出する。
 internal partial class IdentifierDictionary
 {
+	private static readonly System.Buffers.SearchValues<char> badSymbolAsIdentifier = System.Buffers.SearchValues.Create(new char[]
+			{
+			'+', '-', '*', '/', '%', '=', '!', '<', '>', '|', '&', '^', '~',
+			' ', ' ', '\t' ,
+			'\"','(', ')', '{', '}', '[', ']', ',', '.', ':',
+			'\\', '@', '$', '#', '?', ';', '\'',
+				//'_'はOK
+			});
 	#region EM_私家版_辞書獲得
 	public string[] VarKeys => varTokenDic.Keys.ToArray();
-	public string[] MacroKeys => macroDic.Keys.ToArray();
+	public int[] MacroKeys => macroDic.Keys.ToArray();
 	#endregion
 	private enum DefinedNameType
 	{
@@ -40,14 +48,6 @@ internal partial class IdentifierDictionary
 		UserRefMethod,
 		NameSpace,
 	}
-	readonly static char[] badSymbolAsIdentifier = new char[]
-	{
-			'+', '-', '*', '/', '%', '=', '!', '<', '>', '|', '&', '^', '~',
-			' ', '　', '\t' ,
-			'\"','(', ')', '{', '}', '[', ']', ',', '.', ':',
-			'\\', '@', '$', '#', '?', ';', '\'',
-		//'_'はOK
-	};
 	readonly static Regex regexCom = preCompiledComRegex();
 	readonly static Regex regexComAble = preCompiledComAbleRegex();
 	readonly static Regex regexAblup = preCompiledAblupRegex();
@@ -205,7 +205,7 @@ internal partial class IdentifierDictionary
 			return;
 		}
 		//1.721 記号をサポートしない方向に変更
-		if (labelName.IndexOfAny(badSymbolAsIdentifier) >= 0)
+		if (labelName.AsSpan().IndexOfAny(badSymbolAsIdentifier) != -1)
 		{
 			errMes = string.Format(treer.LabelContainsOtherThanUnderline.Text, labelName);
 			warnLevel = 1;
@@ -219,56 +219,58 @@ internal partial class IdentifierDictionary
 		}
 		if (!isFunction || !Config.WarnFunctionOverloading)
 			return;
-		if (!nameDic.ContainsKey(labelName))
-			return;
-
-		if (nameDic.ContainsKey(labelName))
+		if (!nameDic.TryGetValue(labelName, out DefinedNameType value))
 		{
-			switch (nameDic[labelName])
+			if (nameDic.ContainsKey(labelName))
 			{
-				case DefinedNameType.Reserved:
-					if (Config.AllowFunctionOverloading)
-					{
-						errMes = string.Format(treer.LabelConflictReservedWord1.Text, labelName);
+				switch (value)
+				{
+					case DefinedNameType.Reserved:
+						if (Config.AllowFunctionOverloading)
+						{
+							errMes = string.Format(treer.LabelConflictReservedWord1.Text, labelName);
+							warnLevel = 1;
+						}
+						else
+						{
+							errMes = string.Format(treer.LabelConflictReservedWord2.Text, labelName);
+							warnLevel = 2;
+						}
+						break;
+					case DefinedNameType.SystemMethod:
+						if (Config.AllowFunctionOverloading)
+						{
+							errMes = string.Format(treer.LabelOverwriteInternalExpression.Text, labelName);
+							warnLevel = 1;
+						}
+						else
+						{
+							errMes = string.Format(treer.LabelNameAlreadyUsedInternalExpression.Text, labelName);
+							warnLevel = 2;
+						}
+						break;
+					case DefinedNameType.SystemVariable:
+						errMes = string.Format(treer.LabelNameAlreadyUsedInternalVariable.Text, labelName);
 						warnLevel = 1;
-					}
-					else
-					{
-						errMes = string.Format(treer.LabelConflictReservedWord2.Text, labelName);
-						warnLevel = 2;
-					}
-					break;
-				case DefinedNameType.SystemMethod:
-					if (Config.AllowFunctionOverloading)
-					{
-						errMes = string.Format(treer.LabelOverwriteInternalExpression.Text, labelName);
+						break;
+					case DefinedNameType.SystemInstrument:
+						errMes = string.Format(treer.LabelNameAlreadyUsedInternalInstruction.Text, labelName);
 						warnLevel = 1;
-					}
-					else
-					{
-						errMes = string.Format(treer.LabelNameAlreadyUsedInternalExpression.Text, labelName);
+						break;
+						break;
+					case DefinedNameType.UserMacro:
+						//字句解析がうまくいっていれば本来あり得ないはず
+						errMes = string.Format(treer.LabelNameAlreadyUsedMacro.Text, labelName);
 						warnLevel = 2;
-					}
-					break;
-				case DefinedNameType.SystemVariable:
-					errMes = string.Format(treer.LabelNameAlreadyUsedInternalVariable.Text, labelName);
-					warnLevel = 1;
-					break;
-				case DefinedNameType.SystemInstrument:
-					errMes = string.Format(treer.LabelNameAlreadyUsedInternalInstruction.Text, labelName);
-					warnLevel = 1;
-					break;
-				case DefinedNameType.UserMacro:
-					//字句解析がうまくいっていれば本来あり得ないはず
-					errMes = string.Format(treer.LabelNameAlreadyUsedMacro.Text, labelName);
-					warnLevel = 2;
-					break;
-				case DefinedNameType.UserRefMethod:
-					errMes = string.Format(treer.LabelNameAlreadyUsedRefFunction.Text, labelName);
-					warnLevel = 2;
-					break;
+						break;
+					case DefinedNameType.UserRefMethod:
+						errMes = string.Format(treer.LabelNameAlreadyUsedRefFunction.Text, labelName);
+						warnLevel = 2;
+						break;
+				}
 			}
 		}
+		return;
 	}
 
 	public void CheckUserVarName(ref string errMes, ref int warnLevel, string varName)
@@ -280,7 +282,7 @@ internal partial class IdentifierDictionary
 		//    return;
 		//}
 		//1.721 記号をサポートしない方向に変更
-		if (varName.IndexOfAny(badSymbolAsIdentifier) >= 0)
+		if (varName.AsSpan().IndexOfAny(badSymbolAsIdentifier) != -1)
 		{
 			errMes = string.Format(treer.VarContainsOtherThanUnderline.Text, varName);
 			warnLevel = 2;
@@ -329,15 +331,15 @@ internal partial class IdentifierDictionary
 
 	public void CheckUserMacroName(ref string errMes, ref int warnLevel, string macroName)
 	{
-		if (macroName.IndexOfAny(badSymbolAsIdentifier) >= 0)
+		if (macroName.AsSpan().IndexOfAny(badSymbolAsIdentifier) != -1)
 		{
 			errMes = string.Format(treer.MacroContainsOtherThanUnderline.Text, macroName);
 			warnLevel = 2;
 			return;
 		}
-		if (nameDic.ContainsKey(macroName))
+		if (nameDic.TryGetValue(macroName, out DefinedNameType value))
 		{
-			switch (nameDic[macroName])
+			switch (value)
 			{
 				case DefinedNameType.Reserved:
 					errMes = string.Format(treer.MacroConflictReservedWord.Text, macroName);
@@ -379,7 +381,7 @@ internal partial class IdentifierDictionary
 			return;
 		}
 		//1.721 記号をサポートしない方向に変更
-		if (varName.IndexOfAny(badSymbolAsIdentifier) >= 0)
+		if (varName.AsSpan().IndexOfAny(badSymbolAsIdentifier) != -1)
 		{
 			errMes = string.Format(treer.VarContainsOtherThanUnderline.Text, varName);
 			warnLevel = 2;
@@ -432,7 +434,7 @@ internal partial class IdentifierDictionary
 
 	#region header.erb
 	//1807 ErbLoaderに移動
-	Dictionary<string, DefineMacro> macroDic = [];
+	Dictionary<int, DefineMacro> macroDic = [];
 
 	internal void AddUseDefinedVariable(VariableToken var)
 	{
@@ -446,7 +448,16 @@ internal partial class IdentifierDictionary
 	internal void AddMacro(DefineMacro mac)
 	{
 		nameDic.Add(mac.Keyword, DefinedNameType.UserMacro);
-		macroDic.Add(mac.Keyword, mac);
+		int key;
+		if (Config.ICVariable)
+		{
+			key = mac.Keyword.GetHashCode(StringComparison.OrdinalIgnoreCase);
+		}
+		else
+		{
+			key = mac.Keyword.GetHashCode(StringComparison.Ordinal);
+		}
+		macroDic.Add(key, mac);
 	}
 	internal void AddRefMethod(UserDefinedRefMethod refm)
 	{
@@ -464,9 +475,16 @@ internal partial class IdentifierDictionary
 
 	public DefineMacro GetMacro(string key)
 	{
+		int hash; 
 		if (Config.ICVariable)
-			key = key.ToUpper();
-		if (macroDic.TryGetValue(key, out var value))
+		{
+			hash = key.GetHashCode(StringComparison.OrdinalIgnoreCase);
+		}
+		else
+		{
+			hash = key.GetHashCode(StringComparison.Ordinal);
+		}
+		if (macroDic.TryGetValue(hash, out var value))
 			return value;
 		return null;
 	}

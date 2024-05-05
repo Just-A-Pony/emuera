@@ -10,4 +10,4 @@ Emuera/Properties/PublishProfiles/FolderProfile.pubxml.user
 
 Properties/launchSettings.json
 
-artifacts/*
+*/artifacts/*
