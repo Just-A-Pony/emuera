@@ -13,9 +13,6 @@ namespace MinorShift.Emuera.GameProc;
 
 //1756 インナークラス解除して一般に開放
 
-
-//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
-[global::System.Reflection.Obfuscation(Exclude = false)]
 internal enum SystemStateCode
 {
 	__CAN_SAVE__ = 0x10000,//セーブロード画面を呼び出し可能か？
@@ -79,8 +76,6 @@ internal enum SystemStateCode
 	Normal = 0xFFFF | __CAN_BEGIN__ | __CAN_SAVE__,//特に何でもないとき。ScriptEndに達したらエラー
 }
 
-//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
-[global::System.Reflection.Obfuscation(Exclude = false)]
 internal enum BeginType
 {
 	NULL = 0,

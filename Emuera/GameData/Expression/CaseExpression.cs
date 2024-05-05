@@ -4,8 +4,6 @@ using System.Text;
 
 namespace MinorShift.Emuera.GameData.Expression;
 
-//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
-[global::System.Reflection.Obfuscation(Exclude = false)]
 internal enum CaseExpressionType
 {
 	Normal = 1,

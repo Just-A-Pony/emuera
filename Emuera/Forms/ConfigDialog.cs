@@ -17,7 +17,6 @@ using System.Threading.Tasks;
 
 namespace MinorShift.Emuera.Forms
 {
-	[global::System.Reflection.Obfuscation(Exclude = false)]
 	internal enum ConfigDialogResult
 	{
 		Cancel = 0,

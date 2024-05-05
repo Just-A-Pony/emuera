@@ -3,8 +3,6 @@
 /// <summary>
 /// 命令コード
 /// </summary>
-//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
-[global::System.Reflection.Obfuscation(Exclude = true)]
 enum FunctionCode
 {//数値不要
  //FunctionCodeを定義したらstatic FunctionIdentifier()内でaddFunctionすること。

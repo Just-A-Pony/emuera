@@ -4523,8 +4523,6 @@ internal static partial class FunctionMethodCreator
 		}
 	}
 
-	//難読化用属性。enum.ToString()やenum.Parse()を行うなら(Exclude=true)にすること。
-	[global::System.Reflection.Obfuscation(Exclude = false)]
 	//TOUPPER等の処理を汎用化するためのenum
 	enum StrFormType
 	{
