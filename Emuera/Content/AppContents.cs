@@ -106,11 +106,11 @@ static class AppContents
 		try
 		{
 			//resourcesフォルダ内の全てのcsvファイルを探索する
-			string[] csvFiles = Directory.GetFiles(Program.ContentDir, "*.csv", SearchOption.AllDirectories);
+			var csvFiles = Directory.EnumerateFiles(Program.ContentDir, "*.csv", SearchOption.AllDirectories);
 			foreach (var filepath in csvFiles)
 			{
 				//".csv"のみを拾うように
-				if (0 != ".csv".CompareTo(Path.GetExtension(filepath).ToLower()))
+				if (!Path.GetExtension(filepath).Equals(".csv", StringComparison.OrdinalIgnoreCase))
 					continue;
 				//アニメスプライト宣言。nullでないとき、フレーム追加モード
 				SpriteAnime currentAnime = null;

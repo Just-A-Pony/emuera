@@ -10,6 +10,7 @@ using MinorShift.Emuera.GameData;
 using MinorShift.Emuera.GameData.Function;
 using MinorShift.Emuera.GameProc.Function;
 using trerror = EvilMask.Emuera.Lang.Error;
+using System.Windows.Documents;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -18,12 +19,17 @@ internal static class LogicalLineParser
 	public static bool ParseSharpLine(FunctionLabelLine label, StringStream st, ScriptPosition position, List<string> OnlyLabel)
 	{
 		st.ShiftNext();//'#'を飛ばす
-		string token = LexicalAnalyzer.ReadSingleIdentifier(st);//#～自体にはマクロ非適用
+		var token = LexicalAnalyzer.ReadSingleIdentifierROS(st);//#～自体にはマクロ非適用
 		if (Config.ICFunction)
-			token = token.ToUpper();
+		{
+			Span<char> dest = new char[token.Length];
+			Ascii.ToUpper(token, dest, out int _);
+			token = dest;
+		}
 		//#行として不正な行でもAnalyzeに行って引っかかることがあるので、先に存在しない#～は弾いてしまう
-		if (token == null || (token != "SINGLE" && token != "LATER" && token != "PRI" && token != "ONLY" && token != "FUNCTION" && token != "FUNCTIONS"
-			&& token != "LOCALSIZE" && token != "LOCALSSIZE" && token != "DIM" && token != "DIMS"))
+		if (token.IsEmpty || (!token.SequenceEqual("SINGLE") && !token.SequenceEqual("LATER") && !token.SequenceEqual("PRI") && !token.SequenceEqual("ONLY") && !token.SequenceEqual("FUNCTION")
+						 && !token.SequenceEqual("FUNCTIONS")
+						&& !token.SequenceEqual("LOCALSIZE") && !token.SequenceEqual("LOCALSSIZE") && !token.SequenceEqual("DIM") && !token.SequenceEqual("DIMS")))
 		{
 			ParserMediator.Warn(trerror.CanNotInterpretSharpLine.Text, position, 1);
 			return false;
@@ -146,33 +152,32 @@ internal static class LogicalLineParser
 				case "FUNCTIONS":
 					if (!string.IsNullOrEmpty(label.LabelName) && char.IsDigit(label.LabelName[0]))
 					{
-						ParserMediator.Warn(string.Format(trerror.CanNotDeclaredBeginNumberFunction.Text, token), position, 1);
+						ParserMediator.Warn(string.Format(trerror.CanNotDeclaredBeginNumberFunction.Text, token.ToString()), position, 1);
 						label.IsError = true;
 						label.ErrMes = trerror.FuncNameBeginNumber.Text;
 						break;
 					}
 					if (label.IsMethod)
 					{
-						if ((label.MethodType == typeof(Int64) && token == "FUNCTION") || (label.MethodType == typeof(string) && token == "FUNCTIONS"))
+						if ((label.MethodType == typeof(Int64) && token.SequenceEqual("FUNCTION")) || (label.MethodType == typeof(string) && token.SequenceEqual("FUNCTIONS")))
 						{
-							ParserMediator.Warn(string.Format(trerror.AlreadySharpDeclared.Text, label.LabelName, token), position, 1);
+							ParserMediator.Warn(string.Format(trerror.AlreadySharpDeclared.Text, label.LabelName, token.ToString()), position, 1);
 							return false;
 						}
-						if (label.MethodType == typeof(Int64) && token == "FUNCTIONS")
+						if (label.MethodType == typeof(Int64) && token.SequenceEqual("FUNCTIONS")) 
 							ParserMediator.Warn(string.Format(trerror.AlreadyDeclaredSharpFunction.Text, label.LabelName), position, 2);
-						else if (label.MethodType == typeof(string) && token == "FUNCTION")
+						else if (label.MethodType == typeof(string) && token.SequenceEqual("FUNCTION")) 
 							ParserMediator.Warn(string.Format(trerror.AlreadyDeclaredSharpFunctions.Text, label.LabelName), position, 2);
 						return false;
 					}
 					if (label.Depth == 0)
 					{
-						ParserMediator.Warn(string.Format(trerror.UseSharpInSystemFunc.Text, token), position, 2);
+						ParserMediator.Warn(string.Format(trerror.UseSharpInSystemFunc.Text, token.ToString()), position, 2);
 						return false;
 					}
 					label.IsMethod = true;
 					label.Depth = 0;
-					if (token == "FUNCTIONS")
-						label.MethodType = typeof(string);
+					if (token.SequenceEqual("FUNCTIONS")) label.MethodType = typeof(string);
 					else
 						label.MethodType = typeof(Int64);
 					if (label.IsPri)
@@ -201,37 +206,37 @@ internal static class LogicalLineParser
 					{
 						if (wc.EOL)
 						{
-							ParserMediator.Warn(string.Format(trerror.SharpHasNotValidValue.Text, token), position, 2);
+							ParserMediator.Warn(string.Format(trerror.SharpHasNotValidValue.Text, token.ToString()), position, 2);
 							break;
 						}
 						//イベント関数では指定しても無視される
 						if (label.IsEvent)
 						{
-							ParserMediator.Warn(string.Format(trerror.EventFuncIgnoreSpecified.Text, token, token[..^4]), position, 1);
+							ParserMediator.Warn(string.Format(trerror.EventFuncIgnoreSpecified.Text, token.ToString(), token[..^4].ToString()), position, 1);
 							break;
 						}
 						IOperandTerm arg = ExpressionParser.ReduceIntegerTerm(wc, TermEndWith.EoL);
 						if ((!(arg.Restructure(null) is SingleTerm sizeTerm)) || (sizeTerm.GetOperandType() != typeof(Int64)))
 						{
-							ParserMediator.Warn(string.Format(trerror.SharpHasNotValidValue.Text, token), position, 2);
+							ParserMediator.Warn(string.Format(trerror.SharpHasNotValidValue.Text, token.ToString()), position, 2);
 							break;
 						}
 						if (sizeTerm.Int <= 0)
 						{
-							ParserMediator.Warn(string.Format(trerror.LocalsizeLessThan1.Text, token, sizeTerm.Int.ToString()), position, 1);
+							ParserMediator.Warn(string.Format(trerror.LocalsizeLessThan1.Text, token.ToString(), sizeTerm.Int.ToString()), position, 1);
 							break;
 						}
 						if (sizeTerm.Int >= Int32.MaxValue)
 						{
-							ParserMediator.Warn(string.Format(trerror.TooManyLocalsize.Text, token, sizeTerm.Int.ToString()), position, 1);
+							ParserMediator.Warn(string.Format(trerror.TooManyLocalsize.Text, token.ToString(), sizeTerm.Int.ToString()), position, 1);
 							break;
 						}
 						int size = (int)sizeTerm.Int;
-						if (token == "LOCALSIZE")
+						if (token.SequenceEqual("LOCALSIZE"))
 						{
 							if (GlobalStatic.IdentifierDictionary.getLocalIsForbid("LOCAL"))
 							{
-								ParserMediator.Warn(string.Format(trerror.LocalIsProhibited.Text, token, "LOCAL"), position, 2);
+								ParserMediator.Warn(string.Format(trerror.LocalIsProhibited.Text, token.ToString(), "LOCAL"), position, 2);
 								break;
 							}
 							if (label.LocalLength > 0)
@@ -242,7 +247,7 @@ internal static class LogicalLineParser
 						{
 							if (GlobalStatic.IdentifierDictionary.getLocalIsForbid("LOCALS"))
 							{
-								ParserMediator.Warn(string.Format(trerror.LocalIsProhibited.Text, token, "LOCALS"), position, 2);
+								ParserMediator.Warn(string.Format(trerror.LocalIsProhibited.Text, token.ToString(), "LOCALS"), position, 2);
 								break;
 							}
 							if (label.LocalsLength > 0)
@@ -254,7 +259,7 @@ internal static class LogicalLineParser
 				case "DIM":
 				case "DIMS":
 					{
-						UserDefinedVariableData data = UserDefinedVariableData.Create(wc, token == "DIMS", true, position);
+						UserDefinedVariableData data = UserDefinedVariableData.Create(wc, token.SequenceEqual("DIMS"), true, position); 
 						if (!label.AddPrivateVariable(data))
 						{
 							ParserMediator.Warn(string.Format(trerror.VarNameAlreadyUsed.Text, data.Name), position, 2);

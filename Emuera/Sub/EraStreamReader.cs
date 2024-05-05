@@ -49,19 +49,19 @@ internal sealed partial class EraStreamReader : IDisposable
 		}
 		return true;
 	}
-	public bool OpenOnCache(string path)
+	public bool OpenOnCache(ReadOnlySpan<char> path)
 	{
 
 		return OpenOnCache(path, Path.GetFileName(path));
 	}
 
-	public bool OpenOnCache(string path, string name)
+	public bool OpenOnCache(ReadOnlySpan<char> path, ReadOnlySpan<char> name)
 	{
-		filepath = path;
-		filename = name;
+		filepath = path.ToString();
+		filename = name.ToString();
 		curNo = 0;
 		nextNo = 0;
-		_fileLine = Preload.GetFileLines(path.ToUpperInvariant());
+		_fileLine = Preload.GetFileLines(path); 
 		return true;
 	}
 
@@ -155,12 +155,12 @@ internal sealed partial class EraStreamReader : IDisposable
 					match = match.NextMatch();
 				}
 			}
-			string test = line.TrimStart();
+			var test = line.AsSpan().TrimStart(); 
 			if (test.Length > 0)
 			{
 				if (test[0] == '}')
 				{
-					if (test.TrimEnd() != "}") 
+					if (!test.TrimEnd().SequenceEqual("}")) 
 						throw new CodeEE(trerror.CharacterAfterContinuationEnd.Text, new ScriptPosition(filename, curNo));
 					break;
 				}
@@ -168,7 +168,7 @@ internal sealed partial class EraStreamReader : IDisposable
 				//{
 				//A}
 				//みたいなどうしようもないコードは知ったこっちゃない
-				if (test == "{")
+				if (test.SequenceEqual("{")) 
 					throw new CodeEE(trerror.UnexpectedContinuation.Text, new ScriptPosition(filename, curNo));
 			}
 			b.Append($"{line} ");

@@ -513,7 +513,7 @@ internal static class ExpressionParser
 		bool hasBefore = false;
 		bool hasAfter = false;
 		bool waitAfter = false;
-		Stack<Object> stack = new Stack<Object>();
+		Stack<Object> stack = new(5);
 		public void Add(OperatorCode op)
 		{
 			if (state == 2 || state == 3)

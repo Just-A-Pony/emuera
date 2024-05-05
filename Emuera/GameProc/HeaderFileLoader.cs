@@ -11,6 +11,7 @@ using MinorShift.Emuera.GameData.Function;
 using System.IO;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using trerror = EvilMask.Emuera.Lang.Error;
+using System.IO;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -38,6 +39,8 @@ internal sealed class HeaderFileLoader
 	{
 		List<KeyValuePair<string, string>> headerFiles = Config.GetFiles(headerDir, "*.ERH");
 		bool noError = true;
+
+
 		dimlines = new Queue<DimLineWC>();
 		#region EE_ERD
 		//ERD読み込み

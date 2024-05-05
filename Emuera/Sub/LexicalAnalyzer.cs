@@ -5,6 +5,8 @@ using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameData;
 using trerror = EvilMask.Emuera.Lang.Error;
 using System.Text.RegularExpressions;
+using System.Runtime.CompilerServices;
+using System.Buffers;
 
 namespace MinorShift.Emuera.Sub;
 
@@ -321,8 +323,8 @@ internal static partial class LexicalAnalyzer
 	public static IdentifierWord ReadFirstIdentifierWord(StringStream st)
 	{
 		//int startpos = st.CurrentPosition;
-		var str = ReadSingleIdentifier(st);
-		if (string.IsNullOrEmpty(str))
+		var str = ReadSingleIdentifierROS(st);
+		if (str.IsEmpty)
 			throw new CodeEE(trerror.LineBeginsIllegalCharacter.Text);
 		//1808a3 先頭1単語の展開をやめる。－命令の置換を禁止。
 		//if (UseMacro)
@@ -345,7 +347,7 @@ internal static partial class LexicalAnalyzer
 		//        str = macro.IDWord.Code;
 		//    }
 		//}
-		return new IdentifierWord(str);
+		return new IdentifierWord(str.ToString());
 	}
 
 	/// <summary>
@@ -386,39 +388,21 @@ internal static partial class LexicalAnalyzer
 	{
 		return ReadSingleIdentifierROS(st).ToString();
 	}
-	[GeneratedRegex("""^([^  \.\t+\-*/%=!<>|&^~?#)}\],:({[$\\'"@\;]+)""")]
-	private static partial Regex MyRegex();
+	static SearchValues<char> _searchValues = SearchValues.Create("""  .+-*/%=!<>|&^~?#)}],:({[$\'"@;""" + "\t"); 
 	public static ReadOnlySpan<char> ReadSingleIdentifierROS(StringStream st)
 	{
 		var row = st.RowString.AsSpan()[st.CurrentPosition..];
-		var count = 0;
+		var index = row.IndexOfAny(_searchValues);
+		if (index != -1)
+		{
+			st.Jump(index);
+			return row[..(index)];
+		}
 
-		// if (!Config.SystemAllowFullSpace)
-		// {
-		// 	var whiteSpaces = whiteSpaceRegex();
-		// 	var whiteSpacesMatch = whiteSpaces.Match(row);
-		// 	if (whiteSpacesMatch.Success)
-		// 	{
-		// 		throw new CodeEE("予期しない全角スペースを発見しました(この警告はシステムオプション「" + Config.GetConfigName(ConfigCode.SystemAllowFullSpace) + "」により無視できます)");
-		// 	}
-		// }
+		st.Jump(row.Length);
+		return row;
 
-
-		// var r = MyRegex();
-		// var match = r.Match(row);
-		// if (match.Success)
-		// {
-		// 	if (match.ValueSpan.Length > 0)
-		// 	{
-		// 		st.Jump(match.ValueSpan.Length);
-		// 		return match.ValueSpan;
-		// 	}
-		// 	else
-		// 	{
-		// 		return null;
-		// 	}
-		// }
-
+		var count = 0; 
 		foreach (var item in row)
 		{
 			switch (item)
@@ -831,6 +815,7 @@ internal static partial class LexicalAnalyzer
 		int nestBracketS = 0;
 		//int nestBracketM = 0;
 		int nestBracketL = 0;
+		[MethodImpl(MethodImplOptions.AggressiveInlining)] 
 		void local()
 		{
 			while (true)

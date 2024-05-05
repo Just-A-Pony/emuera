@@ -490,9 +490,9 @@ internal partial class IdentifierDictionary
 				}
 			}
 		}
-		if (localvarTokenDic.ContainsKey(key))
+		if (localvarTokenDic.TryGetValue(key, out VariableLocal value))
 		{
-			if (localvarTokenDic[key].IsForbid)
+			if (value.IsForbid)
 			{
 				throw new CodeEE(string.Format(treer.UsedProhibitedVar.Text, key));
 			}
@@ -510,9 +510,8 @@ internal partial class IdentifierDictionary
 				if (Config.ICFunction)
 					subKey = subKey.ToUpper();
 			}
-			LocalVariableToken retLocal = localvarTokenDic[key].GetExistLocalVariableToken(subKey);
-			if (retLocal == null)
-				retLocal = localvarTokenDic[key].GetNewLocalVariableToken(subKey, line.ParentLabelLine);
+			LocalVariableToken retLocal = value.GetExistLocalVariableToken(subKey);
+			retLocal ??= value.GetNewLocalVariableToken(subKey, line.ParentLabelLine);
 			return retLocal;
 		}
 		if (varTokenDic.TryGetValue(key, out ret))
