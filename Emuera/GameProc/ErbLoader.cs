@@ -826,7 +826,6 @@ internal sealed class ErbLoader
 	{//ここでエラーを捕まえることは本来はないはず。ExeEE相当。
 		try
 		{
-			System.Windows.Forms.Application.DoEvents();
 			string filename = label.Position.Filename.ToUpper();
 			setArgument(label);
 			nestCheck(label);
@@ -839,6 +838,7 @@ internal sealed class ErbLoader
 			string errmes = (exc is EmueraException) ? exc.Message : exc.GetType().ToString() + ":" + exc.Message;
 			ParserMediator.Warn(string.Format(trerror.FuncAnalysisError.Text, label.LabelName, errmes), label, 2, true, false, exc is not EmueraException ? exc.StackTrace : null);
 			label.ErrMes = trerror.CalledFailedFunc.Text;
+			System.Windows.Forms.Application.DoEvents();
 		}
 		finally
 		{
