@@ -389,7 +389,7 @@ internal static class ExpressionParser
 			switch (token.Type)
 			{
 				case '\0':
-					goto end;
+					return end(stack, ternaryCount);
 				case '"'://LiteralStringWT
 					stack.Add((token as LiteralStringWord).Str); 
 					break;
@@ -405,7 +405,7 @@ internal static class ExpressionParser
 						if (idStr.Equals("TO", Config.SCVariable))
 						{
 							if (allowKeywordTo)
-								goto end;
+								return end(stack, ternaryCount);
 							else
 								throw new CodeEE(trerror.InvalidTo.Text);
 						}
@@ -415,7 +415,7 @@ internal static class ExpressionParser
 						#region EM_私家版_HTMLパラメータ拡張
 						if ((endWith & TermEndWith.KeyWordPx) == TermEndWith.KeyWordPx && idStr.Equals("px", StringComparison.OrdinalIgnoreCase) && (wc.Next.Type == ',' || wc.Next.Type == '\0'))
 						{
-							goto end;
+							return end(stack, ternaryCount);
 						}
 						#endregion
 						#region EE_ERD
@@ -433,7 +433,7 @@ internal static class ExpressionParser
 						if (op == OperatorCode.Assignment)
 						{
 							if ((endWith & TermEndWith.Assignment) == TermEndWith.Assignment)
-								goto end;
+								return end(stack, ternaryCount); 
 							throw new CodeEE(trerror.EqualInExpression.Text);
 						}
 
@@ -472,15 +472,15 @@ internal static class ExpressionParser
 					continue;
 				case ')':
 					if ((endWith & TermEndWith.RightParenthesis) == TermEndWith.RightParenthesis)
-						goto end;
+						return end(stack, ternaryCount);
 					throw new CodeEE(string.Format(trerror.UnexpectedSymbol.Text, token.Type));
 				case ']':
 					if ((endWith & TermEndWith.RightBracket) == TermEndWith.RightBracket)
-						goto end;
+						return end(stack, ternaryCount);
 					throw new CodeEE(string.Format(trerror.UnexpectedSymbol.Text, token.Type));
 				case ',':
 					if ((endWith & TermEndWith.Comma) == TermEndWith.Comma)
-						goto end;
+						return end(stack, ternaryCount);
 					throw new CodeEE(string.Format(trerror.UnexpectedSymbol.Text, token.Type));
 				case 'M':
 					throw new ExeEE(trerror.FailedSolveMacro.Text);
@@ -490,10 +490,14 @@ internal static class ExpressionParser
 			//termCount++;
 			wc.ShiftNext();
 		} while (!varArg);
-	end:
-		if (ternaryCount > 0)
-			throw new CodeEE(trerror.TernaryBinaryError.Text);
-		return stack.ReduceAll();
+		return end(stack, ternaryCount);
+
+		static IOperandTerm end(TermStack stack, int ternaryCount)
+		{
+			if (ternaryCount > 0)
+				throw new CodeEE(trerror.TernaryBinaryError.Text);
+			return stack.ReduceAll();
+		}
 	}
 
 	#endregion
