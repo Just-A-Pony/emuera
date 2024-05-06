@@ -219,55 +219,52 @@ internal partial class IdentifierDictionary
 		}
 		if (!isFunction || !Config.WarnFunctionOverloading)
 			return;
-		if (!nameDic.TryGetValue(labelName, out DefinedNameType value))
+		if (nameDic.TryGetValue(labelName, out DefinedNameType value))
 		{
-			if (nameDic.ContainsKey(labelName))
+			switch (value)
 			{
-				switch (value)
-				{
-					case DefinedNameType.Reserved:
-						if (Config.AllowFunctionOverloading)
-						{
-							errMes = string.Format(treer.LabelConflictReservedWord1.Text, labelName);
-							warnLevel = 1;
-						}
-						else
-						{
-							errMes = string.Format(treer.LabelConflictReservedWord2.Text, labelName);
-							warnLevel = 2;
-						}
-						break;
-					case DefinedNameType.SystemMethod:
-						if (Config.AllowFunctionOverloading)
-						{
-							errMes = string.Format(treer.LabelOverwriteInternalExpression.Text, labelName);
-							warnLevel = 1;
-						}
-						else
-						{
-							errMes = string.Format(treer.LabelNameAlreadyUsedInternalExpression.Text, labelName);
-							warnLevel = 2;
-						}
-						break;
-					case DefinedNameType.SystemVariable:
-						errMes = string.Format(treer.LabelNameAlreadyUsedInternalVariable.Text, labelName);
+				case DefinedNameType.Reserved:
+					if (Config.AllowFunctionOverloading)
+					{
+						errMes = string.Format(treer.LabelConflictReservedWord1.Text, labelName);
 						warnLevel = 1;
-						break;
-					case DefinedNameType.SystemInstrument:
-						errMes = string.Format(treer.LabelNameAlreadyUsedInternalInstruction.Text, labelName);
+					}
+					else
+					{
+						errMes = string.Format(treer.LabelConflictReservedWord2.Text, labelName);
+						warnLevel = 2;
+					}
+					break;
+				case DefinedNameType.SystemMethod:
+					if (Config.AllowFunctionOverloading)
+					{
+						errMes = string.Format(treer.LabelOverwriteInternalExpression.Text, labelName);
 						warnLevel = 1;
-						break;
-						break;
-					case DefinedNameType.UserMacro:
-						//字句解析がうまくいっていれば本来あり得ないはず
-						errMes = string.Format(treer.LabelNameAlreadyUsedMacro.Text, labelName);
+					}
+					else
+					{
+						errMes = string.Format(treer.LabelNameAlreadyUsedInternalExpression.Text, labelName);
 						warnLevel = 2;
-						break;
-					case DefinedNameType.UserRefMethod:
-						errMes = string.Format(treer.LabelNameAlreadyUsedRefFunction.Text, labelName);
-						warnLevel = 2;
-						break;
-				}
+					}
+					break;
+				case DefinedNameType.SystemVariable:
+					errMes = string.Format(treer.LabelNameAlreadyUsedInternalVariable.Text, labelName);
+					warnLevel = 1;
+					break;
+				case DefinedNameType.SystemInstrument:
+					errMes = string.Format(treer.LabelNameAlreadyUsedInternalInstruction.Text, labelName);
+					warnLevel = 1;
+					break;
+					break;
+				case DefinedNameType.UserMacro:
+					//字句解析がうまくいっていれば本来あり得ないはず
+					errMes = string.Format(treer.LabelNameAlreadyUsedMacro.Text, labelName);
+					warnLevel = 2;
+					break;
+				case DefinedNameType.UserRefMethod:
+					errMes = string.Format(treer.LabelNameAlreadyUsedRefFunction.Text, labelName);
+					warnLevel = 2;
+					break;
 			}
 		}
 		return;
