@@ -113,18 +113,18 @@ internal partial class IdentifierDictionary
 	#endregion
 
 
-	Dictionary<string, DefinedNameType> nameDic = [];
+	Dictionary<string, DefinedNameType> nameDic = new(StringComparer.OrdinalIgnoreCase);
 
 	List<string> privateDimList = [];
 	List<string> disableList = [];
 	//Dictionary<string, VariableToken> userDefinedVarDic = new Dictionary<string, VariableToken>();
 
 	VariableData varData;
-	Dictionary<string, VariableToken> varTokenDic;
-	Dictionary<string, VariableLocal> localvarTokenDic;
-	Dictionary<string, FunctionIdentifier> instructionDic;
-	Dictionary<string, FunctionMethod> methodDic;
-	Dictionary<string, UserDefinedRefMethod> refmethodDic;
+	Dictionary<string, VariableToken> varTokenDic = new(StringComparer.OrdinalIgnoreCase);
+	Dictionary<string, VariableLocal> localvarTokenDic = new(StringComparer.OrdinalIgnoreCase);
+	Dictionary<string, FunctionIdentifier> instructionDic = new(StringComparer.OrdinalIgnoreCase);
+	Dictionary<string, FunctionMethod> methodDic = new(StringComparer.OrdinalIgnoreCase);
+	Dictionary<string, UserDefinedRefMethod> refmethodDic = new(StringComparer.OrdinalIgnoreCase);
 	public List<UserDefinedCharaVariableToken> CharaDimList = new List<UserDefinedCharaVariableToken>();
 
 	#region initialize
@@ -205,7 +205,7 @@ internal partial class IdentifierDictionary
 			return;
 		}
 		//1.721 記号をサポートしない方向に変更
-		if (labelName.AsSpan().IndexOfAny(badSymbolAsIdentifier) != -1)
+		if (labelName.AsSpan().ContainsAny(badSymbolAsIdentifier))
 		{
 			errMes = string.Format(treer.LabelContainsOtherThanUnderline.Text, labelName);
 			warnLevel = 1;
@@ -522,8 +522,6 @@ internal partial class IdentifierDictionary
 			else
 			{
 				ParserMediator.Warn(treer.CannotRecommendCallLocalVar.Text, line, 1, false, false);
-				if (Config.ICFunction)
-					subKey = subKey.ToUpper();
 			}
 			LocalVariableToken retLocal = value.GetExistLocalVariableToken(subKey);
 			retLocal ??= value.GetNewLocalVariableToken(subKey, line.ParentLabelLine);

@@ -244,7 +244,7 @@ static class Program
 				else
 				{
 					//if (Path.GetExtension(args[i]).ToUpper() != ".ERB")
-					if (Path.GetExtension(path).ToUpper() != ".ERB")
+					if (!Path.GetExtension(path).Equals(".ERB", StringComparison.OrdinalIgnoreCase))
 					{
 						System.Windows.MessageBox.Show(Lang.UI.MainWindow.MsgBox.InvalidArg.Text);
 						return;

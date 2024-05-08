@@ -15,8 +15,8 @@ static class AppContents
 	{
 		gList = [];
 	}
-	static Dictionary<string, AbstractImage> resourceDic = [];
-	static Dictionary<string, ASprite> imageDictionary = [];
+	static Dictionary<string, AbstractImage> resourceDic = new(StringComparer.OrdinalIgnoreCase);
+	static Dictionary<string, ASprite> imageDictionary = new(StringComparer.OrdinalIgnoreCase);
 	static Dictionary<int, GraphicsImage> gList;
 	static Dictionary<string, ASprite> resourceImageDictionary = new Dictionary<string, ASprite>();
 
@@ -76,7 +76,7 @@ static class AppContents
 		}
 		else
 		{
-			imageDictionary = new Dictionary<string, ASprite>(resourceImageDictionary);
+			imageDictionary = [];
 			return sprites - csprites;
 		}
 	}

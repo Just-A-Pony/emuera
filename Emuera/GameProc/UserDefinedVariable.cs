@@ -53,11 +53,14 @@ internal sealed class UserDefinedVariableData
 			wc.ShiftNext();
 			keyword = idw.Code;
 			if (Config.ICVariable)
+			{
 				keyword = keyword.ToUpper();
+			}
+			var cmp = Config.ICVariable ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 			//TODO ifの数があたまわるい なんとかしたい
 			switch (keyword)
 			{
-				case "CONST":
+				case var s when s.Equals("CONST", cmp):
 					if (ret.CharaData)
 						throw new CodeEE(string.Format(trerror.CanNotSpecifiedWith.Text, keyword, "CHARADATA"), sc);
 					if (ret.Global)
@@ -72,7 +75,7 @@ internal sealed class UserDefinedVariableData
 						throw new CodeEE(string.Format(trerror.DuplicateKeyword.Text, keyword), sc);
 					ret.Const = true;
 					break;
-				case "REF":
+				case var s when s.Equals("REF", cmp):
 					//throw new CodeEE("未実装の機能です", sc);
 					//if (!isPrivate)
 					//	throw new CodeEE("広域変数の宣言に" + keyword + "キーワードは指定できません", sc);
@@ -91,7 +94,7 @@ internal sealed class UserDefinedVariableData
 					ret.Reference = true;
 					ret.Static = false;
 					break;
-				case "DYNAMIC":
+				case var s when s.Equals("DYNAMIC", cmp):
 					if (!isPrivate)
 						throw new CodeEE(string.Format(trerror.CanNotUseKeywordGlobalVar.Text, keyword), sc);
 					if (ret.CharaData)
@@ -106,7 +109,7 @@ internal sealed class UserDefinedVariableData
 					staticDefined = true;
 					ret.Static = false;
 					break;
-				case "STATIC":
+				case var s when s.Equals("STATIC", cmp):
 					if (!isPrivate)
 						throw new CodeEE(string.Format(trerror.CanNotUseKeywordGlobalVar.Text, keyword), sc);
 					if (ret.CharaData)
@@ -121,7 +124,7 @@ internal sealed class UserDefinedVariableData
 					staticDefined = true;
 					ret.Static = true;
 					break;
-				case "GLOBAL":
+				case var s when s.Equals("GLOBAL", cmp):
 					if (isPrivate)
 						throw new CodeEE(string.Format(trerror.CanNotUseKeywordLocalVar.Text, keyword), sc);
 					if (ret.CharaData)
@@ -137,7 +140,7 @@ internal sealed class UserDefinedVariableData
 							throw new CodeEE(string.Format(trerror.CanNotSpecifiedWith.Text, "DYNAMIC", "GLOBAL"), sc);
 					ret.Global = true;
 					break;
-				case "SAVEDATA":
+				case var s when s.Equals("SAVEDATA", cmp):
 					if (isPrivate)
 						throw new CodeEE(string.Format(trerror.CanNotUseKeywordLocalVar.Text, keyword), sc);
 					if (staticDefined)
@@ -153,7 +156,7 @@ internal sealed class UserDefinedVariableData
 						throw new CodeEE(string.Format(trerror.DuplicateKeyword.Text, keyword), sc);
 					ret.Save = true;
 					break;
-				case "CHARADATA":
+				case var s when s.Equals("CHARADATA", cmp):
 					if (isPrivate)
 						throw new CodeEE(string.Format(trerror.CanNotUseKeywordLocalVar.Text, keyword), sc);
 					if (ret.Reference)
