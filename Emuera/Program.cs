@@ -77,24 +77,11 @@ static partial class Program
 		{ Arity = ArgumentArity.ZeroOrMore };
 		rootCommand.AddArgument(filesArg);
 
-		rootCommand.SetHandler(Handler,
-		exeDirOption,
-		debugModeOption,
-		filesArg,
-		genLangOption);
-
-		var parser = new CommandLineBuilder(rootCommand)
-			.UseDefaults()
-			.Build();
-
-		parser.Invoke(args);
-	}
-
-	private static void Handler(string? exeDir, bool debugMode, string[] fileArgs, bool genLang)
-	{
+		var result = rootCommand.Parse(args);
 
 		//実行ディレクトリが引数で与えられた場合
-		if (exeDir is not null)
+		var exeDir = result.GetValueForOption(exeDirOption);
+		if (exeDir != null)
 		{
 			ExeDir = Path.Join(exeDir.AsSpan(), [Path.DirectorySeparatorChar]);
 
@@ -130,7 +117,10 @@ static partial class Program
 			if (FunctionIdentifier.sound[i] != null) FunctionIdentifier.sound[i].close();
 		}
 
+		var debugMode = result.GetValueForOption(debugModeOption); 
 		DebugMode = debugMode;
+
+		var genLang = result.GetValueForOption(genLangOption);
 		if (genLang)
 			Lang.GenerateDefaultLangFile();
 
@@ -138,6 +128,7 @@ static partial class Program
 		List<string> otherArgs = [];
 
 		//引数の後ろにある他のフラグにマッチしなかった文字列を解析指定されたファイルとみなす
+		var fileArgs = result.GetValueForArgument(filesArg); 
 		var analysisRequestPaths = fileArgs;
 		if (analysisRequestPaths.Length > 0)
 		{
