@@ -301,146 +301,140 @@ internal sealed class ErbLoader
 		//読み込んだファイルのパスを記録
 		//一部ファイルの再読み込み時の処理用
 		labelDic.AddFilename(filename);
-		var eReader = new EraStreamReader(Config.UseRenameFile && ParserMediator.RenameDic != null);
+		using var eReader = new EraStreamReader(Config.UseRenameFile && ParserMediator.RenameDic != null);
 
 		if (!eReader.OpenOnCache(filepath, filename))
 		{
 			output.PrintError(string.Format(trerror.FailedOpenFile.Text, eReader.Filename));
 		}
-		try
+		PPState ppstate = new();
+		LogicalLine nextLine = new NullLine();
+		LogicalLine lastLine = new NullLine();
+		FunctionLabelLine lastLabelLine = null;
+		StringStream st = null;
+		ScriptPosition position = null;
+		int funcCount = 0;
+		if (Program.AnalysisMode)
+			output.PrintSystemLine(" ");
+		while ((st = eReader.ReadEnabledLine(ppstate.Disabled)) != null)
 		{
-			PPState ppstate = new();
-			LogicalLine nextLine = new NullLine();
-			LogicalLine lastLine = new NullLine();
-			FunctionLabelLine lastLabelLine = null;
-			StringStream st = null;
-			ScriptPosition position = null;
-			int funcCount = 0;
-			if (Program.AnalysisMode)
-				output.PrintSystemLine("　");
-			while ((st = eReader.ReadEnabledLine(ppstate.Disabled)) != null)
+			position = new ScriptPosition(eReader.Filename, eReader.LineNo);
+			//rename処理をEraStreamReaderに移管
+			//変換できなかった[[～～]]についてはLexAnalyzerがエラーを投げる
+			if (st.Current == '[' && st.Next != '[')
 			{
-				position = new ScriptPosition(eReader.Filename, eReader.LineNo);
-				//rename処理をEraStreamReaderに移管
-				//変換できなかった[[～～]]についてはLexAnalyzerがエラーを投げる
-				if (st.Current == '[' && st.Next != '[')
-				{
-					st.ShiftNext();
-					string token = LexicalAnalyzer.ReadSingleIdentifier(st);
-					LexicalAnalyzer.SkipWhiteSpace(st);
-					string token2 = LexicalAnalyzer.ReadSingleIdentifier(st);
-					if (string.IsNullOrEmpty(token) || (st.Current != ']'))
-						ParserMediator.Warn(trerror.InvalidSBrackets.Text, position, 1);
-					ppstate.AddKeyWord(token, token2, position);
-					st.ShiftNext();
-					if (!st.EOS)
-						ParserMediator.Warn(string.Format(trerror.IgnoreAfterPreprosessor.Text, token), position, 1);
-					continue;
-				}
-				//if ((skip) || (Program.DebugMode && ifndebug) || (!Program.DebugMode && ifdebug))
-				//	continue;
-				if (ppstate.Disabled)
-					continue;
-				//ここまでプリプロセッサ
+				st.ShiftNext();
+				string token = LexicalAnalyzer.ReadSingleIdentifier(st);
+				LexicalAnalyzer.SkipWhiteSpace(st);
+				string token2 = LexicalAnalyzer.ReadSingleIdentifier(st);
+				if (string.IsNullOrEmpty(token) || (st.Current != ']'))
+					ParserMediator.Warn("[]の使い方が不正です", position, 1);
+				ppstate.AddKeyWord(token, token2, position);
+				st.ShiftNext();
+				if (!st.EOS)
+					ParserMediator.Warn(string.Format(trerror.IgnoreAfterPreprosessor.Text, token), position, 1);
+				continue;
+			}
+			//if ((skip) || (Program.DebugMode && ifndebug) || (!Program.DebugMode && ifdebug))
+			//	continue;
+			if (ppstate.Disabled)
+				continue;
+			//ここまでプリプロセッサ
 
-				if (st.Current == '#')
+			if (st.Current == '#')
+			{
+				if ((lastLine == null) || lastLine is not FunctionLabelLine funcLine)
 				{
-					if ((lastLine == null) || lastLine is not FunctionLabelLine funcLine)
-					{
-						ParserMediator.Warn(trerror.InvalidSharp.Text, position, 1);
-						continue;
-					}
-					if (!LogicalLineParser.ParseSharpLine(funcLine, st, position, isOnlyEvent)) 
-						noError = false;
+					ParserMediator.Warn(trerror.InvalidSharp.Text, position, 1);
 					continue;
 				}
-				if ((st.Current == '$') || (st.Current == '@'))
+				if (!LogicalLineParser.ParseSharpLine(funcLine, st, position, isOnlyEvent))
+					noError = false;
+				continue;
+			}
+			if ((st.Current == '$') || (st.Current == '@'))
+			{
+				bool isFunction = st.Current == '@';
+				nextLine = LogicalLineParser.ParseLabelLine(st, position, output);
+				if (isFunction)
 				{
-					bool isFunction = st.Current == '@';
-					nextLine = LogicalLineParser.ParseLabelLine(st, position, output);
-					if (isFunction)
-					{
-						var label = nextLine as FunctionLabelLine; 
-						lastLabelLine = label;
-						if (label is InvalidLabelLine)
-						{
-							noError = false;
-							ParserMediator.Warn(nextLine.ErrMes, position, 2);
-							labelDic.AddInvalidLabel(label);
-						}
-						else// if (label is FunctionLabelLine)
-						{
-							labelDic.AddLabel(label);
-							if (!label.IsEvent && (Config.WarnNormalFunctionOverloading || Program.AnalysisMode))
-							{
-								FunctionLabelLine seniorLabel = labelDic.GetSameNameLabel(label);
-								if (seniorLabel != null)
-								{
-									//output.NewLine();
-									ParserMediator.Warn(string.Format(trerror.FuncIsAlreadyDefined.Text, label.LabelName, seniorLabel.Position.Filename, seniorLabel.Position.LineNo.ToString()), position, 1);
-									funcCount = -1;
-								}
-							}
-							funcCount++;
-							if (Program.AnalysisMode && Config.PrintCPerLine > 0 && (funcCount % Config.PrintCPerLine) == 0)
-							{
-								output.NewLine();
-								output.PrintSystemLine("　");
-							}
-						}
-					}
-					else
-					{
-						if (nextLine is GotoLabelLine gotoLabel)
-						{
-							gotoLabel.ParentLabelLine = lastLabelLine;
-							if (lastLabelLine != null && !labelDic.AddLabelDollar(gotoLabel))
-							{
-								ScriptPosition pos = labelDic.GetLabelDollar(gotoLabel.LabelName, lastLabelLine).Position;
-								ParserMediator.Warn(string.Format(trerror.LabelIsAlreadyDefined.Text, gotoLabel.LabelName, pos.Filename, pos.LineNo.ToString()), position, 2);
-							}
-						}
-					}
-					if (nextLine is InvalidLine)
+					var label = nextLine as FunctionLabelLine;
+					lastLabelLine = label;
+					if (label is InvalidLabelLine)
 					{
 						noError = false;
+
 						ParserMediator.Warn(nextLine.ErrMes, position, 2);
+						labelDic.AddInvalidLabel(label);
+					}
+					else// if (label is FunctionLabelLine)
+					{
+						labelDic.AddLabel(label);
+						if (!label.IsEvent && (Config.WarnNormalFunctionOverloading || Program.AnalysisMode))
+						{
+							FunctionLabelLine seniorLabel = labelDic.GetSameNameLabel(label);
+							if (seniorLabel != null)
+							{
+								//output.NewLine();
+								ParserMediator.Warn(string.Format(trerror.FuncIsAlreadyDefined.Text, label.LabelName, seniorLabel.Position.Filename, seniorLabel.Position.LineNo.ToString()), position, 1);
+								funcCount = -1;
+							}
+						}
+						funcCount++;
+						if (Program.AnalysisMode && Config.PrintCPerLine > 0 && (funcCount % Config.PrintCPerLine) == 0)
+						{
+							output.NewLine();
+							output.PrintSystemLine(" ");
+						}
 					}
 				}
 				else
 				{
-					//1808alpha006 処理位置変更
-					////全置換はここで対応
-					////1756beta1+++　最初に全置換してしまうと関数定義を_Renameでとか論外なことができてしまうので永久封印した
-					//if (ParserMediator.RenameDic != null && st.CurrentEqualTo("[[") && (rowLine.TrimEnd().IndexOf("]]") == rowLine.TrimEnd().Length - 2))
-					//{
-					//    string replacedLine = st.Substring();
-					//    foreach (KeyValuePair<string, string> pair in ParserMediator.RenameDic)
-					//        replacedLine = replacedLine.Replace(pair.Key, pair.Value);
-					//    st = new StringStream(replacedLine);
-					//}
-					nextLine = LogicalLineParser.ParseLine(st, position, output);
-					if (nextLine == null)
-						continue;
-					if (nextLine is InvalidLine)
+					if (nextLine is GotoLabelLine gotoLabel)
 					{
-						noError = false;
-						ParserMediator.Warn(nextLine.ErrMes, position, 2);
+						gotoLabel.ParentLabelLine = lastLabelLine;
+						if (lastLabelLine != null && !labelDic.AddLabelDollar(gotoLabel))
+						{
+							ScriptPosition pos = labelDic.GetLabelDollar(gotoLabel.LabelName, lastLabelLine).Position;
+							ParserMediator.Warn(string.Format(trerror.LabelIsAlreadyDefined.Text, gotoLabel.LabelName, pos.Filename, pos.LineNo.ToString()), position, 2);
+						}
 					}
 				}
-				if (lastLabelLine == null)
-					ParserMediator.Warn(trerror.LineBeforeFunc.Text, position, 1);
-				nextLine.ParentLabelLine = lastLabelLine;
-				lastLine = addLine(nextLine, lastLine);
+				if (nextLine is InvalidLine)
+				{
+					noError = false;
+					ParserMediator.Warn(nextLine.ErrMes, position, 2);
+				}
 			}
-			addLine(new NullLine(), lastLine);
-			position = new ScriptPosition(eReader.Filename, -1);
-			ppstate.FileEnd(position);
+			else
+			{
+				//1808alpha006 処理位置変更
+				////全置換はここで対応
+				////1756beta1+++ 最初に全置換してしまうと関数定義を_Renameでとか論外なことができてしまうので永久封印した
+				//if (ParserMediator.RenameDic != null && st.CurrentEqualTo("[[") && (rowLine.TrimEnd().IndexOf("]]") == rowLine.TrimEnd().Length - 2))
+				//{
+				//    string replacedLine = st.Substring();
+				//    foreach (KeyValuePair<string, string> pair in ParserMediator.RenameDic)
+				//        replacedLine = replacedLine.Replace(pair.Key, pair.Value);
+				//    st = new StringStream(replacedLine);
+				//}
+				nextLine = LogicalLineParser.ParseLine(st, position, output);
+				if (nextLine == null)
+					continue;
+				if (nextLine is InvalidLine)
+				{
+					noError = false;
+					ParserMediator.Warn(nextLine.ErrMes, position, 2);
+				}
+			}
+			if (lastLabelLine == null)
+				ParserMediator.Warn("関数が定義されるより前に行があります", position, 1);
+			nextLine.ParentLabelLine = lastLabelLine;
+			lastLine = addLine(nextLine, lastLine);
 		}
-		finally
-		{
-			eReader.Close();
-		}
+		addLine(new NullLine(), lastLine);
+		position = new ScriptPosition(eReader.Filename, -1);
+		ppstate.FileEnd(position);
 		return;
 	}
 

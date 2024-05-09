@@ -196,8 +196,9 @@ internal partial class IdentifierDictionary
 	//{
 	//}
 
-	public void CheckUserLabelName(ref string errMes, ref int warnLevel, bool isFunction, string labelName)
+	public void CheckUserLabelName(out string errMes, ref int warnLevel, bool isFunction, string labelName)
 	{
+		errMes = "";
 		if (labelName.Length == 0)
 		{
 			errMes = treer.LabelNameMissing.Text;

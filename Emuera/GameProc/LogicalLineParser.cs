@@ -10,7 +10,6 @@ using MinorShift.Emuera.GameData;
 using MinorShift.Emuera.GameData.Function;
 using MinorShift.Emuera.GameProc.Function;
 using trerror = EvilMask.Emuera.Lang.Error;
-using System.Windows.Documents;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -295,19 +294,18 @@ internal static class LogicalLineParser
 		{
 			int warnLevel = -1;
 			stream.ShiftNext();//@か$を除去
-			WordCollection wc = LexicalAnalyzer.Analyse(stream, LexEndWith.EoL, LexAnalyzeFlag.AllowAssignment);
-			if (wc.EOL || !(wc.Current is IdentifierWord))
+			var wc = LexicalAnalyzer.Analyse(stream, LexEndWith.EoL, LexAnalyzeFlag.AllowAssignment);
+			if (wc.EOL || wc.Current is not IdentifierWord iw)
 			{
-				errMes = trerror.InvalidFunc.Text;
-				goto err;
+				return err(position, isFunction, ref labelName, trerror.InvalidFunc.Text);
 			}
-			labelName = ((IdentifierWord)wc.Current).Code;
+			labelName = iw.Code; 
 			wc.ShiftNext();
-			GlobalStatic.IdentifierDictionary.CheckUserLabelName(ref errMes, ref warnLevel, isFunction, labelName);
+			GlobalStatic.IdentifierDictionary.CheckUserLabelName(out errMes, ref warnLevel, isFunction, labelName); 
 			if (warnLevel >= 0)
 			{
 				if (warnLevel >= 2)
-					goto err;
+					return err(position, isFunction, ref labelName, errMes); 
 				ParserMediator.Warn(errMes, position, warnLevel);
 			}
 			if (!isFunction)//$ならこの時点で終了
@@ -368,15 +366,19 @@ internal static class LogicalLineParser
 		{
 			errMes = e.Message;
 		}
-	err:
-		System.Media.SystemSounds.Hand.Play();
-		if (isFunction)
+		return err(position, isFunction, ref labelName, errMes);
+
+		static LogicalLine err(ScriptPosition position, bool isFunction, ref string labelName, string errMes)
 		{
-			if (labelName.Length == 0)
-				labelName = "<Error>";
-			return new InvalidLabelLine(position, labelName, errMes);
+			System.Media.SystemSounds.Hand.Play();
+			if (isFunction)
+			{
+				if (labelName.Length == 0)
+					labelName = "<Error>";
+				return new InvalidLabelLine(position, labelName, errMes);
+			}
+			return new InvalidLine(position, errMes);
 		}
-		return new InvalidLine(position, errMes);
 	}
 
 
