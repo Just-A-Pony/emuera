@@ -10,6 +10,7 @@ using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using System.Linq;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace MinorShift.Emuera.GameData;
 
@@ -1693,16 +1694,18 @@ internal sealed class ConstantData
 		try
 		{
 			StringStream st = null;
+			Span<Range> dest = stackalloc Range[5]; 
 			while ((st = eReader.ReadEnabledLine()) != null)
 			{
 				position = new ScriptPosition(eReader.Filename, eReader.LineNo);
-				string[] tokens = st.Substring().Split(',');
-				if (tokens.Length < 2)
+				var ros = st.SubstringROS();
+				var length = ros.Split(dest, [',']);
+				if (length < 2)
 				{
 					ParserMediator.Warn(trerror.MissingComma.Text, position, 1);
 					continue;
 				}
-				if (!Int32.TryParse(tokens[0], out int index))
+				if (!int.TryParse(ros[dest[0]], out int index))
 				{
 					ParserMediator.Warn(trerror.FirstValueCanNotConvertToInt.Text, position, 1);
 					continue;
@@ -1719,11 +1722,11 @@ internal sealed class ConstantData
 				}
 				if (!defined.Add(index))
 					ParserMediator.Warn(string.Format(trerror.VarKeyAreadyDefined.Text, index.ToString()), position, 1);
-				target[index] = tokens[1];
-				if ((targetI != null) && (tokens.Length >= 3))
+				target[index] = ros[dest[1]].ToString();
+				if ((targetI != null) && (length >= 3))
 				{
 
-					if (!Int64.TryParse(tokens[2].TrimEnd(), out long price))
+					if (!Int64.TryParse(ros[dest[2]].TrimEnd(), out long price))
 					{
 						ParserMediator.Warn(trerror.CanNotReadAmountOfMoney.Text, position, 1);
 						continue;

@@ -5,6 +5,7 @@ using MinorShift.Emuera.GameProc;
 using MinorShift.Emuera.GameView;
 using System.IO;
 using System.Text.RegularExpressions;
+#nullable enable
 
 namespace MinorShift.Emuera;
 
@@ -12,6 +13,10 @@ namespace MinorShift.Emuera;
 //本当は引数として渡すべきなのかもしれないが全てのParserの引数を書きなおすのが面倒なのでstatic
 internal partial class ParserMediator
 {
+	static ParserMediator()
+	{
+		RenameDic = [];
+	}
 	/// <summary>
 	/// emuera.config等で発生した警告
 	/// Initializeより前に発生する
@@ -40,11 +45,10 @@ internal partial class ParserMediator
 		{
 			return;
 		}
-		if (RenameDic != null)
+		if (RenameDic.Count > 0)
 			RenameDic.Clear();
-		//とにかく辞書を作る。辞書がnullのときは UseRenameFileがNOの時のみ
-		RenameDic = [];
-		var fileLine = File.ReadLines(filepath, Config.Encode); 
+
+		var fileLine = File.ReadAllLines(filepath, Config.Encode);
 		ScriptPosition pos = null;
 		Regex reg = preCompiledRegex(); 
 		try

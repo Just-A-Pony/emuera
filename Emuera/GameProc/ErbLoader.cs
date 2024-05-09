@@ -7,6 +7,7 @@ using MinorShift.Emuera.GameData.Variable;
 using MinorShift.Emuera.GameProc.Function;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using trerror = EvilMask.Emuera.Lang.Error;
+using System.Threading.Tasks;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -46,20 +47,21 @@ internal sealed class ErbLoader
 		try
 		{
 			labelDic.RemoveAll();
-			for (int i = 0; i < erbFiles.Count; i++)
+			foreach (var erb in erbFiles)
 			{
-				string filename = erbFiles[i].Key;
-				string file = erbFiles[i].Value;
+				string filename = erb.Key;
+				string file = erb.Value;
 #if DEBUG
 				if (displayReport)
 					output.PrintSystemLine(string.Format(trsl.ElapsedTimeLoad.Text, (DateTime.Now - starttime).TotalMilliseconds, filename));
 #else
-					if (displayReport)
+				if (displayReport)
 						output.PrintSystemLine(string.Format(trsl.LoadingFile.Text, filename));
 #endif
 				System.Windows.Forms.Application.DoEvents();
 				loadErb(file, filename, isOnlyEvent);
-			}
+			};
+			System.Windows.Forms.Application.DoEvents();
 			ParserMediator.FlushWarningList();
 #if DEBUG
 			output.PrintSystemLine(string.Format(trsl.ElapsedTime.Text, (DateTime.Now - starttime).TotalMilliseconds));
