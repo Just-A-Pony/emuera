@@ -152,12 +152,16 @@ internal sealed partial class Process(EmueraConsole view)
 			}
 			console.SetWindowTitle(gamebase.ScriptWindowTitle);
 			GlobalStatic.GameBaseData = gamebase;
+			Debug.WriteLine("Proc:Init:MainCSV:End " + stopWatch.ElapsedMilliseconds + "ms");
 
 			//前記以外のcsvを全て読み込み
 			ConstantData constant = new();
 			constant.LoadData(Program.CsvDir, console, Config.DisplayReport);
+			Debug.WriteLine("Proc:Init:EtcCSV:End " + stopWatch.ElapsedMilliseconds + "ms");
+
 			GlobalStatic.ConstantData = constant;
 			TrainName = constant.GetCsvNameList(VariableCode.TRAINNAME);
+			Debug.WriteLine("Proc:Init:EtcCSV:End " + stopWatch.ElapsedMilliseconds + "ms");
 
 			vEvaluator = new VariableEvaluator(gamebase, constant);
 			GlobalStatic.VEvaluator = vEvaluator;
@@ -170,6 +174,8 @@ internal sealed partial class Process(EmueraConsole view)
 
 			exm = new ExpressionMediator(this, vEvaluator, console);
 			GlobalStatic.EMediator = exm;
+
+			Debug.WriteLine("Proc:Init:ERH:Start " + stopWatch.ElapsedMilliseconds + "ms");
 
 			labelDic = new LabelDictionary();
 			GlobalStatic.LabelDictionary = labelDic;
@@ -185,6 +191,7 @@ internal sealed partial class Process(EmueraConsole view)
 				return false;
 			}
 			LexicalAnalyzer.UseMacro = idDic.UseMacro();
+			Debug.WriteLine("Proc:Init:ERH:End " + stopWatch.ElapsedMilliseconds + "ms");
 
 			//TODO:ユーザー定義変数用のcsvの適用
 
