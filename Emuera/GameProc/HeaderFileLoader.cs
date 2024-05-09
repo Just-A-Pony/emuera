@@ -2,16 +2,11 @@
 using System.Collections.Generic;
 using MinorShift.Emuera.Sub;
 using MinorShift.Emuera.GameView;
-using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.GameProc.Function;
-using MinorShift._Library;
 using MinorShift.Emuera.GameData;
-using MinorShift.Emuera.GameData.Function;
 using System.IO;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using trerror = EvilMask.Emuera.Lang.Error;
-using System.IO;
 
 namespace MinorShift.Emuera.GameProc;
 

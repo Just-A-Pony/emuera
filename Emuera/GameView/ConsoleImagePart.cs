@@ -1,10 +1,7 @@
 ﻿using EvilMask.Emuera;
-using MinorShift._Library;
 using MinorShift.Emuera.Content;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.Text;
 using static EvilMask.Emuera.Utils;
 

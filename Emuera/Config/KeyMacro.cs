@@ -1,8 +1,6 @@
 ﻿using System.IO;
 using MinorShift.Emuera.Sub;
 using System;
-using System.Windows.Forms;
-using System.Text;
 using trmk = EvilMask.Emuera.Lang.KeyMacro;
 
 namespace MinorShift.Emuera;

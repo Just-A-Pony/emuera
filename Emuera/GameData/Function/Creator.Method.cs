@@ -17,7 +17,6 @@ using System.IO;
 using EvilMask.Emuera;
 using trerror = EvilMask.Emuera.Lang.Error;
 using System.Data;
-using MinorShift.Emuera.Forms;
 
 namespace MinorShift.Emuera.GameData.Function;
 

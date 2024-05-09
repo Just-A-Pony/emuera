@@ -1,9 +1,6 @@
 ﻿using MinorShift._Library;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 
 namespace MinorShift.Emuera.Content;
 

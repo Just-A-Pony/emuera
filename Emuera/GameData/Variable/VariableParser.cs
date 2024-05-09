@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MinorShift.Emuera.GameProc;
-using MinorShift.Emuera.Sub;
+﻿using MinorShift.Emuera.Sub;
 using MinorShift.Emuera.GameData.Expression;
 using trerror = EvilMask.Emuera.Lang.Error;
 

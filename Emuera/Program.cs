@@ -8,7 +8,6 @@ using EvilMask.Emuera;
 using MinorShift.Emuera.GameProc.Function;
 using System.CommandLine;
 using System.CommandLine.Parsing;
-using Emuera;
 
 namespace MinorShift.Emuera;
 #nullable enable

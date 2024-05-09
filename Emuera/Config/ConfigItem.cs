@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.IO;
-using System.Windows.Forms;
 using System.Drawing;
 using MinorShift.Emuera.Sub;
 using EvilMask.Emuera;

@@ -7,7 +7,6 @@ using trerror = EvilMask.Emuera.Lang.Error;
 using System.Text.RegularExpressions;
 using System.Runtime.CompilerServices;
 using System.Buffers;
-using System.Globalization;
 
 namespace MinorShift.Emuera.Sub;
 

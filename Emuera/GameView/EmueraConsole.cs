@@ -6,7 +6,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Linq;
-using MinorShift._Library;
 using MinorShift.Emuera.Sub;
 //using MinorShift.Emuera.GameData;
 using MinorShift.Emuera.GameProc;

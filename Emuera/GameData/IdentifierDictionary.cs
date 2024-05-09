@@ -1,21 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using MinorShift.Emuera.Sub;
 using MinorShift.Emuera.GameData;
 using MinorShift.Emuera.GameData.Variable;
 using MinorShift.Emuera.GameData.Function;
 using MinorShift.Emuera.GameProc;
-using MinorShift.Emuera.GameView;
-using System.IO;
 using System.Text.RegularExpressions;
 using MinorShift.Emuera.GameProc.Function;
 using MinorShift.Emuera.GameData.Expression;
 using MinorShift._Library;
 using System.Linq;
-using EvilMask.Emuera;
 using treer = EvilMask.Emuera.Lang.Error;
-using System.Windows.Input;
 
 namespace MinorShift.Emuera;
 

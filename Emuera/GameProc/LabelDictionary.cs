@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Windows.Forms;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData;
-using MinorShift.Emuera.GameData.Variable;
 using System.Linq;
 
 namespace MinorShift.Emuera.GameProc;

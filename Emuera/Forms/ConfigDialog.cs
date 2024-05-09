@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 using System.Drawing.Text;
 using EvilMask.Emuera;
@@ -11,8 +8,6 @@ using trmb = EvilMask.Emuera.Lang.MessageBox;
 using System.IO;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Runtime.Versioning;
-using System.Threading.Tasks;
 
 
 namespace MinorShift.Emuera.Forms

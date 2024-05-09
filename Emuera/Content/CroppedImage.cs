@@ -3,9 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Text;
 using trerror = EvilMask.Emuera.Lang.Error;
-using System.Runtime.Versioning;
 
 namespace MinorShift.Emuera.Content;
 

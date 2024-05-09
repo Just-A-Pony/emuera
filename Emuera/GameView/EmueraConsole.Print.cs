@@ -1,5 +1,4 @@
-﻿using MinorShift._Library;
-using MinorShift.Emuera.Sub;
+﻿using MinorShift.Emuera.Sub;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,7 +11,6 @@ using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using EvilMask.Emuera;
 using static EvilMask.Emuera.Utils;
-using System.Runtime.Versioning;
 
 namespace MinorShift.Emuera.GameView;
 

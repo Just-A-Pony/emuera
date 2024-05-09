@@ -8,7 +8,6 @@ using MinorShift.Emuera.GameView;
 using EvilMask.Emuera;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
 using Emuera;
-using System.Threading.Tasks;
 using System.Diagnostics;
 
 namespace MinorShift.Emuera.Forms

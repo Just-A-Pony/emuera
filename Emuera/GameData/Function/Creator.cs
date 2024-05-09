@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MinorShift.Emuera.GameData.Expression;
+﻿using System.Collections.Generic;
 using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameProc;
 
 namespace MinorShift.Emuera.GameData.Function;
 

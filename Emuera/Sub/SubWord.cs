@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MinorShift.Emuera.Sub;
+﻿namespace MinorShift.Emuera.Sub;
 
 /// <summary>
 /// FormattedStringWTの中身用のトークン

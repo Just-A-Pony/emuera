@@ -6,12 +6,10 @@ using System.Text.RegularExpressions;
 using MinorShift.Emuera.Sub;
 using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.GameData.Expression;
-using MinorShift._Library;
 using MinorShift.Emuera.GameProc.Function;
 using System.Linq;
 //using System.Windows.Forms;
 using trerror = EvilMask.Emuera.Lang.Error;
-using System.Text.Json;
 
 namespace MinorShift.Emuera.GameData.Variable;
 
