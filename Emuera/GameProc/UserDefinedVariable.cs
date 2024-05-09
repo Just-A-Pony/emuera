@@ -49,7 +49,7 @@ internal sealed class UserDefinedVariableData
 			{
 				keyword = keyword.ToUpper();
 			}
-			var cmp = Config.ICVariable ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+			var cmp = Config.StrComp;
 			//TODO ifの数があたまわるい なんとかしたい
 			switch (keyword)
 			{

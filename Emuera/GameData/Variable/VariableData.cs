@@ -53,8 +53,8 @@ internal sealed partial class VariableData : IDisposable
 	public Int64 LastLoadNo = -1;
 	public string LastLoadText = "";
 
-	Dictionary<string, VariableToken> varTokenDic = new(StringComparer.OrdinalIgnoreCase);
-	Dictionary<string, VariableLocal> localvarTokenDic = new(StringComparer.OrdinalIgnoreCase);
+	readonly Dictionary<string, VariableToken> varTokenDic = new(Config.StrComper);
+	readonly Dictionary<string, VariableLocal> localvarTokenDic = new(Config.StrComper);
 
 	/// <summary>
 	/// ユーザー変数のうちStaticかつ非Globalなもの。ERHでのDIM(非GLOBAL) と関数でのDIM (STATIC)の両方。ロードやリセットで初期化が必要。キャラクタ変数は除く。
@@ -360,10 +360,7 @@ internal sealed partial class VariableData : IDisposable
 	}
 	public Dictionary<string, VariableToken> GetVarTokenDicClone()
 	{
-		Dictionary<string, VariableToken> clone = [];
-		foreach (KeyValuePair<string, VariableToken> pair in varTokenDic)
-			clone.Add(pair.Key, pair.Value);
-		return clone;
+		return new(varTokenDic, Config.StrComper);
 	}
 	public Dictionary<string, VariableToken> GetVarTokenDic()
 	{

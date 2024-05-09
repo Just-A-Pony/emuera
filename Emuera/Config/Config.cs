@@ -367,27 +367,17 @@ internal static class Config
 		return getFiles(rootdir, rootdir, pattern, !SearchSubdirectory, SortWithFilename);
 	}
 
-	private sealed class StrIgnoreCaseComparer : IComparer<string>
-	{
-		public int Compare(string x, string y)
-		{
-			return string.Compare(x, y, StringComparison.OrdinalIgnoreCase);
-		}
-	}
-	static readonly StrIgnoreCaseComparer ignoreCaseComparer = new StrIgnoreCaseComparer();
-
 	//KeyValuePair<相対パス, 完全パス>のリストを返す。
 	private static List<KeyValuePair<string, string>> getFiles(string dir, string rootdir, string pattern, bool toponly, bool sort)
 	{
-		StringComparison strComp = StringComparison.OrdinalIgnoreCase;
 		List<KeyValuePair<string, string>> retList = new List<KeyValuePair<string, string>>();
 
 		string RelativePath;//相対ディレクトリ名
-		if (string.Equals(dir, rootdir, strComp))//現在のパスが検索ルートパスに等しい
+		if (string.Equals(dir, rootdir, StringComparison.OrdinalIgnoreCase))//現在のパスが検索ルートパスに等しい
 			RelativePath = "";
 		else
 		{
-			if (!dir.StartsWith(rootdir, strComp))
+			if (!dir.StartsWith(rootdir, StringComparison.OrdinalIgnoreCase))
 				RelativePath = dir;
 			else
 				RelativePath = dir[rootdir.Length..];//前方が検索ルートパスと一致するならその部分を切り取る
@@ -612,6 +602,9 @@ internal static class Config
 	public static Int64 PbandDef { get; private set; }
 	public static Int64 RelationDef { get; private set; }
 	#endregion
+
+	public static StringComparison StrComp = StringComparison.OrdinalIgnoreCase;
+	public static StringComparer StrComper = StringComparer.OrdinalIgnoreCase;
 
 	#region EE版_UPDATECHECK
 	public static bool ForbidUpdateCheck { get; private set; }

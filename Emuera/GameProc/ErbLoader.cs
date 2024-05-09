@@ -39,7 +39,7 @@ internal sealed class ErbLoader
 		//checkScript();の時点でExpressionPerserがProcess.instance.LabelDicを必要とするから。
 		labelDic = labelDictionary;
 		labelDic.Initialized = false;
-		List<KeyValuePair<string, string>> erbFiles = Config.GetFiles(erbDir, "*.ERB");
+		var erbFiles = Config.GetFiles(erbDir, "*.ERB"); 
 		List<string> isOnlyEvent = [];
 		noError = true;
 		var starttime = DateTime.Now;
@@ -74,7 +74,7 @@ internal sealed class ErbLoader
 #endif
 			if (displayReport)
 				output.PrintSystemLine(trsl.CheckingSyntax.Text);
-			checkScript();
+			ParseScript(); 
 			ParserMediator.FlushWarningList();
 
 #if DEBUG
@@ -128,7 +128,7 @@ internal sealed class ErbLoader
 		setLabelsArg();
 		ParserMediator.FlushWarningList();
 		labelDic.Initialized = true;
-		checkScript();
+		ParseScript();
 		ParserMediator.FlushWarningList();
 		parentProcess.scaningLine = null;
 		isOnlyEvent.Clear();
@@ -614,9 +614,9 @@ internal sealed class ErbLoader
 
 	public bool useCallForm = false;
 	/// <summary>
-	/// 読込終わったファイルをチェックする
+	/// 事前処理したファイルをさらに解析し実行可能な状態にする
 	/// </summary>
-	private void checkScript()
+	private void ParseScript()
 	{
 		int usedLabelCount = 0;
 		int labelDepth = -1;
@@ -635,7 +635,7 @@ internal sealed class ErbLoader
 				//    useCallForm = true;
 				usedLabelCount++;
 				countInDepth++;
-				checkFunctionWithCatch(label);
+				ParseFunctionWithCatch(label);
 			}
 			if (countInDepth == 0)
 				break;
@@ -661,7 +661,7 @@ internal sealed class ErbLoader
 			{
 				if (label.Depth != labelDepth)
 					continue;
-				checkFunctionWithCatch(label);
+				ParseFunctionWithCatch(label);
 			}
 		}
 		else
@@ -673,7 +673,7 @@ internal sealed class ErbLoader
 					continue;
 				//解析モード時は呼ばれなかったものをここで解析
 				if (Program.AnalysisMode)
-					checkFunctionWithCatch(label);
+					ParseFunctionWithCatch(label); 
 				bool ignore = false;
 				if (notCalledWarning == DisplayWarningFlag.ONCE)
 				{
@@ -698,7 +698,7 @@ internal sealed class ErbLoader
 				else
 					ParserMediator.Warn(string.Format(trerror.FuncNeverCalled.Text, label.LabelName), label, 1, false, false);
 				if (!ignoreUncalledFunction)
-					checkFunctionWithCatch(label);
+					ParseFunctionWithCatch(label);
 				else
 				{
 					if (!(label.NextLine is NullLine) && !(label.NextLine is FunctionLabelLine))
@@ -813,11 +813,10 @@ internal sealed class ErbLoader
 		ParserMediator.Warn(str, line, level, isError, false);
 	}
 
-	private void checkFunctionWithCatch(FunctionLabelLine label)
+	private void ParseFunctionWithCatch(FunctionLabelLine label)
 	{//ここでエラーを捕まえることは本来はないはず。ExeEE相当。
 		try
 		{
-			string filename = label.Position.Filename.ToUpper();
 			setArgument(label);
 			nestCheck(label);
 			setJumpTo(label);

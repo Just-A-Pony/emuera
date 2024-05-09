@@ -9,7 +9,7 @@ using EvilMask.Emuera;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using System.Linq;
-using MinorShift.Emuera.GameProc;
+using System.Globalization;
 
 namespace MinorShift.Emuera.GameData;
 
@@ -1511,8 +1511,9 @@ internal sealed class ConstantData
 		Dictionary<string, int> namearray;
 
 		string errPos = null;
-		string varname = tokens[0].ToUpper();
-		switch (varname)
+		Span<char> chars = stackalloc char[tokens[0].Length];
+		var varname = tokens[0].AsSpan().ToUpper(chars, CultureInfo.InvariantCulture);
+		switch (chars)
 		{
 			case "NAME":
 			case "名前":

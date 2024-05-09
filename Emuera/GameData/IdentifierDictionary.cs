@@ -108,18 +108,17 @@ internal partial class IdentifierDictionary
 	#endregion
 
 
-	Dictionary<string, DefinedNameType> nameDic = new(StringComparer.OrdinalIgnoreCase);
+	readonly Dictionary<string, DefinedNameType> nameDic = new(Config.StrComper);
 
 	List<string> privateDimList = [];
-	List<string> disableList = [];
 	//Dictionary<string, VariableToken> userDefinedVarDic = new Dictionary<string, VariableToken>();
 
 	VariableData varData;
-	Dictionary<string, VariableToken> varTokenDic = new(StringComparer.OrdinalIgnoreCase);
-	Dictionary<string, VariableLocal> localvarTokenDic = new(StringComparer.OrdinalIgnoreCase);
-	Dictionary<string, FunctionIdentifier> instructionDic = new(StringComparer.OrdinalIgnoreCase);
-	Dictionary<string, FunctionMethod> methodDic = new(StringComparer.OrdinalIgnoreCase);
-	Dictionary<string, UserDefinedRefMethod> refmethodDic = new(StringComparer.OrdinalIgnoreCase);
+	readonly Dictionary<string, VariableToken> varTokenDic;
+	readonly Dictionary<string, VariableLocal> localvarTokenDic;
+	readonly Dictionary<string, FunctionIdentifier> instructionDic;
+	readonly Dictionary<string, FunctionMethod> methodDic;
+	readonly Dictionary<string, UserDefinedRefMethod> refmethodDic;
 	public List<UserDefinedCharaVariableToken> CharaDimList = new List<UserDefinedCharaVariableToken>();
 
 	#region initialize
@@ -157,7 +156,7 @@ internal partial class IdentifierDictionary
 		varTokenDic = varData.GetVarTokenDicClone();
 		localvarTokenDic = varData.GetLocalvarTokenDic();
 		methodDic = FunctionMethodCreator.GetMethodList();
-		refmethodDic = [];
+		refmethodDic = new(Config.StrComper);
 
 		foreach (KeyValuePair<string, FunctionMethod> pair in methodDic)
 		{
@@ -485,8 +484,8 @@ internal partial class IdentifierDictionary
 	public VariableToken GetVariableToken(string key, string subKey, bool allowPrivate)
 	{
 		VariableToken ret;
-		if (Config.ICVariable)
-			key = key.ToUpper();
+		//if (Config.ICVariable)
+		//	key = key.ToUpper();
 		if (allowPrivate)
 		{
 			LogicalLine line = GlobalStatic.Process.GetScaningLine();
@@ -582,8 +581,8 @@ internal partial class IdentifierDictionary
 
 	public IOperandTerm GetFunctionMethod(LabelDictionary labelDic, string codeStr, IOperandTerm[] arguments, bool userDefinedOnly)
 	{
-		if (Config.ICFunction)
-			codeStr = codeStr.ToUpper();
+		//if (Config.ICFunction)
+		//	codeStr = codeStr.ToUpper();
 		if (arguments == null)//引数なし、名前のみの探索
 		{
 			if (refmethodDic.ContainsKey(codeStr))
@@ -630,10 +629,8 @@ internal partial class IdentifierDictionary
 	public void ThrowException(string str, bool isFunc)
 	{
 		string idStr = str;
-		if (Config.ICFunction || Config.ICVariable) //片方だけなのは互換性用オプションなのでレアケースのはず。対応しない。
-			idStr = idStr.ToUpper();
-		if (disableList.Contains(idStr))
-			throw new CodeEE(string.Format(treer.DeclaringDisable.Text, str));
+		//if (Config.ICFunction || Config.ICVariable) //片方だけなのは互換性用オプションなのでレアケースのはず。対応しない。
+		//	idStr = idStr.ToUpper();
 		if (!isFunc && privateDimList.Contains(idStr))
 			throw new IdentifierNotFoundCodeEE(string.Format(treer.VarNotDefinedThisFunc.Text, str));
 		if (nameDic.ContainsKey(idStr))

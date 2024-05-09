@@ -14,8 +14,8 @@ static class AppContents
 	{
 		gList = [];
 	}
-	static Dictionary<string, AbstractImage> resourceDic = new(StringComparer.OrdinalIgnoreCase);
-	static Dictionary<string, ASprite> imageDictionary = new(StringComparer.OrdinalIgnoreCase);
+	static Dictionary<string, AbstractImage> resourceDic = new(Config.StrComper);
+	static Dictionary<string, ASprite> imageDictionary = new(Config.StrComper);
 	static Dictionary<int, GraphicsImage> gList;
 	static Dictionary<string, ASprite> resourceImageDictionary = new Dictionary<string, ASprite>();
 
