@@ -414,8 +414,6 @@ internal sealed partial class EmueraConsole : IDisposable
 
 	public void Initialize()
 	{
-		Trace.Listeners.Add(new TextWriterTraceListener(Console.Out));
-		Trace.AutoFlush = true;
 		GlobalStatic.Console = this;
 		//GlobalStatic.MainWindow = window;
 		process = new GameProc.Process(this);
