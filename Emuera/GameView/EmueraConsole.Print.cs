@@ -181,7 +181,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		#endregion
 		if (errorStr != null)
 		{
-			System.Windows.MessageBox.Show(trmb.IllegalFontError.Text, trmb.IllegalFontError.Text);
+			MessageBox.Show(trmb.IllegalFontError.Text, trmb.IllegalFontError.Text);
 			this.Quit();
 			return;
 		}
@@ -706,7 +706,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		}
 		catch (Exception)
 		{
-			System.Windows.MessageBox.Show(trmb.FailedOutputLogError.Text, trmb.FailedOutputLog.Text);
+			MessageBox.Show(trmb.FailedOutputLogError.Text, trmb.FailedOutputLog.Text);
 			return false;
 		}
 		finally
@@ -727,12 +727,12 @@ internal sealed partial class EmueraConsole : IDisposable
 			filename = Program.WorkingDir + filename;
 		if (filename.IndexOf("../", StringComparison.Ordinal) >= 0)
 		{
-			System.Windows.MessageBox.Show(trmb.CanNotOutputToParentDirectory.Text, trmb.FailedOutputLog.Text);
+			MessageBox.Show(trmb.CanNotOutputToParentDirectory.Text, trmb.FailedOutputLog.Text);
 			return false;
 		}
 		if (!filename.StartsWith(Program.WorkingDir, StringComparison.CurrentCultureIgnoreCase))
 		{
-			System.Windows.MessageBox.Show(trmb.CanOnlyOutputToSubDirectory.Text, trmb.FailedOutputLog.Text);
+			MessageBox.Show(trmb.CanOnlyOutputToSubDirectory.Text, trmb.FailedOutputLog.Text);
 			return false;
 		}
 
@@ -756,7 +756,7 @@ internal sealed partial class EmueraConsole : IDisposable
 
 		if (!filename.StartsWith(Program.WorkingDir, StringComparison.CurrentCultureIgnoreCase))
 		{
-			System.Windows.MessageBox.Show(trmb.CanOnlyOutputToSubDirectory.Text, trmb.FailedOutputLog.Text);
+			MessageBox.Show(trmb.CanOnlyOutputToSubDirectory.Text, trmb.FailedOutputLog.Text);
 			return false;
 		}
 

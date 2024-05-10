@@ -214,7 +214,7 @@ namespace MinorShift.Emuera.Forms
 				return false;
 			}
 			#region EE_ホットキー拡張
-			System.Windows.MessageBoxResult result;
+			DialogResult result;
 			switch (keyData & Keys.KeyCode)
 			{
 				case Keys.B when (keyData & Keys.Modifiers & Keys.Control) == Keys.Control:
@@ -240,25 +240,25 @@ namespace MinorShift.Emuera.Forms
 						var doit = console != null;
 						if (console != null && console.IsInProcess)
 						{
-							System.Windows.MessageBox.Show(trmb.NotAvailableDuringScript.Text);
+							MessageBox.Show(trmb.NotAvailableDuringScript.Text);
 							doit = false;
 						}
 						if (doit)
 						{
-							result = (System.Windows.MessageBoxResult)openFileDialog.ShowDialog();
+							result = (DialogResult)openFileDialog.ShowDialog();
 							var filepath = new List<string>();
-							if (result == System.Windows.MessageBoxResult.OK)
+							if (result == DialogResult.OK)
 							{
 								foreach (var fname in openFileDialog.FileNames)
 								{
 									if (!File.Exists(fname))
 									{
-										System.Windows.MessageBox.Show(trmb.FileNotFound.Text);
+										MessageBox.Show(trmb.FileNotFound.Text);
 										doit = false;
 									}
 									else if (Path.GetExtension(fname).ToUpper() != ".ERB")
 									{
-										System.Windows.MessageBox.Show(trmb.IsNotErb.Text, trmb.FileFormatError.Text); //
+										MessageBox.Show(trmb.IsNotErb.Text, trmb.FileFormatError.Text); //
 										doit = false;
 									}
 									if (fname.StartsWith(Program.ErbDir, StringComparison.OrdinalIgnoreCase))
@@ -284,22 +284,22 @@ namespace MinorShift.Emuera.Forms
 								doit = false;
 							if (console != null && console.IsInProcess)
 							{
-								System.Windows.MessageBox.Show(trmb.NotAvailableDuringScript.Text);
+								MessageBox.Show(trmb.NotAvailableDuringScript.Text);
 								doit = false;
 							}
 							if (console.notToTitle)
 							{
 								if (console.byError)
-									System.Windows.MessageBox.Show(trmb.ErrorInAnalysisMode.Text);
+									MessageBox.Show(trmb.ErrorInAnalysisMode.Text);
 								else
-									System.Windows.MessageBox.Show(trmb.CanNotReturnToTitle.Text);
+									MessageBox.Show(trmb.CanNotReturnToTitle.Text);
 								doit = false;
 							}
 							if (doit)
 							{
-								result = System.Windows.MessageBox.Show(trmb.ReturnToTitleAsk.Text, trmb.ReturnToTitle.Text,
-									System.Windows.MessageBoxButton.OKCancel);
-								if (result != System.Windows.MessageBoxResult.OK)
+								result = MessageBox.Show(trmb.ReturnToTitleAsk.Text, trmb.ReturnToTitle.Text,
+									MessageBoxButtons.OKCancel);
+								if (result != DialogResult.OK)
 									doit = false;
 								if (doit)
 								{
@@ -312,8 +312,8 @@ namespace MinorShift.Emuera.Forms
 					}
 				case Keys.R when (keyData & Keys.Modifiers & Keys.Control) == Keys.Control:
 				case Keys.Insert when (keyData & Keys.Modifiers & Keys.Control) == Keys.Control:
-					result = System.Windows.MessageBox.Show(trmb.RestartAsk.Text, trmb.Restart.Text, System.Windows.MessageBoxButton.OKCancel);
-					if (result == System.Windows.MessageBoxResult.OK)
+					result = MessageBox.Show(trmb.RestartAsk.Text, trmb.Restart.Text, MessageBoxButtons.OKCancel);
+					if (result == DialogResult.OK)
 					{
 						Reboot();
 						return true;
@@ -776,8 +776,8 @@ namespace MinorShift.Emuera.Forms
 
 		private void exitToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			System.Windows.MessageBoxResult result = System.Windows.MessageBox.Show(trmb.ExitAsk.Text, trmb.Exit.Text, System.Windows.MessageBoxButton.OKCancel);
-			if (result != System.Windows.MessageBoxResult.OK)
+			DialogResult result = MessageBox.Show(trmb.ExitAsk.Text, trmb.Exit.Text, MessageBoxButtons.OKCancel);
+			if (result != DialogResult.OK)
 				return;
 			Close();
 
@@ -785,8 +785,8 @@ namespace MinorShift.Emuera.Forms
 
 		private void rebootToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			System.Windows.MessageBoxResult result = System.Windows.MessageBox.Show(trmb.RestartAsk.Text, trmb.Restart.Text, System.Windows.MessageBoxButton.OKCancel);
-			if (result != System.Windows.MessageBoxResult.OK)
+			DialogResult result = MessageBox.Show(trmb.RestartAsk.Text, trmb.Restart.Text, MessageBoxButtons.OKCancel);
+			if (result != DialogResult.OK)
 				return;
 			Reboot();
 		}
@@ -794,11 +794,11 @@ namespace MinorShift.Emuera.Forms
 		//private void loadToolStripMenuItem_Click(object sender, EventArgs e)
 		//{
 		//    openFileDialog.InitialDirectory = StaticConfig.SavDir;
-		//    System.Windows.MessageBoxResult result = openFileDialog.ShowDialog();
+		//    DialogResult result = openFileDialog.ShowDialog();
 		//    string filepath = openFileDialog.FileName;
 		//    if (!File.Exists(filepath))
 		//    {
-		//        System.Windows.MessageBox.Show("ファイルがありません", "File Not Found");
+		//        MessageBox.Show("ファイルがありません", "File Not Found");
 		//        return;
 		//    }
 		//}
@@ -864,19 +864,19 @@ namespace MinorShift.Emuera.Forms
 				return;
 			if (console.IsInProcess)
 			{
-				System.Windows.MessageBox.Show(trmb.NotAvailableDuringScript.Text);
+				MessageBox.Show(trmb.NotAvailableDuringScript.Text);
 				return;
 			}
 			if (console.notToTitle)
 			{
 				if (console.byError)
-					System.Windows.MessageBox.Show(trmb.ErrorInAnalysisMode.Text);
+					MessageBox.Show(trmb.ErrorInAnalysisMode.Text);
 				else
-					System.Windows.MessageBox.Show(trmb.CanNotReturnToTitle.Text);
+					MessageBox.Show(trmb.CanNotReturnToTitle.Text);
 				return;
 			}
-			System.Windows.MessageBoxResult result = System.Windows.MessageBox.Show(trmb.ReturnToTitleAsk.Text, trmb.ReturnToTitle.Text, System.Windows.MessageBoxButton.OKCancel);
-			if (result != System.Windows.MessageBoxResult.OK)
+			DialogResult result = MessageBox.Show(trmb.ReturnToTitleAsk.Text, trmb.ReturnToTitle.Text, MessageBoxButtons.OKCancel);
+			if (result != DialogResult.OK)
 				return;
 			GotoTitle();
 		}
@@ -887,11 +887,11 @@ namespace MinorShift.Emuera.Forms
 				return;
 			if (console.IsInProcess)
 			{
-				System.Windows.MessageBox.Show(trmb.NotAvailableDuringScript.Text);
+				MessageBox.Show(trmb.NotAvailableDuringScript.Text);
 				return;
 			}
-			System.Windows.MessageBoxResult result = System.Windows.MessageBox.Show(trmb.ReloadErbAsk.Text, trmb.ReloadErb.Text, System.Windows.MessageBoxButton.OKCancel);
-			if (result != System.Windows.MessageBoxResult.OK)
+			DialogResult result = MessageBox.Show(trmb.ReloadErbAsk.Text, trmb.ReloadErb.Text, MessageBoxButtons.OKCancel);
+			if (result != DialogResult.OK)
 				return;
 			await ReloadErb();
 
@@ -916,8 +916,8 @@ namespace MinorShift.Emuera.Forms
 			string fname = time.ToString("yyyyMMdd-HHmmss");
 			fname += ".log";
 			saveFileDialog.FileName = fname;
-			System.Windows.MessageBoxResult result = (System.Windows.MessageBoxResult)saveFileDialog.ShowDialog();
-			if (result == System.Windows.MessageBoxResult.OK)
+			DialogResult result = (DialogResult)saveFileDialog.ShowDialog();
+			if (result == DialogResult.OK)
 			{
 				#region EE_OUTPUTLOG
 				// console.OutputLog(Path.GetFullPath(saveFileDialog.FileName));
@@ -938,7 +938,7 @@ namespace MinorShift.Emuera.Forms
 			}
 			catch (Exception)
 			{
-				System.Windows.MessageBox.Show(trmb.CanNotOpenClipboard.Text);
+				MessageBox.Show(trmb.CanNotOpenClipboard.Text);
 				return;
 			}
 		}
@@ -949,23 +949,23 @@ namespace MinorShift.Emuera.Forms
 				return;
 			if (console.IsInProcess)
 			{
-				System.Windows.MessageBox.Show(trmb.NotAvailableDuringScript.Text);
+				MessageBox.Show(trmb.NotAvailableDuringScript.Text);
 				return;
 			}
-			System.Windows.MessageBoxResult result = (System.Windows.MessageBoxResult)openFileDialog.ShowDialog();
+			DialogResult result = (DialogResult)openFileDialog.ShowDialog();
 			List<string> filepath = [];
-			if (result == System.Windows.MessageBoxResult.OK)
+			if (result == DialogResult.OK)
 			{
 				foreach (string fname in openFileDialog.FileNames)
 				{
 					if (!File.Exists(fname))
 					{
-						System.Windows.MessageBox.Show(trmb.FileNotFound.Text, trmb.FileNotFound.Text);
+						MessageBox.Show(trmb.FileNotFound.Text, trmb.FileNotFound.Text);
 						return;
 					}
 					if (Path.GetExtension(fname).Equals(".ERB", StringComparison.OrdinalIgnoreCase))
 					{
-						System.Windows.MessageBox.Show(trmb.IsNotErb.Text, trmb.FileFormatError.Text);
+						MessageBox.Show(trmb.IsNotErb.Text, trmb.FileFormatError.Text);
 						return;
 					}
 					if (fname.StartsWith(Program.ErbDir, StringComparison.OrdinalIgnoreCase))
@@ -983,11 +983,11 @@ namespace MinorShift.Emuera.Forms
 				return;
 			if (console.IsInProcess)
 			{
-				System.Windows.MessageBox.Show(trmb.NotAvailableDuringScript.Text);
+				MessageBox.Show(trmb.NotAvailableDuringScript.Text);
 				return;
 			}
-			System.Windows.MessageBoxResult result = System.Windows.MessageBox.Show(trmb.ReloadResourceAsk.Text, trmb.ReloadResource.Text, System.Windows.MessageBoxButton.OKCancel);
-			if (result != System.Windows.MessageBoxResult.OK)
+			DialogResult result = MessageBox.Show(trmb.ReloadResourceAsk.Text, trmb.ReloadResource.Text, MessageBoxButtons.OKCancel);
+			if (result != DialogResult.OK)
 				return;
 			console.ReloadResource();
 		}
@@ -1012,11 +1012,11 @@ namespace MinorShift.Emuera.Forms
 				return;
 			if (console.IsInProcess)
 			{
-				System.Windows.MessageBox.Show(trmb.NotAvailableDuringScript.Text);
+				MessageBox.Show(trmb.NotAvailableDuringScript.Text);
 				return;
 			}
 			//List<KeyValuePair<string, string>> filepath = new List<KeyValuePair<string, string>>();
-			if ((System.Windows.MessageBoxResult)folderSelectDialog.ShowDialog() == System.Windows.MessageBoxResult.OK)
+			if ((DialogResult)folderSelectDialog.ShowDialog() == DialogResult.OK)
 			{
 				await console.ReloadFolder(folderSelectDialog.SelectedPath);
 			}

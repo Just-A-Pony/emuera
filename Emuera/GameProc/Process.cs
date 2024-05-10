@@ -15,6 +15,7 @@ using trsl = EvilMask.Emuera.Lang.SystemLine;
 using trerror = EvilMask.Emuera.Lang.Error;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -62,8 +63,8 @@ internal sealed partial class Process(EmueraConsole view)
 			if (ParserMediator.HasWarning)
 			{
 				ParserMediator.FlushWarningList();
-				if (System.Windows.MessageBox.Show(trmb.ConfigFileError.Text, trmb.ConfigError.Text, System.Windows.MessageBoxButton.YesNo)
-					== System.Windows.MessageBoxResult.Yes)
+				if (MessageBox.Show(trmb.ConfigFileError.Text, trmb.ConfigError.Text, MessageBoxButtons.YesNo)
+					== DialogResult.Yes)
 				{
 					console.PrintSystemLine(trsl.SelectExitConfigMB.Text);
 					return false;
@@ -111,8 +112,8 @@ internal sealed partial class Process(EmueraConsole view)
 					if (ParserMediator.HasWarning)
 					{
 						ParserMediator.FlushWarningList();
-						if (System.Windows.MessageBox.Show(trmb.ReplaceFileError.Text, trmb.ReplaceError.Text, System.Windows.MessageBoxButton.YesNo)
-							== System.Windows.MessageBoxResult.Yes)
+						if (MessageBox.Show(trmb.ReplaceFileError.Text, trmb.ReplaceError.Text, MessageBoxButtons.YesNo)
+							== DialogResult.Yes)
 						{
 							console.PrintSystemLine(trsl.SelectExitReplaceMB.Text);
 							return false;
@@ -371,13 +372,13 @@ internal sealed partial class Process(EmueraConsole view)
 		if ((currentLine == null) || (currentLine is NullLine))
 			return;//現在の行が特殊な状態ならスルー
 		if (!console.Enabled)
-			return;//クローズしてるとSystem.Windows.MessageBox.Showができないので。
+			return;//クローズしてるとMessageBox.Showができないので。
 		string caption = string.Format(trmb.InfiniteLoop.Text);
 		string text = string.Format(
 			trmb.TooLongLoop.Text,
 			currentLine.Position.Filename, currentLine.Position.LineNo, state.lineCount, elapsedTime);
-		var result = System.Windows.MessageBox.Show(text, caption, System.Windows.MessageBoxButton.YesNo);
-		if (result == System.Windows.MessageBoxResult.Yes)
+		var result = MessageBox.Show(text, caption, MessageBoxButtons.YesNo);
+		if (result == DialogResult.Yes)
 		{
 			throw new CodeEE(trerror.SelectExitInfiniteLoopMB.Text);
 		}

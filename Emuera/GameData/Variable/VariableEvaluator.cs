@@ -8,7 +8,7 @@ using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameProc.Function;
 using System.Linq;
-//using System.Windows.Forms;
+using System.Windows.Forms;
 using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.GameData.Variable;
@@ -710,10 +710,10 @@ internal sealed class VariableEvaluator : IDisposable
 		}
 	}
 
-	public void SortArray(FixedVariableTerm p, SortOrder order, int start, int num)
+	public void SortArray(FixedVariableTerm p, GameProc.Function.SortOrder order, int start, int num)
 	{
-		if (order == SortOrder.UNDEF)
-			order = SortOrder.ASCENDING;
+		if (order == GameProc.Function.SortOrder.UNDEF)
+			order = GameProc.Function.SortOrder.ASCENDING;
 		if (p.Identifier.IsInteger)
 		{
 			Int64[] array;
@@ -731,9 +731,9 @@ internal sealed class VariableEvaluator : IDisposable
 			Int64[] temp = new Int64[num];
 			Array.Copy(array, start, temp, 0, num);
 
-			if (order == SortOrder.ASCENDING)
+			if (order == GameProc.Function.SortOrder.ASCENDING)
 				Array.Sort(temp);
-			else if (order == SortOrder.DESENDING)
+			else if (order == GameProc.Function.SortOrder.DESENDING)
 				Array.Sort(temp, delegate (Int64 a, Int64 b) { return b.CompareTo(a); });
 			Array.Copy(temp, 0, array, start, num);
 		}
@@ -754,9 +754,9 @@ internal sealed class VariableEvaluator : IDisposable
 			string[] temp = new string[num];
 			Array.Copy(array, start, temp, 0, num);
 
-			if (order == SortOrder.ASCENDING)
+			if (order == GameProc.Function.SortOrder.ASCENDING)
 				Array.Sort(temp);
-			else if (order == SortOrder.DESENDING)
+			else if (order == GameProc.Function.SortOrder.DESENDING)
 				Array.Sort(temp, delegate (string a, string b) { return b.CompareTo(a); });
 			Array.Copy(temp, 0, array, start, num);
 		}
@@ -1187,12 +1187,12 @@ internal sealed class VariableEvaluator : IDisposable
 		varData.CharacterList[(int)x] = data;
 	}
 
-	public void SortChara(VariableToken sortkey, Int64 elem, SortOrder sortorder, bool fixMaster)
+	public void SortChara(VariableToken sortkey, Int64 elem, GameProc.Function.SortOrder sortorder, bool fixMaster)
 	{
 		if (varData.CharacterList.Count <= 1)
 			return;
-		if (sortorder == SortOrder.UNDEF)
-			sortorder = SortOrder.ASCENDING;
+		if (sortorder == GameProc.Function.SortOrder.UNDEF)
+			sortorder = GameProc.Function.SortOrder.ASCENDING;
 		if (sortkey == null)
 			sortkey = GlobalStatic.VariableData.GetSystemVariableToken("NO");
 		CharacterData masterChara = null;
@@ -1216,7 +1216,7 @@ internal sealed class VariableEvaluator : IDisposable
 				return;
 			varData.CharacterList.Remove(masterChara);
 		}
-		if (sortorder == SortOrder.ASCENDING)
+		if (sortorder == GameProc.Function.SortOrder.ASCENDING)
 			varData.CharacterList.Sort(CharacterData.AscCharacterComparison);
 		else// if (sortorder == SortOrder.DESENDING)
 			varData.CharacterList.Sort(CharacterData.DescCharacterComparison);
@@ -1777,7 +1777,7 @@ internal sealed class VariableEvaluator : IDisposable
 		}
 		catch
 		{
-			System.Windows.MessageBox.Show(trerror.FailedCreateDataFolder.Text);
+			MessageBox.Show(trerror.FailedCreateDataFolder.Text);
 			throw new CodeEE(trerror.FailedCreateDataFolder.Text);
 		}
 	}

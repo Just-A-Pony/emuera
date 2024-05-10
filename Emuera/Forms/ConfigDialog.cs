@@ -894,7 +894,7 @@ namespace MinorShift.Emuera.Forms
 			disenabled |= setCheckBoxChecked(checkBox25, false) < 0;
 			disenabled |= setCheckBoxChecked(checkBox9, true) < 0;
 			if (disenabled)
-				System.Windows.MessageBox.Show(trmb.NotAllowChangeSetting.Text, trmb.UnableChangeSetting.Text);
+				MessageBox.Show(trmb.NotAllowChangeSetting.Text, trmb.UnableChangeSetting.Text);
 		}
 
 		private void button8_Click(object sender, EventArgs e)
@@ -911,7 +911,7 @@ namespace MinorShift.Emuera.Forms
 			disenabled |= setCheckBoxChecked(checkBoxCompatiSP, false) < 0;
 			disenabled |= setCheckBoxChecked(checkBox9, false) < 0;
 			if (disenabled)
-				System.Windows.MessageBox.Show(trmb.NotAllowChangeSetting.Text, trmb.UnableChangeSetting.Text);
+				MessageBox.Show(trmb.NotAllowChangeSetting.Text, trmb.UnableChangeSetting.Text);
 		}
 
 		//互換性チェックはいじらないように変更
@@ -926,7 +926,7 @@ namespace MinorShift.Emuera.Forms
 			disenabled |= setComboBoxChanged(comboBox3, 0) < 0;
 			disenabled |= setComboBoxChanged(comboBox4, 0) < 0;
 			if (disenabled)
-				System.Windows.MessageBox.Show(trmb.NotAllowChangeSetting.Text, trmb.UnableChangeSetting.Text);
+				MessageBox.Show(trmb.NotAllowChangeSetting.Text, trmb.UnableChangeSetting.Text);
 		}
 
 		private void button6_Click(object sender, EventArgs e)
@@ -940,7 +940,7 @@ namespace MinorShift.Emuera.Forms
 			disenabled |= setComboBoxChanged(comboBox3, 0) < 0;
 			disenabled |= setComboBoxChanged(comboBox4, 0) < 0;
 			if (disenabled)
-				System.Windows.MessageBox.Show(trmb.NotAllowChangeSetting.Text, trmb.UnableChangeSetting.Text);
+				MessageBox.Show(trmb.NotAllowChangeSetting.Text, trmb.UnableChangeSetting.Text);
 		}
 
 		private void comboBox6_SelectedIndexChanged(object sender, EventArgs e)
