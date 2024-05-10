@@ -83,9 +83,6 @@ internal sealed class GraphicsImage : AbstractImage
 		RealBitmap = new Bitmap(x, y, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 		size = new Size(x, y);
 		g = Graphics.FromImage(RealBitmap);
-		//こうしないとbmpファイルの拡縮が綺麗に出ない
-		g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
-		g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Bicubic;
 		drawImgList = new List<Tuple<ASprite, Rectangle>>();
 		AppContents.tempLoadedGraphicsImages.Add(this);
 	}
@@ -98,9 +95,6 @@ internal sealed class GraphicsImage : AbstractImage
 		size = new Size(bmp.Width, bmp.Height);
 		g = Graphics.FromImage(RealBitmap);
 		g.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height);
-		//こうしないとbmpファイルの拡縮が綺麗に出ない
-		g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.Half;
-		g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.Bicubic;
 	}
 
 	/// <summary>
