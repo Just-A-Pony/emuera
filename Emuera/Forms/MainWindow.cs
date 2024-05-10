@@ -9,6 +9,7 @@ using EvilMask.Emuera;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
 using Emuera;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace MinorShift.Emuera.Forms
 {
@@ -464,22 +465,9 @@ namespace MinorShift.Emuera.Forms
 			base.WndProc(ref m);
 		}
 
-		private void Init(object sender, EventArgs e)
+		private async void Init(object sender, EventArgs e)
 		{
-			var stopWatch = new Stopwatch();
-			stopWatch.Start();
-			Debug.WriteLine("Init:Start");
-			Debug.WriteLine("File:Preload:Start");
-			//必要なソースファイルを事前にメモリに一気に読み込む
-			Preload.Clear();
-			Preload.Load(Program.ErbDir);
-			Preload.Load(Program.CsvDir);
-
-			Debug.WriteLine("File:Preload:End " + stopWatch.ElapsedMilliseconds + "ms");
-
-			console.Initialize();
-
-			Debug.WriteLine("Init:End " + stopWatch.ElapsedMilliseconds + "ms");
+			await console.Initialize();
 		}
 
 		/// <summary>
@@ -829,11 +817,11 @@ namespace MinorShift.Emuera.Forms
 			console.GotoTitle();
 		}
 
-		public void ReloadErb()
+		public async Task ReloadErb()
 		{
 			if (console == null)
 				return;
-			console.ReloadErb();
+			await console.ReloadErb();
 		}
 
 		private void mainPicBox_MouseLeave(object sender, EventArgs e)
@@ -893,7 +881,7 @@ namespace MinorShift.Emuera.Forms
 			GotoTitle();
 		}
 
-		private void コードを読み直すcToolStripMenuItem_Click(object sender, EventArgs e)
+		private async void コードを読み直すcToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (console == null)
 				return;
@@ -905,7 +893,7 @@ namespace MinorShift.Emuera.Forms
 			System.Windows.MessageBoxResult result = System.Windows.MessageBox.Show(trmb.ReloadErbAsk.Text, trmb.ReloadErb.Text, System.Windows.MessageBoxButton.OKCancel);
 			if (result != System.Windows.MessageBoxResult.OK)
 				return;
-			ReloadErb();
+			await ReloadErb();
 
 		}
 
@@ -955,7 +943,7 @@ namespace MinorShift.Emuera.Forms
 			}
 		}
 
-		private void ファイルを読み直すFToolStripMenuItem_Click(object sender, EventArgs e)
+		private async void ファイルを読み直すFToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (console == null)
 				return;
@@ -985,7 +973,7 @@ namespace MinorShift.Emuera.Forms
 					else
 						filepath.Add(fname);
 				}
-				console.ReloadPartialErb(filepath);
+				await console.ReloadPartialErb(filepath);
 			}
 		}
 
@@ -1018,7 +1006,7 @@ namespace MinorShift.Emuera.Forms
 			}
 		}
 
-		private void フォルダを読み直すFToolStripMenuItem_Click(object sender, EventArgs e)
+		private async void フォルダを読み直すFToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (console == null)
 				return;
@@ -1030,7 +1018,7 @@ namespace MinorShift.Emuera.Forms
 			//List<KeyValuePair<string, string>> filepath = new List<KeyValuePair<string, string>>();
 			if ((System.Windows.MessageBoxResult)folderSelectDialog.ShowDialog() == System.Windows.MessageBoxResult.OK)
 			{
-				console.ReloadFolder(folderSelectDialog.SelectedPath);
+				await console.ReloadFolder(folderSelectDialog.SelectedPath);
 			}
 		}
 

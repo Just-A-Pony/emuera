@@ -34,7 +34,7 @@ internal sealed class ErbLoader
 	/// 複数のファイルを読む
 	/// </summary>
 	/// <param name="filepath"></param>
-	public bool LoadErbFiles(string erbDir, bool displayReport, LabelDictionary labelDictionary)
+	public async Task<bool> LoadErbFiles(string erbDir, bool displayReport, LabelDictionary labelDictionary)
 	{
 		//1.713 labelDicをnewする位置を変更。
 		//checkScript();の時点でExpressionPerserがProcess.instance.LabelDicを必要とするから。
@@ -59,9 +59,8 @@ internal sealed class ErbLoader
 						output.PrintSystemLine(string.Format(trsl.LoadingFile.Text, filename));
 #endif
 				System.Windows.Forms.Application.DoEvents();
-				loadErb(file, filename, isOnlyEvent);
+				await Task.Run(() => loadErb(file, filename, isOnlyEvent));
 			};
-			System.Windows.Forms.Application.DoEvents();
 			ParserMediator.FlushWarningList();
 #if DEBUG
 			output.PrintSystemLine(string.Format(trsl.ElapsedTime.Text, (DateTime.Now - starttime).TotalMilliseconds));
@@ -76,7 +75,7 @@ internal sealed class ErbLoader
 #endif
 			if (displayReport)
 				output.PrintSystemLine(trsl.CheckingSyntax.Text);
-			ParseScript(); 
+			await Task.Run(ParseScript); 
 			ParserMediator.FlushWarningList();
 
 #if DEBUG
@@ -105,32 +104,35 @@ internal sealed class ErbLoader
 	/// 指定されたファイルを読み込む
 	/// </summary>
 	/// <param name="filename"></param>
-	public bool loadErbs(List<string> path, LabelDictionary labelDictionary)
+	public async Task<bool> loadErbs(List<string> paths, LabelDictionary labelDictionary)
 	{
 		string fname;
 		List<string> isOnlyEvent = [];
 		noError = true;
 		labelDic = labelDictionary;
 		labelDic.Initialized = false;
-		foreach (string fpath in path)
+		await Task.Run(() =>
 		{
-			if (fpath.StartsWith(Program.ErbDir, Config.SCIgnoreCase) && !Program.AnalysisMode)
-				fname = fpath[Program.ErbDir.Length..];         
-			else
-				fname = fpath;
-			if (Program.AnalysisMode)
+			foreach (string fpath in paths)
 			{
-				output.PrintSystemLine(string.Format(trsl.LoadingFile.Text, fname));
+				if (fpath.StartsWith(Program.ErbDir, Config.SCIgnoreCase) && !Program.AnalysisMode)
+					fname = fpath[Program.ErbDir.Length..];
+				else
+					fname = fpath;
+				if (Program.AnalysisMode)
+				{
+					output.PrintSystemLine(string.Format(trsl.LoadingFile.Text, fname));
+				}
+				loadErb(fpath, fname, isOnlyEvent);
 			}
-			loadErb(fpath, fname, isOnlyEvent);
-		};
+		});
 		if (Program.AnalysisMode)
 			output.NewLine();
 		ParserMediator.FlushWarningList();
 		setLabelsArg();
 		ParserMediator.FlushWarningList();
 		labelDic.Initialized = true;
-		ParseScript();
+		await Task.Run(ParseScript);
 		ParserMediator.FlushWarningList();
 		parentProcess.scaningLine = null;
 		isOnlyEvent.Clear();

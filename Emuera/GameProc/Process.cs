@@ -14,6 +14,7 @@ using trmb = EvilMask.Emuera.Lang.MessageBox;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using trerror = EvilMask.Emuera.Lang.Error;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -44,7 +45,7 @@ internal sealed partial class Process(EmueraConsole view)
 	bool initialiing;
 	public bool inInitializeing { get { return initialiing; } }
 
-	public bool Initialize()
+	public async Task<bool> Initialize()
 	{
 		var stopWatch = new Stopwatch();
 		stopWatch.Start();
@@ -70,9 +71,9 @@ internal sealed partial class Process(EmueraConsole view)
 			}
 			Debug.WriteLine("Proc:Init:Parser:End " + stopWatch.ElapsedMilliseconds + "ms");
 
-			Debug.WriteLine("Proc:Init:Image:Start " + stopWatch.ElapsedMilliseconds + "ms");           
+			Debug.WriteLine("Proc:Init:Image:Start " + stopWatch.ElapsedMilliseconds + "ms");
 			//リソースフォルダ読み込み
-			if (!Content.AppContents.LoadContents(false))
+			if (!await Task.Run(() => Content.AppContents.LoadContents(false)))
 			{
 				ParserMediator.FlushWarningList();
 				console.PrintSystemLine(trsl.ResourceReadError.Text);
@@ -125,6 +126,7 @@ internal sealed partial class Process(EmueraConsole view)
 			//ここでBARを設定すれば、いいことに気づいた予感
 			console.setStBar(Config.DrawLineString);
 
+			Debug.WriteLine("Proc:Init:Rename:Load:Start " + stopWatch.ElapsedMilliseconds + "ms");
 			//_rename.csv読み込み
 			if (Config.UseRenameFile)
 			{
@@ -137,6 +139,7 @@ internal sealed partial class Process(EmueraConsole view)
 				else
 					console.PrintError(trsl.MissingRename.Text);
 			}
+			Debug.WriteLine("Proc:Init:Rename:Load:End " + stopWatch.ElapsedMilliseconds + "ms");
 			if (!Config.DisplayReport)
 			{
 				console.PrintSingleLine(Config.LoadLabel);
@@ -144,7 +147,7 @@ internal sealed partial class Process(EmueraConsole view)
 			}
 			//gamebase.csv読み込み
 			gamebase = new GameBase();
-			if (!gamebase.LoadGameBaseCsv(Program.CsvDir + "GAMEBASE.CSV"))
+			if (!await Task.Run(() => gamebase.LoadGameBaseCsv(Program.CsvDir + "GAMEBASE.CSV")))
 			{
 				ParserMediator.FlushWarningList();
 				console.PrintSystemLine(trsl.GamebaseError.Text);
@@ -184,7 +187,7 @@ internal sealed partial class Process(EmueraConsole view)
 			LexicalAnalyzer.UseMacro = false;
 
 			//ERH読込
-			if (!hLoader.LoadHeaderFiles(Program.ErbDir, Config.DisplayReport))
+			if (!await Task.Run(() => hLoader.LoadHeaderFiles(Program.ErbDir, Config.DisplayReport)))
 			{
 				ParserMediator.FlushWarningList();
 				console.PrintSystemLine("");
@@ -195,18 +198,16 @@ internal sealed partial class Process(EmueraConsole view)
 
 			//TODO:ユーザー定義変数用のcsvの適用
 
-			Debug.WriteLine("Proc:Init:ERB:Start " + stopWatch.ElapsedMilliseconds + "ms");
 			//ERB読込
-			Debug.WriteLine("Proc:Init:ERB:Load:Start " + stopWatch.ElapsedMilliseconds + "ms");
+			Debug.WriteLine("Proc:Init:ERB:Start " + stopWatch.ElapsedMilliseconds + "ms"); 
 			var loader = new ErbLoader(console, exm, this);
 			if (Program.AnalysisMode)
-				noError = loader.loadErbs(Program.AnalysisFiles, labelDic);
+				noError = await loader.loadErbs(Program.AnalysisFiles, labelDic);
 			else
-				noError = loader.LoadErbFiles(Program.ErbDir, Config.DisplayReport, labelDic);
-			Debug.WriteLine("Proc:Init:ERB:Load:End " + stopWatch.ElapsedMilliseconds + "ms");
+				noError = await loader.LoadErbFiles(Program.ErbDir, Config.DisplayReport, labelDic);
+			Debug.WriteLine("Proc:Init:ERB:End " + stopWatch.ElapsedMilliseconds + "ms");
 			initSystemProcess();
 			initialiing = false;
-			Debug.WriteLine("Proc:Init:ERB:End " + stopWatch.ElapsedMilliseconds + "ms");
 
 			Debug.WriteLine("Proc:Init:End " + stopWatch.ElapsedMilliseconds + "ms");
 		}
@@ -225,21 +226,21 @@ internal sealed partial class Process(EmueraConsole view)
 		return true;
 	}
 
-	public void ReloadErb()
+	public async Task ReloadErb()
 	{
 		saveCurrentState(false);
 		state.SystemState = SystemStateCode.System_Reloaderb;
 		ErbLoader loader = new(console, exm, this);
-		loader.LoadErbFiles(Program.ErbDir, false, labelDic);
+		await loader.LoadErbFiles(Program.ErbDir, false, labelDic);
 		console.ReadAnyKey();
 	}
 
-	public void ReloadPartialErb(List<string> path)
+	public async Task ReloadPartialErb(List<string> path)
 	{
 		saveCurrentState(false);
 		state.SystemState = SystemStateCode.System_Reloaderb;
 		ErbLoader loader = new(console, exm, this);
-		loader.loadErbs(path, labelDic);
+		await loader.loadErbs(path, labelDic);
 		console.ReadAnyKey();
 	}
 
