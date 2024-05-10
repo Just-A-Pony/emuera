@@ -12,6 +12,7 @@ namespace EmueraPluginExample
             methods.Add(new HelloWorldMethod());
             methods.Add(new ParametersAndReferencesMethod());
             methods.Add(new ERBExecutionExampleMethod());
+            methods.Add(new TestBuiltinFunctions());
         }
 
         public override string PluginName => "Example Plugin";
@@ -69,4 +70,33 @@ CALLSHARP ERBExecutionExample()
             PluginManager.GetInstance().ExecuteLine("PRINTL this was printed from Sharp plugin!");
         }
     }
+
+    public class TestBuiltinFunctions : IPluginMethod
+    {
+        public string Name => "TestAPI";
+
+        public string Description => "Tests basic API";
+
+        public void Execute(PluginMethodParameter[] args)
+        {
+            var api = PluginManager.GetInstance();
+            api.ClearDisplay();
+            api.SetBgColor(System.Drawing.Color.Red);
+            api.Await(5000);
+            api.SetBgColor(System.Drawing.Color.Green);
+            api.Print("Press any key");
+            api.PrintNewLine();
+            api.ReadAnyKey();
+            long day = api.GetIntVar("DAY");
+            long money = api.GetIntVar("MONEY");
+            api.Print($"Day: {day} Money {money}\n");
+            api.SetIntVar("DAY", 31);
+            api.SetIntVar("MONEY", 100500);
+            api.Print($"New Day: {api.GetIntVar("DAY")} New Money {api.GetIntVar("MONEY")}\n");
+            api.Print("Testing Finished. Press any key\n");
+            api.ReadAnyKey();
+            api.Quit();
+        }
+    }
+
 }
