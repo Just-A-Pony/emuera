@@ -254,33 +254,8 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 			this.process = process;
 			this.processState = processState;
 			this.expressionMediator = expressionMediator;
-
-			InitializeBuiltinFunctions();
 		}
 
-		internal void InitializeBuiltinFunctions()
-		{
-			functionDictionary = FunctionIdentifier.GetInstructionNameDic();
-			var maxValue = (int)Enum.GetValues(typeof(FunctionCode)).Cast<FunctionCode>().Last() + 1;
-			systemFunctions = new List<FunctionIdentifier>(maxValue);
-			for (int i = 0; i < maxValue; i++)
-			{
-				systemFunctions.Add(null);
-			}
-			systemFunctions[(int)FunctionCode.SET] = FunctionIdentifier.SETFunction;
-			foreach (var code in Enum.GetValues(typeof(FunctionCode)))
-			{
-				var name = code.ToString();
-				if (Config.ICFunction)
-				{
-					name = name.ToUpper();	
-				}
-				if (functionDictionary.ContainsKey(name))
-				{
-					systemFunctions[(int)code] = functionDictionary[name];
-				}
-			}
-		}
 		private void ClearMethods()
 		{
 			methods.Clear();
@@ -300,8 +275,6 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 		private Process process;
 		private ProcessState processState;
 		private ExpressionMediator expressionMediator;
-		private Dictionary<string, FunctionIdentifier> functionDictionary;
-		private List<FunctionIdentifier> systemFunctions;
 
 	}
 }
