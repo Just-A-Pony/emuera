@@ -1233,12 +1233,8 @@ internal sealed class ConstantData
 			return;
 		List<KeyValuePair<string, string>> csvPaths = Config.GetFiles(csvDir, "CHARA*.CSV");
 
-		Console.WriteLine($"R1 {stopWatch.ElapsedMilliseconds} ms");
-
 		for (int i = 0; i < csvPaths.Count; i++)
 			loadCharacterDataFile(csvPaths[i].Value, csvPaths[i].Key, disp);
-
-		Console.WriteLine($"R1 {stopWatch.ElapsedMilliseconds} ms");
 
 		if (useCompatiName)
 		{
