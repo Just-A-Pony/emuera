@@ -81,8 +81,6 @@ CALLSHARP ERBExecutionExample()
         {
             var api = PluginManager.GetInstance();
             api.ClearDisplay();
-            api.SetBgColor(System.Drawing.Color.Red);
-            api.Await(5000);
             api.SetBgColor(System.Drawing.Color.Green);
             api.Print("Press any key");
             api.PrintNewLine();
