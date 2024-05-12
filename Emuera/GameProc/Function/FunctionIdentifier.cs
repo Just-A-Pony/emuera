@@ -1,5 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using MinorShift.Emuera.GameData.Function;
+using MinorShift.Emuera.GameProc.PluginSystem;
 
 namespace MinorShift.Emuera.GameProc.Function;
 
@@ -344,6 +349,7 @@ internal sealed partial class FunctionIdentifier
 		addFunction(FunctionCode.CALLEVENT, new CALLEVENT_Instruction());
 		addFunction(FunctionCode.CALLF, new CALLF_Instruction(false));
 		addFunction(FunctionCode.CALLFORMF, new CALLF_Instruction(true));
+		addFunction(FunctionCode.CALLSHARP, new CALLSHARP_Instruction());
 		addFunction(FunctionCode.RESTART, new RESTART_Instruction());//関数の再開。関数の最初に戻る。
 		addFunction(FunctionCode.GOTO, new GOTO_Instruction(false, false, false));//$ラベルへジャンプ
 		addFunction(FunctionCode.TRYGOTO, new GOTO_Instruction(false, true, false), EXTENDED);
