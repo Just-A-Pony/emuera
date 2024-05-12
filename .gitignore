@@ -8,3 +8,5 @@ EmueraPluginExample/obj/*
 *.patch
 *.pubxml.user
 
+*/artifacts/*
+
