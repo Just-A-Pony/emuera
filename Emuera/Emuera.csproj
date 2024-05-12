@@ -65,6 +65,13 @@
             <EmbedInteropTypes>True</EmbedInteropTypes>
         </COMReference>
     </ItemGroup>
+    
+    <ItemGroup>
+      <Compile Remove="artifacts\**" />
+      <EmbeddedResource Remove="artifacts\**" />
+      <None Remove="artifacts\**" />
+      <Page Remove="artifacts\**" />
+    </ItemGroup>
 
     <ItemGroup>
         <Compile Update="Properties\Settings.Designer.cs">
