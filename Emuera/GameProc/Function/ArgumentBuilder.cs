@@ -9,6 +9,7 @@ using MinorShift.Emuera.GameData;
 using MinorShift.Emuera.GameData.Function;
 using MinorShift.Emuera.GameView;
 using trerror = EvilMask.Emuera.Lang.Error;
+using System.Windows.Documents;
 
 namespace MinorShift.Emuera.GameProc.Function;
 
@@ -1406,7 +1407,7 @@ internal static partial class ArgumentParser
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 
-			List<IOperandTerm> termList = new List<IOperandTerm>();
+			List<IOperandTerm> termList = new List<IOperandTerm>(terms);
 			ExpressionArrayArgument ret = new(termList);
 			if (terms.Length == 0)
 			{
