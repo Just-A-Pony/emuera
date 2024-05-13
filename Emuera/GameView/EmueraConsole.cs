@@ -261,6 +261,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	#region EE_AnchorのCB機能移植
 	public readonly ClipboardProcessor CBProc;
 	#endregion
+	private ASprite currentBackground = null;
 
 	MinorShift.Emuera.GameProc.Process emuera;
 	// ConsoleState state = ConsoleState.Initializing;
@@ -639,6 +640,15 @@ internal sealed partial class EmueraConsole : IDisposable
 	}
 
 
+	public void SetBackgroundImage(string name)
+	{
+		currentBackground = AppContents.GetSprite(name);
+	}
+	
+	public void ClearBackgroundImage()
+	{
+		currentBackground = null;
+	}
 	/// <summary>
 	/// INPUT中のアニメーション用タイマー
 	/// </summary>
@@ -1588,6 +1598,12 @@ internal sealed partial class EmueraConsole : IDisposable
 		else
 		{
 			graph.Clear(this.bgColor);
+			if (currentBackground != null)
+			{
+				currentBackground?.GraphicsDraw(graph, new Point(0, 0));
+			}
+			
+			
 			//1823 cbg追加
 			#region EM_私家版_描画拡張
 			if (escapedParts == null) escapedParts = new Dictionary<int, List<AConsoleDisplayPart>>();

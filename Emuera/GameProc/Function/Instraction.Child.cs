@@ -1454,6 +1454,39 @@ internal sealed partial class FunctionIdentifier
 		}
 	}
 
+	private sealed class SETBGIMAGE_Instruction : AbstractInstruction
+	{
+		public SETBGIMAGE_Instruction()
+		{
+			ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.STR_EXPRESSION);
+			flag = METHOD_SAFE | EXTENDED;
+		}
+
+		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+		{
+			ExpressionArgument arg = (ExpressionArgument)func.Argument;
+			string bgName;
+			if (arg.IsConst)
+				bgName = arg.ConstStr;
+			else
+				bgName = arg.Term.GetStrValue(exm);
+			exm.Console.SetBackgroundImage(bgName);
+		}
+	}
+	private sealed class CLEARBGIMAGE_Instruction : AbstractInstruction
+	{
+		public CLEARBGIMAGE_Instruction()
+		{
+			ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.VOID);
+			flag = METHOD_SAFE | EXTENDED;
+		}
+
+		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+		{
+			exm.Console.ClearBackgroundImage();
+		}
+	}
+
 	private sealed class FONTBOLD_Instruction : AbstractInstruction
 	{
 		public FONTBOLD_Instruction()
