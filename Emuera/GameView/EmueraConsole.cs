@@ -261,7 +261,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	#region EE_AnchorのCB機能移植
 	public readonly ClipboardProcessor CBProc;
 	#endregion
-	private ASprite currentBackground = null;
+	private SpriteF currentBackground = null;
 
 	MinorShift.Emuera.GameProc.Process emuera;
 	// ConsoleState state = ConsoleState.Initializing;
@@ -642,7 +642,7 @@ internal sealed partial class EmueraConsole : IDisposable
 
 	public void SetBackgroundImage(string name)
 	{
-		currentBackground = AppContents.GetSprite(name);
+		currentBackground = AppContents.GetSprite(name) as SpriteF;
 	}
 	
 	public void ClearBackgroundImage()
@@ -1600,7 +1600,13 @@ internal sealed partial class EmueraConsole : IDisposable
 			graph.Clear(this.bgColor);
 			if (currentBackground != null)
 			{
-				currentBackground?.GraphicsDraw(graph, new Point(0, 0));
+				var scaleW = graph.ClipBounds.Width / (float)currentBackground.BaseImage.Bitmap.Width;
+				var scaleH = graph.ClipBounds.Height / (float)currentBackground.BaseImage.Bitmap.Height;
+				var cropHorizontally = currentBackground.BaseImage.Bitmap.Height * scaleW < graph.ClipBounds.Height;
+				var newWidth = currentBackground.BaseImage.Bitmap.Width * ((cropHorizontally)?scaleH:scaleW);
+				var newHeight = currentBackground.BaseImage.Bitmap.Height * ((cropHorizontally) ? scaleH : scaleW);
+				var paddingX = (int)((graph.ClipBounds.Width - newWidth) / 2);
+				currentBackground?.GraphicsDraw(graph, new Rectangle(paddingX, 0, (int)newWidth, (int)newHeight));
 			}
 			
 			
