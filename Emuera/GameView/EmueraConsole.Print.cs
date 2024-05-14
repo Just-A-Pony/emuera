@@ -382,7 +382,12 @@ internal sealed partial class EmueraConsole : IDisposable
 			this.DebugNewLine();
 		}
 		UseUserStyle = false;
-		ConsoleDisplayLine dispLine = printBuffer.AppendAndFlushErrButton(str, Style, ErrorButtonsText, pos, stringMeasure);
+		//todo:オプションで色を変えられるように
+		var errerStyle = new StringStyle()
+		{
+			Color = Color.Yellow
+		};
+		ConsoleDisplayLine dispLine = printBuffer.AppendAndFlushErrButton(str, errerStyle, ErrorButtonsText, pos, stringMeasure);
 		if (dispLine == null)
 			return;
 		addDisplayLine(dispLine, true);
