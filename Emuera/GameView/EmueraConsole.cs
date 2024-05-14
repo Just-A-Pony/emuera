@@ -1180,7 +1180,7 @@ internal sealed partial class EmueraConsole : IDisposable
 					i--;
 					inputs = "";
 				}
-				RunEmueraProgram("");
+				RunEmueraProgram(inputs);
 				RefreshStrings(false);
 				while (MesSkip && state == ConsoleState.WaitInput)
 				{
