@@ -19,7 +19,7 @@ internal sealed partial class EraStreamReader : IDisposable
 	string filename;
 	readonly bool useRename = false;
 	int curNo = 0;
-	int nextNo = 0;
+	int nextNo = 1;
 	string[] _fileLine;
 	public bool Open(string path)
 	{

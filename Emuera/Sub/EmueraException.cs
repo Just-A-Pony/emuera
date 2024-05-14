@@ -107,7 +107,7 @@ internal sealed class ScriptPosition : IEquatable<ScriptPosition>, IEqualityComp
 	}
 	public ScriptPosition(string srcFile, int srcLineNo)
 	{
-		LineNo = srcLineNo;
+		LineNo = srcLineNo + 1;
 		if (srcFile == null)
 			Filename = "";
 		else
