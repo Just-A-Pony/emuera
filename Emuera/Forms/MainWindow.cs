@@ -603,18 +603,25 @@ namespace MinorShift.Emuera.Forms
 					vScrollBar.Value = vScrollBar.Maximum;
 					console.RefreshStrings(true);
 				}
-			if (console.IsWaitingEnterKey && !console.IsError && str == null)
+			if (console.IsWaitingEnterKey && str == null)
 			{
 				if (isBacklog)
 					return;
-				if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
-				{
-					if (e.Button == MouseButtons.Right)
-						PressEnterKey(true, true);
-					else
+				if (console.IsError)
+					{
+					if (e.Button == MouseButtons.Left)
+					{
 						PressEnterKey(false, true);
 					return;
+						return;
+					}
 				}
+
+				if (e.Button == MouseButtons.Right)
+					PressEnterKey(true, true);
+				else if (e.Button == MouseButtons.Left)
+					PressEnterKey(false, true);
+				return;
 			}
 			#region EM_私家版_INPUT系機能拡張
 			else if (console.IsWaintingInputWithMouse && (!console.IsError && str != null))

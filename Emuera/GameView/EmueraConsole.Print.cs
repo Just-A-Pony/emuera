@@ -327,11 +327,11 @@ internal sealed partial class EmueraConsole : IDisposable
 		{
 			if (position.LineNo >= 0)
 			{
-				PrintErrorButton(string.Format(trerror.Warning1.Text, level, position.Filename, position.LineNo, str), position);
+				PrintErrorButton(string.Format(trerror.Warning1.Text, level, position.Filename, position.LineNo, str), position, level);
 				GlobalStatic.Process.printRawLine(position);
 			}
 			else
-				PrintErrorButton(string.Format(trerror.Warning2.Text, level, position.Filename, str), position);
+				PrintErrorButton(string.Format(trerror.Warning2.Text, level, position.Filename, str), position, level);
 
 		}
 		else
@@ -372,7 +372,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		RefreshStrings(false);
 	}
 
-	internal void PrintErrorButton(string str, ScriptPosition pos)
+	internal void PrintErrorButton(string str, ScriptPosition pos, int level = 0)
 	{
 		if (string.IsNullOrEmpty(str))
 			return;
@@ -384,7 +384,15 @@ internal sealed partial class EmueraConsole : IDisposable
 		UseUserStyle = false;
 		//todo:オプションで色を変えられるように
 		var errerStyle = Style;
-		errerStyle.Color = Color.Yellow;
+		errerStyle.Color = level switch
+		{
+			0 => Color.Yellow,
+			1 => Color.Yellow,
+			2 => Color.Yellow,
+			3 => Color.Red,
+			_ => Color.Red
+		};
+
 		ConsoleDisplayLine dispLine = printBuffer.AppendAndFlushErrButton(str, errerStyle, ErrorButtonsText, pos, stringMeasure);
 		if (dispLine == null)
 			return;

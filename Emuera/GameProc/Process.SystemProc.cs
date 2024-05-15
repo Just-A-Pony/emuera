@@ -188,7 +188,7 @@ internal sealed partial class Process
 		}
 		if ((!noError) && (!Config.CompatiErrorLine))
 		{
-			console.PrintSystemLine(trsl.ExitBecauseCanNotInterpreted1.Text);
+			console.PrintErrorButton(trsl.ExitBecauseCanNotInterpreted1.Text, null, 3);
 			console.PrintSystemLine(string.Format(trsl.ExitBecauseCanNotInterpreted2.Text, Config.GetConfigName(ConfigCode.CompatiErrorLine)));
 			console.PrintSystemLine(trsl.ExitBecauseCanNotInterpreted3.Text);
 			#region EE_OUTPUTLOG
@@ -197,7 +197,7 @@ internal sealed partial class Process
 			#endregion
 			console.noOutputLog = true;
 			console.PrintSystemLine(trsl.PressEnterOrClick.Text);
-			//System.Media.SystemSounds.Asterisk.Play();
+			System.Media.SystemSounds.Asterisk.Play();
 			console.ThrowTitleError(true);
 			return;
 		}
