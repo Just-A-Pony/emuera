@@ -104,7 +104,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		redrawTimer.Tick += new EventHandler(tickRedrawTimer);
 		redrawTimer.Interval = 10;
 
-		stopwatch.Start();
+		_stopwatch.Start();
 	}
 	#region 1823 cbg関連
 	private readonly List<ClientBackGroundImage> cbgList = [];
@@ -419,8 +419,7 @@ internal sealed partial class EmueraConsole : IDisposable
 
 	public async Task Initialize()
 	{
-		var stopWatch = new Stopwatch();
-		stopWatch.Start();
+		_stopwatch.Start();
 		Debug.WriteLine("Init:Start");
 		Debug.WriteLine("File:Preload:Start");
 		//必要なソースファイルを事前にメモリに一気に読み込む
@@ -428,7 +427,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		await Preload.Load(Program.ErbDir);
 		await Preload.Load(Program.CsvDir);
 
-		Debug.WriteLine("File:Preload:End " + stopWatch.ElapsedMilliseconds + "ms");
+		Debug.WriteLine("File:Preload:End " + _stopwatch.ElapsedMilliseconds + "ms");
 
 		GlobalStatic.Console = this;
 		//GlobalStatic.MainWindow = window;
@@ -452,7 +451,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		RunEmueraProgram("");
 		RefreshStrings(true);
 
-		Debug.WriteLine("Init:End " + stopWatch.ElapsedMilliseconds + "ms");
+		Debug.WriteLine("Init:End " + _stopwatch.ElapsedMilliseconds + "ms");
 	}
 
 
@@ -694,7 +693,7 @@ internal sealed partial class EmueraConsole : IDisposable
 
 	System.Timers.Timer genericTimer = new();
 	Int64 timerID = -1;
-	readonly Stopwatch stopwatch = new();//現在のタイマーを開始した時のミリ秒数（WinmmTimer.TickCount基準）
+	readonly Stopwatch _stopwatch = new();//現在のタイマーを開始した時のミリ秒数（WinmmTimer.TickCount基準）
 	Int64 timer_endTime;//現在のタイマーを終了する時のTickCountミリ秒数
 	bool wait_timeout = false;
 	bool isTimeout = false;
@@ -723,7 +722,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		isTimeout = false;
 		timerID = inputReq.ID;
 		genericTimer.Enabled = true;
-		stopwatch.Restart();
+		_stopwatch.Restart();
 		timer_endTime = inputReq.Timelimit;
 	}
 
@@ -737,7 +736,7 @@ internal sealed partial class EmueraConsole : IDisposable
 				stopTimer();
 				return;
 		}
-		var elapsedMs = stopwatch.ElapsedMilliseconds;
+		var elapsedMs = _stopwatch.ElapsedMilliseconds;
 		if (elapsedMs >= timer_endTime)
 		{
 			endTimer();
@@ -1505,7 +1504,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		 //履歴表示中でなく、最終行を表示済みであり、選択中ボタンが変更されていないなら更新不要
 			if ((!isBackLog) && (lastDrawnLineNo == lineNo) && (lastSelectingButton == selectingButton))
 				return;
-			var sec = stopwatch.ElapsedMilliseconds - lastUpdate;
+			var sec = _stopwatch.ElapsedMilliseconds - lastUpdate;
 			//まだ書き換えるタイミングでないなら次の更新を待ってみる
 			//ただし、入力待ちなど、しばらく更新のタイミングがない場合には強制的に書き換えてみる
 			if (sec < msPerFrame && (state == ConsoleState.Running || state == ConsoleState.Initializing))
@@ -1513,15 +1512,15 @@ internal sealed partial class EmueraConsole : IDisposable
 		}
 		if (forceTextBoxColor)
 		{
-			var sec = stopwatch.ElapsedMilliseconds;
+			var sec = _stopwatch.ElapsedMilliseconds;
 			//色変化が速くなりすぎないように一定時間以内の再呼び出しは強制待ちにする
 			while (sec < 200)
 			{
 				Application.DoEvents();
-				sec = stopwatch.ElapsedMilliseconds - lastBgColorChange;
+				sec = _stopwatch.ElapsedMilliseconds - lastBgColorChange;
 			}
 			window.TextBox.BackColor = this.bgColor;
-			lastBgColorChange = stopwatch.ElapsedMilliseconds;
+			lastBgColorChange = _stopwatch.ElapsedMilliseconds;
 		}
 		window.Invoke(() =>
 		{
@@ -1563,7 +1562,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		if (!this.Enabled)
 			return;
 		//1824 アニメスプライト用・現在フレームの時間を決定
-		lastUpdate = stopwatch.ElapsedMilliseconds;
+		lastUpdate = _stopwatch.ElapsedMilliseconds;
 
 		bool isBackLog = window.ScrollBar.Value != window.ScrollBar.Maximum;
 		int pointY = window.MainPicBox.Height - Config.LineHeight;
