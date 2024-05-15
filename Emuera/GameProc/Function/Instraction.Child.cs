@@ -1458,19 +1458,37 @@ internal sealed partial class FunctionIdentifier
 	{
 		public SETBGIMAGE_Instruction()
 		{
-			ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.STR_EXPRESSION);
+			ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.FORM_STR_ANY);
 			flag = METHOD_SAFE | EXTENDED;
 		}
 
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
-			ExpressionArgument arg = (ExpressionArgument)func.Argument;
+			ExpressionArrayArgument arg = (ExpressionArrayArgument)func.Argument;
 			string bgName;
-			if (arg.IsConst)
-				bgName = arg.ConstStr;
-			else
-				bgName = arg.Term.GetStrValue(exm);
-			exm.Console.SetBackgroundImage(bgName);
+			long bgDepth = 0;
+			bgName = arg.TermList[0].GetStrValue(exm);
+			if (arg.TermList.Count() >= 2)
+			{
+				bgDepth = Int64.Parse(arg.TermList[1].GetStrValue(exm));
+			}
+			exm.Console.AddBackgroundImage(bgName, bgDepth);
+		}
+	}
+	private sealed class REMOVEBGIMAGE_Instruction : AbstractInstruction
+	{
+		public REMOVEBGIMAGE_Instruction()
+		{
+			ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.FORM_STR_ANY);
+			flag = METHOD_SAFE | EXTENDED;
+		}
+
+		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+		{
+			ExpressionArrayArgument arg = (ExpressionArrayArgument)func.Argument;
+			string bgName;
+			bgName = arg.TermList[0].GetStrValue(exm);
+			exm.Console.RemoveBackground(bgName);
 		}
 	}
 	private sealed class CLEARBGIMAGE_Instruction : AbstractInstruction

@@ -261,7 +261,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	#region EE_AnchorのCB機能移植
 	public readonly ClipboardProcessor CBProc;
 	#endregion
-	private SpriteF currentBackground = null;
+	private List<KeyValuePair<long, SpriteF>> backgroundList = new List<KeyValuePair<long, SpriteF>>();
 
 	MinorShift.Emuera.GameProc.Process emuera;
 	// ConsoleState state = ConsoleState.Initializing;
@@ -640,14 +640,25 @@ internal sealed partial class EmueraConsole : IDisposable
 	}
 
 
-	public void SetBackgroundImage(string name)
+	public void AddBackgroundImage(string name, long depth)
 	{
-		currentBackground = AppContents.GetSprite(name) as SpriteF;
+		var bg = AppContents.GetSprite(name) as SpriteF; 
+		if (bg == null)
+		{
+			return;
+		}
+		var pair = new KeyValuePair<long, SpriteF>(depth, bg);
+		backgroundList.Add(pair);
+		backgroundList.Sort((v1, v2) => (v1.Key >= v2.Key)?-1:1);
 	}
 	
 	public void ClearBackgroundImage()
 	{
-		currentBackground = null;
+		backgroundList.Clear();
+	}
+
+	public void RemoveBackground(string key) {
+		backgroundList.RemoveAt(backgroundList.FindIndex((v) => v.Value.Name == key));
 	}
 	/// <summary>
 	/// INPUT中のアニメーション用タイマー
@@ -1598,15 +1609,16 @@ internal sealed partial class EmueraConsole : IDisposable
 		else
 		{
 			graph.Clear(this.bgColor);
-			if (currentBackground != null)
+			foreach (var pair in backgroundList)
 			{
-				var scaleW = graph.ClipBounds.Width / (float)currentBackground.BaseImage.Bitmap.Width;
-				var scaleH = graph.ClipBounds.Height / (float)currentBackground.BaseImage.Bitmap.Height;
-				var cropHorizontally = currentBackground.BaseImage.Bitmap.Height * scaleW < graph.ClipBounds.Height;
-				var newWidth = currentBackground.BaseImage.Bitmap.Width * ((cropHorizontally)?scaleH:scaleW);
-				var newHeight = currentBackground.BaseImage.Bitmap.Height * ((cropHorizontally) ? scaleH : scaleW);
+				var bg = pair.Value;
+				var scaleW = graph.ClipBounds.Width / (float)bg.BaseImage.Bitmap.Width;
+				var scaleH = graph.ClipBounds.Height / (float)bg.BaseImage.Bitmap.Height;
+				var cropHorizontally = bg.BaseImage.Bitmap.Height * scaleW < graph.ClipBounds.Height;
+				var newWidth = bg.BaseImage.Bitmap.Width * ((cropHorizontally)?scaleH:scaleW);
+				var newHeight = bg.BaseImage.Bitmap.Height * ((cropHorizontally) ? scaleH : scaleW);
 				var paddingX = (int)((graph.ClipBounds.Width - newWidth) / 2);
-				currentBackground?.GraphicsDraw(graph, new Rectangle(paddingX, 0, (int)newWidth, (int)newHeight));
+				bg?.GraphicsDraw(graph, new Rectangle(paddingX, 0, (int)newWidth, (int)newHeight));
 			}
 			
 			
