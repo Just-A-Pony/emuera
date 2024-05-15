@@ -100,7 +100,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	/// </summary>
 	string stBar = null;
 
-	long lastBgColorChange = 0;
+	Stopwatch _drawStopwatch = null;
 	bool forceTextBoxColor = false;
 	public void SetBgColor(Color color)
 	{
@@ -110,15 +110,20 @@ internal sealed partial class EmueraConsole : IDisposable
 		//最初の再描画時に現在の背景色に合わせる
 		if (redraw == ConsoleRedraw.None && window.ScrollBar.Value == window.ScrollBar.Maximum)
 			return;
-		var sec = _stopwatch.ElapsedMilliseconds - lastBgColorChange;
 		//色変化が速くなりすぎないように一定時間以内の再呼び出しは強制待ちにする
-		while (lastBgColorChange != 0 && sec < 200)
+		if (_drawStopwatch == null)
 		{
-			Application.DoEvents();
-			sec = _stopwatch.ElapsedMilliseconds - lastBgColorChange;
+			_drawStopwatch = Stopwatch.StartNew();
+		}
+		else
+		{
+			while (_drawStopwatch.ElapsedMilliseconds < msPerFrame)
+			{
+				Application.DoEvents();
+			}
 		}
 		RefreshStrings(true);
-		lastBgColorChange = _stopwatch.ElapsedMilliseconds;
+		_drawStopwatch.Restart();
 	}
 
 	/// <summary>
