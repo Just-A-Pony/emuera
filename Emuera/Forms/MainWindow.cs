@@ -467,7 +467,14 @@ namespace MinorShift.Emuera.Forms
 
 		private async void Init(object sender, EventArgs e)
 		{
-			await console.Initialize();
+			try
+			{
+				await console.Initialize();
+			}
+			catch (OperationCanceledException)
+			{
+
+			}
 		}
 
 		/// <summary>
@@ -806,6 +813,7 @@ namespace MinorShift.Emuera.Forms
 		public void Reboot()
 		{
 			console.forceStopTimer();
+			console.InitializeCancel();
 			_rebootCallback(this);
 			Close();
 		}

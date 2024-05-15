@@ -113,6 +113,9 @@ internal sealed partial class EmueraConsole : IDisposable
 	private int lastSelectingCBGButtonInt = -1;
 	//ConsoleButtonString selectingButton = null;
 	//ConsoleButtonString lastSelectingButton = null;
+
+	System.Threading.CancellationTokenSource _cancellationTokenSource = new();
+
 	class ClientBackGroundImage : IComparable<ClientBackGroundImage>
 	{
 		/// <summary>
@@ -437,7 +440,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			window.Focus();
 		}
 		ClearDisplay();
-		if (!await process.Initialize())
+		if (!await process.Initialize(_cancellationTokenSource.Token))
 		{
 			state = ConsoleState.Error;
 			OutputLog(null);
@@ -445,6 +448,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			RefreshStrings(true);
 			return;
 		}
+		if (_cancellationTokenSource.Token.IsCancellationRequested) return;
 		RunEmueraProgram("");
 		RefreshStrings(true);
 
@@ -2443,7 +2447,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		state = ConsoleState.Initializing;
 		PrintSingleLine(trsl.ReloadingErb.Text, true);
 		force_temporary = true;
-		await process.ReloadErb();
+		await process.ReloadErb(_cancellationTokenSource.Token);
 		force_temporary = false;
 		PrintSingleLine(trsl.ReloadCompleted.Text, true);
 		RefreshStrings(true);
@@ -2494,7 +2498,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		state = ConsoleState.Initializing;
 		PrintSingleLine(trsl.ReloadingErb.Text, true);
 		force_temporary = true;
-		await process.ReloadPartialErb(path);
+		await process.ReloadPartialErb(path, _cancellationTokenSource.Token);
 		force_temporary = false;
 		PrintSingleLine(trsl.ReloadCompleted.Text, true);
 		RefreshStrings(true);
@@ -2542,7 +2546,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		state = ConsoleState.Initializing;
 		PrintSingleLine(trsl.ReloadingErb.Text, true);
 		force_temporary = true;
-		await process.ReloadPartialErb(paths);
+		await process.ReloadPartialErb(paths, _cancellationTokenSource.Token);
 		force_temporary = false;
 		PrintSingleLine(trsl.ReloadCompleted.Text, true);
 		RefreshStrings(true);
@@ -2591,6 +2595,10 @@ internal sealed partial class EmueraConsole : IDisposable
 		if (notRedraw)
 			redraw = ConsoleRedraw.None;
 		*/
+	}
+	public void InitializeCancel()
+	{
+		_cancellationTokenSource.Cancel();
 	}
 
 	public void Dispose()
