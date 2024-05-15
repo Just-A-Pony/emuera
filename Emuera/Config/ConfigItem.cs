@@ -14,7 +14,7 @@ internal abstract class AConfigItem
 	public AConfigItem(ConfigCode code, string text, string etext)
 	{
 		this.Code = code;
-		this.Name = code.ToString();
+		this.Name = EnumsNET.Enums.AsString(code);
 		// this.Text = text;
 		this.Text = text.ToUpper();
 		// this.EngText = etext;
