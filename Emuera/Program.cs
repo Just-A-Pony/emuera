@@ -356,7 +356,7 @@ static partial class Program
 
 	#region eee_カレントディレクトリー
 	/// <summary>
-	/// 実行ファイルのディレクトリ。最後に\を付けたstring
+	/// 実行ファイルのディレクトリ。最後にPath.DirectorySeparatorCharを付けたstring
 	/// </summary>
 	public static string ExeDir { get; private set; }
 	public static string WorkingDir { get; private set; }
