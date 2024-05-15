@@ -734,12 +734,8 @@ internal sealed partial class EmueraConsole : IDisposable
 			return;
 		if (state != ConsoleState.WaitInput || inputReq.Timelimit <= 0 || timerID != inputReq.ID)
 		{
-#if DEBUG
-			throw new ExeEE("");
-#else
 				stopTimer();
 				return;
-#endif
 		}
 		var elapsedMs = stopwatch.ElapsedMilliseconds;
 		if (elapsedMs >= timer_endTime)
@@ -798,9 +794,12 @@ internal sealed partial class EmueraConsole : IDisposable
 			RunEmueraProgram("");//ディフォルト入力の処理はcallEmueraProgram側で
 			if (state == ConsoleState.WaitInput && inputReq.NeedValue)
 			{
-				Point point = window.MainPicBox.PointToClient(Control.MousePosition);
-				if (window.MainPicBox.ClientRectangle.Contains(point))
-					MoveMouse(point);
+				window.Invoke(() =>
+				{
+					Point point = window.MainPicBox.PointToClient(Control.MousePosition);
+					if (window.MainPicBox.ClientRectangle.Contains(point))
+						MoveMouse(point);
+				});
 			}
 			RefreshStrings(true);
 		});
@@ -1571,8 +1570,6 @@ internal sealed partial class EmueraConsole : IDisposable
 
 
 		int bottomLineNo = window.ScrollBar.Value - 1;
-		if (displayLineList.Count - 1 < bottomLineNo)
-			bottomLineNo = displayLineList.Count - 1;//1820 この処理不要な気がするけどエラー報告があったので入れとく
 		int topLineNo = bottomLineNo - (pointY / Config.LineHeight + 1);
 		if (topLineNo < 0)
 			topLineNo = 0;
@@ -1583,7 +1580,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		else
 		{
 			graph.Clear(this.bgColor);
-			graph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
+			//graph.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
 			//1823 cbg追加
 			#region EM_私家版_描画拡張
 			if (escapedParts == null) escapedParts = new Dictionary<int, List<AConsoleDisplayPart>>();
@@ -1610,7 +1607,10 @@ internal sealed partial class EmueraConsole : IDisposable
 				if (depth == 0)
 				{
 					// 普通のパーツを描画
-					for (int i = topLineNo; i <= bottomLineNo; i++)
+					for (int i = topLineNo;
+					i <= bottomLineNo &&
+					i < displayLineList.Count;//何処かで非同期にDisplayLineListを触ってるやつがいる気がする...
+					i++)
 					{
 						displayLineList[i].DrawTo(graph, pointY, isBackLog, true, Config.TextDrawingMode);
 						pointY += Config.LineHeight;
