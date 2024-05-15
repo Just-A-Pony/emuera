@@ -5,6 +5,7 @@
         <TargetFramework>net8.0-windows</TargetFramework>
         <RuntimeIdentifier>win-x64</RuntimeIdentifier>
         <UseWindowsForms>true</UseWindowsForms>
+        <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
         <LangVersion>12.0</LangVersion>
         <Nullable>disable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
