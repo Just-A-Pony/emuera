@@ -318,7 +318,7 @@ internal sealed class ErbLoader
 	{
 		//読み込んだファイルのパスを記録
 		//一部ファイルの再読み込み時の処理用
-		labelDic.AddFilename(filename);
+		labelDic.IfFileLoadClearLabelWithPath(filename);
 		using var eReader = new EraStreamReader(Config.UseRenameFile && ParserMediator.RenameDic != null);
 
 		if (!eReader.OpenOnCache(filepath, filename))
