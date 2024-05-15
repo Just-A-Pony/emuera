@@ -963,7 +963,7 @@ namespace MinorShift.Emuera.Forms
 						MessageBox.Show(trmb.FileNotFound.Text, trmb.FileNotFound.Text);
 						return;
 					}
-					if (Path.GetExtension(fname).Equals(".ERB", StringComparison.OrdinalIgnoreCase))
+					if (!Path.GetExtension(fname).Equals(".ERB", StringComparison.OrdinalIgnoreCase))
 					{
 						MessageBox.Show(trmb.IsNotErb.Text, trmb.FileFormatError.Text);
 						return;

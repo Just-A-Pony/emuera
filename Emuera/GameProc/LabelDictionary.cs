@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -143,6 +144,7 @@ internal sealed class LabelDictionary
 		totalFileCount = 0;
 	}
 
+	//ファイル名に基づき、そのファイルに紐づくラベルを削除する
 	public void RemoveLabelWithPath(string fname)
 	{
 		List<FunctionLabelLine> labelLines;

@@ -227,10 +227,10 @@ internal static class Config
 		DrawableWidth = WindowX - DrawingParam_ShapePositionShift;
 		#region eee_カレントディレクトリー
 		// ForceSavDir = Program.ExeDir + "sav\\";
-		ForceSavDir = Program.WorkingDir + "sav\\";
+		ForceSavDir = Program.WorkingDir + "sav" + Path.DirectorySeparatorChar;
 		if (UseSaveFolder)
 			// SavDir = Program.ExeDir + "sav\\";
-			SavDir = Program.WorkingDir + "sav\\";
+			SavDir = Program.WorkingDir + "sav" + Path.DirectorySeparatorChar;
 		else
 			// SavDir = Program.ExeDir;
 			SavDir = Program.WorkingDir;
@@ -391,7 +391,7 @@ internal static class Config
 			Array.Sort(filepaths);
 		for (int i = 0; i < filepaths.Length; i++)
 			if (Path.GetExtension(filepaths[i]).Length <= 4)//".erb"や".csv"であること。放置すると".erb*"等を拾う。
-				retList.Add(new KeyValuePair<string, string>(RelativePath + Path.GetFileName(filepaths[i]), filepaths[i]));
+				retList.Add(new KeyValuePair<string, string>(Path.Combine(RelativePath, Path.GetFileName(filepaths[i])), filepaths[i]));
 
 		if (!toponly)
 		{//サブフォルダ内の検索

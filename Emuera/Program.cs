@@ -83,26 +83,7 @@ static partial class Program
 		var exeDir = result.GetValueForOption(exeDirOption);
 		if (exeDir != null)
 		{
-			ExeDir = Path.Join(exeDir.AsSpan(), [Path.DirectorySeparatorChar]);
-
-			CsvDir = Path.Join(ExeDir.AsSpan(), "csv", [Path.DirectorySeparatorChar]);
-			ErbDir = Path.Join(ExeDir.AsSpan(), "erb", [Path.DirectorySeparatorChar]);
-			DebugDir = Path.Join(ExeDir.AsSpan(), "debug", [Path.DirectorySeparatorChar]);
-			DatDir = Path.Join(ExeDir.AsSpan(), "dat", [Path.DirectorySeparatorChar]);
-			ContentDir = Path.Join(ExeDir.AsSpan(), "resources", [Path.DirectorySeparatorChar]);
-			#region EE_フォントファイル対応
-			FontDir = Path.Join(ExeDir.AsSpan(), "font", [Path.DirectorySeparatorChar]);
-			#endregion
-			/*
-			CsvDir = WorkingDir + "csv\\";
-			ErbDir = WorkingDir + "erb\\";
-			DebugDir = WorkingDir + "debug\\";
-			DatDir = WorkingDir + "dat\\";
-			ContentDir = WorkingDir + "resources\\";
-			#region EE_フォントファイル対応
-			FontDir = WorkingDir + "font\\";
-			#endregion
-			*/
+			SetDirPaths(exeDir);
 		}
 
 		#endregion
@@ -346,6 +327,33 @@ static partial class Program
 		#endregion
 	}
 
+
+	private static void SetDirPaths(string exeDir)
+	{
+
+		ExeDir = Path.GetFullPath(new DirectoryInfo(exeDir).FullName + Path.DirectorySeparatorChar);
+
+		CsvDir = Path.Combine(ExeDir, "csv") + Path.DirectorySeparatorChar;
+		ErbDir = Path.Combine(ExeDir, "erb") + Path.DirectorySeparatorChar;
+		DebugDir = Path.Combine(ExeDir, "debug") + Path.DirectorySeparatorChar;
+		DatDir = Path.Combine(ExeDir, "dat") + Path.DirectorySeparatorChar;
+		ContentDir = Path.Combine(ExeDir, "resources") + Path.DirectorySeparatorChar;
+		#region EE_フォントファイル対応
+		FontDir = Path.Combine(ExeDir, "font") + Path.DirectorySeparatorChar;
+		#endregion
+
+		/*
+		CsvDir = WorkingDir + "csv\\";
+		ErbDir = WorkingDir + "erb\\";
+		DebugDir = WorkingDir + "debug\\";
+		DatDir = WorkingDir + "dat\\";
+		ContentDir = WorkingDir + "resources\\";
+		#region EE_フォントファイル対応
+		FontDir = WorkingDir + "font\\";
+		#endregion
+		*/
+	}
+
 	#region eee_カレントディレクトリー
 	/// <summary>
 	/// 実行ファイルのディレクトリ。最後に\を付けたstring
@@ -382,19 +390,6 @@ static partial class Program
 
 	static Program()
 	{
-		ExeDir = Path.Join(
-		AppContext.BaseDirectory.AsSpan(), 
-		[Path.DirectorySeparatorChar]
-		);
-
-		CsvDir = Path.Join(ExeDir.AsSpan(), "csv", [Path.DirectorySeparatorChar]);
-		ErbDir = Path.Join(ExeDir.AsSpan(), "erb", [Path.DirectorySeparatorChar]);
-		DebugDir = Path.Join(ExeDir.AsSpan(), "debug", [Path.DirectorySeparatorChar]);
-		DatDir = Path.Join(ExeDir.AsSpan(), "dat", [Path.DirectorySeparatorChar]);
-		ContentDir = Path.Join(ExeDir.AsSpan(), "resources", [Path.DirectorySeparatorChar]);
-		#region EE_フォントファイル対応
-		FontDir = Path.Join(ExeDir.AsSpan(), "font", [Path.DirectorySeparatorChar]);
-		#endregion
+		SetDirPaths(AppContext.BaseDirectory);
 	}
-
 }

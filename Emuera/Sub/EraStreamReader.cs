@@ -48,13 +48,13 @@ internal sealed partial class EraStreamReader : IDisposable
 		}
 		return true;
 	}
-	public bool OpenOnCache(ReadOnlySpan<char> path)
+	public bool OpenOnCache(string path)
 	{
 
 		return OpenOnCache(path, Path.GetFileName(path));
 	}
 
-	public bool OpenOnCache(ReadOnlySpan<char> path, ReadOnlySpan<char> name)
+	public bool OpenOnCache(string path, string name)
 	{
 		filepath = path.ToString();
 		filename = name.ToString();

@@ -1245,7 +1245,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			{
 				if (fname.Contains(Program.ErbDir, ignoreCaseCmp))
 					fname = fname.Replace(Program.ErbDir, "", ignoreCaseCmp);
-				fname = Program.ErbDir + fname;
+				fname = Path.Combine(Program.ErbDir + fname);
 			}
 		}
 		switch (Config.EditorType)

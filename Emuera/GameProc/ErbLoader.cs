@@ -8,6 +8,7 @@ using MinorShift.Emuera.GameProc.Function;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using trerror = EvilMask.Emuera.Lang.Error;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -34,7 +35,7 @@ internal sealed class ErbLoader
 	/// 複数のファイルを読む
 	/// </summary>
 	/// <param name="filepath"></param>
-	public async Task<bool> LoadErbFiles(string erbDir, bool displayReport, LabelDictionary labelDictionary)
+	public async Task<bool> LoadErbDir(string erbDir, bool displayReport, LabelDictionary labelDictionary)
 	{
 		//1.713 labelDicをnewする位置を変更。
 		//checkScript();の時点でExpressionPerserがProcess.instance.LabelDicを必要とするから。
@@ -104,7 +105,7 @@ internal sealed class ErbLoader
 	/// 指定されたファイルを読み込む
 	/// </summary>
 	/// <param name="filename"></param>
-	public async Task<bool> loadErbs(List<string> paths, LabelDictionary labelDictionary)
+	public async Task<bool> LoadErbList(List<string> paths, LabelDictionary labelDictionary)
 	{
 		string fname;
 		List<string> isOnlyEvent = [];
@@ -116,7 +117,7 @@ internal sealed class ErbLoader
 			foreach (string fpath in paths)
 			{
 				if (fpath.StartsWith(Program.ErbDir, Config.SCIgnoreCase) && !Program.AnalysisMode)
-					fname = fpath[Program.ErbDir.Length..];
+					fname = Path.GetRelativePath(Program.ErbDir, fpath);
 				else
 					fname = fpath;
 				if (Program.AnalysisMode)
