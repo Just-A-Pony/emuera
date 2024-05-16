@@ -262,6 +262,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	public readonly ClipboardProcessor CBProc;
 	#endregion
 	private List<KeyValuePair<long, SpriteF>> backgroundList = new List<KeyValuePair<long, SpriteF>>();
+	private Bitmap bakedBackground;
 
 	MinorShift.Emuera.GameProc.Process emuera;
 	// ConsoleState state = ConsoleState.Initializing;
@@ -650,15 +651,51 @@ internal sealed partial class EmueraConsole : IDisposable
 		var pair = new KeyValuePair<long, SpriteF>(depth, bg);
 		backgroundList.Add(pair);
 		backgroundList.Sort((v1, v2) => (v1.Key >= v2.Key)?-1:1);
+		BakeBackground();
 	}
 	
 	public void ClearBackgroundImage()
 	{
 		backgroundList.Clear();
+		BakeBackground();
 	}
 
 	public void RemoveBackground(string key) {
 		backgroundList.RemoveAt(backgroundList.FindIndex((v) => v.Value.Name == key));
+		BakeBackground();
+	}
+	public void ValidateBackground(int width, int height)
+	{
+		if (bakedBackground == null)
+		{
+			bakedBackground = new Bitmap(width, height);
+			BakeBackground();
+		} else if (bakedBackground.Width != width || bakedBackground.Height != height)
+		{
+			bakedBackground.Dispose();
+			bakedBackground = new Bitmap(width, height);
+			BakeBackground();
+		}
+	}
+	private void BakeBackground()
+	{
+		if (bakedBackground == null)
+		{
+			return;
+		}
+		var graph = Graphics.FromImage(bakedBackground);
+		graph.Clear(Color.Transparent);
+		foreach (var pair in backgroundList) 
+		{
+			var bg = pair.Value;
+			var scaleW = bakedBackground.Width / (float)bg.BaseImage.Bitmap.Width;
+			var scaleH = bakedBackground.Height / (float)bg.BaseImage.Bitmap.Height;
+			var cropHorizontally = bg.BaseImage.Bitmap.Height * scaleW < bakedBackground.Height;
+			var newWidth = bg.BaseImage.Bitmap.Width * ((cropHorizontally) ? scaleH : scaleW);
+			var newHeight = bg.BaseImage.Bitmap.Height * ((cropHorizontally) ? scaleH : scaleW);
+			var paddingX = (int)((bakedBackground.Width - newWidth) / 2);
+			bg.GraphicsDraw(graph, new Rectangle(paddingX, 0, (int)newWidth, (int)newHeight));
+		}
 	}
 	/// <summary>
 	/// INPUT中のアニメーション用タイマー
@@ -1567,7 +1604,6 @@ internal sealed partial class EmueraConsole : IDisposable
 	/// <param name="graph"></param>
 	public void OnPaint(Graphics graph)
 	{
-
 		//デバッグ用。描画が超重い環境を想定1
 		//System.Threading.Thread.Sleep(100);
 
@@ -1575,6 +1611,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		//OnPaintからgraphをもらった直後だから大丈夫だとは思うけど一応
 		if (!this.Enabled)
 			return;
+
 		//1824 アニメスプライト用・現在フレームの時間を決定
 		lastUpdate = DateTime.Now.Millisecond;//WinmmTimer.TickCount;
 
@@ -1608,19 +1645,12 @@ internal sealed partial class EmueraConsole : IDisposable
 		}
 		else
 		{
+			ValidateBackground((int)graph.ClipBounds.Width, (int)graph.ClipBounds.Height);
 			graph.Clear(this.bgColor);
-			foreach (var pair in backgroundList)
+			if (bakedBackground != null)
 			{
-				var bg = pair.Value;
-				var scaleW = graph.ClipBounds.Width / (float)bg.BaseImage.Bitmap.Width;
-				var scaleH = graph.ClipBounds.Height / (float)bg.BaseImage.Bitmap.Height;
-				var cropHorizontally = bg.BaseImage.Bitmap.Height * scaleW < graph.ClipBounds.Height;
-				var newWidth = bg.BaseImage.Bitmap.Width * ((cropHorizontally)?scaleH:scaleW);
-				var newHeight = bg.BaseImage.Bitmap.Height * ((cropHorizontally) ? scaleH : scaleW);
-				var paddingX = (int)((graph.ClipBounds.Width - newWidth) / 2);
-				bg?.GraphicsDraw(graph, new Rectangle(paddingX, 0, (int)newWidth, (int)newHeight));
+				graph.DrawImage(bakedBackground, 0, 0);
 			}
-			
 			
 			//1823 cbg追加
 			#region EM_私家版_描画拡張
