@@ -13,6 +13,7 @@ using Windows.Win32;
 using System.CommandLine.Builder;
 using System.Reflection;
 using DotnetEmuera;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MinorShift.Emuera;
 #nullable enable
@@ -163,20 +164,20 @@ static partial class Program
 		//二重起動の禁止かつ二重起動
 		if ((!Config.AllowMultipleInstances) && AssemblyData.PrevInstance())
 		{
-			//MessageBox.Show("多重起動を許可する場合、emuera.configを書き換えて下さい", "既に起動しています");
-			MessageBox.Show(Lang.UI.MainWindow.MsgBox.MultiInstanceInfo.Text, Lang.UI.MainWindow.MsgBox.InstaceExists.Text);
+			//Dialog.Show("既に起動しています", "多重起動を許可する場合、emuera.configを書き換えて下さい");
+			Dialog.Show(Lang.UI.MainWindow.MsgBox.InstaceExists.Text, Lang.UI.MainWindow.MsgBox.MultiInstanceInfo.Text);
 			return;
 		}
 		if (!Directory.Exists(CsvDir))
 		{
-			//MessageBox.Show("csvフォルダが見つかりません", "フォルダなし");
-			MessageBox.Show(Lang.UI.MainWindow.MsgBox.NoCsvFolder.Text, Lang.UI.MainWindow.MsgBox.FolderNotFound.Text);
+			//Dialog.Show("フォルダなし", "csvフォルダが見つかりません");
+			Dialog.Show(Lang.UI.MainWindow.MsgBox.FolderNotFound.Text, Lang.UI.MainWindow.MsgBox.NoCsvFolder.Text);
 			return;
 		}
 		if (!Directory.Exists(ErbDir))
 		{
-			//MessageBox.Show("erbフォルダが見つかりません", "フォルダなし");
-			MessageBox.Show(Lang.UI.MainWindow.MsgBox.NoErbFolder.Text, Lang.UI.MainWindow.MsgBox.FolderNotFound.Text);
+			//Dialog.Show("フォルダなし", "erbフォルダが見つかりません");
+			Dialog.Show(Lang.UI.MainWindow.MsgBox.FolderNotFound.Text, Lang.UI.MainWindow.MsgBox.NoErbFolder.Text);
 			return;
 		}
 		#region EE_フォントファイル対応
@@ -202,7 +203,7 @@ static partial class Program
 				}
 				catch
 				{
-					MessageBox.Show(Lang.UI.MainWindow.MsgBox.FailedCreateDebugFolder.Text, Lang.UI.MainWindow.MsgBox.FolderNotFound.Text);
+					Dialog.Show(Lang.UI.MainWindow.MsgBox.FolderNotFound.Text, Lang.UI.MainWindow.MsgBox.FailedCreateDebugFolder.Text);
 					return;
 				}
 			}
@@ -330,6 +331,12 @@ static partial class Program
 		#endregion
 	}
 
+	[MemberNotNull(nameof(ExeDir))]
+	[MemberNotNull(nameof(CsvDir))]
+	[MemberNotNull(nameof(ErbDir))]
+	[MemberNotNull(nameof(DebugDir))]
+	[MemberNotNull(nameof(DatDir))]
+	[MemberNotNull(nameof(ContentDir))]
 
 	private static void SetDirPaths(string exeDir)
 	{
