@@ -11,6 +11,8 @@ using System.CommandLine.Parsing;
 using System.Threading.Tasks;
 using Windows.Win32;
 using System.CommandLine.Builder;
+using System.Reflection;
+using DotnetEmuera;
 
 namespace MinorShift.Emuera;
 #nullable enable
@@ -139,10 +141,9 @@ static partial class Program
 		}
 		#endregion
 
-		ApplicationConfiguration.Initialize();
 		Application.SetCompatibleTextRenderingDefault(false);
 		ConfigData.Instance.LoadConfig();
-
+		JSONConfig.Load();
 
 		#region EM_私家版_Emuera多言語化改造
 		Lang.LoadLanguageFile();
@@ -244,6 +245,8 @@ static partial class Program
 			}
 			#endregion
 		}
+
+		ApplicationConfiguration.Initialize();
 
 		var winState = FormWindowState.Normal;
 		var rebootClientHeight = 0;

@@ -8,7 +8,7 @@ using trmb = EvilMask.Emuera.Lang.MessageBox;
 using System.IO;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-
+using DotnetEmuera;
 
 namespace MinorShift.Emuera.Forms
 {
@@ -511,6 +511,8 @@ namespace MinorShift.Emuera.Forms
 			textBox2.Text = Config.EditorArg;
 			textBox2.Enabled = itemET.Value == TextEditorType.USER_SETTING;
 
+			_useButtonFocusColor.Checked = JSONConfig.Data.UseButtonFocusBackgroundColor;
+
 			#region EM_私家版_LoadText＆SaveText機能拡張
 			{
 				ConfigItem<List<string>> item = (ConfigItem<List<string>>)ConfigData.Instance.GetConfigItem(ConfigCode.ValidExtension);
@@ -734,6 +736,8 @@ namespace MinorShift.Emuera.Forms
 
 
 			config.SaveConfig();
+
+			JSONConfig.Save();
 		}
 
 
@@ -989,5 +993,10 @@ namespace MinorShift.Emuera.Forms
 				}
 			}
 		}
+		private void UseButtonFocusColor_CheckedChanged(object sender, EventArgs e)
+		{
+			JSONConfig.Data.UseButtonFocusBackgroundColor = _useButtonFocusColor.Checked;
+		}
+
 	}
 }

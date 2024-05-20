@@ -226,6 +226,7 @@
 			flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
 			flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
+			_useButtonFocusColor = new System.Windows.Forms.CheckBox();
 			tabControl.SuspendLayout();
 			tabEnvironment.SuspendLayout();
 			flowLayoutPanel13.SuspendLayout();
@@ -539,10 +540,18 @@
 			// 
 			// tabPageView
 			// 
+			tabPageView.Controls.Add(_useButtonFocusColor);
 			tabPageView.Controls.Add(flowLayoutPanel17);
 			resources.ApplyResources(tabPageView, "tabPageView");
 			tabPageView.Name = "tabPageView";
 			tabPageView.UseVisualStyleBackColor = true;
+			//
+			// _useButtonFocusColor
+			// 
+			resources.ApplyResources(_useButtonFocusColor, "_useButtonFocusColor");
+			_useButtonFocusColor.Name = "_useButtonFocusColor";
+			_useButtonFocusColor.UseVisualStyleBackColor = true;
+			_useButtonFocusColor.CheckedChanged += UseButtonFocusColor_CheckedChanged;
 			// 
 			// flowLayoutPanel17
 			// 
@@ -1960,5 +1969,6 @@
 		private System.Windows.Forms.LinkLabel rikaiNote2;
 		private System.Windows.Forms.Label rikaiNote3;
 		private System.Windows.Forms.CheckBox checkBox35;
+		private System.Windows.Forms.CheckBox _useButtonFocusColor;
 	}
 }
