@@ -23,6 +23,8 @@ using Emuera;
 //using System.Diagnostics.Eventing.Reader;
 //using System.Linq.Expressions;
 //using System.Windows;
+using MinorShift.Emuera.Runtime.Config;
+
 
 namespace MinorShift.Emuera.GameView;
 
@@ -1159,7 +1161,7 @@ internal sealed partial class EmueraConsole : IDisposable
 					stopTimer();
 				//if((inputReq.InputType == InputType.IntValue || inputReq.InputType == InputType.StrValue)
 				if (str.Contains("("))
-					str = parseInput(new StringStream(str), false);
+					str = parseInput(new CharStream(str), false);
 				text = str.Split(spliter, StringSplitOptions.None);
 			}
 
@@ -1281,7 +1283,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		return;
 	}
 
-	string parseInput(StringStream st, bool isNest)
+	string parseInput(CharStream st, bool isNest)
 	{
 		StringBuilder sb = new(20);
 		StringBuilder num = new(20);
@@ -1982,7 +1984,7 @@ internal sealed partial class EmueraConsole : IDisposable
 				line = LogicalLineParser.ParseLine(com, null);
 			if (line == null || (line is InvalidLine))
 			{
-				WordCollection wc = LexicalAnalyzer.Analyse(new StringStream(com), LexEndWith.EoL, LexAnalyzeFlag.None);
+				WordCollection wc = LexicalAnalyzer.Analyse(new CharStream(com), LexEndWith.EoL, LexAnalyzeFlag.None);
 				IOperandTerm term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
 				if (term == null)
 					throw new CodeEE(trerror.CanNotInterpretedLine.Text);

@@ -16,6 +16,7 @@ using MinorShift._Library;
 
 using System.Windows.Forms; //for TextRenderer
 using System.IO; //for File
+using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.GameView;
 
@@ -850,7 +851,7 @@ partial class Rikaichan
 			string sprev = s;
 			int len;
 		do_it_again:
-			len = stringMeasure.GetDisplayLength(s, Config.Font);
+			len = stringMeasure.GetDisplayLength(s, Config.DefaultFont);
 			if (len > screenWidth - 32)
 			{
 				int split;
@@ -858,7 +859,7 @@ partial class Rikaichan
 				{
 					split = s.LastIndexOf(' ');
 					s = s.Substring(0, split);
-					len = stringMeasure.GetDisplayLength(s, Config.Font);
+					len = stringMeasure.GetDisplayLength(s, Config.DefaultFont);
 					if (len > screenWidth - 32)
 					{
 						continue;
@@ -962,7 +963,7 @@ partial class Rikaichan
 			while (j != 0)
 			{
 				var line = outputList2[firstlineind + j - 1];
-				TextRenderer.DrawText(graph, line, Config.Font, new Point(x_offset, y), Config.RikaiColorText, TextFormatFlags.NoPrefix);
+				TextRenderer.DrawText(graph, line, Config.DefaultFont, new Point(x_offset, y), Config.RikaiColorText, TextFormatFlags.NoPrefix);
 				j--;
 				i++;
 				y -= 20;

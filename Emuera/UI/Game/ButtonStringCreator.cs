@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using MinorShift.Emuera.Sub;
+using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.GameView;
 
@@ -41,7 +42,7 @@ internal static class ButtonStringCreator
 		List<string> strs;
 		if ((!printString.Contains("[")) || (!printString.Contains("]")))
 			goto nonButton;
-		strs = lex(new StringStream(printString));
+		strs = lex(new CharStream(printString));
 		if (strs == null)
 			goto nonButton;
 		bool beforeButton = false;//最初のボタン（"[1]"とか）より前にテキストがある
@@ -198,7 +199,7 @@ internal static class ButtonStringCreator
 		if (!isNumericWord(str))
 			return false;
 		string buttonStr = str[1..^1];
-		StringStream stInt = new(buttonStr);
+		CharStream stInt = new(buttonStr);
 		LexicalAnalyzer.SkipAllSpace(stInt);
 		try
 		{
@@ -217,7 +218,7 @@ internal static class ButtonStringCreator
 	/// </summary>
 	/// <param name="st"></param>
 	/// <returns></returns>
-	private static List<string> lex(StringStream st)
+	private static List<string> lex(CharStream st)
 	{
 		List<string> strs = [];
 		int state = 0;

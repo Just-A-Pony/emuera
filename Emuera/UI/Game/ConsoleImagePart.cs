@@ -4,6 +4,7 @@ using System;
 using System.Drawing;
 using System.Text;
 using static EvilMask.Emuera.Utils;
+using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.GameView;
 
@@ -152,7 +153,7 @@ class ConsoleImagePart : AConsoleDisplayPart
 		}
 		if (cImage != null)
 			return;
-		Width = sm.GetDisplayLength(Str, Config.Font);
+		Width = sm.GetDisplayLength(Str, Config.DefaultFont);
 		XsubPixel = subPixel;
 	}
 
@@ -211,9 +212,9 @@ class ConsoleImagePart : AConsoleDisplayPart
 		else
 		{
 			if (mode == TextDrawingMode.GRAPHICS)
-				graph.DrawString(AltText, Config.Font, new SolidBrush(Config.ForeColor), new Point(PointX, pointY));
+				graph.DrawString(AltText, Config.DefaultFont, new SolidBrush(Config.ForeColor), new Point(PointX, pointY));
 			else
-				System.Windows.Forms.TextRenderer.DrawText(graph, AltText.AsSpan(), Config.Font, new Point(PointX, pointY), Config.ForeColor, System.Windows.Forms.TextFormatFlags.NoPrefix);
+				System.Windows.Forms.TextRenderer.DrawText(graph, AltText.AsSpan(), Config.DefaultFont, new Point(PointX, pointY), Config.ForeColor, System.Windows.Forms.TextFormatFlags.NoPrefix);
 		}
 	}
 }

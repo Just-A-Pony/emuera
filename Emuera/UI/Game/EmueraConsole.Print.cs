@@ -12,6 +12,8 @@ using trsl = EvilMask.Emuera.Lang.SystemLine;
 using EvilMask.Emuera;
 using static EvilMask.Emuera.Utils;
 using System.Diagnostics;
+using Emuera.UI;
+using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.GameView;
 
@@ -503,7 +505,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	private void calcPrintCWidth(StringMeasure stringMeasure)
 	{
 		string str = new(' ', Config.PrintCLength);
-		Font font = Config.Font;
+		Font font = Config.DefaultFont;
 		printCWidth = stringMeasure.GetDisplayLength(str, font);
 
 		//この処理要る？
@@ -529,7 +531,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		Font font;
 		try
 		{
-			font = new Font(Style.Fontname, Config.Font.Size, Style.FontStyle, GraphicsUnit.Pixel);
+			font = new Font(Style.Fontname, Config.DefaultFont.Size, Style.FontStyle, GraphicsUnit.Pixel);
 		}
 		catch
 		{
@@ -689,7 +691,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		StringBuilder bar = new();
 		bar.Append(barStr);
 		int width = 0;
-		Font font = Config.Font;
+		Font font = Config.DefaultFont;
 		while (width < Config.DrawableWidth)
 		{//境界を越えるまで一文字ずつ増やす
 			bar.Append(barStr);

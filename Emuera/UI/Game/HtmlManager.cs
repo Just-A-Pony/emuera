@@ -9,6 +9,7 @@ using trerror = EvilMask.Emuera.Lang.Error;
 using EvilMask.Emuera;
 using static EvilMask.Emuera.Utils;
 using static EvilMask.Emuera.Shape;
+using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.GameView;
 
@@ -397,7 +398,7 @@ internal static class HtmlManager
 	public static string[] HtmlTagSplit(string str)
 	{
 		List<string> strList = [];
-		StringStream st = new(str);
+		CharStream st = new(str);
 		int found;
 		while (!st.EOS)
 		{
@@ -428,7 +429,7 @@ internal static class HtmlManager
 	sealed class HtmlParentInfo
 	{
 		public HtmlAnalzeState State;
-		public StringStream Stream;
+		public CharStream Stream;
 		public bool HasComment;
 		public bool HasReturn;
 	}
@@ -458,7 +459,7 @@ internal static class HtmlManager
 		List<ConsoleButtonString> buttonList = buttonsOutput == null ? [] : buttonsOutput;
 		#endregion
 		// StringStream st = new StringStream(str);
-		StringStream st = parent != null ? parent.Stream : new(str);
+		CharStream st = parent != null ? parent.Stream : new(str);
 		int found;
 		bool hasComment = parent != null ? parent.HasComment : str.IndexOf("<!--", StringComparison.Ordinal) >= 0;
 		bool hasReturn = parent != null ? parent.HasReturn : str.IndexOf('\n', StringComparison.Ordinal) >= 0;
@@ -849,7 +850,7 @@ internal static class HtmlManager
 		return b.ToString();
 	}
 
-	private static AConsoleDisplayPart tagAnalyze(HtmlAnalzeState state, StringStream st)
+	private static AConsoleDisplayPart tagAnalyze(HtmlAnalzeState state, CharStream st)
 	{
 		bool endTag = st.Current == '/';
 		string tag;

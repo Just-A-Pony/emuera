@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MinorShift.Emuera.Runtime.Config;
 
 //This file is generated from deinflect.js from rikaichamp. Use rikaichan.Autogenerate() to generate it again.
 
