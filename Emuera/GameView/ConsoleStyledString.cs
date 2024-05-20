@@ -99,17 +99,42 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 		if (this.Error)
 			return;
 		Color color = this.Color;
+		Color? backcolor = null;
 		if (isSelecting)
+		{
+
+			//
+			if (!(Color.Yellow.R == color.R &&
+					Color.Yellow.G == color.G &&
+					Color.Yellow.B == color.B)
+			 && !string.IsNullOrWhiteSpace(Str))
+			{
+				backcolor = Color.Gray;
+			}
 			color = this.ButtonColor;
+		}
 		else if (isBackLog && !colorChanged)
 			color = Config.LogColor;
 
 		#region EM_私家版_描画拡張
 		if (mode == TextDrawingMode.GRAPHICS)
+		{
 			graph.DrawString(Str, Font, new SolidBrush(color), new Point(PointX, pointY));
+		}
 		else
-			// TextRenderer.DrawText(graph, Str, Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
-			TextRenderer.DrawText(graph, Str.AsSpan(), Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
+		// TextRenderer.DrawText(graph, Str, Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
+		{
+			//todo:これもオプション化したい
+			if (backcolor.HasValue)
+			{
+				TextRenderer.DrawText(graph, Str.AsSpan(), Font, new Point(PointX, pointY), color, backColor: backcolor.Value, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
+			}
+			else
+			{
+				TextRenderer.DrawText(graph, Str.AsSpan(), Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
+			}
+		}
+
 		#endregion
 	}
 
