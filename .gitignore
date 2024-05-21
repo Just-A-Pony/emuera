@@ -6,7 +6,6 @@ Emuera/Properties/PublishProfiles/FolderProfile.pubxml.user
 EmueraPluginExample/bin/*
 EmueraPluginExample/obj/*
 *.patch
-*.pubxml.user
 
 */artifacts/*
 

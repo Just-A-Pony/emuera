@@ -20,8 +20,6 @@ using trerror = EvilMask.Emuera.Lang.Error;
 using System.Data;
 using static EvilMask.Emuera.Lang.UI.ConfigDialog;
 using System.Windows.Navigation;
-using MinorShift.Emuera.GameProc.Function;
-using System.DirectoryServices;
 
 namespace MinorShift.Emuera.GameData.Function;
 
@@ -7410,50 +7408,7 @@ internal static partial class FunctionMethodCreator
 			return line.ParentLabelLine.LabelName;
 		}
 	}
-	#endregion
-	#region EE_SystemInput拡張
-	private sealed class FlowInputMethod : FunctionMethod
-	{
-		public FlowInputMethod()
-		{
-			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 1 },
-				};
-			CanRestructure = false;
-		}
-		public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-		{
 
-			exm.Process.flowinputDef = arguments[0].GetIntValue(exm);
-			if (arguments.Length > 1)
-				exm.Process.flowinput = arguments[1].GetIntValue(exm) != 0 ? true : false ;
-			if (arguments.Length > 2)
-				exm.Process.flowinputCanSkip = arguments[2].GetIntValue(exm) != 0 ? true : false ;
-			if (arguments.Length > 3)
-				exm.Process.flowinputForceSkip = arguments[3].GetIntValue(exm) != 0 ? true : false;
-			return 0;
-		}
-	}
-	private sealed class FlowInputsMethod : FunctionMethod
-	{
-		public FlowInputsMethod()
-		{
-			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
-					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String }, OmitStart = 1 },
-				};
-			CanRestructure = false;
-		}
-		public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-		{
-
-			exm.Process.flowinputString = arguments[0].GetIntValue(exm) != 0 ? true : false ;
-			if (arguments.Length > 1)
-				exm.Process.flowinputDefString = arguments[1].GetStrValue(exm);
-			return 0;
-		}
-	}
 	#endregion
 
 	//Bitmap Cache
