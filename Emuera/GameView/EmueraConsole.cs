@@ -19,6 +19,7 @@ using trmb = EvilMask.Emuera.Lang.MessageBox;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using EvilMask.Emuera;
+using System.Drawing.Imaging;
 //using System.Diagnostics.Eventing.Reader;
 //using System.Linq.Expressions;
 //using System.Windows;
@@ -261,7 +262,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	#region EE_AnchorのCB機能移植
 	public readonly ClipboardProcessor CBProc;
 	#endregion
-	private List<KeyValuePair<long, SpriteF>> backgroundList = new List<KeyValuePair<long, SpriteF>>();
+	private List<KeyValuePair<long, ConsoleBackground>> backgroundList = new List<KeyValuePair<long, ConsoleBackground>>();
 	private Bitmap bakedBackground;
 
 	MinorShift.Emuera.GameProc.Process emuera;
@@ -641,14 +642,15 @@ internal sealed partial class EmueraConsole : IDisposable
 	}
 
 
-	public void AddBackgroundImage(string name, long depth)
+	public void AddBackgroundImage(string name, long depth, float opacity)
 	{
-		var bg = AppContents.GetSprite(name) as SpriteF; 
-		if (bg == null)
+		var spr = AppContents.GetSprite(name) as SpriteF; 
+		if (spr == null)
 		{
 			return;
 		}
-		var pair = new KeyValuePair<long, SpriteF>(depth, bg);
+		var bg = new ConsoleBackground(spr, opacity);
+		var pair = new KeyValuePair<long, ConsoleBackground>(depth, bg);
 		backgroundList.Add(pair);
 		backgroundList.Sort((v1, v2) => (v1.Key >= v2.Key)?-1:1);
 		BakeBackground();
@@ -661,7 +663,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	}
 
 	public void RemoveBackground(string key) {
-		backgroundList.RemoveAt(backgroundList.FindIndex((v) => v.Value.Name == key));
+		backgroundList.RemoveAt(backgroundList.FindIndex((v) => v.Value.bgImage.Name == key));
 		BakeBackground();
 	}
 	public void ValidateBackground(int width, int height)
@@ -687,14 +689,16 @@ internal sealed partial class EmueraConsole : IDisposable
 		graph.Clear(Color.Transparent);
 		foreach (var pair in backgroundList) 
 		{
-			var bg = pair.Value;
+			var bg = pair.Value.bgImage;
 			var scaleW = bakedBackground.Width / (float)bg.BaseImage.Bitmap.Width;
 			var scaleH = bakedBackground.Height / (float)bg.BaseImage.Bitmap.Height;
 			var cropHorizontally = bg.BaseImage.Bitmap.Height * scaleW < bakedBackground.Height;
 			var newWidth = bg.BaseImage.Bitmap.Width * ((cropHorizontally) ? scaleH : scaleW);
 			var newHeight = bg.BaseImage.Bitmap.Height * ((cropHorizontally) ? scaleH : scaleW);
 			var paddingX = (int)((bakedBackground.Width - newWidth) / 2);
-			bg.GraphicsDraw(graph, new Rectangle(paddingX, 0, (int)newWidth, (int)newHeight));
+			var attributes = new ImageAttributes();
+			attributes.SetColorMatrix(pair.Value.GetColorMatrix(), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+			bg.GraphicsDraw(graph, new Rectangle(paddingX, 0, (int)newWidth, (int)newHeight), attributes);
 		}
 	}
 	/// <summary>
@@ -2670,4 +2674,27 @@ internal sealed partial class EmueraConsole : IDisposable
 		//timer = null;
 		//stringMeasure.Dispose();
 	}
+}
+
+internal class ConsoleBackground
+{
+	public readonly SpriteF bgImage;
+
+	public ConsoleBackground(SpriteF spr, float opacity = 1.0f)
+	{
+		bgImage = spr;
+		colorMatrix = new ColorMatrix();
+		SetOpacity(opacity);
+	}
+
+	public void SetOpacity(float opacity)
+	{
+		colorMatrix.Matrix33 = opacity;
+	}
+	public ColorMatrix GetColorMatrix()
+	{
+		return colorMatrix;
+	}
+
+	private ColorMatrix colorMatrix;
 }

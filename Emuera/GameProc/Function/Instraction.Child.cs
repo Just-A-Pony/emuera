@@ -1468,11 +1468,16 @@ internal sealed partial class FunctionIdentifier
 			string bgName;
 			long bgDepth = 0;
 			bgName = arg.TermList[0].GetStrValue(exm);
+			float opacity = 1.0f;
 			if (arg.TermList.Count() >= 2)
 			{
 				bgDepth = Int64.Parse(arg.TermList[1].GetStrValue(exm));
 			}
-			exm.Console.AddBackgroundImage(bgName, bgDepth);
+			if (arg.TermList.Count() >= 3)
+			{
+				opacity = Int64.Parse(arg.TermList[2].GetStrValue(exm)) / 255.0f;
+			}
+			exm.Console.AddBackgroundImage(bgName, bgDepth, opacity);
 		}
 	}
 	private sealed class REMOVEBGIMAGE_Instruction : AbstractInstruction
