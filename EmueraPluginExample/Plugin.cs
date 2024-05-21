@@ -54,8 +54,8 @@ CALLSHARP ERBExecutionExample()
 
         public void Execute(PluginMethodParameter[] args)
         {
-            MessageBox.Show(args[0].value);
-            args[1].value = "This string is from Sharp Plugin";
+            MessageBox.Show(args[0].strValue);
+            args[1].strValue = "This string is from Sharp Plugin";
         }
     }
 
