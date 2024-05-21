@@ -1,9 +1,6 @@
-﻿using MinorShift.Emuera.GameData;
-using MinorShift.Emuera.GameData.Expression;
+﻿using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameData.Variable;
 using MinorShift.Emuera.GameProc.Function;
-using MinorShift.Emuera.Sub;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,14 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Xml.Linq;
-using System.Xml.Serialization;
 using static EvilMask.Emuera.Utils;
-using static MinorShift.Emuera.GameProc.Function.FunctionIdentifier;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace MinorShift.Emuera.GameProc.PluginSystem
 {
