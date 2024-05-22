@@ -317,18 +317,10 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 
 		public Int64 Get(string key, Int64 idx = 0)
 		{
-			if (Config.ICVariable)
-			{
-				key = key.ToUpper();
-			}
 			return tokens[key].GetIntValue(exm, [charId, idx]);
 		}
 		public void Set(string key, Int64 value, Int64 idx = 0)
 		{
-			if (Config.ICVariable)
-			{
-				key = key.ToUpper();
-			}
 			tokens[key].SetValue(value, [charId, idx]);
 		}
 
