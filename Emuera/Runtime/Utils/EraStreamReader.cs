@@ -209,6 +209,7 @@ internal sealed partial class EraStreamReader : IDisposable
 		filepath = null;
 		filename = null;
 		disposed = true;
+		_fileLines = null;
 	}
 
 	#endregion

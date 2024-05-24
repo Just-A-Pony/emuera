@@ -108,43 +108,8 @@ readonly record struct ScriptPosition
 	public ScriptPosition(string srcFile, int srcLineNo)
 	{
 		LineNo = srcLineNo + 1;
-		if (srcFile == null)
-			Filename = "";
-		else
-			Filename = string.Intern(srcFile);
+		Filename = srcFile ?? "";
 	}
 	public readonly int LineNo;
 	public readonly string Filename;
-
-	public override string ToString()
-	{
-		if (LineNo == -1)
-			return base.ToString();
-		return Filename + ":" + LineNo.ToString();
-	}
-
-	#region IEqualityComparer<ScriptPosition?> メンバ
-
-	public bool Equals(ScriptPosition? x, ScriptPosition? y)
-	{
-		if ((x == null) || (y == null))
-			return false;
-		return (x.Value.Filename == y.Value.Filename) && (x.Value.LineNo == y.Value.LineNo);
-	}
-
-	public int GetHashCode(ScriptPosition? obj)
-	{
-		return Filename.GetHashCode() ^ LineNo.GetHashCode();
-	}
-
-	#endregion
-
-	#region IEquatable<ScriptPosition?> メンバ
-
-	public bool Equals(ScriptPosition? other)
-	{
-		return this.Equals(this, other);
-	}
-
-	#endregion
 }

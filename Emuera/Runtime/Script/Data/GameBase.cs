@@ -92,7 +92,7 @@ internal sealed class GameBase
 			return true;
 		}
 		ScriptPosition? pos = null;
-		EraStreamReader eReader = new(false);
+		using var eReader = new EraStreamReader(false);
 		if (!eReader.Open(basePath))
 		{
 			//output.PrintLine(eReader.Filename + "のオープンに失敗しました");
