@@ -18,6 +18,7 @@ using EvilMask.Emuera;
 using static EvilMask.Emuera.Utils;
 using System.Linq;
 using MinorShift.Emuera.Runtime.Config;
+using System.Diagnostics;
 
 namespace MinorShift.Emuera.GameProc.Function;
 
@@ -434,7 +435,7 @@ internal sealed partial class FunctionIdentifier
 		{
 			if (GlobalStatic.Process.SkipPrint)
 				return;
-			GlobalStatic.Console.printCustomBar(((ExpressionArgument)func.Argument).ConstStr, true);
+			GlobalStatic.Console.printCustomBar(func.Argument.ConstStr, true); 
 			exm.Console.NewLine();
 		}
 	}
@@ -510,9 +511,8 @@ internal sealed partial class FunctionIdentifier
 		}
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
-			if (func.Argument is SpSetArrayArgument)
+			if (func.Argument is SpSetArrayArgument arg)
 			{
-				SpSetArrayArgument arg = (SpSetArrayArgument)func.Argument;
 				if (arg.VariableDest.IsInteger)
 				{
 					if (arg.IsConst)
@@ -2765,10 +2765,8 @@ internal sealed partial class FunctionIdentifier
 											   //if (func.JumpTo == null)
 											   //	throw new ExeEE("IFに対応するENDIFが設定されていない");
 
-			InstructionLine line;
-			for (int i = 0; i < func.IfCaseList.Count; i++)
+			foreach (var line in func.IfCaseList)
 			{
-				line = func.IfCaseList[i];
 				if (line.IsError)
 					continue;
 				if (line.FunctionCode == FunctionCode.ELSE)
@@ -2784,7 +2782,15 @@ internal sealed partial class FunctionIdentifier
 
 				//1730 ELSEIFが出したエラーがIFのエラーとして検出されていた
 				state.CurrentLine = line;
-				Int64 value = ((ExpressionArgument)(line.Argument)).Term.GetIntValue(exm);
+				long value = 0;
+				if (line.Argument.IsConst)
+				{
+					value = line.Argument.ConstInt;
+				}
+				else
+				{
+					value = ((ExpressionArgument)line.Argument).Term.GetIntValue(exm);
+				}
 				if (value != 0)//式が真
 				{
 					ifJumpto = line;
