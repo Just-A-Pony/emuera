@@ -122,7 +122,7 @@ internal abstract class FunctionMethod
 	//引数の数・型が一致するかどうかのテスト
 	//正しくない場合はエラーメッセージを返す。
 	//引数の数が不定である場合や引数の省略を許す場合にはoverrideすること。
-	private string CheckArgumentTypeEx(string name, AExpression[] arguments)
+	private string CheckArgumentTypeEx(string name, List<AExpression> arguments)
 	{
 		string[] errMsg = new string[argumentTypeArrayEx.Length];
 		for (int idx = 0; idx < argumentTypeArrayEx.Length; idx++)
@@ -130,21 +130,21 @@ internal abstract class FunctionMethod
 			var list = argumentTypeArrayEx[idx];
 			var vs = list.LastVariadics;
 			bool variadic = vs != null;
-			bool argsNotMoreThanRule = variadic ? true : arguments.Length <= list.ArgTypes.Count;
-			bool argsNotLessThanRule = list.OmitStart > -1 ? arguments.Length >= list.OmitStart : arguments.Length >= list.ArgTypes.Count;
+			bool argsNotMoreThanRule = variadic ? true : arguments.Count <= list.ArgTypes.Count;
+			bool argsNotLessThanRule = list.OmitStart > -1 ? arguments.Count >= list.OmitStart : arguments.Count >= list.ArgTypes.Count;
 			if (argsNotMoreThanRule && argsNotLessThanRule)
 			{
 				if (list.MatchVariadicGroup && vs != null)
 				{
 					var variadicGroupStart = list.ArgTypes.Count - vs.Length;
-					if (arguments.Length > variadicGroupStart && (arguments.Length - variadicGroupStart) % vs.Length != 0)
+					if (arguments.Count > variadicGroupStart && (arguments.Count - variadicGroupStart) % vs.Length != 0)
 					{
-						errMsg[idx] = string.Format(Lang.Error.ArgsNotFitExpr.Text, name, arguments.Length, variadicGroupStart, vs.Length);
+						errMsg[idx] = string.Format(Lang.Error.ArgsNotFitExpr.Text, name, arguments.Count, variadicGroupStart, vs.Length);
 						continue;
 					}
 				}
 				// 引数の数が有効
-				for (int i = 0; i < (variadic ? arguments.Length : Math.Min(arguments.Length, list.ArgTypes.Count)); i++)
+				for (int i = 0; i < (variadic ? arguments.Count : Math.Min(arguments.Count, list.ArgTypes.Count)); i++)
 				{
 					var rule = variadic && i >= list.ArgTypes.Count ? vs[(i - list.ArgTypes.Count) % vs.Length] : list.ArgTypes[i];
 					if (arguments[i] == null)
@@ -233,7 +233,7 @@ internal abstract class FunctionMethod
 			{
 				// 数固定の引数が必要
 				if (list.ArgTypes.Count > 0)
-					errMsg[idx] = string.Format(Lang.Error.ArgsCountNotMatches.Text, name, list.ArgTypes.Count, arguments.Length);
+					errMsg[idx] = string.Format(Lang.Error.ArgsCountNotMatches.Text, name, list.ArgTypes.Count, arguments.Count);
 				else
 					errMsg[idx] = string.Format(Lang.Error.ArgsNotNeeded.Text, name);
 				continue;
@@ -262,7 +262,7 @@ internal abstract class FunctionMethod
 		}
 		return string.Format(Lang.Error.NotValidArgs.Text, name, sb.ToString());
 	}
-	public virtual string CheckArgumentType(string name, AExpression[] arguments)
+	public virtual string CheckArgumentType(string name, List<AExpression> arguments)
 	{
 		if (argumentTypeArrayEx != null)
 		{
@@ -270,11 +270,11 @@ internal abstract class FunctionMethod
 		}
 		else if (argumentTypeArray != null)
 		{
-			if (arguments.Length != argumentTypeArray.Length)
+			if (arguments.Count != argumentTypeArray.Length)
 			// return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum0, name);
 			{
 				if (argumentTypeArray.Length > 0)
-					return string.Format(Lang.Error.ArgsCountNotMatches.Text, name, argumentTypeArray.Length, arguments.Length);
+					return string.Format(Lang.Error.ArgsCountNotMatches.Text, name, argumentTypeArray.Length, arguments.Count);
 				else
 					return string.Format(Lang.Error.ArgsNotNeeded.Text, name);
 			}

@@ -6,6 +6,7 @@ using MinorShift.Emuera.GameData.Function;
 using System.Windows.Forms;
 using trerror = EvilMask.Emuera.Lang.Error;
 using MinorShift.Emuera.Runtime.Config;
+using System.Runtime.CompilerServices;
 
 namespace MinorShift.Emuera.GameData.Expression;
 
@@ -47,7 +48,8 @@ internal static class ExpressionParser
 	/// 呼び出し元はCodeEEを適切に処理すること
 	/// </summary>
 	/// <returns></returns>
-	public static AExpression[] ReduceArguments(WordCollection wc, ArgsEndWith endWith, bool isDefine)
+	[MethodImpl(MethodImplOptions.AggressiveOptimization)]
+	public static List<AExpression> ReduceArguments(WordCollection wc, ArgsEndWith endWith, bool isDefine)
 	{
 		if (wc == null)
 			throw new ExeEE(trerror.EmptyStream.Text);
@@ -127,7 +129,7 @@ internal static class ExpressionParser
 			}
 		}
 		local();
-		return [.. terms];
+		return terms;
 	}
 
 
@@ -251,7 +253,7 @@ internal static class ExpressionParser
 			if (symbol.Type == '[')//1810 多分永久に実装されない
 				throw new CodeEE(trerror.SBracketsFuncNotImprement.Text);
 			//引数を処理
-			AExpression[] args = ReduceArguments(wc, ArgsEndWith.RightParenthesis, false);
+			var args = ReduceArguments(wc, ArgsEndWith.RightParenthesis, false);
 			AExpression mToken = GlobalStatic.IdentifierDictionary.GetFunctionMethod(GlobalStatic.LabelDictionary, idStr, args, false);
 			if (mToken == null)
 			{

@@ -141,7 +141,7 @@ internal sealed class CalledFunction
 	/// 1806+v6.99 式中関数の引数に無効な#DIM変数を与えている場合に例外になるのを修正
 	/// 1808beta009 REF型に対応
 	/// </summary>
-	public UserDefinedFunctionArgument ConvertArg(AExpression[] srcArgs, out string errMes)
+	public UserDefinedFunctionArgument ConvertArg(List<AExpression> srcArgs, out string errMes)
 	{
 		errMes = null;
 		if (TopLabel.IsError)
@@ -151,7 +151,7 @@ internal sealed class CalledFunction
 		}
 		FunctionLabelLine func = TopLabel;
 		AExpression[] convertedArg = new AExpression[func.Arg.Length];
-		if (convertedArg.Length < srcArgs.Length)
+		if (convertedArg.Length < srcArgs.Count)
 		{
 			errMes = string.Format(trerror.TooManyFuncArgs.Text, func.LabelName);
 			return null;
@@ -161,7 +161,7 @@ internal sealed class CalledFunction
 		//bool isString = false;
 		for (int i = 0; i < func.Arg.Length; i++)
 		{
-			term = (i < srcArgs.Length) ? srcArgs[i] : null;
+			term = (i < srcArgs.Count) ? srcArgs[i] : null;
 			destArg = func.Arg[i];
 			//isString = destArg.IsString;
 			if (destArg.Identifier.IsReference)//参照渡しの場合

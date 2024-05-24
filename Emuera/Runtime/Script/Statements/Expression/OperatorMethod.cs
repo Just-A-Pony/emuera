@@ -19,7 +19,7 @@ internal abstract class OperatorMethod : FunctionMethod
 	{
 		argumentTypeArray = null;
 	}
-	public override string CheckArgumentType(string name, AExpression[] arguments) { throw new ExeEE("型チェックは呼び出し元が行うこと"); }
+	public override string CheckArgumentType(string name, List<AExpression> arguments) { throw new ExeEE("型チェックは呼び出し元が行うこと"); }
 }
 
 internal static class OperatorMethodManager
@@ -99,7 +99,7 @@ internal static class OperatorMethodManager
 				method = unaryDic[op];
 		}
 		if (method != null)
-			return new FunctionMethodTerm(method, new AExpression[] { o1 });
+			return new FunctionMethodTerm(method, [o1]);
 		string errMes;
 		if (o1.GetOperandType() == typeof(Int64))
 			errMes = trerror.NumericType.Text;
@@ -127,7 +127,7 @@ internal static class OperatorMethodManager
 				method = unaryAfterDic[op];
 		}
 		if (method != null)
-			return new FunctionMethodTerm(method, new AExpression[] { o1 });
+			return new FunctionMethodTerm(method, [o1]);
 		string errMes;
 		if (o1.GetOperandType() == typeof(Int64))
 			errMes = trerror.NumericType.Text;
@@ -159,7 +159,7 @@ internal static class OperatorMethodManager
 				method = binaryMultIntStr;
 		}
 		if (method != null)
-			return new FunctionMethodTerm(method, new AExpression[] { left, right });
+			return new FunctionMethodTerm(method, [left, right]);
 		string typeName1, typeName2, errMes;
 		if (left.GetOperandType() == typeof(Int64))
 			typeName1 = trerror.NumericType.Text;
@@ -185,7 +185,7 @@ internal static class OperatorMethodManager
 		else if ((o1.GetOperandType() == typeof(Int64)) && (o2.GetOperandType() == typeof(string)) && (o3.GetOperandType() == typeof(string)))
 			method = ternaryIntStrStr;
 		if (method != null)
-			return new FunctionMethodTerm(method, new AExpression[] { o1, o2, o3 });
+			return new FunctionMethodTerm(method, [o1, o2, o3]);
 		throw new CodeEE(trerror.InvalidTernaryOp.Text);
 
 	}

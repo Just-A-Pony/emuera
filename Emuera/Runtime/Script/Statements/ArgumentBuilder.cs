@@ -45,7 +45,7 @@ internal abstract class ArgumentBuilder
 	/// 引数の数に制限なし。
 	/// </summary>
 	protected bool argAny = false;
-	protected bool checkArgumentType(InstructionLine line, ExpressionMediator exm, AExpression[] arguments)
+	protected bool checkArgumentType(InstructionLine line, ExpressionMediator exm, List<AExpression> arguments)
 	{
 		if (arguments == null)
 		{
@@ -53,15 +53,15 @@ internal abstract class ArgumentBuilder
 			return false;
 		}
 		if (
-			arguments.Length < minArg ||
-			((arguments.Length < argumentTypeArray.Length) && (minArg < 0))
+			arguments.Count < minArg ||
+			((arguments.Count < argumentTypeArray.Length) && (minArg < 0))
 			)
 		{
 			warn(trerror.NotEnoughArguments.Text, line, 2, false);
 			return false;
 		}
-		int length = arguments.Length;
-		if ((arguments.Length > argumentTypeArray.Length) && (!argAny))
+		int length = arguments.Count;
+		if ((arguments.Count > argumentTypeArray.Length) && (!argAny))
 		{
 			warn(trerror.TooManyArg.Text, line, 1, false);
 			length = argumentTypeArray.Length;
@@ -88,7 +88,7 @@ internal abstract class ArgumentBuilder
 				return false;
 			}
 		}
-		length = arguments.Length;
+		length = arguments.Count;
 		for (int i = 0; i < length; i++)
 		{
 			if (arguments[i] == null)
@@ -98,7 +98,7 @@ internal abstract class ArgumentBuilder
 		return true;
 	}
 
-	protected VariableTerm getChangeableVariable(AExpression[] terms, int i, InstructionLine line)
+	protected VariableTerm getChangeableVariable(List<AExpression> terms, int i, InstructionLine line)
 	{
 		if (!(terms[i - 1] is VariableTerm varTerm))
 		{
@@ -119,7 +119,7 @@ internal abstract class ArgumentBuilder
 		return LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
 	}
 
-	protected AExpression[] popTerms(InstructionLine line)
+	protected List<AExpression> popTerms(InstructionLine line)
 	{
 		CharStream st = line.PopArgumentPrimitive();
 		WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
@@ -337,9 +337,9 @@ internal static partial class ArgumentParser
 				return null;
 			}
 
-			AExpression[] terms = new AExpression[param.Count];
+			var terms = new AExpression[param.Count];
 			for (int i = 0; i < param.Count; i++) terms[i] = param[i].num;
-			if (!checkArgumentType(line, exm, terms)) return null;
+			//if (!checkArgumentType(line, exm, terms)) return null;
 
 			return new SpPrintShapeArgument(param.ToArray());
 		}
@@ -356,19 +356,19 @@ internal static partial class ArgumentParser
 		{
 			CharStream st = line.PopArgumentPrimitive();
 			WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AnalyzePrintV);
-			AExpression[] args = ExpressionParser.ReduceArguments(wc, ArgsEndWith.EoL, false);
-			if (args.Length < 1)
+			List<AExpression> args = ExpressionParser.ReduceArguments(wc, ArgsEndWith.EoL, false);
+			if (args.Count < 1)
 			{
 				warn(trerror.NotEnoughArguments.Text, line, 2, false);
 				return null;
 			}
-			if (args.Length > 2)
+			if (args.Count > 2)
 			{
 				warn(trerror.TooManyArg.Text, line, 2, false);
 				return null;
 			}
 			bool constStr = false, constInt = true;
-			for (int i = 0; i < args.Length; i++)
+			for (int i = 0; i < args.Count; i++)
 			{
 				if (i == 0 && args[i] == null)
 				{ warn(string.Format(trerror.CanNotOmitArg.Text, i + 1), line, 2, false); return null; }
@@ -382,10 +382,10 @@ internal static partial class ArgumentParser
 				if (i == 0 && args[i] is SingleTerm) constStr = true;
 				if (i == 1 && !(args[i] is SingleTerm)) constInt = false;
 			}
-			var ret = new SpHtmlPrint(args[0], args.Length > 1 ? args[1] : null);
+			var ret = new SpHtmlPrint(args[0], args.Count > 1 ? args[1] : null);
 			if (constStr && constInt)
 			{
-				ret.ConstInt = args.Length > 1 ? args[1].GetIntValue(exm) : 0;
+				ret.ConstInt = args.Count > 1 ? args[1].GetIntValue(exm) : 0;
 				ret.ConstStr = args[0].GetStrValue(exm);
 			}
 			return ret;
@@ -496,8 +496,8 @@ internal static partial class ArgumentParser
 		{
 			CharStream st = line.PopArgumentPrimitive();
 			WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AnalyzePrintV);
-			AExpression[] args = ExpressionParser.ReduceArguments(wc, ArgsEndWith.EoL, false);
-			for (int i = 0; i < args.Length; i++)
+			var args = ExpressionParser.ReduceArguments(wc, ArgsEndWith.EoL, false);
+			for (int i = 0; i < args.Count; i++)
 			{
 				if (args[i] == null)
 				{
@@ -721,7 +721,7 @@ internal static partial class ArgumentParser
 
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			VariableTerm varTerm = new(GlobalStatic.VariableData.GetSystemVariableToken("NO"), new AExpression[] { new SingleTerm(0) });
+			VariableTerm varTerm = new(GlobalStatic.VariableData.GetSystemVariableToken("NO"), [new SingleTerm(0)]);
 			SortOrder order = SortOrder.ASCENDING;
 			WordCollection wc = popWords(line);
 			if (wc.EOL)
@@ -864,8 +864,8 @@ internal static partial class ArgumentParser
 			WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
 			wc.ShiftNext();
 
-			AExpression[] subNames = null;
-			AExpression[] args = null;
+			List<AExpression> subNames = null;
+			List<AExpression> args = null;
 			if (cur == '[')
 			{
 				subNames = ExpressionParser.ReduceArguments(wc, ArgsEndWith.RightBracket, false);
@@ -886,13 +886,13 @@ internal static partial class ArgumentParser
 				{ warn(trerror.WrongFormat.Text, line, 2, false); return null; }
 			}
 			if (subNames == null)
-				subNames = new AExpression[0];
+				subNames = [];
 			if (args == null)
-				args = new AExpression[0];
-			for (int i = 0; i < subNames.Length; i++)
+				args = [];
+			for (int i = 0; i < subNames.Count; i++)
 				if (subNames != null)
 					subNames[i] = subNames[i].Restructure(exm);
-			for (int i = 0; i < args.Length; i++)
+			for (int i = 0; i < args.Count; i++)
 				if (args[i] != null)
 					args[i] = args[i].Restructure(exm);
 			Argument ret;
@@ -933,14 +933,14 @@ internal static partial class ArgumentParser
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
 			WordCollection destWc = line.PopAssignmentDestStr();
-			AExpression[] destTerms = ExpressionParser.ReduceArguments(destWc, ArgsEndWith.EoL, false);
+			var destTerms = ExpressionParser.ReduceArguments(destWc, ArgsEndWith.EoL, false);
 			SpSetArgument ret;
-			if ((destTerms.Length == 0) || (destTerms[0] == null))
+			if ((destTerms.Count == 0) || (destTerms[0] == null))
 			{
 				assignwarn(trerror.CanNotReadLeft.Text, line, 2, false);
 				return null;
 			}
-			if (destTerms.Length != 1)
+			if (destTerms.Count != 1)
 			{
 				assignwarn(trerror.LeftHasExtraComma.Text, line, 2, false);
 				return null;
@@ -993,14 +993,14 @@ internal static partial class ArgumentParser
 					return ret;
 				}
 				WordCollection srcWc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
-				AExpression[] srcTerms = ExpressionParser.ReduceArguments(srcWc, ArgsEndWith.EoL, false);
+				var srcTerms = ExpressionParser.ReduceArguments(srcWc, ArgsEndWith.EoL, false);
 
-				if ((srcTerms.Length == 0) || (srcTerms[0] == null))
+				if ((srcTerms.Count == 0) || (srcTerms[0] == null))
 				{
 					assignwarn(trerror.CanNotReadRight.Text, line, 2, false);
 					return null;
 				}
-				if (srcTerms.Length != 1)
+				if (srcTerms.Count != 1)
 				{
 					if (op != OperatorCode.Assignment)
 					{
@@ -1008,8 +1008,8 @@ internal static partial class ArgumentParser
 						return null;
 					}
 					bool allConst = true;
-					Int64[] constValues = new Int64[srcTerms.Length];
-					for (int i = 0; i < srcTerms.Length; i++)
+					Int64[] constValues = new Int64[srcTerms.Count];
+					for (int i = 0; i < srcTerms.Count; i++)
 					{
 						if (srcTerms[i] == null)
 						{
@@ -1027,7 +1027,7 @@ internal static partial class ArgumentParser
 						else
 							allConst = false;
 					}
-					SpSetArrayArgument arrayarg = new(varTerm, srcTerms, constValues)
+					var arrayarg = new SpSetArrayArgument(varTerm, srcTerms, constValues)
 					{
 						IsConst = allConst
 					};
@@ -1093,16 +1093,16 @@ internal static partial class ArgumentParser
 				else if ((op == OperatorCode.Mult) || (op == OperatorCode.Plus) || (op == OperatorCode.AssignmentStr))
 				{
 					WordCollection srcWc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
-					AExpression[] srcTerms = ExpressionParser.ReduceArguments(srcWc, ArgsEndWith.EoL, false);
+					List<AExpression> srcTerms = ExpressionParser.ReduceArguments(srcWc, ArgsEndWith.EoL, false);
 
-					if ((srcTerms.Length == 0) || (srcTerms[0] == null))
+					if ((srcTerms.Count == 0) || (srcTerms[0] == null))
 					{
 						assignwarn(trerror.CanNotReadRight.Text, line, 2, false);
 						return null;
 					}
 					if (op == OperatorCode.AssignmentStr)
 					{
-						if (srcTerms.Length == 1)
+						if (srcTerms.Count == 1)
 						{
 							if (srcTerms[0].IsInteger)
 							{
@@ -1120,8 +1120,8 @@ internal static partial class ArgumentParser
 							return ret;
 						}
 						bool allConst = true;
-						string[] constValues = new string[srcTerms.Length];
-						for (int i = 0; i < srcTerms.Length; i++)
+						string[] constValues = new string[srcTerms.Count];
+						for (int i = 0; i < srcTerms.Count; i++)
 						{
 							if (srcTerms[i] == null)
 							{
@@ -1139,13 +1139,13 @@ internal static partial class ArgumentParser
 							else
 								allConst = false;
 						}
-						SpSetArrayArgument arrayarg = new(varTerm, srcTerms, constValues)
+						var arrayarg = new SpSetArrayArgument(varTerm, srcTerms, constValues)
 						{
 							IsConst = allConst
 						};
 						return arrayarg;
 					}
-					if (srcTerms.Length != 1)
+					if (srcTerms.Count != 1)
 					{
 						assignwarn(trerror.RightHasExtraComma.Text, line, 2, false);
 						return null;
@@ -1165,7 +1165,7 @@ internal static partial class ArgumentParser
 	{
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] args = popTerms(line);
+			List<AExpression> args = popTerms(line);
 			string errmes = line.Function.Method.CheckArgumentType(line.Function.Name, args);
 			if (errmes != null)
 				throw new CodeEE(errmes);
@@ -1235,19 +1235,19 @@ internal static partial class ArgumentParser
 			st.ShiftNext();
 			WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
 
-			AExpression[] terms = ExpressionParser.ReduceArguments(wc, ArgsEndWith.EoL, false);
-			if (!st.EOS || terms.Length > 1)
+			var terms = ExpressionParser.ReduceArguments(wc, ArgsEndWith.EoL, false);
+			if (!st.EOS || terms.Count > 1)
 			{
 				warn(trerror.TooManyArg.Text, line, 1, false);
 			}
-			if (terms.Length > 0)
+			if (terms.Count > 0)
 			{
 				if (terms[0] == null || !terms[0].IsInteger)
 				{
 					warn(trerror.IgnoreArgBecauseNotInt.Text, line, 1, false);
 					ret = new SpInputsArgument(term, null, null);
 				}
-				else if (terms.Length == 1) ret = new SpInputsArgument(term, terms[0], null);
+				else if (terms.Count == 1) ret = new SpInputsArgument(term, terms[0], null);
 				else ret = new SpInputsArgument(term, terms[0], terms[1]);
 			}
 			#endregion
@@ -1271,11 +1271,11 @@ internal static partial class ArgumentParser
 
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			AExpression term;
-			if (terms.Length == 0)
+			if (terms.Count == 0)
 			{
 				term = new SingleTerm(0);
 				if (!nullable)
@@ -1302,7 +1302,7 @@ internal static partial class ArgumentParser
 					warn(trerror.RepeatCountLessthan0.Text, line, 0, true);
 				}
 				VariableToken count = GlobalStatic.VariableData.GetSystemVariableToken("COUNT");
-				VariableTerm repCount = new(count, new AExpression[] { new SingleTerm(0) });
+				VariableTerm repCount = new(count, [new SingleTerm(0)]);
 				repCount.Restructure(exm);
 				return new SpForNextArgment(repCount, new SingleTerm(0), term, new SingleTerm(1));
 			}
@@ -1337,13 +1337,13 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 
 			List<AExpression> termList = new List<AExpression>();
 			ExpressionArrayArgument ret = new(termList);
-			if (terms.Length == 0)
+			if (terms.Count == 0)
 			{
 				if (line.FunctionCode == FunctionCode.RETURN)
 				{
@@ -1355,7 +1355,7 @@ internal static partial class ArgumentParser
 				warn(trerror.MissingArg.Text, line, 2, false);
 				return null;
 			}
-			else if (terms.Length == 1)
+			else if (terms.Count == 1)
 			{
 				if (terms[0] is SingleTerm s)
 				{
@@ -1390,11 +1390,11 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			ExpressionArgument ret;
-			if (terms.Length == 0)
+			if (terms.Count == 0)
 			{
 				ret = new ExpressionArgument(new SingleTerm(""))
 				{
@@ -1417,10 +1417,10 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
-			if (terms.Length == 0)
+			if (terms.Count == 0)
 			{
 				ExpressionArgument ret = new ExpressionArgument(null)
 				{
@@ -1443,7 +1443,7 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			return new SpBarArgument(terms[0], terms[1], terms[2]);
@@ -1461,12 +1461,12 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			//上の判定で省略不可時はここに来ないので即さばける
-			if (terms.Length == 1)
-				terms = new AExpression[] { terms[0], null };
+			if (terms.Count == 1)
+				terms = [terms[0], null];
 			return new SpSwapCharaArgument(terms[0], terms[1]);
 		}
 	}
@@ -1480,7 +1480,7 @@ internal static partial class ArgumentParser
 
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			return new SpSaveDataArgument(terms[0], terms[1]);
@@ -1497,17 +1497,17 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			AExpression term3 = null, term4 = null, term5 = null, term6 = null;
 			if (!checkArgumentType(line, exm, terms))
 				return null;
-			if (terms.Length > 2)
+			if (terms.Count > 2)
 				term3 = terms[2];
-			if (terms.Length > 3)
+			if (terms.Count > 3)
 				term4 = terms[3];
-			if (terms.Length > 4)
+			if (terms.Count > 4)
 				term5 = terms[4];
-			if (terms.Length > 5)
+			if (terms.Count > 5)
 				term6 = terms[5];
 
 			return new SpTInputsArgument(terms[0], terms[1], term3, term4, term5, term6);
@@ -1523,17 +1523,17 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			AExpression term3 = null, term4 = null, term5 = null, term6 = null;
 			if (!checkArgumentType(line, exm, terms))
 				return null;
-			if (terms.Length > 2)
+			if (terms.Count > 2)
 				term3 = terms[2];
-			if (terms.Length > 3)
+			if (terms.Count > 3)
 				term4 = terms[3];
-			if (terms.Length > 4)
+			if (terms.Count > 4)
 				term5 = terms[4];
-			if (terms.Length > 5)
+			if (terms.Count > 5)
 				term6 = terms[5];
 			return new SpTInputsArgument(terms[0], terms[1], term3, term4, term5, term6);
 		}
@@ -1551,9 +1551,9 @@ internal static partial class ArgumentParser
 	//		IOperandTerm term3 = null, term4 = null;
 	//		if (!checkArgumentType(line, exm, terms))
 	//			return null;
-	//		if (terms.Length > 2)
+	//		if (terms.Count > 2)
 	//			term3 = terms[2];
-	//		if (terms.Length > 3)
+	//		if (terms.Count > 3)
 	//			term4 = terms[3];
 
 	//		return new SpTInputsArgument(terms[0], terms[1], term3, term4);
@@ -1573,9 +1573,9 @@ internal static partial class ArgumentParser
 	//		IOperandTerm term3 = null, term4 = null;
 	//		if (!checkArgumentType(line, exm, terms))
 	//			return null;
-	//		if (terms.Length > 2)
+	//		if (terms.Count > 2)
 	//			term3 = terms[2];
-	//		if (terms.Length > 3)
+	//		if (terms.Count > 3)
 	//			term4 = terms[3];
 	//		return new SpTInputsArgument(terms[0], terms[1], term3, term4);
 	//	}
@@ -1591,7 +1591,7 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			VariableTerm varTerm = getChangeableVariable(terms, 1, line);
@@ -1605,7 +1605,7 @@ internal static partial class ArgumentParser
 			AExpression step;
 			if (start == null)
 				start = new SingleTerm(0);
-			if ((terms.Length > 3) && (terms[3] != null))
+			if ((terms.Count > 3) && (terms[3] != null))
 				step = terms[3];
 			else
 				step = new SingleTerm(1);
@@ -1624,7 +1624,7 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			VariableTerm varTerm = getChangeableVariable(terms, 1, line);
@@ -1644,7 +1644,7 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			VariableTerm x = getChangeableVariable(terms, 1, line);
@@ -1671,8 +1671,8 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
-			if (terms.Length == 0)
+			var terms = popTerms(line);
+			if (terms.Count == 0)
 				return new PrintDataArgument(null);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
@@ -1692,11 +1692,11 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
-			if (terms.Length == 0)
+			var terms = popTerms(line);
+			if (terms.Count == 0)
 			{
 				VariableToken varToken = GlobalStatic.VariableData.GetSystemVariableToken("RESULTS");
-				VariableTerm varTerm = new(varToken, new AExpression[] { new SingleTerm(0) });
+				VariableTerm varTerm = new(varToken, [new SingleTerm(0)]);
 				return new StrDataArgument(varTerm);
 			}
 			if (!checkArgumentType(line, exm, terms))
@@ -1718,7 +1718,7 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			VariableTerm varTerm = getChangeableVariable(terms, 1, line);
@@ -1754,7 +1754,7 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			VariableTerm varTerm = getChangeableVariable(terms, 1, line);
@@ -1767,7 +1767,7 @@ internal static partial class ArgumentParser
 			}
 
 			AExpression term, term3 = null, term4 = null;
-			if (terms.Length > 1)
+			if (terms.Count > 1)
 				term = terms[1];
 			else
 			{
@@ -1778,18 +1778,18 @@ internal static partial class ArgumentParser
 			}
 			if (varTerm is VariableNoArgTerm)
 			{
-				if (terms.Length > 2)
+				if (terms.Count > 2)
 				{
 					warn(string.Format(trerror.CanNotSetthirdLaterArg.Text, varTerm.Identifier.Name), line, 2, false);
 					return null;
 				}
 				return new SpVarSetArgument(new FixedVariableTerm(varTerm.Identifier), term, null, null);
 			}
-			if (terms.Length > 2)
+			if (terms.Count > 2)
 				term3 = terms[2];
-			if (terms.Length > 3)
+			if (terms.Count > 3)
 				term4 = terms[3];
-			if (terms.Length >= 3 && !varTerm.Identifier.IsArray1D)
+			if (terms.Count >= 3 && !varTerm.Identifier.IsArray1D)
 				warn(trerror.IgnoreThirdLaterArg.Text, line, 1, false);
 			if (term.GetOperandType() != varTerm.GetOperandType())
 			{
@@ -1809,7 +1809,7 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 
@@ -1822,11 +1822,11 @@ internal static partial class ArgumentParser
 			if (varTerm.Identifier.IsArray2D)
 			{ warn(trerror.ArgIs2DVar.Text, line, 2, false); return null; }
 			AExpression index, term, term4 = null, term5 = null;
-			if (terms.Length > 1)
+			if (terms.Count > 1)
 				index = terms[1];
 			else
 				index = new SingleTerm(0);
-			if (terms.Length > 2)
+			if (terms.Count > 2)
 				term = terms[2];
 			else
 			{
@@ -1835,16 +1835,16 @@ internal static partial class ArgumentParser
 				else
 					term = new SingleTerm(0);
 			}
-			if (terms.Length > 3)
+			if (terms.Count > 3)
 				term4 = terms[3];
-			if (terms.Length > 4)
+			if (terms.Count > 4)
 				term5 = terms[4];
 			if (index is SingleTerm term1 && index.GetOperandType() == typeof(string) && varTerm.Identifier.IsArray1D)
 			{
 				if (!GlobalStatic.ConstantData.isDefined(varTerm.Identifier.Code, term1.Str))
 				{ warn(string.Format(trerror.NotDefinedKey.Text, varTerm.Identifier.Name, index.GetStrValue(null)), line, 2, false); return null; }
 			}
-			if (terms.Length > 3 && !varTerm.Identifier.IsArray1D)
+			if (terms.Count > 3 && !varTerm.Identifier.IsArray1D)
 				warn(trerror.IgnoreFourthLaterArg.Text, line, 1, false);
 			if (term.GetOperandType() != varTerm.GetOperandType())
 			{
@@ -1863,7 +1863,7 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			return new SpButtonArgument(terms[0], terms[1]);
@@ -1880,13 +1880,13 @@ internal static partial class ArgumentParser
 
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
-			if (terms.Length == 2)
+			if (terms.Count == 2)
 			{ warn(trerror.InvalidSetcolorArgCount.Text, line, 2, false); return null; }
 			SpColorArgument arg;
-			if (terms.Length == 1)
+			if (terms.Count == 1)
 			{
 				arg = new SpColorArgument(terms[0]);
 				if (terms[0] is SingleTerm)
@@ -1917,7 +1917,7 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			VariableTerm x = getChangeableVariable(terms, 3, line);
@@ -1925,7 +1925,7 @@ internal static partial class ArgumentParser
 				return null;
 			if (!x.Identifier.IsArray1D && !x.Identifier.IsArray2D && !x.Identifier.IsArray3D)
 			{ warn(string.Format(trerror.ArgIsNotArrayVar.Text, "3"), line, 2, false); return null; }
-			VariableTerm term = (terms.Length >= 4) ? getChangeableVariable(terms, 4, line) : new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("RESULT"), new AExpression[] { new SingleTerm(0) });
+			VariableTerm term = (terms.Count >= 4) ? getChangeableVariable(terms, 4, line) : new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("RESULT"), [new SingleTerm(0)]);
 			return new SpSplitArgument(terms[0], terms[1], x.Identifier, term);
 		}
 	}
@@ -1939,13 +1939,13 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			VariableToken destVar;
 			VariableTerm destVarTerm = null;
 			VariableTerm term = null;
-			if (terms.Length >= 2)
+			if (terms.Count >= 2)
 				destVarTerm = getChangeableVariable(terms, 2, line);
 			if (destVarTerm != null)
 				destVar = destVarTerm.Identifier;
@@ -1953,12 +1953,12 @@ internal static partial class ArgumentParser
 				destVar = GlobalStatic.VariableData.GetSystemVariableToken("RESULTS");
 			if (!destVar.IsArray1D || destVar.IsCharacterData)
 			{ warn(string.Format(trerror.ArgIsRequiredNonCharaArrayVar.Text, "2"), line, 2, false); return null; }
-			if (terms.Length >= 3)
+			if (terms.Count >= 3)
 				term = getChangeableVariable(terms, 3, line);
 			if (term == null)
 			{
 				VariableToken varToken = GlobalStatic.VariableData.GetSystemVariableToken("RESULT");
-				term = new VariableTerm(varToken, new AExpression[] { new SingleTerm(0) });
+				term = new VariableTerm(varToken, [new SingleTerm(0)]);
 			}
 			return new SpHtmlSplitArgument(terms[0], destVar, term);
 		}
@@ -1973,11 +1973,11 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
-			if (terms.Length == 0)
+			var terms = popTerms(line);
+			if (terms.Count == 0)
 			{
 				VariableToken varToken = GlobalStatic.VariableData.GetSystemVariableToken("RESULT");
-				return new SpGetIntArgument(new VariableTerm(varToken, new AExpression[] { new SingleTerm(0) }));
+				return new SpGetIntArgument(new VariableTerm(varToken, [new SingleTerm(0)]));
 			}
 			if (!checkArgumentType(line, exm, terms))
 				return null;
@@ -1996,7 +1996,7 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			VariableTerm x = getChangeableVariable(terms, 1, line);
@@ -2015,7 +2015,7 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 
@@ -2030,8 +2030,8 @@ internal static partial class ArgumentParser
 				if (terms[0].GetOperandType() != terms[2].GetOperandType())
 				{ warn(trerror.NotMatchFirstAndThirdVar.Text, line, 2, false); return null; }
 			}
-			AExpression term4 = terms.Length >= 4 ? terms[3] : new SingleTerm(0);
-			AExpression term5 = terms.Length >= 5 ? terms[4] : null;
+			AExpression term4 = terms.Count >= 4 ? terms[3] : new SingleTerm(0);
+			AExpression term5 = terms.Count >= 5 ? terms[4] : null;
 			return new SpArrayShiftArgument(x, terms[1], terms[2], term4, term5);
 		}
 	}
@@ -2046,11 +2046,11 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			List<VariableToken> varTokens = [];
-			for (int i = 2; i < terms.Length; i++)
+			for (int i = 2; i < terms.Count; i++)
 			{
 				if (terms[i] == null)
 				{ warn(string.Format(trerror.CanNotOmitArg.Text, i + 1), line, 2, false); return null; }
@@ -2097,7 +2097,7 @@ internal static partial class ArgumentParser
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 
@@ -2223,7 +2223,7 @@ internal static partial class ArgumentParser
 			//IOperandTerm term;
 
 			//ExpressionArgument ret;
-			//if (terms.Length == 0)
+			//if (terms.Count == 0)
 			//{
 			//	ret = new ExpressionArgument(term);
 			//	return ret;
@@ -2254,8 +2254,8 @@ internal static partial class ArgumentParser
 			//	ret.ConstInt = i;
 			//	ret.IsConst = true;
 			//}
-			AExpression[] terms = popTerms(line);
-			for (int i = 0; i < terms.Length; i++)
+			var terms = popTerms(line);
+			for (int i = 0; i < terms.Count; i++)
 			{
 				if (terms[i] != null && terms[i].GetOperandType() != typeof(Int64))
 				{
@@ -2264,16 +2264,16 @@ internal static partial class ArgumentParser
 				}
 			}
 			SpInputsArgument ret;
-			if (terms.Length == 0)
+			if (terms.Count == 0)
 			{
 				ret = new SpInputsArgument(null, null, null);
 				return ret;
 			}
-			else if (terms.Length == 1)
+			else if (terms.Count == 1)
 			{
 				ret = new SpInputsArgument(terms[0], null, null);
 			}
-			else if (terms.Length == 2)
+			else if (terms.Count == 2)
 			{
 				ret = new SpInputsArgument(terms[0], terms[1], null);
 			}
@@ -2296,7 +2296,7 @@ internal static partial class ArgumentParser
 
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			VariableToken[] vars = new VariableToken[2] { null, null };
@@ -2371,7 +2371,7 @@ internal static partial class ArgumentParser
 
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			AExpression[] terms = popTerms(line);
+			var terms = popTerms(line);
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			return new ExpressionsArgument(argumentTypeArray, terms);

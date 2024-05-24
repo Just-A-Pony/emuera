@@ -2541,9 +2541,9 @@ internal static partial class FunctionMethodCreator
 		}
 
 		readonly bool warn;
-		public override string CheckArgumentType(string name, AExpression[] arguments)
+		public override string CheckArgumentType(string name, List<AExpression> arguments)
 		{
-			if (arguments.Length > 0)
+			if (arguments.Count > 0)
 				// return name + "関数の引数が多すぎます";
 				return string.Format(Lang.Error.TooManyFuncArgs.Text, name);
 			if (warn)

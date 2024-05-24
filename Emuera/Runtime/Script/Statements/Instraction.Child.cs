@@ -125,7 +125,7 @@ internal sealed partial class FunctionIdentifier
 			else if (isPrintV)
 			{
 				StringBuilder builder = new();
-				AExpression[] terms = ((SpPrintVArgument)func.Argument).Terms;
+				var terms = ((SpPrintVArgument)func.Argument).Terms;
 				foreach (AExpression termV in terms)
 				{
 					if (termV.GetOperandType() == typeof(Int64))
@@ -519,7 +519,7 @@ internal sealed partial class FunctionIdentifier
 						arg.VariableDest.SetValue(arg.ConstIntList, exm);
 					else
 					{
-						Int64[] values = new Int64[arg.TermList.Length];
+						Int64[] values = new Int64[arg.TermList.Count];
 						for (int i = 0; i < values.Length; i++)
 						{
 							values[i] = arg.TermList[i].GetIntValue(exm);
@@ -533,7 +533,7 @@ internal sealed partial class FunctionIdentifier
 						arg.VariableDest.SetValue(arg.ConstStrList, exm);
 					else
 					{
-						string[] values = new string[arg.TermList.Length];
+						string[] values = new string[arg.TermList.Count];
 						for (int i = 0; i < values.Length; i++)
 						{
 							values[i] = arg.TermList[i].GetStrValue(exm);
@@ -630,7 +630,7 @@ internal sealed partial class FunctionIdentifier
 		{
 			BitArgument spsetarg = (BitArgument)func.Argument;
 			VariableTerm varTerm = spsetarg.VariableDest;
-			AExpression[] terms = spsetarg.Term;
+			var terms = spsetarg.Term;
 			for (int i = 0; i < terms.Length; i++)
 			{
 				Int64 x = terms[i].GetIntValue(exm);
@@ -1664,7 +1664,7 @@ internal sealed partial class FunctionIdentifier
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
 			ExpressionArrayArgument arg = (ExpressionArrayArgument)func.Argument;
-			AExpression[] terms = arg.TermList;
+			var terms = arg.TermList;
 			string datFilename = terms[0].GetStrValue(exm);
 			string savMes = terms[1].GetStrValue(exm);
 			int[] savCharaList = new int[terms.Length - 2];
@@ -1946,7 +1946,7 @@ internal sealed partial class FunctionIdentifier
 		{
 			ExpressionsArgument arg = (ExpressionsArgument)func.Argument;
 			Int64 time = 0;
-			if (arg.ArgumentArray.Length > 0)
+			if (arg.ArgumentArray.Count > 0)
 				time = arg.ArgumentArray[0].GetIntValue(exm);
 			InputRequest req = new InputRequest();
 			req.InputType = InputType.PrimitiveMouseKey;

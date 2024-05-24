@@ -255,22 +255,22 @@ internal sealed class UserDefinedVariableData
 			if (sizeNum.Count == 1)
 				size = sizeNum[0];
 			wc.ShiftNext();
-			AExpression[] terms = ExpressionParser.ReduceArguments(wc, ArgsEndWith.EoL, false);
-			if (terms.Length == 0)
+			var terms = ExpressionParser.ReduceArguments(wc, ArgsEndWith.EoL, false);
+			if (terms.Count == 0)
 				throw new CodeEE(trerror.ArrayVarCanNotOmitInitialValue.Text);
 			if (size > 0)
 			{
-				if (terms.Length > size)
+				if (terms.Count > size)
 					throw new CodeEE(trerror.InitialValueMoreThanArraySize.Text);
-				if (ret.Const && terms.Length != size)
+				if (ret.Const && terms.Count != size)
 					throw new CodeEE(trerror.ConstInitialValueDifferentArraySize.Text);
 			}
 			if (dims)
-				ret.DefaultStr = new string[terms.Length];
+				ret.DefaultStr = new string[terms.Count];
 			else
-				ret.DefaultInt = new Int64[terms.Length];
+				ret.DefaultInt = new Int64[terms.Count];
 
-			for (int i = 0; i < terms.Length; i++)
+			for (int i = 0; i < terms.Count; i++)
 			{
 				if (terms[i] == null)
 					throw new CodeEE(trerror.ArrayVarCanNotOmitInitialValue.Text);
@@ -286,7 +286,7 @@ internal sealed class UserDefinedVariableData
 					ret.DefaultInt[i] = sTerm.Int;
 			}
 			if (sizeNum.Count == 0)
-				sizeNum.Add(terms.Length);
+				sizeNum.Add(terms.Count);
 		}
 		if (!wc.EOL)
 			throw new CodeEE(trerror.WrongFormat.Text, sc);
