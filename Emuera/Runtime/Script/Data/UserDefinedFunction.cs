@@ -30,7 +30,7 @@ internal sealed class UserDefinedFunctionData
 	public bool TypeIsStr = false;
 	public UserDifinedFunctionDataArgType[] ArgList;
 
-	public static UserDefinedFunctionData Create(WordCollection wc, bool dims, ScriptPosition sc)
+	public static UserDefinedFunctionData Create(WordCollection wc, bool dims, ScriptPosition? sc)
 	{
 		string dimtype = dims ? "#FUNCTION" : "#FUNCTIONS";
 		UserDefinedFunctionData ret = new()

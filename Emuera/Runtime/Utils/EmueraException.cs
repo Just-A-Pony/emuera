@@ -7,7 +7,7 @@ namespace MinorShift.Emuera.Sub;
 [Serializable]
 internal abstract class EmueraException : ApplicationException
 {
-	protected EmueraException(string errormes, ScriptPosition position)
+	protected EmueraException(string errormes, ScriptPosition? position)
 		: base(errormes)
 	{
 		Position = position;
@@ -17,7 +17,7 @@ internal abstract class EmueraException : ApplicationException
 	{
 		Position = null;
 	}
-	public ScriptPosition Position;
+	public ScriptPosition? Position;
 }
 
 /// <summary>
@@ -30,7 +30,7 @@ internal sealed class ExeEE : EmueraException
 		: base(errormes)
 	{
 	}
-	public ExeEE(string errormes, ScriptPosition position)
+	public ExeEE(string errormes, ScriptPosition? position)
 		: base(errormes, position)
 	{
 	}
@@ -42,7 +42,7 @@ internal sealed class ExeEE : EmueraException
 [Serializable]
 internal class CodeEE : EmueraException
 {
-	public CodeEE(string errormes, ScriptPosition position)
+	public CodeEE(string errormes, ScriptPosition? position)
 		: base(errormes, position)
 	{
 	}
@@ -58,7 +58,7 @@ internal class CodeEE : EmueraException
 [Serializable]
 internal class IdentifierNotFoundCodeEE : CodeEE
 {
-	public IdentifierNotFoundCodeEE(string errormes, ScriptPosition position)
+	public IdentifierNotFoundCodeEE(string errormes, ScriptPosition? position)
 		: base(errormes, position)
 	{
 	}
@@ -74,7 +74,7 @@ internal class IdentifierNotFoundCodeEE : CodeEE
 [Serializable]
 internal sealed class NotImplCodeEE : CodeEE
 {
-	public NotImplCodeEE(ScriptPosition position)
+	public NotImplCodeEE(ScriptPosition? position)
 		: base(trerror.CanNotUseFuncCurrentVer.Text, position)
 	{
 	}
@@ -98,7 +98,7 @@ internal sealed class FileEE : EmueraException
 /// <summary>
 /// エラー箇所を表示するための位置データ。整形前のデータなのでエラー表示以外の理由で参照するべきではない。
 /// </summary>
-internal sealed class ScriptPosition : IEquatable<ScriptPosition>, IEqualityComparer<ScriptPosition>
+readonly record struct ScriptPosition
 {
 	public ScriptPosition()
 	{
@@ -111,7 +111,7 @@ internal sealed class ScriptPosition : IEquatable<ScriptPosition>, IEqualityComp
 		if (srcFile == null)
 			Filename = "";
 		else
-			Filename = srcFile;
+			Filename = string.Intern(srcFile);
 	}
 	public readonly int LineNo;
 	public readonly string Filename;
@@ -123,25 +123,25 @@ internal sealed class ScriptPosition : IEquatable<ScriptPosition>, IEqualityComp
 		return Filename + ":" + LineNo.ToString();
 	}
 
-	#region IEqualityComparer<ScriptPosition> メンバ
+	#region IEqualityComparer<ScriptPosition?> メンバ
 
-	public bool Equals(ScriptPosition x, ScriptPosition y)
+	public bool Equals(ScriptPosition? x, ScriptPosition? y)
 	{
 		if ((x == null) || (y == null))
 			return false;
-		return (x.Filename == y.Filename) && (x.LineNo == y.LineNo);
+		return (x.Value.Filename == y.Value.Filename) && (x.Value.LineNo == y.Value.LineNo);
 	}
 
-	public int GetHashCode(ScriptPosition obj)
+	public int GetHashCode(ScriptPosition? obj)
 	{
 		return Filename.GetHashCode() ^ LineNo.GetHashCode();
 	}
 
 	#endregion
 
-	#region IEquatable<ScriptPosition> メンバ
+	#region IEquatable<ScriptPosition?> メンバ
 
-	public bool Equals(ScriptPosition other)
+	public bool Equals(ScriptPosition? other)
 	{
 		return this.Equals(this, other);
 	}

@@ -29,7 +29,7 @@ internal sealed class UserDefinedVariableData
 		return Create(dimline.WC, dimline.Dims, dimline.IsPrivate, dimline.SC);
 	}
 
-	public static UserDefinedVariableData Create(WordCollection wc, bool dims, bool isPrivate, ScriptPosition sc)
+	public static UserDefinedVariableData Create(WordCollection wc, bool dims, bool isPrivate, ScriptPosition? sc)
 	{
 		string dimtype = dims ? "#DIM" : "#DIMS";
 		UserDefinedVariableData ret = new()
@@ -328,8 +328,8 @@ internal sealed class DimLineWC
 	public WordCollection WC;
 	public bool Dims;
 	public bool IsPrivate;
-	public ScriptPosition SC;
-	public DimLineWC(WordCollection wc, bool isString, bool isPrivate, ScriptPosition position)
+	public ScriptPosition? SC;
+	public DimLineWC(WordCollection wc, bool isString, bool isPrivate, ScriptPosition? position)
 	{
 		WC = wc;
 		Dims = isString;

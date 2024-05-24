@@ -166,7 +166,7 @@ internal sealed class ErbLoader
 		readonly Stack<bool> doneStack = new();
 		readonly Stack<string> ppMatch = new();
 
-		internal void AddKeyWord(string token, string token2, ScriptPosition position)
+		internal void AddKeyWord(string token, string token2, ScriptPosition? position)
 		{
 			//bool token2enabled = string.IsNullOrEmpty(token2);
 			switch (token)
@@ -299,7 +299,7 @@ internal sealed class ErbLoader
 				Disabled = true;
 		}
 
-		internal void FileEnd(ScriptPosition position)
+		internal void FileEnd(ScriptPosition? position)
 		{
 			if (ppMatch.Count != 0)
 			{
@@ -331,7 +331,7 @@ internal sealed class ErbLoader
 		LogicalLine lastLine = new NullLine();
 		FunctionLabelLine lastLabelLine = null;
 		CharStream st = null;
-		ScriptPosition position = default;
+		ScriptPosition? position = null;
 		int funcCount = 0;
 		if (Program.AnalysisMode)
 			output.PrintSystemLine(" ");
@@ -395,7 +395,7 @@ internal sealed class ErbLoader
 							if (seniorLabel != null)
 							{
 								//output.NewLine();
-								ParserMediator.Warn(string.Format(trerror.FuncIsAlreadyDefined.Text, label.LabelName, seniorLabel.Position.Filename, seniorLabel.Position.LineNo.ToString()), position, 1);
+								ParserMediator.Warn(string.Format(trerror.FuncIsAlreadyDefined.Text, label.LabelName, seniorLabel.Position.Value.Filename, seniorLabel.Position.Value.LineNo.ToString()), position, 1);
 								funcCount = -1;
 							}
 						}
@@ -414,8 +414,8 @@ internal sealed class ErbLoader
 						gotoLabel.ParentLabelLine = lastLabelLine;
 						if (lastLabelLine != null && !labelDic.AddLabelDollar(gotoLabel))
 						{
-							ScriptPosition pos = labelDic.GetLabelDollar(gotoLabel.LabelName, lastLabelLine).Position;
-							ParserMediator.Warn(string.Format(trerror.LabelIsAlreadyDefined.Text, gotoLabel.LabelName, pos.Filename, pos.LineNo.ToString()), position, 2);
+							ScriptPosition? pos = labelDic.GetLabelDollar(gotoLabel.LabelName, lastLabelLine).Position;
+							ParserMediator.Warn(string.Format(trerror.LabelIsAlreadyDefined.Text, gotoLabel.LabelName, pos.Value.Filename, pos.Value.LineNo.ToString()), position, 2);
 						}
 					}
 				}
@@ -702,7 +702,7 @@ internal sealed class ErbLoader
 					bool ignore = false;
 					if (notCalledWarning == DisplayWarningFlag.ONCE)
 					{
-						string filename = label.Position.Filename.ToUpper();
+						string filename = label.Position.Value.Filename.ToUpper();
 
 						if (!string.IsNullOrEmpty(filename))
 						{
@@ -821,7 +821,7 @@ internal sealed class ErbLoader
 		else if (warnFlag == DisplayWarningFlag.ONCE)
 		{
 
-			string filename = line.Position.Filename.ToUpper();
+			string filename = line.Position.Value.Filename.ToUpper();
 			if (!string.IsNullOrEmpty(filename))
 			{
 				if (ignoredFNFWarningFileList.Contains(filename))

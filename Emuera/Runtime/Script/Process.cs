@@ -384,7 +384,7 @@ internal sealed partial class Process(EmueraConsole view)
 		string caption = string.Format(trmb.InfiniteLoop.Text);
 		string text = string.Format(
 			trmb.TooLongLoop.Text,
-			currentLine.Position.Filename, currentLine.Position.LineNo, state.lineCount, elapsedTime);
+			currentLine.Position.Value.Filename, currentLine.Position.Value.LineNo, state.lineCount, elapsedTime);
 		if (Dialog.ShowPrompt(text, caption))
 		{
 			throw new CodeEE(trerror.SelectExitInfiniteLoopMB.Text);
@@ -439,7 +439,7 @@ internal sealed partial class Process(EmueraConsole view)
 		return methodStack;
 	}
 
-	public ScriptPosition GetRunningPosition()
+	public ScriptPosition? GetRunningPosition()
 	{
 		LogicalLine line = state.ErrorLine;
 		if (line == null)
@@ -495,7 +495,7 @@ internal sealed partial class Process(EmueraConsole view)
 	private void handleException(Exception exc, LogicalLine current, bool playSound)
 	{
 		console.ThrowError(playSound);
-		ScriptPosition position = default;
+		ScriptPosition? position = null;
 		if ((exc is EmueraException ee) && (ee.Position != null))
 			position = ee.Position;
 		else if ((current != null) && (current.Position != null))
@@ -503,10 +503,10 @@ internal sealed partial class Process(EmueraConsole view)
 		string posString = "";
 		if (position != null)
 		{
-			if (position.LineNo >= 0)
-				posString = string.Format(trerror.ErrorFileAndLine.Text, position.Filename, position.LineNo.ToString());
+			if (position.Value.LineNo >= 0)
+				posString = string.Format(trerror.ErrorFileAndLine.Text, position.Value.Filename, position.Value.LineNo.ToString());
 			else
-				posString = string.Format(trerror.ErrorFile.Text, position.Filename);
+				posString = string.Format(trerror.ErrorFile.Text, position.Value.Filename);
 
 		}
 		if (exc is CodeEE)
@@ -525,7 +525,7 @@ internal sealed partial class Process(EmueraConsole view)
 					printRawLine(position);
 					console.PrintError(string.Format(trerror.ErrorMessage.Text, exc.Message));
 				}
-				console.PrintError(string.Format(trerror.ErrorInFunc.Text, current.ParentLabelLine.LabelName, current.ParentLabelLine.Position.Filename, current.ParentLabelLine.Position.LineNo.ToString()));
+				console.PrintError(string.Format(trerror.ErrorInFunc.Text, current.ParentLabelLine.LabelName, current.ParentLabelLine.Position.Value.Filename, current.ParentLabelLine.Position.Value.LineNo.ToString()));
 				console.PrintError(trerror.FuncCallStack.Text);
 				LogicalLine parent;
 				int depth = 0;
@@ -533,7 +533,7 @@ internal sealed partial class Process(EmueraConsole view)
 				{
 					if (parent.Position != null)
 					{
-						console.PrintErrorButton(string.Format(trerror.ErrorFuncStack.Text, parent.Position.Filename, parent.Position.LineNo.ToString(), parent.ParentLabelLine.LabelName), parent.Position);
+						console.PrintErrorButton(string.Format(trerror.ErrorFuncStack.Text, parent.Position.Value.Filename, parent.Position.Value.LineNo.ToString(), parent.ParentLabelLine.LabelName), parent.Position);
 					}
 				}
 			}
@@ -560,26 +560,26 @@ internal sealed partial class Process(EmueraConsole view)
 		}
 	}
 
-	public void printRawLine(ScriptPosition position)
+	public void printRawLine(ScriptPosition? position)
 	{
 		string str = getRawTextFormFilewithLine(position);
 		if (str != "")
 			console.PrintError(str);
 	}
 
-	public string getRawTextFormFilewithLine(ScriptPosition position)
+	public string getRawTextFormFilewithLine(ScriptPosition? position)
 	{
-		string extents = position.Filename[^4..].ToLower();
+		string extents = position.Value.Filename[^4..].ToLower();
 		if (extents == ".erb")
 		{
-			return File.Exists(Program.ErbDir + position.Filename)
-				? position.LineNo > 0 ? File.ReadLines(Program.ErbDir + position.Filename, EncodingHandler.DetectEncoding(Program.ErbDir + position.Filename)).Skip(position.LineNo - 1).First() : ""
+			return File.Exists(Program.ErbDir + position.Value.Filename)
+				? position.Value.LineNo > 0 ? File.ReadLines(Program.ErbDir + position.Value.Filename, EncodingHandler.DetectEncoding(Program.ErbDir + position.Value.Filename)).Skip(position.Value.LineNo - 1).First() : ""
 				: "";
 		}
 		else if (extents == ".csv")
 		{
-			return File.Exists(Program.CsvDir + position.Filename)
-				? position.LineNo > 0 ? File.ReadLines(Program.CsvDir + position.Filename, EncodingHandler.DetectEncoding(Program.ErbDir + position.Filename)).Skip(position.LineNo - 1).First() : ""
+			return File.Exists(Program.CsvDir + position.Value.Filename)
+				? position.Value.LineNo > 0 ? File.ReadLines(Program.CsvDir + position.Value.Filename, EncodingHandler.DetectEncoding(Program.ErbDir + position.Value.Filename)).Skip(position.Value.LineNo - 1).First() : ""
 				: "";
 		}
 		else

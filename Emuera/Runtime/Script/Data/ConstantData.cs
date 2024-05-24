@@ -226,7 +226,7 @@ internal sealed class ConstantData
 			output.PrintError(string.Format(trerror.FailedOpenFile.Text, eReader.Filename));
 			return;
 		}
-		ScriptPosition position = default;
+		ScriptPosition? position = null;
 		if (disp)
 			output.PrintSystemLine(string.Format(trsl.LoadingFile.Text, eReader.Filename));
 		try
@@ -256,7 +256,7 @@ internal sealed class ConstantData
 	}
 
 
-	private void changeVariableSizeData(string line, ScriptPosition position)
+	private void changeVariableSizeData(string line, ScriptPosition? position)
 	{
 		string[] tokens = line.Split(',');
 		if (tokens.Length < 2)
@@ -497,7 +497,7 @@ internal sealed class ConstantData
 			ParserMediator.Warn(string.Format(trerror.VarSizeAlreadyDefined.Text, id.Code.ToString()), position, 1);
 	}
 
-	private void _decideActualArraySize_sub(VariableCode mainCode, VariableCode nameCode, int[] arraylength, ScriptPosition position)
+	private void _decideActualArraySize_sub(VariableCode mainCode, VariableCode nameCode, int[] arraylength, ScriptPosition? position)
 	{
 		int nameIndex = (int)(nameCode & VariableCode.__LOWERCASE__);
 		int mainLengthIndex = (int)(mainCode & VariableCode.__LOWERCASE__);
@@ -521,7 +521,7 @@ internal sealed class ConstantData
 			MaxDataList[nameIndex] = arraylength[mainLengthIndex];
 	}
 
-	private void decideActualArraySize(ScriptPosition position)
+	private void decideActualArraySize(ScriptPosition? position)
 	{
 		_decideActualArraySize_sub(VariableCode.ABL, VariableCode.ABLNAME, CharacterIntArrayLength, position);
 		_decideActualArraySize_sub(VariableCode.TALENT, VariableCode.TALENTNAME, CharacterIntArrayLength, position);
@@ -704,7 +704,7 @@ internal sealed class ConstantData
 		public int num;
 		public string path;
 	};
-	public void UserDefineLoadData(List<string> filepaths, string varname, int varlength, bool disp, ScriptPosition sc)
+	public void UserDefineLoadData(List<string> filepaths, string varname, int varlength, bool disp, ScriptPosition? sc)
 	{
 
 		Dictionary<string, ErdDictInfo> preDict = new Dictionary<string, ErdDictInfo>();
@@ -743,7 +743,7 @@ internal sealed class ConstantData
 	}
 
 	#region EE_重複定義の確認
-	public void isDefinedErd(string varname, ScriptPosition sc)
+	public void isDefinedErd(string varname, ScriptPosition? sc)
 	{
 		List<string> erddic = new List<string>(erdNameToIntDics.Keys);
 		foreach (var erdvarname in erddic)
@@ -1284,7 +1284,7 @@ internal sealed class ConstantData
 				output.PrintError(string.Format(trerror.FailedOpenFile.Text, eReader.Filename));
 				return;
 			}
-			ScriptPosition position = default;
+			ScriptPosition? position = null;
 			if (disp)
 				output.PrintSystemLine(string.Format(trsl.LoadingFile.Text, eReader.Filename));
 			try
@@ -1385,7 +1385,7 @@ internal sealed class ConstantData
 			output.PrintError(string.Format(trerror.FailedOpenFile.Text, eReader.Filename));
 			return;
 		}
-		ScriptPosition position = null;
+		ScriptPosition? position = null;
 		if (disp)
 			output.PrintSystemLine(string.Format(trsl.LoadingFile.Text, eReader.Filename));
 		try
@@ -1508,7 +1508,7 @@ internal sealed class ConstantData
 		return true;
 	}
 
-	private void toCharacterTemplate(ScriptPosition position, CharacterTemplate chara, string[] tokens)
+	private void toCharacterTemplate(ScriptPosition? position, CharacterTemplate chara, string[] tokens)
 	{
 		if (chara == null)
 			return;
@@ -1691,7 +1691,7 @@ internal sealed class ConstantData
 			output.PrintError(string.Format(trerror.FailedOpenFile.Text, eReader.Filename));
 			return;
 		}
-		ScriptPosition position = default;
+		ScriptPosition? position = null;
 		#region EE_ERD
 		// if (disp || Program.AnalysisMode)
 		if ((disp || Program.AnalysisMode) && output != null)

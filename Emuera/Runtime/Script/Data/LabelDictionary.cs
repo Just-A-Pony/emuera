@@ -157,7 +157,7 @@ internal sealed class LabelDictionary
 			labelLines = pair.Value;
 			foreach (FunctionLabelLine labelLine in labelLines)
 			{
-				if (string.Equals(labelLine.Position.Filename, fname, Config.SCIgnoreCase))
+				if (string.Equals(labelLine.Position.Value.Filename, fname, Config.SCIgnoreCase))
 					removeLine.Add(labelLine);
 			}
 			foreach (FunctionLabelLine remove in removeLine)
@@ -178,7 +178,7 @@ internal sealed class LabelDictionary
 		}
 		for (int i = 0; i < invalidList.Count; i++)
 		{
-			if (string.Equals(invalidList[i].Position.Filename, fname, Config.SCIgnoreCase))
+			if (string.Equals(invalidList[i].Position.Value.Filename, fname, Config.SCIgnoreCase))
 			{
 				invalidList.RemoveAt(i);
 				i--;

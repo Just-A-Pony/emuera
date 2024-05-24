@@ -78,7 +78,7 @@ internal sealed class ErhLoader
 	private bool loadHeaderFile(string filepath, string filename)
 	{
 		CharStream st;
-		ScriptPosition position = default;
+		ScriptPosition? position = null;
 		//EraStreamReader eReader = new EraStreamReader(false);
 		//1815修正 _rename.csvの適用
 		//eramakerEXの仕様的には.ERHに適用するのはおかしいけど、もうEmueraの仕様になっちゃってるのでしかたないか
@@ -157,7 +157,7 @@ internal sealed class ErhLoader
 	//#dims puyo, j
 	//static List<string> keywordsList = new List<string>();
 
-	private void analyzeSharpDefine(CharStream st, ScriptPosition position)
+	private void analyzeSharpDefine(CharStream st, ScriptPosition? position)
 	{
 		//LexicalAnalyzer.SkipWhiteSpace(st);呼び出し前に行う。
 		string srcID = LexicalAnalyzer.ReadSingleIdentifier(st);
@@ -260,7 +260,7 @@ internal sealed class ErhLoader
 		idDic.AddMacro(mac);
 	}
 
-	//private void analyzeSharpDim(StringStream st, ScriptPosition position, bool dims)
+	//private void analyzeSharpDim(StringStream st, ScriptPosition? position, bool dims)
 	//{
 	//	//WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AllowAssignment);
 	//	//UserDefinedVariableData data = UserDefinedVariableData.Create(wc, dims, false, position);
@@ -390,7 +390,7 @@ internal sealed class ErhLoader
 		}
 	}
 	#endregion
-	private void analyzeSharpFunction(CharStream st, ScriptPosition position, bool funcs)
+	private void analyzeSharpFunction(CharStream st, ScriptPosition? position, bool funcs)
 	{
 		throw new NotImplCodeEE();
 		//WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AllowAssignment);

@@ -501,7 +501,7 @@ internal sealed partial class EmueraConsole : IDisposable
 
 	public bool notToTitle = false;
 	public bool byError = false;
-	//public ScriptPosition ErrPos = null;
+	//public ScriptPosition? ErrPos = null;
 
 	#region button関連
 	bool lastButtonIsInput = true;
@@ -1228,14 +1228,14 @@ internal sealed partial class EmueraConsole : IDisposable
 		RefreshStrings(true);
 	}
 
-	private void OpenErrorFile(ScriptPosition pos)
+	private void OpenErrorFile(ScriptPosition? pos)
 	{
 		ProcessStartInfo pInfo = new()
 		{
 			FileName = Config.TextEditor
 		};
 		var ignoreCaseCmp = StringComparison.OrdinalIgnoreCase; 
-		string fname = pos.Filename.ToUpper();
+		string fname = pos.Value.Filename.ToUpper();
 		if (fname.EndsWith(".CSV", ignoreCaseCmp))
 		{
 			if (fname.Contains(Program.CsvDir, ignoreCaseCmp))
@@ -1255,17 +1255,17 @@ internal sealed partial class EmueraConsole : IDisposable
 		switch (Config.EditorType)
 		{
 			case TextEditorType.SAKURA:
-				pInfo.Arguments = "-Y=" + pos.LineNo.ToString() + " \"" + fname + "\"";
+				pInfo.Arguments = "-Y=" + pos.Value.LineNo.ToString() + " \"" + fname + "\"";
 				break;
 			case TextEditorType.TERAPAD:
-				pInfo.Arguments = "/jl=" + pos.LineNo.ToString() + " \"" + fname + "\"";
+				pInfo.Arguments = "/jl=" + pos.Value.LineNo.ToString() + " \"" + fname + "\"";
 				break;
 			case TextEditorType.EMEDITOR:
-				pInfo.Arguments = "/l " + pos.LineNo.ToString() + " \"" + fname + "\"";
+				pInfo.Arguments = "/l " + pos.Value.LineNo.ToString() + " \"" + fname + "\"";
 				break;
 			case TextEditorType.USER_SETTING:
 				if (Config.EditorArg != "" && Config.EditorArg != null)
-					pInfo.Arguments = Config.EditorArg + pos.LineNo.ToString() + " \"" + fname + "\"";
+					pInfo.Arguments = Config.EditorArg + pos.Value.LineNo.ToString() + " \"" + fname + "\"";
 				else
 					pInfo.Arguments = fname;
 				break;
@@ -1887,8 +1887,8 @@ internal sealed partial class EmueraConsole : IDisposable
 		}
 		else
 		{
-			builder.AppendLine(string.Format(trsl.FileName.Text, line.Position.Filename));
-			builder.AppendLine(string.Format(trsl.LineFuncName.Text, line.Position.LineNo.ToString(), line.ParentLabelLine.LabelName));
+			builder.AppendLine(string.Format(trsl.FileName.Text, line.Position.Value.Filename));
+			builder.AppendLine(string.Format(trsl.LineFuncName.Text, line.Position.Value.LineNo.ToString(), line.ParentLabelLine.LabelName));
 			builder.AppendLine("");
 		}
 		builder.AppendLine(trsl.FuncCallStack.Text);

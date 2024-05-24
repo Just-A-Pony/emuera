@@ -1621,7 +1621,7 @@ internal sealed partial class VariableData
 			LogicalLine line = exm.Process.GetScaningLine();
 			if ((line == null) || (line.Position == null))
 				return "";
-			return line.Position.Filename;
+			return line.Position.Value.Filename;
 		}
 	}
 
@@ -1652,7 +1652,7 @@ internal sealed partial class VariableData
 			LogicalLine line = exm.Process.GetScaningLine();
 			if ((line == null) || (line.Position == null))
 				return -1L;
-			return line.Position.LineNo;
+			return line.Position.Value.LineNo;
 		}
 	}
 

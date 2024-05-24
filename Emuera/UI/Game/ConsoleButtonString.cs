@@ -32,7 +32,7 @@ internal sealed class ConsoleButtonString
 		IsButton = false;
 		PointX = -1;
 		Width = -1;
-		ErrPos = default;
+		ErrPos = null;
 	}
 	public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, Int64 input)
 		: this(console, strs)
@@ -47,7 +47,7 @@ internal sealed class ConsoleButtonString
 			Generation = parent.NewButtonGeneration;
 			console.UpdateGeneration();
 		}
-		ErrPos = default;
+		ErrPos = null;
 	}
 	public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, string inputs)
 		: this(console, strs)
@@ -61,7 +61,7 @@ internal sealed class ConsoleButtonString
 			Generation = parent.NewButtonGeneration;
 			console.UpdateGeneration();
 		}
-		ErrPos = default;
+		ErrPos = null;
 	}
 
 	public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, Int64 input, string inputs)
@@ -77,9 +77,9 @@ internal sealed class ConsoleButtonString
 			Generation = parent.NewButtonGeneration;
 			console.UpdateGeneration();
 		}
-		ErrPos = default;
+		ErrPos = null;
 	}
-	public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, string inputs, ScriptPosition pos)
+	public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, string inputs, ScriptPosition? pos)
 		: this(console, strs)
 	{
 		this.Inputs = inputs;
@@ -125,7 +125,7 @@ internal sealed class ConsoleButtonString
 	public int Width { get; set; }
 	public float XsubPixel { get; set; }
 	public Int64 Generation { get; private set; }
-	public ScriptPosition ErrPos { get; set; }
+	public ScriptPosition? ErrPos { get; set; }
 	public string Title { get; set; }
 
 

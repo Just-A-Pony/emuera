@@ -712,7 +712,7 @@ internal sealed class ConfigData
 		using var eReader = new EraStreamReader(false);
 		if (!eReader.Open(confPath))
 			return false;
-		ScriptPosition pos = null;
+		ScriptPosition? pos = null;
 		try
 		{
 			string line = null;
@@ -799,7 +799,7 @@ internal sealed class ConfigData
 		EraStreamReader eReader = new(false); 
 		if (!eReader.Open(filename))
 			return;
-		ScriptPosition pos = null;
+		ScriptPosition? pos = null;
 		try
 		{
 			string line = null;
@@ -875,7 +875,7 @@ internal sealed class ConfigData
 		EraStreamReader eReader = new(false); 
 		if (!eReader.Open(configdebugPath))
 			goto err;
-		ScriptPosition pos = null;
+		ScriptPosition? pos = null;
 		try
 		{
 			string line = null;

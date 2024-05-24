@@ -323,7 +323,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	/// <param name="str"></param>
 	/// <param name="position"></param>
 	/// <param name="level">警告レベル.0:軽微なミス.1:無視できる行.2:行が実行されなければ無害.3:致命的</param>
-	public void PrintWarning(string str, ScriptPosition position, int level)
+	public void PrintWarning(string str, ScriptPosition? position, int level)
 	{
 		if (level < Config.DisplayWarningLevel && !Program.AnalysisMode)
 			return;
@@ -332,13 +332,13 @@ internal sealed partial class EmueraConsole : IDisposable
 		force_temporary = false;
 		if (position != null)
 		{
-			if (position.LineNo >= 0)
+			if (position.Value.LineNo >= 0)
 			{
-				PrintErrorButton(string.Format(trerror.Warning1.Text, level, position.Filename, position.LineNo, str), position, level);
+				PrintErrorButton(string.Format(trerror.Warning1.Text, level, position.Value.Filename, position.Value.LineNo, str), position, level);
 				GlobalStatic.Process.printRawLine(position);
 			}
 			else
-				PrintErrorButton(string.Format(trerror.Warning2.Text, level, position.Filename, str), position, level);
+				PrintErrorButton(string.Format(trerror.Warning2.Text, level, position.Value.Filename, str), position, level);
 
 		}
 		else
@@ -379,7 +379,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		RefreshStrings(false);
 	}
 
-	internal void PrintErrorButton(string str, ScriptPosition pos, int level = 0)
+	internal void PrintErrorButton(string str, ScriptPosition? pos, int level = 0)
 	{
 		if (string.IsNullOrEmpty(str))
 			return;

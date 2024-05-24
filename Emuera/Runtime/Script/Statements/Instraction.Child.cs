@@ -2708,7 +2708,7 @@ internal sealed partial class FunctionIdentifier
 			else
 				func.JumpTo = func.NextLine.NextLine;
 
-			if ((func.JumpTo != null) && (func.Position.LineNo + 1 != func.NextLine.Position.LineNo))
+			if ((func.JumpTo != null) && (func.Position.Value.LineNo + 1 != func.NextLine.Position.Value.LineNo))
 				ParserMediator.Warn(trerror.EmptyAfterSif.Text, func, 0, false, true);
 		}
 

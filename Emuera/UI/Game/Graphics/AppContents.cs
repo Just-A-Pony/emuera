@@ -142,7 +142,7 @@ static class AppContents
 								continue;
 							string[] tokens = str.Split(',');
 							//AContentItem item = CreateFromCsv(tokens);
-							ScriptPosition sp = new(filename, lineNo);
+							ScriptPosition? sp = new(filename, lineNo);
 							if (CreateFromCsv(tokens, directory, currentAnime, sp) is ASprite item)
 							{
 								//アニメスプライト宣言ならcurrentAnime上書きしてフレーム追加モードにする。そうでないならnull
@@ -208,7 +208,7 @@ static class AppContents
 	/// <param name="currentAnime"></param>
 	/// <param name="sp"></param>
 	/// <returns></returns>
-	static private AContentItem CreateFromCsv(string[] tokens, string dir, SpriteAnime currentAnime, ScriptPosition sp)
+	static private AContentItem CreateFromCsv(string[] tokens, string dir, SpriteAnime currentAnime, ScriptPosition? sp)
 	{
 		if (tokens.Length < 2)
 			return null;

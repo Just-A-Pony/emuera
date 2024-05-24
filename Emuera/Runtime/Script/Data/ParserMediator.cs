@@ -23,7 +23,7 @@ internal partial class ParserMediator
 	/// </summary>
 	/// <param name="str"></param>
 	/// <param name="?"></param>
-	public static void ConfigWarn(string str, ScriptPosition pos, int level, string stack)
+	public static void ConfigWarn(string str, ScriptPosition? pos, int level, string stack)
 	{
 		if (level < Config.DisplayWarningLevel && !Program.AnalysisMode)
 			return;
@@ -49,7 +49,7 @@ internal partial class ParserMediator
 			RenameDic.Clear();
 
 		var fileLine = File.ReadAllLines(filepath, Config.Encode);
-		ScriptPosition pos = null;
+		ScriptPosition? pos = null;
 		Regex regex = unEscapedCommaRegex();
 		try
 		{
@@ -78,12 +78,12 @@ internal partial class ParserMediator
 	#endregion
 
 
-	public static void Warn(string str, ScriptPosition pos, int level)
+	public static void Warn(string str, ScriptPosition? pos, int level)
 	{
 		Warn(str, pos, level, null);
 	}
 
-	public static void Warn(string str, ScriptPosition pos, int level, string stack)
+	public static void Warn(string str, ScriptPosition? pos, int level, string stack)
 	{
 		if (level < Config.DisplayWarningLevel && !Program.AnalysisMode)
 			return;
@@ -146,7 +146,7 @@ internal partial class ParserMediator
 
 	private class ParserWarning
 	{
-		public ParserWarning(string mes, ScriptPosition pos, int level, string stackTrace)
+		public ParserWarning(string mes, ScriptPosition? pos, int level, string stackTrace)
 		{
 			WarningMes = mes;
 			WarningPos = pos;
@@ -154,7 +154,7 @@ internal partial class ParserMediator
 			StackTrace = stackTrace;
 		}
 		public string WarningMes;
-		public ScriptPosition WarningPos;
+		public ScriptPosition? WarningPos;
 		public int WarningLevel;
 		public string StackTrace;
 	}

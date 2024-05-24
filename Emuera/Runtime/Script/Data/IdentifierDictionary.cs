@@ -611,7 +611,7 @@ internal partial class IdentifierDictionary
 				}
 				//1.721 #FUNCTIONが定義されていない関数は組み込み関数を上書きしない方向に。 PANCTION.ERBのRANDとか。
 				if (!methodDic.ContainsKey(codeStr))
-					throw new CodeEE(string.Format(treer.UsedNonMethodFunc.Text, func.Position.Filename, func.Position.LineNo));
+					throw new CodeEE(string.Format(treer.UsedNonMethodFunc.Text, func.Position.Value.Filename, func.Position.Value.LineNo));
 			}
 		}
 		if (userDefinedOnly)
