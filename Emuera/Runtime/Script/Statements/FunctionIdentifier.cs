@@ -41,12 +41,12 @@ internal sealed partial class FunctionIdentifier
 	readonly static Dictionary<FunctionCode, string> funcMatch = [];
 	readonly static Dictionary<FunctionCode, FunctionCode> funcParent = [];
 	readonly static ArgumentBuilder methodArgumentBuilder = null;
-	readonly static AbstractInstruction methodInstruction = null;
+	readonly static AInstruction methodInstruction = null;
 
-	private static void addFunction(FunctionCode code, AbstractInstruction inst)
+	private static void addFunction(FunctionCode code, AInstruction inst)
 	{ addFunction(code, inst, 0); }
 
-	private static void addFunction(FunctionCode code, AbstractInstruction inst, int additionalFlag)
+	private static void addFunction(FunctionCode code, AInstruction inst, int additionalFlag)
 	{
 		string key = code.ToString();
 		if (Config.ICFunction)
@@ -500,11 +500,11 @@ internal sealed partial class FunctionIdentifier
 	}
 	#endregion
 
-	private FunctionIdentifier(string name, FunctionCode code, AbstractInstruction instruction)
+	private FunctionIdentifier(string name, FunctionCode code, AInstruction instruction)
 		: this(name, code, instruction, 0)
 	{
 	}
-	private FunctionIdentifier(string name, FunctionCode code, AbstractInstruction instruction, int additionalFlag)
+	private FunctionIdentifier(string name, FunctionCode code, AInstruction instruction, int additionalFlag)
 	{
 		this.code = code;
 		this.arg = instruction.ArgBuilder;
@@ -524,7 +524,7 @@ internal sealed partial class FunctionIdentifier
 		Instruction = null;
 	}
 
-	private FunctionIdentifier(string methodName, FunctionMethod method, AbstractInstruction instruction)
+	private FunctionIdentifier(string methodName, FunctionMethod method, AInstruction instruction)
 	{
 		this.code = FunctionCode.__NULL__;
 		this.arg = instruction.ArgBuilder;
@@ -533,7 +533,7 @@ internal sealed partial class FunctionIdentifier
 		Name = methodName;
 		Instruction = instruction;
 	}
-	public readonly AbstractInstruction Instruction;
+	public readonly AInstruction Instruction;
 	private FunctionCode code;
 	private ArgumentBuilder arg;
 	private int flag;
