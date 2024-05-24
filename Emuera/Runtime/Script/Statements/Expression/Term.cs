@@ -2,7 +2,7 @@
 
 namespace MinorShift.Emuera.GameData.Expression;
 
-internal sealed class NullTerm : IOperandTerm
+internal sealed class NullTerm : AExpression
 {
 	public NullTerm(Int64 i)
 		: base(typeof(Int64))
@@ -18,7 +18,7 @@ internal sealed class NullTerm : IOperandTerm
 /// <summary>
 /// 項。一単語だけ。
 /// </summary>
-internal sealed class SingleTerm : IOperandTerm
+internal sealed class SingleTerm : AExpression
 {
 
 	public SingleTerm(bool i)
@@ -84,7 +84,7 @@ internal sealed class SingleTerm : IOperandTerm
 		return base.ToString();
 	}
 
-	public override IOperandTerm Restructure(ExpressionMediator exm)
+	public override AExpression Restructure(ExpressionMediator exm)
 	{
 		return this;
 	}
@@ -92,7 +92,7 @@ internal sealed class SingleTerm : IOperandTerm
 /// <summary>
 /// 項。一単語だけ。
 /// </summary>
-internal sealed class StrFormTerm : IOperandTerm
+internal sealed class StrFormTerm : AExpression
 {
 	public StrFormTerm(StrForm sf)
 		: base(typeof(string))
@@ -118,12 +118,12 @@ internal sealed class StrFormTerm : IOperandTerm
 		return new SingleTerm(sfValue.GetString(exm));
 	}
 
-	public override IOperandTerm Restructure(ExpressionMediator exm)
+	public override AExpression Restructure(ExpressionMediator exm)
 	{
 		sfValue.Restructure(exm);
 		if (sfValue.IsConst)
 			return new SingleTerm(sfValue.GetString(exm));
-		IOperandTerm term = sfValue.GetIOperandTerm();
+		AExpression term = sfValue.GetIOperandTerm();
 		if (term != null)
 			return term;
 		return this;

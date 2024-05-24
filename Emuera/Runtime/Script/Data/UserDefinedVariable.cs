@@ -218,7 +218,7 @@ internal sealed class UserDefinedVariableData
 				}
 				if (wc.EOL)
 					throw new CodeEE(trerror.HasNotExpressionAfterComma.Text, sc);
-				IOperandTerm arg = ExpressionParser.ReduceIntegerTerm(wc, TermEndWith.Comma_Assignment);
+				AExpression arg = ExpressionParser.ReduceIntegerTerm(wc, TermEndWith.Comma_Assignment);
 				SingleTerm sizeTerm = arg.Restructure(null) as SingleTerm;
 				if ((sizeTerm == null) || (sizeTerm.GetOperandType() != typeof(Int64)))
 					throw new CodeEE(trerror.HasNotExpressionAfterComma.Text, sc);
@@ -255,7 +255,7 @@ internal sealed class UserDefinedVariableData
 			if (sizeNum.Count == 1)
 				size = sizeNum[0];
 			wc.ShiftNext();
-			IOperandTerm[] terms = ExpressionParser.ReduceArguments(wc, ArgsEndWith.EoL, false);
+			AExpression[] terms = ExpressionParser.ReduceArguments(wc, ArgsEndWith.EoL, false);
 			if (terms.Length == 0)
 				throw new CodeEE(trerror.ArrayVarCanNotOmitInitialValue.Text);
 			if (size > 0)

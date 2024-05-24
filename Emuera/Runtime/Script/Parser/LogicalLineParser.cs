@@ -204,7 +204,7 @@ internal static class LogicalLineParser
 							ParserMediator.Warn(string.Format(trerror.EventFuncIgnoreSpecified.Text, token.ToString(), token[..^4].ToString()), position, 1);
 							break;
 						}
-						IOperandTerm arg = ExpressionParser.ReduceIntegerTerm(wc, TermEndWith.EoL);
+						AExpression arg = ExpressionParser.ReduceIntegerTerm(wc, TermEndWith.EoL);
 						if ((!(arg.Restructure(null) is SingleTerm sizeTerm)) || (sizeTerm.GetOperandType() != typeof(Int64)))
 						{
 							ParserMediator.Warn(string.Format(trerror.SharpHasNotValidValue.Text, token.ToString()), position, 2);

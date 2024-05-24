@@ -528,7 +528,7 @@ internal sealed class ErbLoader
 			{ errMes = trerror.WrongArgFormat.Text; goto err; }
 			if (symbol.Type == '[')//TODO:subNames 結局実装しないかも
 			{
-				IOperandTerm[] subNamesRow = ExpressionParser.ReduceArguments(wc, ArgsEndWith.RightBracket, false);
+				AExpression[] subNamesRow = ExpressionParser.ReduceArguments(wc, ArgsEndWith.RightBracket, false);
 				if (subNamesRow.Length == 0)
 				{ errMes = trerror.CanNotEmptyFuncSBrackets.Text; goto err; }
 				subNames = new SingleTerm[subNamesRow.Length];
@@ -536,7 +536,7 @@ internal sealed class ErbLoader
 				{
 					if (subNamesRow[i] == null)
 					{ errMes = trerror.CanNotOmitFuncDefineArg.Text; goto err; }
-					IOperandTerm term = subNamesRow[i].Restructure(exm);
+					AExpression term = subNamesRow[i].Restructure(exm);
 					subNames[i] = term as SingleTerm;
 					if (subNames[i] == null)
 					{ errMes = trerror.FuncDefineArgOnlyConst.Text; goto err; }
@@ -548,7 +548,7 @@ internal sealed class ErbLoader
 			}
 			if (!wc.EOL)
 			{
-				IOperandTerm[] argsRow;
+				AExpression[] argsRow;
 				if (symbol.Type == ',')
 					argsRow = ExpressionParser.ReduceArguments(wc, ArgsEndWith.EoL, true);
 				else if (symbol.Type == '(')
@@ -561,7 +561,7 @@ internal sealed class ErbLoader
 				for (int i = 0; i < length; i++)
 				{
 					SingleTerm def = null;
-					IOperandTerm term = argsRow[i * 2];
+					AExpression term = argsRow[i * 2];
 					//引数読み取り時点で判別されないといけない
 					//if (term == null)
 					//{ errMes = "関数定義の引数は省略できません"; goto err; }

@@ -5,10 +5,10 @@ using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.GameData.Variable;
 
-internal class VariableTerm : IOperandTerm
+internal class VariableTerm : AExpression
 {
 	protected VariableTerm(VariableToken token) : base(token.VariableType) { }
-	public VariableTerm(VariableToken token, IOperandTerm[] args)
+	public VariableTerm(VariableToken token, AExpression[] args)
 		: base(token.VariableType)
 	{
 		this.Identifier = token;
@@ -29,7 +29,7 @@ internal class VariableTerm : IOperandTerm
 		}
 	}
 	public VariableToken Identifier;
-	private readonly IOperandTerm[] arguments;
+	private readonly AExpression[] arguments;
 	protected Int64[] transporter;
 	protected bool allArgIsConst = false;
 
@@ -180,7 +180,7 @@ internal class VariableTerm : IOperandTerm
 		else
 			SetValue(value.Str, exm);
 	}
-	public virtual void SetValue(IOperandTerm value, ExpressionMediator exm)
+	public virtual void SetValue(AExpression value, ExpressionMediator exm)
 	{
 		if (Identifier.VariableType == typeof(Int64))
 			SetValue(value.GetIntValue(exm), exm);
@@ -221,7 +221,7 @@ internal class VariableTerm : IOperandTerm
 		return fp;
 	}
 
-	public override IOperandTerm Restructure(ExpressionMediator exm)
+	public override AExpression Restructure(ExpressionMediator exm)
 	{
 		bool[] canCheck = new bool[arguments.Length];
 		allArgIsConst = true;
@@ -385,7 +385,7 @@ internal sealed class FixedVariableTerm : VariableTerm
 		}
 	}
 
-	public override IOperandTerm Restructure(ExpressionMediator exm)
+	public override AExpression Restructure(ExpressionMediator exm)
 	{
 		if (Identifier.CanRestructure)
 			return GetValue(exm);
@@ -428,12 +428,12 @@ internal sealed class VariableNoArgTerm : VariableTerm
 	{ throw new CodeEE(string.Format(trerror.MissingVarArg.Text, Identifier.Name)); }
 	public override void SetValue(SingleTerm value, ExpressionMediator exm)
 	{ throw new CodeEE(string.Format(trerror.MissingVarArg.Text, Identifier.Name)); }
-	public override void SetValue(IOperandTerm value, ExpressionMediator exm)
+	public override void SetValue(AExpression value, ExpressionMediator exm)
 	{ throw new CodeEE(string.Format(trerror.MissingVarArg.Text, Identifier.Name)); }
 	public override FixedVariableTerm GetFixedVariableTerm(ExpressionMediator exm)
 	{ throw new CodeEE(string.Format(trerror.MissingVarArg.Text, Identifier.Name)); }
 
-	public override IOperandTerm Restructure(ExpressionMediator exm)
+	public override AExpression Restructure(ExpressionMediator exm)
 	{
 		return this;
 	}

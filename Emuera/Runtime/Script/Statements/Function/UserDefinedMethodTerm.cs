@@ -6,7 +6,7 @@ using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.GameData.Function;
 
-internal abstract class SuperUserDefinedMethodTerm : IOperandTerm
+internal abstract class SuperUserDefinedMethodTerm : AExpression
 {
 	protected SuperUserDefinedMethodTerm(Type returnType)
 		: base(returnType)
@@ -48,7 +48,7 @@ internal sealed class UserDefinedMethodTerm : SuperUserDefinedMethodTerm
 	/// <summary>
 	/// エラーならnullを返す。
 	/// </summary>
-	public static UserDefinedMethodTerm Create(FunctionLabelLine targetLabel, IOperandTerm[] srcArgs, out string errMes)
+	public static UserDefinedMethodTerm Create(FunctionLabelLine targetLabel, AExpression[] srcArgs, out string errMes)
 	{
 		CalledFunction call = CalledFunction.CreateCalledFunctionMethod(targetLabel, targetLabel.LabelName);
 		UserDefinedFunctionArgument arg = call.ConvertArg(srcArgs, out errMes);
@@ -68,7 +68,7 @@ internal sealed class UserDefinedMethodTerm : SuperUserDefinedMethodTerm
 	private readonly UserDefinedFunctionArgument argment;
 	private readonly CalledFunction called;
 
-	public override IOperandTerm Restructure(ExpressionMediator exm)
+	public override AExpression Restructure(ExpressionMediator exm)
 	{
 		Argument.Restructure(exm);
 		return this;
@@ -79,13 +79,13 @@ internal sealed class UserDefinedMethodTerm : SuperUserDefinedMethodTerm
 }
 internal sealed class UserDefinedRefMethodTerm : SuperUserDefinedMethodTerm
 {
-	public UserDefinedRefMethodTerm(UserDefinedRefMethod reffunc, IOperandTerm[] srcArgs)
+	public UserDefinedRefMethodTerm(UserDefinedRefMethod reffunc, AExpression[] srcArgs)
 		: base(reffunc.RetType)
 	{
 		this.srcArgs = srcArgs;
 		this.reffunc = reffunc;
 	}
-	IOperandTerm[] srcArgs = null;
+	AExpression[] srcArgs = null;
 	readonly UserDefinedRefMethod reffunc = null;
 	public override UserDefinedFunctionArgument Argument
 	{
@@ -109,7 +109,7 @@ internal sealed class UserDefinedRefMethodTerm : SuperUserDefinedMethodTerm
 		}
 	}
 
-	public override IOperandTerm Restructure(ExpressionMediator exm)
+	public override AExpression Restructure(ExpressionMediator exm)
 	{
 		for (int i = 0; i < srcArgs.Length; i++)
 		{
@@ -148,7 +148,7 @@ internal sealed class UserDefinedRefMethodNoArgTerm : SuperUserDefinedMethodTerm
 	{ throw new CodeEE(string.Format(trerror.RefFuncHasNotArg.Text, reffunc.Name)); }
 	public override SingleTerm GetValue(ExpressionMediator exm)
 	{ throw new CodeEE(string.Format(trerror.RefFuncHasNotArg.Text, reffunc.Name)); }
-	public override IOperandTerm Restructure(ExpressionMediator exm)
+	public override AExpression Restructure(ExpressionMediator exm)
 	{
 		return this;
 	}

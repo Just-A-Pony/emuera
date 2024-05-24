@@ -580,7 +580,7 @@ internal partial class IdentifierDictionary
 		return null;
 	}
 
-	public IOperandTerm GetFunctionMethod(LabelDictionary labelDic, string codeStr, IOperandTerm[] arguments, bool userDefinedOnly)
+	public AExpression GetFunctionMethod(LabelDictionary labelDic, string codeStr, AExpression[] arguments, bool userDefinedOnly)
 	{
 		//if (Config.ICFunction)
 		//	codeStr = codeStr.ToUpper();
@@ -604,7 +604,7 @@ internal partial class IdentifierDictionary
 				if (func.IsMethod)
 				{
 					string errMes;
-					IOperandTerm ret = UserDefinedMethodTerm.Create(func, arguments, out errMes);
+					AExpression ret = UserDefinedMethodTerm.Create(func, arguments, out errMes);
 					if (ret == null)
 						throw new CodeEE(errMes);
 					return ret;

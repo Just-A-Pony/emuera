@@ -47,11 +47,11 @@ internal static class ExpressionParser
 	/// 呼び出し元はCodeEEを適切に処理すること
 	/// </summary>
 	/// <returns></returns>
-	public static IOperandTerm[] ReduceArguments(WordCollection wc, ArgsEndWith endWith, bool isDefine)
+	public static AExpression[] ReduceArguments(WordCollection wc, ArgsEndWith endWith, bool isDefine)
 	{
 		if (wc == null)
 			throw new ExeEE(trerror.EmptyStream.Text);
-		List<IOperandTerm> terms = [];
+		List<AExpression> terms = [];
 		TermEndWith termEndWith = TermEndWith.EoL;
 		switch (endWith)
 		{
@@ -106,7 +106,7 @@ internal static class ExpressionParser
 					if (wc.Current is OperatorWord)
 					{//=がある
 						wc.ShiftNext();
-						IOperandTerm term = reduceTerm(wc, false, termEndWith, VariableCode.__NULL__);
+						AExpression term = reduceTerm(wc, false, termEndWith, VariableCode.__NULL__);
 						if (term == null)
 							throw new CodeEE("'='の後に式がありません");
 						if (term.GetOperandType() != terms[terms.Count - 1].GetOperandType())
@@ -137,9 +137,9 @@ internal static class ExpressionParser
 	/// </summary>
 	/// <param name="st"></param>
 	/// <returns></returns>
-	public static IOperandTerm ReduceExpressionTerm(WordCollection wc, TermEndWith endWith)
+	public static AExpression ReduceExpressionTerm(WordCollection wc, TermEndWith endWith)
 	{
-		IOperandTerm term = reduceTerm(wc, false, endWith, VariableCode.__NULL__);
+		AExpression term = reduceTerm(wc, false, endWith, VariableCode.__NULL__);
 		return term;
 	}
 
@@ -158,9 +158,9 @@ internal static class ExpressionParser
 	//    return term;
 	//}
 
-	public static IOperandTerm ReduceIntegerTerm(WordCollection wc, TermEndWith endwith)
+	public static AExpression ReduceIntegerTerm(WordCollection wc, TermEndWith endwith)
 	{
-		IOperandTerm term = reduceTerm(wc, false, endwith, VariableCode.__NULL__);
+		AExpression term = reduceTerm(wc, false, endwith, VariableCode.__NULL__);
 		if (term == null)
 			throw new CodeEE(trerror.CanNotInterpretedExpression.Text);
 		if (term.GetOperandType() != typeof(Int64))
@@ -173,7 +173,7 @@ internal static class ExpressionParser
 	/// 結果次第ではSingleTermを返すことがある。
 	/// </summary>
 	/// <returns></returns>
-	public static IOperandTerm ToStrFormTerm(StrFormWord sfw)
+	public static AExpression ToStrFormTerm(StrFormWord sfw)
 	{
 		StrForm strf = StrForm.FromWordToken(sfw);
 		if (strf.IsConst)
@@ -200,10 +200,10 @@ internal static class ExpressionParser
 	}
 	#region EE_ERD
 	// public static IOperandTerm ReduceVariableArgument(WordCollection wc, VariableCode varCode)
-	public static IOperandTerm ReduceVariableArgument(WordCollection wc, VariableCode varCode, VariableToken id)
+	public static AExpression ReduceVariableArgument(WordCollection wc, VariableCode varCode, VariableToken id)
 	{
 		// IOperandTerm ret = reduceTerm(wc, false, TermEndWith.EoL, varCode);
-		IOperandTerm ret = reduceTerm(wc, false, TermEndWith.EoL, varCode, id);
+		AExpression ret = reduceTerm(wc, false, TermEndWith.EoL, varCode, id);
 		if (ret == null)
 			throw new CodeEE(trerror.MissingArgAfterColon.Text);
 		return ret;
@@ -235,7 +235,7 @@ internal static class ExpressionParser
 	/// <returns></returns>
 	#region EE_ERD
 	//private static IOperandTerm reduceIdentifier(WordCollection wc, string idStr, VariableCode varCode)
-	private static IOperandTerm reduceIdentifier(WordCollection wc, string idStr, VariableCode varCode, VariableToken varId = null)
+	private static AExpression reduceIdentifier(WordCollection wc, string idStr, VariableCode varCode, VariableToken varId = null)
 	#endregion
 
 	{
@@ -251,8 +251,8 @@ internal static class ExpressionParser
 			if (symbol.Type == '[')//1810 多分永久に実装されない
 				throw new CodeEE(trerror.SBracketsFuncNotImprement.Text);
 			//引数を処理
-			IOperandTerm[] args = ReduceArguments(wc, ArgsEndWith.RightParenthesis, false);
-			IOperandTerm mToken = GlobalStatic.IdentifierDictionary.GetFunctionMethod(GlobalStatic.LabelDictionary, idStr, args, false);
+			AExpression[] args = ReduceArguments(wc, ArgsEndWith.RightParenthesis, false);
+			AExpression mToken = GlobalStatic.IdentifierDictionary.GetFunctionMethod(GlobalStatic.LabelDictionary, idStr, args, false);
 			if (mToken == null)
 			{
 				if (!Program.AnalysisMode)
@@ -279,7 +279,7 @@ internal static class ExpressionParser
 					return VariableParser.ReduceVariable(id, wc);
 			}
 			//idStrが変数名でない場合、
-			IOperandTerm refToken = GlobalStatic.IdentifierDictionary.GetFunctionMethod(GlobalStatic.LabelDictionary, idStr, null, false);
+			AExpression refToken = GlobalStatic.IdentifierDictionary.GetFunctionMethod(GlobalStatic.LabelDictionary, idStr, null, false);
 			if (refToken != null)//関数参照と名前が一致したらそれを返す。実際に使うとエラー
 				return refToken;
 			if (varCode != VariableCode.__NULL__ && GlobalStatic.ConstantData.isDefined(varCode, idStr))//連想配列的な可能性アリ
@@ -376,7 +376,7 @@ internal static class ExpressionParser
 
 	#region EE_ERD
 	// private static IOperandTerm reduceTerm(WordCollection wc, bool allowKeywordTo, TermEndWith endWith, VariableCode varCode)
-	private static IOperandTerm reduceTerm(WordCollection wc, bool allowKeywordTo, TermEndWith endWith, VariableCode varCode, VariableToken varId = null)
+	private static AExpression reduceTerm(WordCollection wc, bool allowKeywordTo, TermEndWith endWith, VariableCode varCode, VariableToken varId = null)
 	#endregion
 	{
 		TermStack stack = new();
@@ -462,7 +462,7 @@ internal static class ExpressionParser
 					}
 				case '(':
 					wc.ShiftNext();
-					IOperandTerm inTerm = reduceTerm(wc, false, TermEndWith.RightParenthesis, VariableCode.__NULL__);
+					AExpression inTerm = reduceTerm(wc, false, TermEndWith.RightParenthesis, VariableCode.__NULL__);
 					if (inTerm == null)
 						throw new CodeEE(trerror.NoContainExpressionInBrackets.Text);
 					stack.Add(inTerm);
@@ -493,7 +493,7 @@ internal static class ExpressionParser
 		} while (!varArg);
 		return end(stack, ternaryCount);
 
-		static IOperandTerm end(TermStack stack, int ternaryCount)
+		static AExpression end(TermStack stack, int ternaryCount)
 		{
 			if (ternaryCount > 0)
 				throw new CodeEE(trerror.TernaryBinaryError.Text);
@@ -579,7 +579,7 @@ internal static class ExpressionParser
 		}
 		public void Add(Int64 i) { Add(new SingleTerm(i)); }
 		public void Add(string s) { Add(new SingleTerm(s)); }
-		public void Add(IOperandTerm term)
+		public void Add(AExpression term)
 		{
 			stack.Push(term);
 			if (state == 1)
@@ -607,7 +607,7 @@ internal static class ExpressionParser
 			return priority;
 		}
 
-		public IOperandTerm ReduceAll()
+		public AExpression ReduceAll()
 		{
 			if (stack.Count == 0)
 				return null;
@@ -623,7 +623,7 @@ internal static class ExpressionParser
 			{
 				reduceLastThree();
 			}
-			IOperandTerm retTerm = (IOperandTerm)stack.Pop();
+			AExpression retTerm = (AExpression)stack.Pop();
 			return retTerm;
 		}
 
@@ -631,9 +631,9 @@ internal static class ExpressionParser
 		{
 			//if (stack.Count < 2)
 			//    throw new ExeEE("不正な時期の呼び出し");
-			IOperandTerm operand = (IOperandTerm)stack.Pop();
+			AExpression operand = (AExpression)stack.Pop();
 			OperatorCode op = (OperatorCode)stack.Pop();
-			IOperandTerm newTerm = OperatorMethodManager.ReduceUnaryTerm(op, operand);
+			AExpression newTerm = OperatorMethodManager.ReduceUnaryTerm(op, operand);
 			stack.Push(newTerm);
 		}
 
@@ -642,9 +642,9 @@ internal static class ExpressionParser
 			//if (stack.Count < 2)
 			//    throw new ExeEE("不正な時期の呼び出し");
 			OperatorCode op = (OperatorCode)stack.Pop();
-			IOperandTerm operand = (IOperandTerm)stack.Pop();
+			AExpression operand = (AExpression)stack.Pop();
 
-			IOperandTerm newTerm = OperatorMethodManager.ReduceUnaryAfterTerm(op, operand);
+			AExpression newTerm = OperatorMethodManager.ReduceUnaryAfterTerm(op, operand);
 			stack.Push(newTerm);
 
 		}
@@ -652,9 +652,9 @@ internal static class ExpressionParser
 		{
 			//if (stack.Count < 2)
 			//    throw new ExeEE("不正な時期の呼び出し");
-			IOperandTerm right = (IOperandTerm)stack.Pop();//後から入れたほうが右側
+			AExpression right = (AExpression)stack.Pop();//後から入れたほうが右側
 			OperatorCode op = (OperatorCode)stack.Pop();
-			IOperandTerm left = (IOperandTerm)stack.Pop();
+			AExpression left = (AExpression)stack.Pop();
 			if (OperatorManager.IsTernary(op))
 			{
 				if (stack.Count > 1)
@@ -665,16 +665,16 @@ internal static class ExpressionParser
 				throw new CodeEE(trerror.InsufficientExpression.Text);
 			}
 
-			IOperandTerm newTerm = OperatorMethodManager.ReduceBinaryTerm(op, left, right);
+			AExpression newTerm = OperatorMethodManager.ReduceBinaryTerm(op, left, right);
 			stack.Push(newTerm);
 		}
 
-		private void reduceTernary(IOperandTerm left, IOperandTerm right)
+		private void reduceTernary(AExpression left, AExpression right)
 		{
 			_ = (OperatorCode)stack.Pop();
-			IOperandTerm newLeft = (IOperandTerm)stack.Pop();
+			AExpression newLeft = (AExpression)stack.Pop();
 
-			IOperandTerm newTerm = OperatorMethodManager.ReduceTernaryTerm(newLeft, left, right);
+			AExpression newTerm = OperatorMethodManager.ReduceTernaryTerm(newLeft, left, right);
 			stack.Push(newTerm);
 		}
 

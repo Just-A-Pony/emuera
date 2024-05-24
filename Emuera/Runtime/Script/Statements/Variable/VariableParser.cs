@@ -10,7 +10,7 @@ internal static class VariableParser
 	public static void Initialize()
 	{
 		ZeroTerm = new SingleTerm(0);
-		IOperandTerm[] zeroArgs = new IOperandTerm[] { ZeroTerm };
+		AExpression[] zeroArgs = new AExpression[] { ZeroTerm };
 		TARGET = new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("TARGET"), zeroArgs);
 	}
 
@@ -51,10 +51,10 @@ internal static class VariableParser
 	/// <returns></returns>
 	public static VariableTerm ReduceVariable(VariableToken id, WordCollection wc)
 	{
-		IOperandTerm operand;
-		IOperandTerm op1 = null;
-		IOperandTerm op2 = null;
-		IOperandTerm op3 = null;
+		AExpression operand;
+		AExpression op1 = null;
+		AExpression op2 = null;
+		AExpression op3 = null;
 		int i = 0;
 		while (true)
 		{
@@ -81,12 +81,12 @@ internal static class VariableParser
 
 
 
-	public static VariableTerm ReduceVariable(VariableToken id, IOperandTerm p1, IOperandTerm p2, IOperandTerm p3)
+	public static VariableTerm ReduceVariable(VariableToken id, AExpression p1, AExpression p2, AExpression p3)
 	{
-		IOperandTerm[] terms;
-		IOperandTerm op1 = p1;
-		IOperandTerm op2 = p2;
-		IOperandTerm op3 = p3;
+		AExpression[] terms;
+		AExpression op1 = p1;
+		AExpression op2 = p2;
+		AExpression op3 = p3;
 		//引数の推測
 		if (id.IsCharacterData)
 		{

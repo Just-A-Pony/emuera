@@ -1985,7 +1985,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			if (line == null || (line is InvalidLine))
 			{
 				WordCollection wc = LexicalAnalyzer.Analyse(new CharStream(com), LexEndWith.EoL, LexAnalyzeFlag.None);
-				IOperandTerm term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
+				AExpression term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
 				if (term == null)
 					throw new CodeEE(trerror.CanNotInterpretedLine.Text);
 				if (term.GetOperandType() == typeof(Int64))

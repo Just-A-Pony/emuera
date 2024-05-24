@@ -7,11 +7,11 @@ using trerror = EvilMask.Emuera.Lang.Error;
 namespace MinorShift.Emuera.GameData.Variable;
 
 //変数の引数のうち文字列型のもの。
-internal sealed class VariableStrArgTerm : IOperandTerm
+internal sealed class VariableStrArgTerm : AExpression
 {
 	#region EE_ERD
 	// public VariableStrArgTerm(VariableCode code, IOperandTerm strTerm, int index)
-	public VariableStrArgTerm(VariableCode code, IOperandTerm strTerm, int index, string varname)
+	public VariableStrArgTerm(VariableCode code, AExpression strTerm, int index, string varname)
 	#endregion
 		: base(typeof(Int64))
 	{
@@ -23,7 +23,7 @@ internal sealed class VariableStrArgTerm : IOperandTerm
 		#endregion
 
 	}
-	IOperandTerm strTerm;
+	AExpression strTerm;
 	readonly VariableCode parentCode;
 	readonly int index;
 	#region EE_ERD
@@ -57,7 +57,7 @@ internal sealed class VariableStrArgTerm : IOperandTerm
 		return i;
 	}
 
-	public override IOperandTerm Restructure(ExpressionMediator exm)
+	public override AExpression Restructure(ExpressionMediator exm)
 	{
 		if (dic == null)
 			#region EE_ERD

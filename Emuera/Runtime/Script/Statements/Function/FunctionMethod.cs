@@ -122,7 +122,7 @@ internal abstract class FunctionMethod
 	//引数の数・型が一致するかどうかのテスト
 	//正しくない場合はエラーメッセージを返す。
 	//引数の数が不定である場合や引数の省略を許す場合にはoverrideすること。
-	private string CheckArgumentTypeEx(string name, IOperandTerm[] arguments)
+	private string CheckArgumentTypeEx(string name, AExpression[] arguments)
 	{
 		string[] errMsg = new string[argumentTypeArrayEx.Length];
 		for (int idx = 0; idx < argumentTypeArrayEx.Length; idx++)
@@ -262,7 +262,7 @@ internal abstract class FunctionMethod
 		}
 		return string.Format(Lang.Error.NotValidArgs.Text, name, sb.ToString());
 	}
-	public virtual string CheckArgumentType(string name, IOperandTerm[] arguments)
+	public virtual string CheckArgumentType(string name, AExpression[] arguments)
 	{
 		if (argumentTypeArrayEx != null)
 		{
@@ -300,9 +300,9 @@ internal abstract class FunctionMethod
 	public bool HasUniqueRestructure { get; protected set; }
 
 	//実際の計算。
-	public virtual Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments) { throw new ExeEE(trerror.ReturnTypeDifferentOrNotImpelemnt.Text); }
-	public virtual string GetStrValue(ExpressionMediator exm, IOperandTerm[] arguments) { throw new ExeEE(trerror.ReturnTypeDifferentOrNotImpelemnt.Text); }
-	public virtual SingleTerm GetReturnValue(ExpressionMediator exm, IOperandTerm[] arguments)
+	public virtual Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments) { throw new ExeEE(trerror.ReturnTypeDifferentOrNotImpelemnt.Text); }
+	public virtual string GetStrValue(ExpressionMediator exm, AExpression[] arguments) { throw new ExeEE(trerror.ReturnTypeDifferentOrNotImpelemnt.Text); }
+	public virtual SingleTerm GetReturnValue(ExpressionMediator exm, AExpression[] arguments)
 	{
 		if (ReturnType == typeof(Int64))
 			return new SingleTerm(GetIntValue(exm, arguments));
@@ -316,7 +316,7 @@ internal abstract class FunctionMethod
 	/// <param name="exm"></param>
 	/// <param name="arguments"></param>
 	/// <returns></returns>
-	public virtual bool UniqueRestructure(ExpressionMediator exm, IOperandTerm[] arguments)
+	public virtual bool UniqueRestructure(ExpressionMediator exm, AExpression[] arguments)
 	{ throw new ExeEE(trerror.NotImplement.Text); }
 
 
