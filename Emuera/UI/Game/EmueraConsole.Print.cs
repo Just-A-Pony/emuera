@@ -688,21 +688,21 @@ internal sealed partial class EmueraConsole : IDisposable
 
 	public string getStBar(string barStr)
 	{
-		StringBuilder bar = new();
-		bar.Append(barStr);
+		var builder = new StringBuilder();
+		builder.Append(barStr);
 		int width = 0;
 		Font font = Config.DefaultFont;
 		while (width < Config.DrawableWidth)
 		{//境界を越えるまで一文字ずつ増やす
-			bar.Append(barStr);
-			width = stringMeasure.GetDisplayLength(bar.ToString(), font);
+			builder.Append(barStr);
+			width = stringMeasure.GetDisplayLength(builder.ToString(), font);
 		}
 		while (width > Config.DrawableWidth)
 		{//境界を越えたら、今度は超えなくなるまで一文字ずつ減らす（barStrに複数字の文字列がきた場合に対応するため）
-			bar.Remove(bar.Length - 1, 1);
-			width = stringMeasure.GetDisplayLength(bar.ToString(), font);
+			builder.Remove(builder.Length - 1, 1);
+			width = stringMeasure.GetDisplayLength(builder.ToString(), font);
 		}
-		return bar.ToString();
+		return builder.ToString();
 	}
 
 	public void setStBar(string barStr)
