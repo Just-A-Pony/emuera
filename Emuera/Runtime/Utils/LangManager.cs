@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace MinorShift._Library;
 
@@ -15,6 +16,10 @@ internal static class LangManager
 
 	public static int GetStrlenLang(string str)
 	{
+		if (Ascii.IsValid(str))
+		{
+			return str.Length;
+		}
 		return lang.GetByteCount(str);
 	}
 	public static int GetUFTIndex(string str, int LangIndex)
