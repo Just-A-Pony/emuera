@@ -19,6 +19,7 @@ using trmb = EvilMask.Emuera.Lang.MessageBox;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
 using EvilMask.Emuera;
+using System.Drawing.Imaging;
 //using System.Diagnostics.Eventing.Reader;
 //using System.Linq.Expressions;
 //using System.Windows;
@@ -253,6 +254,8 @@ internal sealed partial class EmueraConsole : IDisposable
 	#region EE_AnchorのCB機能移植
 	public readonly ClipboardProcessor CBProc;
 	#endregion
+	private List<KeyValuePair<long, ConsoleBackground>> backgroundList = new List<KeyValuePair<long, ConsoleBackground>>();
+	private Bitmap bakedBackground;
 
 	MinorShift.Emuera.GameProc.Process emuera;
 	// ConsoleState state = ConsoleState.Initializing;
@@ -631,6 +634,65 @@ internal sealed partial class EmueraConsole : IDisposable
 	}
 
 
+	public void AddBackgroundImage(string name, long depth, float opacity)
+	{
+		var spr = AppContents.GetSprite(name) as SpriteF; 
+		if (spr == null)
+		{
+			return;
+		}
+		var bg = new ConsoleBackground(spr, opacity);
+		var pair = new KeyValuePair<long, ConsoleBackground>(depth, bg);
+		backgroundList.Add(pair);
+		backgroundList.Sort((v1, v2) => (v1.Key >= v2.Key)?-1:1);
+		BakeBackground();
+	}
+	
+	public void ClearBackgroundImage()
+	{
+		backgroundList.Clear();
+		BakeBackground();
+	}
+
+	public void RemoveBackground(string key) {
+		backgroundList.RemoveAt(backgroundList.FindIndex((v) => v.Value.bgImage.Name == key));
+		BakeBackground();
+	}
+	public void ValidateBackground(int width, int height)
+	{
+		if (bakedBackground == null)
+		{
+			bakedBackground = new Bitmap(width, height);
+			BakeBackground();
+		} else if (bakedBackground.Width != width || bakedBackground.Height != height)
+		{
+			bakedBackground.Dispose();
+			bakedBackground = new Bitmap(width, height);
+			BakeBackground();
+		}
+	}
+	private void BakeBackground()
+	{
+		if (bakedBackground == null)
+		{
+			return;
+		}
+		var graph = Graphics.FromImage(bakedBackground);
+		graph.Clear(Color.Transparent);
+		foreach (var pair in backgroundList) 
+		{
+			var bg = pair.Value.bgImage;
+			var scaleW = bakedBackground.Width / (float)bg.BaseImage.Bitmap.Width;
+			var scaleH = bakedBackground.Height / (float)bg.BaseImage.Bitmap.Height;
+			var cropHorizontally = bg.BaseImage.Bitmap.Height * scaleW < bakedBackground.Height;
+			var newWidth = bg.BaseImage.Bitmap.Width * ((cropHorizontally) ? scaleH : scaleW);
+			var newHeight = bg.BaseImage.Bitmap.Height * ((cropHorizontally) ? scaleH : scaleW);
+			var paddingX = (int)((bakedBackground.Width - newWidth) / 2);
+			var attributes = new ImageAttributes();
+			attributes.SetColorMatrix(pair.Value.GetColorMatrix(), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+			bg.GraphicsDraw(graph, new Rectangle(paddingX, 0, (int)newWidth, (int)newHeight), attributes);
+		}
+	}
 	/// <summary>
 	/// INPUT中のアニメーション用タイマー
 	/// </summary>
@@ -1536,7 +1598,6 @@ internal sealed partial class EmueraConsole : IDisposable
 	/// <param name="graph"></param>
 	public void OnPaint(Graphics graph)
 	{
-
 		//デバッグ用。描画が超重い環境を想定1
 		//System.Threading.Thread.Sleep(100);
 
@@ -1544,6 +1605,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		//OnPaintからgraphをもらった直後だから大丈夫だとは思うけど一応
 		if (!this.Enabled)
 			return;
+
 		//1824 アニメスプライト用・現在フレームの時間を決定
 		WinmmTimer.FrameStart();
 		lastUpdate = WinmmTimer.CurrentFrameTime;//WinmmTimer.TickCount;
@@ -1578,7 +1640,13 @@ internal sealed partial class EmueraConsole : IDisposable
 		}
 		else
 		{
+			ValidateBackground((int)graph.ClipBounds.Width, (int)graph.ClipBounds.Height);
 			graph.Clear(this.bgColor);
+			if (bakedBackground != null)
+			{
+				graph.DrawImage(bakedBackground, 0, 0);
+			}
+			
 			//1823 cbg追加
 			#region EM_私家版_描画拡張
 			if (escapedParts == null) escapedParts = new Dictionary<int, List<AConsoleDisplayPart>>();
@@ -2597,4 +2665,27 @@ internal sealed partial class EmueraConsole : IDisposable
 		//timer = null;
 		//stringMeasure.Dispose();
 	}
+}
+
+internal class ConsoleBackground
+{
+	public readonly SpriteF bgImage;
+
+	public ConsoleBackground(SpriteF spr, float opacity = 1.0f)
+	{
+		bgImage = spr;
+		colorMatrix = new ColorMatrix();
+		SetOpacity(opacity);
+	}
+
+	public void SetOpacity(float opacity)
+	{
+		colorMatrix.Matrix33 = opacity;
+	}
+	public ColorMatrix GetColorMatrix()
+	{
+		return colorMatrix;
+	}
+
+	private ColorMatrix colorMatrix;
 }

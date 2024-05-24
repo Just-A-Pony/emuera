@@ -1454,6 +1454,62 @@ internal sealed partial class FunctionIdentifier
 		}
 	}
 
+	private sealed class SETBGIMAGE_Instruction : AbstractInstruction
+	{
+		public SETBGIMAGE_Instruction()
+		{
+			ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.FORM_STR_ANY);
+			flag = METHOD_SAFE | EXTENDED;
+		}
+
+		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+		{
+			ExpressionArrayArgument arg = (ExpressionArrayArgument)func.Argument;
+			string bgName;
+			long bgDepth = 0;
+			bgName = arg.TermList[0].GetStrValue(exm);
+			float opacity = 1.0f;
+			if (arg.TermList.Count() >= 2)
+			{
+				bgDepth = Int64.Parse(arg.TermList[1].GetStrValue(exm));
+			}
+			if (arg.TermList.Count() >= 3)
+			{
+				opacity = Int64.Parse(arg.TermList[2].GetStrValue(exm)) / 255.0f;
+			}
+			exm.Console.AddBackgroundImage(bgName, bgDepth, opacity);
+		}
+	}
+	private sealed class REMOVEBGIMAGE_Instruction : AbstractInstruction
+	{
+		public REMOVEBGIMAGE_Instruction()
+		{
+			ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.FORM_STR_ANY);
+			flag = METHOD_SAFE | EXTENDED;
+		}
+
+		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+		{
+			ExpressionArrayArgument arg = (ExpressionArrayArgument)func.Argument;
+			string bgName;
+			bgName = arg.TermList[0].GetStrValue(exm);
+			exm.Console.RemoveBackground(bgName);
+		}
+	}
+	private sealed class CLEARBGIMAGE_Instruction : AbstractInstruction
+	{
+		public CLEARBGIMAGE_Instruction()
+		{
+			ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.VOID);
+			flag = METHOD_SAFE | EXTENDED;
+		}
+
+		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+		{
+			exm.Console.ClearBackgroundImage();
+		}
+	}
+
 	private sealed class FONTBOLD_Instruction : AbstractInstruction
 	{
 		public FONTBOLD_Instruction()

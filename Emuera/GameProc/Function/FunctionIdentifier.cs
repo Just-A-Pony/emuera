@@ -273,8 +273,11 @@ internal sealed partial class FunctionIdentifier
 		addFunction(FunctionCode.SETCOLORBYNAME, argb[FunctionArgType.STR], METHOD_SAFE | EXTENDED);
 		addFunction(FunctionCode.RESETCOLOR, new RESETCOLOR_Instruction());
 		addFunction(FunctionCode.SETBGCOLOR, argb[FunctionArgType.SP_COLOR], METHOD_SAFE | EXTENDED);
+		addFunction(FunctionCode.SETBGIMAGE, new SETBGIMAGE_Instruction());
 		addFunction(FunctionCode.SETBGCOLORBYNAME, argb[FunctionArgType.STR], METHOD_SAFE | EXTENDED);
 		addFunction(FunctionCode.RESETBGCOLOR, new RESETBGCOLOR_Instruction());
+		addFunction(FunctionCode.CLEARBGIMAGE, new CLEARBGIMAGE_Instruction());
+		addFunction(FunctionCode.REMOVEBGIMAGE, new REMOVEBGIMAGE_Instruction());
 		addFunction(FunctionCode.FONTBOLD, new FONTBOLD_Instruction());
 		addFunction(FunctionCode.FONTITALIC, new FONTITALIC_Instruction());
 		addFunction(FunctionCode.FONTREGULAR, new FONTREGULAR_Instruction());
