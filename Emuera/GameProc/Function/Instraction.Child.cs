@@ -1161,7 +1161,7 @@ internal sealed partial class FunctionIdentifier
 			SpCallSharpArgment arg = (SpCallSharpArgment)func.Argument;
 			var manager = PluginManager.GetInstance();
 
-			var pluginArgs = arg.RowArgs.Select((term) => new PluginMethodParameter(term.GetStrValue(exm))).ToArray();
+			var pluginArgs = arg.RowArgs.Select((term) => PluginMethodParameterBuilder.ConvertTerm(term, exm)).ToArray();
 			arg.CallFunc.Execute(pluginArgs);
 			for (var i = 0; i < pluginArgs.Count(); ++i)
 			{
@@ -1169,7 +1169,12 @@ internal sealed partial class FunctionIdentifier
 				if (rowArg is VariableTerm)
 				{
 					var varTerm = (VariableTerm)rowArg;
-					varTerm.SetValue(pluginArgs[i].value, exm);
+					if (varTerm.IsString) {
+						varTerm.SetValue(pluginArgs[i].strValue, exm);
+					} else
+					{
+						varTerm.SetValue(pluginArgs[i].intValue, exm);
+					}
 				}
 			}
 		}
