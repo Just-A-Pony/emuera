@@ -1,6 +1,7 @@
 ﻿using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameData.Variable;
 using MinorShift.Emuera.GameProc.Function;
+using MinorShift.Emuera.Sub;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -172,6 +173,10 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 			}
 		}
 
+		public Int64[] GetCharacterIDs()
+		{
+			return expressionMediator.VEvaluator.VariableData.CharacterList.Select(v => v.NO).ToArray();
+		}
 		public long GetIntVar(string name, int index = 0)
 		{
 			return expressionMediator.VEvaluator.VariableData.GetVarTokenDic()[name].GetIntValue(expressionMediator, [index]);
@@ -234,6 +239,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 				Directory.CreateDirectory("Plugins");
 			}
 			string[] plugins = Directory.GetFiles("Plugins", "*.dll");
+			bool pluginsAware = File.Exists("pluginsAware.txt");
 			ClearMethods();
 			foreach (var pluginPath in plugins)
 			{
@@ -243,6 +249,10 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 				{
 					//TODO: throw warning
 					continue;
+				}
+				if (!pluginsAware)
+				{
+					throw new ExeEE("This game comes prepackaged with plugins. This is a security check to make sure you're aware of that: Never run your EE under Administrator rights, Always get your games and Plugins from verified sources and If you're maintainer of the build and it should NOT come with plugins, Investigate immediately. If everything is okay, create file pluginsAware.txt at the root of the game distributive and restart");
 				}
 
 				PluginManifestAbstract manifest = (PluginManifestAbstract)Activator.CreateInstance(manifestType);
