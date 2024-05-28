@@ -18,6 +18,7 @@ using EvilMask.Emuera;
 using trerror = EvilMask.Emuera.Lang.Error;
 using System.Data;
 using MinorShift.Emuera.Runtime.Config;
+using System.Diagnostics;
 
 namespace MinorShift.Emuera.GameData.Function;
 
@@ -2906,6 +2907,7 @@ internal static partial class FunctionMethodCreator
 
 	private sealed class GetmsMethod : FunctionMethod
 	{
+		static Stopwatch stopwatch = Stopwatch.StartNew();
 		public GetmsMethod()
 		{
 			ReturnType = typeof(Int64);

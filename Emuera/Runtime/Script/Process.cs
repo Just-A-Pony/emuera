@@ -314,11 +314,11 @@ internal sealed partial class Process(EmueraConsole view)
 		vEvaluator.RESULTS = s;
 	}
 
-	DateTime startTime;
+	Stopwatch startTime = new();
 
 	public void DoScript()
 	{
-		startTime = DateTime.Now;
+		startTime.Restart();
 		state.lineCount = 0;
 		bool systemProcRunning = true;
 		try
@@ -356,7 +356,7 @@ internal sealed partial class Process(EmueraConsole view)
 
 	public void UpdateCheckInfiniteLoopState()
 	{
-		startTime = DateTime.Now;
+		startTime.Restart();
 		state.lineCount = 0;
 	}
 
@@ -373,7 +373,7 @@ internal sealed partial class Process(EmueraConsole view)
 		//    console.ReadAnyKey();
 		//    return;
 		//}
-		var elapsedTime = (DateTime.Now - startTime).TotalMilliseconds;
+		var elapsedTime = startTime.ElapsedMilliseconds;
 		if (elapsedTime < Config.InfiniteLoopAlertTime)
 			return;
 		LogicalLine currentLine = state.CurrentLine;
@@ -392,7 +392,7 @@ internal sealed partial class Process(EmueraConsole view)
 		else
 		{
 			state.lineCount = 0;
-			startTime = DateTime.Now;
+			startTime.Restart();
 		}
 	}
 
