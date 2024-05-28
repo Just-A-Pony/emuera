@@ -7,7 +7,6 @@ using MinorShift.Emuera.GameData.Variable;
 using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.GameProc.Function;
 using trerror = EvilMask.Emuera.Lang.Error;
-using System.Runtime.Versioning;
 using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.GameProc;
@@ -98,7 +97,6 @@ internal sealed partial class Process
 	}
 
 	#region normal
-	[SupportedOSPlatform("windows")]
 	void doNormalFunction(InstructionLine func)
 	{
 		Int64 iValue = 0;
