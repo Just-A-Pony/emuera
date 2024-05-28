@@ -461,8 +461,8 @@ internal static class HtmlManager
 		// StringStream st = new StringStream(str);
 		CharStream st = parent != null ? parent.Stream : new(str);
 		int found;
-		bool hasComment = parent != null ? parent.HasComment : str.IndexOf("<!--", StringComparison.Ordinal) >= 0;
-		bool hasReturn = parent != null ? parent.HasReturn : str.IndexOf('\n', StringComparison.Ordinal) >= 0;
+		bool hasComment = parent != null ? parent.HasComment : str.Contains("<!--", StringComparison.Ordinal);
+		bool hasReturn = parent != null ? parent.HasReturn : str.Contains('\n', StringComparison.Ordinal);
 		HtmlAnalzeState state = new();
 		#region EM_私家版_HTML_divタグ
 		if (parent != null)

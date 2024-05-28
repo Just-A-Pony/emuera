@@ -26,18 +26,18 @@ abstract class ConsoleShapePart : AConsoleColoredPart
 			if (i < param.Length - 1)
 				sb.Append(", ");
 		}
-		sb.Append("'");
+		sb.Append('\'');
 		if (colorchanged)
 		{
 			sb.Append(" color='");
 			sb.Append(HtmlManager.GetColorToString(color));
-			sb.Append("'");
+			sb.Append('\'');
 		}
 		if (bcolor != Config.FocusColor)
 		{
 			sb.Append(" bcolor='");
 			sb.Append(HtmlManager.GetColorToString(bcolor));
-			sb.Append("'");
+			sb.Append('\'');
 		}
 		sb.Append(">");
 		ConsoleShapePart ret = null;
