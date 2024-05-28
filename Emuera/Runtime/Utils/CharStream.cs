@@ -132,7 +132,7 @@ internal sealed class CharStream
 	/// </summary>
 	public int Find(char c)
 	{
-		return source.IndexOf(c, pointer) - pointer;
+		return source.AsSpan()[pointer..].IndexOf(c) - pointer;
 	}
 
 	public override string ToString()
