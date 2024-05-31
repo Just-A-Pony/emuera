@@ -29,6 +29,7 @@
         <PublishSingleFile>true</PublishSingleFile>
         <PublishTrimmed>false</PublishTrimmed>
         <SelfContained>false</SelfContained>
+        <TieredCompilation>false</TieredCompilation>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug-NAudio' ">
