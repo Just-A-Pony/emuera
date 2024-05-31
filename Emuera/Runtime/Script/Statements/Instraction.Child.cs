@@ -19,6 +19,7 @@ using static EvilMask.Emuera.Utils;
 using System.Linq;
 using MinorShift.Emuera.Runtime.Config;
 using System.Diagnostics;
+using DotnetEmuera;
 
 namespace MinorShift.Emuera.GameProc.Function;
 
@@ -1546,12 +1547,21 @@ internal sealed partial class FunctionIdentifier
 
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
-			Int64 iValue;
-			if (func.Argument.IsConst)
-				iValue = func.Argument.ConstInt;
+			if (JSONConfig.Data.IgnoreRandamizeSeed)
+			{
+				exm.VEvaluator.Randomize();
+			}
 			else
-				iValue = ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
-			exm.VEvaluator.Randomize(iValue);
+			{
+				ParserMediator.Warn("Randomizeを行うと互換性維持のため古い乱数アルゴリズムが使われます", null, 0);
+				ParserMediator.FlushWarningList();
+				Int64 iValue;
+				if (func.Argument.IsConst)
+					iValue = func.Argument.ConstInt;
+				else
+					iValue = ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
+				exm.VEvaluator.Randomize(iValue);
+			}
 		}
 	}
 	private sealed class INITRAND_Instruction : AInstruction
@@ -1564,6 +1574,8 @@ internal sealed partial class FunctionIdentifier
 
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
+			ParserMediator.Warn(".NET EmueraではINITRANDは機能しません", null, 1);
+			ParserMediator.FlushWarningList();
 			exm.VEvaluator.InitRanddata();
 		}
 	}
@@ -1578,6 +1590,8 @@ internal sealed partial class FunctionIdentifier
 
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
+			ParserMediator.Warn(".NET EmueraではDUMPRANDは機能しません", null, 1);
+			ParserMediator.FlushWarningList();
 			exm.VEvaluator.DumpRanddata();
 		}
 	}
