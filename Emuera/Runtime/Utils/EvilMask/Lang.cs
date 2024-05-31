@@ -1065,10 +1065,6 @@ internal sealed class Lang
 		[Managed] public static TranslatableString CanNotOmitMacroArg { get; } = new TranslatableString("関数形式のマクロ{0}の引数を省略することはできません");
 		[Managed] public static TranslatableString NotFoundCorresponding { get; } = new TranslatableString("\'{0}\'が使われましたが対応する\'{1}\'が見つかりません");
 		[Managed] public static TranslatableString OoRSumArray { get; } = new TranslatableString("命令ARRAYSORTの第３引数({0})と第4変数({1})の和が配列\"{2}\"の範囲を超えています");
-		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
-		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
-		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
-		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
 		[Managed] public static TranslatableString CannotRecommendCallLocalVar { get; } = new TranslatableString("コード中でローカル変数を@付きで呼ぶことは推奨されません(代わりに*.ERHファイルの利用を検討してください)");
 
 		[Managed] public static TranslatableString LabelNameMissing { get; } = new TranslatableString("ラベル名がありません");
@@ -1176,6 +1172,12 @@ internal sealed class Lang
 		[Managed] public static TranslatableString IsDefinedErdVariable { get; } = new TranslatableString("変数名\"{0}\"は既にERD変数\"{1}\"の定義に使われており、予期せぬ配列参照を引き起こす場合があります");
 		[Managed] public static TranslatableString CanNotParseStringToIntTooltipImg { get; } = new TranslatableString("\"{0}\"を数値型に変換できません（文字列型として使う場合はTOOLTIP_IMGをオフにしてください）");
 		[Managed] public static TranslatableString ImcompatibleSoundFile { get; } = new TranslatableString("非対応のサウンドファイルが指定されました");
+		[Managed] public static TranslatableString IgnoreRandomize { get; } = new TranslatableString("新しい乱数アルゴリズムではRandomizeは無視されます");
+		[Managed] public static TranslatableString CanNotUseInitrand{ get; } = new TranslatableString("新しい乱数アルゴリズムではINITRANDは機能しません");
+		[Managed] public static TranslatableString CanNotUseDumprand { get; } = new TranslatableString("新しい乱数アルゴリズムではDUMPRANDは機能しません");
+		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
+		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
+		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
 	}
 	[Managed]
 	public sealed class MessageBox
