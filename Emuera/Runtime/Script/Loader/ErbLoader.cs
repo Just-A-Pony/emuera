@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Threading;
 using MinorShift.Emuera.Runtime.Config;
+using DotnetEmuera;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -444,6 +445,24 @@ internal sealed class ErbLoader
 				{
 					noError = false;
 					ParserMediator.Warn(nextLine.ErrMes, position, 2);
+				}
+				else if (JSONConfig.Data.UseNewRandom &&
+										nextLine is InstructionLine instruction)
+				{
+					switch (instruction.FunctionCode)
+					{
+						case FunctionCode.RANDOMIZE:
+							ParserMediator.Warn(trerror.IgnoreRandomize.Text, position, 1);
+							break;
+						case FunctionCode.DUMPRAND:
+							ParserMediator.Warn(trerror.CanNotUseDumprand.Text, position, 1);
+							break;
+						case FunctionCode.INITRAND:
+							ParserMediator.Warn(trerror.CanNotUseInitrand.Text, position, 1);
+							break;
+						default:
+							break;
+					}
 				}
 			}
 			if (lastLabelLine == null)
