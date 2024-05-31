@@ -1172,7 +1172,7 @@ internal sealed class Lang
 		[Managed] public static TranslatableString IsDefinedErdVariable { get; } = new TranslatableString("変数名\"{0}\"は既にERD変数\"{1}\"の定義に使われており、予期せぬ配列参照を引き起こす場合があります");
 		[Managed] public static TranslatableString CanNotParseStringToIntTooltipImg { get; } = new TranslatableString("\"{0}\"を数値型に変換できません（文字列型として使う場合はTOOLTIP_IMGをオフにしてください）");
 		[Managed] public static TranslatableString ImcompatibleSoundFile { get; } = new TranslatableString("非対応のサウンドファイルが指定されました");
-		[Managed] public static TranslatableString IgnoreRandomize { get; } = new TranslatableString("新しい乱数アルゴリズムではRandomizeは無視されます");
+		[Managed] public static TranslatableString IgnoreRandomize { get; } = new TranslatableString("新しい乱数アルゴリズムではRANDOMIZEは無視されます");
 		[Managed] public static TranslatableString CanNotUseInitrand{ get; } = new TranslatableString("新しい乱数アルゴリズムではINITRANDは機能しません");
 		[Managed] public static TranslatableString CanNotUseDumprand { get; } = new TranslatableString("新しい乱数アルゴリズムではDUMPRANDは機能しません");
 		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
