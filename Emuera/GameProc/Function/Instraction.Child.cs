@@ -960,7 +960,7 @@ internal sealed partial class FunctionIdentifier
 
 			InputRequest req = new()
 			{
-				InputType = InputType.StrValue,
+				InputType = InputType.IntValue,
 				HasDefValue = true,
 				OneInput = isOne
 			};
