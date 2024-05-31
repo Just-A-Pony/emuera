@@ -452,13 +452,13 @@ internal sealed class ErbLoader
 					switch (instruction.FunctionCode)
 					{
 						case FunctionCode.RANDOMIZE:
-							ParserMediator.Warn(trerror.IgnoreRandomize.Text, position, 1);
+							ParserMediator.Warn(trerror.IgnoreRandomize.Text, position, 0);
 							break;
 						case FunctionCode.DUMPRAND:
-							ParserMediator.Warn(trerror.CanNotUseDumprand.Text, position, 1);
+							ParserMediator.Warn(trerror.CanNotUseDumprand.Text, position, 0);
 							break;
 						case FunctionCode.INITRAND:
-							ParserMediator.Warn(trerror.CanNotUseInitrand.Text, position, 1);
+							ParserMediator.Warn(trerror.CanNotUseInitrand.Text, position, 0);
 							break;
 						default:
 							break;
