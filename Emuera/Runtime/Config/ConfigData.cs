@@ -806,6 +806,8 @@ internal sealed class ConfigData
 			while ((line = eReader.ReadLine()) != null)
 			{
 				line = line.Trim();
+				if (line.Length == 0)
+					continue;
 				if (line[0] == ';')
 					continue;
 				pos = new ScriptPosition(eReader.Filename, eReader.LineNo);
