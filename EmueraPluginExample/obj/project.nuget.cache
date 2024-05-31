@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "+0wn1tLHIDvGu5VUactfIjEelq8MZu+q90mCu1J83ICyMFcstOfNdVijADb/PPdwyK2ibQflVQ7TMkQwxye9bA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\catgi\\Dropbox\\git_EmueraEMEE\\EmueraPluginExample\\EmueraPluginExample.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\catgi\\.nuget\\packages\\enums.net\\4.0.1\\enums.net.4.0.1.nupkg.sha512",
+    "C:\\Users\\catgi\\.nuget\\packages\\system.commandline\\2.0.0-beta4.22272.1\\system.commandline.2.0.0-beta4.22272.1.nupkg.sha512"
+  ],
+  "logs": []
+}

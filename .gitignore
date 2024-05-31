@@ -11,3 +11,10 @@ EmueraPluginExample/obj/*
 
 */Emuera.csproj.user
 
+.vscode/*
+
+Properties/launchSettings.json
+
+*/artifacts/*
+
+*/Emuera.csproj.user

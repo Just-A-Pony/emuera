@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using MinorShift.Emuera.GameProc;
 using MinorShift.Emuera.GameData;
 using MinorShift.Emuera.GameData.Expression;
@@ -22,7 +21,7 @@ internal static class GlobalStatic
 	//これは生成される順序で並んでいる。
 	//下から上を参照した場合、nullを返されることがある。
 	//Config Replace
-	public static MainWindow MainWindow;
+	//public static MainWindow MainWindow;
 	public static EmueraConsole Console;
 	public static Process Process;
 	//Config.RenameDic
@@ -39,7 +38,7 @@ internal static class GlobalStatic
 
 	//ERBloaderに引数解析の結果を渡すための橋渡し変数
 	//1756 Processから移動。Program.AnalysisMode用
-	public static Dictionary<string, Int64> tempDic = [];
+	public static Dictionary<string, Int64> tempDic = new(StringComparer.OrdinalIgnoreCase);
 	#region EE_FORCE_QUIT_AND_RESTART
 	public static bool ForceQuitAndRestart = false;//連続実行を防ぐ
 	#endregion
@@ -59,7 +58,7 @@ internal static class GlobalStatic
 		VEvaluator = null;
 		VariableData = null;
 		Console = null;
-		MainWindow = null;
+		//MainWindow = null;
 		LabelDictionary = null;
 		IdentifierDictionary = null;
 		tempDic.Clear();
