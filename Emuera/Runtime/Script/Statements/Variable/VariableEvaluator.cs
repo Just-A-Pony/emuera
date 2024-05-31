@@ -39,7 +39,6 @@ internal sealed class VariableEvaluator : IDisposable
 	}
 	public void Randomize()
 	{
-		rand = new();
 	}
 
 	public void InitRanddata()
