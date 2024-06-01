@@ -390,7 +390,7 @@ internal static partial class LexicalAnalyzer
 		var span = ReadSingleIdentifierROS(st);
 		return span.ToString(); ;
 	}
-	static readonly SearchValues<char> _searchValues = SearchValues.Create("""  .+-*/%=!<>|&^~?#)}],:({[$\'"@;""" + "\t"); 
+	static readonly SearchValues<char> _searchValues = SearchValues.Create(""" 　.+-*/%=!<>|&^~?#)}],:({[$\'"@;""" + "\t"); 
 	public static ReadOnlySpan<char> ReadSingleIdentifierROS(CharStream st)
 	{
 		var row = st.RowString.AsSpan()[st.CurrentPosition..];
