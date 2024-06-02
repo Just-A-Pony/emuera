@@ -1,8 +1,10 @@
-﻿using MinorShift.Emuera.Sub;
+﻿using MinorShift._Library;
+using MinorShift.Emuera.Sub;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using MinorShift.Emuera.GameProc.Function;
@@ -718,21 +720,13 @@ internal sealed partial class EmueraConsole : IDisposable
 		StreamWriter writer = null;
 		try
 		{
-			writer = new StreamWriter(fullpath, false, Config.Encode);
-			foreach (ConsoleDisplayLine line in displayLineList)
-			{
-				writer.WriteLine(line.ToString());
-			}
+			var log = GetLog();
+			File.WriteAllText(fullpath, log);
 		}
 		catch (Exception)
 		{
 			Dialog.Show(trmb.FailedOutputLog.Text, trmb.FailedOutputLogError.Text);
 			return false;
-		}
-		finally
-		{
-			if (writer != null)
-				writer.Close();
 		}
 		return true;
 	}
@@ -794,10 +788,28 @@ internal sealed partial class EmueraConsole : IDisposable
 	}
 
 	#endregion
-	public void GetDisplayStrings(StringBuilder builder)
+	public string GetLog()
 	{
-		if (displayLineList.Count == 0)
-			return;
+		var builder = new StringBuilder();
+
+
+		builder.AppendLine(trsl.EnvironmentInformation.Text);
+		builder.AppendLine($".NET Emuera {AssemblyData.emueraVer}");
+
+		var patchVersionsPath = Path.Combine(Program.ExeDir, "patch_versions");
+		if (Directory.Exists(patchVersionsPath))
+		{
+			builder.AppendLine(trsl.PatchVersion.Text);
+			var versionTexts = Directory.EnumerateFiles(patchVersionsPath, "*.txt")
+					.Where(x => Path.GetExtension(x) == ".txt")
+					.OrderBy(x => x, StringComparer.Ordinal)
+					.Select(x => File.ReadAllText(x).Trim());
+			var versionText = string.Join("+", versionTexts);
+			builder.AppendLine(versionText);
+		}
+		builder.AppendLine();
+		builder.AppendLine(trsl.Log.Text);
+		builder.AppendLine();
 		for (int i = 0; i < displayLineList.Count; i++)
 		{
 			#region EE_AnchorのCB機能移植
@@ -805,6 +817,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			builder.AppendLine(ClipboardProcessor.StripHTML(displayLineList[i].ToString()));
 			#endregion
 		}
+		return builder.ToString();
 	}
 
 	public ConsoleDisplayLine[] GetDisplayLines(Int64 lineNo)
