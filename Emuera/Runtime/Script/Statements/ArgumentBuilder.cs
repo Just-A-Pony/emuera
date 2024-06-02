@@ -731,10 +731,10 @@ internal static partial class ArgumentParser
 			{
 				return new SpSortcharaArgument(varTerm, order);
 			}
-			if ((wc.Current is IdentifierWord id) && (id.Code.Equals("FORWARD", Config.SCVariable)
-				|| id.Code.Equals("BACK", Config.SCVariable)))
+			if ((wc.Current is IdentifierWord id) && (id.Code.Equals("FORWARD", Config.StringComparison)
+				|| id.Code.Equals("BACK", Config.StringComparison)))
 			{
-				if (id.Code.Equals("BACK", Config.SCVariable))
+				if (id.Code.Equals("BACK", Config.StringComparison))
 					order = SortOrder.DESENDING;
 				wc.ShiftNext();
 				if (!wc.EOL)
@@ -754,10 +754,10 @@ internal static partial class ArgumentParser
 				if (!wc.EOL)
 				{
 					id = wc.Current as IdentifierWord;
-					if ((id != null) && (id.Code.Equals("FORWARD", Config.SCVariable)
-						|| id.Code.Equals("BACK", Config.SCVariable)))
+					if ((id != null) && (id.Code.Equals("FORWARD", Config.StringComparison)
+						|| id.Code.Equals("BACK", Config.StringComparison)))
 					{
-						if (id.Code.Equals("BACK", Config.SCVariable))
+						if (id.Code.Equals("BACK", Config.StringComparison))
 							order = SortOrder.DESENDING;
 						wc.ShiftNext();
 						if (!wc.EOL)
@@ -800,9 +800,9 @@ internal static partial class ArgumentParser
 			wc.ShiftNext();
 			IdentifierWord id = wc.Current as IdentifierWord;
 
-			if ((id != null) && (id.Code.Equals("FORWARD", Config.SCVariable) || (id.Code.Equals("BACK", Config.SCVariable))))
+			if ((id != null) && (id.Code.Equals("FORWARD", Config.StringComparison) || (id.Code.Equals("BACK", Config.StringComparison))))
 			{
-				if (id.Code.Equals("BACK", Config.SCVariable))
+				if (id.Code.Equals("BACK", Config.StringComparison))
 					order = SortOrder.DESENDING;
 				wc.ShiftNext();
 			}

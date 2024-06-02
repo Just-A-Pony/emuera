@@ -46,11 +46,7 @@ internal sealed class UserDefinedVariableData
 		{
 			wc.ShiftNext();
 			keyword = idw.Code;
-			if (Config.ICVariable)
-			{
-				keyword = keyword.ToUpper();
-			}
-			var cmp = Config.StrComp;
+			var cmp = Config.StringComparison;
 			//TODO ifの数があたまわるい なんとかしたい
 			switch (keyword)
 			{

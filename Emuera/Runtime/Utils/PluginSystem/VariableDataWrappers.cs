@@ -318,7 +318,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 
 		public Int64 Get(string key, Int64 idx = 0)
 		{
-			if (Config.ICVariable)
+			if (Config.IgnoreCase)
 			{
 				key = key.ToUpper();
 			}
@@ -326,7 +326,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 		}
 		public void Set(string key, Int64 value, Int64 idx = 0)
 		{
-			if (Config.ICVariable)
+			if (Config.IgnoreCase)
 			{
 				key = key.ToUpper();
 			}

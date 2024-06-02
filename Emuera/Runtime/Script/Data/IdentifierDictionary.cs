@@ -442,7 +442,7 @@ internal partial class IdentifierDictionary
 	{
 		nameDic.Add(mac.Keyword, DefinedNameType.UserMacro);
 		int key;
-		if (Config.ICVariable)
+		if (Config.IgnoreCase)
 		{
 			key = mac.Keyword.GetHashCode(StringComparison.OrdinalIgnoreCase);
 		}
@@ -469,7 +469,7 @@ internal partial class IdentifierDictionary
 	public DefineMacro GetMacro(string key)
 	{
 		int hash; 
-		if (Config.ICVariable)
+		if (Config.IgnoreCase)
 		{
 			hash = key.GetHashCode(StringComparison.OrdinalIgnoreCase);
 		}
@@ -485,7 +485,7 @@ internal partial class IdentifierDictionary
 	public VariableToken GetVariableToken(string key, string subKey, bool allowPrivate)
 	{
 		VariableToken ret;
-		//if (Config.ICVariable)
+		//if (Config.IgnoreCase)
 		//	key = key.ToUpper();
 		if (allowPrivate)
 		{
@@ -548,7 +548,7 @@ internal partial class IdentifierDictionary
 		string key = str;
 		if (string.IsNullOrEmpty(key))
 			return null;
-		if (Config.ICFunction)
+		if (Config.IgnoreCase)
 			key = key.ToUpper();
 		if (instructionDic.TryGetValue(key, out FunctionIdentifier ret))
 			return ret;
@@ -573,8 +573,6 @@ internal partial class IdentifierDictionary
 
 	public UserDefinedRefMethod GetRefMethod(string codeStr)
 	{
-		if (Config.ICFunction)
-			codeStr = codeStr.ToUpper();
 		if (refmethodDic.ContainsKey(codeStr))
 			return refmethodDic[codeStr];
 		return null;
@@ -582,7 +580,7 @@ internal partial class IdentifierDictionary
 
 	public AExpression GetFunctionMethod(LabelDictionary labelDic, string codeStr, List<AExpression> arguments, bool userDefinedOnly)
 	{
-		//if (Config.ICFunction)
+		//if (Config.IgnoreCase)
 		//	codeStr = codeStr.ToUpper();
 		if (arguments == null)//引数なし、名前のみの探索
 		{
@@ -630,7 +628,7 @@ internal partial class IdentifierDictionary
 	public void ThrowException(string str, bool isFunc)
 	{
 		string idStr = str;
-		//if (Config.ICFunction || Config.ICVariable) //片方だけなのは互換性用オプションなのでレアケースのはず。対応しない。
+		//if (Config.IgnoreCase || Config.IgnoreCase) //片方だけなのは互換性用オプションなのでレアケースのはず。対応しない。
 		//	idStr = idStr.ToUpper();
 		if (!isFunc && privateDimList.Contains(idStr))
 			throw new IdentifierNotFoundCodeEE(string.Format(treer.VarNotDefinedThisFunc.Text, str));

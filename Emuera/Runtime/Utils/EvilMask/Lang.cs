@@ -1291,6 +1291,10 @@ internal sealed class Lang
 		[Managed] public static TranslatableString LogFileHasBeenCreated { get; } = new TranslatableString("※※※ログファイルを{0}に出力しました※※※");
 		[Managed] public static TranslatableString MinusWontWork { get; } = new TranslatableString("整数型最小値({0})は-を取っても値は変化しません");
 		[Managed] public static TranslatableString ReloadResourceMessage { get; } = new TranslatableString("リソースフォルダを読み直しました");
+		[Managed] public static TranslatableString EnvironmentInformation { get; } = new TranslatableString("# 環境情報");
+		[Managed] public static TranslatableString PatchVersion { get; } = new TranslatableString("# パッチバージョン");
+		[Managed] public static TranslatableString Log { get; } = new TranslatableString("# ログ");
+		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
 		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
 		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
 

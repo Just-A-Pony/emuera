@@ -504,11 +504,11 @@ internal sealed partial class Process
 				break;
 			case FunctionCode.ALIGNMENT:
 				str = func.Argument.ConstStr;
-				if (str.Equals("LEFT", Config.SCVariable))
+				if (str.Equals("LEFT", Config.StringComparison))
 					exm.Console.Alignment = DisplayLineAlignment.LEFT;
-				else if (str.Equals("CENTER", Config.SCVariable))
+				else if (str.Equals("CENTER", Config.StringComparison))
 					exm.Console.Alignment = DisplayLineAlignment.CENTER;
-				else if (str.Equals("RIGHT", Config.SCVariable))
+				else if (str.Equals("RIGHT", Config.StringComparison))
 					exm.Console.Alignment = DisplayLineAlignment.RIGHT;
 				else
 					throw new CodeEE(string.Format(trerror.InvalidAlignment.Text, str));
@@ -846,8 +846,6 @@ internal sealed partial class Process
 
 						cfa = (SpCallArgment)iLine.Argument;
 						funcName = cfa.FuncnameTerm.GetStrValue(exm);
-						if (Config.ICFunction)
-							funcName = funcName.ToUpper();
 						callto = CalledFunction.CallFunction(this, funcName, func.JumpTo);
 						if (callto == null)
 							continue;
@@ -870,8 +868,6 @@ internal sealed partial class Process
 						if (iLine.Argument == null)
 							ArgumentParser.SetArgumentTo(iLine);
 						funcName = ((SpCallArgment)iLine.Argument).FuncnameTerm.GetStrValue(exm);
-						if (Config.ICVariable)
-							funcName = funcName.ToUpper();
 						jumpto = state.CurrentCalled.CallLabel(this, funcName);
 						if (jumpto != null)
 							break;

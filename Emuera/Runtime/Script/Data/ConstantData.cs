@@ -1317,55 +1317,55 @@ internal sealed class ConstantData
 						ParserMediator.Warn(trerror.StartedComma.Text, position, 1);
 						continue;
 					}
-					if (tokens[0].Equals("GLOBAL_MAPS", Config.SCVariable))
+					if (tokens[0].Equals("GLOBAL_MAPS", Config.StringComparison))
 					{
 						for (int i = 1; i < tokens.Length; i++)
 							GlobalSaveMaps.Add(tokens[i].Trim());
 						continue;
 					}
-					if (tokens[0].Equals("SAVE_MAPS", Config.SCVariable))
+					if (tokens[0].Equals("SAVE_MAPS", Config.StringComparison))
 					{
 						for (int i = 1; i < tokens.Length; i++)
 							SaveMaps.Add(tokens[i].Trim());
 						continue;
 					}
-					if (tokens[0].Equals("GLOBAL_XMLS", Config.SCVariable))
+					if (tokens[0].Equals("GLOBAL_XMLS", Config.StringComparison))
 					{
 						for (int i = 1; i < tokens.Length; i++)
 							GlobalSaveXmls.Add(tokens[i].Trim());
 						continue;
 					}
-					if (tokens[0].Equals("SAVE_XMLS", Config.SCVariable))
+					if (tokens[0].Equals("SAVE_XMLS", Config.StringComparison))
 					{
 						for (int i = 1; i < tokens.Length; i++)
 							SaveXmls.Add(tokens[i].Trim());
 						continue;
 					}
-					if (tokens[0].Equals("GLOBAL_DTS", Config.SCVariable))
+					if (tokens[0].Equals("GLOBAL_DTS", Config.StringComparison))
 					{
 						for (int i = 1; i < tokens.Length; i++)
 							GlobalSaveDTs.Add(tokens[i].Trim());
 						continue;
 					}
-					if (tokens[0].Equals("SAVE_DTS", Config.SCVariable))
+					if (tokens[0].Equals("SAVE_DTS", Config.StringComparison))
 					{
 						for (int i = 1; i < tokens.Length; i++)
 							SaveDTs.Add(tokens[i].Trim());
 						continue;
 					}
-					if (tokens[0].Equals("STATIC_XMLS", Config.SCVariable))
+					if (tokens[0].Equals("STATIC_XMLS", Config.StringComparison))
 					{
 						for (int i = 1; i < tokens.Length; i++)
 							StaticXmls.Add(tokens[i].Trim());
 						continue;
 					}
-					if (tokens[0].Equals("STATIC_MAPS", Config.SCVariable))
+					if (tokens[0].Equals("STATIC_MAPS", Config.StringComparison))
 					{
 						for (int i = 1; i < tokens.Length; i++)
 							StaticMaps.Add(tokens[i].Trim());
 						continue;
 					}
-					if (tokens[0].Equals("STATIC_DTS", Config.SCVariable))
+					if (tokens[0].Equals("STATIC_DTS", Config.StringComparison))
 					{
 						for (int i = 1; i < tokens.Length; i++)
 							StaticDTs.Add(tokens[i].Trim());
@@ -1419,8 +1419,8 @@ internal sealed class ConstantData
 					ParserMediator.Warn(trerror.StartedComma.Text, position, 1);
 					continue;
 				}
-				if (tokens[0].Equals("NO", Config.SCVariable)
-					|| tokens[0].Equals("番号", Config.SCVariable))
+				if (tokens[0].Equals("NO", Config.StringComparison)
+					|| tokens[0].Equals("番号", Config.StringComparison))
 				{
 					if (tmpl != null)
 					{

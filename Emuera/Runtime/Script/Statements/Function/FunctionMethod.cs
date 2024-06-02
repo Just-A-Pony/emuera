@@ -300,9 +300,9 @@ internal abstract class FunctionMethod
 	public bool HasUniqueRestructure { get; protected set; }
 
 	//実際の計算。
-	public virtual Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments) { throw new ExeEE(trerror.ReturnTypeDifferentOrNotImpelemnt.Text); }
-	public virtual string GetStrValue(ExpressionMediator exm, AExpression[] arguments) { throw new ExeEE(trerror.ReturnTypeDifferentOrNotImpelemnt.Text); }
-	public virtual SingleTerm GetReturnValue(ExpressionMediator exm, AExpression[] arguments)
+	public virtual Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments) { throw new ExeEE(trerror.ReturnTypeDifferentOrNotImpelemnt.Text); }
+	public virtual string GetStrValue(ExpressionMediator exm, List<AExpression> arguments) { throw new ExeEE(trerror.ReturnTypeDifferentOrNotImpelemnt.Text); }
+	public virtual SingleTerm GetReturnValue(ExpressionMediator exm, List<AExpression> arguments)
 	{
 		if (ReturnType == typeof(Int64))
 			return new SingleTerm(GetIntValue(exm, arguments));
@@ -316,7 +316,7 @@ internal abstract class FunctionMethod
 	/// <param name="exm"></param>
 	/// <param name="arguments"></param>
 	/// <returns></returns>
-	public virtual bool UniqueRestructure(ExpressionMediator exm, AExpression[] arguments)
+	public virtual bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 	{ throw new ExeEE(trerror.NotImplement.Text); }
 
 

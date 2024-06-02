@@ -747,8 +747,6 @@ internal sealed class VariableEvaluator : IDisposable
 			reqestSpan.Sort();
 			if (order == GameProc.Function.SortOrder.DESENDING)
 				reqestSpan.Reverse();
-
-			Array.Copy(reqestSpan.ToArray(), 0, array, start, count);
 		}
 		else
 		{
@@ -772,8 +770,6 @@ internal sealed class VariableEvaluator : IDisposable
 			reqestSpan.Sort();
 			if (order == GameProc.Function.SortOrder.DESENDING)
 				reqestSpan.Reverse();
-
-			Array.Copy(reqestSpan.ToArray(), 0, array, start, count);
 		}
 	}
 

@@ -35,10 +35,10 @@ internal static partial class FunctionMethodCreator
 				};
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			int len = HtmlManager.HtmlLength(arguments[0].GetStrValue(exm));
-			if (arguments.Length == 1 || arguments[1].GetIntValue(exm) == 0)
+			if (arguments.Count == 1 || arguments[1].GetIntValue(exm) == 0)
 			{
 				if (len >= 0)
 					return 2 * len / Config.FontSize + ((2 * len % Config.FontSize != 0) ? 1 : 0);
@@ -79,7 +79,7 @@ internal static partial class FunctionMethodCreator
 				default: array[i] = node.Value; break;
 			}
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			XmlDocument doc = null;
 			XmlNodeList nodes = null;
@@ -112,9 +112,9 @@ internal static partial class FunctionMethodCreator
 			{
 				throw new CodeEE(string.Format(trerror.XmlGetPathError.Text, path, e.Message));
 			}
-			long outputStyle = arguments.Length == 4 ? arguments[3].GetIntValue(exm) : 0;
+			long outputStyle = arguments.Count == 4 ? arguments[3].GetIntValue(exm) : 0;
 
-			if (arguments.Length >= 3)
+			if (arguments.Count >= 3)
 			{
 				if (arguments[2].GetOperandType() == typeof(Int64) && arguments[2].GetIntValue(exm) != 0)
 				{
@@ -140,7 +140,7 @@ internal static partial class FunctionMethodCreator
 			CanRestructure = true;
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return (GlobalStatic.IdentifierDictionary.GetMacro(arguments[0].GetStrValue(exm)) != null) ? 1 : 0;
 		}
@@ -171,7 +171,7 @@ internal static partial class FunctionMethodCreator
 			this.type = type;
 			this.action = act;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string arg = arguments[0].GetStrValue(exm).ToUpper();
 			string[] array = null;
@@ -208,7 +208,7 @@ internal static partial class FunctionMethodCreator
 				}
 			// strs.Sort();
 			string[] output;
-			if (arguments.Length == 2)
+			if (arguments.Count == 2)
 				output = (arguments[1] as VariableTerm).Identifier.GetArray() as string[];
 			else
 				output = exm.VEvaluator.RESULTS_ARRAY;
@@ -228,12 +228,12 @@ internal static partial class FunctionMethodCreator
 				};
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			var dir = Utils.GetValidPath(arguments[0].GetStrValue(exm));
 			if (dir == null || !Directory.Exists(dir)) return -1;
-			var pattern = arguments.Length > 1 ? arguments[1].GetStrValue(exm) : "*";
-			var option = arguments.Length > 2
+			var pattern = arguments.Count > 1 ? arguments[1].GetStrValue(exm) : "*";
+			var option = arguments.Count > 2
 				? (arguments[2].GetIntValue(exm) == 0 ? SearchOption.TopDirectoryOnly : SearchOption.AllDirectories)
 				: SearchOption.TopDirectoryOnly;
 			string[] files;
@@ -246,7 +246,7 @@ internal static partial class FunctionMethodCreator
 				return -1;
 			}
 			string[] output;
-			if (arguments.Length == 4)
+			if (arguments.Count == 4)
 				output = (arguments[3] as VariableTerm).Identifier.GetArray() as string[];
 			else
 				output = exm.VEvaluator.RESULTS_ARRAY;
@@ -264,7 +264,7 @@ internal static partial class FunctionMethodCreator
 			CanRestructure = false;
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string name = arguments[0].GetStrValue(exm);
 			WordCollection wc = LexicalAnalyzer.Analyse(new CharStream(arguments[0].GetStrValue(exm)), LexEndWith.EoL, LexAnalyzeFlag.None);
@@ -292,7 +292,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string name = arguments[0].GetStrValue(exm);
 			WordCollection wc = LexicalAnalyzer.Analyse(new CharStream(arguments[0].GetStrValue(exm)), LexEndWith.EoL, LexAnalyzeFlag.None);
@@ -321,7 +321,7 @@ internal static partial class FunctionMethodCreator
 			CanRestructure = true;
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableToken token = GlobalStatic.IdentifierDictionary.GetVariableToken(arguments[0].GetStrValue(exm), null, true);
 			if (token != null)
@@ -370,10 +370,10 @@ internal static partial class FunctionMethodCreator
 				throw new CodeEE(err);
 			return term as VariableTerm;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			bool isAscending = arguments.Length < 3 || arguments[2] == null || arguments[2].GetIntValue(exm) != 0;
-			Int64 fixedLength = arguments.Length < 4 ? -1 : arguments[3].GetIntValue(exm);
+			bool isAscending = arguments.Count < 3 || arguments[2] == null || arguments[2].GetIntValue(exm) != 0;
+			Int64 fixedLength = arguments.Count < 4 ? -1 : arguments[3].GetIntValue(exm);
 			if (fixedLength == 0) return 0;
 			VariableTerm varTerm = arguments[0] is VariableTerm ? arguments[0] as VariableTerm : GetConvertedTerm(exm, arguments[0].GetStrValue(exm));
 			int[] sortedArray;
@@ -486,9 +486,9 @@ internal static partial class FunctionMethodCreator
 			}
 			return 1;
 		}
-		public override bool UniqueRestructure(ExpressionMediator exm, AExpression[] arguments)
+		public override bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			for (int i = 0; i < arguments.Length; i++)
+			for (int i = 0; i < arguments.Count; i++)
 				arguments[i] = arguments[i].Restructure(exm);
 			return false;
 		}
@@ -503,7 +503,7 @@ internal static partial class FunctionMethodCreator
 				};
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string name = arguments[0].GetStrValue(exm);
 			WordCollection wc = LexicalAnalyzer.Analyse(new CharStream(arguments[0].GetStrValue(exm)), LexEndWith.EoL, LexAnalyzeFlag.None);
@@ -541,7 +541,7 @@ internal static partial class FunctionMethodCreator
 				};
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string name = arguments[0].GetStrValue(exm);
 			WordCollection wc = LexicalAnalyzer.Analyse(new CharStream(arguments[0].GetStrValue(exm)), LexEndWith.EoL, LexAnalyzeFlag.None);
@@ -552,18 +552,18 @@ internal static partial class FunctionMethodCreator
 				if (var.Identifier == null || var.Identifier.IsConst)
 					throw new CodeEE(string.Format(trerror.IsNotVar.Text, name));
 
-				int start = (int)(arguments.Length >= 4 ? arguments[3].GetIntValue(exm) : 0);
-				int end = (int)(arguments.Length == 5 ? arguments[4].GetIntValue(exm)
+				int start = (int)(arguments.Count >= 4 ? arguments[3].GetIntValue(exm) : 0);
+				int end = (int)(arguments.Count == 5 ? arguments[4].GetIntValue(exm)
 					: (var.Identifier.IsArray1D ? var.Identifier.GetLength()
 					: (var.Identifier.IsArray2D ? var.Identifier.GetLength(1)
 					: (var.Identifier.IsArray2D ? var.Identifier.GetLength(2) : 0))));
-				bool setAllDims = arguments.Length >= 3 ? arguments[2].GetIntValue(exm) != 0 : true;
+				bool setAllDims = arguments.Count >= 3 ? arguments[2].GetIntValue(exm) != 0 : true;
 				if (var.IsString)
 				{
 					var val = string.Empty;
-					if (arguments.Length > 1 && arguments[1].GetOperandType() != typeof(string))
+					if (arguments.Count > 1 && arguments[1].GetOperandType() != typeof(string))
 						throw new CodeEE(string.Format(trerror.SetStrToInt.Text, name));
-					if (arguments.Length > 1)
+					if (arguments.Count > 1)
 						val = arguments[1].GetStrValue(exm);
 					if (var.Identifier.IsArray1D)
 						var.Identifier.SetValueAll(val, start, end, 0);
@@ -588,9 +588,9 @@ internal static partial class FunctionMethodCreator
 				else
 				{
 					Int64 val = 0;
-					if (arguments.Length > 1 && arguments[1].GetOperandType() != typeof(Int64))
+					if (arguments.Count > 1 && arguments[1].GetOperandType() != typeof(Int64))
 						throw new CodeEE(string.Format(trerror.SetIntToStr.Text, name));
-					if (arguments.Length > 1)
+					if (arguments.Count > 1)
 						val = arguments[1].GetIntValue(exm);
 					if (var.Identifier.IsArray1D)
 						var.Identifier.SetValueAll(val, start, end, 0);
@@ -646,7 +646,7 @@ internal static partial class FunctionMethodCreator
 			CanRestructure = false;
 		}
 
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
 			string[] strs = MinorShift.Emuera.GameView.HtmlManager.HtmlSubString(str, (int)arguments[1].GetIntValue(exm));
@@ -665,7 +665,7 @@ internal static partial class FunctionMethodCreator
 			CanRestructure = false;
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
 			if (string.IsNullOrEmpty(str)) return 0;
@@ -701,13 +701,13 @@ internal static partial class FunctionMethodCreator
 					idx++;
 				}
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string baseString = arguments[0].GetStrValue(exm);
 			Regex reg;
 			try
 			{
-				reg = new Regex(arguments[1].GetStrValue(exm));
+				reg = RegexFactory.GetRegex(arguments[1].GetStrValue(exm));
 			}
 			catch (ArgumentException e)
 			{
@@ -715,12 +715,12 @@ internal static partial class FunctionMethodCreator
 			}
 			var matches = reg.Matches(baseString);
 			var ret = matches.Count;
-			if (arguments.Length == 3 && arguments[2].GetIntValue(exm) != 0)
+			if (arguments.Count == 3 && arguments[2].GetIntValue(exm) != 0)
 			{
 				exm.VEvaluator.RESULT_ARRAY[1] = reg.GetGroupNumbers().Length;
 				if (ret > 0) Output(matches, reg, exm.VEvaluator.RESULTS_ARRAY);
 			}
-			if (arguments.Length == 4)
+			if (arguments.Count == 4)
 			{
 				(arguments[2] as VariableTerm).SetValue(reg.GetGroupNumbers().Length, exm);
 				if (ret > 0) Output(matches, reg, (arguments[3] as VariableTerm).Identifier.GetArray() as string[]);
@@ -746,7 +746,7 @@ internal static partial class FunctionMethodCreator
 			CanRestructure = false;
 		}
 		private Operation op;
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string idx = arguments[0].GetOperandType() == typeof(string) ? arguments[0].GetStrValue(exm) : arguments[0].GetIntValue(exm).ToString();
 			var xmlDict = exm.VEvaluator.VariableData.DataXmlDocument;
@@ -808,7 +808,7 @@ internal static partial class FunctionMethodCreator
 				default: node.Value = val; break;
 			}
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			XmlDocument doc;
 			bool saveToArg0 = true;
@@ -844,8 +844,8 @@ internal static partial class FunctionMethodCreator
 			{
 				throw new CodeEE(string.Format(trerror.XmlXPathParseError.Text, Name, path, e.Message));
 			}
-			bool setAllNodes = arguments.Length >= 4 ? arguments[3].GetIntValue(exm) != 0 : false;
-			var style = arguments.Length == 5 ? arguments[4].GetIntValue(exm) : 0;
+			bool setAllNodes = arguments.Count >= 4 ? arguments[3].GetIntValue(exm) != 0 : false;
+			var style = arguments.Count == 5 ? arguments[4].GetIntValue(exm) : 0;
 			if (style > 2 || style < 0) style = 0;
 			var val = arguments[2].GetStrValue(exm);
 			if (nodes.Count > 0)
@@ -874,7 +874,7 @@ internal static partial class FunctionMethodCreator
 				};
 			CanRestructure = false;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string idx = arguments[0].GetOperandType() == typeof(string) ? arguments[0].GetStrValue(exm) : arguments[0].GetIntValue(exm).ToString();
 			var xmlDict = exm.VEvaluator.VariableData.DataXmlDocument;
@@ -951,11 +951,11 @@ internal static partial class FunctionMethodCreator
 			}
 			return false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			XmlDocument doc;
 			int methodPos = op == Operation.Node ? 4 : 5;
-			int method = arguments.Length >= methodPos ? (int)arguments[methodPos - 1].GetIntValue(exm) : 0;
+			int method = arguments.Count >= methodPos ? (int)arguments[methodPos - 1].GetIntValue(exm) : 0;
 			if (method > 2 || method < 0) method = 0;
 			bool saveToArg0 = true;
 			if (arguments[0].GetOperandType() == typeof(Int64) || (byName && arguments[0].GetOperandType() == typeof(string)))
@@ -993,7 +993,7 @@ internal static partial class FunctionMethodCreator
 			if (nodes.Count > 0)
 			{
 				int setAllPos = op == Operation.Node ? 5 : 6;
-				bool setAllNodes = arguments.Length == setAllPos ? arguments[setAllPos - 1].GetIntValue(exm) != 0 : false;
+				bool setAllNodes = arguments.Count == setAllPos ? arguments[setAllPos - 1].GetIntValue(exm) != 0 : false;
 				XmlNode child;
 				if (op == Operation.Node)
 				{
@@ -1021,7 +1021,7 @@ internal static partial class FunctionMethodCreator
 				else
 				{
 					child = doc.CreateAttribute(arguments[2].GetStrValue(exm));
-					if (arguments.Length >= 4) child.Value = arguments[3].GetStrValue(exm);
+					if (arguments.Count >= 4) child.Value = arguments[3].GetStrValue(exm);
 				}
 				if (nodes.Count != 1)
 				{
@@ -1080,10 +1080,10 @@ internal static partial class FunctionMethodCreator
 			}
 			return false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			XmlDocument doc;
-			int method = arguments.Length >= 4 ? (int)arguments[3].GetIntValue(exm) : 0;
+			int method = arguments.Count >= 4 ? (int)arguments[3].GetIntValue(exm) : 0;
 			if (method > 2 || method < 0) method = 0;
 			bool saveToArg0 = true;
 			if (arguments[0].GetOperandType() == typeof(Int64) || (byName && arguments[0].GetOperandType() == typeof(string)))
@@ -1120,7 +1120,7 @@ internal static partial class FunctionMethodCreator
 			}
 			if (nodes.Count > 0)
 			{
-				bool setAllNodes = arguments.Length == 3 ? arguments[2].GetIntValue(exm) != 0 : false;
+				bool setAllNodes = arguments.Count == 3 ? arguments[2].GetIntValue(exm) != 0 : false;
 				if (nodes.Count != 1)
 				{
 					if (setAllNodes)
@@ -1164,11 +1164,11 @@ internal static partial class FunctionMethodCreator
 			}
 			return false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			XmlDocument newXml = new XmlDocument();
 			{
-				string xml = arguments.Length > 2 ? arguments[2].GetStrValue(exm) : arguments[1].GetStrValue(exm);
+				string xml = arguments.Count > 2 ? arguments[2].GetStrValue(exm) : arguments[1].GetStrValue(exm);
 				try
 				{
 					newXml.LoadXml(xml);
@@ -1180,13 +1180,13 @@ internal static partial class FunctionMethodCreator
 			}
 			bool saveToArg0 = true;
 			XmlDocument doc = null;
-			if (arguments[0].GetOperandType() == typeof(Int64) || (byName && arguments[0].GetOperandType() == typeof(string)) || (arguments[0].GetOperandType() == typeof(string) && arguments.Length == 2))
+			if (arguments[0].GetOperandType() == typeof(Int64) || (byName && arguments[0].GetOperandType() == typeof(string)) || (arguments[0].GetOperandType() == typeof(string) && arguments.Count == 2))
 			{
 				saveToArg0 = false;
 				var idx = arguments[0].GetOperandType() == typeof(string) ? arguments[0].GetStrValue(exm) : arguments[0].GetIntValue(exm).ToString();
 				var dict = exm.VEvaluator.VariableData.DataXmlDocument;
 				if (!dict.ContainsKey(idx)) return -1;
-				if (arguments.Length == 2)
+				if (arguments.Count == 2)
 				{
 					dict[idx] = newXml;
 					return 1;
@@ -1228,7 +1228,7 @@ internal static partial class FunctionMethodCreator
 					child.Attributes.Append(attr);
 				}
 				child.InnerXml = newNode.InnerXml;
-				bool setAllNodes = arguments.Length >= 4 ? arguments[3].GetIntValue(exm) != 0 : false;
+				bool setAllNodes = arguments.Count >= 4 ? arguments[3].GetIntValue(exm) != 0 : false;
 				if (nodes.Count != 1)
 				{
 					if (setAllNodes)
@@ -1251,7 +1251,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			var filepath = Utils.GetValidPath(arguments[0].GetStrValue(exm));
 			if (filepath != null && File.Exists(filepath)) return 1;
@@ -1272,7 +1272,7 @@ internal static partial class FunctionMethodCreator
 			op = type;
 		}
 		private Operation op;
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string key = arguments[0].GetStrValue(exm);
 			var dict = exm.VEvaluator.VariableData.DataDataTables;
@@ -1331,7 +1331,7 @@ internal static partial class FunctionMethodCreator
 			op = type;
 		}
 		private Operation op;
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string key = arguments[0].GetStrValue(exm);
 			var dict = exm.VEvaluator.VariableData.DataDataTables;
@@ -1340,7 +1340,7 @@ internal static partial class FunctionMethodCreator
 			if (op == Operation.Names)
 			{
 				string[] output;
-				if (arguments.Length > 1 && arguments[1] is VariableTerm v) output = v.Identifier.GetArray() as string[];
+				if (arguments.Count > 1 && arguments[1] is VariableTerm v) output = v.Identifier.GetArray() as string[];
 				else output = exm.VEvaluator.RESULTS_ARRAY;
 				for (int i = 0; i < dt.Columns.Count; i++) output[i] = dt.Columns[i].ColumnName;
 				return dt.Columns.Count;
@@ -1362,7 +1362,7 @@ internal static partial class FunctionMethodCreator
 			}
 			if (contains) return 0;
 			Type t = null;
-			if (arguments.Length >= 3)
+			if (arguments.Count >= 3)
 			{
 				if (arguments[2].GetOperandType() == typeof(string)) t = Utils.DataTable.NameToType(arguments[2].GetStrValue(exm));
 				else t = Utils.DataTable.IntToType(arguments[2].GetIntValue(exm));
@@ -1371,7 +1371,7 @@ internal static partial class FunctionMethodCreator
 					throw new CodeEE(string.Format(Lang.Error.UnsupportedType.Text, Name));
 				}
 			}
-			bool nullable = arguments.Length == 4 ? arguments[3].GetIntValue(exm) != 0 : true;
+			bool nullable = arguments.Count == 4 ? arguments[3].GetIntValue(exm) != 0 : true;
 			DataColumn dc;
 			if (t != null) dc = dt.Columns.Add(cName, t);
 			else dc = dt.Columns.Add(cName);
@@ -1437,7 +1437,7 @@ internal static partial class FunctionMethodCreator
 				throw new CodeEE(string.Format(Lang.Error.DTInvalidDataType.Text, Name, key, name));
 			row[name] = Utils.DataTable.ConvertInt(v, dt.Columns[name].DataType);
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			var b = op == Operation.Add ? 0 : 1;
 			string key = arguments[0].GetStrValue(exm);
@@ -1458,7 +1458,7 @@ internal static partial class FunctionMethodCreator
 				row = dt.NewRow();
 				row[0] = Utils.TimePoint();
 			}
-			if (arguments.Length == b + 4)
+			if (arguments.Count == b + 4)
 			{
 				var names = (arguments[b + 1] as VariableTerm).Identifier.GetArray() as string[];
 				var count = Math.Min(names.Length, arguments[b + 3].GetIntValue(exm));
@@ -1482,7 +1482,7 @@ internal static partial class FunctionMethodCreator
 			else
 			{
 				var pos = b + 1;
-				while (pos < arguments.Length)
+				while (pos < arguments.Count)
 				{
 					var name = arguments[pos].GetStrValue(exm);
 					SetValue(row, dt, name, key, exm, arguments[pos + 1]);
@@ -1509,7 +1509,7 @@ internal static partial class FunctionMethodCreator
 			op = type;
 		}
 		private Operation op;
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string key = arguments[0].GetStrValue(exm);
 			var dict = exm.VEvaluator.VariableData.DataDataTables;
@@ -1528,14 +1528,14 @@ internal static partial class FunctionMethodCreator
 					};
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string key = arguments[0].GetStrValue(exm);
 			var dict = exm.VEvaluator.VariableData.DataDataTables;
 			if (!dict.ContainsKey(key)) return -1;
 			var dt = dict[key];
 			DataRow[] rows;
-			if (arguments.Length == 3)
+			if (arguments.Count == 3)
 			{
 				StringBuilder sb = new StringBuilder();
 				var array = (arguments[1] as VariableTerm).Identifier.GetArray() as Int64[];
@@ -1568,12 +1568,12 @@ internal static partial class FunctionMethodCreator
 			op = type;
 		}
 		private Operation op;
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			var key = arguments[0].GetStrValue(exm);
 			var dict = exm.VEvaluator.VariableData.DataDataTables;
 			if (!dict.ContainsKey(key)) return op == Operation.IsNull ? -1 : 0;
-			bool asId = arguments.Length == 4 ? arguments[3].GetIntValue(exm) != 0 : false;
+			bool asId = arguments.Count == 4 ? arguments[3].GetIntValue(exm) != 0 : false;
 			var dt = dict[key];
 			var idx = arguments[1].GetIntValue(exm);
 			var name = arguments[2].GetStrValue(exm);
@@ -1595,12 +1595,12 @@ internal static partial class FunctionMethodCreator
 			}
 			return op == Operation.IsNull ? -2 : 0;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			var key = arguments[0].GetStrValue(exm);
 			var dict = exm.VEvaluator.VariableData.DataDataTables;
 			if (!dict.ContainsKey(key)) return string.Empty;
-			bool asId = arguments.Length == 4 ? arguments[3].GetIntValue(exm) != 0 : false;
+			bool asId = arguments.Count == 4 ? arguments[3].GetIntValue(exm) != 0 : false;
 			var dt = dict[key];
 			var idx = arguments[1].GetIntValue(exm);
 			var name = arguments[2].GetStrValue(exm);
@@ -1633,17 +1633,17 @@ internal static partial class FunctionMethodCreator
 				};
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			var key = arguments[0].GetStrValue(exm);
 			var dict = exm.VEvaluator.VariableData.DataDataTables;
 			if (!dict.ContainsKey(key)) return -1;
-			bool asId = arguments.Length == 5 ? arguments[4].GetIntValue(exm) != 0 : false;
+			bool asId = arguments.Count == 5 ? arguments[4].GetIntValue(exm) != 0 : false;
 			var dt = dict[key];
 			var idx = arguments[1].GetIntValue(exm);
 			var name = arguments[2].GetStrValue(exm);
 			if (name.ToLower() == "id") return 0;
-			var v = arguments.Length > 3 ? arguments[3] : null;
+			var v = arguments.Count > 3 ? arguments[3] : null;
 			DataRow row = null;
 			if (asId) row = dt.Rows.Find(idx);
 			else if (idx >= 0 && idx < dt.Rows.Count) row = dt.Rows[(int)idx];
@@ -1675,19 +1675,19 @@ internal static partial class FunctionMethodCreator
 				};
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			var key = arguments[0].GetStrValue(exm);
 			var dict = exm.VEvaluator.VariableData.DataDataTables;
 			if (!dict.ContainsKey(key)) return -1;
 			var dt = dict[key];
-			string filter = arguments.Length > 1 ? (arguments[1] != null ? arguments[1].GetStrValue(exm) : null) : null;
-			string sort = arguments.Length > 2 ? (arguments[2] != null ? arguments[2].GetStrValue(exm) : null) : null;
+			string filter = arguments.Count > 1 ? (arguments[1] != null ? arguments[1].GetStrValue(exm) : null) : null;
+			string sort = arguments.Count > 2 ? (arguments[2] != null ? arguments[2].GetStrValue(exm) : null) : null;
 			DataRow[] res;
 			if (sort != null) res = dt.Select(filter, sort);
 			else if (filter != null) res = dt.Select(filter);
 			else res = dt.Select();
-			bool toResult = arguments.Length != 4;
+			bool toResult = arguments.Count != 4;
 			Int64[] output = toResult ? GlobalStatic.VEvaluator.RESULT_ARRAY : (arguments[3] as VariableTerm).Identifier.GetArray() as Int64[];
 			if (res != null)
 			{
@@ -1711,14 +1711,14 @@ internal static partial class FunctionMethodCreator
 				};
 			CanRestructure = false;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			var key = arguments[0].GetStrValue(exm);
 			var dict = exm.VEvaluator.VariableData.DataDataTables;
 			if (!dict.ContainsKey(key)) return string.Empty;
 			var dt = dict[key];
-			var output = arguments.Length > 1 ? (arguments[1] as VariableTerm).Identifier.GetArray() as string[] : GlobalStatic.VEvaluator.RESULTS_ARRAY;
-			var idx = arguments.Length > 1 ? 0 : 1;
+			var output = arguments.Count > 1 ? (arguments[1] as VariableTerm).Identifier.GetArray() as string[] : GlobalStatic.VEvaluator.RESULTS_ARRAY;
+			var idx = arguments.Count > 1 ? 0 : 1;
 
 			var sb = new StringBuilder();
 			using (var sw = new StringWriter(sb))
@@ -1739,7 +1739,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(string), typeof(string), typeof(string)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			var key = arguments[0].GetStrValue(exm);
 			var dict = exm.VEvaluator.VariableData.DataDataTables;
@@ -1777,7 +1777,7 @@ internal static partial class FunctionMethodCreator
 			op = type;
 		}
 		private Operation op;
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string key = arguments[0].GetStrValue(exm);
 			var dict = exm.VEvaluator.VariableData.DataStringMaps;
@@ -1812,7 +1812,7 @@ internal static partial class FunctionMethodCreator
 			op = type;
 		}
 		private Operation op;
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			var map = arguments[0].GetStrValue(exm);
 			var dict = exm.VEvaluator.VariableData.DataStringMaps;
@@ -1855,7 +1855,7 @@ internal static partial class FunctionMethodCreator
 			op = type;
 		}
 		private Operation op;
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			var dict = exm.VEvaluator.VariableData.DataStringMaps;
 			var map = arguments[0].GetStrValue(exm);
@@ -1867,17 +1867,17 @@ internal static partial class FunctionMethodCreator
 				if (sMap.ContainsKey(key)) return sMap[key];
 				return "";
 			}
-			else if (op == Operation.GetKeys && arguments.Length > 1)
+			else if (op == Operation.GetKeys && arguments.Count > 1)
 			{
 				int count = 0;
 				string[] array;
-				if (arguments.Length == 3) // to array
+				if (arguments.Count == 3) // to array
 				{
 					var Term = arguments[1] as VariableTerm;
 					if (arguments[2].GetIntValue(exm) == 0) return "";
 					array = Term.Identifier.GetArray() as string[];
 				}
-				else if (arguments.Length == 2) // to RESULTS array
+				else if (arguments.Count == 2) // to RESULTS array
 				{
 					if (arguments[1].GetIntValue(exm) == 0) return "";
 					array = exm.VEvaluator.RESULTS_ARRAY;
@@ -1890,7 +1890,7 @@ internal static partial class FunctionMethodCreator
 					count++;
 				}
 				exm.VEvaluator.RESULT = sMap.Keys.Count;
-				return arguments.Length == 2 ? exm.VEvaluator.RESULTS : "";
+				return arguments.Count == 2 ? exm.VEvaluator.RESULTS : "";
 			}
 			StringBuilder sb = new StringBuilder();
 			if (op == Operation.GetKeys)
@@ -1924,7 +1924,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(string), typeof(string)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			var map = arguments[0].GetStrValue(exm);
 			var dict = exm.VEvaluator.VariableData.DataStringMaps;
@@ -1965,7 +1965,7 @@ internal static partial class FunctionMethodCreator
 			resume = b;
 		}
 		bool resume;
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (resume) exm.Console.Window.ResetTextBoxPos();
 			else exm.Console.Window.SetTextBoxPos(
@@ -1993,9 +1993,9 @@ internal static partial class FunctionMethodCreator
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 		//	//通常２つ、１つ省略可能で１～２の引数が必要。
-		//	if (arguments.Length < 1)
+		//	if (arguments.Count < 1)
 		//		return name + "関数には少なくとも1つの引数が必要です";
-		//	if (arguments.Length > 2)
+		//	if (arguments.Count > 2)
 		//		return name + "関数の引数が多すぎます";
 
 		//	if (arguments[0] == null)
@@ -2003,21 +2003,21 @@ internal static partial class FunctionMethodCreator
 		//	if (arguments[0].GetOperandType() != typeof(Int64))
 		//		return name + "関数の1番目の引数の型が正しくありません";
 		//	//2は省略可能
-		//	if ((arguments.Length == 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count == 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の2番目の引数の型が正しくありません";
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 integer = arguments[0].GetIntValue(exm);
 			if (!Config.CompatiSPChara)
 			{
-				//if ((arguments.Length > 1) && (arguments[1] != null) && (arguments[1].GetIntValue(exm) != 0))
+				//if ((arguments.Count > 1) && (arguments[1] != null) && (arguments[1].GetIntValue(exm) != 0))
 				return exm.VEvaluator.GetChara(integer);
 			}
 			//以下互換性用の旧処理
 			bool CheckSp = false;
-			if ((arguments.Length > 1) && (arguments[1] != null) && (arguments[1].GetIntValue(exm) != 0))
+			if ((arguments.Count > 1) && (arguments[1] != null) && (arguments[1].GetIntValue(exm) != 0))
 				CheckSp = true;
 			if (CheckSp)
 			{
@@ -2040,7 +2040,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (!Config.CompatiSPChara)
 				// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
@@ -2075,24 +2075,24 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 1)
+		//	if (arguments.Count < 1)
 		//		return name + "関数には少なくとも1つの引数が必要です";
-		//	if (arguments.Length > 2)
+		//	if (arguments.Count > 2)
 		//		return name + "関数の引数が多すぎます";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
 		//	if (!arguments[0].IsInteger)
 		//		return name + "関数の1番目の引数が数値ではありません";
-		//	if (arguments.Length == 1)
+		//	if (arguments.Count == 1)
 		//		return null;
 		//	if ((arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の2番目の変数が数値ではありません";
 		//	return null;
 		//}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			long x = arguments[0].GetIntValue(exm);
-			long y = (arguments.Length > 1 && arguments[1] != null) ? arguments[1].GetIntValue(exm) : 0;
+			long y = (arguments.Count > 1 && arguments[1] != null) ? arguments[1].GetIntValue(exm) : 0;
 			if (!Config.CompatiSPChara && y != 0)
 				// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
 				throw new CodeEE(Lang.Error.SPCharacterFeatureDisabled.Text);
@@ -2113,9 +2113,9 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 2)
+		//	if (arguments.Count < 2)
 		//		return name + "関数には少なくとも2つの引数が必要です";
-		//	if (arguments.Length > 3)
+		//	if (arguments.Count > 3)
 		//		return name + "関数の引数が多すぎます";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
@@ -2125,17 +2125,17 @@ internal static partial class FunctionMethodCreator
 		//		return name + "関数の2番目の引数は省略できません";
 		//	if (arguments[1].GetOperandType() != typeof(Int64))
 		//		return name + "関数の2番目の変数が数値ではありません";
-		//	if (arguments.Length == 2)
+		//	if (arguments.Count == 2)
 		//		return null;
 		//	if ((arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の3番目の変数が数値ではありません";
 		//	return null;
 		//}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			long x = arguments[0].GetIntValue(exm);
 			long y = arguments[1].GetIntValue(exm);
-			long z = (arguments.Length == 3 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : 0;
+			long z = (arguments.Count == 3 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : 0;
 			if (!Config.CompatiSPChara && z != 0)
 				// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
 				throw new CodeEE(Lang.Error.SPCharacterFeatureDisabled.Text);
@@ -2168,9 +2168,9 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 2)
+		//	if (arguments.Count < 2)
 		//		return name + "関数には少なくとも2つの引数が必要です";
-		//	if (arguments.Length > 3)
+		//	if (arguments.Count > 3)
 		//		return name + "関数の引数が多すぎます";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
@@ -2180,17 +2180,17 @@ internal static partial class FunctionMethodCreator
 		//		return name + "関数の2番目の引数は省略できません";
 		//	if (arguments[1].GetOperandType() != typeof(Int64))
 		//		return name + "関数の2番目の変数が数値ではありません";
-		//	if (arguments.Length == 2)
+		//	if (arguments.Count == 2)
 		//		return null;
 		//	if ((arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の3番目の変数が数値ではありません";
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			long x = arguments[0].GetIntValue(exm);
 			long y = arguments[1].GetIntValue(exm);
-			long z = (arguments.Length == 3 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : 0;
+			long z = (arguments.Count == 3 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : 0;
 			if (!Config.CompatiSPChara && z != 0)
 				// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
 				throw new CodeEE(Lang.Error.SPCharacterFeatureDisabled.Text);
@@ -2215,9 +2215,9 @@ internal static partial class FunctionMethodCreator
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 		//	//通常3つ、1つ省略可能で2～3の引数が必要。
-		//	if (arguments.Length < 2)
+		//	if (arguments.Count < 2)
 		//		return name + "関数には少なくとも2つの引数が必要です";
-		//	if (arguments.Length > 4)
+		//	if (arguments.Count > 4)
 		//		return name + "関数の引数が多すぎます";
 
 		//	if (arguments[0] == null)
@@ -2231,14 +2231,14 @@ internal static partial class FunctionMethodCreator
 		//	if (arguments[1].GetOperandType() != arguments[0].GetOperandType())
 		//		return name + "関数の2番目の引数の型が正しくありません";
 		//	//3番目は省略可能
-		//	if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の3番目の引数の型が正しくありません";
 		//	//4番目は省略可能
-		//	if ((arguments.Length >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の4番目の引数の型が正しくありません";
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm vTerm = (VariableTerm)arguments[0];
 			VariableToken varID = vTerm.Identifier;
@@ -2253,9 +2253,9 @@ internal static partial class FunctionMethodCreator
 			}
 			Int64 startindex = 0;
 			Int64 lastindex = exm.VEvaluator.CHARANUM;
-			if (arguments.Length >= 3 && arguments[2] != null)
+			if (arguments.Count >= 3 && arguments[2] != null)
 				startindex = arguments[2].GetIntValue(exm);
-			if (arguments.Length >= 4 && arguments[3] != null)
+			if (arguments.Count >= 4 && arguments[3] != null)
 				lastindex = arguments[3].GetIntValue(exm);
 			if (startindex < 0 || startindex >= exm.VEvaluator.CHARANUM)
 				// throw new CodeEE((isLast ? "" : "") + "関数の第3引数(" + startindex.ToString() + ")はキャラクタ位置の範囲外です");
@@ -2291,24 +2291,24 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 1)
+		//	if (arguments.Count < 1)
 		//		return name + "関数には少なくとも1つの引数が必要です";
-		//	if (arguments.Length > 2)
+		//	if (arguments.Count > 2)
 		//		return name + "関数の引数が多すぎます";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
 		//	if (!arguments[0].IsInteger)
 		//		return name + "関数の1番目の引数が数値ではありません";
-		//	if (arguments.Length == 1)
+		//	if (arguments.Count == 1)
 		//		return null;
 		//	if ((arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の2番目の変数が数値ではありません";
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 no = arguments[0].GetIntValue(exm);
-			bool isSp = (arguments.Length == 2 && arguments[1] != null) ? (arguments[1].GetIntValue(exm) != 0) : false;
+			bool isSp = (arguments.Count == 2 && arguments[1] != null) ? (arguments[1].GetIntValue(exm) != 0) : false;
 			if (!Config.CompatiSPChara && isSp)
 				// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
 				throw new CodeEE(Lang.Error.SPCharacterFeatureDisabled.Text);
@@ -2334,9 +2334,9 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 1)
+		//	if (arguments.Count < 1)
 		//		return name + "関数には少なくとも1つの引数が必要です";
-		//	if (arguments.Length > 2)
+		//	if (arguments.Count > 2)
 		//		return name + "関数の引数が多すぎます";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
@@ -2348,33 +2348,33 @@ internal static partial class FunctionMethodCreator
 		//		if (GlobalStatic.IdentifierDictionary.GetVariableToken(varName, null, true) == null)
 		//			return name + "関数の1番目の引数が変数名ではありません";
 		//	}
-		//	if (arguments.Length == 1)
+		//	if (arguments.Count == 1)
 		//		return null;
 		//	if ((arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の2番目の変数が数値ではありません";
-		//	if (arguments.Length == 2)
+		//	if (arguments.Count == 2)
 		//		return null;
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableToken var = GlobalStatic.IdentifierDictionary.GetVariableToken(arguments[0].GetStrValue(exm), null, true);
 			if (var == null)
 				// throw new CodeEE("VARSIZEの1番目の引数(\"" + arguments[0].GetStrValue(exm) + "\")が変数名ではありません");
 				throw new CodeEE(string.Format(Lang.Error.NotVariableName.Text, Name, 1, arguments[0].GetStrValue(exm)));
 			int dim = 0;
-			if (arguments.Length == 2 && arguments[1] != null)
+			if (arguments.Count == 2 && arguments[1] != null)
 				dim = (int)arguments[1].GetIntValue(exm);
 			if (Config.VarsizeDimConfig && dim > 0)
 				dim--;
 			return (var.GetLength(dim));
 		}
-		public override bool UniqueRestructure(ExpressionMediator exm, AExpression[] arguments)
+		public override bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			arguments[0].Restructure(exm);
-			if (arguments.Length > 1)
+			if (arguments.Count > 1)
 				arguments[1].Restructure(exm);
-			if (arguments[0] is SingleTerm && (arguments.Length == 1 || arguments[1] is SingleTerm))
+			if (arguments[0] is SingleTerm && (arguments.Count == 1 || arguments[1] is SingleTerm))
 			{
 				VariableToken var = GlobalStatic.IdentifierDictionary.GetVariableToken(arguments[0].GetStrValue(exm), null, true);
 				if (var == null || var.IsReference)//可変長の場合は定数化できない
@@ -2393,7 +2393,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = true;//起動中に変わることもそうそうないはず……
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
 			using (System.Drawing.Text.InstalledFontCollection ifc = new System.Drawing.Text.InstalledFontCollection())
@@ -2434,7 +2434,7 @@ internal static partial class FunctionMethodCreator
 		}
 
 		readonly EraSaveFileType type;
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 target = arguments[0].GetIntValue(exm);
 			if (target < 0)
@@ -2463,7 +2463,7 @@ internal static partial class FunctionMethodCreator
 		}
 
 		readonly EraSaveFileType type;
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string datFilename = arguments[0].GetStrValue(exm);
 			EraDataResult result = exm.VEvaluator.CheckData(datFilename, type);
@@ -2492,19 +2492,19 @@ internal static partial class FunctionMethodCreator
 
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length > 1)
+		//	if (arguments.Count > 1)
 		//		return name + "関数の引数が多すぎます";
-		//	if (arguments.Length == 0 || arguments[0] == null)
+		//	if (arguments.Count == 0 || arguments[0] == null)
 		//		return null;
 		//	if (!arguments[0].IsString)
 		//		return name + "関数の1番目の引数が文字列ではありません";
 		//	return null;
 		//}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string pattern = "*";
-			if (arguments.Length > 0 && arguments[0] != null)
+			if (arguments.Count > 0 && arguments[0] != null)
 				pattern = arguments[0].GetStrValue(exm);
 			List<string> filepathes = exm.VEvaluator.GetDatFiles(type == EraSaveFileType.CharVar, pattern);
 			string[] results = exm.VEvaluator.VariableData.DataStringArray[(int)(VariableCode.RESULTS & VariableCode.__LOWERCASE__)];
@@ -2525,7 +2525,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return exm.Process.SkipPrint ? 1L : 0L;
 		}
@@ -2552,7 +2552,7 @@ internal static partial class FunctionMethodCreator
 				ParserMediator.Warn(string.Format(Lang.Error.FuncDeprecated.Text, name, "MESSKIP"), GlobalStatic.Process.GetScaningLine(), 1, false, false, null);
 			return null;
 		}
-		public override long GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return GlobalStatic.Console.MesSkip ? 1L : 0L;
 		}
@@ -2570,7 +2570,7 @@ internal static partial class FunctionMethodCreator
 		}
 
 		readonly bool defaultColor;
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Color color = (defaultColor) ? Config.ForeColor : GlobalStatic.Console.StringStyle.Color;
 			return (color.ToArgb() & 0xFFFFFF);
@@ -2585,7 +2585,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return (Config.FocusColor.ToArgb() & 0xFFFFFF);
 		}
@@ -2602,7 +2602,7 @@ internal static partial class FunctionMethodCreator
 		}
 
 		readonly bool defaultColor;
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Color color = (defaultColor) ? Config.BackColor : GlobalStatic.Console.bgColor;
 			return (color.ToArgb() & 0xFFFFFF);
@@ -2618,7 +2618,7 @@ internal static partial class FunctionMethodCreator
 			CanRestructure = false;
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			FontStyle fontstyle = GlobalStatic.Console.StringStyle.FontStyle;
 			long ret = 0;
@@ -2642,7 +2642,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return (GlobalStatic.Console.StringStyle.Fontname);
 		}
@@ -2656,7 +2656,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(long), typeof(long), typeof(long)];
 			CanRestructure = true;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			long var = arguments[0].GetIntValue(exm);
 			long max = arguments[1].GetIntValue(exm);
@@ -2673,7 +2673,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (exm.Console.Alignment == GameView.DisplayLineAlignment.LEFT)
 				return "LEFT";
@@ -2692,7 +2692,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override long GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return (exm.Console.Redraw == GameView.ConsoleRedraw.None) ? 0L : 1L;
 		}
@@ -2706,7 +2706,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
-		public override long GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string colorName = arguments[0].GetStrValue(exm);
 			Color color = Color.FromName(colorName);
@@ -2733,7 +2733,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(long), typeof(long), typeof(long)];
 			CanRestructure = true;
 		}
-		public override long GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			long r = arguments[0].GetIntValue(exm);
 			if (r < 0 || r > 255)
@@ -2764,9 +2764,9 @@ internal static partial class FunctionMethodCreator
 	//	}
 	//	public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 	//	{
-	//		if (arguments.Length < 1)
+	//		if (arguments.Count < 1)
 	//			return name + "関数には少なくとも1つの引数が必要です";
-	//		if (arguments.Length > 1)
+	//		if (arguments.Count > 1)
 	//			return name + "関数の引数が多すぎます";
 	//		if (arguments[0] == null)
 	//			return name + "関数の1番目の引数は省略できません";
@@ -2796,22 +2796,22 @@ internal static partial class FunctionMethodCreator
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 		//	//通常2つ、1つ省略可能で1～2の引数が必要。
-		//	if (arguments.Length < 1)
+		//	if (arguments.Count < 1)
 		//		return name + "関数には少なくとも1つの引数が必要です";
-		//	if (arguments.Length > 2)
+		//	if (arguments.Count > 2)
 		//		return name + "関数の引数が多すぎます";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
 		//	if (arguments[0].GetOperandType() != typeof(Int64))
 		//		return name + "関数の1番目の引数の型が正しくありません";
-		//	if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(string)))
+		//	if ((arguments.Count >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(string)))
 		//		return name + "関数の2番目の引数の型が正しくありません";
 		//	return null;
 		//}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			long money = arguments[0].GetIntValue(exm);
-			if ((arguments.Length < 2) || (arguments[1] == null))
+			if ((arguments.Count < 2) || (arguments[1] == null))
 				return (Config.MoneyFirst) ? Config.MoneyLabel + money.ToString() : money.ToString() + Config.MoneyLabel;
 			string format = arguments[1].GetStrValue(exm);
 			string ret;
@@ -2836,7 +2836,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return (Config.PrintCPerLine);
 		}
@@ -2850,7 +2850,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = true;
 		}
-		public override long GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return (Config.PrintCLength);
 		}
@@ -2864,7 +2864,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return (Config.SaveDataNos);
 		}
@@ -2878,7 +2878,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			long date = DateTime.Now.Year;
 			date = date * 100 + DateTime.Now.Month;
@@ -2899,7 +2899,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return (DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
 		}
@@ -2914,7 +2914,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			//西暦0001年1月1日からの経過時間をミリ秒で。
 			return (long)(DateTime.Now - new DateTime(0001, 1, 1, 0, 0, 0)).TotalMilliseconds;
@@ -2929,7 +2929,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			//西暦0001年1月1日からの経過時間を秒で。
 			//Ticksは100ナノ秒単位であるが実際にはそんな精度はないので無駄。
@@ -2954,11 +2954,11 @@ internal static partial class FunctionMethodCreator
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 		//	//通常2つ、1つ省略可能で1～2の引数が必要。
-		//	if (arguments.Length < 1)
+		//	if (arguments.Count < 1)
 		//		return name + "関数には少なくとも1つの引数が必要です";
-		//	if (arguments.Length > 2)
+		//	if (arguments.Count > 2)
 		//		return name + "関数の引数が多すぎます";
-		//	if (arguments.Length == 1)
+		//	if (arguments.Count == 1)
 		//	{
 		//		if (arguments[0] == null)
 		//			return name + "関数には少なくとも1つの引数が必要です";
@@ -2973,11 +2973,11 @@ internal static partial class FunctionMethodCreator
 		//		return name + "関数の2番目の引数の型が正しくありません";
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 min = 0;
 			long max;
-			if (arguments.Length == 1)
+			if (arguments.Count == 1)
 				max = arguments[0].GetIntValue(exm);
 			else
 			{
@@ -3023,9 +3023,9 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 1)
+		//	if (arguments.Count < 1)
 		//		return name + "関数には少なくとも1つの引数が必要です";
-		//	for (int i = 0; i < arguments.Length; i++)
+		//	for (int i = 0; i < arguments.Count; i++)
 		//	{
 		//		if (arguments[i] == null)
 		//			return name + "関数の" + (i + 1).ToString() + "番目の引数は省略できません";
@@ -3034,11 +3034,11 @@ internal static partial class FunctionMethodCreator
 		//	}
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 ret = arguments[0].GetIntValue(exm);
 
-			for (int i = 1; i < arguments.Length; i++)
+			for (int i = 1; i < arguments.Count; i++)
 			{
 				Int64 newRet = arguments[i].GetIntValue(exm);
 				if (isMax)
@@ -3064,7 +3064,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(Int64)];
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 ret = arguments[0].GetIntValue(exm);
 			//普通は使わない値なので例外として投げてしまう方向性で
@@ -3082,7 +3082,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64)];
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 x = arguments[0].GetIntValue(exm);
 			Int64 y = arguments[1].GetIntValue(exm);
@@ -3108,7 +3108,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(Int64)];
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 ret = arguments[0].GetIntValue(exm);
 			if (ret < 0)
@@ -3126,7 +3126,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(Int64)];
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 ret = arguments[0].GetIntValue(exm);
 			if (ret < 0)
@@ -3153,7 +3153,7 @@ internal static partial class FunctionMethodCreator
 			Base = b;
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 ret = arguments[0].GetIntValue(exm);
 			if (ret <= 0)
@@ -3188,7 +3188,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(Int64)];
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 ret = arguments[0].GetIntValue(exm);
 			double dret = Math.Exp((double)ret);
@@ -3215,7 +3215,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(Int64)];
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 ret = arguments[0].GetIntValue(exm);
 			return (Math.Sign(ret));
@@ -3230,7 +3230,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64)];
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 value = arguments[0].GetIntValue(exm);
 			Int64 min = arguments[1].GetIntValue(exm);
@@ -3273,9 +3273,9 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 1)
+		//	if (arguments.Count < 1)
 		//		return name + "関数には少なくとも1つの引数が必要です";
-		//	if (arguments.Length > 3)
+		//	if (arguments.Count > 3)
 		//		return name + "関数の引数が多すぎます";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
@@ -3288,21 +3288,21 @@ internal static partial class FunctionMethodCreator
 		//		return name + "関数の1番目の引数がキャラクタ変数ではありません";
 		//	if (!isCharaRange && !varToken.Identifier.IsArray1D && !varToken.Identifier.IsArray2D && !varToken.Identifier.IsArray3D)
 		//		return name + "関数の1番目の引数が配列変数ではありません";
-		//	if (arguments.Length == 1)
+		//	if (arguments.Count == 1)
 		//		return null;
 		//	if ((arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の2番目の変数が数値ではありません";
-		//	if (arguments.Length == 2)
+		//	if (arguments.Count == 2)
 		//		return null;
 		//	if ((arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の3番目の変数が数値ではありません";
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm varTerm = (VariableTerm)arguments[0];
-			Int64 index1 = (arguments.Length >= 2 && arguments[1] != null) ? arguments[1].GetIntValue(exm) : 0;
-			Int64 index2 = (arguments.Length == 3 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : (isCharaRange ? exm.VEvaluator.CHARANUM : varTerm.GetLastLength());
+			Int64 index1 = (arguments.Count >= 2 && arguments[1] != null) ? arguments[1].GetIntValue(exm) : 0;
+			Int64 index2 = (arguments.Count == 3 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : (isCharaRange ? exm.VEvaluator.CHARANUM : varTerm.GetLastLength());
 
 			FixedVariableTerm p = varTerm.GetFixedVariableTerm(exm);
 			if (!isCharaRange)
@@ -3349,9 +3349,9 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 2)
+		//	if (arguments.Count < 2)
 		//		return name + "関数には少なくとも2つの引数が必要です";
-		//	if (arguments.Length > 4)
+		//	if (arguments.Count > 4)
 		//		return name + "関数の引数が多すぎます";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
@@ -3368,18 +3368,18 @@ internal static partial class FunctionMethodCreator
 		//		return name + "関数の2番目の引数は省略できません";
 		//	if (arguments[1].GetOperandType() != arguments[0].GetOperandType())
 		//		return name + "関数の1番目の引数と2番目の引数の型が異なります";
-		//	if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の3番目の引数の型が正しくありません";
-		//	if ((arguments.Length >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の4番目の引数の型が正しくありません";
 		//	return null;
 		//}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm varTerm = arguments[0] as VariableTerm;
-			Int64 start = (arguments.Length > 2 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : 0;
-			Int64 end = (arguments.Length > 3 && arguments[3] != null) ? arguments[3].GetIntValue(exm) : (isCharaRange ? exm.VEvaluator.CHARANUM : varTerm.GetLength());
+			Int64 start = (arguments.Count > 2 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : 0;
+			Int64 end = (arguments.Count > 3 && arguments[3] != null) ? arguments[3].GetIntValue(exm) : (isCharaRange ? exm.VEvaluator.CHARANUM : varTerm.GetLength());
 
 			FixedVariableTerm p = varTerm.GetFixedVariableTerm(exm);
 			if (!isCharaRange)
@@ -3415,10 +3415,10 @@ internal static partial class FunctionMethodCreator
 			}
 		}
 
-		public override bool UniqueRestructure(ExpressionMediator exm, AExpression[] arguments)
+		public override bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			arguments[0].Restructure(exm);
-			for (int i = 1; i < arguments.Length; i++)
+			for (int i = 1; i < arguments.Count; i++)
 			{
 				if (arguments[i] == null)
 					continue;
@@ -3441,12 +3441,12 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 2)
+		//	if (arguments.Count < 2)
 		//		return name + "関数には少なくとも2つの引数が必要です";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
 		//	Type baseType = arguments[0].GetOperandType();
-		//	for (int i = 1; i < arguments.Length; i++)
+		//	for (int i = 1; i < arguments.Count; i++)
 		//	{
 		//		if (arguments[i] == null)
 		//			return name + "関数の" + (i + 1).ToString() + "番目の引数は省略できません";
@@ -3455,13 +3455,13 @@ internal static partial class FunctionMethodCreator
 		//	}
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 ret = 0;
 			if (arguments[0].GetOperandType() == typeof(Int64))
 			{
 				Int64 baseValue = arguments[0].GetIntValue(exm);
-				for (int i = 1; i < arguments.Length; i++)
+				for (int i = 1; i < arguments.Count; i++)
 				{
 					if (baseValue == arguments[i].GetIntValue(exm))
 						ret += 1;
@@ -3470,7 +3470,7 @@ internal static partial class FunctionMethodCreator
 			else
 			{
 				string baseString = arguments[0].GetStrValue(exm);
-				for (int i = 1; i < arguments.Length; i++)
+				for (int i = 1; i < arguments.Count; i++)
 				{
 					if (baseString == arguments[i].GetStrValue(exm))
 						ret += 1;
@@ -3493,12 +3493,12 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 2)
+		//	if (arguments.Count < 2)
 		//		return name + "関数には少なくとも2つの引数が必要です";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
 		//	Type baseType = arguments[0].GetOperandType();
-		//	for (int i = 1; i < arguments.Length; i++)
+		//	for (int i = 1; i < arguments.Count; i++)
 		//	{
 		//		if (arguments[i] == null)
 		//			return name + "関数の" + (i + 1).ToString() + "番目の引数は省略できません";
@@ -3507,28 +3507,28 @@ internal static partial class FunctionMethodCreator
 		//	}
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (arguments[0].GetOperandType() == typeof(Int64))
 			{
-				Int64[] valueArray = new Int64[arguments.Length];
-				for (int i = 0; i < arguments.Length; i++)
+				Int64[] valueArray = new Int64[arguments.Count];
+				for (int i = 0; i < arguments.Count; i++)
 				{
 					valueArray[i] = arguments[i].GetIntValue(exm);
 				}
 				var resultArray = valueArray.Distinct();
-				if (resultArray.Count() != arguments.Length)
+				if (resultArray.Count() != arguments.Count)
 					return 0L;
 			}
 			else
 			{
-				string[] stringArray = new string[arguments.Length];
-				for (int i = 0; i < arguments.Length; i++)
+				string[] stringArray = new string[arguments.Count];
+				for (int i = 0; i < arguments.Count; i++)
 				{
 					stringArray[i] = arguments[i].GetStrValue(exm);
 				}
 				var resultArray = stringArray.Distinct();
-				if (resultArray.Count() != arguments.Length)
+				if (resultArray.Count() != arguments.Count)
 					return 0L;
 			}
 			return 1L;
@@ -3548,12 +3548,12 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 2)
+		//	if (arguments.Count < 2)
 		//		return name + "関数には少なくとも2つの引数が必要です";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
 		//	Type baseType = arguments[0].GetOperandType();
-		//	for (int i = 1; i < arguments.Length; i++)
+		//	for (int i = 1; i < arguments.Count; i++)
 		//	{
 		//		if (arguments[i] == null)
 		//			return name + "関数の" + (i + 1).ToString() + "番目の引数は省略できません";
@@ -3562,12 +3562,12 @@ internal static partial class FunctionMethodCreator
 		//	}
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (arguments[0].GetOperandType() == typeof(Int64))
 			{
 				Int64 baseValue = arguments[0].GetIntValue(exm);
-				for (int i = 1; i < arguments.Length; i++)
+				for (int i = 1; i < arguments.Count; i++)
 				{
 					if (baseValue != arguments[i].GetIntValue(exm))
 						return 0L;
@@ -3576,7 +3576,7 @@ internal static partial class FunctionMethodCreator
 			else
 			{
 				string baseValue = arguments[0].GetStrValue(exm);
-				for (int i = 1; i < arguments.Length; i++)
+				for (int i = 1; i < arguments.Count; i++)
 				{
 					if (baseValue != arguments[i].GetStrValue(exm))
 						return 0L;
@@ -3636,9 +3636,9 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 1)
+		//	if (arguments.Count < 1)
 		//		return name + "関数には少なくとも1つの引数が必要です";
-		//	if (arguments.Length > 3)
+		//	if (arguments.Count > 3)
 		//		return name + "関数の引数が多すぎます";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
@@ -3653,17 +3653,17 @@ internal static partial class FunctionMethodCreator
 		//		return name + "関数は二重配列・三重配列には対応していません";
 		//	if (!varToken.Identifier.IsArray1D)
 		//		return name + "関数の1番目の引数が配列変数ではありません";
-		//	if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の2番目の引数の型が正しくありません";
-		//	if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の3番目の引数の型が正しくありません";
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm vTerm = (VariableTerm)arguments[0];
-			Int64 start = (arguments.Length > 1 && arguments[1] != null) ? arguments[1].GetIntValue(exm) : 0;
-			Int64 end = (arguments.Length > 2 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : (isCharaRange ? exm.VEvaluator.CHARANUM : vTerm.GetLength());
+			Int64 start = (arguments.Count > 1 && arguments[1] != null) ? arguments[1].GetIntValue(exm) : 0;
+			Int64 end = (arguments.Count > 2 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : (isCharaRange ? exm.VEvaluator.CHARANUM : vTerm.GetLength());
 			FixedVariableTerm p = vTerm.GetFixedVariableTerm(exm);
 			if (!isCharaRange)
 			{
@@ -3701,7 +3701,7 @@ internal static partial class FunctionMethodCreator
 		//	}
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 n = arguments[0].GetIntValue(exm);
 			Int64 m = arguments[1].GetIntValue(exm);
@@ -3727,7 +3727,7 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length != 2)
+		//	if (arguments.Count != 2)
 		//		return name + "関数には2つの引数が必要です";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
@@ -3739,13 +3739,13 @@ internal static partial class FunctionMethodCreator
 		//		return name + "関数の2番目の引数の型が正しくありません";
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm vToken = (VariableTerm)arguments[0];
 			VariableCode varCode = vToken.Identifier.Code;
 			string varname = "";
 			#region EE_ERD
-			if (arguments.Length > 2)
+			if (arguments.Count > 2)
 				varname = vToken.Identifier.Name + "@" + arguments[2].GetIntValue(exm);
 			else
 				varname = vToken.Identifier.Name;
@@ -3759,7 +3759,7 @@ internal static partial class FunctionMethodCreator
 			else
 				return -1;
 		}
-		public override bool UniqueRestructure(ExpressionMediator exm, AExpression[] arguments)
+		public override bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			arguments[1] = arguments[1].Restructure(exm);
 			return arguments[1] is SingleTerm;
@@ -3824,7 +3824,7 @@ internal static partial class FunctionMethodCreator
 		//		return name + "関数の1番目の引数は省略できません";
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 value = arguments[0].GetIntValue(exm);
 			Int64 maxLv = arguments[1].GetIntValue(exm);
@@ -3850,7 +3850,7 @@ internal static partial class FunctionMethodCreator
 		//		return name + "関数の1番目の引数は省略できません";
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 value = arguments[0].GetIntValue(exm);
 			Int64 maxLv = arguments[1].GetIntValue(exm);
@@ -3878,9 +3878,9 @@ internal static partial class FunctionMethodCreator
 		readonly string funcName;
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 2)
+		//	if (arguments.Count < 2)
 		//		return name + "関数には少なくとも2つの引数が必要です";
-		//	if (arguments.Length > 5)
+		//	if (arguments.Count > 5)
 		//		return name + "関数の引数が多すぎます";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
@@ -3895,23 +3895,23 @@ internal static partial class FunctionMethodCreator
 		//		return name + "関数の2番目の引数は省略できません";
 		//	if (arguments[1].GetOperandType() != baseType)
 		//		return name + "関数の2番目の引数の型が正しくありません";
-		//	if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の3番目の引数の型が正しくありません";
-		//	if ((arguments.Length >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の4番目の引数の型が正しくありません";
-		//	if ((arguments.Length >= 5) && (arguments[4] != null) && (arguments[4].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 5) && (arguments[4] != null) && (arguments[4].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の5番目の引数の型が正しくありません";
 		//	return null;
 		//}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			bool isExact = false;
 			VariableTerm varTerm = (VariableTerm)arguments[0];
 
-			Int64 start = (arguments.Length > 2 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : 0;
-			Int64 end = (arguments.Length > 3 && arguments[3] != null) ? arguments[3].GetIntValue(exm) : varTerm.GetLength();
-			if (arguments.Length > 4 && arguments[4] != null)
+			Int64 start = (arguments.Count > 2 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : 0;
+			Int64 end = (arguments.Count > 3 && arguments[3] != null) ? arguments[3].GetIntValue(exm) : varTerm.GetLength();
+			if (arguments.Count > 4 && arguments[4] != null)
 				isExact = (arguments[4].GetIntValue(exm) != 0);
 
 			FixedVariableTerm p = varTerm.GetFixedVariableTerm(exm);
@@ -3927,7 +3927,7 @@ internal static partial class FunctionMethodCreator
 				Regex targetString;
 				try
 				{
-					targetString = new Regex(arguments[1].GetStrValue(exm));
+					targetString = RegexFactory.GetRegex(arguments[1].GetStrValue(exm));
 				}
 				catch (ArgumentException e)
 				{
@@ -3939,12 +3939,12 @@ internal static partial class FunctionMethodCreator
 		}
 
 
-		public override bool UniqueRestructure(ExpressionMediator exm, AExpression[] arguments)
+		public override bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			arguments[0].Restructure(exm);
 			VariableTerm varToken = arguments[0] as VariableTerm;
 			bool isConst = varToken.Identifier.IsConst;
-			for (int i = 1; i < arguments.Length; i++)
+			for (int i = 1; i < arguments.Count; i++)
 			{
 				if (arguments[i] == null)
 					continue;
@@ -3964,7 +3964,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64)];
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 value = arguments[0].GetIntValue(exm);
 			Int64 min = arguments[1].GetIntValue(exm);
@@ -3997,9 +3997,9 @@ internal static partial class FunctionMethodCreator
 		private readonly bool isCharaRange = false;
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 2)
+		//	if (arguments.Count < 2)
 		//		return name + "関数には少なくとも2つの引数が必要です";
-		//	if (arguments.Length > 6)
+		//	if (arguments.Count > 6)
 		//		return name + "関数の引数が多すぎます";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
@@ -4022,20 +4022,20 @@ internal static partial class FunctionMethodCreator
 		//		return name + "関数の3番目の引数は省略できません";
 		//	if (arguments[2].GetOperandType() != typeof(Int64))
 		//		return name + "関数の3番目の引数が数値型ではありません";
-		//	if ((arguments.Length >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 4) && (arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の4番目の引数の型が正しくありません";
-		//	if ((arguments.Length >= 5) && (arguments[4] != null) && (arguments[4].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 5) && (arguments[4] != null) && (arguments[4].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の5番目の引数の型が正しくありません";
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 min = arguments[1].GetIntValue(exm);
 			Int64 max = arguments[2].GetIntValue(exm);
 
 			VariableTerm varTerm = arguments[0] as VariableTerm;
-			Int64 start = (arguments.Length > 3 && arguments[3] != null) ? arguments[3].GetIntValue(exm) : 0;
-			Int64 end = (arguments.Length > 4 && arguments[4] != null) ? arguments[4].GetIntValue(exm) : (isCharaRange ? exm.VEvaluator.CHARANUM : varTerm.GetLength());
+			Int64 start = (arguments.Count > 3 && arguments[3] != null) ? arguments[3].GetIntValue(exm) : 0;
+			Int64 end = (arguments.Count > 4 && arguments[4] != null) ? arguments[4].GetIntValue(exm) : (isCharaRange ? exm.VEvaluator.CHARANUM : varTerm.GetLength());
 
 			FixedVariableTerm p = varTerm.GetFixedVariableTerm(exm);
 
@@ -4069,9 +4069,9 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 2)
+		//	if (arguments.Count < 2)
 		//		return string.Format("{0}関数:少なくとも{1}の引数が必要です", name, 2);
-		//	for (int i = 0; i < arguments.Length; i++)
+		//	for (int i = 0; i < arguments.Count; i++)
 		//	{
 		//		if (arguments[i] == null)
 		//			return string.Format("{0}関数:{1}番目の引数は省略できません", name, i + 1);
@@ -4089,7 +4089,7 @@ internal static partial class FunctionMethodCreator
 		//	}
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm varTerm = arguments[0] as VariableTerm;
 			int[] sortedArray;
@@ -4205,9 +4205,9 @@ internal static partial class FunctionMethodCreator
 			}
 			return 1;
 		}
-		public override bool UniqueRestructure(ExpressionMediator exm, AExpression[] arguments)
+		public override bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			for (int i = 0; i < arguments.Length; i++)
+			for (int i = 0; i < arguments.Count; i++)
 				arguments[i] = arguments[i].Restructure(exm);
 			return false;
 		}
@@ -4223,7 +4223,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
 			return (LangManager.GetStrlenLang(str));
@@ -4238,7 +4238,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
 			return (str.Length);
@@ -4260,9 +4260,9 @@ internal static partial class FunctionMethodCreator
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 		//	//通常３つ、２つ省略可能で１～３の引数が必要。
-		//	if (arguments.Length < 1)
+		//	if (arguments.Count < 1)
 		//		return name + "関数には少なくとも1つの引数が必要です";
-		//	if (arguments.Length > 3)
+		//	if (arguments.Count > 3)
 		//		return name + "関数の引数が多すぎます";
 
 		//	if (arguments[0] == null)
@@ -4270,20 +4270,20 @@ internal static partial class FunctionMethodCreator
 		//	if (arguments[0].GetOperandType() != typeof(string))
 		//		return name + "関数の1番目の引数の型が正しくありません";
 		//	//2、３は省略可能
-		//	if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の2番目の引数の型が正しくありません";
-		//	if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の3番目の引数の型が正しくありません";
 		//	return null;
 		//}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
 			int start = 0;
 			int length = -1;
-			if ((arguments.Length >= 2) && (arguments[1] != null))
+			if ((arguments.Count >= 2) && (arguments[1] != null))
 				start = (int)arguments[1].GetIntValue(exm);
-			if ((arguments.Length >= 3) && (arguments[2] != null))
+			if ((arguments.Count >= 3) && (arguments[2] != null))
 				length = (int)arguments[2].GetIntValue(exm);
 
 			return (LangManager.GetSubStringLang(str, start, length));
@@ -4305,9 +4305,9 @@ internal static partial class FunctionMethodCreator
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 		//	//通常３つ、２つ省略可能で１～３の引数が必要。
-		//	if (arguments.Length < 1)
+		//	if (arguments.Count < 1)
 		//		return name + "関数には少なくとも1つの引数が必要です";
-		//	if (arguments.Length > 3)
+		//	if (arguments.Count > 3)
 		//		return name + "関数の引数が多すぎます";
 
 		//	if (arguments[0] == null)
@@ -4315,20 +4315,20 @@ internal static partial class FunctionMethodCreator
 		//	if (arguments[0].GetOperandType() != typeof(string))
 		//		return name + "関数の1番目の引数の型が正しくありません";
 		//	//2、３は省略可能
-		//	if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の2番目の引数の型が正しくありません";
-		//	if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の3番目の引数の型が正しくありません";
 		//	return null;
 		//}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
 			int start = 0;
 			int length = -1;
-			if ((arguments.Length >= 2) && (arguments[1] != null))
+			if ((arguments.Count >= 2) && (arguments[1] != null))
 				start = (int)arguments[1].GetIntValue(exm);
-			if ((arguments.Length >= 3) && (arguments[2] != null))
+			if ((arguments.Count >= 3) && (arguments[2] != null))
 				length = (int)arguments[2].GetIntValue(exm);
 			if ((start >= str.Length) || (length == 0))
 				return ("");
@@ -4366,9 +4366,9 @@ internal static partial class FunctionMethodCreator
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 		//	//通常３つ、１つ省略可能で２～３の引数が必要。
-		//	if (arguments.Length < 2)
+		//	if (arguments.Count < 2)
 		//		return name + "関数には少なくとも2つの引数が必要です";
-		//	if (arguments.Length > 3)
+		//	if (arguments.Count > 3)
 		//		return name + "関数の引数が多すぎます";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
@@ -4379,17 +4379,17 @@ internal static partial class FunctionMethodCreator
 		//	if (arguments[1].GetOperandType() != typeof(string))
 		//		return name + "関数の2番目の引数の型が正しくありません";
 		//	//3つ目は省略可能
-		//	if ((arguments.Length >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 3) && (arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の3番目の引数の型が正しくありません";
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 
 			string target = arguments[0].GetStrValue(exm);
 			string word = arguments[1].GetStrValue(exm);
 			int UFTstart = 0;
-			if ((arguments.Length >= 3) && (arguments[2] != null))
+			if ((arguments.Count >= 3) && (arguments[2] != null))
 			{
 				if (unicode)
 				{
@@ -4420,12 +4420,12 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(string), typeof(string)];
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Regex reg;
 			try
 			{
-				reg = new Regex(arguments[1].GetStrValue(exm));
+				reg = RegexFactory.GetRegex(arguments[1].GetStrValue(exm));
 			}
 			catch (ArgumentException e)
 			{
@@ -4451,22 +4451,22 @@ internal static partial class FunctionMethodCreator
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 		//	//通常2つ、1つ省略可能で1～2の引数が必要。
-		//	if (arguments.Length < 1)
+		//	if (arguments.Count < 1)
 		//		return name + "関数には少なくとも1つの引数が必要です";
-		//	if (arguments.Length > 2)
+		//	if (arguments.Count > 2)
 		//		return name + "関数の引数が多すぎます";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
 		//	if (arguments[0].GetOperandType() != typeof(Int64))
 		//		return name + "関数の1番目の引数の型が正しくありません";
-		//	if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(string)))
+		//	if ((arguments.Count >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(string)))
 		//		return name + "関数の2番目の引数の型が正しくありません";
 		//	return null;
 		//}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 i = arguments[0].GetIntValue(exm);
-			if ((arguments.Length < 2) || (arguments[1] == null))
+			if ((arguments.Count < 2) || (arguments[1] == null))
 				return (i.ToString());
 			string format = arguments[1].GetStrValue(exm);
 			string ret;
@@ -4492,7 +4492,7 @@ internal static partial class FunctionMethodCreator
 			CanRestructure = true;
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
 			if (str == null || str == "")
@@ -4551,7 +4551,7 @@ internal static partial class FunctionMethodCreator
 			strType = type;
 			CanRestructure = true;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
 			if (str == null || str == "")
@@ -4579,7 +4579,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return GlobalStatic.Console.EmptyLine ? 1L : 0L;
 		}
@@ -4600,34 +4600,34 @@ internal static partial class FunctionMethodCreator
 			CanRestructure = false;
 		}
 
-		public override bool UniqueRestructure(ExpressionMediator exm, AExpression[] arguments)
+		public override bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			return (arguments.Length < 4 || arguments[3].GetIntValue(exm) != 1);
+			return (arguments.Count < 4 || arguments[3].GetIntValue(exm) != 1);
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 		//	//通常2つ、1つ省略可能で1～2の引数が必要。
-		//	if (arguments.Length < 3)
+		//	if (arguments.Count < 3)
 		//		return name + "関数には少なくとも3つの引数が必要です";
-		//	if (arguments.Length > 4)
+		//	if (arguments.Count > 4)
 		//		return name + "関数の引数が多すぎます";
 		//	for (int i = 0; i < 3; i++)
 		//		if (arguments[i].GetOperandType() != typeof(string))
 		//			return string.Format("{0}関数:{1}番目の引数が文字列ではありません", name, i + 1);
-		//	if (arguments.Length == 4 && arguments[3].GetOperandType() != typeof(Int64))
+		//	if (arguments.Count == 4 && arguments[3].GetOperandType() != typeof(Int64))
 		//		return string.Format("{0}関数:4番目の引数が整数ではありません", name);
 		//	return null;
 		//}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string baseString = arguments[0].GetStrValue(exm);
 			Regex reg = null;
-			int type = arguments.Length == 4 ? (int)arguments[3].GetIntValue(exm) : 0;
+			int type = arguments.Count == 4 ? (int)arguments[3].GetIntValue(exm) : 0;
 			if (type != 2)
 			{
 				try
 				{
-					reg = new Regex(arguments[1].GetStrValue(exm));
+					reg = RegexFactory.GetRegex(arguments[1].GetStrValue(exm));
 				}
 				catch (ArgumentException e)
 				{
@@ -4635,7 +4635,7 @@ internal static partial class FunctionMethodCreator
 					throw new CodeEE(string.Format(Lang.Error.InvalidRegexArg.Text, Name, 2, e.Message));
 				}
 			}
-			if (arguments.Length == 4)
+			if (arguments.Count == 4)
 			{
 				switch (type)
 				{
@@ -4675,7 +4675,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(Int64)];
 			CanRestructure = true;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 i = arguments[0].GetIntValue(exm);
 			if ((i < 0) || (i > 0xFFFF))
@@ -4711,7 +4711,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string target = arguments[0].GetStrValue(exm);
 			int length = Encoding.UTF32.GetEncoder().GetByteCount(target.ToCharArray(), 0, target.Length, false);
@@ -4731,7 +4731,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64)];
 			CanRestructure = true;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 toBase = arguments[1].GetIntValue(exm);
 			if ((toBase != 2) && (toBase != 8) && (toBase != 10) && (toBase != 16))
@@ -4749,7 +4749,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
-		public override long GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string baseStr = arguments[0].GetStrValue(exm);
 
@@ -4789,7 +4789,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return Regex.Escape(arguments[0].GetStrValue(exm));
 		}
@@ -4809,24 +4809,24 @@ internal static partial class FunctionMethodCreator
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 		//	//通常2つ、1つ省略可能で1～2の引数が必要。
-		//	if (arguments.Length < 1)
+		//	if (arguments.Count < 1)
 		//		return name + "関数には少なくとも1つの引数が必要です";
-		//	if (arguments.Length > 2)
+		//	if (arguments.Count > 2)
 		//		return name + "関数の引数が多すぎます";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
 		//	if (arguments[0].GetOperandType() != typeof(string))
 		//		return name + "関数の1番目の引数の型が正しくありません";
-		//	if ((arguments.Length >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
+		//	if ((arguments.Count >= 2) && (arguments[1] != null) && (arguments[1].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の2番目の引数の型が正しくありません";
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string baseStr = arguments[0].GetStrValue(exm);
 			if (baseStr.Length == 0)
 				return -1;
-			Int64 position = (arguments.Length > 1 && arguments[1] != null) ? arguments[1].GetIntValue(exm) : 0;
+			Int64 position = (arguments.Count > 1 && arguments[1] != null) ? arguments[1].GetIntValue(exm) : 0;
 			if (position < 0)
 				// throw new CodeEE("ENCOIDETOUNI関数の第２引数(" + position.ToString() + ")が負の値です");
 				throw new CodeEE(string.Format(Lang.Error.ArgIsNegative.Text, Name, 2, position));
@@ -4845,7 +4845,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(string), typeof(Int64)];
 			CanRestructure = true;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
 			Int64 pos = arguments[1].GetIntValue(exm);
@@ -4863,7 +4863,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
 			if (string.IsNullOrEmpty(str))
@@ -4882,7 +4882,7 @@ internal static partial class FunctionMethodCreator
 			HasUniqueRestructure = true;
 			CanRestructure = true;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
 			string destStr;
@@ -4904,7 +4904,7 @@ internal static partial class FunctionMethodCreator
 			}
 			return destStr;
 		}
-		public override bool UniqueRestructure(ExpressionMediator exm, AExpression[] arguments)
+		public override bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			arguments[0].Restructure(exm);
 			//引数が文字列式等ならお手上げなので諦める
@@ -4944,9 +4944,9 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 1)
+		//	if (arguments.Count < 1)
 		//		return name + "関数には少なくとも1つの引数が必要です";
-		//	if (arguments.Length > 4)
+		//	if (arguments.Count > 4)
 		//		return name + "関数の引数が多すぎます";
 		//	if (arguments[0] == null)
 		//		return name + "関数の1番目の引数は省略できません";
@@ -4955,26 +4955,26 @@ internal static partial class FunctionMethodCreator
 		//	VariableTerm varToken = (VariableTerm)arguments[0];
 		//	if (!varToken.Identifier.IsArray1D && !varToken.Identifier.IsArray2D && !varToken.Identifier.IsArray3D)
 		//		return name + "関数の1番目の引数が配列変数ではありません";
-		//	if (arguments.Length == 1)
+		//	if (arguments.Count == 1)
 		//		return null;
 		//	if ((arguments[1] != null) && (arguments[1].GetOperandType() != typeof(string)))
 		//		return name + "関数の2番目の変数が文字列ではありません";
-		//	if (arguments.Length == 2)
+		//	if (arguments.Count == 2)
 		//		return null;
 		//	if ((arguments[2] != null) && (arguments[2].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の3番目の変数が数値ではありません";
-		//	if (arguments.Length == 3)
+		//	if (arguments.Count == 3)
 		//		return null;
 		//	if ((arguments[3] != null) && (arguments[3].GetOperandType() != typeof(Int64)))
 		//		return name + "関数の4番目の変数が数値ではありません";
 		//	return null;
 		//}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm varTerm = (VariableTerm)arguments[0];
-			string delimiter = (arguments.Length >= 2 && arguments[1] != null) ? arguments[1].GetStrValue(exm) : ",";
-			Int64 index1 = (arguments.Length >= 3 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : 0;
-			Int64 index2 = (arguments.Length == 4 && arguments[3] != null) ? arguments[3].GetIntValue(exm) : varTerm.GetLastLength() - index1;
+			string delimiter = (arguments.Count >= 2 && arguments[1] != null) ? arguments[1].GetStrValue(exm) : ",";
+			Int64 index1 = (arguments.Count >= 3 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : 0;
+			Int64 index2 = (arguments.Count == 4 && arguments[3] != null) ? arguments[3].GetIntValue(exm) : varTerm.GetLastLength() - index1;
 
 			FixedVariableTerm p = varTerm.GetFixedVariableTerm(exm);
 
@@ -4985,12 +4985,12 @@ internal static partial class FunctionMethodCreator
 			p.IsArrayRangeValid(index1, index1 + index2, "STRJOIN", 2L, 3L);
 			return (exm.VEvaluator.GetJoinedStr(p, delimiter, index1, index2));
 		}
-		public override bool UniqueRestructure(ExpressionMediator exm, AExpression[] arguments)
+		public override bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			//第1変数は変数名なので、定数文字列変数だと事故が起こるので独自対応
 			VariableTerm varTerm = (VariableTerm)arguments[0];
 			bool canRerstructure = varTerm.Identifier.IsConst;
-			for (int i = 1; i < arguments.Length; i++)
+			for (int i = 1; i < arguments.Count; i++)
 			{
 				if (arguments[i] == null)
 					continue;
@@ -5019,7 +5019,7 @@ internal static partial class FunctionMethodCreator
 			CanRestructure = true;
 		}
 		private readonly string funcname;
-		private SingleTerm GetSingleTerm(ExpressionMediator exm, AExpression[] arguments)
+		private SingleTerm GetSingleTerm(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
 			if (str == null || str.Length == 0)
@@ -5032,7 +5032,7 @@ internal static partial class FunctionMethodCreator
 				throw new CodeEE(errMes);
 			return term;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (ReturnType != typeof(Int64))
 				throw new ExeEE(funcname + "関数:不正な呼び出し");
@@ -5042,7 +5042,7 @@ internal static partial class FunctionMethodCreator
 				throw new CodeEE(string.Format(Lang.Error.InvalidType.Text, Name, "GETCONFIGS"));
 			return term.Int;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (ReturnType != typeof(string))
 				throw new ExeEE(funcname + "関数:不正な呼び出し");
@@ -5072,18 +5072,18 @@ internal static partial class FunctionMethodCreator
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 		//	//通常１つ。省略可能。
-		//	if (arguments.Length > 1)
+		//	if (arguments.Count > 1)
 		//		return name + "関数の引数が多すぎます";
-		//	if (arguments.Length == 0|| arguments[0] == null)
+		//	if (arguments.Count == 0|| arguments[0] == null)
 		//		return null;
 		//	if (arguments[0].GetOperandType() != typeof(Int64))
 		//		return name + "関数の1番目の引数の型が正しくありません";
 		//	return null;
 		//}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 lineNo = 0;
-			if (arguments.Length > 0)
+			if (arguments.Count > 0)
 				lineNo = arguments[0].GetIntValue(exm);
 			if (lineNo < 0)
 				// throw new CodeEE("引数を0未満にできません");
@@ -5104,7 +5104,7 @@ internal static partial class FunctionMethodCreator
 			CanRestructure = false;
 		}
 
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			ConsoleDisplayLine[] dispLines = exm.Console.PopDisplayingLines();
 			if (dispLines == null)
@@ -5121,7 +5121,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return HtmlManager.Html2PlainText(arguments[0].GetStrValue(exm));
 		}
@@ -5134,7 +5134,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return HtmlManager.Escape(arguments[0].GetStrValue(exm));
 		}
@@ -5145,7 +5145,7 @@ internal static partial class FunctionMethodCreator
 	/// <summary>
 	/// argNo番目の引数をGraphicsImageのIDを示す整数値として読み取り、 GraphicsImage又はnullを返す。
 	/// </summary>
-	private static GraphicsImage ReadGraphics(string Name, ExpressionMediator exm, AExpression[] arguments, int argNo)
+	private static GraphicsImage ReadGraphics(string Name, ExpressionMediator exm, List<AExpression> arguments, int argNo)
 	{
 		Int64 target = arguments[argNo].GetIntValue(exm);
 		if (target < 0)//funcname + "関数:GraphicsIDに負の値(" + target.ToString() + ")が指定されました"
@@ -5173,7 +5173,7 @@ internal static partial class FunctionMethodCreator
 	/// <summary>
 	/// argNo番目の引数を整数値として読み取り、 アルファ値を含むColor構造体にして返す。
 	/// </summary>
-	private static Color ReadColor(string Name, ExpressionMediator exm, AExpression[] arguments, int argNo)
+	private static Color ReadColor(string Name, ExpressionMediator exm, List<AExpression> arguments, int argNo)
 	{
 		Int64 c64 = arguments[argNo].GetIntValue(exm);
 		if (c64 < 0 || c64 > 0xFFFFFFFF)
@@ -5185,7 +5185,7 @@ internal static partial class FunctionMethodCreator
 	/// <summary>
 	/// argNo番目を含む2つの引数を整数値として読み取り、Point形式にして返す。
 	/// </summary>
-	private static Point ReadPoint(string Name, ExpressionMediator exm, AExpression[] arguments, int argNo)
+	private static Point ReadPoint(string Name, ExpressionMediator exm, List<AExpression> arguments, int argNo)
 	{
 		Int64 x64 = arguments[argNo].GetIntValue(exm);
 		if (x64 < int.MinValue || x64 > int.MaxValue)
@@ -5201,7 +5201,7 @@ internal static partial class FunctionMethodCreator
 	/// <summary>
 	/// argNo番目を含む4つの引数を整数値として読み取り、Rectangle形式にして返す。
 	/// </summary>
-	private static Rectangle ReadRectangle(string Name, ExpressionMediator exm, AExpression[] arguments, int argNo)
+	private static Rectangle ReadRectangle(string Name, ExpressionMediator exm, List<AExpression> arguments, int argNo)
 	{
 		Int64 x64 = arguments[argNo].GetIntValue(exm);
 		if (x64 < int.MinValue || x64 > int.MaxValue)
@@ -5226,7 +5226,7 @@ internal static partial class FunctionMethodCreator
 	/// <summary>
 	/// argNo番目の引数を5x5のカラーマトリクス配列変数として読み取り、 5x5のfloat[][]形式にして返す。
 	/// </summary>
-	private static float[][] ReadColormatrix(string Name, ExpressionMediator exm, AExpression[] arguments, int argNo)
+	private static float[][] ReadColormatrix(string Name, ExpressionMediator exm, List<AExpression> arguments, int argNo)
 	{
 		//数値型二次元以上配列変数のはず
 		FixedVariableTerm p = ((VariableTerm)arguments[argNo]).GetFixedVariableTerm(exm);
@@ -5299,7 +5299,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -5341,7 +5341,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -5367,7 +5367,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -5393,7 +5393,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -5418,7 +5418,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -5447,11 +5447,11 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length > 2)
+		//	if (arguments.Count > 2)
 		//		return null;
 		//	return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 2);
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -5462,7 +5462,7 @@ internal static partial class FunctionMethodCreator
 			string fontname = arguments[1].GetStrValue(exm);
 			Int64 fontsize = arguments[2].GetIntValue(exm);
 			FontStyle fs = FontStyle.Regular;
-			if (arguments.Length > 3)
+			if (arguments.Count > 3)
 			{
 				Int64 style = arguments[3].GetIntValue(exm);
 
@@ -5514,7 +5514,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -5538,7 +5538,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -5568,14 +5568,14 @@ internal static partial class FunctionMethodCreator
 
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 2)
+		//	if (arguments.Count < 2)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 2);
-		//	if (arguments.Length > 4)
+		//	if (arguments.Count > 4)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum2, name);
-		//	if (arguments.Length != 2 && arguments.Length != 4)
+		//	if (arguments.Count != 2 && arguments.Count != 4)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum0, name);
 
-		//	for (int i = 0; i < arguments.Length; i++)
+		//	for (int i = 0; i < arguments.Count; i++)
 		//	{
 		//		if (arguments[i] == null)
 		//			return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, i + 1);
@@ -5583,12 +5583,12 @@ internal static partial class FunctionMethodCreator
 		//		if (i < argumentTypeArray.Length && argumentTypeArray[i] != arguments[i].GetOperandType())
 		//			return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentType0, name, i + 1);
 		//	}
-		//	if (arguments.Length <= 4)
+		//	if (arguments.Count <= 4)
 		//		return null;
 		//	return null;
 		//}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -5597,11 +5597,11 @@ internal static partial class FunctionMethodCreator
 			if (!g.IsCreated)
 				return 0;
 			string text = arguments[1].GetStrValue(exm);
-			if (arguments.Length == 2)
+			if (arguments.Count == 2)
 			{
 				g.GDrawString(text, 0, 0);
 			}
-			else if (arguments.Length == 4)
+			else if (arguments.Count == 4)
 			{
 				Point p = ReadPoint(Name, exm, arguments, 2);
 				g.GDrawString(text, p.X, p.Y);
@@ -5640,11 +5640,11 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length > 2)
+		//	if (arguments.Count > 2)
 		//		return null;
 		//	return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 2);
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -5654,7 +5654,7 @@ internal static partial class FunctionMethodCreator
 			string fontname = arguments[1].GetStrValue(exm);
 			Int64 fontsize = arguments[2].GetIntValue(exm);
 			FontStyle fs = FontStyle.Regular;
-			if (arguments.Length > 3)
+			if (arguments.Count > 3)
 			{
 				Int64 style = arguments[3].GetIntValue(exm);
 				if ((style & 1) != 0)
@@ -5694,11 +5694,11 @@ internal static partial class FunctionMethodCreator
 	//	}
 	//	public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 	//	{
-	//		if (arguments.Length < 2)
+	//		if (arguments.Count < 2)
 	//			return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 2);
-	//		if (arguments.Length > 4)
+	//		if (arguments.Count > 4)
 	//			return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum2, name);
-	//		if (arguments.Length != 2 && arguments.Length != 4)
+	//		if (arguments.Count != 2 && arguments.Count != 4)
 	//			return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum0, name);
 	//		return null;
 	//	}
@@ -5712,7 +5712,7 @@ internal static partial class FunctionMethodCreator
 	//		Int64 angle = arguments[1].GetIntValue(exm);
 
 	//		//座標省略してたらx/2,y/2で渡す
-	//		if (arguments.Length == 2)
+	//		if (arguments.Count == 2)
 	//		{
 	//			g.GRotate(angle, g.Width / 2, g.Height / 2);
 	//		}
@@ -5737,15 +5737,15 @@ internal static partial class FunctionMethodCreator
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 3)
+		//	if (arguments.Count < 3)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 3);
-		//	if (arguments.Length > 5)
+		//	if (arguments.Count > 5)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum2, name);
-		//	if (arguments.Length != 3 && arguments.Length != 5)
+		//	if (arguments.Count != 3 && arguments.Count != 5)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum0, name);
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -5759,7 +5759,7 @@ internal static partial class FunctionMethodCreator
 			Int64 angle = arguments[2].GetIntValue(exm);
 
 			//座標省略してたらx/2,y/2で渡す
-			if (arguments.Length == 3)
+			if (arguments.Count == 3)
 			{
 				dest.GDrawGWithRotate(src, angle, src.Width / 2, src.Height / 2);
 			}
@@ -5801,7 +5801,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				throw new CodeEE(string.Format(Lang.Error.GDIPlusOnly.Text, Name));
@@ -5824,7 +5824,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string imgname = arguments[0].GetStrValue(exm);
 			ASprite img = AppContents.GetSprite(imgname);
@@ -5855,7 +5855,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(string), typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string imgname = arguments[0].GetStrValue(exm);
 			ASprite img = AppContents.GetSprite(imgname);
@@ -5883,7 +5883,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(string), typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string imgname = arguments[0].GetStrValue(exm);
 			ASprite img = AppContents.GetSprite(imgname);
@@ -5909,7 +5909,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			switch (Name)
 			{
@@ -5930,7 +5930,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -5970,7 +5970,7 @@ internal static partial class FunctionMethodCreator
 				};
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -5981,7 +5981,7 @@ internal static partial class FunctionMethodCreator
 
 			string filename = arguments[1].GetStrValue(exm);
 			bool isRelative = false;
-			if (arguments.Length > 2)
+			if (arguments.Count > 2)
 				isRelative = arguments[2].GetIntValue(exm) != 0;
 
 			Bitmap bmp = null;
@@ -6031,7 +6031,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6062,9 +6062,9 @@ internal static partial class FunctionMethodCreator
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 
-		//	if (arguments.Length < 2)
+		//	if (arguments.Count < 2)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 2);
-		//	if (arguments.Length > 6)
+		//	if (arguments.Count > 6)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum2, name);
 		//	if (arguments[0] == null)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, 0 + 1);
@@ -6074,11 +6074,11 @@ internal static partial class FunctionMethodCreator
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentType0, name, 0 + 1);
 		//	if (arguments[1].GetOperandType() != typeof(Int64))
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentType0, name, 1 + 1);
-		//	if (arguments.Length == 2)
+		//	if (arguments.Count == 2)
 		//		return null;
-		//	if (arguments.Length != 6)
+		//	if (arguments.Count != 6)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum0, name);
-		//	for (int i = 2; i < arguments.Length; i++)
+		//	for (int i = 2; i < arguments.Count; i++)
 		//	{
 		//		if (arguments[i] == null)
 		//			return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, i + 1);
@@ -6087,7 +6087,7 @@ internal static partial class FunctionMethodCreator
 		//	}
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6103,7 +6103,7 @@ internal static partial class FunctionMethodCreator
 				return 0;
 
 			Rectangle rect = new Rectangle(0, 0, g.Width, g.Height);
-			if (arguments.Length == 6)
+			if (arguments.Count == 6)
 			{//四角形は正でも負でもよいが親画像の外を指してはいけない
 				rect = ReadRectangle(Name, exm, arguments, 2);
 				#region EM_私家版_SPRITECREATE範囲制限緩和
@@ -6128,7 +6128,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string imgname = arguments[0].GetStrValue(exm);
 			ASprite img = AppContents.GetSprite(imgname);
@@ -6147,7 +6147,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return AppContents.SpriteDisposeAll(arguments[0].GetIntValue(exm) != 0);
 		}
@@ -6174,9 +6174,9 @@ internal static partial class FunctionMethodCreator
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 
-		//	if (arguments.Length != 2 && arguments.Length != 6)
+		//	if (arguments.Count != 2 && arguments.Count != 6)
 		//		return string.Format("{0}関数には2つもしくは6つの引数が必要です", name);
-		//	for (int i = 0; i < arguments.Length; i++)
+		//	for (int i = 0; i < arguments.Count; i++)
 		//	{
 		//		if (arguments[i] == null)
 		//			return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, i + 1);
@@ -6185,7 +6185,7 @@ internal static partial class FunctionMethodCreator
 		//	}
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6194,7 +6194,7 @@ internal static partial class FunctionMethodCreator
 			Color c = ReadColor(Name, exm, arguments, 1);
 			if (!g.IsCreated)
 				return 0;
-			if (arguments.Length == 2)
+			if (arguments.Count == 2)
 				g.GClear(c);
 			else
 				g.GClear(c, (int)arguments[2].GetIntValue(exm), (int)arguments[3].GetIntValue(exm), (int)arguments[4].GetIntValue(exm), (int)arguments[5].GetIntValue(exm));
@@ -6214,7 +6214,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6252,9 +6252,9 @@ internal static partial class FunctionMethodCreator
 
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 10)
+		//	if (arguments.Count < 10)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 10);
-		//	if (arguments.Length > 11)
+		//	if (arguments.Count > 11)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum2, name);
 		//	for (int i = 0; i < 10; i++)
 		//	{
@@ -6263,13 +6263,13 @@ internal static partial class FunctionMethodCreator
 		//		if (typeof(Int64) != arguments[i].GetOperandType())
 		//			return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentType0, name, i + 1);
 		//	}
-		//	if (arguments.Length == 10)
+		//	if (arguments.Count == 10)
 		//		return null;
 		//	if (!(arguments[10] is VariableTerm varToken) || !varToken.IsInteger || (!varToken.Identifier.IsArray2D && !varToken.Identifier.IsArray3D))
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodGraphicsColorMatrix0, name);
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6282,7 +6282,7 @@ internal static partial class FunctionMethodCreator
 				return 0;
 			Rectangle destRect = ReadRectangle(Name, exm, arguments, 2);
 			Rectangle srcRect = ReadRectangle(Name, exm, arguments, 6);
-			if (arguments.Length == 10 || arguments[10] == null)
+			if (arguments.Count == 10 || arguments[10] == null)
 			{
 				dest.GDrawG(src, destRect, srcRect);
 				return 1;
@@ -6292,9 +6292,9 @@ internal static partial class FunctionMethodCreator
 			return 1;
 		}
 
-		public override bool UniqueRestructure(ExpressionMediator exm, AExpression[] arguments)
+		public override bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			for (int i = 0; i < arguments.Length; i++)
+			for (int i = 0; i < arguments.Count; i++)
 			{
 				if (arguments[i] == null)
 					continue;
@@ -6321,7 +6321,7 @@ internal static partial class FunctionMethodCreator
 		}
 
 
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6371,14 +6371,14 @@ internal static partial class FunctionMethodCreator
 
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
-		//	if (arguments.Length < 2)
+		//	if (arguments.Count < 2)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 2);
-		//	if (arguments.Length > 7)
+		//	if (arguments.Count > 7)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum2, name);
-		//	if (arguments.Length != 2 && arguments.Length != 4 && arguments.Length != 6 && arguments.Length != 7)
+		//	if (arguments.Count != 2 && arguments.Count != 4 && arguments.Count != 6 && arguments.Count != 7)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum0, name);
 
-		//	for (int i = 0; i < arguments.Length; i++)
+		//	for (int i = 0; i < arguments.Count; i++)
 		//	{
 		//		if (arguments[i] == null)
 		//			return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, i + 1);
@@ -6386,13 +6386,13 @@ internal static partial class FunctionMethodCreator
 		//		if (i < argumentTypeArray.Length && argumentTypeArray[i] != arguments[i].GetOperandType())
 		//			return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentType0, name, i + 1);
 		//	}
-		//	if (arguments.Length <= 6)
+		//	if (arguments.Count <= 6)
 		//		return null;
 		//	if (!(arguments[6] is VariableTerm varToken) || !varToken.IsInteger || (!varToken.Identifier.IsArray2D && !varToken.Identifier.IsArray3D))
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodGraphicsColorMatrix0, name);
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6407,12 +6407,12 @@ internal static partial class FunctionMethodCreator
 				return 0;
 
 			Rectangle destRect = new Rectangle(0, 0, img.DestBaseSize.Width, img.DestBaseSize.Height);
-			if (arguments.Length == 2)
+			if (arguments.Count == 2)
 			{
 				dest.GDrawCImg(img, destRect);
 				return 1;
 			}
-			if (arguments.Length == 4)
+			if (arguments.Count == 4)
 			{
 				Point p = ReadPoint(Name, exm, arguments, 2);
 				destRect.X = p.X;
@@ -6420,22 +6420,22 @@ internal static partial class FunctionMethodCreator
 				dest.GDrawCImg(img, destRect);
 				return 1;
 			}
-			if (arguments.Length == 6)
+			if (arguments.Count == 6)
 			{
 				destRect = ReadRectangle(Name, exm, arguments, 2);
 				dest.GDrawCImg(img, destRect);
 				return 1;
 			}
-			//if (arguments.Length == 7)
+			//if (arguments.Count == 7)
 			destRect = ReadRectangle(Name, exm, arguments, 2);
 			float[][] cm = ReadColormatrix(Name, exm, arguments, 6);
 			dest.GDrawCImg(img, destRect, cm);
 			return 1;
 		}
 
-		public override bool UniqueRestructure(ExpressionMediator exm, AExpression[] arguments)
+		public override bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			for (int i = 0; i < arguments.Length; i++)
+			for (int i = 0; i < arguments.Count; i++)
 			{
 				if (arguments[i] == null)
 					continue;
@@ -6460,7 +6460,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(string), typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6503,7 +6503,7 @@ internal static partial class FunctionMethodCreator
 			CanRestructure = false;
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6546,7 +6546,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			//if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 			//	throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6566,7 +6566,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 
 			Int64 x64 = arguments[0].GetIntValue(exm);
@@ -6589,7 +6589,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			//if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 			//	throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6608,7 +6608,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			//if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 			//	throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6627,7 +6627,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6658,7 +6658,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6684,7 +6684,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(string), typeof(Int64), typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			//if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 			//	throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6722,14 +6722,14 @@ internal static partial class FunctionMethodCreator
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 
-		//	if (arguments.Length < 6)
+		//	if (arguments.Count < 6)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 6);
-		//	if (arguments.Length > 7)
+		//	if (arguments.Count > 7)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum2, name);
-		//	if (arguments.Length != 6 && arguments.Length != 7)
+		//	if (arguments.Count != 6 && arguments.Count != 7)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum0, name);
 
-		//	for (int i = 0; i < arguments.Length; i++)
+		//	for (int i = 0; i < arguments.Count; i++)
 		//	{
 		//		if (arguments[i] == null)
 		//			return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, i + 1);
@@ -6739,7 +6739,7 @@ internal static partial class FunctionMethodCreator
 		//	}
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -6759,7 +6759,7 @@ internal static partial class FunctionMethodCreator
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodDefaultArgumentOutOfRange0, Name, z64, 5 + 1));
 				throw new CodeEE(string.Format(Lang.Error.ArgIsOutOfRangeExcept.Text, Name, 6, z64, int.MinValue, int.MaxValue, 0));
 			string tooltip = null;
-			if (arguments.Length > 6)
+			if (arguments.Count > 6)
 				tooltip = arguments[6].GetStrValue(exm);
 			if (!exm.Console.CBG_SetButtonImage((int)b64, imgN, imgB, p.X, p.Y, (int)z64, tooltip))
 				return 0;
@@ -6777,7 +6777,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (!exm.Console.IsActive)//アクティブでないならスルー
 				return 0;
@@ -6804,7 +6804,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			switch (Name)
 			{
@@ -6823,7 +6823,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			//if (exm.Console.SelectingButton != null)
 			//	return exm.Console.SelectingButton.ToString();
@@ -6855,7 +6855,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return exm.Console.IsActive ? 1 : 0;
 		}
@@ -6869,7 +6869,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 i64 = arguments[0].GetIntValue(exm);
 			if (i64 < int.MinValue || i64 > short.MaxValue)
@@ -6897,11 +6897,11 @@ internal static partial class FunctionMethodCreator
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 
-		//	if (arguments.Length < 2)
+		//	if (arguments.Count < 2)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 2);
-		//	if (arguments.Length > 4)
+		//	if (arguments.Count > 4)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum2, name);
-		//	for (int i = 0; i < arguments.Length; i++)
+		//	for (int i = 0; i < arguments.Count; i++)
 		//	{
 		//		if (arguments[i] == null)
 		//			return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, i + 1);
@@ -6913,15 +6913,15 @@ internal static partial class FunctionMethodCreator
 		//	}
 		//	return null;
 		//}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			#region EM_私家版_LoadText＆SaveText機能拡張
 			//string savText = arguments[0].GetStrValue(exm);
 			//Int64 i64 = arguments[1].GetIntValue(exm);
 			//if (i64 < 0 || i64 > int.MaxValue)
 			//	return 0;
-			//bool forceSavdir = arguments.Length > 2 && (arguments[2].GetIntValue(exm) != 0);
-			//bool forceUTF8 = arguments.Length > 3 && (arguments[3].GetIntValue(exm) != 0);
+			//bool forceSavdir = arguments.Count > 2 && (arguments[2].GetIntValue(exm) != 0);
+			//bool forceUTF8 = arguments.Count > 3 && (arguments[3].GetIntValue(exm) != 0);
 			//int fileIndex = (int)i64;
 			//string filepath = forceSavdir ?
 			//	GetSaveDataPathText(fileIndex, Config.ForceSavDir) :
@@ -6940,8 +6940,8 @@ internal static partial class FunctionMethodCreator
 			//catch { return 0; }
 			string savText = arguments[0].GetStrValue(exm), filepath;
 			Int64 i64 = -1;
-			bool forceSavdir = arguments.Length > 2 && (arguments[2].GetIntValue(exm) != 0);
-			bool forceUTF8 = arguments.Length > 3 && (arguments[3].GetIntValue(exm) != 0);
+			bool forceSavdir = arguments.Count > 2 && (arguments[2].GetIntValue(exm) != 0);
+			bool forceUTF8 = arguments.Count > 3 && (arguments[3].GetIntValue(exm) != 0);
 
 
 			if (arguments[1].GetOperandType() == typeof(Int64))
@@ -7006,11 +7006,11 @@ internal static partial class FunctionMethodCreator
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 
-		//	if (arguments.Length < 1)
+		//	if (arguments.Count < 1)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum1, name, 1);
-		//	if (arguments.Length > 3)
+		//	if (arguments.Count > 3)
 		//		return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNum2, name);
-		//	for (int i = 0; i < arguments.Length; i++)
+		//	for (int i = 0; i < arguments.Count; i++)
 		//	{
 		//		if (arguments[i] == null)
 		//			return string.Format(Properties.Resources.SyntaxErrMesMethodDefaultArgumentNotNullable0, name, i + 1);
@@ -7022,14 +7022,14 @@ internal static partial class FunctionMethodCreator
 		//	}
 		//	return null;
 		//}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			#region EM_私家版_LoadText＆SaveText機能拡張
 			//Int64 i64 = arguments[0].GetIntValue(exm);
 			//if (i64 < 0 || i64 > int.MaxValue)
 			//	return "";
-			//bool forceSavdir = arguments.Length > 1 && (arguments[1].GetIntValue(exm) != 0);
-			//bool forceUTF8 = arguments.Length > 2 && (arguments[2].GetIntValue(exm) != 0);
+			//bool forceSavdir = arguments.Count > 1 && (arguments[1].GetIntValue(exm) != 0);
+			//bool forceUTF8 = arguments.Count > 2 && (arguments[2].GetIntValue(exm) != 0);
 			//int fileIndex = (int)i64;
 			//string filepath = forceSavdir ?
 			//	GetSaveDataPathText(fileIndex, Config.ForceSavDir) :
@@ -7048,8 +7048,8 @@ internal static partial class FunctionMethodCreator
 			//return ret;
 			string ret = "", filepath;
 			Int64 i64 = -1;
-			bool forceSavdir = arguments.Length > 1 && (arguments[1].GetIntValue(exm) != 0);
-			bool forceUTF8 = arguments.Length > 2 && (arguments[2].GetIntValue(exm) != 0);
+			bool forceSavdir = arguments.Count > 1 && (arguments[1].GetIntValue(exm) != 0);
+			bool forceUTF8 = arguments.Count > 2 && (arguments[2].GetIntValue(exm) != 0);
 			if (arguments[0].GetOperandType() == typeof(Int64))
 			{
 				i64 = arguments[0].GetIntValue(exm);
@@ -7098,7 +7098,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -7135,7 +7135,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [typeof(Int64), typeof(Int64)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (Config.TextDrawingMode == TextDrawingMode.WINAPI)
 				// throw new CodeEE(string.Format(Properties.Resources.RuntimeErrMesMethodGDIPLUSOnly, Name));
@@ -7190,7 +7190,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
 			string filepath = System.IO.Path.GetFullPath(".\\sound\\" + str);
@@ -7214,13 +7214,13 @@ internal static partial class FunctionMethodCreator
 				};
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string functionname = arguments[0].GetStrValue(exm);
-			if (arguments.Length == 1 || arguments[1].GetIntValue(exm) == 0)
+			if (arguments.Count == 1 || arguments[1].GetIntValue(exm) == 0)
 			{
 				FunctionLabelLine func;
-				if (Config.SCFunction == StringComparison.OrdinalIgnoreCase)
+				if (Config.StringComparison == StringComparison.OrdinalIgnoreCase)
 					func = GlobalStatic.LabelDictionary.GetNonEventLabel(functionname.ToUpper());
 				else
 					func = GlobalStatic.LabelDictionary.GetNonEventLabel(functionname);
@@ -7270,7 +7270,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			using (System.Diagnostics.Process memory = System.Diagnostics.Process.GetCurrentProcess())
 			{
@@ -7288,7 +7288,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			using (System.Diagnostics.Process destmemory = System.Diagnostics.Process.GetCurrentProcess())
 			{
@@ -7311,7 +7311,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = false;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return exm.Console.Window.TextBox.Text;
 		}
@@ -7324,7 +7324,7 @@ internal static partial class FunctionMethodCreator
 			 argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			exm.Console.Window.ChangeTextBox(arguments[0].GetStrValue(exm));
 			return 1;
@@ -7344,11 +7344,11 @@ internal static partial class FunctionMethodCreator
 			CanRestructure = true;
 			HasUniqueRestructure = true;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm vToken = (VariableTerm)arguments[0];
 			string varname = "";
-			if (arguments.Length > 2)
+			if (arguments.Count > 2)
 				varname = vToken.Identifier.Name + "@" + arguments[2].GetIntValue(exm);
 			else
 				varname = vToken.Identifier.Name;
@@ -7358,7 +7358,7 @@ internal static partial class FunctionMethodCreator
 			else
 				return "";
 		}
-		public override bool UniqueRestructure(ExpressionMediator exm, AExpression[] arguments)
+		public override bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			arguments[1] = arguments[1].Restructure(exm);
 			return arguments[1] is SingleTerm;
@@ -7377,7 +7377,7 @@ internal static partial class FunctionMethodCreator
 				};
 			CanRestructure = false;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			//修正に失敗したので差し戻す
 			//long num = arguments[0].GetIntValue(exm)-exm.Console.DeletedLines;
@@ -7398,7 +7398,7 @@ internal static partial class FunctionMethodCreator
 			argumentTypeArray = [];
 			CanRestructure = true;
 		}
-		public override string GetStrValue(ExpressionMediator exm, AExpression[] arguments)
+		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			LogicalLine line = exm.Process.GetScaningLine();
 			if ((line == null) || (line.ParentLabelLine == null))
@@ -7419,15 +7419,15 @@ internal static partial class FunctionMethodCreator
 				};
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 
 			exm.Process.flowinputDef = arguments[0].GetIntValue(exm);
-			if (arguments.Length > 1)
+			if (arguments.Count > 1)
 				exm.Process.flowinput = arguments[1].GetIntValue(exm) != 0 ? true : false ;
-			if (arguments.Length > 2)
+			if (arguments.Count > 2)
 				exm.Process.flowinputCanSkip = arguments[2].GetIntValue(exm) != 0 ? true : false ;
-			if (arguments.Length > 3)
+			if (arguments.Count > 3)
 				exm.Process.flowinputForceSkip = arguments[3].GetIntValue(exm) != 0 ? true : false;
 			return 0;
 		}
@@ -7442,11 +7442,11 @@ internal static partial class FunctionMethodCreator
 				};
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 
 			exm.Process.flowinputString = arguments[0].GetIntValue(exm) != 0 ? true : false ;
-			if (arguments.Length > 1)
+			if (arguments.Count > 1)
 				exm.Process.flowinputDefString = arguments[1].GetStrValue(exm);
 			return 0;
 		}
@@ -7467,7 +7467,7 @@ internal static partial class FunctionMethodCreator
 				};
 			CanRestructure = false;
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, AExpression[] arguments)
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 argument0 = arguments[0].GetIntValue(exm);
 			GlobalStatic.Console.bitmapCacheEnabledForNextLine = (argument0 != 0);

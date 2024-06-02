@@ -326,7 +326,7 @@ internal static class ExpressionParser
 	{
 		CaseExpression ret = new();
 		IdentifierWord id = wc.Current as IdentifierWord;
-		if ((id != null) && id.Code.Equals("IS", Config.SCVariable))
+		if ((id != null) && id.Code.Equals("IS", Config.StringComparison))
 		{
 			wc.ShiftNext();
 			ret.CaseType = CaseExpressionType.Is;
@@ -349,7 +349,7 @@ internal static class ExpressionParser
 		if (ret.LeftTerm == null)
 			throw new CodeEE(trerror.CanNotOmitCaseArg.Text);
 		id = wc.Current as IdentifierWord;
-		if ((id != null) && id.Code.Equals("TO", Config.SCVariable))
+		if ((id != null) && id.Code.Equals("TO", Config.StringComparison))
 		{
 			ret.CaseType = CaseExpressionType.To;
 			wc.ShiftNext();
@@ -357,7 +357,7 @@ internal static class ExpressionParser
 			if (ret.RightTerm == null)
 				throw new CodeEE(trerror.NoExpressionAfterTo.Text);
 			id = wc.Current as IdentifierWord;
-			if ((id != null) && (id.Code.Equals("TO", Config.SCVariable)))
+			if ((id != null) && (id.Code.Equals("TO", Config.StringComparison)))
 				throw new CodeEE(trerror.DuplicateTo.Text);
 			if (ret.LeftTerm.GetOperandType() != ret.RightTerm.GetOperandType())
 				throw new CodeEE(trerror.DoesNotMatchTo.Text);
@@ -405,14 +405,14 @@ internal static class ExpressionParser
 				case 'A'://IdentifierWT
 					{
 						string idStr = (token as IdentifierWord).Code;
-						if (idStr.Equals("TO", Config.SCVariable))
+						if (idStr.Equals("TO", Config.StringComparison))
 						{
 							if (allowKeywordTo)
 								return end(stack, ternaryCount);
 							else
 								throw new CodeEE(trerror.InvalidTo.Text);
 						}
-						else if (idStr.Equals("IS", Config.SCVariable))
+						else if (idStr.Equals("IS", Config.StringComparison))
 							throw new CodeEE(trerror.InvalidIs.Text);
 
 						#region EM_私家版_HTMLパラメータ拡張
