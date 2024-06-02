@@ -1158,7 +1158,7 @@ internal static partial class ArgumentParser
 				else if ((op == OperatorCode.Mult) || (op == OperatorCode.Plus) || (op == OperatorCode.AssignmentStr))
 				{
 					WordCollection srcWc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
-					List<AExpression> srcTerms = ExpressionParser.ReduceArguments(srcWc, ArgsEndWith.EoL, false);
+					var srcTerms = ExpressionParser.ReduceArguments(srcWc, ArgsEndWith.EoL, false);
 
 					if ((srcTerms.Count == 0) || (srcTerms[0] == null))
 					{
@@ -1230,7 +1230,7 @@ internal static partial class ArgumentParser
 	{
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			List<AExpression> args = popTerms(line);
+			var args = popTerms(line);
 			string errmes = line.Function.Method.CheckArgumentType(line.Function.Name, args);
 			if (errmes != null)
 				throw new CodeEE(errmes);
@@ -1367,7 +1367,7 @@ internal static partial class ArgumentParser
 					warn(trerror.RepeatCountLessthan0.Text, line, 0, true);
 				}
 				VariableToken count = GlobalStatic.VariableData.GetSystemVariableToken("COUNT");
-				VariableTerm repCount = new(count, [new SingleTerm(0)]);
+				VariableTerm repCount = new(count, new AExpression[] { new SingleTerm(0) });
 				repCount.Restructure(exm);
 				return new SpForNextArgment(repCount, new SingleTerm(0), term, new SingleTerm(1));
 			}
@@ -1406,7 +1406,7 @@ internal static partial class ArgumentParser
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 
-			List<AExpression> termList = new List<AExpression>();
+			List<AExpression> termList = [.. terms];
 			ExpressionArrayArgument ret = new(termList);
 			if (terms.Count == 0)
 			{
@@ -1487,7 +1487,7 @@ internal static partial class ArgumentParser
 				return null;
 			if (terms.Count == 0)
 			{
-				ExpressionArgument ret = new ExpressionArgument(null)
+				ExpressionArgument ret = new(null)
 				{
 					ConstStr = "",
 					ConstInt = 0,
@@ -1761,7 +1761,7 @@ internal static partial class ArgumentParser
 			if (terms.Count == 0)
 			{
 				VariableToken varToken = GlobalStatic.VariableData.GetSystemVariableToken("RESULTS");
-				VariableTerm varTerm = new(varToken, [new SingleTerm(0)]);
+				VariableTerm varTerm = new(varToken, new AExpression[] { new SingleTerm(0) });
 				return new StrDataArgument(varTerm);
 			}
 			if (!checkArgumentType(line, exm, terms))
@@ -1789,11 +1789,10 @@ internal static partial class ArgumentParser
 			VariableTerm varTerm = getChangeableVariable(terms, 1, line);
 			if (varTerm == null)
 				return null;
-			List<AExpression> termList = new List<AExpression>();
-			termList.AddRange(terms);
+			List<AExpression> termList = [.. terms];
 			//最初の項はいらない
 			termList.RemoveAt(0);
-			BitArgument ret = new BitArgument(varTerm, termList.ToArray());
+			BitArgument ret = new(varTerm, termList.ToArray());
 			for (int i = 0; i < termList.Count; i++)
 			{
 				if (termList[i] is SingleTerm term)
@@ -1965,7 +1964,7 @@ internal static partial class ArgumentParser
 				arg = new SpColorArgument(terms[0], terms[1], terms[2]);
 				if ((terms[0] is SingleTerm) && (terms[1] is SingleTerm) && (terms[2] is SingleTerm))
 				{
-					arg.ConstInt = (terms[0].GetIntValue(exm) << 16) + (terms[1].GetIntValue(exm) << 8) + (terms[2].GetIntValue(exm));
+					arg.ConstInt = (terms[0].GetIntValue(exm) << 16) + (terms[1].GetIntValue(exm) << 8) + terms[2].GetIntValue(exm);
 					arg.IsConst = true;
 				}
 			}
@@ -1990,7 +1989,7 @@ internal static partial class ArgumentParser
 				return null;
 			if (!x.Identifier.IsArray1D && !x.Identifier.IsArray2D && !x.Identifier.IsArray3D)
 			{ warn(string.Format(trerror.ArgIsNotArrayVar.Text, "3"), line, 2, false); return null; }
-			VariableTerm term = (terms.Count >= 4) ? getChangeableVariable(terms, 4, line) : new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("RESULT"), [new SingleTerm(0)]);
+			VariableTerm term = (terms.Count >= 4) ? getChangeableVariable(terms, 4, line) : new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("RESULT"), new AExpression[] { new SingleTerm(0) });
 			return new SpSplitArgument(terms[0], terms[1], x.Identifier, term);
 		}
 	}
@@ -2023,7 +2022,7 @@ internal static partial class ArgumentParser
 			if (term == null)
 			{
 				VariableToken varToken = GlobalStatic.VariableData.GetSystemVariableToken("RESULT");
-				term = new VariableTerm(varToken, [new SingleTerm(0)]);
+				term = new VariableTerm(varToken, new AExpression[] { new SingleTerm(0) });
 			}
 			return new SpHtmlSplitArgument(terms[0], destVar, term);
 		}
@@ -2166,9 +2165,8 @@ internal static partial class ArgumentParser
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 
-			List<AExpression> termList = new List<AExpression>();
-			termList.AddRange(terms);
-			ExpressionArrayArgument ret = new ExpressionArrayArgument(termList);
+			List<AExpression> termList = [.. terms];
+			ExpressionArrayArgument ret = new(termList);
 
 			for (int i = 2; i < termList.Count; i++)
 			{
