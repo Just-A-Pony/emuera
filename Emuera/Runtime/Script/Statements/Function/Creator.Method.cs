@@ -7220,7 +7220,7 @@ internal static partial class FunctionMethodCreator
 			if (arguments.Count == 1 || arguments[1].GetIntValue(exm) == 0)
 			{
 				FunctionLabelLine func;
-				if (Config.SCFunction == StringComparison.OrdinalIgnoreCase)
+				if (Config.StringComparison == StringComparison.OrdinalIgnoreCase)
 					func = GlobalStatic.LabelDictionary.GetNonEventLabel(functionname.ToUpper());
 				else
 					func = GlobalStatic.LabelDictionary.GetNonEventLabel(functionname);

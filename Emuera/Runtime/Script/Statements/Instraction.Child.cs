@@ -1200,7 +1200,7 @@ internal sealed partial class FunctionIdentifier
 				return;
 			}
 			SpCallFArgment callfArg = (SpCallFArgment)func.Argument;
-			//if (Config.ICFunction)
+			//if (Config.IgnoreCase)
 			//	callfArg.ConstStr = callfArg.ConstStr.ToUpper();
 			try
 			{
@@ -2746,7 +2746,7 @@ internal sealed partial class FunctionIdentifier
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
 			string keyword = func.Argument.ConstStr;
-			//if (Config.ICFunction)//1756 BEGINのキーワードは関数扱いらしい
+			//if (Config.IgnoreCase)//1756 BEGINのキーワードは関数扱いらしい
 			//	keyword = keyword.ToUpper();
 			state.SetBegin(keyword, true);
 			state.Return(0);
@@ -3452,7 +3452,7 @@ internal sealed partial class FunctionIdentifier
 			if (func.Argument.IsConst)
 			{
 				string labelName = func.Argument.ConstStr;
-				if (Config.ICVariable)//eramakerではGOTO文は大文字小文字を区別しない
+				if (Config.IgnoreCase)//eramakerではGOTO文は大文字小文字を区別しない
 					labelName = labelName.ToUpper();
 				jumpto = GlobalStatic.LabelDictionary.GetLabelDollar(labelName, func.ParentLabelLine);
 				if (jumpto == null)
@@ -3485,7 +3485,7 @@ internal sealed partial class FunctionIdentifier
 			else
 			{
 				label = ((SpCallArgment)func.Argument).FuncnameTerm.GetStrValue(exm);
-				if (Config.ICVariable)
+				if (Config.IgnoreCase)
 					label = label.ToUpper();
 				jumpto = state.CurrentCalled.CallLabel(GlobalStatic.Process, label);
 			}

@@ -1436,7 +1436,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			RefreshStrings(true);
 			return;
 		}
-		StringComparison sc = Config.SCVariable;
+		StringComparison sc = Config.StringComparison;
 		Print(command);
 		PrintFlush(false);
 		RefreshStrings(true);

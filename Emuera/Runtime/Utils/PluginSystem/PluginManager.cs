@@ -276,7 +276,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 		public IPluginMethod GetMethod(string name)
 		{
 			var key = name;
-			if (Config.ICFunction)
+			if (Config.IgnoreCase)
 			{
 				key = key.ToUpper();
 			}
@@ -286,7 +286,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 		public bool HasMethod(string name)
 		{
 			var key = name;
-			if (Config.ICFunction)
+			if (Config.IgnoreCase)
 			{
 				key = key.ToUpper();
 			}
@@ -378,7 +378,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 		private void AddMethod(IPluginMethod method)
 		{
 			var key = method.Name;
-			if (Config.ICFunction)
+			if (Config.IgnoreCase)
 			{
 				key = key.ToUpper();
 			}

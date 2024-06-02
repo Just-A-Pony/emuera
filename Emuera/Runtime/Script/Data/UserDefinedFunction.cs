@@ -43,7 +43,7 @@ internal sealed class UserDefinedFunctionData
 		{
 			wc.ShiftNext();
 			keyword = idw.Code;
-			if (Config.ICVariable)
+			if (Config.IgnoreCase)
 				keyword = keyword.ToUpper();
 			switch (keyword)
 			{
@@ -137,7 +137,7 @@ internal sealed class UserDefinedFunctionData
 				case 'A':
 					{
 						string str = ((IdentifierWord)wc.Current).Code;
-						if (Config.ICVariable)
+						if (Config.IgnoreCase)
 							str = str.ToUpper();
 						if (str == "REF")
 						{
