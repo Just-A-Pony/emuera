@@ -109,56 +109,54 @@ static class AppContents
 		{
 			//resourcesフォルダ内の全てのcsvファイルを探索する
 			var csvFiles = Directory.EnumerateFiles(Program.ContentDir, "*.csv", SearchOption.AllDirectories);
-			foreach (var filepath in csvFiles)
+
+			if (reload)
 			{
-				if (reload)
+				foreach (string key in resourceImageDictionary.Keys)
 				{
-					foreach (string key in resourceImageDictionary.Keys)
-					{
-						imageDictionary.TryRemove(key, out _);
-					}
-					resourceImageDictionary.Clear();
-					foreach (var img in resourceDic.Values)
-						img.Dispose();
-					resourceDic.Clear();
+					imageDictionary.TryRemove(key, out _);
 				}
-				csvFiles.AsParallel()
-					.Where(path => Path.GetExtension(path).Equals(".csv", StringComparison.OrdinalIgnoreCase))
-					.ForAll(path =>
+				resourceImageDictionary.Clear();
+				foreach (var img in resourceDic.Values)
+					img.Dispose();
+				resourceDic.Clear();
+			}
+			csvFiles.AsParallel()
+				.Where(path => Path.GetExtension(path).Equals(".csv", StringComparison.OrdinalIgnoreCase))
+				.ForAll(path =>
+				{
+					//アニメスプライト宣言。nullでないとき、フレーム追加モード
+					SpriteAnime currentAnime = null;
+					string directory = Path.GetDirectoryName(path).ToUpper() + "\\";
+					string filename = Path.GetFileName(path);
+					string[] lines = File.ReadAllLines(path, EncodingHandler.DetectEncoding(path));
+					int lineNo = 0;
+					foreach (var line in lines)
 					{
-						//アニメスプライト宣言。nullでないとき、フレーム追加モード
-						SpriteAnime currentAnime = null;
-						string directory = Path.GetDirectoryName(path).ToUpper() + "\\";
-						string filename = Path.GetFileName(path);
-						string[] lines = File.ReadAllLines(path, EncodingHandler.DetectEncoding(path));
-						int lineNo = 0;
-						foreach (var line in lines)
+						lineNo++;
+						if (line.Length == 0)
+							continue;
+						string str = line.Trim();
+						if (str.Length == 0 || str.StartsWith(";"))
+							continue;
+						string[] tokens = str.Split(',');
+						//AContentItem item = CreateFromCsv(tokens);
+						ScriptPosition? sp = new(filename, lineNo);
+						if (CreateFromCsv(tokens, directory, currentAnime, sp) is ASprite item)
 						{
-							lineNo++;
-							if (line.Length == 0)
-								continue;
-							string str = line.Trim();
-							if (str.Length == 0 || str.StartsWith(";"))
-								continue;
-							string[] tokens = str.Split(',');
-							//AContentItem item = CreateFromCsv(tokens);
-							ScriptPosition? sp = new(filename, lineNo);
-							if (CreateFromCsv(tokens, directory, currentAnime, sp) is ASprite item)
+							//アニメスプライト宣言ならcurrentAnime上書きしてフレーム追加モードにする。そうでないならnull
+							currentAnime = item as SpriteAnime;
+							if (reload)
+								imageDictionary.Remove(item.Name, out _);
+							
+							if (!imageDictionary.TryAdd(item.Name, item))
 							{
-								//アニメスプライト宣言ならcurrentAnime上書きしてフレーム追加モードにする。そうでないならnull
-								currentAnime = item as SpriteAnime;
-								if (reload)
-									imageDictionary.Remove(item.Name, out _);
-								
-								if (!imageDictionary.TryAdd(item.Name, item))
-								{
-									ParserMediator.Warn(string.Format(trerror.SpriteNameAlreadyUsed.Text, item.Name), sp, 0);
-									item.Dispose();
-								}
+								ParserMediator.Warn(string.Format(trerror.SpriteNameAlreadyUsed.Text, item.Name), sp, 0);
+								item.Dispose();
 							}
 						}
-					});
-			}
+					}
+				});
 		}
 		catch
 		{
