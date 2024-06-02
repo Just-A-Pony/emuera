@@ -5026,7 +5026,7 @@ internal static partial class FunctionMethodCreator
 				// throw new CodeEE(funcname + "関数に空文字列が渡されました");
 				throw new CodeEE(string.Format(Lang.Error.ArgIsEmptyString.Text, Name, 1));
 			string errMes = null;
-			SingleTerm term = ConfigData.Instance.GetConfigValueInERB(str, ref errMes);
+			SingleTerm term = ConfigData.GetConfigValueInERB(str, ref errMes);
 			if (errMes != null)
 				// throw new CodeEE(funcname + "関数:" + errMes);
 				throw new CodeEE(errMes);

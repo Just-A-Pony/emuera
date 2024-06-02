@@ -22,7 +22,7 @@ public static class AssemblyData
 	/// </summary>
 	public static readonly string ExePath;
 
-	public static Version emueraVer;
+	public readonly static Version emueraVer;
 
 	/// <summary>
 	/// 実行ファイルのディレクトリ。最後に\を付けたstring

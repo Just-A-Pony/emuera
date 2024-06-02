@@ -343,7 +343,7 @@ internal static class HtmlManager
 					if (buttons[buttonCounter].PointXisLocked)
 					{
 						b.Append(" pos='");
-						b.Append(buttons[buttonCounter].RelativePointX.ToString());
+						b.Append(buttons[buttonCounter].RelativePointX);
 						b.Append("'");
 					}
 					b.Append(">");
@@ -1266,7 +1266,7 @@ internal static class HtmlManager
 					if (state.CurrentButtonTag != null)
 						throw new CodeEE(trerror.NestedButtonTag.Text);
 					HtmlAnalzeStateButtonTag buttonTag = new();
-					bool isButton = tag.ToLower() == "button";
+					bool isButton = tag.Equals("button", StringComparison.OrdinalIgnoreCase);
 					string attrValue;
 					string value = null;
 					//if (wc == null)

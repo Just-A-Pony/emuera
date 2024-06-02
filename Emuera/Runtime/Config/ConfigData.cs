@@ -472,7 +472,7 @@ internal sealed class ConfigData
 		#endregion
 	}
 
-	public SingleTerm GetConfigValueInERB(string text, ref string errMes)
+	public static SingleTerm GetConfigValueInERB(string text, ref string errMes)
 	{
 		AConfigItem item = ConfigData.Instance.GetItem(text);
 		if (item == null)

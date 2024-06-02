@@ -301,7 +301,7 @@ internal sealed class ConfigItem<T> : AConfigItem
 	}
 	#endregion
 
-	private bool tryStringToBool(string arg, ref bool p)
+	private static bool tryStringToBool(string arg, ref bool p)
 	{
 		if (arg == null)
 			return false;
@@ -328,7 +328,7 @@ internal sealed class ConfigItem<T> : AConfigItem
 		throw new CodeEE(Lang.Error.InvalidSpecification.Text);
 	}
 
-	private bool tryStringsToColor(string str, out Color c)
+	private static bool tryStringsToColor(string str, out Color c)
 	{
 		string[] tokens = str.Split(',');
 		c = Color.Black;
