@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Sub;
 
 namespace Emuera;
 static partial class Preload
@@ -28,7 +30,7 @@ static partial class Preload
 				Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories).AsParallel().ForAll((childPath) =>
 				{
 					var key = childPath;
-					var value = File.ReadAllLines(childPath, Config.Encode);
+					var value = File.ReadAllLines(childPath, EncodingHandler.DetectEncoding(childPath));
 					lock (files)
 					{
 						files[key] = value;

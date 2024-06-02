@@ -130,7 +130,7 @@ static class AppContents
 						SpriteAnime currentAnime = null;
 						string directory = Path.GetDirectoryName(path).ToUpper() + "\\";
 						string filename = Path.GetFileName(path);
-						string[] lines = File.ReadAllLines(path, Config.Encode);
+						string[] lines = File.ReadAllLines(path, EncodingHandler.DetectEncoding(path));
 						int lineNo = 0;
 						foreach (var line in lines)
 						{
@@ -147,7 +147,10 @@ static class AppContents
 							{
 								//アニメスプライト宣言ならcurrentAnime上書きしてフレーム追加モードにする。そうでないならnull
 								currentAnime = item as SpriteAnime;
-								if (reload && !imageDictionary.TryAdd(item.Name, item))
+								if (reload)
+									imageDictionary.Remove(item.Name, out _);
+								
+								if (!imageDictionary.TryAdd(item.Name, item))
 								{
 									ParserMediator.Warn(string.Format(trerror.SpriteNameAlreadyUsed.Text, item.Name), sp, 0);
 									item.Dispose();
@@ -162,7 +165,6 @@ static class AppContents
 			return false;
 			//throw new CodeEE("リソースファイルのロード中にエラーが発生しました");
 		}
-		imageDictionary = new ConcurrentDictionary<string, ASprite>(resourceImageDictionary);
 		return true;
 	}
 
