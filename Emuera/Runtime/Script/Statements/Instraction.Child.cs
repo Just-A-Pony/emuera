@@ -3452,8 +3452,6 @@ internal sealed partial class FunctionIdentifier
 			if (func.Argument.IsConst)
 			{
 				string labelName = func.Argument.ConstStr;
-				if (Config.IgnoreCase)//eramakerではGOTO文は大文字小文字を区別しない
-					labelName = labelName.ToUpper();
 				jumpto = GlobalStatic.LabelDictionary.GetLabelDollar(labelName, func.ParentLabelLine);
 				if (jumpto == null)
 				{
@@ -3485,8 +3483,6 @@ internal sealed partial class FunctionIdentifier
 			else
 			{
 				label = ((SpCallArgment)func.Argument).FuncnameTerm.GetStrValue(exm);
-				if (Config.IgnoreCase)
-					label = label.ToUpper();
 				jumpto = state.CurrentCalled.CallLabel(GlobalStatic.Process, label);
 			}
 			if (jumpto == null)

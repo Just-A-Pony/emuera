@@ -161,8 +161,6 @@ internal sealed class ErhLoader
 		string srcID = LexicalAnalyzer.ReadSingleIdentifier(st);
 		if (srcID == null)
 			throw new CodeEE(trerror.MissingReplacementSource.Text, position);
-		if (Config.IgnoreCase)
-			srcID = srcID.ToUpper();
 
 		//ここで名称重複判定しないと、大変なことになる
 		string errMes = "";
