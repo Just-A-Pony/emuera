@@ -1400,7 +1400,8 @@ internal sealed class Lang
 		writer.Flush();
 	}
 
-	static readonly string langDir = "lang/";
+	static readonly string langDir = Path.Combine(Program.ExeDir, "lang") + Path.DirectorySeparatorChar;
+
 	static readonly Dictionary<string, string> langList = new Dictionary<string, string>();
 	public static string MFont { get; private set; }
 	static string[] langNames;
