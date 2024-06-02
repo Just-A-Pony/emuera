@@ -707,7 +707,7 @@ internal static partial class FunctionMethodCreator
 			Regex reg;
 			try
 			{
-				reg = new Regex(arguments[1].GetStrValue(exm));
+				reg = RegexFactory.GetRegex(arguments[1].GetStrValue(exm));
 			}
 			catch (ArgumentException e)
 			{
@@ -3927,7 +3927,7 @@ internal static partial class FunctionMethodCreator
 				Regex targetString;
 				try
 				{
-					targetString = new Regex(arguments[1].GetStrValue(exm));
+					targetString = RegexFactory.GetRegex(arguments[1].GetStrValue(exm));
 				}
 				catch (ArgumentException e)
 				{
@@ -4425,7 +4425,7 @@ internal static partial class FunctionMethodCreator
 			Regex reg;
 			try
 			{
-				reg = new Regex(arguments[1].GetStrValue(exm));
+				reg = RegexFactory.GetRegex(arguments[1].GetStrValue(exm));
 			}
 			catch (ArgumentException e)
 			{
@@ -4627,7 +4627,7 @@ internal static partial class FunctionMethodCreator
 			{
 				try
 				{
-					reg = new Regex(arguments[1].GetStrValue(exm));
+					reg = RegexFactory.GetRegex(arguments[1].GetStrValue(exm));
 				}
 				catch (ArgumentException e)
 				{
