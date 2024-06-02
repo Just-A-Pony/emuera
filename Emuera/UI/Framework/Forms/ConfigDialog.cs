@@ -819,28 +819,31 @@ namespace MinorShift.Emuera.Forms
 
 			var selectedFontName = comboBox2.Text;
 			#region EE_フォントファイル対応
-			PrivateFontCollection pfc = new PrivateFontCollection();
-			foreach (string fontFile in Directory.GetFiles(Program.FontDir, "*.ttf", SearchOption.AllDirectories))
-				pfc.AddFontFile(fontFile);
-
-			foreach (string fontFile in Directory.GetFiles(Program.FontDir, "*.otf", SearchOption.AllDirectories))
-				pfc.AddFontFile(fontFile);
-
-			foreach (FontFamily ff in pfc.Families)
+			if (Directory.Exists(Program.FontDir))
 			{
-				/**
-				if (!ff.IsStyleAvailable(FontStyle.Regular))
-					continue;
-				if (!ff.IsStyleAvailable(FontStyle.Bold))
-					continue;
-				if (!ff.IsStyleAvailable(FontStyle.Italic))
-					continue;
-				if (!ff.IsStyleAvailable(FontStyle.Strikeout))
-					continue;
-				if (!ff.IsStyleAvailable(FontStyle.Underline))
-					continue;
-				**/
-				comboBox2.Items.Add(ff.Name);
+				PrivateFontCollection pfc = new PrivateFontCollection();
+				foreach (string fontFile in Directory.GetFiles(Program.FontDir, "*.ttf", SearchOption.AllDirectories))
+					pfc.AddFontFile(fontFile);
+
+				foreach (string fontFile in Directory.GetFiles(Program.FontDir, "*.otf", SearchOption.AllDirectories))
+					pfc.AddFontFile(fontFile);
+
+				foreach (FontFamily ff in pfc.Families)
+				{
+					/**
+					if (!ff.IsStyleAvailable(FontStyle.Regular))
+						continue;
+					if (!ff.IsStyleAvailable(FontStyle.Bold))
+						continue;
+					if (!ff.IsStyleAvailable(FontStyle.Italic))
+						continue;
+					if (!ff.IsStyleAvailable(FontStyle.Strikeout))
+						continue;
+					if (!ff.IsStyleAvailable(FontStyle.Underline))
+						continue;
+					**/
+					comboBox2.Items.Add(ff.Name);
+				}
 			}
 			#endregion
 

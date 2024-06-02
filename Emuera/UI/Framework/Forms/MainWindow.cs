@@ -821,6 +821,7 @@ namespace MinorShift.Emuera.Forms
 			console.forceStopTimer();
 			console.InitializeCancel();
 			_rebootCallback(this);
+			Program.rebootFlag = true;
 			Close();
 		}
 
