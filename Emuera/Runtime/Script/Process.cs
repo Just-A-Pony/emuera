@@ -425,7 +425,7 @@ internal sealed partial class Process(EmueraConsole view)
 		finally
 		{
 			if (udmt.Call.TopLabel.hasPrivDynamicVar)
-				udmt.Call.TopLabel.Out();
+				udmt.Call.TopLabel.ScopeOut();
 			//1756beta2+v3:こいつらはここにないとデバッグコンソールで式中関数が事故った時に大事故になる
 			state.currentMin = temp_current;
 			methodStack--;
