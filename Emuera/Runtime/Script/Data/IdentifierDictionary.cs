@@ -573,8 +573,6 @@ internal partial class IdentifierDictionary
 
 	public UserDefinedRefMethod GetRefMethod(string codeStr)
 	{
-		if (Config.ICFunction)
-			codeStr = codeStr.ToUpper();
 		if (refmethodDic.ContainsKey(codeStr))
 			return refmethodDic[codeStr];
 		return null;

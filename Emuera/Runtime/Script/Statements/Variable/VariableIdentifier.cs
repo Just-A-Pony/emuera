@@ -285,8 +285,6 @@ internal sealed class VariableIdentifier
 			key = key.ToUpper();
 		if (subStr != null)
 		{
-			if (Config.ICFunction)
-				subStr = subStr.ToUpper();
 			if (localvarNameDic.TryGetValue(key, out ret))
 				return new VariableIdentifier(ret, subStr);
 			if (nameDic.ContainsKey(key))

@@ -1071,8 +1071,6 @@ internal sealed partial class FunctionIdentifier
 				return;
 			}
 			SpCallFArgment callfArg = (SpCallFArgment)func.Argument;
-			if (Config.ICFunction)
-				callfArg.ConstStr = callfArg.ConstStr.ToUpper();
 			try
 			{
 				callfArg.FuncTerm = GlobalStatic.IdentifierDictionary.GetFunctionMethod(GlobalStatic.LabelDictionary, callfArg.ConstStr, callfArg.RowArgs, true);
@@ -1202,8 +1200,8 @@ internal sealed partial class FunctionIdentifier
 				return;
 			}
 			SpCallFArgment callfArg = (SpCallFArgment)func.Argument;
-			if (Config.ICFunction)
-				callfArg.ConstStr = callfArg.ConstStr.ToUpper();
+			//if (Config.ICFunction)
+			//	callfArg.ConstStr = callfArg.ConstStr.ToUpper();
 			try
 			{
 				callfArg.FuncTerm = GlobalStatic.IdentifierDictionary.GetFunctionMethod(GlobalStatic.LabelDictionary, callfArg.ConstStr, callfArg.RowArgs, true);
@@ -2729,8 +2727,6 @@ internal sealed partial class FunctionIdentifier
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
 			string keyword = func.Argument.ConstStr;
-			if (Config.ICFunction)//1756 BEGINのキーワードは関数扱いらしい
-				keyword = keyword.ToUpper();
 			#region EE
 			// state.SetBegin(keyword);
 			state.SetBegin(keyword, true);
@@ -2750,8 +2746,8 @@ internal sealed partial class FunctionIdentifier
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
 			string keyword = func.Argument.ConstStr;
-			if (Config.ICFunction)//1756 BEGINのキーワードは関数扱いらしい
-				keyword = keyword.ToUpper();
+			//if (Config.ICFunction)//1756 BEGINのキーワードは関数扱いらしい
+			//	keyword = keyword.ToUpper();
 			state.SetBegin(keyword, true);
 			state.Return(0);
 			exm.Console.ResetStyle();
@@ -3339,8 +3335,6 @@ internal sealed partial class FunctionIdentifier
 			}
 			SpCallArgment callArg = (SpCallArgment)func.Argument;
 			string labelName = callArg.ConstStr;
-			//if (Config.ICFunction)
-			//	labelName = labelName.ToUpper();
 			CalledFunction call = CalledFunction.CallFunction(GlobalStatic.Process, labelName, func);
 			if ((call == null) && (!func.Function.IsTry()))
 			{
@@ -3384,8 +3378,6 @@ internal sealed partial class FunctionIdentifier
 			else
 			{
 				labelName = spCallArg.FuncnameTerm.GetStrValue(exm);
-				if (Config.ICFunction)
-					labelName = labelName.ToUpper();
 				call = CalledFunction.CallFunction(GlobalStatic.Process, labelName, func);
 			}
 			if (call == null)
@@ -3429,8 +3421,6 @@ internal sealed partial class FunctionIdentifier
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
 			string labelName = func.Argument.ConstStr;
-			if (Config.ICFunction)
-				labelName = labelName.ToUpper();
 			CalledFunction call = CalledFunction.CallEventFunction(GlobalStatic.Process, labelName, func);
 			if (call == null)
 				return;
