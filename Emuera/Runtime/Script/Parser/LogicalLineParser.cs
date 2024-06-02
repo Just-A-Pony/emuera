@@ -421,7 +421,7 @@ internal static class LogicalLineParser
 					if (stream.EOS) //引数の無い関数
 						return new InstructionLine(position, func, stream);
 					var current = stream.Current;
-					if ((current != ';') && (current != ' ') && (current != '\t') && (!Config.SystemAllowFullSpace || (current != ' ')))
+					if ((current != ';') && (current != ' ') && (current != '\t') && (!Config.SystemAllowFullSpace || (current != '　')))
 					{
 						if (current == '　') 
 							errMes = string.Format(trerror.InvalidCharacterAfterInstruction1.Text, Config.GetConfigName(ConfigCode.SystemAllowFullSpace));
