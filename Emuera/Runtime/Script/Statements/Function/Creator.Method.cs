@@ -184,8 +184,7 @@ internal static partial class FunctionMethodCreator
 					array = GlobalStatic.IdentifierDictionary.VarKeys;
 					break;
 				case EType.Macro:
-					for (int i = 0; i < GlobalStatic.IdentifierDictionary.MacroKeys.Length; i++)
-						array[i] = GlobalStatic.IdentifierDictionary.MacroKeys[i].ToString();
+					array = GlobalStatic.IdentifierDictionary.MacroKeys;
 					break;
 			}
 			List<string> strs = new List<string>();
