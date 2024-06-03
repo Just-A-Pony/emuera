@@ -36,6 +36,7 @@ internal static class Config
 		else
 		{
 			StringComparison = StringComparison.Ordinal;
+			StrComper = StringComparer.Ordinal;
 		}
 		UseRenameFile = instance.GetConfigValue<bool>(ConfigCode.UseRenameFile);
 		UseReplaceFile = instance.GetConfigValue<bool>(ConfigCode.UseReplaceFile);
