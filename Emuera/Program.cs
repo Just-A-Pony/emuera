@@ -251,18 +251,8 @@ static partial class Program
 
 		ApplicationConfiguration.Initialize();
 
-		var winState = FormWindowState.Normal;
-		var rebootClientHeight = 0;
-		var rebootLocation = Point.Empty;
-
-		while (true)
-		{
-			var rebootFlag = false;
-
-			using var win = new Forms.MainWindow(winState, rebootLocation, rebootClientHeight, (_) =>
-			{
-				rebootFlag = true;
-			});
+		using var win = new Forms.MainWindow(args);
+		{ 
 			#region EM_私家版_Emuera多言語化改造
 			win.TranslateUI();
 			#endregion
@@ -272,23 +262,6 @@ static partial class Program
 			#endregion
 
 			Application.Run(win);
-
-			Content.AppContents.UnloadContents();
-			if (!rebootFlag)
-				break;
-
-			RebootWinState = win.WindowState;
-			if (win.WindowState == FormWindowState.Normal)
-			{
-				rebootClientHeight = win.ClientSize.Height;
-				rebootLocation = win.Location;
-			}
-			else
-			{
-				rebootClientHeight = 0;
-				rebootLocation = new Point();
-			}
-
 			/* VVII版マージ前の起動処理
 			MainWindow win = null;
 			StartTime = WinmmTimer.TickCount;
@@ -317,7 +290,6 @@ static partial class Program
 					RebootLocation = new Point();
 				}
 			}
-			*/
 			//条件次第ではParserMediatorが空でない状態で再起動になる場合がある
 			ParserMediator.ClearWarningList();
 			ParserMediator.Initialize(null);
@@ -327,10 +299,13 @@ static partial class Program
 			ConfigData.Instance.ReLoadConfig();
 
 			break;
+			*/
 		}
+		/*
 		if (rebootFlag)
 			Application.Restart();
 		#endregion
+		*/
 	}
 
 	[MemberNotNull(nameof(ExeDir))]
