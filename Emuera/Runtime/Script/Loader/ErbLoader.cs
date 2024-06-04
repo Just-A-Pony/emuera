@@ -38,7 +38,7 @@ internal sealed class ErbLoader
 	/// 複数のファイルを読む
 	/// </summary>
 	/// <param name="filepath"></param>
-	public async Task<bool> LoadErbDir(string erbDir, bool displayReport, LabelDictionary labelDictionary, CancellationToken cancellationToken)
+	public async Task<bool> LoadErbDir(string erbDir, bool displayReport, LabelDictionary labelDictionary)
 	{
 		//1.713 labelDicをnewする位置を変更。
 		//checkScript();の時点でExpressionPerserがProcess.instance.LabelDicを必要とするから。
@@ -63,14 +63,12 @@ internal sealed class ErbLoader
 						output.PrintSystemLine(string.Format(trsl.LoadingFile.Text, filename));
 #endif
 				//System.Windows.Forms.Application.DoEvents();
-				cancellationToken.ThrowIfCancellationRequested();
-				await Task.Run(() => loadErb(file, filename, isOnlyEvent), cancellationToken);
+				await Task.Run(() => loadErb(file, filename, isOnlyEvent));
 			};
 			ParserMediator.FlushWarningList();
 #if DEBUG
 			output.PrintSystemLine(string.Format(trsl.ElapsedTime.Text, (DateTime.Now - starttime).TotalMilliseconds));
 #endif
-			cancellationToken.ThrowIfCancellationRequested();
 			if (displayReport)
 				output.PrintSystemLine(trsl.BuildingUserFunc.Text);
 			setLabelsArg();
@@ -79,16 +77,9 @@ internal sealed class ErbLoader
 #if DEBUG
 			output.PrintSystemLine(string.Format(trsl.ElapsedTime.Text, (DateTime.Now - starttime).TotalMilliseconds));
 #endif
-			cancellationToken.ThrowIfCancellationRequested();
 			if (displayReport)
 				output.PrintSystemLine(trsl.CheckingSyntax.Text);
-			try
-			{
-				await Task.Run(() => ParseScript(cancellationToken), cancellationToken);
-			}
-			catch (OperationCanceledException)
-			{
-			}
+
 			ParserMediator.FlushWarningList();
 
 #if DEBUG
@@ -117,7 +108,7 @@ internal sealed class ErbLoader
 	/// 指定されたファイルを読み込む
 	/// </summary>
 	/// <param name="filename"></param>
-	public async Task<bool> LoadErbList(List<string> paths, LabelDictionary labelDictionary, CancellationToken cancellationToken)
+	public async Task<bool> LoadErbList(List<string> paths, LabelDictionary labelDictionary)
 	{
 		string fname;
 		List<string> isOnlyEvent = [];
@@ -138,20 +129,16 @@ internal sealed class ErbLoader
 				}
 				loadErb(fpath, fname, isOnlyEvent);
 			}
-		}, cancellationToken);
+		});
 		if (Program.AnalysisMode)
 			output.NewLine();
 		ParserMediator.FlushWarningList();
 		setLabelsArg();
 		ParserMediator.FlushWarningList();
 		labelDic.Initialized = true;
-		try
-		{
-			await Task.Run(() => ParseScript(cancellationToken), cancellationToken);
-		}
-		catch (OperationCanceledException)
-		{
-		}
+
+		await Task.Run(() => ParseScript());
+
 		ParserMediator.FlushWarningList();
 		parentProcess.scaningLine = null;
 		isOnlyEvent.Clear();
@@ -656,101 +643,97 @@ internal sealed class ErbLoader
 	/// <summary>
 	/// 事前処理したファイルをさらに解析し実行可能な状態にする
 	/// </summary>
-	private void ParseScript(CancellationToken cancellationToken)
+	private void ParseScript()
 	{
 		int usedLabelCount = 0;
 		int labelDepth = -1;
 		List<FunctionLabelLine> labelList = labelDic.GetAllLabels(true);
 
-		try
+		while (true)
 		{
-
-			while (true)
+			labelDepth++;
+			int countInDepth = 0;
+			foreach (FunctionLabelLine label in labelList)
 			{
-				labelDepth++;
-				int countInDepth = 0;
-				foreach (FunctionLabelLine label in labelList)
-				{
-					if (label.Depth != labelDepth)
-						continue;
-					//1756beta003 なんで追加したんだろう デバグ中になんかやったのか とりあえずコメントアウトしておく
-					//if (label.LabelName == "EVENTTURNEND")
-					//    useCallForm = true;
-					usedLabelCount++;
-					countInDepth++;
-					ParseFunctionWithCatch(label, cancellationToken);
-				}
-				if (countInDepth == 0)
-					break;
+				if (label.Depth != labelDepth)
+					continue;
+				//1756beta003 なんで追加したんだろう デバグ中になんかやったのか とりあえずコメントアウトしておく
+				//if (label.LabelName == "EVENTTURNEND")
+				//    useCallForm = true;
+				usedLabelCount++;
+				countInDepth++;
+				ParseFunctionWithCatch(label);
 			}
-			labelDepth = -1;
-			var ignoredFNCWarningFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-			int ignoredFNCWarningCount = 0;
+			if (countInDepth == 0)
+				break;
+		}
+		labelDepth = -1;
+		var ignoredFNCWarningFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+		int ignoredFNCWarningCount = 0;
 
-			bool ignoreAll = false;
-			DisplayWarningFlag notCalledWarning = Config.FunctionNotCalledWarning;
-			switch (notCalledWarning)
+		bool ignoreAll = false;
+		DisplayWarningFlag notCalledWarning = Config.FunctionNotCalledWarning;
+		switch (notCalledWarning)
+		{
+			case DisplayWarningFlag.IGNORE:
+			case DisplayWarningFlag.LATER:
+				ignoreAll = true;
+				break;
+		}
+		if (useCallForm)
+		{//callform系が使われたら全ての関数が呼び出されたとみなす。
+			if (Program.AnalysisMode)
+				output.PrintSystemLine(trerror.BeNotFuncCheckBecauseUseCallform.Text);
+			foreach (FunctionLabelLine label in labelList)
 			{
-				case DisplayWarningFlag.IGNORE:
-				case DisplayWarningFlag.LATER:
-					ignoreAll = true;
-					break;
+				if (label.Depth != labelDepth)
+					continue;
+				ParseFunctionWithCatch(label);
 			}
-			if (useCallForm)
-			{//callform系が使われたら全ての関数が呼び出されたとみなす。
+		}
+		else
+		{
+			bool ignoreUncalledFunction = Config.IgnoreUncalledFunction;
+			foreach (FunctionLabelLine label in labelList)
+			{
+				if (label.Depth != labelDepth)
+					continue;
+				//解析モード時は呼ばれなかったものをここで解析
 				if (Program.AnalysisMode)
-					output.PrintSystemLine(trerror.BeNotFuncCheckBecauseUseCallform.Text);
-				foreach (FunctionLabelLine label in labelList)
+					ParseFunctionWithCatch(label);
+				bool ignore = false;
+				if (notCalledWarning == DisplayWarningFlag.ONCE)
 				{
-					if (label.Depth != labelDepth)
-						continue;
-					ParseFunctionWithCatch(label, cancellationToken);
-				}
-			}
-			else
-			{
-				bool ignoreUncalledFunction = Config.IgnoreUncalledFunction;
-				foreach (FunctionLabelLine label in labelList)
-				{
-					if (label.Depth != labelDepth)
-						continue;
-					//解析モード時は呼ばれなかったものをここで解析
-					if (Program.AnalysisMode)
-						ParseFunctionWithCatch(label, cancellationToken);
-					bool ignore = false;
-					if (notCalledWarning == DisplayWarningFlag.ONCE)
-					{
-						string filename = label.Position.Value.Filename;
+					string filename = label.Position.Value.Filename;
 
-						if (!string.IsNullOrEmpty(filename))
-						{
-							if (ignoredFNCWarningFiles.Contains(filename))
-							{
-								ignore = true;
-							}
-							else
-							{
-								ignore = false;
-								ignoredFNCWarningFiles.Add(filename);
-							}
-						}
-						//break;
-					}
-					if (ignoreAll || ignore)
-						ignoredFNCWarningCount++;
-					else
-						ParserMediator.Warn(string.Format(trerror.FuncNeverCalled.Text, label.LabelName), label, 1, false, false);
-					if (!ignoreUncalledFunction)
-						ParseFunctionWithCatch(label, cancellationToken);
-					else
+					if (!string.IsNullOrEmpty(filename))
 					{
-						if (!(label.NextLine is NullLine) && !(label.NextLine is FunctionLabelLine))
+						if (ignoredFNCWarningFiles.Contains(filename))
 						{
-							if (!label.NextLine.IsError)
-							{
-								label.NextLine.IsError = true;
-								label.NextLine.ErrMes = "呼び出されないはずの関数が呼ばれた";
-							}
+							ignore = true;
+						}
+						else
+						{
+							ignore = false;
+							ignoredFNCWarningFiles.Add(filename);
+						}
+					}
+					//break;
+				}
+				if (ignoreAll || ignore)
+					ignoredFNCWarningCount++;
+				else
+					ParserMediator.Warn(string.Format(trerror.FuncNeverCalled.Text, label.LabelName), label, 1, false, false);
+				if (!ignoreUncalledFunction)
+					ParseFunctionWithCatch(label);
+				else
+				{
+					if (!(label.NextLine is NullLine) && !(label.NextLine is FunctionLabelLine))
+					{
+						if (!label.NextLine.IsError)
+						{
+							label.NextLine.IsError = true;
+							label.NextLine.ErrMes = "呼び出されないはずの関数が呼ばれた";
 						}
 					}
 				}
@@ -803,11 +786,7 @@ internal sealed class ErbLoader
 					output.PrintSystemLine(trerror.OverWriteSystemFuncWarn6.Text);
 					output.PrintSystemLine(trerror.OverWriteSystemFuncWarn7.Text);
 				}
-
 			}
-		}
-		catch
-		{
 		}
 	}
 
@@ -861,19 +840,13 @@ internal sealed class ErbLoader
 		ParserMediator.Warn(str, line, level, isError, false);
 	}
 
-	private void ParseFunctionWithCatch(FunctionLabelLine label, CancellationToken cancellationToken)
+	private void ParseFunctionWithCatch(FunctionLabelLine label)
 	{//ここでエラーを捕まえることは本来はないはず。ExeEE相当。
 		try
 		{
-			cancellationToken.ThrowIfCancellationRequested();
-			setArgument(label, cancellationToken);
-			cancellationToken.ThrowIfCancellationRequested();
-			nestCheck(label, cancellationToken);
-			cancellationToken.ThrowIfCancellationRequested();
-			setJumpTo(label, cancellationToken);
-		}
-		catch (OperationCanceledException)
-		{
+			setArgument(label);
+			nestCheck(label);
+			setJumpTo(label);
 		}
 		catch (Exception exc)
 		{
@@ -891,7 +864,7 @@ internal sealed class ErbLoader
 
 	}
 
-	private void setArgument(FunctionLabelLine label, CancellationToken cancellationToken)
+	private void setArgument(FunctionLabelLine label)
 	{
 		//1周目/3周
 		//引数の解析とか
@@ -920,7 +893,7 @@ internal sealed class ErbLoader
 		}
 	}
 
-	private void nestCheck(FunctionLabelLine label, CancellationToken cancellationToken)
+	private void nestCheck(FunctionLabelLine label)
 	{
 		//2周目/3周
 		//IF-ELSEIF-ENDIF、REPEAT-RENDの対応チェックなど
@@ -1474,7 +1447,7 @@ internal sealed class ErbLoader
 		SelectcaseStack.Clear();
 	}
 
-	private void setJumpTo(FunctionLabelLine label, CancellationToken cancellationToken)
+	private void setJumpTo(FunctionLabelLine label)
 	{
 		//3周目/3周
 		//フロー制御命令のジャンプ先を設定

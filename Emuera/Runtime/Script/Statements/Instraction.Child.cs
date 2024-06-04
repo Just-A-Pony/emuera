@@ -3214,7 +3214,7 @@ internal sealed partial class FunctionIdentifier
 		{
 			InstructionLine jumpTo = (InstructionLine)func.JumpTo;
 			//ループ変数が不明(REPEAT、FORを経由せずにループしようとした場合は無視してループを抜ける(eramakerがこういう仕様だったりする))
-			if (jumpTo.LoopCounter == null)
+			if (jumpTo == null || jumpTo.LoopCounter == null)
 			{
 				state.JumpTo(jumpTo.JumpTo);
 				return;
