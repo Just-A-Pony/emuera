@@ -462,7 +462,14 @@ namespace MinorShift.Emuera.Forms
 
 		private async void Init(object sender, EventArgs e)
 		{
-			await console.Initialize();
+			try
+			{
+				await console.Initialize();
+			}
+			catch (OperationCanceledException)
+			{
+
+			}
 		}
 
 		/// <summary>
