@@ -1171,7 +1171,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	}
 	#endregion
 
-	public void PressEnterKey(bool keySkip, string str, bool changedByMouse)
+	public void PressEnterKey(bool keySkip, string input, bool changedByMouse)
 	{
 		MesSkip = keySkip;
 		if ((state == ConsoleState.Running) || (state == ConsoleState.Initializing))
@@ -1183,7 +1183,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		}
 		else if (state == ConsoleState.Error)
 		{
-			if (str == ErrorButtonsText && selectingButton != null && selectingButton.ErrPos != null)
+			if (input == ErrorButtonsText && selectingButton != null && selectingButton.ErrPos != null)
 			{
 				OpenErrorFile(selectingButton.ErrPos);
 				return;
@@ -1200,13 +1200,13 @@ internal sealed partial class EmueraConsole : IDisposable
 		{
 			string[] text;
 			if (changedByMouse)//1823 マウスによって入力されたならマクロ解析を行わない
-			{ text = [str]; }
+			{ text = [input]; }
 			else
 			{
 				//INPUTSでも"@"のみが弾かれないようにおまじない
-				if (str.StartsWith('@') && str.Length > 1 && !inputReq.OneInput)
+				if (input.Length > 1 && !inputReq.OneInput && input.StartsWith('@'))
 				{
-					doSystemCommand(str);
+					doSystemCommand(input);
 					return;
 				}
 				if (inputReq.InputType == InputType.Void)
@@ -1215,9 +1215,9 @@ internal sealed partial class EmueraConsole : IDisposable
 						(inputReq.InputType == InputType.AnyKey || inputReq.InputType == InputType.EnterKey))
 					stopTimer();
 				//if((inputReq.InputType == InputType.IntValue || inputReq.InputType == InputType.StrValue)
-				if (str.Contains('(', StringComparison.Ordinal))
-					str = parseInput(new CharStream(str), false);
-				text = str.Split(spliter, StringSplitOptions.None);
+				if (input.Contains('(', StringComparison.Ordinal))
+					input = parseInput(new CharStream(input), false);
+				text = input.Split(spliter, StringSplitOptions.None);
 			}
 
 			inProcess = true;
@@ -2040,7 +2040,7 @@ internal sealed partial class EmueraConsole : IDisposable
 					com = com.Replace(pair.Key, pair.Value);
 			}
 			LogicalLine line = null;
-			if (!com.StartsWith("@", StringComparison.Ordinal) && !com.StartsWith("\"", StringComparison.Ordinal) && !com.StartsWith("\\", StringComparison.Ordinal))
+			if (!com.StartsWith('@') && !com.StartsWith('"') && !com.StartsWith('\\'))
 				line = LogicalLineParser.ParseLine(com, null);
 			if (line == null || (line is InvalidLine))
 			{
