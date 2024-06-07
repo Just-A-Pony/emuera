@@ -34,17 +34,17 @@ internal sealed class StrForm
 		formatYenAt = new FormatYenAt();
 		VariableToken nameID = GlobalStatic.VariableData.GetSystemVariableToken("NAME");
 		VariableToken callnameID = GlobalStatic.VariableData.GetSystemVariableToken("CALLNAME");
-		AExpression[] zeroArg = new AExpression[] { new SingleTerm(0) };
-		VariableTerm target = new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("TARGET"), zeroArg);
-		VariableTerm master = new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("MASTER"), zeroArg);
-		VariableTerm player = new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("PLAYER"), zeroArg);
-		VariableTerm assi = new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("ASSI"), zeroArg);
+		AExpression[] zeroArg = new AExpression[] { new SingleLongTerm(0) };
+		VariableTerm target = new(GlobalStatic.VariableData.GetSystemVariableToken("TARGET"), zeroArg);
+		VariableTerm master = new(GlobalStatic.VariableData.GetSystemVariableToken("MASTER"), zeroArg);
+		VariableTerm player = new(GlobalStatic.VariableData.GetSystemVariableToken("PLAYER"), zeroArg);
+		VariableTerm assi = new(GlobalStatic.VariableData.GetSystemVariableToken("ASSI"), zeroArg);
 
-		VariableTerm nametarget = new VariableTerm(nameID, new AExpression[] { target });
-		VariableTerm callnamemaster = new VariableTerm(callnameID, new AExpression[] { master });
-		VariableTerm callnameplayer = new VariableTerm(callnameID, new AExpression[] { player });
-		VariableTerm nameassi = new VariableTerm(nameID, new AExpression[] { assi });
-		VariableTerm callnametarget = new VariableTerm(callnameID, new AExpression[] { target });
+		VariableTerm nametarget = new(nameID, new AExpression[] { target });
+		VariableTerm callnamemaster = new(callnameID, new AExpression[] { master });
+		VariableTerm callnameplayer = new(callnameID, new AExpression[] { player });
+		VariableTerm nameassi = new(nameID, new AExpression[] { assi });
+		VariableTerm callnametarget = new(callnameID, new AExpression[] { target });
 		NameTarget = new FunctionMethodTerm(formatPercent, [nametarget, null, null]);
 		CallnameMaster = new FunctionMethodTerm(formatPercent, [callnamemaster, null, null]);
 		CallnamePlayer = new FunctionMethodTerm(formatPercent, [callnameplayer, null, null]);
@@ -98,11 +98,11 @@ internal sealed class StrForm
 						throw new CodeEE(trerror.AbnormalFirstOperand.Text);
 				}
 				else
-					operand = new SingleTerm(0);
+					operand = new SingleLongTerm(0);
 				AExpression left = new StrFormTerm(StrForm.FromWordToken(yenat.Left));
 				AExpression right;
 				if (yenat.Right == null)
-					right = new SingleTerm("");
+					right = new SingleStrTerm("");
 				else
 					right = new StrFormTerm(StrForm.FromWordToken(yenat.Right));
 				termArray[i] = new FunctionMethodTerm(formatYenAt, [operand, left, right]);
@@ -131,7 +131,7 @@ internal sealed class StrForm
 					if (id == null)
 						throw new CodeEE(trerror.NotSpecifiedLR.Text);
 					if (string.Equals(id.Code, "LEFT", Config.StringComparison))//標準RIGHT
-						third = new SingleTerm(1);
+						third = new SingleLongTerm(1);
 					else if (!string.Equals(id.Code, "RIGHT", Config.StringComparison))
 						throw new CodeEE(trerror.OtherThanLR.Text);
 					wc.ShiftNext();
@@ -163,7 +163,7 @@ internal sealed class StrForm
 		}
 	}
 
-	public AExpression GetIOperandTerm()
+	public AExpression GetAExpression()
 	{
 		if ((strs.Length == 2) && (strs[0].Length == 0) && (strs[1].Length == 0))
 			return terms[0];
@@ -232,7 +232,7 @@ internal sealed class StrForm
 		}
 		public override string CheckArgumentType(string name, List<AExpression> arguments) { throw new ExeEE("型チェックは呼び出し元が行うこと"); }
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments) { throw new ExeEE("戻り値の型が違う"); }
-		public override SingleTerm GetReturnValue(ExpressionMediator exm, List<AExpression> arguments) { return new SingleTerm(GetStrValue(exm, arguments)); }
+		public override SingleTerm GetReturnValue(ExpressionMediator exm, List<AExpression> arguments) { return new SingleStrTerm(GetStrValue(exm, arguments)); }
 	}
 
 	private sealed class FormatCurlyBrace : FormattedStringMethod

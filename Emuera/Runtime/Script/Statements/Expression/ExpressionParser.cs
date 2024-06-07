@@ -179,7 +179,7 @@ internal static class ExpressionParser
 	{
 		StrForm strf = StrForm.FromWordToken(sfw);
 		if (strf.IsConst)
-			return new SingleTerm(strf.GetString(null));
+			return new SingleStrTerm(strf.GetString(null));
 		return new StrFormTerm(strf);
 	}
 
@@ -285,7 +285,7 @@ internal static class ExpressionParser
 			if (refToken != null)//関数参照と名前が一致したらそれを返す。実際に使うとエラー
 				return refToken;
 			if (varCode != VariableCode.__NULL__ && GlobalStatic.ConstantData.isDefined(varCode, idStr))//連想配列的な可能性アリ
-				return new SingleTerm(idStr);
+				return new SingleStrTerm(idStr);
 			#region EE_ERD
 			else if (varId != null)
 			{
@@ -296,19 +296,19 @@ internal static class ExpressionParser
 					case VariableCode.CVAR:
 					case VariableCode.CVARS:
 						if (GlobalStatic.ConstantData.isUserDefined(varId.Name, idStr, 1))//ユーザー定義変数は名前付けられるようになったので通す
-							return new SingleTerm(idStr);
+							return new SingleStrTerm(idStr);
 						break;
 					case VariableCode.VAR2D:
 					case VariableCode.VARS2D:
 					case VariableCode.CVAR2D:
 					case VariableCode.CVARS2D:
 						if (GlobalStatic.ConstantData.isUserDefined(varId.Name, idStr, 2))//ユーザー定義変数は名前付けられるようになったので通す
-							return new SingleTerm(idStr);
+							return new SingleStrTerm(idStr);
 						break;
 					case VariableCode.VAR3D:
 					case VariableCode.VARS3D:
 						if (GlobalStatic.ConstantData.isUserDefined(varId.Name, idStr, 3))//ユーザー定義変数は名前付けられるようになったので通す
-							return new SingleTerm(idStr);
+							return new SingleStrTerm(idStr);
 						break;
 				}
 			}
@@ -579,8 +579,8 @@ internal static class ExpressionParser
 			}
 			throw new CodeEE(trerror.UnrecognizedSyntax.Text);
 		}
-		public void Add(Int64 i) { Add(new SingleTerm(i)); }
-		public void Add(string s) { Add(new SingleTerm(s)); }
+		public void Add(Int64 i) { Add(new SingleLongTerm(i)); }
+		public void Add(string s) { Add(new SingleStrTerm(s)); }
 		public void Add(AExpression term)
 		{
 			stack.Push(term);

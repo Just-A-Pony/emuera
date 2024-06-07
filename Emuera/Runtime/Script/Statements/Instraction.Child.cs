@@ -425,7 +425,7 @@ internal sealed partial class FunctionIdentifier
 			else
 				rowStr = st.Substring();
 			rowStr = GlobalStatic.Console.getStBar(rowStr);
-			Argument ret = new ExpressionArgument(new SingleTerm(rowStr))
+			Argument ret = new ExpressionArgument(new SingleStrTerm(rowStr))
 			{
 				ConstStr = rowStr,
 				IsConst = true
@@ -1128,7 +1128,7 @@ internal sealed partial class FunctionIdentifier
 			else
 				rowStr = st.Substring();
 			rowStr = GlobalStatic.Console.getStBar(rowStr);
-			Argument ret = new ExpressionArgument(new SingleTerm(rowStr))
+			Argument ret = new ExpressionArgument(new SingleStrTerm(rowStr))
 			{
 				ConstStr = rowStr,
 				IsConst = true
@@ -1643,10 +1643,10 @@ internal sealed partial class FunctionIdentifier
 			}
 			if (!p.Identifier.IsCharacterData)
 				throw new CodeEE(string.Format(trerror.CvarsetArgIsNotCharaVar.Text, p.Identifier.Name));
-			if (index.GetOperandType() == typeof(string) && p.Identifier.IsArray1D)
+			if (index is SingleStrTerm singleStrTerm && p.Identifier.IsArray1D)
 			{
-				if (!GlobalStatic.ConstantData.isDefined(p.Identifier.Code, index.Str))
-					throw new CodeEE(string.Format(trerror.NotDefinedKey.Text, p.Identifier.Name, index.Str));
+				if (!GlobalStatic.ConstantData.isDefined(p.Identifier.Code, singleStrTerm.Str))
+					throw new CodeEE(string.Format(trerror.NotDefinedKey.Text, p.Identifier.Name, singleStrTerm.Str));
 			}
 			if (p.Identifier.IsString)
 			{

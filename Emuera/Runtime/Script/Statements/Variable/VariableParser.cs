@@ -9,7 +9,7 @@ internal static class VariableParser
 {
 	public static void Initialize()
 	{
-		ZeroTerm = new SingleTerm(0);
+		ZeroTerm = new SingleLongTerm(0);
 		AExpression[] zeroArgs = new AExpression[] { ZeroTerm };
 		TARGET = new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("TARGET"), zeroArgs);
 	}
@@ -163,7 +163,7 @@ internal static class VariableParser
 			}
 			if (!Config.CompatiRAND && op1 is SingleTerm op1SingleTerm && id.Code == VariableCode.RAND)
 			{
-				if (op1SingleTerm.Int == 0) 
+				if (((SingleLongTerm)op1SingleTerm).Int == 0)
 					throw new CodeEE(trerror.RandArgIsZero.Text);
 			}
 			terms = [op1];

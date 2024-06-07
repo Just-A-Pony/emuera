@@ -249,8 +249,8 @@ internal static partial class ArgumentParser
 	{
 		public SP_PRINT_IMG_ArgumentBuilder()
 		{
-			this.argumentTypeArray = null;// new Type[] { typeof(string), typeof(string), typeof(Int64), typeof(Int64), typeof(Int64) };
-			this.minArg = 1;
+			argumentTypeArray = null;// new Type[] { typeof(string), typeof(string), typeof(Int64), typeof(Int64), typeof(Int64) };
+			minArg = 1;
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
@@ -565,7 +565,7 @@ internal static partial class ArgumentParser
 			{
 				if (line.FunctionCode == FunctionCode.RETURNFORM)
 				{
-					termList.Add(new SingleTerm("0"));
+					termList.Add(new SingleStrTerm("0"));
 					ret = new ExpressionArrayArgument(termList)
 					{
 						IsConst = true,
@@ -645,7 +645,7 @@ internal static partial class ArgumentParser
 				}
 
 			}
-			Argument ret = new ExpressionArgument(new SingleTerm(rowStr))
+			Argument ret = new ExpressionArgument(new SingleStrTerm(rowStr))
 			{
 				ConstStr = rowStr,
 				IsConst = true
@@ -676,7 +676,7 @@ internal static partial class ArgumentParser
 				}
 				//if (line.FunctionCode == FunctionCode.PRINTFORML)
 				//	warn("PRINTFORMLの後ろに空白がありません(eramaker：\'PRINTFORML\'を表示)", line, 0, true);
-				ret = new ExpressionArgument(new SingleTerm(""))
+				ret = new ExpressionArgument(new SingleStrTerm(""))
 				{
 					ConstStr = "",
 					IsConst = true
@@ -724,7 +724,7 @@ internal static partial class ArgumentParser
 
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
-			VariableTerm varTerm = new(GlobalStatic.VariableData.GetSystemVariableToken("NO"), [new SingleTerm(0)]);
+			VariableTerm varTerm = new(GlobalStatic.VariableData.GetSystemVariableToken("NO"), [new SingleLongTerm(0)]);
 			SortOrder order = SortOrder.ASCENDING;
 			WordCollection wc = popWords(line);
 			if (wc.EOL)
@@ -777,7 +777,7 @@ internal static partial class ArgumentParser
 		{
 			SortOrder order = SortOrder.ASCENDING;
 			WordCollection wc = popWords(line);
-			AExpression term3 = new SingleTerm(0);
+			AExpression term3 = new SingleLongTerm(0);
 			AExpression term4 = null;
 
 			if (wc.EOL)
@@ -861,7 +861,7 @@ internal static partial class ArgumentParser
 			{
 				string str = LexicalAnalyzer.ReadString(st, StrEndWith.LeftParenthesis_Bracket_Comma_Semicolon);
 				str = str.Trim([' ', '\t']);
-				funcname = new SingleTerm(str);
+				funcname = new SingleStrTerm(str);
 			}
 			char cur = st.Current;
 			WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
@@ -928,7 +928,7 @@ internal static partial class ArgumentParser
 			AExpression funcname;
 				string str = LexicalAnalyzer.ReadString(st, StrEndWith.LeftParenthesis_Bracket_Comma_Semicolon);
 				str = str.Trim(new char[] { ' ', '\t' });
-				funcname = new SingleTerm(str);
+				funcname = new SingleStrTerm(str);
 			char cur = st.Current;
 			WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
 			wc.ShiftNext();
@@ -1342,7 +1342,7 @@ internal static partial class ArgumentParser
 			AExpression term;
 			if (terms.Count == 0)
 			{
-				term = new SingleTerm(0);
+				term = new SingleLongTerm(0);
 				if (!nullable)
 				{
 					if (line.Function.IsExtended())
@@ -1367,9 +1367,9 @@ internal static partial class ArgumentParser
 					warn(trerror.RepeatCountLessthan0.Text, line, 0, true);
 				}
 				VariableToken count = GlobalStatic.VariableData.GetSystemVariableToken("COUNT");
-				VariableTerm repCount = new(count, new AExpression[] { new SingleTerm(0) });
+				VariableTerm repCount = new(count, new AExpression[] { new SingleLongTerm(0) });
 				repCount.Restructure(exm);
-				return new SpForNextArgment(repCount, new SingleTerm(0), term, new SingleTerm(1));
+				return new SpForNextArgment(repCount, new SingleLongTerm(0), term, new SingleLongTerm(1));
 			}
 			ExpressionArgument ret = new(term);
 			if (term is SingleTerm)
@@ -1412,7 +1412,7 @@ internal static partial class ArgumentParser
 			{
 				if (line.FunctionCode == FunctionCode.RETURN)
 				{
-					termList.Add(new SingleTerm(0));
+					termList.Add(new SingleLongTerm(0));
 					ret.IsConst = true;
 					ret.ConstInt = 0;
 					return ret;
@@ -1422,7 +1422,7 @@ internal static partial class ArgumentParser
 			}
 			else if (terms.Count == 1)
 			{
-				if (terms[0] is SingleTerm s)
+				if (terms[0] is SingleLongTerm s)
 				{
 					ret.IsConst = true;
 					ret.ConstInt = s.Int;
@@ -1461,7 +1461,7 @@ internal static partial class ArgumentParser
 			ExpressionArgument ret;
 			if (terms.Count == 0)
 			{
-				ret = new ExpressionArgument(new SingleTerm(""))
+				ret = new ExpressionArgument(new SingleStrTerm(""))
 				{
 					ConstStr = "",
 					IsConst = true
@@ -1669,11 +1669,11 @@ internal static partial class ArgumentParser
 			AExpression end = terms[2];
 			AExpression step;
 			if (start == null)
-				start = new SingleTerm(0);
+				start = new SingleLongTerm(0);
 			if ((terms.Count > 3) && (terms[3] != null))
 				step = terms[3];
 			else
-				step = new SingleTerm(1);
+				step = new SingleLongTerm(1);
 			if (!start.IsInteger)
 			{ warn(string.Format(trerror.DifferentArgType.Text, "2"), line, 2, false); return null; }
 			return new SpForNextArgment(varTerm, start, end, step);
@@ -1761,7 +1761,7 @@ internal static partial class ArgumentParser
 			if (terms.Count == 0)
 			{
 				VariableToken varToken = GlobalStatic.VariableData.GetSystemVariableToken("RESULTS");
-				VariableTerm varTerm = new(varToken, new AExpression[] { new SingleTerm(0) });
+				VariableTerm varTerm = new(varToken, new AExpression[] { new SingleLongTerm(0) });
 				return new StrDataArgument(varTerm);
 			}
 			if (!checkArgumentType(line, exm, terms))
@@ -1795,7 +1795,7 @@ internal static partial class ArgumentParser
 			BitArgument ret = new(varTerm, termList.ToArray());
 			for (int i = 0; i < termList.Count; i++)
 			{
-				if (termList[i] is SingleTerm term)
+				if (termList[i] is SingleLongTerm term)
 				{
 					Int64 bit = term.Int;
 					if ((bit < 0) || (bit > 63))
@@ -1836,9 +1836,9 @@ internal static partial class ArgumentParser
 			else
 			{
 				if (varTerm.IsString)
-					term = new SingleTerm("");
+					term = new SingleStrTerm("");
 				else
-					term = new SingleTerm(0);
+					term = new SingleLongTerm(0);
 			}
 			if (varTerm is VariableNoArgTerm)
 			{
@@ -1889,21 +1889,21 @@ internal static partial class ArgumentParser
 			if (terms.Count > 1)
 				index = terms[1];
 			else
-				index = new SingleTerm(0);
+				index = new SingleLongTerm(0);
 			if (terms.Count > 2)
 				term = terms[2];
 			else
 			{
 				if (varTerm.IsString)
-					term = new SingleTerm("");
+					term = new SingleStrTerm("");
 				else
-					term = new SingleTerm(0);
+					term = new SingleLongTerm(0);
 			}
 			if (terms.Count > 3)
 				term4 = terms[3];
 			if (terms.Count > 4)
 				term5 = terms[4];
-			if (index is SingleTerm term1 && index.GetOperandType() == typeof(string) && varTerm.Identifier.IsArray1D)
+			if (index is SingleStrTerm term1 && index.GetOperandType() == typeof(string) && varTerm.Identifier.IsArray1D)
 			{
 				if (!GlobalStatic.ConstantData.isDefined(varTerm.Identifier.Code, term1.Str))
 				{ warn(string.Format(trerror.NotDefinedKey.Text, varTerm.Identifier.Name, index.GetStrValue(null)), line, 2, false); return null; }
@@ -1989,7 +1989,7 @@ internal static partial class ArgumentParser
 				return null;
 			if (!x.Identifier.IsArray1D && !x.Identifier.IsArray2D && !x.Identifier.IsArray3D)
 			{ warn(string.Format(trerror.ArgIsNotArrayVar.Text, "3"), line, 2, false); return null; }
-			VariableTerm term = (terms.Count >= 4) ? getChangeableVariable(terms, 4, line) : new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("RESULT"), new AExpression[] { new SingleTerm(0) });
+			VariableTerm term = (terms.Count >= 4) ? getChangeableVariable(terms, 4, line) : new VariableTerm(GlobalStatic.VariableData.GetSystemVariableToken("RESULT"), new AExpression[] { new SingleLongTerm(0) });
 			return new SpSplitArgument(terms[0], terms[1], x.Identifier, term);
 		}
 	}
@@ -2022,7 +2022,7 @@ internal static partial class ArgumentParser
 			if (term == null)
 			{
 				VariableToken varToken = GlobalStatic.VariableData.GetSystemVariableToken("RESULT");
-				term = new VariableTerm(varToken, new AExpression[] { new SingleTerm(0) });
+				term = new VariableTerm(varToken, new AExpression[] { new SingleLongTerm(0) });
 			}
 			return new SpHtmlSplitArgument(terms[0], destVar, term);
 		}
@@ -2041,7 +2041,7 @@ internal static partial class ArgumentParser
 			if (terms.Count == 0)
 			{
 				VariableToken varToken = GlobalStatic.VariableData.GetSystemVariableToken("RESULT");
-				return new SpGetIntArgument(new VariableTerm(varToken, [new SingleTerm(0)]));
+				return new SpGetIntArgument(new VariableTerm(varToken, [new SingleLongTerm(0)]));
 			}
 			if (!checkArgumentType(line, exm, terms))
 				return null;
@@ -2094,7 +2094,7 @@ internal static partial class ArgumentParser
 				if (terms[0].GetOperandType() != terms[2].GetOperandType())
 				{ warn(trerror.NotMatchFirstAndThirdVar.Text, line, 2, false); return null; }
 			}
-			AExpression term4 = terms.Count >= 4 ? terms[3] : new SingleTerm(0);
+			AExpression term4 = terms.Count >= 4 ? terms[3] : new SingleLongTerm(0);
 			AExpression term5 = terms.Count >= 5 ? terms[4] : null;
 			return new SpArrayShiftArgument(x, terms[1], terms[2], term4, term5);
 		}
@@ -2363,7 +2363,7 @@ internal static partial class ArgumentParser
 			if (!checkArgumentType(line, exm, terms))
 				return null;
 			VariableToken[] vars = new VariableToken[2] { null, null };
-			if (terms[0] is SingleTerm term)
+			if (terms[0] is SingleStrTerm term)
 			{
 				if ((vars[0] = GlobalStatic.IdentifierDictionary.GetVariableToken(term.Str, null, true)) == null)
 				{
@@ -2381,7 +2381,7 @@ internal static partial class ArgumentParser
 					return null;
 				}
 			}
-			if (terms[1] is SingleTerm term1)
+			if (terms[1] is SingleStrTerm term1)
 			{
 				if ((vars[1] = GlobalStatic.IdentifierDictionary.GetVariableToken(term1.Str, null, true)) == null)
 				{

@@ -166,10 +166,10 @@ internal sealed class VariableEvaluator : IDisposable
 
 		if (p.Identifier.IsArray1D)
 		{
-			if (index.GetOperandType() == typeof(Int64))
-				indexNum = index.Int;
+			if (index is SingleLongTerm singleLongTerm)
+				indexNum = singleLongTerm.Int;
 			else
-				indexNum = constant.KeywordToInteger(p.Identifier.Code, index.Str, 1);
+				indexNum = constant.KeywordToInteger(p.Identifier.Code, ((SingleStrTerm)index).Str, 1);
 			if (indexNum < 0 || indexNum >= ((long[])p.Identifier.GetArrayChara(0)).Length)
 				throw new CodeEE(string.Format(trerror.OoRCharaVar.Text, p.Identifier.Name, "2", indexNum.ToString()));
 		}
@@ -204,10 +204,10 @@ internal sealed class VariableEvaluator : IDisposable
 
 		if (p.Identifier.IsArray1D)
 		{
-			if (index.GetOperandType() == typeof(Int64))
-				indexNum = index.Int;
+			if (index is SingleLongTerm singleLongTerm)
+				indexNum = singleLongTerm.Int;
 			else
-				indexNum = constant.KeywordToInteger(p.Identifier.Code, index.Str, 1);
+				indexNum = constant.KeywordToInteger(p.Identifier.Code, ((SingleStrTerm)index).Str, 1);
 			if (indexNum < 0 || indexNum >= ((string[])p.Identifier.GetArrayChara(0)).Length)
 				throw new CodeEE(string.Format(trerror.OoRCharaVar.Text, p.Identifier.Name, "2", indexNum.ToString()));
 		}

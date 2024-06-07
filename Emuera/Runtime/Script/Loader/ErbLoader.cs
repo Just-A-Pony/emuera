@@ -602,9 +602,9 @@ internal sealed class ErbLoader
                         if (canDef)// && label.ArgOptional)
                         {
                             if (vTerm.GetOperandType() == typeof(Int64))
-                                def = new SingleTerm(0);
+                                def = new SingleLongTerm(0);
                             else
-                                def = new SingleTerm("");
+                                def = new SingleStrTerm("");
                         }
                     }
                     else

@@ -5037,20 +5037,20 @@ internal static partial class FunctionMethodCreator
 			if (ReturnType != typeof(Int64))
 				throw new ExeEE(funcname + "関数:不正な呼び出し");
 			SingleTerm term = GetSingleTerm(exm, arguments);
-			if (term.GetOperandType() != typeof(Int64))
+			if (term is not SingleLongTerm singleLongTerm)
 				// throw new CodeEE(funcname + "関数:型が違います（GETCONFIGS関数を使用してください）");
 				throw new CodeEE(string.Format(Lang.Error.InvalidType.Text, Name, "GETCONFIGS"));
-			return term.Int;
+			return singleLongTerm.Int;
 		}
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (ReturnType != typeof(string))
 				throw new ExeEE(funcname + "関数:不正な呼び出し");
 			SingleTerm term = GetSingleTerm(exm, arguments);
-			if (term.GetOperandType() != typeof(string))
+			if (term is not SingleStrTerm singleStrTerm)
 				// throw new CodeEE(funcname + "関数:型が違います（GETCONFIG関数を使用してください）");
 				throw new CodeEE(string.Format(Lang.Error.InvalidType.Text, Name, "GETCONFIG"));
-			return term.Str;
+			return singleStrTerm.Str;
 		}
 	}
 	#endregion

@@ -190,7 +190,7 @@ internal sealed class PrintStringBuffer
 	#endregion
 	{
 		if (buttonList.Count == 0)
-			return new ConsoleDisplayLine[0];
+			return [];
 		setWidthToButtonList(buttonList, stringMeasure, nobr);
 		List<ConsoleDisplayLine> lineList = [];
 		List<ConsoleButtonString> lineButtonList = [];
