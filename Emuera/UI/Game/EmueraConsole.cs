@@ -1204,7 +1204,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			else
 			{
 				//INPUTSでも"@"のみが弾かれないようにおまじない
-				if (str.StartsWith("@") && str.Length > 1 && !inputReq.OneInput)
+				if (str.StartsWith('@') && str.Length > 1 && !inputReq.OneInput)
 				{
 					doSystemCommand(str);
 					return;
@@ -1215,7 +1215,7 @@ internal sealed partial class EmueraConsole : IDisposable
 						(inputReq.InputType == InputType.AnyKey || inputReq.InputType == InputType.EnterKey))
 					stopTimer();
 				//if((inputReq.InputType == InputType.IntValue || inputReq.InputType == InputType.StrValue)
-				if (str.Contains("("))
+				if (str.Contains('('))
 					str = parseInput(new CharStream(str), false);
 				text = str.Split(spliter, StringSplitOptions.None);
 			}
