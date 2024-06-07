@@ -16,6 +16,7 @@ using DotnetEmuera;
 using System.Diagnostics.CodeAnalysis;
 using MinorShift.Emuera.Runtime.Config;
 using MinorShift.Emuera.GameProc.PluginSystem;
+using System.Runtime;
 
 namespace MinorShift.Emuera;
 #nullable enable
@@ -145,6 +146,10 @@ static partial class Program
 		#endregion
 
 		Application.SetCompatibleTextRenderingDefault(false);
+
+		ProfileOptimization.SetProfileRoot(exeDir ?? Environment.CurrentDirectory);
+		ProfileOptimization.StartProfile("profile");
+
 		ConfigData.Instance.LoadConfig();
 		JSONConfig.Load();
 

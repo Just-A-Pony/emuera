@@ -31,7 +31,6 @@
         <PublishTrimmed>false</PublishTrimmed>
         <SelfContained>false</SelfContained>
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
-        <TieredCompilation>false</TieredCompilation>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Debug-NAudio' ">
