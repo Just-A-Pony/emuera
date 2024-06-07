@@ -433,7 +433,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	{
 		if (string.IsNullOrEmpty(str))
 			return;
-		if (str.Contains('\n'))
+		if (str.Contains('\n', StringComparison.Ordinal))
 		{
 			int newline = str.IndexOf('\n', StringComparison.Ordinal);
 			string upper = str[..newline];
@@ -744,7 +744,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			Dialog.Show(trmb.FailedOutputLog.Text, trmb.CanNotOutputToParentDirectory.Text);
 			return false;
 		}
-		if (!filename.StartsWith(Program.WorkingDir, StringComparison.CurrentCultureIgnoreCase))
+		if (!filename.StartsWith(Program.WorkingDir, StringComparison.OrdinalIgnoreCase))
 		{
 			Dialog.Show(trmb.FailedOutputLog.Text, trmb.CanOnlyOutputToSubDirectory.Text);
 			return false;
@@ -768,7 +768,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		if (filename == "" || filename == null)
 			filename = Program.WorkingDir + "emuera.log";
 
-		if (!filename.StartsWith(Program.WorkingDir, StringComparison.CurrentCultureIgnoreCase))
+		if (!filename.StartsWith(Program.WorkingDir, StringComparison.OrdinalIgnoreCase))
 		{
 			Dialog.Show(trmb.FailedOutputLog.Text, trmb.CanOnlyOutputToSubDirectory.Text);
 			return false;
