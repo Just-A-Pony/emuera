@@ -138,7 +138,7 @@ static class AppContents
 							if (line.Length == 0)
 								continue;
 							string str = line.Trim();
-							if (str.Length == 0 || str.StartsWith(";"))
+							if (str.Length == 0 || str.StartsWith(';'))
 								continue;
 							string[] tokens = str.Split(',');
 							//AContentItem item = CreateFromCsv(tokens);
