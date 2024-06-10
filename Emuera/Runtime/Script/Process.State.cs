@@ -432,7 +432,7 @@ internal sealed class ProcessState
 		else if (Program.DebugMode)
 		{
 			FunctionLabelLine label = called.CurrentLabel;
-			console.DebugAddTraceLog(string.Format(trsl.DebugTraceCall.Text, label.LabelName, label.Position.Value.Filename, label.Position.ToString()));
+			console.DebugAddTraceLog(string.Format(trsl.DebugTraceCall.Text, label.LabelName, label.Position.Value.Filename, label.Position.Value.LineNo));
 		}
 		lineCount++;
 		//ShfitNextLine();
@@ -454,9 +454,9 @@ internal sealed class ProcessState
 		{
 			FunctionLabelLine label = call.CurrentLabel;
 			if (call.IsJump)
-				console.DebugAddTraceLog(string.Format(trsl.DebugTraceJump.Text, label.LabelName, label.Position.Value.Filename, label.Position.ToString()));
+				console.DebugAddTraceLog(string.Format(trsl.DebugTraceJump.Text, label.LabelName, label.Position.Value.Filename, label.Position.Value.LineNo));
 			else
-				console.DebugAddTraceLog(string.Format(trsl.DebugTraceCall.Text, label.LabelName, label.Position.Value.Filename, label.Position.ToString()));
+				console.DebugAddTraceLog(string.Format(trsl.DebugTraceCall.Text, label.LabelName, label.Position.Value.Filename, label.Position.Value.LineNo));
 		}
 		if (srcArgs != null)
 		{
