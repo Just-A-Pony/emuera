@@ -270,8 +270,7 @@ internal sealed class UserDefinedVariableData
 				if (terms[i] == null)
 					throw new CodeEE(trerror.ArrayVarCanNotOmitInitialValue.Text);
 				terms[i] = terms[i].Restructure(GlobalStatic.EMediator);
-				SingleTerm sTerm = terms[i] as SingleTerm;
-				if (sTerm == null)
+				if (terms[i] is not SingleTerm sTerm)
 					throw new CodeEE(trerror.InitialValueOnlyConst.Text);
 				if (dims != sTerm.IsString)
 					throw new CodeEE(trerror.NotMatchVarTypeAndInitialValue.Text);
