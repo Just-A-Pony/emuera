@@ -82,7 +82,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return maxlv;
 	}
 
-	public void SetValueAll(FixedVariableTerm p, Int64 srcValue, int start, int end)
+	public static void SetValueAll(FixedVariableTerm p, Int64 srcValue, int start, int end)
 	{
 		//呼び出し元で判定済み
 		//if (!p.Identifier.IsInteger)
@@ -114,7 +114,7 @@ internal sealed class VariableEvaluator : IDisposable
 		}
 	}
 
-	public void SetValueAll(FixedVariableTerm p, string srcValue, int start, int end)
+	public static void SetValueAll(FixedVariableTerm p, string srcValue, int start, int end)
 	{
 		//呼び出し元で判定済み
 		//if (!p.Identifier.IsString)
@@ -220,7 +220,7 @@ internal sealed class VariableEvaluator : IDisposable
 		}
 	}
 
-	public Int64 GetArraySum(FixedVariableTerm p, Int64 index1, Int64 index2)
+	public static Int64 GetArraySum(FixedVariableTerm p, Int64 index1, Int64 index2)
 	{
 		Int64 sum = 0;
 
@@ -259,7 +259,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return sum;
 	}
 
-	public Int64 GetArraySumChara(FixedVariableTerm p, Int64 index1, Int64 index2)
+	public static Int64 GetArraySumChara(FixedVariableTerm p, Int64 index1, Int64 index2)
 	{
 		Int64 sum = 0;
 
@@ -270,7 +270,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return sum;
 	}
 
-	public string GetJoinedStr(FixedVariableTerm p, string delimiter, Int64 index1, Int64 length)
+	public static string GetJoinedStr(FixedVariableTerm p, string delimiter, Int64 index1, Int64 length)
 	{
 		string sum = "";
 
@@ -312,7 +312,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return sum;
 	}
 
-	public Int64 GetMatch(FixedVariableTerm p, Int64 target, Int64 start, Int64 end)
+	public static Int64 GetMatch(FixedVariableTerm p, Int64 target, Int64 start, Int64 end)
 	{
 		Int64 ret = 0;
 
@@ -323,7 +323,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return ret;
 	}
 
-	public Int64 GetMatch(FixedVariableTerm p, string target, Int64 start, Int64 end)
+	public static Int64 GetMatch(FixedVariableTerm p, string target, Int64 start, Int64 end)
 	{
 		Int64 ret = 0;
 		bool targetIsNullOrEmpty = string.IsNullOrEmpty(target);
@@ -335,7 +335,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return ret;
 	}
 
-	public Int64 GetMatchChara(FixedVariableTerm p, Int64 target, Int64 start, Int64 end)
+	public static Int64 GetMatchChara(FixedVariableTerm p, Int64 target, Int64 start, Int64 end)
 	{
 		Int64 ret = 0;
 
@@ -348,7 +348,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return ret;
 	}
 
-	public Int64 GetMatchChara(FixedVariableTerm p, string target, Int64 start, Int64 end)
+	public static Int64 GetMatchChara(FixedVariableTerm p, string target, Int64 start, Int64 end)
 	{
 		Int64 ret = 0;
 		bool targetIsNullOrEmpty = string.IsNullOrEmpty(target);
@@ -362,7 +362,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return ret;
 	}
 
-	public Int64 FindElement(FixedVariableTerm p, Int64 target, Int64 start, Int64 end, bool isExact, bool isLast)
+	public static Int64 FindElement(FixedVariableTerm p, Int64 target, Int64 start, Int64 end, bool isExact, bool isLast)
 	{
 		Int64[] array;
 
@@ -394,7 +394,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return -1;
 	}
 
-	public Int64 FindElement(FixedVariableTerm p, Regex target, Int64 start, Int64 end, bool isExact, bool isLast)
+	public static Int64 FindElement(FixedVariableTerm p, Regex target, Int64 start, Int64 end, bool isExact, bool isLast)
 	{
 		string[] array;
 
@@ -452,7 +452,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return -1;
 	}
 
-	public Int64 GetMaxArray(FixedVariableTerm p, Int64 start, Int64 end, bool isMax)
+	public static Int64 GetMaxArray(FixedVariableTerm p, Int64 start, Int64 end, bool isMax)
 	{
 		Int64 value;
 		Int64 ret = p.Identifier.GetIntValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? [p.Index1, start] : [start]);
@@ -473,7 +473,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return ret;
 	}
 
-	public Int64 GetMaxArrayChara(FixedVariableTerm p, Int64 start, Int64 end, bool isMax)
+	public static Int64 GetMaxArrayChara(FixedVariableTerm p, Int64 start, Int64 end, bool isMax)
 	{
 		Int64 ret;
 		Int64 value;
@@ -498,7 +498,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return ret;
 	}
 
-	public Int64 GetInRangeArray(FixedVariableTerm p, Int64 min, Int64 max, Int64 start, Int64 end)
+	public static Int64 GetInRangeArray(FixedVariableTerm p, Int64 min, Int64 max, Int64 start, Int64 end)
 	{
 		Int64 value;
 		Int64 ret = 0;
@@ -513,7 +513,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return ret;
 	}
 
-	public Int64 GetInRangeArrayChara(FixedVariableTerm p, Int64 min, Int64 max, Int64 start, Int64 end)
+	public static Int64 GetInRangeArrayChara(FixedVariableTerm p, Int64 min, Int64 max, Int64 start, Int64 end)
 	{
 		Int64 ret = 0;
 		Int64 value;
@@ -528,7 +528,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return ret;
 	}
 
-	public void ShiftArray(FixedVariableTerm p, int shift, Int64 def, int start, int num)
+	public static void ShiftArray(FixedVariableTerm p, int shift, Int64 def, int start, int num)
 	{
 		Int64[] array;
 		if (p.Identifier.IsCharacterData)
@@ -601,7 +601,7 @@ internal sealed class VariableEvaluator : IDisposable
 		//    Buffer.BlockCopy(temp, (start + num) * 8, array, (start + num) * 8, (array.Length - (start + num)) * 8);
 	}
 
-	public void ShiftArray(FixedVariableTerm p, int shift, string def, int start, int num)
+	public static void ShiftArray(FixedVariableTerm p, int shift, string def, int start, int num)
 	{
 		string[] arrays;
 		if (p.Identifier.IsCharacterData)
@@ -673,7 +673,7 @@ internal sealed class VariableEvaluator : IDisposable
 		//    Array.Copy(temps, (start + num), arrays, (start + num), arrays.Length - (start + num));
 	}
 
-	public void RemoveArray(FixedVariableTerm p, int start, int num)
+	public static void RemoveArray(FixedVariableTerm p, int start, int num)
 	{
 		if (p.Identifier.IsInteger)
 		{
@@ -723,7 +723,7 @@ internal sealed class VariableEvaluator : IDisposable
 		}
 	}
 
-	public void SortArray(FixedVariableTerm p, GameProc.Function.SortOrder order, int start, int count)
+	public static void SortArray(FixedVariableTerm p, GameProc.Function.SortOrder order, int start, int count)
 	{
 		if (order == GameProc.Function.SortOrder.UNDEF)
 			order = GameProc.Function.SortOrder.ASCENDING;
@@ -777,7 +777,7 @@ internal sealed class VariableEvaluator : IDisposable
 
 
 
-	public void CopyArray(VariableToken var1, VariableToken var2)
+	public static void CopyArray(VariableToken var1, VariableToken var2)
 	{
 		if (var1.IsInteger)
 		{
@@ -1252,7 +1252,7 @@ internal sealed class VariableEvaluator : IDisposable
 	}
 
 
-	internal Int64 FindChara(VariableToken varID, Int64 elem64, string word, Int64 startIndex, Int64 lastIndex, bool isLast)
+	internal static Int64 FindChara(VariableToken varID, Int64 elem64, string word, Int64 startIndex, Int64 lastIndex, bool isLast)
 	{
 		if (startIndex >= lastIndex)
 			return -1;
@@ -1286,7 +1286,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return -1;
 	}
 
-	internal Int64 FindChara(VariableToken varID, Int64 elem64, Int64 word, Int64 startIndex, Int64 lastIndex, bool isLast)
+	internal static Int64 FindChara(VariableToken varID, Int64 elem64, Int64 word, Int64 startIndex, Int64 lastIndex, bool isLast)
 	{
 		if (startIndex >= lastIndex)
 			return -1;
@@ -1656,7 +1656,7 @@ internal sealed class VariableEvaluator : IDisposable
 			down[i] = 0;
 	}
 
-	private void setDefaultStain(CharacterData chara)
+	private static void setDefaultStain(CharacterData chara)
 	{
 		long[] array = chara.DataIntegerArray[(int)(VariableCode.STAIN & VariableCode.__LOWERCASE__)];
 		//STAINの配列要素数 < _REPLACE.CSVのSTAIN初期値の指定数の時エラーになるのを対処
@@ -1767,20 +1767,20 @@ internal sealed class VariableEvaluator : IDisposable
 	#region File操作
 
 
-	private string getSaveDataPathG() { return Config.SavDir + "global.sav"; }
-	private string getSaveDataPath(int index) { return string.Format("{0}save{1:00}.sav", Config.SavDir, index); }
-	private string getSaveDataPath(string s) { return string.Format("{0}save{1:00}.sav", Config.SavDir, s); }
+	private static string getSaveDataPathG() { return Config.SavDir + "global.sav"; }
+	private static string getSaveDataPath(int index) { return string.Format("{0}save{1:00}.sav", Config.SavDir, index); }
+	private static string getSaveDataPath(string s) { return string.Format("{0}save{1:00}.sav", Config.SavDir, s); }
 
-	private string getSaveDataPathV(int index) { return Program.DatDir + string.Format("var_{0:00}.dat", index); }
-	private string getSaveDataPathC(int index) { return Program.DatDir + string.Format("chara_{0:00}.dat", index); }
-	private string getSaveDataPathV(string s) { return Program.DatDir + "var_" + s + ".dat"; }
-	private string getSaveDataPathC(string s) { return Program.DatDir + "chara_" + s + ".dat"; }
+	private static string getSaveDataPathV(int index) { return Program.DatDir + string.Format("var_{0:00}.dat", index); }
+	private static string getSaveDataPathC(int index) { return Program.DatDir + string.Format("chara_{0:00}.dat", index); }
+	private static string getSaveDataPathV(string s) { return Program.DatDir + "var_" + s + ".dat"; }
+	private static string getSaveDataPathC(string s) { return Program.DatDir + "chara_" + s + ".dat"; }
 
 	/// <summary>
 	/// DatFolderが存在せず、かつ作成に失敗したらエラーを投げる
 	/// </summary>
 	/// <returns></returns>
-	public void CreateDatFolder()
+	public static void CreateDatFolder()
 	{
 		if (Directory.Exists(Program.DatDir))
 			return;
@@ -1795,7 +1795,7 @@ internal sealed class VariableEvaluator : IDisposable
 		}
 	}
 
-	public List<string> GetDatFiles(bool charadat, string pattern)
+	public static List<string> GetDatFiles(bool charadat, string pattern)
 	{
 		List<string> files = [];
 		if (!Directory.Exists(Program.DatDir))
@@ -1825,7 +1825,7 @@ internal sealed class VariableEvaluator : IDisposable
 	/// </summary>
 	/// <param name="datfilename"></param>
 	/// <returns>適切ならnull、不適切ならエラーメッセージ</returns>
-	public string CheckDatFilename(string datfilename)
+	public static string CheckDatFilename(string datfilename)
 	{
 		if (string.IsNullOrEmpty(datfilename))
 			return trerror.NothingFileName.Text;
@@ -2151,7 +2151,7 @@ internal sealed class VariableEvaluator : IDisposable
 			if (!gamebase.CheckVersion(version))
 				return;
 			bReader.ReadString();//saveMes
-			while (varData.LoadVariableBinary(bReader)) { }
+			while (VariableData.LoadVariableBinary(bReader)) { }
 			RESULT = 1;
 			return;
 		}
@@ -2295,10 +2295,10 @@ internal sealed class VariableEvaluator : IDisposable
 				if (!gamebase.CheckVersion(version))
 					return false;
 				bReader.ReadString();//saveMes
-				varData.LoadFromStreamBinary(bReader);
+				VariableData.LoadFromStreamBinary(bReader);
 				#region EM_私家版_セーブ拡張
 				if (!bReader.EOF())
-					varData.LoadFromStreamBinary(bReader);
+					VariableData.LoadFromStreamBinary(bReader);
 				#endregion
 			}
 			else
@@ -2377,10 +2377,10 @@ internal sealed class VariableEvaluator : IDisposable
 			varData.CharacterList.Add(chara);
 			chara.LoadFromStreamBinary(bReader);
 		}
-		varData.LoadFromStreamBinary(bReader);
+		VariableData.LoadFromStreamBinary(bReader);
 		#region EM_私家版_セーブ拡張
 		if (!bReader.EOF())
-			varData.LoadFromStreamBinary(bReader);
+			VariableData.LoadFromStreamBinary(bReader);
 		#endregion
 	}
 
@@ -2456,7 +2456,7 @@ internal sealed class VariableEvaluator : IDisposable
 		return true;
 	}
 
-	public void DelData(int dataIndex)
+	public static void DelData(int dataIndex)
 	{
 		string filepath = getSaveDataPath(dataIndex);
 		if (!File.Exists(filepath))

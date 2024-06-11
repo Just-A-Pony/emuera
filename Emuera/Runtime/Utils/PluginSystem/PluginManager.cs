@@ -225,7 +225,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 			return expressionMediator.VEvaluator.VariableData.DataDataTables[name];
 		}
 
-		public PluginAPICharContext CreateCharContext(long charId)
+		public static PluginAPICharContext CreateCharContext(long charId)
 		{
 			return new PluginAPICharContext(charId);
 		}

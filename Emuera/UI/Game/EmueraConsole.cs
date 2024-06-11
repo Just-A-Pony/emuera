@@ -1340,7 +1340,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		return;
 	}
 
-	string parseInput(CharStream st, bool isNest)
+	static string parseInput(CharStream st, bool isNest)
 	{
 		StringBuilder sb = new StringBuilder(20);
 		StringBuilder num = new StringBuilder(20);

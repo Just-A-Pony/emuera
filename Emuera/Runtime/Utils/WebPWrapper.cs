@@ -97,7 +97,7 @@ public sealed class WebP : IDisposable
 	/// <param name="rawWebP">the data to uncompress</param>
 	/// <param name="options">Options for advanced decode</param>
 	/// <returns>Bitmap with the WebP image</returns>
-	public Bitmap Decode(byte[] rawWebP, WebPDecoderOptions options, PixelFormat pixelFormat = PixelFormat.DontCare)
+	public static Bitmap Decode(byte[] rawWebP, WebPDecoderOptions options, PixelFormat pixelFormat = PixelFormat.DontCare)
 	{
 		GCHandle pinnedWebP = GCHandle.Alloc(rawWebP, GCHandleType.Pinned);
 		Bitmap bmp = null;
@@ -199,7 +199,7 @@ public sealed class WebP : IDisposable
 	/// <param name="width">Wanted width of thumbnail</param>
 	/// <param name="height">Wanted height of thumbnail</param>
 	/// <returns>Bitmap with the WebP thumbnail in 24bpp</returns>
-	public Bitmap GetThumbnailFast(byte[] rawWebP, int width, int height)
+	public static Bitmap GetThumbnailFast(byte[] rawWebP, int width, int height)
 	{
 		GCHandle pinnedWebP = GCHandle.Alloc(rawWebP, GCHandleType.Pinned);
 		Bitmap bmp = null;
@@ -260,7 +260,7 @@ public sealed class WebP : IDisposable
 	/// <param name="width">Wanted width of thumbnail</param>
 	/// <param name="height">Wanted height of thumbnail</param>
 	/// <returns>Bitmap with the WebP thumbnail</returns>
-	public Bitmap GetThumbnailQuality(byte[] rawWebP, int width, int height)
+	public static Bitmap GetThumbnailQuality(byte[] rawWebP, int width, int height)
 	{
 		GCHandle pinnedWebP = GCHandle.Alloc(rawWebP, GCHandleType.Pinned);
 		Bitmap bmp = null;
@@ -353,7 +353,7 @@ public sealed class WebP : IDisposable
 	/// <param name="bmp">Bitmap with the image</param>
 	/// <param name="quality">Between 0 (lower quality, lowest file size) and 100 (highest quality, higher file size)</param>
 	/// <returns>Compressed data</returns>
-	public byte[] EncodeLossy(Bitmap bmp, int quality = 75)
+	public static byte[] EncodeLossy(Bitmap bmp, int quality = 75)
 	{
 		//test bmp
 		if (bmp.Width == 0 || bmp.Height == 0)
@@ -442,7 +442,7 @@ public sealed class WebP : IDisposable
 	/// <summary>Lossless encoding bitmap to WebP (Simple encoding API)</summary>
 	/// <param name="bmp">Bitmap with the image</param>
 	/// <returns>Compressed data</returns>
-	public byte[] EncodeLossless(Bitmap bmp)
+	public static byte[] EncodeLossless(Bitmap bmp)
 	{
 		//test bmp
 		if (bmp.Width == 0 || bmp.Height == 0)
@@ -554,7 +554,7 @@ public sealed class WebP : IDisposable
 	#region | Another Public Functions |
 	/// <summary>Get the libwebp version</summary>
 	/// <returns>Version of library</returns>
-	public string GetVersion()
+	public static string GetVersion()
 	{
 		try
 		{
@@ -574,7 +574,7 @@ public sealed class WebP : IDisposable
 	/// <param name="has_alpha">Image has alpha channel</param>
 	/// <param name="has_animation">Image is a animation</param>
 	/// <param name="format">Format of image: 0 = undefined (/mixed), 1 = lossy, 2 = lossless</param>
-	public void GetInfo(byte[] rawWebP, out int width, out int height, out bool has_alpha, out bool has_animation, out string format)
+	public static void GetInfo(byte[] rawWebP, out int width, out int height, out bool has_alpha, out bool has_animation, out string format)
 	{
 		VP8StatusCode result;
 		GCHandle pinnedWebP = GCHandle.Alloc(rawWebP, GCHandleType.Pinned);
@@ -620,7 +620,7 @@ public sealed class WebP : IDisposable
 	/// <param name="reference">Reference picture</param>
 	/// <param name="metric_type">0 = PSNR, 1 = SSIM, 2 = LSIM</param>
 	/// <returns>dB in the Y/U/V/Alpha/All order</returns>
-	public float[] GetPictureDistortion(Bitmap source, Bitmap reference, int metric_type)
+	public static float[] GetPictureDistortion(Bitmap source, Bitmap reference, int metric_type)
 	{
 		WebPPicture wpicSource = new WebPPicture();
 		WebPPicture wpicReference = new WebPPicture();

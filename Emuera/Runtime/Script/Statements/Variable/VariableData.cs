@@ -873,7 +873,7 @@ internal sealed partial class VariableData : IDisposable
 				copyListToArray3D(value, (Int64[,,])var.GetArray());
 	}
 
-	private void copyListToArray<T>(List<T> srcList, T[] destArray)
+	private static void copyListToArray<T>(List<T> srcList, T[] destArray)
 	{
 		int count = Math.Min(srcList.Count, destArray.Length);
 		for (int i = 0; i < count; i++)
@@ -882,7 +882,7 @@ internal sealed partial class VariableData : IDisposable
 		}
 	}
 
-	private void copyListToArray2D<T>(List<T[]> srcList, T[,] destArray)
+	private static void copyListToArray2D<T>(List<T[]> srcList, T[,] destArray)
 	{
 		int countX = Math.Min(srcList.Count, destArray.GetLength(0));
 		int dLength = destArray.GetLength(1);
@@ -896,7 +896,7 @@ internal sealed partial class VariableData : IDisposable
 			}
 		}
 	}
-	private void copyListToArray3D<T>(List<List<T[]>> srcList, T[,,] destArray)
+	private static void copyListToArray3D<T>(List<List<T[]>> srcList, T[,,] destArray)
 	{
 		int countX = Math.Min(srcList.Count, destArray.GetLength(0));
 		int dLength1 = destArray.GetLength(1);

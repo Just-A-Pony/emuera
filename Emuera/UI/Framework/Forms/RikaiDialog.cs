@@ -278,7 +278,7 @@ namespace MinorShift.Emuera.Forms
 
 		//In theory one of them will always stay in the kana area, while other will be all over the place.
 		//I will check if this is true or not once this thing actually works.
-		int WhichIsCloser(byte[] first, byte[] second, byte[] tothis)
+		static int WhichIsCloser(byte[] first, byte[] second, byte[] tothis)
 		{
 			if (first[0] == second[0] && second[0] == tothis[0]) return 0;
 			int s = second[0] - tothis[0];
@@ -290,7 +290,7 @@ namespace MinorShift.Emuera.Forms
 		}
 
 
-		private int Compare(byte[] first, byte[] second)
+		private static int Compare(byte[] first, byte[] second)
 		{
 			int i = 0;
 			while (true)

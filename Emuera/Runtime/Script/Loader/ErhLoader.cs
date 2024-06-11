@@ -380,7 +380,7 @@ internal sealed class ErhLoader
         }
     }
     #endregion
-    private void analyzeSharpFunction(CharStream st, ScriptPosition? position, bool funcs)
+    private static void analyzeSharpFunction(CharStream st, ScriptPosition? position, bool funcs)
     {
         throw new NotImplCodeEE();
         //WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AllowAssignment);

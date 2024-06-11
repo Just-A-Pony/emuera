@@ -79,7 +79,7 @@ internal sealed class ExpressionMediator
 		return str;
 	}
 
-	public string CheckEscape(string str)
+	public static string CheckEscape(string str)
 	{
 		CharStream st = new(str);
 		StringBuilder buffer = new();
@@ -117,7 +117,7 @@ internal sealed class ExpressionMediator
 		return buffer.ToString();
 	}
 
-	public string CreateBar(Int64 var, Int64 max, Int64 length)
+	public static string CreateBar(Int64 var, Int64 max, Int64 length)
 	{
 		if (max <= 0)
 			throw new CodeEE(trerror.MaxBarNotPositive.Text);

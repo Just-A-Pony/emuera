@@ -274,7 +274,7 @@ internal sealed class ConfigItem<T> : AConfigItem
 
 
 	#region EM_私家版_LoadText＆SaveText機能拡張
-	private bool tryStringToStringList(string arg, ref List<string> vs)
+	private static bool tryStringToStringList(string arg, ref List<string> vs)
 	{
 		string[] tokens = arg.Split(',');
 		vs.Clear();

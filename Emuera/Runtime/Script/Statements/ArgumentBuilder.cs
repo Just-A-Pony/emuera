@@ -14,7 +14,7 @@ namespace MinorShift.Emuera.GameProc.Function;
 
 internal abstract class ArgumentBuilder
 {
-	protected void assignwarn(string mes, InstructionLine line, int level, bool isBackComp)
+	protected static void assignwarn(string mes, InstructionLine line, int level, bool isBackComp)
 	{
 		bool isError = level >= 2;
 		if (isError)
@@ -24,7 +24,7 @@ internal abstract class ArgumentBuilder
 		}
 		ParserMediator.Warn(mes, line, level, isError, isBackComp);
 	}
-	protected void warn(string mes, InstructionLine line, int level, bool isBackComp)
+	protected static void warn(string mes, InstructionLine line, int level, bool isBackComp)
 	{
 		mes = line.Function.Name + trerror.Instruction.Text + mes;
 		bool isError = level >= 2;
@@ -100,7 +100,7 @@ internal abstract class ArgumentBuilder
 		return true;
 	}
 
-	protected VariableTerm getChangeableVariable(List<AExpression> terms, int i, InstructionLine line)
+	protected static VariableTerm getChangeableVariable(List<AExpression> terms, int i, InstructionLine line)
 	{
 		if (!(terms[i - 1] is VariableTerm varTerm))
 		{
@@ -115,13 +115,13 @@ internal abstract class ArgumentBuilder
 		return varTerm;
 	}
 
-	protected WordCollection popWords(InstructionLine line)
+	protected static WordCollection popWords(InstructionLine line)
 	{
 		CharStream st = line.PopArgumentPrimitive();
 		return LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
 	}
 
-	protected List<AExpression> popTerms(InstructionLine line)
+	protected static List<AExpression> popTerms(InstructionLine line)
 	{
 		CharStream st = line.PopArgumentPrimitive();
 		WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);

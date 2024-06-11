@@ -143,7 +143,7 @@ internal sealed partial class FunctionIdentifier
 				str = ((ExpressionArgument)func.Argument).Term.GetStrValue(exm);
 				if (isForms)
 				{
-					str = exm.CheckEscape(str);
+					str = ExpressionMediator.CheckEscape(str);
 					StrFormWord wt = LexicalAnalyzer.AnalyseFormattedString(new CharStream(str), FormStrEndWith.EoL, false);
 					StrForm strForm = StrForm.FromWordToken(wt);
 					str = strForm.GetString(exm);
@@ -1254,7 +1254,7 @@ internal sealed partial class FunctionIdentifier
 			Int64 var = barArg.Terms[0].GetIntValue(exm);
 			Int64 max = barArg.Terms[1].GetIntValue(exm);
 			Int64 length = barArg.Terms[2].GetIntValue(exm);
-			exm.Console.Print(exm.CreateBar(var, max, length));
+			exm.Console.Print(ExpressionMediator.CreateBar(var, max, length));
 			if (newline)
 				exm.Console.NewLine();
 		}
@@ -1593,12 +1593,12 @@ internal sealed partial class FunctionIdentifier
 			if (var.IsString)
 			{
 				string src = spvarsetarg.Term.GetStrValue(exm);
-				exm.VEvaluator.SetValueAll(p, src, start, end);
+				VariableEvaluator.SetValueAll(p, src, start, end);
 			}
 			else
 			{
 				long src = spvarsetarg.Term.GetIntValue(exm);
-				exm.VEvaluator.SetValueAll(p, src, start, end);
+				VariableEvaluator.SetValueAll(p, src, start, end);
 			}
 		}
 	}
@@ -1910,7 +1910,7 @@ internal sealed partial class FunctionIdentifier
 				target = ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
 
 			int target32 = FunctionIdentifier.toUInt32inArg(target, "DELDATA", 1);
-			exm.VEvaluator.DelData(target32);
+			VariableEvaluator.DelData(target32);
 		}
 	}
 

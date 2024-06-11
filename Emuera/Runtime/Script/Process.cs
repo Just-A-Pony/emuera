@@ -567,7 +567,7 @@ internal sealed partial class Process(EmueraConsole view)
             console.PrintError(str);
     }
 
-    public string getRawTextFormFilewithLine(ScriptPosition? position)
+    public static string getRawTextFormFilewithLine(ScriptPosition? position)
     {
         string extents = position.Value.Filename[^4..].ToLower();
         if (extents == ".erb")
