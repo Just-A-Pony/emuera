@@ -2303,13 +2303,13 @@ internal sealed partial class VariableData
 
 		public override void SetValueAll(long value, int start, int end, int charaPos)
 		{
-			if (value == 0)
+			if (value == default)
 			{
-				Array.Clear(array);
+				Array.Clear(array, start, end - start);
 			}
 			else
 			{
-				Array.Fill(array, value);
+				Array.Fill(array, value, start, end - start);
 			}
 		}
 
@@ -2510,8 +2510,14 @@ internal sealed partial class VariableData
 		}
 		public override void SetValueAll(string value, int start, int end, int charaPos)
 		{
-			for (int i = start; i < end; i++)
-				array[i] = value;
+			if (value == default)
+			{
+				Array.Clear(array, start, end - start);
+			}
+			else
+			{
+				Array.Fill(array, value, start, end - start);
+			}
 		}
 		public override object GetArray() { return array; }
 		public override void ScopeIn()
