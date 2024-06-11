@@ -141,7 +141,7 @@ internal sealed class ConsoleRectangleShapePart : ConsoleShapePart
 	readonly RectangleF originalRectF;
 	bool visible = false;
 	Rectangle rect;
-	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)
+	public override void DrawTo(System.Drawing.Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
 	{
 		if (!visible)
 			return;
@@ -173,7 +173,7 @@ internal sealed class ConsoleSpacePart : ConsoleShapePart
 		//Width = width;
 	}
 
-	public override void DrawTo(System.Drawing.Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode) { }
+	public override void DrawTo(System.Drawing.Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false) { }
 
 	public override void SetWidth(StringMeasure sm, float subPixel)
 	{
@@ -191,7 +191,7 @@ internal sealed class ConsoleErrorShapePart : ConsoleShapePart
 		AltText = errMes;
 	}
 
-	public override void DrawTo(System.Drawing.Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)
+	public override void DrawTo(System.Drawing.Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
 	{
 		if (mode == TextDrawingMode.GRAPHICS)
 			graph.DrawString(Str, Config.DefaultFont, new SolidBrush(Config.ForeColor), new Point(PointX, pointY));

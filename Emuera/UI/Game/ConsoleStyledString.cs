@@ -96,7 +96,7 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 		#endregion
 	}
 
-	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)
+	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
 	{
 		if (this.Error)
 			return;
@@ -108,7 +108,7 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 			{
 				if (!(Color.Yellow.R == color.R &&
 					Color.Yellow.G == color.G &&
-					Color.Yellow.B == color.B) && 
+					Color.Yellow.B == color.B) &&
 					!string.IsNullOrWhiteSpace(Str))
 				{
 					backcolor = Color.Gray;
@@ -117,7 +117,9 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 			color = this.ButtonColor;
 		}
 		else if (isBackLog && !colorChanged)
+		{
 			color = Config.LogColor;
+		}
 
 		#region EM_私家版_描画拡張
 		if (mode == TextDrawingMode.GRAPHICS)
@@ -127,10 +129,20 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 		else
 		// TextRenderer.DrawText(graph, Str, Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
 		{
-			//todo:これもオプション化したい
-			if (JSONConfig.Data.UseButtonFocusBackgroundColor && backcolor.HasValue)
+			if (JSONConfig.Data.UseButtonFocusBackgroundColor)
 			{
-				TextRenderer.DrawText(graph, Str.AsSpan(), Font, new Point(PointX, pointY), color, backColor: backcolor.Value, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
+				if (isButton && !isBackLog)
+				{
+					if (!backcolor.HasValue)
+					{
+						backcolor = Color.FromArgb(50, 50, 50);
+					}
+					TextRenderer.DrawText(graph, Str.AsSpan(), Font, new Point(PointX, pointY), color, backColor: backcolor.Value, TextFormatFlags.NoPrefix);
+				}
+				else
+				{
+					TextRenderer.DrawText(graph, Str.AsSpan(), Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
+				}
 			}
 			else
 			{

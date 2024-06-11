@@ -193,7 +193,7 @@ class ConsoleImagePart : AConsoleDisplayPart
 		return 0;
 	}
 	#endregion
-	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)
+	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
 	{
 		if (this.Error)
 			return;

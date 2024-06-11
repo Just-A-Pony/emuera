@@ -320,7 +320,7 @@ internal sealed class ConsoleButtonString
 		foreach (AConsoleDisplayPart css in strArray)
 		{
 			if (css is ConsoleDivPart div) continue;
-			css.DrawTo(graph, pointY, isSelecting, isBackLog, mode);
+			css.DrawTo(graph, pointY, isSelecting, isBackLog, mode, IsButton);
 		}
 		#endregion
 	}

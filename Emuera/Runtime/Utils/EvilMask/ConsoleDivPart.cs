@@ -143,7 +143,7 @@ class ConsoleDivPart : AConsoleDisplayPart
 		}
 		return pointing;
 	}
-	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)
+	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
 	{
 		if (GlobalStatic.EMediator.Console.Window == null) return;
 		var rect = IsRelative ? new Rectangle(PointX + xOffset, pointY + PointY, width + 2, Height)
