@@ -132,7 +132,7 @@ internal sealed partial class FunctionIdentifier
 				foreach (AExpression termV in terms)
 				{
 					if (termV.GetOperandType() == typeof(Int64))
-						builder.Append(termV.GetIntValue(exm).ToString());
+						builder.Append(termV.GetIntValue(exm));
 					else
 						builder.Append(termV.GetStrValue(exm));
 				}
