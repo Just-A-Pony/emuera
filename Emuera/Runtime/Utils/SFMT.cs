@@ -316,7 +316,7 @@ public sealed class MTRandom
 	/// </summary>
 	private void period_certification()
 	{
-		UInt32[] PARITY = new UInt32[] { PARITY1, PARITY2, PARITY3, PARITY4 };
+		UInt32[] PARITY = [PARITY1, PARITY2, PARITY3, PARITY4];
 		UInt32 inner = 0;
 		int i, j;
 		UInt32 work;

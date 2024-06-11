@@ -30,9 +30,9 @@ internal static partial class FunctionMethodCreator
 		public HtmlStringLenMethod()
 		{
 			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int}, OmitStart = 1 }
-				};
+				];
 			CanRestructure = true;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -53,19 +53,19 @@ internal static partial class FunctionMethodCreator
 		public XmlGetMethod()
 		{
 			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.String, ArgType.Int, ArgType.Int}, OmitStart = 2 },
 					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.String, ArgType.RefString1D, ArgType.Int}, OmitStart = 3 },
-				};
+				];
 			CanRestructure = false;
 		}
 		public XmlGetMethod(bool byname) : this()
 		{
 			byName = byname;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.String, ArgType.Int, ArgType.Int}, OmitStart = 2 },
 					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.String, ArgType.RefString1D, ArgType.Int}, OmitStart = 3 },
-				};
+				];
 		}
 		private bool byName;
 		private static void OutPutNode(XmlNode node, string[] array, int i, Int64 style)
@@ -165,9 +165,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			CanRestructure = false;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D }, OmitStart = 1 },
-				};
+				];
 			this.type = type;
 			this.action = act;
 		}
@@ -223,9 +223,9 @@ internal static partial class FunctionMethodCreator
 		public EnumFilesMethod()
 		{
 			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Int, ArgType.RefString1D }, OmitStart = 1 },
-				};
+				];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -342,10 +342,10 @@ internal static partial class FunctionMethodCreator
 		public ArrayMultiSortExMethod()
 		{
 			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D, ArgType.Int, ArgType.Int | ArgType.DisallowVoid }, OmitStart = 2 },
 					new ArgTypeList{ ArgTypes = { ArgType.RefInt1D, ArgType.RefString1D, ArgType.Int, ArgType.Int | ArgType.DisallowVoid }, OmitStart = 2 },
-				};
+				];
 			CanRestructure = false;
 		}
 		private string CheckVariableTerm(AExpression arg, string v)
@@ -498,9 +498,9 @@ internal static partial class FunctionMethodCreator
 		public SetVarMethod()
 		{
 			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Any } },
-				};
+				];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -536,9 +536,9 @@ internal static partial class FunctionMethodCreator
 		public VarSetExMethod()
 		{
 			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Any, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 2 },
-				};
+				];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -684,10 +684,10 @@ internal static partial class FunctionMethodCreator
 		public RegexpMatchMethod()
 		{
 			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Int }, OmitStart = 2 },
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.RefInt, ArgType.RefString1D } },
-				};
+				];
 			CanRestructure = false;
 		}
 
@@ -737,13 +737,13 @@ internal static partial class FunctionMethodCreator
 			op = type;
 			ReturnType = typeof(Int64);
 			if (op == Operation.Create)
-				argumentTypeArrayEx = new ArgTypeList[] {
+				argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.String } },
-					};
+					];
 			else
-				argumentTypeArrayEx = new ArgTypeList[] {
+				argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.Any } },
-					};
+					];
 			CanRestructure = false;
 		}
 		private Operation op;
@@ -786,18 +786,18 @@ internal static partial class FunctionMethodCreator
 		public XmlSetMethod()
 		{
 			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
 					new ArgTypeList{ ArgTypes = { ArgType.RefString, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
-				};
+				];
 			CanRestructure = false;
 		}
 		public XmlSetMethod(bool byname) : this()
 		{
 			byName = byname;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
-				};
+				];
 		}
 		private bool byName;
 		private static void SetNode(XmlNode node, string val, Int64 style)
@@ -870,9 +870,9 @@ internal static partial class FunctionMethodCreator
 		public XmlToStrMethod()
 		{
 			ReturnType = typeof(string);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Any } },
-				};
+				];
 			CanRestructure = false;
 		}
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -890,15 +890,15 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			if (op == Operation.Node)
-				argumentTypeArrayEx = new ArgTypeList[] {
+				argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
 						new ArgTypeList{ ArgTypes = { ArgType.RefString, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 }
-					};
+					];
 			else
-				argumentTypeArrayEx = new ArgTypeList[] {
+				argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
 						new ArgTypeList{ ArgTypes = { ArgType.RefString, ArgType.String, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 }
-					};
+					];
 			CanRestructure = false;
 			this.op = op;
 		}
@@ -906,13 +906,13 @@ internal static partial class FunctionMethodCreator
 		{
 			byName = byname;
 			if (op == Operation.Node)
-				argumentTypeArrayEx = new ArgTypeList[] {
+				argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
-					};
+					];
 			else
-				argumentTypeArrayEx = new ArgTypeList[] {
+				argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
-					};
+					];
 		}
 		private bool byName;
 		Operation op;
@@ -1044,19 +1044,19 @@ internal static partial class FunctionMethodCreator
 		public XmlRemoveNodeMethod(Operation op)
 		{
 			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.Int }, OmitStart = 2 },
 						new ArgTypeList{ ArgTypes = { ArgType.RefString, ArgType.String, ArgType.Int }, OmitStart = 2 }
-					};
+					];
 			CanRestructure = false;
 			this.op = op;
 		}
 		public XmlRemoveNodeMethod(Operation op, bool byname) : this(op)
 		{
 			byName = byname;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Int }, OmitStart = 2 },
-					};
+					];
 		}
 		private bool byName;
 		Operation op;
@@ -1141,19 +1141,19 @@ internal static partial class FunctionMethodCreator
 		public XmlReplaceMethod()
 		{
 			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.String } },
 						new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.String, ArgType.Int }, OmitStart = 3 },
 						new ArgTypeList{ ArgTypes = { ArgType.RefString, ArgType.String, ArgType.String, ArgType.Int }, OmitStart = 3 },
-					};
+					];
 			CanRestructure = false;
 		}
 		public XmlReplaceMethod(bool byname) : this()
 		{
 			byName = byname;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.Int }, OmitStart = 3 },
-					};
+					];
 		}
 		private bool byName;
 
@@ -1309,7 +1309,7 @@ internal static partial class FunctionMethodCreator
 			c.AllowDBNull = false;
 			c.Unique = true;
 			dict[key] = dt;
-			dt.PrimaryKey = new DataColumn[] { c };
+			dt.PrimaryKey = [c];
 			return 1;
 		}
 	}
@@ -1320,13 +1320,13 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			if (type == Operation.Create)
-				argumentTypeArrayEx = new ArgTypeList[] {
+				argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Any, ArgType.Int }, OmitStart = 2 },
-					};
+					];
 			else if (type == Operation.Names)
-				argumentTypeArrayEx = new ArgTypeList[] {
+				argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D }, OmitStart = 1 },
-					};
+					];
 			else
 				argumentTypeArray = [typeof(string), typeof(string)];
 			CanRestructure = false;
@@ -1388,15 +1388,15 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			if (type == Operation.Add)
-				argumentTypeArrayEx = new ArgTypeList[] {
+				argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.VariadicString, ArgType.VariadicAny }, MatchVariadicGroup = true, OmitStart = 1 },
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D, ArgType.RefAny1D, ArgType.Int } },
-					};
+					];
 			else
-				argumentTypeArrayEx = new ArgTypeList[] {
+				argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int, ArgType.VariadicString, ArgType.VariadicAny }, MatchVariadicGroup = true },
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int, ArgType.RefString1D, ArgType.RefAny1D, ArgType.Int } },
-					};
+					];
 			CanRestructure = false;
 			op = type;
 		}
@@ -1524,10 +1524,10 @@ internal static partial class FunctionMethodCreator
 		public DataTableRowRemoveMethod()
 		{
 			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int } },
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefInt1D, ArgType.Int } },
-					};
+					];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -1551,7 +1551,7 @@ internal static partial class FunctionMethodCreator
 				if (rows == null) return 0;
 			}
 			else if (dt.Rows.Find(arguments[1].GetIntValue(exm)) is DataRow row)
-				rows = new DataRow[] { row };
+				rows = [row];
 			else return 0;
 			foreach (var row in rows) dt.Rows.Remove(row);
 			return rows.Length;
@@ -1563,9 +1563,9 @@ internal static partial class FunctionMethodCreator
 		public DataTableCellGetMethod(Operation type)
 		{
 			ReturnType = type == Operation.Gets ? typeof(string) : typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int, ArgType.String, ArgType.Int }, OmitStart = 3 },
-					};
+					];
 			CanRestructure = false;
 			op = type;
 		}
@@ -1630,9 +1630,9 @@ internal static partial class FunctionMethodCreator
 		public DataTableCellSetMethod()
 		{
 			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int, ArgType.String, ArgType.Any, ArgType.Int }, OmitStart = 3 },
-				};
+				];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -1672,9 +1672,9 @@ internal static partial class FunctionMethodCreator
 		public DataTableSelectMethod()
 		{
 			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.RefInt1D }, OmitStart = 1 },
-				};
+				];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -1708,9 +1708,9 @@ internal static partial class FunctionMethodCreator
 		public DataTableToXmlMethod()
 		{
 			ReturnType = typeof(string);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString }, OmitStart = 1 },
-				};
+				];
 			CanRestructure = false;
 		}
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -1848,10 +1848,10 @@ internal static partial class FunctionMethodCreator
 				case Operation.ToXml:
 					 argumentTypeArray = [typeof(string)]; break;
 				case Operation.GetKeys:
-					argumentTypeArrayEx = new ArgTypeList[] {
+					argumentTypeArrayEx = [
 							new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int }, OmitStart = 1 },
 							new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.RefString1D, ArgType.Int } },
-						}; break;
+						]; break;
 			}
 			CanRestructure = false;
 			op = type;
@@ -1986,9 +1986,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int }, OmitStart = 1 },
-				};
+				];
 			CanRestructure = false;
 		}
 
@@ -2060,18 +2060,18 @@ internal static partial class FunctionMethodCreator
 			ReturnType = typeof(string);
 			argumentTypeArray = null;
 			charaStr = CharacterStrData.NAME;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int }, OmitStart = 1 },
-				};
+				];
 			CanRestructure = true;
 		}
 		public CsvStrDataMethod(CharacterStrData cStr)
 		{
 			ReturnType = typeof(string);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int }, OmitStart = 1 },
-				};
+				];
 			charaStr = cStr;
 			CanRestructure = true;
 		}
@@ -2108,9 +2108,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(string);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 2 },
-				};
+				];
 			CanRestructure = true;
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
@@ -2152,9 +2152,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 2 },
-				};
+				];
 			charaInt = CharacterIntData.BASE;
 			CanRestructure = true;
 		}
@@ -2162,9 +2162,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 2 },
-				};
+				];
 			charaInt = cInt;
 			CanRestructure = true;
 		}
@@ -2206,9 +2206,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.Any, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
-				};
+				];
 			CanRestructure = false;
 			isLast = last;
 		}
@@ -2286,9 +2286,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int }, OmitStart = 1 },
-				};
+				];
 			CanRestructure = true;
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
@@ -2327,9 +2327,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int }, OmitStart = 1 },
-				};
+				];
 			CanRestructure = true;
 			//1808beta009 参照型変数の追加によりちょっと面倒になった
 			HasUniqueRestructure = true;
@@ -2483,9 +2483,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String }, OmitStart = 0 },
-				};
+				];
 			CanRestructure = false;
 			this.type = type;
 		}
@@ -2790,9 +2790,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(string);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String}, OmitStart = 1 }
-				};
+				];
 			CanRestructure = true;
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
@@ -2947,9 +2947,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int}, OmitStart = 1 }
-				};
+				];
 			CanRestructure = false;
 		}
 
@@ -3007,9 +3007,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.VariadicInt}, OmitStart = 1 }
-				};
+				];
 			isMax = true;
 			CanRestructure = true;
 		}
@@ -3017,9 +3017,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.VariadicInt}, OmitStart = 1 }
-				};
+				];
 			isMax = max;
 			CanRestructure = true;
 		}
@@ -3257,9 +3257,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.RefIntArray, ArgType.Int, ArgType.Int }, OmitStart = 1 },
-				};
+				];
 			isCharaRange = false;
 			CanRestructure = false;
 		}
@@ -3267,9 +3267,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefIntArray | ArgType.AllowConstRef, ArgType.Int, ArgType.Int }, OmitStart = 1 }
-				};
+				];
 			isCharaRange = isChara;
 			CanRestructure = false;
 		}
@@ -3330,9 +3330,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.RefAny1D | ArgType.AllowConstRef, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
-				};
+				];
 			isCharaRange = false;
 			CanRestructure = false;
 			HasUniqueRestructure = true;
@@ -3341,10 +3341,10 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					//new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefAny1D | ArgType.AllowConstRef | ArgType.Any, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
 					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.SameAsFirst, ArgType.Int, ArgType.Int }, OmitStart = 2 },
-				};
+				];
 			isCharaRange = isChara;
 			CanRestructure = false;
 			HasUniqueRestructure = true;
@@ -3436,9 +3436,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.VariadicSameAsFirst } },
-				};
+				];
 			CanRestructure = false;
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
@@ -3488,9 +3488,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.VariadicSameAsFirst } },
-				};
+				];
 			CanRestructure = false;
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
@@ -3543,9 +3543,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.VariadicSameAsFirst } },
-				};
+				];
 			CanRestructure = false;
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
@@ -3597,9 +3597,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.RefInt1D | ArgType.AllowConstRef, ArgType.Int, ArgType.Int }, OmitStart = 1 },
-				};
+				];
 			isCharaRange = false;
 			isMax = true;
 			funcName = "MAXARRAY";
@@ -3609,9 +3609,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefInt1D | ArgType.AllowConstRef, ArgType.Int, ArgType.Int }, OmitStart = 1 },
-				};
+				];
 			isCharaRange = isChara;
 			isMax = true;
 			if (isCharaRange)
@@ -3625,12 +3625,12 @@ internal static partial class FunctionMethodCreator
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
 			argumentTypeArrayEx = isChara
-				? new ArgTypeList[] {
+				? [
 						new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefInt1D | ArgType.AllowConstRef, ArgType.Int, ArgType.Int }, OmitStart = 1 },
-				}
-				: new ArgTypeList[] {
+				]
+				: [
 						new ArgTypeList{ ArgTypes = { ArgType.RefInt1D | ArgType.AllowConstRef, ArgType.Int, ArgType.Int }, OmitStart = 1 },
-				};
+				];
 			isCharaRange = isChara;
 			isMax = isMaxFunc;
 			funcName = (isMax ? "MAX" : "MIN") + (isCharaRange ? "C" : "") + "ARRAY";
@@ -3721,9 +3721,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.RefAny | ArgType.AllowConstRef, ArgType.String, ArgType.Int }, OmitStart = 2 },
-				};
+				];
 			CanRestructure = true;
 			HasUniqueRestructure = true;
 		}
@@ -3867,9 +3867,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.RefAny1D | ArgType.AllowConstRef, ArgType.SameAsFirst, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 2 },
-				};
+				];
 			CanRestructure = true; //すべて定数項ならできるはず
 			HasUniqueRestructure = true;
 			isLast = last;
@@ -3981,18 +3981,18 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.RefInt1D | ArgType.AllowConstRef, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 3 },
-				};
+				];
 			CanRestructure = false;
 		}
 		public InRangeArrayMethod(bool isChara)
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.CharacterData | ArgType.RefInt1D | ArgType.AllowConstRef, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 3 },
-				};
+				];
 			isCharaRange = isChara;
 			CanRestructure = false;
 		}
@@ -4063,9 +4063,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.RefAny1D, ArgType.RefAnyArray | ArgType.Variadic }, OmitStart = 1 },
-				};
+				];
 			CanRestructure = false;
 			HasUniqueRestructure = true;
 		}
@@ -4253,9 +4253,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(string);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int, ArgType.Int}, OmitStart = 1 }
-				};
+				];
 			CanRestructure = true;
 		}
 
@@ -4298,9 +4298,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(string);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int, ArgType.Int}, OmitStart = 1 }
-				};
+				];
 			CanRestructure = true;
 		}
 
@@ -4357,9 +4357,9 @@ internal static partial class FunctionMethodCreator
 			ReturnType = typeof(Int64);
 			argumentTypeArray = null;
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Int}, OmitStart = 2 }
-				};
+				];
 			CanRestructure = true;
 			this.unicode = unicode;
 		}
@@ -4444,9 +4444,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(string);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String }, OmitStart = 1 }
-				};
+				];
 			CanRestructure = true;
 		}
 
@@ -4594,10 +4594,10 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(string);
 			// argumentTypeArray = new Type[] { typeof(string), typeof(string), typeof(string) };
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.Int }, OmitStart = 3 },
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.RefString1D | ArgType.AllowConstRef, ArgType.Int } },
-				};
+				];
 			HasUniqueRestructure = true;
 			CanRestructure = false;
 		}
@@ -4803,9 +4803,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = new Type[] { null };
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int }, OmitStart = 1 },
-				};
+				];
 			CanRestructure = true;
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
@@ -4938,9 +4938,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(string);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.RefAnyArray | ArgType.AllowConstRef, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 1 },
-				};
+				];
 			HasUniqueRestructure = true;
 			CanRestructure = true;
 		}
@@ -5065,9 +5065,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(string);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int }, OmitStart = 0 }
-				};
+				];
 			CanRestructure = false;
 		}
 
@@ -5442,9 +5442,9 @@ internal static partial class FunctionMethodCreator
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = new Type[] { typeof(Int64), typeof(string), typeof(Int64) };
 			// argumentTypeArray = new Type[] { typeof(Int64), typeof(string), typeof(Int64), typeof(Int64) };
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 2 }
-				};
+				];
 			CanRestructure = false;
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
@@ -5562,9 +5562,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = new Type[] { typeof(Int64), typeof(string), typeof(Int64), typeof(Int64) };
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 2 }
-				};
+				];
 			CanRestructure = false;
 		}
 
@@ -5635,9 +5635,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = new Type[] { typeof(string), typeof(string), typeof(Int64), typeof(Int64) };
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 }
-				};
+				];
 			CanRestructure = false;
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
@@ -5732,9 +5732,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64) };
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int }, OmitStart = 3 }
-				};
+				];
 			CanRestructure = false;
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
@@ -5967,9 +5967,9 @@ internal static partial class FunctionMethodCreator
 		public GraphicsCreateFromFileMethod()
 		{
 			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.Int }, OmitStart = 2 }
-				};
+				];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -6055,10 +6055,10 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			//  argumentTypeArray = [typeof(string)];
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int } },
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int } },
-				};
+				];
 			CanRestructure = false;
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
@@ -6166,10 +6166,10 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64) };
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int } },
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int } }
-				};
+				];
 			argumentTypeArray = null;
 			CanRestructure = false;
 		}
@@ -6240,14 +6240,14 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int,
 							ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int,
 							ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.RefInt2D | ArgType.AllowConstRef }, OmitStart = 10 },
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int,
 							ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int,
 							ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.RefInt3D | ArgType.AllowConstRef }, OmitStart = 10 },
-				};
+				];
 			CanRestructure = false;
 			HasUniqueRestructure = true;
 		}
@@ -6361,12 +6361,12 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = new Type[] { typeof(Int64), typeof(string), typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64) };
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String } },
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.Int, ArgType.Int } },
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.RefInt2D | ArgType.AllowConstRef }, OmitStart = 6 },
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.RefInt3D | ArgType.AllowConstRef }, OmitStart = 6 },
-				};
+				];
 			CanRestructure = false;
 			HasUniqueRestructure = true;
 		}
@@ -6716,9 +6716,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = new Type[] { typeof(Int64), typeof(string), typeof(string), typeof(Int64), typeof(Int64), typeof(Int64), typeof(string) };
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int, ArgType.Int, ArgType.String }, OmitStart = 6 },
-				};
+				];
 			CanRestructure = false;
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
@@ -6891,9 +6891,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = new Type[] { typeof(string) ,typeof(Int64), typeof(Int64), typeof(Int64) };
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Any, ArgType.Int, ArgType.Int }, OmitStart = 2 },
-				};
+				];
 			CanRestructure = false;
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
@@ -7000,9 +7000,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(string);
 			// argumentTypeArray = new Type[] { typeof(Int64), typeof(Int64), typeof(Int64) };
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.Int, ArgType.Int }, OmitStart = 1 },
-				};
+				];
 			CanRestructure = false;
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
@@ -7211,9 +7211,9 @@ internal static partial class FunctionMethodCreator
 		public ExistFunctionMethod()
 		{
 			ReturnType = typeof(Int64);
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int}, OmitStart = 1 },
-				};
+				];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -7340,9 +7340,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(string);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.RefAny | ArgType.AllowConstRef, ArgType.Int, ArgType.Int }, OmitStart = 2 },
-				};
+				];
 			CanRestructure = true;
 			HasUniqueRestructure = true;
 		}
@@ -7374,9 +7374,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(string);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int }},
-				};
+				];
 			CanRestructure = false;
 		}
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -7464,9 +7464,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int }, OmitStart = 1 },
-				};
+				];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)

@@ -2142,7 +2142,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	#endregion
 
 	#region EM_私家版_描画拡張
-	int[] dummy = new int[] { 0 };
+	int[] dummy = [0];
 	#endregion
 	/// <summary>
 	/// マウス位置をボタンの選択状態に反映させる

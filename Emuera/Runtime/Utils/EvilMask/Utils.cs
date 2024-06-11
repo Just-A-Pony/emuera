@@ -282,7 +282,7 @@ internal sealed class Utils
 
 	public sealed class DataTable
 	{
-		static Type[] builtInDTTypes = { typeof(sbyte), typeof(Int16), typeof(Int32), typeof(Int64), typeof(string) };
+		static Type[] builtInDTTypes = [typeof(sbyte), typeof(Int16), typeof(Int32), typeof(Int64), typeof(string)];
 		static Dictionary<Type, string> builtInDictDTTypeNames = new Dictionary<Type, string>{
 				{ typeof(sbyte), "int8" },
 				{ typeof(Int16), "int16" },

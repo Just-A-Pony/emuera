@@ -57,7 +57,7 @@ partial class Rikaichan
 {
 	DeinflectRule[] deinflectRuleData;
 
-	string[] deinflectReasonStrings = new string[] {
+	string[] deinflectReasonStrings = [
 			"PolitePastNegative",
 			"PoliteNegative",
 			"PoliteVolitional",
@@ -90,7 +90,7 @@ partial class Rikaichan
 			"Continuous",
 			"Ki",
 			"SuruNoun",
-		};
+		];
 
 	void InitData()
 	{

@@ -217,7 +217,7 @@ internal class ClipboardProcessor
 	public static string StripHTML(string input)
 	{
 		// still faster to use String.Contains to check if we need to do this at all first, supposedly
-		if (Config.CBIgnoreTags && input.Contains("<"))
+		if (Config.CBIgnoreTags && input.Contains('<'))
 		{
 			// regex is faster and simpler than a for loop you nerds
 			return Regex.Replace(input, HTML_TAG_PATTERN, Config.CBReplaceTags);

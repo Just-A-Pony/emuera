@@ -326,7 +326,7 @@ internal sealed partial class Process
 					else if (target > int.MaxValue)
 						throw new CodeEE(string.Format(trerror.TooLargeSavedataArg.Text, target.ToString()));
 					string savemes = spSavedataArg.StrExpression.GetStrValue(exm);
-					if (savemes.Contains("\n"))
+					if (savemes.Contains('\n'))
 						throw new CodeEE(trerror.SavetextContainNewLineCharacter.Text);
 					if (!vEvaluator.SaveTo((int)target, savemes))
 					{
@@ -535,7 +535,7 @@ internal sealed partial class Process
 				{
 					SpSplitArgument spSplitArg = (SpSplitArgument)func.Argument;
 					string target = spSplitArg.TargetStr.GetStrValue(exm);
-					string[] split = new string[] { spSplitArg.Split.GetStrValue(exm) };
+					string[] split = [spSplitArg.Split.GetStrValue(exm)];
 					string[] retStr = target.Split(split, StringSplitOptions.None);
 					spSplitArg.Num.SetValue(retStr.Length, exm);
 					if (retStr.Length > spSplitArg.Var.GetLength(0))
@@ -545,7 +545,7 @@ internal sealed partial class Process
 						Array.Copy(temp, retStr, retStr.Length);
 						//throw new CodeEE("SPLITによる分割後の文字列の数が配列変数の要素数を超えています");
 					}
-					spSplitArg.Var.SetValue(retStr, new long[] { 0, 0, 0 });
+					spSplitArg.Var.SetValue(retStr, [0, 0, 0]);
 				}
 				break;
 			case FunctionCode.PRINTCPERLINE:
@@ -682,10 +682,10 @@ internal sealed partial class Process
 					SpCopyArrayArgument arrayArg = (SpCopyArrayArgument)func.Argument;
 					AExpression varName1 = arrayArg.VarName1;
 					AExpression varName2 = arrayArg.VarName2;
-					VariableToken[] vars = new VariableToken[2] { null, null };
+					VariableToken[] vars = [null, null];
 					if (!(varName1 is SingleTerm) || !(varName2 is SingleTerm))
 					{
-						string[] names = new string[2] { null, null };
+						string[] names = [null, null];
 						names[0] = varName1.GetStrValue(exm);
 						names[1] = varName2.GetStrValue(exm);
 						if ((vars[0] = GlobalStatic.IdentifierDictionary.GetVariableToken(names[0], null, true)) == null)

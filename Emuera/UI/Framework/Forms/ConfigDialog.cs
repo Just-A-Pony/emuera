@@ -61,7 +61,7 @@ namespace MinorShift.Emuera.Forms
 			numericUpDownCBMinTimer.Maximum = 60000;
 			#endregion
 
-			pages = new FlowLayoutPanel[] {
+			pages = [
 				flowLayoutPanel13,
 				flowLayoutPanel17,
 				flowLayoutPanel23,
@@ -72,7 +72,7 @@ namespace MinorShift.Emuera.Forms
 				flowLayoutPanel33,
 				flowLayoutPanel35,
 				rikaiFlowLayoutPanel,
-			};
+			];
 		}
 		internal void SetupLang(string[] langs)
 		{

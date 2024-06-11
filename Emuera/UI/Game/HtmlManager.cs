@@ -127,7 +127,7 @@ internal static class HtmlManager
 			last = found + 1;
 		}
 		string[] ret = new string[2];
-		if (last == 0) return new string[] { "", str };
+		if (last == 0) return ["", str];
 		ret[0] = str.Substring(0, last - 1);
 		while (endStack.Count > 0) ret[0] += endStack.Pop().tag;
 		while (beginStack.Count > 0) ret[1] = beginStack.Pop().tag + ret[1];
