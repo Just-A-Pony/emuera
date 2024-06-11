@@ -766,12 +766,8 @@ internal sealed partial class EmueraConsole : IDisposable
 		need_settimer = true;
 		if (inputReq.DisplayTime)
 		{
-			//100ms未満の場合、一瞬だけ残り0が表示されて終了
-			//timer_nextDisplayTime = timer_startTime + 100;
-			long start = inputReq.Timelimit / 100;
-			string timeString1 = trsl.Remaining.Text;
-			string timeString2 = ((double)start / 10.0).ToString();
-			PrintSingleLine(timeString1 + timeString2);
+			var remainingMs = inputReq.Timelimit - _genericTimerStopwatch.ElapsedMilliseconds;
+			PrintSingleLine(trsl.Remaining.Text + $"{remainingMs} ms");
 		}
 	}
 	private void setTimer()
@@ -798,6 +794,12 @@ internal sealed partial class EmueraConsole : IDisposable
 		{
 			endTimer();
 			return;
+		}
+
+		if (inputReq.DisplayTime)
+		{
+			var remainingMs = inputReq.Timelimit - _genericTimerStopwatch.ElapsedMilliseconds;
+			window.Invoke(() => changeLastLine(trsl.Remaining.Text + $"{remainingMs / 1000.0f:0.0}"));
 		}
 	}
 
