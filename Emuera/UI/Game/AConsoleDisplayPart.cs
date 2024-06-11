@@ -45,8 +45,8 @@ abstract class AConsoleDisplayPart
 	#endregion
 
 	#region EmuEra-Rikaichan
-	public bool rikaichaned = false;
-	public int[] Ends = null;
+	public bool rikaichaned;
+	public int[] Ends;
 	public AConsoleDisplayPart NextLine;
 	#endregion
 }

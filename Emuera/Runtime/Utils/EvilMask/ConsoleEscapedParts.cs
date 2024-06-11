@@ -19,7 +19,7 @@ internal sealed class ConsoleEscapedParts
 	/// <summary>
 	/// 最近GetPartsInRangeを行ったか
 	/// </summary>
-	static bool getOnce = false;
+	static bool getOnce;
 	/// <summary>
 	/// 前回GetPartsInRangeを行った時の状態
 	/// </summary>

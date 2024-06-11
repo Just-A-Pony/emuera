@@ -77,7 +77,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	public const nint bitmapCacheArrayCap = 256;
 	public ConsoleButtonString[] bitmapCacheArray = new ConsoleButtonString[bitmapCacheArrayCap];
 	public nint bitmapCacheArrayIndex = 0;
-	public bool bitmapCacheEnabledForNextLine = false;
+	public bool bitmapCacheEnabledForNextLine;
 
 	public EmueraConsole(MainWindow parent)
 	{
@@ -107,7 +107,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	}
 	#region 1823 cbg関連
 	private readonly List<ClientBackGroundImage> cbgList = new List<ClientBackGroundImage>();
-	private GraphicsImage cbgButtonMap = null;
+	private GraphicsImage cbgButtonMap;
 	private int selectingCBGButtonInt = -1;
 	private int lastSelectingCBGButtonInt = -1;
 	//ConsoleButtonString selectingButton = null;
@@ -121,14 +121,14 @@ internal sealed partial class EmueraConsole : IDisposable
 		/// <param name="zdepth"></param>
 		internal ClientBackGroundImage(int zdepth)
 		{ this.zdepth = zdepth; }
-		public ASprite Img = null;
-		public ASprite ImgB = null;
+		public ASprite Img;
+		public ASprite ImgB;
 		public int x;
 		public int y;
 		public readonly int zdepth;
-		public bool isButton = false;
+		public bool isButton;
 		public int buttonValue;
-		public string tooltipString = null;
+		public string tooltipString;
 		public int CompareTo(ClientBackGroundImage other)
 		{
 			if (other == null)
@@ -493,19 +493,19 @@ internal sealed partial class EmueraConsole : IDisposable
 		state = ConsoleState.Error;
 	}
 
-	public bool notToTitle = false;
-	public bool byError = false;
+	public bool notToTitle;
+	public bool byError;
 	//public ScriptPosition? ErrPos = null;
 
 	#region button関連
 	bool lastButtonIsInput = true;
-	public bool updatedGeneration = false;
-	int lastButtonGeneration = 0;//最後に追加された選択肢の世代。これと世代が一致しない選択肢は選択できない。
+	public bool updatedGeneration;
+	int lastButtonGeneration;//最後に追加された選択肢の世代。これと世代が一致しない選択肢は選択できない。
 	#region EE_BINPUT
 	public int LastButtonGeneration { get { return lastButtonGeneration; } }
 	#endregion
-	int newButtonGeneration = 0;//次に追加される選択肢の世代。Input又はInputsごとに増加
-								//public int LastButtonGeneration { get { return lastButtonGeneration; } }
+	int newButtonGeneration;//次に追加される選択肢の世代。Input又はInputsごとに増加
+							//public int LastButtonGeneration { get { return lastButtonGeneration; } }
 	public int NewButtonGeneration { get { return newButtonGeneration; } }
 	public void UpdateGeneration() { lastButtonGeneration = newButtonGeneration; updatedGeneration = true; }
 	public void forceUpdateGeneration() { newButtonGeneration++; lastButtonGeneration = newButtonGeneration; updatedGeneration = true; }
@@ -554,8 +554,8 @@ internal sealed partial class EmueraConsole : IDisposable
 	/// <summary>
 	/// 選択中のボタン。INPUTやINPUTSに対応したものでなければならない
 	/// </summary>
-	ConsoleButtonString selectingButton = null;
-	ConsoleButtonString lastSelectingButton = null;
+	ConsoleButtonString selectingButton;
+	ConsoleButtonString lastSelectingButton;
 	public ConsoleButtonString SelectingButton { get { return selectingButton; } }
 	public bool ButtonIsSelected(ConsoleButtonString button) { return selectingButton == button; }
 	public bool ButtonIsPointing(ConsoleButtonString button) { return pointingStrings.Contains(button); }
@@ -563,18 +563,18 @@ internal sealed partial class EmueraConsole : IDisposable
 	/// <summary>
 	/// ToolTip表示したフラグ
 	/// </summary>
-	bool tooltipUsed = false;
+	bool tooltipUsed;
 	/// <summary>
 	/// マウスの直下にあるテキスト。ボタンであってもよい。
 	/// ToolTip表示用。世代無視、履歴中も表示
 	/// </summary>
-	ConsoleButtonString pointingString = null;
+	ConsoleButtonString pointingString;
 	// pointingStrings记录鼠标下所有Button图像。当多个Button重叠时，被鼠标划到的图像都会变化
 	HashSet<ConsoleButtonString> pointingStrings = new HashSet<ConsoleButtonString>();
 	#region EE_MOUSEB
 	public ConsoleButtonString PointingSring { get { return pointingString; } }
 	#endregion
-	ConsoleButtonString lastPointingString = null;
+	ConsoleButtonString lastPointingString;
 	#endregion
 
 	#region Input & Timer系
@@ -583,7 +583,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	//Int64 defNum;
 	//string defStr;
 
-	public InputRequest inputReq = null;
+	public InputRequest inputReq;
 	#region EE_INPUT第二引数修正
 	public InputType NowInputType { get { return inputReq.InputType; } }
 	#endregion
@@ -716,7 +716,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	/// <summary>
 	/// INPUT中のアニメーション用タイマー
 	/// </summary>
-	Timer redrawTimer = null;
+	Timer redrawTimer;
 
 	private void tickRedrawTimer(object sender, EventArgs e)
 	{
@@ -752,14 +752,14 @@ internal sealed partial class EmueraConsole : IDisposable
 	Int64 timerID = -1;
 	readonly Stopwatch _genericTimerStopwatch = new();//現在のタイマーを開始した時のミリ秒数（WinmmTimer.TickCount基準）
 	Int64 timer_endTime;//現在のタイマーを終了する時のTickCountミリ秒数
-	bool wait_timeout = false;
-	bool isTimeout = false;
+	bool wait_timeout;
+	bool isTimeout;
 	public bool IsTimeOut { get { return isTimeout; } }
 
 	/// <summary>
 	/// 1824 TINPUT時に直接タイマーをセットせずに最初の再描画が終わってからタイマーをセットする（そうしないとTINPUTと再描画だけでループしてしまうので）
 	/// </summary>
-	bool need_settimer = false;
+	bool need_settimer;
 
 	private void presetTimer()
 	{
@@ -1071,9 +1071,9 @@ internal sealed partial class EmueraConsole : IDisposable
 	#region 入力系
 	readonly string[] spliter = ["\\n", "\r\n", "\n", "\r"];//本物の改行コードが来ることは無いはずだけど一応
 
-	public bool MesSkip = false;
-	private bool inProcess = false;
-	volatile public bool KillMacro = false;
+	public bool MesSkip;
+	private bool inProcess;
+	volatile public bool KillMacro;
 
 	internal void MouseWheel(Point point, int delta)
 	{
@@ -1415,7 +1415,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	}
 
 
-	bool runningERBfromMemory = false;
+	bool runningERBfromMemory;
 	/// <summary>
 	/// 通常コンソールからのDebugコマンド、及びデバッグウインドウの変数ウォッチなど、
 	/// *.ERBファイルが存在しないスクリプトを実行中
@@ -1509,7 +1509,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			RefreshStrings(true);
 	}
 
-	string debugTitle = null;
+	string debugTitle;
 	public void SetWindowTitle(string str)
 	{
 		if (Program.DebugMode)
@@ -1885,11 +1885,11 @@ internal sealed partial class EmueraConsole : IDisposable
 		window.ToolTip.InitialDelay = delay;
 	}
 
-	int tooltip_duration = 0;
+	int tooltip_duration;
 	string tooltip_fontname = Config.FontName;
 	long tooltip_fontsize = Config.FontSize;
-	TextFormatFlags tooltip_format = 0;
-	bool tooltip_img = false;
+	TextFormatFlags tooltip_format;
+	bool tooltip_img;
 	public void SetToolTipDuration(int duration)
 	{
 		tooltip_duration = duration;
@@ -1926,7 +1926,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	#endregion
 
 	#region DebugMode系
-	DebugDialog dd = null;
+	DebugDialog dd;
 	public DebugDialog DebugDialog { get { return dd; } }
 	StringBuilder dConsoleLog = new StringBuilder("");
 	public string DebugConsoleLog { get { return dConsoleLog.ToString(); } }
@@ -2138,7 +2138,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		return pos;
 	}
 	#region EE_MOUSEB
-	public bool AlwaysRefresh = false;
+	public bool AlwaysRefresh;
 	#endregion
 
 	#region EM_私家版_描画拡張
@@ -2483,8 +2483,8 @@ internal sealed partial class EmueraConsole : IDisposable
 		RefreshStrings(true);
 	}
 
-	bool force_temporary = false;
-	bool timer_suspended = false;
+	bool force_temporary;
+	bool timer_suspended;
 	ConsoleState prevState;
 	InputRequest prevReq;
 

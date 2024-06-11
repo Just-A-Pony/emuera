@@ -93,12 +93,12 @@ internal sealed class ProcessState
 		if (Program.DebugMode)//DebugModeでなければ知らなくて良い
 			this.console = console;
 	}
-	readonly EmueraConsole console = null;
+	readonly EmueraConsole console;
 	readonly List<CalledFunction> functionList = [];
 	private LogicalLine currentLine;
 	//private LogicalLine nextLine;
-	public int lineCount = 0;
-	public int currentMin = 0;
+	public int lineCount;
+	public int currentMin;
 	//private bool sequential;
 
 	public bool ScriptEnd
@@ -501,7 +501,7 @@ internal sealed class ProcessState
 		}
 	}
 
-	public SingleTerm MethodReturnValue = null;
+	public SingleTerm MethodReturnValue;
 
 	public void ReturnF(SingleTerm ret)
 	{
@@ -530,7 +530,7 @@ internal sealed class ProcessState
 
 	#endregion
 
-	bool isClone = false;
+	bool isClone;
 	public bool IsClone { get { return isClone; } set { isClone = value; } }
 
 	// functionListのコピーを必要とする呼び出し元が無かったのでコピーしないことにする。

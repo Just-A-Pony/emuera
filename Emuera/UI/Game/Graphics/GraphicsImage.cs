@@ -26,11 +26,11 @@ internal sealed class GraphicsImage : AbstractImage
 	}
 	public readonly int ID;
 	Size size;
-	Brush brush = null;
-	Pen pen = null;
-	Font font = null;
+	Brush brush;
+	Pen pen;
+	Font font;
 	#region EE_GDRAWTEXT
-	FontStyle style = default;
+	FontStyle style;
 	#endregion
 
 	//Bitmap b;
@@ -38,7 +38,7 @@ internal sealed class GraphicsImage : AbstractImage
 	// 当GraphicsImage是完全由图像拼接而成时，此处记录拼接图案的列表。
 	// 可清理图片来减少内存使用。在使用时按照此列表组合
 	public bool useImgList { get { return drawImgList != null; } }
-	public List<Tuple<ASprite, Rectangle>> drawImgList = null;
+	public List<Tuple<ASprite, Rectangle>> drawImgList;
 
 
 	////bool created;

@@ -106,9 +106,9 @@ internal sealed class ConsoleButtonString
 	}
 
 	//Bitmap Cache
-	public Bitmap bitmapCache = null;
+	public Bitmap bitmapCache;
 
-	ConsoleImagePart mask = null;
+	ConsoleImagePart mask;
 	#endregion
 
 	AConsoleDisplayPart[] strArray;
@@ -141,7 +141,7 @@ internal sealed class ConsoleButtonString
 	#region EM_私家版_描画拡張
 	public AConsoleDisplayPart[] EscapedParts { get { return escaped; } }
 	AConsoleDisplayPart[] escaped;
-	bool escapeFilterApplied = false;
+	bool escapeFilterApplied;
 
 	public void FilterEscaped()
 	{

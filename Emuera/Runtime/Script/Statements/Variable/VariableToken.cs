@@ -319,7 +319,7 @@ internal abstract class UserDefinedVariableToken : VariableToken
 	}
 
 	public abstract void SetDefault();
-	protected bool isConst = false;
+	protected bool isConst;
 	protected int[] sizes;
 	protected int totalSize;
 	//public bool IsGlobal { get; protected set; }
@@ -421,8 +421,8 @@ internal abstract class ReferenceToken : UserDefinedVariableToken
 		arrayList = [];
 		IsForbid = false;
 	}
-	protected List<Array> arrayList = null;
-	protected Array array = null;
+	protected List<Array> arrayList;
+	protected Array array;
 
 	public override void SetDefault()
 	{//Defaultのセットは参照元がやるべき
@@ -476,7 +476,7 @@ internal abstract class ReferenceToken : UserDefinedVariableToken
 			throw new CodeEE(string.Format(trerror.OoRInstructionArg.Text, funcName, i2.ToString(), index2.ToString(), varName));
 	}
 
-	int counter = 0;
+	int counter;
 	public override void ScopeIn()
 	{
 		if (counter > 0)
@@ -1362,7 +1362,7 @@ internal sealed partial class VariableData
 			this.array = array;
 			IsForbid = array.Length == 0;
 		}
-		Int64[] array = null;
+		Int64[] array;
 		public override Int64 GetIntValue(ExpressionMediator exm, Int64[] arguments)
 		{
 			return array[arguments[0]];
@@ -1407,7 +1407,7 @@ internal sealed partial class VariableData
 			IsForbid = array.Length == 0;
 		}
 
-		string[] array = null;
+		string[] array;
 		public override string GetStrValue(ExpressionMediator exm, Int64[] arguments)
 		{
 			return array[arguments[0]];
@@ -1733,7 +1733,7 @@ internal sealed partial class VariableData
 			: base(varCode, varData, subId, size)
 		{
 		}
-		Int64[] array = null;
+		Int64[] array;
 
 		public override void SetDefault()
 		{
@@ -1801,7 +1801,7 @@ internal sealed partial class VariableData
 			: base(varCode, varData, subId, size)
 		{
 		}
-		string[] array = null;
+		string[] array;
 		public override void SetDefault()
 		{
 			if (array != null)
@@ -1875,8 +1875,8 @@ internal sealed partial class VariableData
 			//	Array.Copy(defArray, array, defArray.Length);
 		}
 		int length;
-		Int64[] array = null;
-		Int64[] defArray = null;
+		Int64[] array;
+		Int64[] defArray;
 		void IfNullInitArray()
 		{
 			if (array == null)
@@ -1953,7 +1953,7 @@ internal sealed partial class VariableData
 			//array = new Int64[sizes[0], sizes[1]];
 		}
 		(int x, int y) size = (0, 0);
-		long[,] array = null;
+		long[,] array;
 
 		void IfNullInitArray()
 		{
@@ -2021,7 +2021,7 @@ internal sealed partial class VariableData
 			//array = new Int64[sizes[0], sizes[1], sizes[2]];
 		}
 		(int x, int y, int z) size = (0, 0, 0);
-		Int64[,,] array = null;
+		Int64[,,] array;
 		void IfNullInitArray()
 		{
 			array ??= new long[sizes[0], sizes[1], sizes[2]];
@@ -2091,8 +2091,8 @@ internal sealed partial class VariableData
 			//	Array.Copy(defArray, array, defArray.Length);
 		}
 		int length;
-		string[] array = null;
-		string[] defArray = null;
+		string[] array;
+		string[] defArray;
 
 		void IfNullInitArray()
 		{
@@ -2156,7 +2156,7 @@ internal sealed partial class VariableData
 			IsStatic = true;
 			//array = new string[sizes[0], sizes[1]];
 		}
-		string[,] array = null;
+		string[,] array;
 		(int x, int y) size;
 
 		void IfNullInitArray()
@@ -2221,7 +2221,7 @@ internal sealed partial class VariableData
 			IsStatic = true;
 			//array = new string[sizes[0], sizes[1], sizes[2]];
 		}
-		string[,,] array = null;
+		string[,,] array;
 		(int x, int y, int z) size;
 
 		void IfNullInitArray()
@@ -2289,9 +2289,9 @@ internal sealed partial class VariableData
 			arrayStack = [];
 			defArray = data.DefaultInt;
 		}
-		readonly Stack<long[]> arrayStack = null;
-		Int64[] array = null;
-		Int64[] defArray = null;
+		readonly Stack<long[]> arrayStack;
+		Int64[] array;
+		Int64[] defArray;
 		//int counter = 0;
 		public override void SetDefault()
 		{
@@ -2356,8 +2356,8 @@ internal sealed partial class VariableData
 			IsStatic = false;
 			arrayStack = [];
 		}
-		readonly Stack<long[,]> arrayStack = null;
-		Int64[,] array = null;
+		readonly Stack<long[,]> arrayStack;
+		Int64[,] array;
 		//int counter = 0;
 		public override void SetDefault() { }
 		public override Int64 GetIntValue(ExpressionMediator exm, Int64[] arguments)
@@ -2421,8 +2421,8 @@ internal sealed partial class VariableData
 			IsStatic = false;
 			arrayStack = [];
 		}
-		readonly Stack<long[,,]> arrayStack = null;
-		Int64[,,] array = null;
+		readonly Stack<long[,,]> arrayStack;
+		Int64[,,] array;
 		//int counter = 0;
 		public override void SetDefault() { }
 		public override Int64 GetIntValue(ExpressionMediator exm, Int64[] arguments)
@@ -2492,9 +2492,9 @@ internal sealed partial class VariableData
 			defArray = data.DefaultStr;
 		}
 		//int counter = 0;
-		readonly Stack<string[]> arrayStack = null;
-		string[] array = null;
-		string[] defArray = null;
+		readonly Stack<string[]> arrayStack;
+		string[] array;
+		string[] defArray;
 		public override void SetDefault()
 		{
 		}
@@ -2561,8 +2561,8 @@ internal sealed partial class VariableData
 			arrayStack = [];
 		}
 		//int counter = 0;
-		readonly Stack<string[,]> arrayStack = null;
-		string[,] array = null;
+		readonly Stack<string[,]> arrayStack;
+		string[,] array;
 		public override void SetDefault()
 		{
 		}
@@ -2625,8 +2625,8 @@ internal sealed partial class VariableData
 			arrayStack = [];
 		}
 		//int counter = 0;
-		readonly Stack<string[,,]> arrayStack = null;
-		string[,,] array = null;
+		readonly Stack<string[,,]> arrayStack;
+		string[,,] array;
 		public override void SetDefault() { }
 
 		public override string GetStrValue(ExpressionMediator exm, Int64[] arguments)

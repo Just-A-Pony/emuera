@@ -24,8 +24,8 @@ internal sealed class SpInputsArgument : Argument
 #region EM_私家版_HTMLパラメータ拡張
 internal sealed class MixedIntegerExprTerm
 {
-	public AExpression num = null;
-	public bool isPx = false;
+	public AExpression num;
+	public bool isPx;
 }
 internal sealed class SpPrintShapeArgument : Argument
 {
@@ -578,13 +578,13 @@ internal sealed class RefArgument : Argument
 		RefVarToken = vt;
 		SrcTerm = src;
 	}
-	readonly public UserDefinedRefMethod RefMethodToken = null;
-	readonly public UserDefinedRefMethod SrcRefMethodToken = null;
-	readonly public CalledFunction SrcCalledFunction = null;
+	readonly public UserDefinedRefMethod RefMethodToken;
+	readonly public UserDefinedRefMethod SrcRefMethodToken;
+	readonly public CalledFunction SrcCalledFunction;
 
-	readonly public ReferenceToken RefVarToken = null;
-	readonly public VariableToken SrcVarToken = null;
-	readonly public AExpression SrcTerm = null;
+	readonly public ReferenceToken RefVarToken;
+	readonly public VariableToken SrcVarToken;
+	readonly public AExpression SrcTerm;
 }
 
 internal sealed class OneInputArgument : Argument
@@ -631,7 +631,7 @@ internal sealed class SpSetArgument : Argument
 	}
 	readonly public VariableTerm VariableDest;
 	readonly public AExpression Term;
-	public bool AddConst = false;
+	public bool AddConst;
 }
 
 internal sealed class SpSetArrayArgument : Argument

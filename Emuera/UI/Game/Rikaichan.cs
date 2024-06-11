@@ -23,7 +23,7 @@ namespace MinorShift.Emuera.GameView;
 partial class Rikaichan
 {
 	public bool enabled = true;
-	public ConsoleStyledString css = null;
+	public ConsoleStyledString css;
 	public Point point;
 	public int curLineY = -1;
 	public string laststr;
@@ -31,8 +31,8 @@ partial class Rikaichan
 	public int laststrpos = -1;
 	public string output;
 
-	public byte[] edict = null;
-	public byte[] edictind = null;
+	public byte[] edict;
+	public byte[] edictind;
 	public Encoding eucjp = Encoding.GetEncoding(20932);
 
 	public bool hidden = true;
@@ -40,7 +40,7 @@ partial class Rikaichan
 	public List<int> searchResults = new List<int>(0x20);
 	public int indexLast;
 
-	public int longestResult = 0;
+	public int longestResult;
 
 	SolidBrush blueBrush;
 

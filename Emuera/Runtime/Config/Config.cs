@@ -18,7 +18,7 @@ internal static class Config
 	#region config
 	public static Encoding Encode = EncodingHandler.UTF8BOMEncoding;
 	public static Encoding SaveEncode = EncodingHandler.UTF8BOMEncoding;
-	private static Dictionary<ConfigCode, string> nameDic = null;
+	private static Dictionary<ConfigCode, string> nameDic;
 	public static string GetConfigName(ConfigCode code)
 	{
 		return nameDic[code];

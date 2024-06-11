@@ -799,8 +799,8 @@ internal sealed partial class Process
 		return;
 	}
 
-	bool saveSkip = false;
-	bool userDefinedSkip = false;
+	bool saveSkip;
+	bool userDefinedSkip;
 
 	#endregion
 

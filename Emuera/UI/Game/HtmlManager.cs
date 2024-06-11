@@ -183,7 +183,7 @@ internal static class HtmlManager
 			StyledBox = box;
 			IsRelative = isRelative;
 		}
-		public ConsoleDisplayLine[] Lines = null;
+		public ConsoleDisplayLine[] Lines;
 		public MixedNum Width;
 		public MixedNum Height;
 		public MixedNum X;
@@ -208,7 +208,7 @@ internal static class HtmlManager
 	{
 		public int Color = -1;
 		public int BColor = -1;
-		public string FontName = null;
+		public string FontName;
 		//public int PointX = 0;
 		//public bool PointXisLocked = false;
 	}
@@ -217,12 +217,12 @@ internal static class HtmlManager
 	{
 		public bool IsButton = true;
 		public bool IsButtonTag = true;
-		public Int64 ButtonValueInt = 0;
-		public string ButtonValueStr = null;
-		public string ButtonTitle = null;
-		public bool ButtonIsInteger = false;
-		public int PointX = 0;
-		public bool PointXisLocked = false;
+		public Int64 ButtonValueInt;
+		public string ButtonValueStr;
+		public string ButtonTitle;
+		public bool ButtonIsInteger;
+		public int PointX;
+		public bool PointXisLocked;
 	}
 
 	private sealed class HtmlAnalzeState
@@ -230,34 +230,34 @@ internal static class HtmlManager
 		public bool LineHead = true;//行頭フラグ。一度もテキストが出てきてない状態
 		public FontStyle FontStyle = FontStyle.Regular;
 		public List<HtmlAnalzeStateFontTag> FonttagList = [];
-		public bool FlagNobr = false;//falseの時に</nobr>するとエラー
-		public bool FlagP = false;//falseの時に</p>するとエラー
-		public bool FlagNobrClosed = false;//trueの時に</nobr>するとエラー
-		public bool FlagPClosed = false;//trueの時に</p>するとエラー
+		public bool FlagNobr;//falseの時に</nobr>するとエラー
+		public bool FlagP;//falseの時に</p>するとエラー
+		public bool FlagNobrClosed;//trueの時に</nobr>するとエラー
+		public bool FlagPClosed;//trueの時に</p>するとエラー
 		public DisplayLineAlignment Alignment = DisplayLineAlignment.LEFT;
 
 		/// <summary>
 		/// 今まで追加された文字列についてのボタンタグ情報
 		/// </summary>
-		public HtmlAnalzeStateButtonTag LastButtonTag = null;
+		public HtmlAnalzeStateButtonTag LastButtonTag;
 		/// <summary>
 		/// 最新のボタンタグ情報
 		/// </summary>
-		public HtmlAnalzeStateButtonTag CurrentButtonTag = null;
+		public HtmlAnalzeStateButtonTag CurrentButtonTag;
 
 		#region EM_私家版_clearbutton
-		public bool FlagClearButton = false;//falseの時に</clearbutton>するとエラー,trueの時ボタン化が無効とする
-		public bool FlagClearButtonTooltip = false;//tureの時にボタンのツールチップ属性を無効とする
+		public bool FlagClearButton;//falseの時に</clearbutton>するとエラー,trueの時ボタン化が無効とする
+		public bool FlagClearButtonTooltip;//tureの時にボタンのツールチップ属性を無効とする
 		#endregion
 
 		#region EM_私家版_HTML_divタグ
-		public bool StartingSubDivision = false;
-		public HtmlDivTag CurrentDivTag = null;
+		public bool StartingSubDivision;
+		public HtmlDivTag CurrentDivTag;
 		public int SubDivisionWidth;
 		// public int SubDivisionXOffset; // 必要がなさそうなので削除する
 		#endregion
-		public bool FlagBr = false;//<br>による強制改行の予約
-		public bool FlagButton = false;//<button></button>によるボタン化の予約
+		public bool FlagBr;//<br>による強制改行の予約
+		public bool FlagButton;//<button></button>によるボタン化の予約
 
 		public StringStyle GetSS()
 		{

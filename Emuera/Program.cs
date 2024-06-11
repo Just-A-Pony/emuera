@@ -367,14 +367,14 @@ static partial class Program
 	#endregion
 
 
-	public static bool rebootFlag = false;
+	public static bool rebootFlag;
 	//public static int RebootClientX = 0;
 	//public static int RebootClientY = 0;
 	public static FormWindowState RebootWinState = FormWindowState.Normal;
 	//public static Point RebootLocation;
 
-	public static bool AnalysisMode = false;
-	public static List<string> AnalysisFiles = null;
+	public static bool AnalysisMode;
+	public static List<string> AnalysisFiles;
 
 	//public static bool debugMode = false;
 	//public static bool DebugMode { get { return debugMode; } }

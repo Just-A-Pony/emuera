@@ -40,7 +40,7 @@ internal static class GlobalStatic
 	//1756 Processから移動。Program.AnalysisMode用
 	public static Dictionary<string, Int64> tempDic = new(StringComparer.OrdinalIgnoreCase);
 	#region EE_FORCE_QUIT_AND_RESTART
-	public static bool ForceQuitAndRestart = false;//連続実行を防ぐ
+	public static bool ForceQuitAndRestart;//連続実行を防ぐ
 	#endregion
 	#region EE_フォントファイル対応
 	public static PrivateFontCollection Pfc = new();

@@ -109,8 +109,8 @@ namespace MinorShift.Emuera.Forms
 		class EdictParser
 		{
 			public byte[] edict;
-			public int end = 0, start = 0;
-			public bool finished = false;
+			public int end, start;
+			public bool finished;
 			public const long tickDelta = 4000;
 			public long tickNext = DateTime.Now.Ticks + tickDelta;
 			public byte[] word;
@@ -206,8 +206,8 @@ namespace MinorShift.Emuera.Forms
 		{
 			public byte[] word;
 			public List<int> offsets;
-			public IndexEntry Next = null;
-			public IndexEntry Previous = null;
+			public IndexEntry Next;
+			public IndexEntry Previous;
 
 			public IndexEntry(byte[] a_word)
 			{

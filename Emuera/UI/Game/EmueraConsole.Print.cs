@@ -24,7 +24,7 @@ namespace MinorShift.Emuera.GameView;
 internal sealed partial class EmueraConsole : IDisposable
 {
 	private readonly List<ConsoleDisplayLine> displayLineList;
-	public bool noOutputLog = false;
+	public bool noOutputLog;
 	public Color bgColor = Config.BackColor;
 
 	private readonly PrintStringBuffer printBuffer;
@@ -103,10 +103,10 @@ internal sealed partial class EmueraConsole : IDisposable
 	/// <summary>
 	/// DRAWLINE用文字列
 	/// </summary>
-	string stBar = null;
+	string stBar;
 
-	Stopwatch _drawStopwatch = null;
-	bool forceTextBoxColor = false;
+	Stopwatch _drawStopwatch;
+	bool forceTextBoxColor;
 	public void SetBgColor(Color color)
 	{
 		this.bgColor = color;
@@ -135,11 +135,11 @@ internal sealed partial class EmueraConsole : IDisposable
 	/// 最後に描画した時にlineNoの値
 	/// </summary>
 	int lastDrawnLineNo = -1;
-	int lineNo = 0;
+	int lineNo;
 	public int GetLineNo { get { return lineNo; } }
-	Int64 logicalLineCount = 0;
+	Int64 logicalLineCount;
 	#region GETDISPLAYLINE修正
-	Int64 deletedLines = 0;
+	Int64 deletedLines;
 	#endregion
 	public long LineCount { get { return logicalLineCount; } }
 	#region GETDISPLAYLINE修正

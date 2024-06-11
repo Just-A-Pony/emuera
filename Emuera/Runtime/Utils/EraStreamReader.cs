@@ -18,8 +18,8 @@ internal sealed partial class EraStreamReader : IDisposable
 
 	string filepath;
 	string filename;
-	readonly bool useRename = false;
-	int curNo = 0;
+	readonly bool useRename;
+	int curNo;
 	int nextNo = 1;
 	string[] _fileLines;
 	public bool Open(string path)
@@ -199,7 +199,7 @@ internal sealed partial class EraStreamReader : IDisposable
 	//}
 
 	public void Close() { this.Dispose(); }
-	bool disposed = false;
+	bool disposed;
 	#region IDisposable メンバ
 
 	public void Dispose()

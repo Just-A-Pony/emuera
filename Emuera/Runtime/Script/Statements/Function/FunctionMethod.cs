@@ -95,7 +95,7 @@ internal abstract class FunctionMethod
 	{
 		public List<_ArgType> ArgTypes { get; set; } = new List<_ArgType>();
 		public int OmitStart { get; set; } = -1;
-		public bool MatchVariadicGroup { get; set; } = false;
+		public bool MatchVariadicGroup { get; set; }
 
 		public _ArgType[] LastVariadics
 		{
@@ -117,7 +117,7 @@ internal abstract class FunctionMethod
 			}
 		}
 	}
-	protected ArgTypeList[] argumentTypeArrayEx = null;
+	protected ArgTypeList[] argumentTypeArrayEx;
 
 	//引数の数・型が一致するかどうかのテスト
 	//正しくない場合はエラーメッセージを返す。

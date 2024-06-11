@@ -29,8 +29,8 @@ internal sealed class VariableStrArgTerm : AExpression
 	#region EE_ERD
 	readonly string varname;
 	#endregion
-	Dictionary<string, int> dic = null;
-	string errPos = null;
+	Dictionary<string, int> dic;
+	string errPos;
 
 	public override Int64 GetIntValue(ExpressionMediator exm)
 	{

@@ -32,8 +32,8 @@ namespace MinorShift.Emuera.Forms
 			checkBoxTopMost.Checked = this.TopMost;
 			loadWatchList();
 		}
-		private Process emuera = null;
-		private EmueraConsole mainConsole = null;
+		private Process emuera;
+		private EmueraConsole mainConsole;
 
 		internal void SetParent(EmueraConsole console, Process process)
 		{
@@ -418,7 +418,7 @@ namespace MinorShift.Emuera.Forms
 		}
 
 		List<string> history = [];
-		int selectedIndex = 0;
+		int selectedIndex;
 		void updateInputs()
 		{
 			var input = textBoxCommand.Text;

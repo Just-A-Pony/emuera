@@ -47,13 +47,13 @@ internal sealed class InputRequest
 		}
 	}
 	#region EM_私家版_INPUT系機能拡張
-	public bool MouseInput = false;
+	public bool MouseInput;
 	#endregion
-	public bool OneInput = false;
-	public bool StopMesskip = false;
-	public bool IsSystemInput = false;
+	public bool OneInput;
+	public bool StopMesskip;
+	public bool IsSystemInput;
 
-	public bool HasDefValue = false;
+	public bool HasDefValue;
 	public long DefIntValue;
 	public string DefStrValue;
 
@@ -61,5 +61,5 @@ internal sealed class InputRequest
 	public bool DisplayTime;
 	public string TimeUpMes;
 
-	static Int64 LastRequestID = 0;
+	static Int64 LastRequestID;
 }

@@ -45,9 +45,9 @@ internal sealed partial class Process(EmueraConsole view)
     private IdentifierDictionary idDic;
     ProcessState state;
     ProcessState originalState;//リセットする時のために
-    bool noError = false;
-    //色々あって復活させてみる
-    bool initialiing;
+    bool noError;
+	//色々あって復活させてみる
+	bool initialiing;
     public bool inInitializeing { get { return initialiing; } }
 
     public async Task<bool> Initialize()
@@ -396,8 +396,8 @@ internal sealed partial class Process(EmueraConsole view)
         }
     }
 
-    int methodStack = 0;
-    public SingleTerm GetValue(SuperUserDefinedMethodTerm udmt)
+    int methodStack;
+	public SingleTerm GetValue(SuperUserDefinedMethodTerm udmt)
     {
         methodStack++;
         if (methodStack > 100)
@@ -455,8 +455,8 @@ internal sealed partial class Process(EmueraConsole view)
 				return state.Scope;
 			}
 	*/
-    public LogicalLine scaningLine = null;
-    internal LogicalLine GetScaningLine()
+    public LogicalLine scaningLine;
+	internal LogicalLine GetScaningLine()
     {
         if (scaningLine != null)
             return scaningLine;

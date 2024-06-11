@@ -16,7 +16,7 @@ internal class ClipboardProcessor
 
 	private bool minTimePassed; //Has enough time passed since the last Clipboard update?
 	private bool postWaiting; //Is there text waiting to be sent to clipboard?
-	private static System.Timers.Timer minTimer = null; //Minimum timer for refrehsing the clipboard to prevent spam
+	private static System.Timers.Timer minTimer; //Minimum timer for refrehsing the clipboard to prevent spam
 
 	private readonly int MaxCB; //Max length in lines of the output to clipboard
 	private int ScrollPos; //Position of the clipboard output in the buffer

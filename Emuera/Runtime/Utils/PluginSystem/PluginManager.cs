@@ -32,7 +32,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 
 		}
 
-		static private PluginManager instance = null;
+		static private PluginManager instance;
 
 		/// <summary>
 		/// Unsafe rudimentary method to execute ERB line of code from Plugin.

@@ -93,7 +93,7 @@ namespace MinorShift.Emuera.Forms
 		public VScrollBar ScrollBar { get { return vScrollBar; } }
 		public RichTextBox TextBox { get { return richTextBox1; } }
 		public ToolTip ToolTip { get { return toolTipButton; } }
-		private EmueraConsole console = null;
+		private EmueraConsole console;
 
 		#region EM_私家版_Icon指定機能
 		public void SetupIcon(Icon icon)
@@ -561,7 +561,7 @@ namespace MinorShift.Emuera.Forms
 			if (Config.CBUseClipboard && e.Button == MouseButtons.Left) console.CBProc.Check(ClipboardProcessor.CBTriggers.DoubleLeftClick);
 		}
 		#endregion
-		bool changeTextbyMouse = false;
+		bool changeTextbyMouse;
 		private void mainPicBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			if (!Config.UseMouse)
@@ -1114,7 +1114,7 @@ namespace MinorShift.Emuera.Forms
 			textBox_flag = true;
 		}
 		#region EM_私家版_INPUT系機能拡張
-		Keys? modifiersWhileWaintingInputWithMouse = null;
+		Keys? modifiersWhileWaintingInputWithMouse;
 		private void richTextBox1_ModifierRecorder_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
 		{
 			if (console == null || !console.IsWaintingInputWithMouse)
@@ -1329,7 +1329,7 @@ namespace MinorShift.Emuera.Forms
 			PressEnterKey(false, false);
 		}
 
-		int macroGroup = 0;
+		int macroGroup;
 		private void マクロToolStripMenuItem_Click(object? sender, EventArgs e)
 		{
 			if ((console == null) || console.IsInProcess)
@@ -1378,7 +1378,7 @@ namespace MinorShift.Emuera.Forms
 			}
 		}
 
-		int labelTimerCount = 0;
+		int labelTimerCount;
 		private void setNewMacroGroup(int group)
 		{
 			labelTimerCount = 0;

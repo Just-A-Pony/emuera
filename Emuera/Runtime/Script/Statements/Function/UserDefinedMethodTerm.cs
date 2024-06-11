@@ -84,8 +84,8 @@ internal sealed class UserDefinedRefMethodTerm : SuperUserDefinedMethodTerm
 		this.srcArgs = srcArgs;
 		this.reffunc = reffunc;
 	}
-	List<AExpression> srcArgs = null;
-	readonly UserDefinedRefMethod reffunc = null;
+	List<AExpression> srcArgs;
+	readonly UserDefinedRefMethod reffunc;
 	public override UserDefinedFunctionArgument Argument
 	{
 		get
@@ -130,7 +130,7 @@ internal sealed class UserDefinedRefMethodNoArgTerm : SuperUserDefinedMethodTerm
 	{
 		this.reffunc = reffunc;
 	}
-	readonly UserDefinedRefMethod reffunc = null;
+	readonly UserDefinedRefMethod reffunc;
 	public override UserDefinedFunctionArgument Argument
 	{ get { throw new CodeEE(string.Format(trerror.RefFuncHasNotArg.Text, reffunc.Name)); } }
 	public override CalledFunction Call

@@ -29,8 +29,8 @@ internal sealed class LabelDictionary
 	int count;
 
 	ConcurrentDictionary<string, int> loadedFileDic = [];
-	int currentFileCount = 0;
-	int totalFileCount = 0;
+	int currentFileCount;
+	int totalFileCount;
 
 	public int Count { get { return count; } }
 

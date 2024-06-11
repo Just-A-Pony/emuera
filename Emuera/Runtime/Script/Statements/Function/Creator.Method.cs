@@ -67,7 +67,7 @@ internal static partial class FunctionMethodCreator
 					new ArgTypeList{ ArgTypes = { ArgType.Any, ArgType.String, ArgType.RefString1D, ArgType.Int}, OmitStart = 3 },
 				};
 		}
-		private bool byName = false;
+		private bool byName;
 		private void OutPutNode(XmlNode node, string[] array, int i, Int64 style)
 		{
 			switch (style)
@@ -798,7 +798,7 @@ internal static partial class FunctionMethodCreator
 					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
 				};
 		}
-		private bool byName = false;
+		private bool byName;
 		private void SetNode(XmlNode node, string val, Int64 style)
 		{
 			switch (style)
@@ -913,7 +913,7 @@ internal static partial class FunctionMethodCreator
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.String, ArgType.Int, ArgType.Int }, OmitStart = 3 },
 					};
 		}
-		private bool byName = false;
+		private bool byName;
 		Operation op;
 		bool Insert(XmlNode node, XmlNode child, int method)
 		{
@@ -1057,7 +1057,7 @@ internal static partial class FunctionMethodCreator
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.Int }, OmitStart = 2 },
 					};
 		}
-		private bool byName = false;
+		private bool byName;
 		Operation op;
 		bool Remove(XmlNode node)
 		{
@@ -1154,7 +1154,7 @@ internal static partial class FunctionMethodCreator
 						new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.String, ArgType.String, ArgType.Int }, OmitStart = 3 },
 					};
 		}
-		private bool byName = false;
+		private bool byName;
 		bool Replace(XmlNode node, XmlNode newNode)
 		{
 			if (node.ParentNode != null)
@@ -3994,7 +3994,7 @@ internal static partial class FunctionMethodCreator
 			isCharaRange = isChara;
 			CanRestructure = false;
 		}
-		private readonly bool isCharaRange = false;
+		private readonly bool isCharaRange;
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 		//	if (arguments.Count < 2)
@@ -4362,7 +4362,7 @@ internal static partial class FunctionMethodCreator
 			this.unicode = unicode;
 		}
 
-		readonly bool unicode = false;
+		readonly bool unicode;
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
 		//	//通常３つ、１つ省略可能で２～３の引数が必要。

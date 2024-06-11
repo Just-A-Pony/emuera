@@ -25,7 +25,7 @@ internal static class KeyMacro
 	/// </summary>
 	static string[] macroName = new string[MaxMacro];
 	static string[] groupName = new string[MaxGroup];
-	static bool isMacroChanged = false;
+	static bool isMacroChanged;
 	static KeyMacro()
 	{
 		ResetNames();

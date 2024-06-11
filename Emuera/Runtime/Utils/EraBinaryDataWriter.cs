@@ -36,11 +36,11 @@ internal sealed class EraBinaryDataWriter : IDisposable
 		}
 		#endregion
 	}
-	BinaryWriter writer = null;
+	BinaryWriter writer;
 
 	#region EM_私家版_セーブ圧縮
-	BinaryWriter fileWriter = null;
-	MemoryStream ms = null;
+	BinaryWriter fileWriter;
+	MemoryStream ms;
 	#endregion
 
 	public void WriteHeader()

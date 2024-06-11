@@ -69,7 +69,7 @@ class ConsoleDivPart : AConsoleDisplayPart
 		Depth = depth;
 		IsRelative = isRelative;
 	}
-	int pointX = 0;
+	int pointX;
 	int xOffset;
 	#region EE_div各要素の修正
 	int divXOffset;
@@ -95,7 +95,7 @@ class ConsoleDivPart : AConsoleDisplayPart
 	Color backgroundColor;
 	string altHeadTag;
 	readonly ConsoleDisplayLine[] children;
-	public bool IsEscaped { get; set; } = false;
+	public bool IsEscaped { get; set; }
 	public override int Top { get { return PointY; } }
 	public override int Bottom { get { return PointY + Height; } }
 	public bool IsRelative { get; private set; }

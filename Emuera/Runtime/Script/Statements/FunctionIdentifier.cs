@@ -43,7 +43,7 @@ internal sealed partial class FunctionIdentifier
 	readonly static Dictionary<string, FunctionIdentifier> funcDic = Config.IgnoreCase ? new(StringComparer.OrdinalIgnoreCase) : new(); 
 	readonly static Dictionary<FunctionCode, string> funcMatch = [];
 	readonly static Dictionary<FunctionCode, FunctionCode> funcParent = [];
-	readonly static AInstruction methodInstruction = null;
+	readonly static AInstruction methodInstruction;
 
 	private static void addFunction(FunctionCode code, AInstruction inst)
 	{ addFunction(code, inst, 0); }
@@ -541,7 +541,7 @@ internal sealed partial class FunctionIdentifier
 	private FunctionCode code;
 	private ArgumentBuilder arg;
 	private int flag;
-	private FunctionMethod method = null;
+	private FunctionMethod method;
 	public FunctionCode Code { get { return code; } }
 	public ArgumentBuilder ArgBuilder { get { return arg; } }
 	public FunctionMethod Method { get { return method; } }

@@ -34,8 +34,8 @@ internal sealed class Utils
 		{
 			return num != null ? (num.isPx ? num.num : num.num * Config.FontSize / 100f) : 0f;
 		}
-		public int num = 0;
-		public bool isPx = false;
+		public int num;
+		public bool isPx;
 		public override string ToString()
 		{
 			var sb = new StringBuilder();

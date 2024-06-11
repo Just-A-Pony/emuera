@@ -44,15 +44,15 @@ internal sealed class ConsoleDisplayLine
 
 	///論理行の最初となる場合だけtrue。表示の都合で改行された2行目以降はfalse
 	readonly public bool IsLogicalLine = true;
-	readonly public bool IsTemporary = false;
+	readonly public bool IsTemporary;
 	//EmueraConsole parent;
 	ConsoleButtonString[] buttons;
 	DisplayLineAlignment align;
 	public ConsoleButtonString[] Buttons { get { return buttons; } }
 	public DisplayLineAlignment Align { get { return align; } }
-	bool aligned = false;
+	bool aligned;
 	//Bitmap Cache
-	public bool bitmapCacheEnabled = false;
+	public bool bitmapCacheEnabled;
 	public void SetAlignment(DisplayLineAlignment align, int customWidth = -1/*, int xOffset = 0*/)
 	{
 		if (aligned)
