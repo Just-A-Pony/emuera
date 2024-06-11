@@ -297,7 +297,7 @@ internal static partial class ArgumentParser
 					}
 				}
 				else
-					param.Add(new MixedIntegerExprTerm { num = arg, isPx = (wc.Current.Type != '\0' && wc.Current.Type != ',') });
+					param.Add(new MixedIntegerExprTerm { num = arg, isPx = wc.Current.Type != '\0' && wc.Current.Type != ',' });
 				if (wc.Current.Type != '\0' && wc.Current.Type != ',') wc.ShiftNext();
 				wc.ShiftNext();
 				argCount++;
@@ -324,7 +324,7 @@ internal static partial class ArgumentParser
 			{
 				var arg = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.Comma | TermEndWith.KeyWordPx);
 				if (Config.NeedReduceArgumentOnLoad) arg = arg.Restructure(exm);
-				param.Add(new MixedIntegerExprTerm { num = arg, isPx = (wc.Current.Type != '\0' && wc.Current.Type != ',') });
+				param.Add(new MixedIntegerExprTerm { num = arg, isPx = wc.Current.Type != '\0' && wc.Current.Type != ',' });
 				if (wc.Current.Type != '\0' && wc.Current.Type != ',') wc.ShiftNext();
 				wc.ShiftNext();
 
@@ -800,7 +800,7 @@ internal static partial class ArgumentParser
 			wc.ShiftNext();
 			IdentifierWord id = wc.Current as IdentifierWord;
 
-			if ((id != null) && (id.Code.Equals("FORWARD", Config.StringComparison) || (id.Code.Equals("BACK", Config.StringComparison))))
+			if ((id != null) && (id.Code.Equals("FORWARD", Config.StringComparison) || id.Code.Equals("BACK", Config.StringComparison)))
 			{
 				if (id.Code.Equals("BACK", Config.StringComparison))
 					order = SortOrder.DESENDING;
@@ -907,7 +907,7 @@ internal static partial class ArgumentParser
 			{
 				ret.IsConst = true;
 				ret.ConstStr = funcname.GetStrValue(null);
-				if (ret.ConstStr == "")
+				if (string.IsNullOrEmpty(ret.ConstStr))
 				{
 					warn(trerror.NotSpecifiedFuncName.Text, line, 2, false);
 					return null;

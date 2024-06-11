@@ -120,7 +120,7 @@ internal static class HtmlManager
 				if (fspace < 0) fspace = found;
 				string tag = str.Substring(last, fspace - last);
 				if (tag == "br") { delbr = 1; break; }
-				bool ist = (tag == "b" || tag == "i" || tag == "s");
+				bool ist = tag == "b" || tag == "i" || tag == "s";
 				beginStack.Push(new HTMLI('<' + str.Substring(last, found - last) + '>', ist));
 				endStack.Push(new HTMLI("</" + tag + '>', ist));
 			}

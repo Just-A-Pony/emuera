@@ -113,7 +113,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	//ConsoleButtonString selectingButton = null;
 	//ConsoleButtonString lastSelectingButton = null;
 
-	class ClientBackGroundImage : IComparable<ClientBackGroundImage>
+	sealed class ClientBackGroundImage : IComparable<ClientBackGroundImage>
 	{
 		/// <summary>
 		/// zdepth == 0は文字列用ダミーなので他で使ってはいけない
@@ -202,8 +202,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	{
 		if (image == null || !image.IsCreated)
 			return false;
-		if (zdepth == 0)
-			throw new ArgumentOutOfRangeException();
+		ArgumentOutOfRangeException.ThrowIfZero(zdepth);
 		ClientBackGroundImage cbg = new ClientBackGroundImage(zdepth);
 		cbg.Img = image;
 		cbg.x = x;
@@ -228,8 +227,7 @@ internal sealed partial class EmueraConsole : IDisposable
 
 	public bool CBG_SetButtonImage(int buttonValue, ASprite imageN, ASprite imageB, int x, int y, int zdepth, string tooltip = null)
 	{
-		if (zdepth == 0)
-			throw new ArgumentOutOfRangeException();
+		ArgumentOutOfRangeException.ThrowIfZero(zdepth);
 		ClientBackGroundImage cbg = new ClientBackGroundImage(zdepth);
 		cbg.Img = imageN;
 		cbg.ImgB = imageB;
@@ -299,7 +297,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		{
 			if (state == ConsoleState.Initializing)
 				return true;
-			return (state == ConsoleState.Running || runningERBfromMemory);
+			return state == ConsoleState.Running || runningERBfromMemory;
 		}
 	}
 	#region EM_私家版_INPUT系機能拡張
@@ -307,7 +305,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	{
 		get
 		{
-			return (state == ConsoleState.WaitInput && inputReq.MouseInput);
+			return state == ConsoleState.WaitInput && inputReq.MouseInput;
 		}
 	}
 	#endregion
@@ -321,7 +319,7 @@ internal sealed partial class EmueraConsole : IDisposable
 				return true;
 			if (inProcess)
 				return true;
-			return (state == ConsoleState.Running || runningERBfromMemory);
+			return state == ConsoleState.Running || runningERBfromMemory;
 		}
 	}
 
@@ -345,7 +343,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			if (state == ConsoleState.WaitInput)
 			{
 				GlobalStatic.ForceQuitAndRestart = false;
-				return (inputReq.InputType == InputType.AnyKey || inputReq.InputType == InputType.EnterKey);
+				return inputReq.InputType == InputType.AnyKey || inputReq.InputType == InputType.EnterKey;
 			}
 			return false;
 		}
@@ -356,7 +354,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		get
 		{
 			GlobalStatic.ForceQuitAndRestart = false;
-			return (state == ConsoleState.WaitInput && inputReq.InputType == InputType.AnyKey);
+			return state == ConsoleState.WaitInput && inputReq.InputType == InputType.AnyKey;
 		}
 	}
 	#endregion
@@ -364,7 +362,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	{
 		get
 		{
-			return (state == ConsoleState.WaitInput && inputReq.OneInput);
+			return state == ConsoleState.WaitInput && inputReq.OneInput;
 		}
 	}
 
@@ -372,7 +370,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	{
 		get
 		{
-			return (state == ConsoleState.WaitInput && inputReq.Timelimit > 0 && !isTimeout);
+			return state == ConsoleState.WaitInput && inputReq.Timelimit > 0 && !isTimeout;
 		}
 	}
 
@@ -381,7 +379,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		get
 		{
 			if (state == ConsoleState.WaitInput)
-				return (inputReq.InputType == InputType.PrimitiveMouseKey);
+				return inputReq.InputType == InputType.PrimitiveMouseKey;
 			return false;
 		}
 	}
@@ -705,8 +703,8 @@ internal sealed partial class EmueraConsole : IDisposable
 			var scaleW = bakedBackground.Width / (float)bg.BaseImage.Bitmap.Width;
 			var scaleH = bakedBackground.Height / (float)bg.BaseImage.Bitmap.Height;
 			var cropHorizontally = bg.BaseImage.Bitmap.Height * scaleW < bakedBackground.Height;
-			var newWidth = bg.BaseImage.Bitmap.Width * ((cropHorizontally) ? scaleH : scaleW);
-			var newHeight = bg.BaseImage.Bitmap.Height * ((cropHorizontally) ? scaleH : scaleW);
+			var newWidth = bg.BaseImage.Bitmap.Width * (cropHorizontally ? scaleH : scaleW);
+			var newHeight = bg.BaseImage.Bitmap.Height * (cropHorizontally ? scaleH : scaleW);
 			var paddingX = (int)((bakedBackground.Width - newWidth) / 2);
 			var attributes = new ImageAttributes();
 			attributes.SetColorMatrix(pair.Value.GetColorMatrix(), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
@@ -752,7 +750,6 @@ internal sealed partial class EmueraConsole : IDisposable
 	Int64 timerID = -1;
 	readonly Stopwatch _genericTimerStopwatch = new();//現在のタイマーを開始した時のミリ秒数（WinmmTimer.TickCount基準）
 	Int64 timer_endTime;//現在のタイマーを終了する時のTickCountミリ秒数
-	bool wait_timeout;
 	bool isTimeout;
 	public bool IsTimeOut { get { return isTimeout; } }
 
@@ -823,8 +820,6 @@ internal sealed partial class EmueraConsole : IDisposable
 	/// </summary>
 	private void endTimer()
 	{
-		if (wait_timeout)
-			return;
 		stopTimer();
 		isTimeout = true;
 		if (IsWaitingPrimitive)
@@ -1321,7 +1316,7 @@ internal sealed partial class EmueraConsole : IDisposable
 				pInfo.Arguments = "/l " + pos.Value.LineNo.ToString() + " \"" + fname + "\"";
 				break;
 			case TextEditorType.USER_SETTING:
-				if (Config.EditorArg != "" && Config.EditorArg != null)
+				if (!string.IsNullOrEmpty(Config.EditorArg) && Config.EditorArg != null)
 					pInfo.Arguments = Config.EditorArg + pos.Value.LineNo.ToString() + " \"" + fname + "\"";
 				else
 					pInfo.Arguments = fname;
@@ -1458,7 +1453,7 @@ internal sealed partial class EmueraConsole : IDisposable
 
 			return;
 		}
-		else if ((com.Equals("QUIT", sc)) || (com.Equals("EXIT", sc)))
+		else if (com.Equals("QUIT", sc) || com.Equals("EXIT", sc))
 		{
 			window.Close();
 			return;
@@ -2175,7 +2170,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			}
 			if (buttonNum >= 0)
 			{
-				bool ret = (pointingString != null || selectingButton != null || buttonNum != selectingCBGButtonInt);
+				bool ret = pointingString != null || selectingButton != null || buttonNum != selectingCBGButtonInt;
 				selectingCBGButtonInt = buttonNum;
 				pointingString = null;
 				pointingStrings.Clear();

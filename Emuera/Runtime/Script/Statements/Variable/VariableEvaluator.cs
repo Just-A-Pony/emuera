@@ -296,17 +296,17 @@ internal sealed class VariableEvaluator : IDisposable
 			if (p.Identifier.IsArray1D)
 			{
 				for (int i = 0; i < (int)length; i++)
-					sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, [index1 + i])).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
+					sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, [index1 + i]).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
 			}
 			else if (p.Identifier.IsArray2D)
 			{
 				for (int i = 0; i < (int)length; i++)
-					sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, [p.Index1, index1 + i])).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
+					sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, [p.Index1, index1 + i]).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
 			}
 			else
 			{
 				for (int i = 0; i < (int)length; i++)
-					sum += (p.Identifier.GetIntValue(GlobalStatic.EMediator, [p.Index1, p.Index2, index1 + i])).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
+					sum += p.Identifier.GetIntValue(GlobalStatic.EMediator, [p.Index1, p.Index2, index1 + i]).ToString() + ((i < ((int)length - 1)) ? delimiter : "");
 			}
 		}
 		return sum;
@@ -1191,7 +1191,7 @@ internal sealed class VariableEvaluator : IDisposable
 
 	public void SwapChara(Int64 x, Int64 y)
 	{
-		if ((x < 0) || (x >= varData.CharacterList.Count) || ((y < 0) || (y >= varData.CharacterList.Count)))
+		if ((x < 0) || (x >= varData.CharacterList.Count) || (y < 0) || (y >= varData.CharacterList.Count))
 			throw new CodeEE(trerror.OoRSwapChara.Text);
 		if (x == y)
 			return;

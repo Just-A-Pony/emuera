@@ -401,7 +401,7 @@ internal sealed partial class Process
 						Int64 colorRGB = colorArg.RGB.GetIntValue(exm);
 						colorR = (colorRGB & 0xFF0000) >> 16;
 						colorG = (colorRGB & 0x00FF00) >> 8;
-						colorB = (colorRGB & 0x0000FF);
+						colorB = colorRGB & 0x0000FF;
 					}
 					else
 					{
@@ -786,8 +786,8 @@ internal sealed partial class Process
 			#region EE_SKIPLOG
 			case FunctionCode.SKIPLOG:
 				{
-					iValue = (func.Argument.IsConst) ? func.Argument.ConstInt : ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
-					console.MesSkip = (iValue != 0);
+					iValue = func.Argument.IsConst ? func.Argument.ConstInt : ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
+					console.MesSkip = iValue != 0;
 					break;
 				}
 			#endregion

@@ -274,7 +274,7 @@ internal sealed partial class Process(EmueraConsole view)
         count = 0;
         isCTrain = false;
         skipPrint = true;
-        return (callFunction("CALLTRAINEND", false, false));
+        return callFunction("CALLTRAINEND", false, false);
     }
     #region EE_INPUTMOUSEKEYのボタン対応
     // public void InputResult5(int r0, int r1, int r2, int r3, int r4)
@@ -563,8 +563,8 @@ internal sealed partial class Process(EmueraConsole view)
     public void printRawLine(ScriptPosition? position)
     {
         string str = getRawTextFormFilewithLine(position);
-        if (str != "")
-            console.PrintError(str);
+		if (!string.IsNullOrEmpty(str))
+			console.PrintError(str);
     }
 
     public static string getRawTextFormFilewithLine(ScriptPosition? position)

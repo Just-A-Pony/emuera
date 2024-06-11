@@ -2098,7 +2098,7 @@ internal static partial class FunctionMethodCreator
 			if (!Config.CompatiSPChara && y != 0)
 				// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
 				throw new CodeEE(Lang.Error.SPCharacterFeatureDisabled.Text);
-			return exm.VEvaluator.GetCharacterStrfromCSVData(x, charaStr, (y != 0), 0);
+			return exm.VEvaluator.GetCharacterStrfromCSVData(x, charaStr, y != 0, 0);
 		}
 	}
 
@@ -2141,7 +2141,7 @@ internal static partial class FunctionMethodCreator
 			if (!Config.CompatiSPChara && z != 0)
 				// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
 				throw new CodeEE(Lang.Error.SPCharacterFeatureDisabled.Text);
-			return exm.VEvaluator.GetCharacterStrfromCSVData(x, CharacterStrData.CSTR, (z != 0), y);
+			return exm.VEvaluator.GetCharacterStrfromCSVData(x, CharacterStrData.CSTR, z != 0, y);
 		}
 	}
 
@@ -2196,7 +2196,7 @@ internal static partial class FunctionMethodCreator
 			if (!Config.CompatiSPChara && z != 0)
 				// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
 				throw new CodeEE(Lang.Error.SPCharacterFeatureDisabled.Text);
-			return exm.VEvaluator.GetCharacterIntfromCSVData(x, charaInt, (z != 0), y);
+			return exm.VEvaluator.GetCharacterIntfromCSVData(x, charaInt, z != 0, y);
 		}
 	}
 
@@ -2276,7 +2276,7 @@ internal static partial class FunctionMethodCreator
 				Int64 word = arguments[1].GetIntValue(exm);
 				ret = VariableEvaluator.FindChara(varID, elem, word, startindex, lastindex, isLast);
 			}
-			return (ret);
+			return ret;
 		}
 	}
 
@@ -2315,7 +2315,7 @@ internal static partial class FunctionMethodCreator
 				// throw new CodeEE("SPキャラ関係の機能は標準では使用できません(互換性オプション「SPキャラを使用する」をONにしてください)");
 				throw new CodeEE(Lang.Error.SPCharacterFeatureDisabled.Text);
 
-			return (exm.VEvaluator.ExistCsv(no, isSp));
+			return exm.VEvaluator.ExistCsv(no, isSp);
 		}
 	}
 	#endregion
@@ -2369,7 +2369,7 @@ internal static partial class FunctionMethodCreator
 				dim = (int)arguments[1].GetIntValue(exm);
 			if (Config.VarsizeDimConfig && dim > 0)
 				dim--;
-			return (var.GetLength(dim));
+			return var.GetLength(dim);
 		}
 		public override bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 		{
@@ -2419,7 +2419,7 @@ internal static partial class FunctionMethodCreator
 					}
 				}
 				#endregion
-				return (isInstalled);
+				return isInstalled;
 			}
 		}
 
@@ -2447,7 +2447,7 @@ internal static partial class FunctionMethodCreator
 				throw new CodeEE(string.Format(Lang.Error.ArgIsTooLarge.Text, Name, 1, target));
 			EraDataResult result = exm.VEvaluator.CheckData((int)target, type);
 			exm.VEvaluator.RESULTS = result.DataMes;
-			return ((long)result.State);
+			return (long)result.State;
 		}
 	}
 
@@ -2470,7 +2470,7 @@ internal static partial class FunctionMethodCreator
 			string datFilename = arguments[0].GetStrValue(exm);
 			EraDataResult result = exm.VEvaluator.CheckData(datFilename, type);
 			exm.VEvaluator.RESULTS = result.DataMes;
-			return ((long)result.State);
+			return (long)result.State;
 		}
 	}
 
@@ -2574,8 +2574,8 @@ internal static partial class FunctionMethodCreator
 		readonly bool defaultColor;
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			Color color = (defaultColor) ? Config.ForeColor : GlobalStatic.Console.StringStyle.Color;
-			return (color.ToArgb() & 0xFFFFFF);
+			Color color = defaultColor ? Config.ForeColor : GlobalStatic.Console.StringStyle.Color;
+			return color.ToArgb() & 0xFFFFFF;
 		}
 	}
 
@@ -2589,7 +2589,7 @@ internal static partial class FunctionMethodCreator
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			return (Config.FocusColor.ToArgb() & 0xFFFFFF);
+			return Config.FocusColor.ToArgb() & 0xFFFFFF;
 		}
 	}
 
@@ -2606,8 +2606,8 @@ internal static partial class FunctionMethodCreator
 		readonly bool defaultColor;
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			Color color = (defaultColor) ? Config.BackColor : GlobalStatic.Console.bgColor;
-			return (color.ToArgb() & 0xFFFFFF);
+			Color color = defaultColor ? Config.BackColor : GlobalStatic.Console.bgColor;
+			return color.ToArgb() & 0xFFFFFF;
 		}
 	}
 
@@ -2632,7 +2632,7 @@ internal static partial class FunctionMethodCreator
 				ret |= 4;
 			if ((fontstyle & FontStyle.Underline) == FontStyle.Underline)
 				ret |= 8;
-			return (ret);
+			return ret;
 		}
 	}
 
@@ -2646,7 +2646,7 @@ internal static partial class FunctionMethodCreator
 		}
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			return (GlobalStatic.Console.StringStyle.Fontname);
+			return GlobalStatic.Console.StringStyle.Fontname;
 		}
 	}
 
@@ -2814,7 +2814,7 @@ internal static partial class FunctionMethodCreator
 		{
 			long money = arguments[0].GetIntValue(exm);
 			if ((arguments.Count < 2) || (arguments[1] == null))
-				return (Config.MoneyFirst) ? Config.MoneyLabel + money.ToString() : money.ToString() + Config.MoneyLabel;
+				return Config.MoneyFirst ? Config.MoneyLabel + money.ToString() : money.ToString() + Config.MoneyLabel;
 			string format = arguments[1].GetStrValue(exm);
 			string ret;
 			try
@@ -2826,7 +2826,7 @@ internal static partial class FunctionMethodCreator
 				// throw new CodeEE("MONEYSTR関数の第2引数の書式指定が間違っています");
 				throw new CodeEE(string.Format(Lang.Error.InvalidFormat.Text, Name, 2));
 			}
-			return (Config.MoneyFirst) ? Config.MoneyLabel + ret : ret + Config.MoneyLabel;
+			return Config.MoneyFirst ? Config.MoneyLabel + ret : ret + Config.MoneyLabel;
 		}
 	}
 
@@ -2840,7 +2840,7 @@ internal static partial class FunctionMethodCreator
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			return (Config.PrintCPerLine);
+			return Config.PrintCPerLine;
 		}
 	}
 
@@ -2854,7 +2854,7 @@ internal static partial class FunctionMethodCreator
 		}
 		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			return (Config.PrintCLength);
+			return Config.PrintCLength;
 		}
 	}
 
@@ -2868,7 +2868,7 @@ internal static partial class FunctionMethodCreator
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			return (Config.SaveDataNos);
+			return Config.SaveDataNos;
 		}
 	}
 
@@ -2889,7 +2889,7 @@ internal static partial class FunctionMethodCreator
 			date = date * 100 + DateTime.Now.Minute;
 			date = date * 100 + DateTime.Now.Second;
 			date = date * 1000 + DateTime.Now.Millisecond;
-			return (date);//17桁。2京くらい。
+			return date;//17桁。2京くらい。
 		}
 	}
 
@@ -2903,7 +2903,7 @@ internal static partial class FunctionMethodCreator
 		}
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			return (DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss"));
+			return DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
 		}
 	}
 
@@ -2935,7 +2935,7 @@ internal static partial class FunctionMethodCreator
 		{
 			//西暦0001年1月1日からの経過時間を秒で。
 			//Ticksは100ナノ秒単位であるが実際にはそんな精度はないので無駄。
-			return (DateTime.Now.Ticks / 10000000);
+			return DateTime.Now.Ticks / 10000000;
 		}
 	}
 	#endregion
@@ -2996,7 +2996,7 @@ internal static partial class FunctionMethodCreator
 					// throw new CodeEE("RANDの最大値に最小値以下の値(" + max.ToString() + ")が指定されました");
 					throw new CodeEE(string.Format(Lang.Error.MaximumLowerThanMinimum.Text, Name, max));
 			}
-			return (exm.VEvaluator.GetNextRand(max - min) + min);
+			return exm.VEvaluator.GetNextRand(max - min) + min;
 		}
 	}
 
@@ -3054,7 +3054,7 @@ internal static partial class FunctionMethodCreator
 						ret = newRet;
 				}
 			}
-			return (ret);
+			return ret;
 		}
 	}
 
@@ -3072,7 +3072,7 @@ internal static partial class FunctionMethodCreator
 			//普通は使わない値なので例外として投げてしまう方向性で
 			if (ret == long.MinValue)
 				throw new CodeEE(string.Format(Lang.Error.MinInt64CanNotApplyABS.Text, Name, long.MinValue));
-			return (Math.Abs(ret));
+			return Math.Abs(ret);
 		}
 	}
 
@@ -3098,7 +3098,7 @@ internal static partial class FunctionMethodCreator
 			else if ((pow >= Int64.MaxValue) || (pow <= Int64.MinValue))
 				//throw new CodeEE("累乗結果(" + pow.ToString() + ")が64ビット符号付き整数の範囲外です");
 				throw new CodeEE(string.Format(Lang.Error.ResultIsOutOfTheRangeOfInt64.Text, Name, pow));
-			return ((long)pow);
+			return (long)pow;
 		}
 	}
 
@@ -3116,7 +3116,7 @@ internal static partial class FunctionMethodCreator
 			if (ret < 0)
 				// throw new CodeEE("SQRT関数の引数に負の値が指定されました");
 				throw new CodeEE(string.Format(Lang.Error.ArgIsNegative.Text, Name, 1, ret));
-			return ((Int64)Math.Sqrt(ret));
+			return (Int64)Math.Sqrt(ret);
 		}
 	}
 
@@ -3134,7 +3134,7 @@ internal static partial class FunctionMethodCreator
 			if (ret < 0)
 				// throw new CodeEE("CBRT関数の引数に負の値が指定されました");
 				throw new CodeEE(string.Format(Lang.Error.ArgIsNegative.Text, Name, 1, ret));
-			return ((Int64)Math.Pow((double)ret, 1.0 / 3.0));
+			return (Int64)Math.Pow((double)ret, 1.0 / 3.0);
 		}
 	}
 
@@ -3178,7 +3178,7 @@ internal static partial class FunctionMethodCreator
 			else if ((dret >= Int64.MaxValue) || (dret <= Int64.MinValue))
 				// throw new CodeEE("計算結果(" + dret.ToString() + ")が64ビット符号付き整数の範囲外です");
 				throw new CodeEE(string.Format(Lang.Error.ResultIsOutOfTheRangeOfInt64.Text, Name, dret));
-			return ((Int64)dret);
+			return (Int64)dret;
 		}
 	}
 
@@ -3204,7 +3204,7 @@ internal static partial class FunctionMethodCreator
 				// throw new CodeEE("計算結果(" + dret.ToString() + ")が64ビット符号付き整数の範囲外です");
 				throw new CodeEE(string.Format(Lang.Error.ResultIsOutOfTheRangeOfInt64.Text, Name, dret));
 
-			return ((Int64)dret);
+			return (Int64)dret;
 		}
 	}
 
@@ -3220,7 +3220,7 @@ internal static partial class FunctionMethodCreator
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 ret = arguments[0].GetIntValue(exm);
-			return (Math.Sign(ret));
+			return Math.Sign(ret);
 		}
 	}
 
@@ -3244,7 +3244,7 @@ internal static partial class FunctionMethodCreator
 				ret = max;
 			else
 				ret = value;
-			return (ret);
+			return ret;
 		}
 	}
 	#endregion
@@ -3310,7 +3310,7 @@ internal static partial class FunctionMethodCreator
 			if (!isCharaRange)
 			{
 				p.IsArrayRangeValid(index1, index2, "SUMARRAY", 2L, 3L);
-				return (VariableEvaluator.GetArraySum(p, index1, index2));
+				return VariableEvaluator.GetArraySum(p, index1, index2);
 			}
 			else
 			{
@@ -3318,7 +3318,7 @@ internal static partial class FunctionMethodCreator
 				if (index1 >= charaNum || index1 < 0 || index2 > charaNum || index2 < 0)
 					// throw new CodeEE("SUMCARRAY関数の範囲指定がキャラクタ配列の範囲を超えています(" + index1.ToString() + "～" + index2.ToString() + ")");
 					throw new CodeEE(string.Format(Lang.Error.CharacterRangeInvalid.Text, Name, index1, index2));
-				return (VariableEvaluator.GetArraySumChara(p, index1, index2));
+				return VariableEvaluator.GetArraySumChara(p, index1, index2);
 			}
 		}
 	}
@@ -3390,12 +3390,12 @@ internal static partial class FunctionMethodCreator
 				if (arguments[0].GetOperandType() == typeof(Int64))
 				{
 					Int64 targetValue = arguments[1].GetIntValue(exm);
-					return (VariableEvaluator.GetMatch(p, targetValue, start, end));
+					return VariableEvaluator.GetMatch(p, targetValue, start, end);
 				}
 				else
 				{
 					string targetStr = arguments[1].GetStrValue(exm);
-					return (VariableEvaluator.GetMatch(p, targetStr, start, end));
+					return VariableEvaluator.GetMatch(p, targetStr, start, end);
 				}
 			}
 			else
@@ -3407,12 +3407,12 @@ internal static partial class FunctionMethodCreator
 				if (arguments[0].GetOperandType() == typeof(Int64))
 				{
 					Int64 targetValue = arguments[1].GetIntValue(exm);
-					return (VariableEvaluator.GetMatchChara(p, targetValue, start, end));
+					return VariableEvaluator.GetMatchChara(p, targetValue, start, end);
 				}
 				else
 				{
 					string targetStr = arguments[1].GetStrValue(exm);
-					return (VariableEvaluator.GetMatchChara(p, targetStr, start, end));
+					return VariableEvaluator.GetMatchChara(p, targetStr, start, end);
 				}
 			}
 		}
@@ -3478,7 +3478,7 @@ internal static partial class FunctionMethodCreator
 						ret += 1;
 				}
 			}
-			return (ret);
+			return ret;
 		}
 	}
 
@@ -3670,14 +3670,14 @@ internal static partial class FunctionMethodCreator
 			if (!isCharaRange)
 			{
 				p.IsArrayRangeValid(start, end, funcName, 2L, 3L);
-				return (VariableEvaluator.GetMaxArray(p, start, end, isMax));
+				return VariableEvaluator.GetMaxArray(p, start, end, isMax);
 			}
 			else
 			{
 				Int64 charaNum = exm.VEvaluator.CHARANUM;
 				if (start >= charaNum || start < 0 || end > charaNum || end < 0)
 					throw new CodeEE(funcName + "関数の範囲指定がキャラクタ配列の範囲を超えています(" + start.ToString() + "～" + end.ToString() + ")");
-				return (VariableEvaluator.GetMaxArrayChara(p, start, end, isMax));
+				return VariableEvaluator.GetMaxArrayChara(p, start, end, isMax);
 			}
 		}
 	}
@@ -3711,7 +3711,7 @@ internal static partial class FunctionMethodCreator
 				// throw new CodeEE("GETBIT関数の第２引数(" + m.ToString() + ")が範囲(０～６３)を超えています");
 				throw new CodeEE(string.Format(Lang.Error.ArgIsOutOfRange.Text, Name, 2, m, 0, 63));
 			int mi = (int)m;
-			return ((n >> mi) & 1);
+			return (n >> mi) & 1;
 		}
 	}
 
@@ -3831,7 +3831,7 @@ internal static partial class FunctionMethodCreator
 			Int64 value = arguments[0].GetIntValue(exm);
 			Int64 maxLv = arguments[1].GetIntValue(exm);
 
-			return (exm.VEvaluator.getPalamLv(value, maxLv));
+			return exm.VEvaluator.getPalamLv(value, maxLv);
 		}
 	}
 
@@ -3857,7 +3857,7 @@ internal static partial class FunctionMethodCreator
 			Int64 value = arguments[0].GetIntValue(exm);
 			Int64 maxLv = arguments[1].GetIntValue(exm);
 
-			return (exm.VEvaluator.getExpLv(value, maxLv));
+			return exm.VEvaluator.getExpLv(value, maxLv);
 		}
 	}
 
@@ -3914,7 +3914,7 @@ internal static partial class FunctionMethodCreator
 			Int64 start = (arguments.Count > 2 && arguments[2] != null) ? arguments[2].GetIntValue(exm) : 0;
 			Int64 end = (arguments.Count > 3 && arguments[3] != null) ? arguments[3].GetIntValue(exm) : varTerm.GetLength();
 			if (arguments.Count > 4 && arguments[4] != null)
-				isExact = (arguments[4].GetIntValue(exm) != 0);
+				isExact = arguments[4].GetIntValue(exm) != 0;
 
 			FixedVariableTerm p = varTerm.GetFixedVariableTerm(exm);
 			p.IsArrayRangeValid(start, end, funcName, 3L, 4L);
@@ -4044,7 +4044,7 @@ internal static partial class FunctionMethodCreator
 			if (!isCharaRange)
 			{
 				p.IsArrayRangeValid(start, end, "INRANGEARRAY", 4L, 5L);
-				return (VariableEvaluator.GetInRangeArray(p, min, max, start, end));
+				return VariableEvaluator.GetInRangeArray(p, min, max, start, end);
 			}
 			else
 			{
@@ -4052,7 +4052,7 @@ internal static partial class FunctionMethodCreator
 				if (start >= charaNum || start < 0 || end > charaNum || end < 0)
 					// throw new CodeEE("INRANGECARRAY関数の範囲指定がキャラクタ配列の範囲を超えています(" + start.ToString() + "～" + end.ToString() + ")");
 					throw new CodeEE(string.Format(Lang.Error.CharacterRangeInvalid.Text, Name, start, end));
-				return (VariableEvaluator.GetInRangeArrayChara(p, min, max, start, end));
+				return VariableEvaluator.GetInRangeArrayChara(p, min, max, start, end);
 			}
 		}
 	}
@@ -4228,7 +4228,7 @@ internal static partial class FunctionMethodCreator
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
-			return (LangManager.GetStrlenLang(str));
+			return LangManager.GetStrlenLang(str);
 		}
 	}
 
@@ -4243,7 +4243,7 @@ internal static partial class FunctionMethodCreator
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
-			return (str.Length);
+			return str.Length;
 		}
 	}
 
@@ -4288,7 +4288,7 @@ internal static partial class FunctionMethodCreator
 			if ((arguments.Count >= 3) && (arguments[2] != null))
 				length = (int)arguments[2].GetIntValue(exm);
 
-			return (LangManager.GetSubStringLang(str, start, length));
+			return LangManager.GetSubStringLang(str, start, length);
 		}
 	}
 
@@ -4333,20 +4333,20 @@ internal static partial class FunctionMethodCreator
 			if ((arguments.Count >= 3) && (arguments[2] != null))
 				length = (int)arguments[2].GetIntValue(exm);
 			if ((start >= str.Length) || (length == 0))
-				return ("");
+				return "";
 			if ((length < 0) || (length > str.Length))
 				length = str.Length;
 			if (start <= 0)
 			{
 				if (length == str.Length)
-					return (str);
+					return str;
 				else
 					start = 0;
 			}
 			if ((start + length) > str.Length)
 				length = str.Length - start;
 
-			return (str.Substring(start, length));
+			return str.Substring(start, length);
 		}
 	}
 
@@ -4403,14 +4403,14 @@ internal static partial class FunctionMethodCreator
 				}
 			}
 			if (UFTstart < 0 || UFTstart >= target.Length)
-				return (-1);
+				return -1;
 			int index = target.IndexOf(word, UFTstart, StringComparison.Ordinal);
 			if (index > 0 && !unicode)
 			{
 				string subStr = target.Substring(0, index);
 				index = LangManager.GetStrlenLang(subStr);
 			}
-			return (index);
+			return index;
 		}
 	}
 
@@ -4434,7 +4434,7 @@ internal static partial class FunctionMethodCreator
 				// throw new CodeEE("第2引数が正規表現として不正です：" + e.Message);
 				throw new CodeEE(string.Format(Lang.Error.InvalidRegexArg.Text, Name, 2, e.Message));
 			}
-			return (reg.Matches(arguments[0].GetStrValue(exm)).Count);
+			return reg.Matches(arguments[0].GetStrValue(exm)).Count;
 		}
 	}
 
@@ -4469,7 +4469,7 @@ internal static partial class FunctionMethodCreator
 		{
 			Int64 i = arguments[0].GetIntValue(exm);
 			if ((arguments.Count < 2) || (arguments[1] == null))
-				return (i.ToString());
+				return i.ToString();
 			string format = arguments[1].GetStrValue(exm);
 			string ret;
 			try
@@ -4481,7 +4481,7 @@ internal static partial class FunctionMethodCreator
 				// throw new CodeEE("TOSTR関数の書式指定が間違っています");
 				throw new CodeEE(string.Format(Lang.Error.InvalidFormat.Text, Name, 2));
 			}
-			return (ret);
+			return ret;
 		}
 	}
 
@@ -4497,16 +4497,16 @@ internal static partial class FunctionMethodCreator
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
-			if (str == null || str == "")
-				return (0);
+			if (str == null || string.IsNullOrEmpty(str))
+				return 0;
 			//全角文字が入ってるなら無条件で0を返す
 			if (str.Length < LangManager.GetStrlenLang(str))
-				return (0);
+				return 0;
 			CharStream st = new CharStream(str);
 			if (!char.IsDigit(st.Current) && st.Current != '+' && st.Current != '-')
-				return (0);
+				return 0;
 			else if ((st.Current == '+' || st.Current == '-') && !char.IsDigit(st.Next))
-				return (0);
+				return 0;
 			Int64 ret = LexicalAnalyzer.ReadInt64(st, true);
 			if (!st.EOS)
 			{
@@ -4516,12 +4516,12 @@ internal static partial class FunctionMethodCreator
 					while (!st.EOS)
 					{
 						if (!char.IsDigit(st.Current))
-							return (0);
+							return 0;
 						st.ShiftNext();
 					}
 				}
 				else
-					return (0);
+					return 0;
 			}
 			return ret;
 		}
@@ -4556,8 +4556,8 @@ internal static partial class FunctionMethodCreator
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
-			if (str == null || str == "")
-				return ("");
+			if (str == null || string.IsNullOrEmpty(str))
+				return "";
 			switch (strType)
 			{
 				case StrFormType.Upper:
@@ -4569,7 +4569,7 @@ internal static partial class FunctionMethodCreator
 				case StrFormType.Full:
 					return Microsoft.VisualBasic.Strings.StrConv(str, Microsoft.VisualBasic.VbStrConv.Wide, Config.Language);
 			}
-			return ("");
+			return "";
 		}
 	}
 
@@ -4604,7 +4604,7 @@ internal static partial class FunctionMethodCreator
 
 		public override bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			return (arguments.Count < 4 || arguments[3].GetIntValue(exm) != 1);
+			return arguments.Count < 4 || arguments[3].GetIntValue(exm) != 1;
 		}
 		//public override string CheckArgumentType(string name, IOperandTerm[] arguments)
 		//{
@@ -4664,7 +4664,7 @@ internal static partial class FunctionMethodCreator
 				}
 			}
 			// type == 0 or > 2 or omitted.
-			return (reg.Replace(baseString, arguments[2].GetStrValue(exm)));
+			return reg.Replace(baseString, arguments[2].GetStrValue(exm));
 		}
 	}
 	#endregion
@@ -4701,7 +4701,7 @@ internal static partial class FunctionMethodCreator
 			}
 			string s = new string(new char[] { (char)i });
 
-			return (s);
+			return s;
 		}
 	}
 
@@ -4721,7 +4721,7 @@ internal static partial class FunctionMethodCreator
 			Encoding.UTF32.GetEncoder().GetBytes(target.ToCharArray(), 0, target.Length, bytes, 0, false);
 			Int64 i = (Int64)BitConverter.ToInt32(bytes, 0);
 
-			return (i);
+			return i;
 		}
 	}
 
@@ -4757,12 +4757,12 @@ internal static partial class FunctionMethodCreator
 
 			//全角文字があるなら数値ではない
 			if (baseStr.Length < LangManager.GetStrlenLang(baseStr))
-				return (0);
+				return 0;
 			CharStream st = new CharStream(baseStr);
 			if (!char.IsDigit(st.Current) && st.Current != '+' && st.Current != '-')
-				return (0);
+				return 0;
 			else if ((st.Current == '+' || st.Current == '-') && !char.IsDigit(st.Next))
-				return (0);
+				return 0;
 			_ = LexicalAnalyzer.ReadInt64(st, true);
 			if (!st.EOS)
 			{
@@ -4772,12 +4772,12 @@ internal static partial class FunctionMethodCreator
 					while (!st.EOS)
 					{
 						if (!char.IsDigit(st.Current))
-							return (0);
+							return 0;
 						st.ShiftNext();
 					}
 				}
 				else
-					return (0);
+					return 0;
 			}
 			return 1;
 		}
@@ -4913,7 +4913,7 @@ internal static partial class FunctionMethodCreator
 			if (!(arguments[0] is SingleTerm) && !(arguments[0] is VariableTerm))
 				return false;
 			//引数が確定値でない文字列変数なら無条件で不可（結果が可変なため）
-			if ((arguments[0] is VariableTerm) && !(((VariableTerm)arguments[0]).Identifier.IsConst))
+			if ((arguments[0] is VariableTerm) && !((VariableTerm)arguments[0]).Identifier.IsConst)
 				return false;
 			string str = arguments[0].GetStrValue(exm);
 			try
@@ -4985,7 +4985,7 @@ internal static partial class FunctionMethodCreator
 				throw new CodeEE(string.Format(Lang.Error.ArgIsNegative.Text, Name, 4, index2));
 
 			p.IsArrayRangeValid(index1, index1 + index2, "STRJOIN", 2L, 3L);
-			return (VariableEvaluator.GetJoinedStr(p, delimiter, index1, index2));
+			return VariableEvaluator.GetJoinedStr(p, delimiter, index1, index2);
 		}
 		public override bool UniqueRestructure(ExpressionMediator exm, List<AExpression> arguments)
 		{
@@ -6006,7 +6006,7 @@ internal static partial class FunctionMethodCreator
 				#endregion
 				if (bmp.Width > AbstractImage.MAX_IMAGESIZE || bmp.Height > AbstractImage.MAX_IMAGESIZE)
 					return 0;
-				g.GCreateFromF(bmp, (Config.TextDrawingMode == TextDrawingMode.WINAPI));
+				g.GCreateFromF(bmp, Config.TextDrawingMode == TextDrawingMode.WINAPI);
 			}
 			catch (Exception e)
 			{
@@ -7163,7 +7163,7 @@ internal static partial class FunctionMethodCreator
 				#endregion
 				if (bmp.Width > AbstractImage.MAX_IMAGESIZE || bmp.Height > AbstractImage.MAX_IMAGESIZE)
 					return 0;
-				g.GCreateFromF(bmp, (Config.TextDrawingMode == TextDrawingMode.WINAPI));
+				g.GCreateFromF(bmp, Config.TextDrawingMode == TextDrawingMode.WINAPI);
 			}
 			catch (Exception e)
 			{
@@ -7472,7 +7472,7 @@ internal static partial class FunctionMethodCreator
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			Int64 argument0 = arguments[0].GetIntValue(exm);
-			GlobalStatic.Console.bitmapCacheEnabledForNextLine = (argument0 != 0);
+			GlobalStatic.Console.bitmapCacheEnabledForNextLine = argument0 != 0;
 			return 0;
 		}
 	}

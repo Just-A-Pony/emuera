@@ -40,7 +40,7 @@ internal sealed class VariableStrArgTerm : AExpression
 			dic = exm.VEvaluator.Constant.GetKeywordDictionary(out errPos, parentCode, index, varname);
 		#endregion
 		string key = strTerm.GetStrValue(exm);
-		if (key == "")
+		if (string.IsNullOrEmpty(key))
 			throw new CodeEE(trerror.KeywordCanNotEmpty.Text);
 		#region EE_ERD
 		if (dic == null && key != "")

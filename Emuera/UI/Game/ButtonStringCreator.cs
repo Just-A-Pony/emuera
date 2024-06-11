@@ -76,7 +76,7 @@ internal static class ButtonStringCreator
 			ButtonPrimitive button = new()
 			{
 				Str = printBuffer.ToString(),
-				CanSelect = (buttonCount >= 1),
+				CanSelect = buttonCount >= 1,
 				Input = inpL
 			};
 			ret.Add(button);

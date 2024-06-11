@@ -357,7 +357,7 @@ internal static class ExpressionParser
 			if (ret.RightTerm == null)
 				throw new CodeEE(trerror.NoExpressionAfterTo.Text);
 			id = wc.Current as IdentifierWord;
-			if ((id != null) && (id.Code.Equals("TO", Config.StringComparison)))
+			if ((id != null) && id.Code.Equals("TO", Config.StringComparison))
 				throw new CodeEE(trerror.DuplicateTo.Text);
 			if (ret.LeftTerm.GetOperandType() != ret.RightTerm.GetOperandType())
 				throw new CodeEE(trerror.DoesNotMatchTo.Text);

@@ -274,7 +274,7 @@ internal static class OperatorMethodManager
 				throw new CodeEE(string.Format(trerror.MultiplyNegativeToStr.Text, value.ToString()));
 			if (value >= 10000)
 				throw new CodeEE(string.Format(trerror.Multiply10kToStr.Text, value.ToString()));
-			if ((str == "") || (value == 0))
+			if (string.IsNullOrEmpty(str) || (value == 0))
 				return "";
 			StringBuilder builder = new()
 			{

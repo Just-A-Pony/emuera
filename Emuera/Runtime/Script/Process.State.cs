@@ -471,7 +471,7 @@ internal sealed class ProcessState
 				if (srcArgs.Arguments[i] != null)
 				{
 					if (call.TopLabel.Arg[i].Identifier.IsReference)
-						((ReferenceToken)(call.TopLabel.Arg[i].Identifier)).SetRef(srcArgs.TransporterRef[i]);
+						((ReferenceToken)call.TopLabel.Arg[i].Identifier).SetRef(srcArgs.TransporterRef[i]);
 					else if (srcArgs.Arguments[i].GetOperandType() == typeof(Int64))
 						call.TopLabel.Arg[i].SetValue(srcArgs.TransporterInt[i], exm);
 					else

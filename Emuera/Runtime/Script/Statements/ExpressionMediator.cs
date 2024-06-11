@@ -43,7 +43,7 @@ internal sealed class ExpressionMediator
 
 	public bool ForceKana()
 	{
-		return (forceHiragana | forceKatakana | halftoFull);
+		return forceHiragana | forceKatakana | halftoFull;
 	}
 
 	public void OutputToConsole(string str, FunctionIdentifier func)

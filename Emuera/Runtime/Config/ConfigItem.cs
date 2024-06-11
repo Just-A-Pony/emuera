@@ -72,7 +72,7 @@ internal sealed class ConfigItem<T> : AConfigItem
 	public override void CopyTo(AConfigItem other)
 	{
 
-		ConfigItem<T> item = ((ConfigItem<T>)other);
+		ConfigItem<T> item = (ConfigItem<T>)other;
 		item.Fixed = false;
 		item.Value = this.Value;
 		item.Fixed = this.Fixed;
@@ -293,7 +293,7 @@ internal sealed class ConfigItem<T> : AConfigItem
 		string str = arg.Trim();
 		if (Int32.TryParse(str, out int i))
 		{
-			p = (i != 0);
+			p = i != 0;
 			return true;
 		}
 		if (str.Equals("NO", StringComparison.OrdinalIgnoreCase)

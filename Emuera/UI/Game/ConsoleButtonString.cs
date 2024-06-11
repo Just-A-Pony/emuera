@@ -328,7 +328,7 @@ internal sealed class ConsoleButtonString
 	#region EM_私家版_描画拡張
 	public void DrawPartTo(Graphics graph, AConsoleDisplayPart css, int pointY, bool isBackLog, TextDrawingMode mode)
 	{
-		bool isSelecting = (IsButton) && (parent.ButtonIsSelected(this));
+		bool isSelecting = IsButton && parent.ButtonIsSelected(this);
 		css.DrawTo(graph, pointY, isSelecting, isBackLog, mode);
 	}
 	#endregion

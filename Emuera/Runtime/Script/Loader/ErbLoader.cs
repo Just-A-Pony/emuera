@@ -571,7 +571,7 @@ internal sealed class ErbLoader
                     //引数読み取り時点で判別されないといけない
                     //if (term == null)
                     //{ errMes = "関数定義の引数は省略できません"; goto err; }
-                    if ((!(term.Restructure(exm) is VariableTerm vTerm)) || (vTerm.Identifier.IsConst))
+                    if ((!(term.Restructure(exm) is VariableTerm vTerm)) || vTerm.Identifier.IsConst)
                     { errMes = trerror.ArgCanOnlyAssignableVar.Text; goto err; }
                     else if (!vTerm.Identifier.IsReference)//参照型なら添え字不要
                     {
@@ -1025,14 +1025,14 @@ internal sealed class ErbLoader
                         {
                             foreach (InstructionLine iLine in nestStack)
                             {
-                                if (iLine.FunctionCode == FunctionCode.REPEAT && (Cnt.isAllConst && Cnt.getEl1forArg == 0))
+                                if (iLine.FunctionCode == FunctionCode.REPEAT && Cnt.isAllConst && Cnt.getEl1forArg == 0)
                                 {
                                     ParserMediator.Warn(string.Format(trerror.RepeatInsideFor.Text, "0"), func, 1, false, false);
                                 }
                                 else if (iLine.FunctionCode == FunctionCode.FOR)
                                 {
                                     VariableTerm destCnt = (iLine.Argument as SpForNextArgment).Cnt;
-                                    if (destCnt.Identifier.Name == "COUNT" && (Cnt.isAllConst && destCnt.isAllConst && destCnt.getEl1forArg == Cnt.getEl1forArg))
+                                    if (destCnt.Identifier.Name == "COUNT" && Cnt.isAllConst && destCnt.isAllConst && destCnt.getEl1forArg == Cnt.getEl1forArg)
                                     {
                                         ParserMediator.Warn(string.Format(trerror.RepeatInsideFor.Text, Cnt.getEl1forArg.ToString()), func, 1, false, false);
                                     }

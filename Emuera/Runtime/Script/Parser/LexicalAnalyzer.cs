@@ -185,7 +185,7 @@ internal static partial class LexicalAnalyzer
 		{
 
 			double d = significand * Math.Pow(expBase, exponent);
-			if ((double.IsNaN(d)) || (double.IsInfinity(d)) || (d > Int64.MaxValue) || (d < Int64.MinValue))
+			if (double.IsNaN(d) || double.IsInfinity(d) || (d > Int64.MaxValue) || (d < Int64.MinValue))
 				throw new CodeEE(string.Format(trerror.OoRInt64.Text, st.Substring(stStartPos, stEndPos)));
 			significand = (Int64)d;
 		}

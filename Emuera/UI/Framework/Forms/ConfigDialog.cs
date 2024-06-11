@@ -19,7 +19,7 @@ namespace MinorShift.Emuera.Forms
 		Save = 1,
 		SaveReboot = 2,
 	}
-	internal partial class ConfigDialog : Form
+	internal sealed partial class ConfigDialog : Form
 	{
 		FlowLayoutPanel[] pages;
 		public ConfigDialog()

@@ -620,12 +620,12 @@ internal sealed class ConfigData
 				//1806beta001 CompatiDRAWLINEの廃止、CompatiLinefeedAs1739へ移行
 				if (item.Code == ConfigCode.CompatiDRAWLINE)
 					continue;
-				if ((item.Code == ConfigCode.ChangeMasterNameIfDebug) && (item.GetValue<bool>()))
+				if ((item.Code == ConfigCode.ChangeMasterNameIfDebug) && item.GetValue<bool>())
 					continue;
 				if ((item.Code == ConfigCode.LastKey) && (item.GetValue<long>() == 0))
 					continue;
 				#region EM_私家版_LoadText＆SaveText機能拡張
-				if ((item.Code == ConfigCode.ValidExtension))
+				if (item.Code == ConfigCode.ValidExtension)
 				{
 					var ex = (ConfigItem<List<string>>)item;
 					var sb = new System.Text.StringBuilder();
@@ -771,7 +771,7 @@ internal sealed class ConfigData
 						//解析モード時はここを上書きして十分な長さを確保する
 						tokens[1] = "10000";
 					}
-					if ((item.TryParse(tokens[1])) && (fix))
+					if (item.TryParse(tokens[1]) && fix)
 						item.Fixed = true;
 				}
 			}

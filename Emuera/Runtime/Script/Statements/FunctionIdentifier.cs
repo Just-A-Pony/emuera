@@ -549,7 +549,7 @@ internal sealed partial class FunctionIdentifier
 	public string Name { get; private set; }
 	internal bool IsFlowContorol()
 	{
-		return ((flag & FLOW_CONTROL) == FLOW_CONTROL);
+		return (flag & FLOW_CONTROL) == FLOW_CONTROL;
 	}
 
 	internal bool IsExtended()

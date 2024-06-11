@@ -621,7 +621,7 @@ internal sealed class GraphicsImage : AbstractImage
 				ret |= 4;
 			if ((style & FontStyle.Underline) == FontStyle.Underline)
 				ret |= 8;
-			return (ret);
+			return ret;
 		}
 	}
 

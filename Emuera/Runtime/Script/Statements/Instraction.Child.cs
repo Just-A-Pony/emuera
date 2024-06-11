@@ -325,7 +325,7 @@ internal sealed partial class FunctionIdentifier
 			//else
 			//	str = ((ExpressionArgument)func.Argument).Term.GetStrValue(exm);
 			//exm.Console.PrintImg(str);
-			var arg = ((SpPrintImgArgument)func.Argument);
+			var arg = (SpPrintImgArgument)func.Argument;
 			if (arg == null)
 				throw new CodeEE(trerror.InvalidArg.Text);
 			var strb = arg.Nameb != null ? arg.Nameb.GetStrValue(exm) : null;
@@ -364,7 +364,7 @@ internal sealed partial class FunctionIdentifier
 			//	param[i] = FunctionIdentifier.toUInt32inArg(intExpArg.TermList[i].GetIntValue(exm), "PRINT_RECT", i + 1);
 
 			//exm.Console.PrintShape("rect", param);
-			var arg = ((SpPrintShapeArgument)func.Argument);
+			var arg = (SpPrintShapeArgument)func.Argument;
 			if (arg == null)
 				throw new CodeEE(trerror.InvalidArg.Text);
 			var param = new MixedNum[arg.Param.Length];
@@ -398,7 +398,7 @@ internal sealed partial class FunctionIdentifier
 			//	param = ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
 			//int param32 = FunctionIdentifier.toUInt32inArg(param, "PRINT_SPACE", 1);
 			// exm.Console.PrintShape("space", new int[] { param32 });
-			var arg = ((SpPrintShapeArgument)func.Argument);
+			var arg = (SpPrintShapeArgument)func.Argument;
 			if (arg == null)
 				throw new CodeEE(trerror.InvalidArg.Text);
 			var param = new MixedNum[arg.Param.Length];
@@ -1094,7 +1094,7 @@ internal sealed partial class FunctionIdentifier
 		{
 			AExpression mToken;
 			string labelName;
-			if ((!func.Argument.IsConst) || (exm.Console.RunERBFromMemory))
+			if ((!func.Argument.IsConst) || exm.Console.RunERBFromMemory)
 			{
 				SpCallFArgment spCallformArg = (SpCallFArgment)func.Argument;
 				labelName = spCallformArg.FuncnameTerm.GetStrValue(exm);
@@ -1220,7 +1220,7 @@ internal sealed partial class FunctionIdentifier
 		{
 			AExpression mToken;
 			string labelName;
-			if ((!func.Argument.IsConst) || (exm.Console.RunERBFromMemory))
+			if ((!func.Argument.IsConst) || exm.Console.RunERBFromMemory)
 			{
 				SpCallFArgment spCallformArg = (SpCallFArgment)func.Argument;
 				labelName = spCallformArg.FuncnameTerm.GetStrValue(exm);
@@ -1825,7 +1825,7 @@ internal sealed partial class FunctionIdentifier
 				for (int j = 0; j < i; j++)
 				{
 					if (savCharaList[i] == savCharaList[j])
-						throw new CodeEE(string.Format(trerror.DuplicateCharaNo.Text, (savCharaList[i]).ToString()));
+						throw new CodeEE(string.Format(trerror.DuplicateCharaNo.Text, savCharaList[i].ToString()));
 				}
 			}
 			exm.VEvaluator.SaveChara(datFilename, savMes, savCharaList);
@@ -2982,7 +2982,7 @@ internal sealed partial class FunctionIdentifier
 					caseJumpto = line;
 					break;
 				}
-				CaseArgument caseArg = (CaseArgument)(line.Argument);
+				CaseArgument caseArg = (CaseArgument)line.Argument;
 				//チェック済み
 				//if (caseArg == null)
 				//	throw new ExeEE("CASEチェック中。引数が解析されていない。", func.IfCaseList[i].Position);

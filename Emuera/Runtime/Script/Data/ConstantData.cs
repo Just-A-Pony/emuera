@@ -302,7 +302,7 @@ internal sealed class ConstantData
 				ParserMediator.Warn(trerror.CanNotDisableVarArrayLengthIsNegative.Text, position, 2);
 				return;
 			}
-			if (tokens.Length > 2 && tokens[2].Length > 0 && tokens[2].Trim().Length > 0 && char.IsDigit((tokens[2].Trim())[0]))
+			if (tokens.Length > 2 && tokens[2].Length > 0 && tokens[2].Trim().Length > 0 && char.IsDigit(tokens[2].Trim()[0]))
 			{
 				ParserMediator.Warn(string.Format(trerror.IgnoreNDData.Text, "1"), position, 0);
 			}
@@ -311,7 +311,7 @@ internal sealed class ConstantData
 		}
 		if (id.IsArray1D)
 		{
-			if (tokens.Length > 2 && tokens[2].Length > 0 && tokens[2].Trim().Length > 0 && char.IsDigit((tokens[2].Trim())[0]))
+			if (tokens.Length > 2 && tokens[2].Length > 0 && tokens[2].Trim().Length > 0 && char.IsDigit(tokens[2].Trim()[0]))
 			{
 				ParserMediator.Warn(string.Format(trerror.IgnoreNDData.Text, "1"), position, 0);
 			}
@@ -338,7 +338,7 @@ internal sealed class ConstantData
 				ParserMediator.Warn(string.Format(trerror.MissingVarSizeArg.Text, "2"), position, 1);
 				return;
 			}
-			if (tokens.Length > 3 && tokens[3].Length > 0 && tokens[3].Trim().Length > 0 && char.IsDigit((tokens[3].Trim())[0]))
+			if (tokens.Length > 3 && tokens[3].Length > 0 && tokens[3].Trim().Length > 0 && char.IsDigit(tokens[3].Trim()[0]))
 			{
 				ParserMediator.Warn(string.Format(trerror.IgnoreNDData.Text, "2"), position, 0);
 			}
@@ -370,7 +370,7 @@ internal sealed class ConstantData
 				ParserMediator.Warn(string.Format(trerror.MissingVarSizeArg.Text, "3"), position, 1);
 				return;
 			}
-			if (tokens.Length > 4 && tokens[4].Length > 0 && tokens[4].Trim().Length > 0 && char.IsDigit((tokens[4].Trim())[0]))
+			if (tokens.Length > 4 && tokens[4].Length > 0 && tokens[4].Trim().Length > 0 && char.IsDigit(tokens[4].Trim()[0]))
 			{
 				ParserMediator.Warn(string.Format(trerror.IgnoreNDData.Text, "3"), position, 0);
 			}
@@ -1734,7 +1734,7 @@ internal sealed class ConstantData
 					ParserMediator.Warn(trerror.ProhibitedArrayName.Text, position, 2);
 					break;
 				}
-				if (((index < 0) || (target.Length <= index)))
+				if ((index < 0) || (target.Length <= index))
 				{
 					ParserMediator.Warn(string.Format(trerror.OoRArray.Text, index.ToString()), position, 1);
 					continue;

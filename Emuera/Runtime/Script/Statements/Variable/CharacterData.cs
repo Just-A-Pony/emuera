@@ -249,7 +249,7 @@ internal sealed class CharacterData : IDisposable
 					{
 						int length = ((string[])UserDefCVarDataList[var.ArrayIndex]).GetLength(0);
 						for (int i = 0; i < length; i++)
-							((string[])other.UserDefCVarDataList[var.ArrayIndex])[i] = ((string[])(UserDefCVarDataList[var.ArrayIndex]))[i];
+							((string[])other.UserDefCVarDataList[var.ArrayIndex])[i] = ((string[])UserDefCVarDataList[var.ArrayIndex])[i];
 					}
 					else if (var.IsArray2D)
 					{

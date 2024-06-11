@@ -199,7 +199,7 @@ internal abstract class FunctionMethod
 								}
 						}
 						// 引数が引用系
-						if ((arguments[i] is VariableTerm varTerm && !(varTerm.Identifier.IsCalc || (!rule.AllowConstRef && varTerm.Identifier.IsConst))))
+						if (arguments[i] is VariableTerm varTerm && !(varTerm.Identifier.IsCalc || (!rule.AllowConstRef && varTerm.Identifier.IsConst)))
 						{
 							// 変数の場合
 							switch (dims)

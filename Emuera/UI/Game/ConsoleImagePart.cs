@@ -8,7 +8,7 @@ using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.GameView;
 
-class ConsoleImagePart : AConsoleDisplayPart
+sealed class ConsoleImagePart : AConsoleDisplayPart
 {
 	#region EM_私家版_HTMLパラメータ拡張
 	//public ConsoleImagePart(string resName, string resNameb, int raw_height, int raw_width, int raw_ypos)
@@ -85,7 +85,7 @@ class ConsoleImagePart : AConsoleDisplayPart
 		if (raw_width == null || raw_width.num == 0)
 		{
 			Width = cImage.DestBaseSize.Width * height / cImage.DestBaseSize.Height;
-			XsubPixel = ((float)cImage.DestBaseSize.Width * height) / cImage.DestBaseSize.Height - Width;
+			XsubPixel = (float)cImage.DestBaseSize.Width * height / cImage.DestBaseSize.Height - Width;
 		}
 		else if (raw_width.isPx)
 		{

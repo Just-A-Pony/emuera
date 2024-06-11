@@ -221,7 +221,7 @@ namespace MinorShift.Emuera.Forms
 					break;
 				case Keys.C when (keyData & Keys.Modifiers & Keys.Control) == Keys.Control:
 				case Keys.Insert when (keyData & Keys.Modifiers & Keys.Control) == Keys.Control:
-					if (TextBox.SelectedText == "")
+					if (string.IsNullOrEmpty(TextBox.SelectedText))
 					{
 						var dialog = new ClipBoardDialog { StartPosition = FormStartPosition.CenterParent };
 						dialog.Setup(console);
@@ -357,7 +357,7 @@ namespace MinorShift.Emuera.Forms
 							int macroNum = keyCode - (int)Keys.F1;
 							if (shiftPressed)
 							{
-								if (richTextBox1.Text != "")
+								if (!string.IsNullOrEmpty(richTextBox1.Text))
 									KeyMacro.SetMacro(macroNum, macroGroup, richTextBox1.Text);
 								return true;
 							}
@@ -608,7 +608,7 @@ namespace MinorShift.Emuera.Forms
 				return;
 			}
 			#region EM_私家版_INPUT系機能拡張
-			else if (console.IsWaintingInputWithMouse && (!console.IsError && str != null))
+			else if (console.IsWaintingInputWithMouse && !console.IsError && str != null)
 			{
 				if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
 				{
@@ -1231,13 +1231,13 @@ namespace MinorShift.Emuera.Forms
 		{
 			if (!Program.DebugMode)
 				return;
-			if ((console.DebugDialog != null) && (console.DebugDialog.Created))
+			if ((console.DebugDialog != null) && console.DebugDialog.Created)
 				console.DebugDialog.UpdateData();
 		}
 
 		private void AutoVerbMenu_Opened(object sender, EventArgs e)
 		{
-			if ((console == null) || (console.IsInProcess))
+			if ((console == null) || console.IsInProcess)
 			{
 				切り取り.Enabled = false;
 				コピー.Enabled = false;

@@ -58,7 +58,7 @@ abstract class ConsoleShapePart : AConsoleColoredPart
 				if (param.Length == 1)
 				{
 					//rectF = new RectangleF(0, 0, paramPixel[0], lineHeight);
-					var rectF = new RectangleF(0, 0, param[0].isPx ? param[0].num : ((float)param[0].num * lineHeight) / 100f, lineHeight);
+					var rectF = new RectangleF(0, 0, param[0].isPx ? param[0].num : (float)param[0].num * lineHeight / 100f, lineHeight);
 					ret = new ConsoleSpacePart(rectF);
 				}
 				break;
@@ -67,7 +67,7 @@ abstract class ConsoleShapePart : AConsoleColoredPart
 				if (param.Length == 1 && param[0].num > 0)
 				{
 					//rectF = new RectangleF(0, 0, paramPixel[0], lineHeight);
-					var rectF = new RectangleF(0, 0, param[0].isPx ? param[0].num : ((float)param[0].num * lineHeight) / 100f, lineHeight);
+					var rectF = new RectangleF(0, 0, param[0].isPx ? param[0].num : (float)param[0].num * lineHeight / 100f, lineHeight);
 					ret = new ConsoleRectangleShapePart(rectF);
 				}
 				// else if (paramPixel.Length == 4)
