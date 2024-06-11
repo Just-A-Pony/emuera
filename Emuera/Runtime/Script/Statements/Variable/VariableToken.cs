@@ -455,9 +455,21 @@ internal abstract class ReferenceToken : UserDefinedVariableToken
 		if (Dimension >= 3 && ((arguments[2] < 0) || (arguments[2] >= array.GetLength(2))))
 			throw new CodeEE(string.Format(trerror.OoRVarArg.Text, varName, "3", arguments[2].ToString()));
 	}
+	void CheckBounds(long i1, long i2, long i3)
+	{
+		//if (array == null)
+		//	throw new ExeEE("プライベート変数" + varName + "の配列が用意されていない");
+
+		if ((i1 < 0) || (i1 >= sizes[0]))
+			throw new CodeEE(string.Format(trerror.OoRVarArg.Text, varName, "1", i1));
+		if (sizes.Length >= 2 && ((i2 < 0) || (i2 >= sizes[1])))
+			throw new CodeEE(string.Format(trerror.OoRVarArg.Text, varName, "2", i2));
+		if (sizes.Length >= 3 && ((i3 < 0) || (i3 >= sizes[2])))
+			throw new CodeEE(string.Format(trerror.OoRVarArg.Text, varName, "3", i3));
+	}
 	public override void IsArrayRangeValid(Int64[] arguments, Int64 index1, Int64 index2, string funcName, Int64 i1, Int64 i2)
 	{
-		CheckElement(arguments);
+		CheckBounds(arguments[0], arguments[1], arguments[2]);
 		if ((index1 < 0) || (index1 > array.GetLength(Dimension - 1)))
 			throw new CodeEE(string.Format(trerror.OoRInstructionArg.Text, funcName, i1.ToString(), index1.ToString(), varName));
 		if ((index2 < 0) || (index2 > array.GetLength(Dimension - 1)))
