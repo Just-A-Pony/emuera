@@ -144,7 +144,7 @@ internal partial class ParserMediator
 		warningList.Clear();
 	}
 
-	private class ParserWarning
+	private sealed class ParserWarning
 	{
 		public ParserWarning(string mes, ScriptPosition? pos, int level, string stackTrace)
 		{
