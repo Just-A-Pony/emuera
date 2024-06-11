@@ -2909,7 +2909,6 @@ internal static partial class FunctionMethodCreator
 
 	private sealed class GetmsMethod : FunctionMethod
 	{
-		static Stopwatch stopwatch = Stopwatch.StartNew();
 		public GetmsMethod()
 		{
 			ReturnType = typeof(Int64);

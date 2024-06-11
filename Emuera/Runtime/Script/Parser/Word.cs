@@ -103,15 +103,6 @@ internal sealed class StrFormWord : Word
 	}
 }
 
-
-internal sealed class TermWord : Word
-{
-	public TermWord(AExpression term) { this.term = term; }
-	readonly AExpression term;
-	public AExpression Term { get { return term; } }
-	public override char Type { get { return 'T'; } }
-}
-
 internal sealed class MacroWord : Word
 {
 	public MacroWord(int num) { this.num = num; }

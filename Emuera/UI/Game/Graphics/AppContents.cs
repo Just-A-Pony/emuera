@@ -13,13 +13,9 @@ namespace MinorShift.Emuera.Content;
 
 static class AppContents
 {
-	static AppContents()
-	{
-		gList = [];
-	}
 	static ConcurrentDictionary<string, AbstractImage> resourceDic = new(Config.StrComper);
 	static ConcurrentDictionary<string, ASprite> imageDictionary = new(Config.StrComper);
-	static ConcurrentDictionary<int, GraphicsImage> gList;
+	static ConcurrentDictionary<int, GraphicsImage> gList = [];
 	static ConcurrentDictionary<string, ASprite> resourceImageDictionary = new ConcurrentDictionary<string, ASprite>();
 
 	// the ConstImages that has been loaded into memory. will free them in every SetBegin(BeginType.SHOP)

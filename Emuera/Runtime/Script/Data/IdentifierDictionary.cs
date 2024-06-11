@@ -666,8 +666,6 @@ internal partial class IdentifierDictionary
 	[GeneratedRegex("^ABLUP[0-9]+$")]
 	private static partial Regex preCompiledAblupRegex();
 
-	[GeneratedRegex("COM.*")]
-	private static partial Regex preCompiledCOMRegex();
 	#endregion
 
 	#region util

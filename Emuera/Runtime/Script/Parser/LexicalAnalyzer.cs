@@ -1234,9 +1234,6 @@ internal static partial class LexicalAnalyzer
 		st.ShiftNext();
 		return new YenAtSubWord(w, left, right);
 	}
-	[GeneratedRegex(" ")]
-	private static partial Regex whiteSpaceRegex();
-
 	#endregion
 
 }
