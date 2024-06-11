@@ -11,6 +11,11 @@
         <Nullable>disable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <Configurations>Debug;Release;Debug-NAudio;Release-NAudio</Configurations>
+        <EnableNETAnalyzers>true</EnableNETAnalyzers>
+        <AnalysisMode>Minimum</AnalysisMode>
+
+        <TieredCompilation>false</TieredCompilation>
+
     </PropertyGroup>
 
     <PropertyGroup>
