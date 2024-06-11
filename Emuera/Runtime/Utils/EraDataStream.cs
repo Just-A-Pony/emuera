@@ -185,8 +185,7 @@ internal sealed class EraDataReader : IDisposable
 				throw new FileEE(trerror.InvalidSaveDataFormat.Text);
 			string key = str[..index];
 			string value = str.Substring(index + 1, str.Length - index - 1);
-			if (!strList.ContainsKey(key))
-				strList.Add(key, value);
+			strList.TryAdd(key, value);
 		}
 		return strList;
 	}
@@ -212,8 +211,7 @@ internal sealed class EraDataReader : IDisposable
 			string valueStr = str.Substring(index + 1, str.Length - index - 1);
 			if (!Int64.TryParse(valueStr, out long value))
 				throw new FileEE(trerror.InvalidArray.Text);
-			if (!intList.ContainsKey(key))
-				intList.Add(key, value);
+			intList.TryAdd(key, value);
 		}
 		return intList;
 	}
@@ -248,8 +246,7 @@ internal sealed class EraDataReader : IDisposable
 					throw new FileEE(trerror.InvalidArray.Text);
 				valueList.Add(value);
 			}
-			if (!ret.ContainsKey(key))
-				ret.Add(key, valueList);
+			ret.TryAdd(key, valueList);
 		}
 		return ret;
 	}
@@ -282,8 +279,7 @@ internal sealed class EraDataReader : IDisposable
 					break;
 				valueList.Add(str);
 			}
-			if (!ret.ContainsKey(key))
-				ret.Add(key, valueList);
+			ret.TryAdd(key, valueList);
 		}
 		return ret;
 	}
@@ -329,8 +325,7 @@ internal sealed class EraDataReader : IDisposable
 						throw new FileEE(string.Format(trerror.CanNotInterpretNumValue.Text, tokens[x]));
 				valueList.Add(intTokens);
 			}
-			if (!ret.ContainsKey(key))
-				ret.Add(key, valueList);
+			ret.TryAdd(key, valueList);
 		}
 		return ret;
 	}
@@ -409,8 +404,7 @@ internal sealed class EraDataReader : IDisposable
 					valueList.Add(tokenList);
 				}
 			}
-			if (!ret.ContainsKey(key))
-				ret.Add(key, valueList);
+			ret.TryAdd(key, valueList);
 		}
 		return ret;
 	}

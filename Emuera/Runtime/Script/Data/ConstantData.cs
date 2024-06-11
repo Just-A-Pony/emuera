@@ -1267,10 +1267,10 @@ internal sealed class ConstantData
 			{
 				targetList = spList;
 			}
-			if (targetList.ContainsKey(tmpl.No))
+			if (targetList.TryGetValue(tmpl.No, out CharacterTemplate chara))
 			{
 
-				if (!Config.CompatiSPChara && (tmpl.IsSpchara != targetList[tmpl.No].IsSpchara))
+				if (!Config.CompatiSPChara && (tmpl.IsSpchara != chara.IsSpchara))
 					ParserMediator.Warn(string.Format(trerror.DuplicateCharaDefine1.Text, tmpl.No.ToString()), null, 1);
 				else
 					ParserMediator.Warn(string.Format(trerror.DuplicateCharaDefine2.Text, tmpl.No.ToString()), null, 1);
@@ -1908,7 +1908,7 @@ internal sealed class CharacterTemplate
 	internal void SetSpFlag()
 	{
 		//bool res;
-		if (CFlag.ContainsKey(0) && CFlag[0] != 0L)
+		if (CFlag.TryGetValue(0, out long value) && value != 0L)
 			IsSpchara = true;
 	}
 }

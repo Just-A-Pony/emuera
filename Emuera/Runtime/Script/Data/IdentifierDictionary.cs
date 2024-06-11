@@ -169,8 +169,7 @@ internal partial class IdentifierDictionary
 			//RANDが衝突している
 			//1808a3 GLOBAL、PRIVATEも
 			//1808beta009 REFも
-			if (!nameDic.ContainsKey(pair.Key))
-				nameDic.Add(pair.Key, DefinedNameType.SystemVariable);
+			nameDic.TryAdd(pair.Key, DefinedNameType.SystemVariable);
 		}
 
 		foreach (KeyValuePair<string, VariableLocal> pair in localvarTokenDic)
@@ -182,8 +181,7 @@ internal partial class IdentifierDictionary
 		{
 			//Methodと被る
 			//1808a3 SAVEDATAも
-			if (!nameDic.ContainsKey(pair.Key))
-				nameDic.Add(pair.Key, DefinedNameType.SystemInstrument);
+			nameDic.TryAdd(pair.Key, DefinedNameType.SystemInstrument);
 		}
 	}
 
@@ -288,9 +286,9 @@ internal partial class IdentifierDictionary
 		//    return;
 		//}
 
-		if (nameDic.ContainsKey(varName))
+		if (nameDic.TryGetValue(varName, out DefinedNameType value))
 		{
-			switch (nameDic[varName])
+			switch (value)
 			{
 				case DefinedNameType.Reserved:
 					errMes = string.Format(treer.VarConflictReservedWord.Text, varName);
@@ -386,9 +384,9 @@ internal partial class IdentifierDictionary
 			warnLevel = 2;
 			return;
 		}
-		if (nameDic.ContainsKey(varName))
+		if (nameDic.TryGetValue(varName, out DefinedNameType value))
 		{
-			switch (nameDic[varName])
+			switch (value)
 			{
 				case DefinedNameType.Reserved:
 					errMes = string.Format(treer.VarConflictReservedWord.Text, varName);
@@ -573,8 +571,8 @@ internal partial class IdentifierDictionary
 
 	public UserDefinedRefMethod GetRefMethod(string codeStr)
 	{
-		if (refmethodDic.ContainsKey(codeStr))
-			return refmethodDic[codeStr];
+		if (refmethodDic.TryGetValue(codeStr, out UserDefinedRefMethod value))
+			return value;
 		return null;
 	}
 
@@ -584,14 +582,14 @@ internal partial class IdentifierDictionary
 		//	codeStr = codeStr.ToUpper();
 		if (arguments == null)//引数なし、名前のみの探索
 		{
-			if (refmethodDic.ContainsKey(codeStr))
-				return new UserDefinedRefMethodNoArgTerm(refmethodDic[codeStr]);
+			if (refmethodDic.TryGetValue(codeStr, out UserDefinedRefMethod value))
+				return new UserDefinedRefMethodNoArgTerm(value);
 			return null;
 		}
 		if ((labelDic != null) && labelDic.Initialized)
 		{
-			if (refmethodDic.ContainsKey(codeStr))
-				return new UserDefinedRefMethodTerm(refmethodDic[codeStr], arguments);
+			if (refmethodDic.TryGetValue(codeStr, out UserDefinedRefMethod value))
+				return new UserDefinedRefMethodTerm(value, arguments);
 			FunctionLabelLine func = labelDic.GetNonEventLabel(codeStr);
 			if (func != null)
 			{
@@ -632,9 +630,9 @@ internal partial class IdentifierDictionary
 		//	idStr = idStr.ToUpper();
 		if (!isFunc && privateDimList.Contains(idStr))
 			throw new IdentifierNotFoundCodeEE(string.Format(treer.VarNotDefinedThisFunc.Text, str));
-		if (nameDic.ContainsKey(idStr))
+		if (nameDic.TryGetValue(idStr, out DefinedNameType value))
 		{
-			DefinedNameType type = nameDic[idStr];
+			DefinedNameType type = value;
 			switch (type)
 			{
 				case DefinedNameType.Reserved:
@@ -689,8 +687,8 @@ internal partial class IdentifierDictionary
 	}
 	public bool getVarTokenIsForbid(string key)
 	{
-		if (localvarTokenDic.ContainsKey(key))
-			return localvarTokenDic[key].IsForbid;
+		if (localvarTokenDic.TryGetValue(key, out VariableLocal value))
+			return value.IsForbid;
 		varTokenDic.TryGetValue(key, out VariableToken var);
 		if (var != null)
 			return var.IsForbid;
