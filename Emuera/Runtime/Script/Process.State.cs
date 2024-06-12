@@ -6,6 +6,8 @@ using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.GameData.Variable;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
+using System.Diagnostics;
+using System.Drawing;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -432,7 +434,8 @@ internal sealed class ProcessState
 		else if (Program.DebugMode)
 		{
 			FunctionLabelLine label = called.CurrentLabel;
-			console.DebugAddTraceLog(string.Format(trsl.DebugTraceCall.Text, label.LabelName, label.Position.Value.Filename, label.Position.Value.LineNo));
+			long line = currentLine.Position.Value.LineNo;
+			console.DebugAddTraceLog(string.Format(trsl.DebugTraceCall.Text, label.LabelName, label.Position.Value.Filename, label.Position.Value.LineNo, line));
 		}
 		lineCount++;
 		//ShfitNextLine();
@@ -453,10 +456,21 @@ internal sealed class ProcessState
 		if (Program.DebugMode)
 		{
 			FunctionLabelLine label = call.CurrentLabel;
-			if (call.IsJump)
-				console.DebugAddTraceLog(string.Format(trsl.DebugTraceJump.Text, label.LabelName, label.Position.Value.Filename, label.Position.Value.LineNo));
+			if (exm != null)
+			{
+				long line = exm.Process.getCurrentLine.Position.Value.LineNo;
+				if (call.IsJump)
+					console.DebugAddTraceLog(string.Format(trsl.DebugTraceJump2.Text, label.LabelName, label.Position.Value.Filename, label.Position.Value.LineNo, line));
+				else
+					console.DebugAddTraceLog(string.Format(trsl.DebugTraceCall2.Text, label.LabelName, label.Position.Value.Filename, label.Position.Value.LineNo, line));
+			}
 			else
-				console.DebugAddTraceLog(string.Format(trsl.DebugTraceCall.Text, label.LabelName, label.Position.Value.Filename, label.Position.Value.LineNo));
+			{
+				if (call.IsJump)
+					console.DebugAddTraceLog(string.Format(trsl.DebugTraceJump.Text, label.LabelName, label.Position.Value.Filename, label.Position.Value.LineNo));
+				else
+					console.DebugAddTraceLog(string.Format(trsl.DebugTraceCall.Text, label.LabelName, label.Position.Value.Filename, label.Position.Value.LineNo));
+			}
 		}
 		if (srcArgs != null)
 		{

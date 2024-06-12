@@ -1268,6 +1268,8 @@ internal sealed class Lang
 		[Managed] public static TranslatableString ErhLoadingError { get; } = new TranslatableString("ERHの読み込み中にエラーが発生したため処理を終了しました");
 		[Managed] public static TranslatableString DebugTraceCall { get; } = new TranslatableString("CALL :@{0}:{1}:{2}行目");
 		[Managed] public static TranslatableString DebugTraceJump { get; } = new TranslatableString("JUMP :@{0}:{1}:{2}行目");
+		[Managed] public static TranslatableString DebugTraceCall2 { get; } = new TranslatableString("CALL :@{0}:{1}:{2}行目 Called :{3}行目");
+		[Managed] public static TranslatableString DebugTraceJump2 { get; } = new TranslatableString("JUMP :@{0}:{1}:{2}行目 Jumped :{3}行目");
 		[Managed] public static TranslatableString AnalysisCompleted { get; } = new TranslatableString("ファイル解析終了：Analysis.logに出力します");
 		[Managed] public static TranslatableString PressEnterOrClick { get; } = new TranslatableString("エンターキーもしくはクリックで終了します");
 		[Managed] public static TranslatableString ExitBecauseCanNotInterpreted1 { get; } = new TranslatableString("ERBコードに解釈不可能な行があるためEmueraを終了します");
