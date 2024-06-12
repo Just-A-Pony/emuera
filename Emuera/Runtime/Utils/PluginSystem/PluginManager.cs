@@ -92,7 +92,8 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 			if (text == "")
 			{
 				expressionMediator.Console.PrintBar();
-			} else
+			}
+			else
 			{
 				expressionMediator.Console.printCustomBar(text, isConst);
 			}
@@ -168,7 +169,8 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 			if (force)
 			{
 				expressionMediator.Console.ForceQuit();
-			}  else
+			}
+			else
 			{
 				expressionMediator.Console.Quit();
 			}

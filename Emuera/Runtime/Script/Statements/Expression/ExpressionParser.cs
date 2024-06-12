@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.GameData.Function;
-using System.Windows.Forms;
-using trerror = EvilMask.Emuera.Lang.Error;
+﻿using MinorShift.Emuera.GameData.Variable;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Sub;
+using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.GameData.Expression;
 
@@ -394,7 +392,7 @@ internal static class ExpressionParser
 				case '\0':
 					return end(stack, ternaryCount);
 				case '"'://LiteralStringWT
-					stack.Add((token as LiteralStringWord).Str); 
+					stack.Add((token as LiteralStringWord).Str);
 					break;
 				case '0'://LiteralIntegerWT
 					stack.Add((token as LiteralIntegerWord).Int);
@@ -436,7 +434,7 @@ internal static class ExpressionParser
 						if (op == OperatorCode.Assignment)
 						{
 							if ((endWith & TermEndWith.Assignment) == TermEndWith.Assignment)
-								return end(stack, ternaryCount); 
+								return end(stack, ternaryCount);
 							throw new CodeEE(trerror.EqualInExpression.Text);
 						}
 

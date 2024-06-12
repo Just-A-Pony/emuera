@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
-
-namespace MinorShift._Library;
+﻿namespace MinorShift._Library;
 
 internal sealed class WinInput
 {

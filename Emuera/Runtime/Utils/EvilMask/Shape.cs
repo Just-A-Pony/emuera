@@ -1,12 +1,6 @@
-﻿using MinorShift.Emuera;
-using System;
-using System.Collections.Generic;
+﻿using MinorShift.Emuera.Runtime.Config;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace EvilMask.Emuera;
 

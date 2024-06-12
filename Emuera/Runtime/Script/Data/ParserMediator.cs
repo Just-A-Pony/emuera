@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameProc;
+﻿using MinorShift.Emuera.GameProc;
 using MinorShift.Emuera.GameView;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Sub;
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera;
 

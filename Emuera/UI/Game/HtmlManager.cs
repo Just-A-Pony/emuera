@@ -1,15 +1,15 @@
-﻿using System;
+﻿using EvilMask.Emuera;
+using MinorShift.Emuera.GameData.Expression;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Sub;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
-using MinorShift.Emuera.Sub;
-using System.Drawing;
-using MinorShift.Emuera.GameData.Expression;
-using trerror = EvilMask.Emuera.Lang.Error;
-using EvilMask.Emuera;
-using static EvilMask.Emuera.Utils;
 using static EvilMask.Emuera.Shape;
-using MinorShift.Emuera.Runtime.Config;
+using static EvilMask.Emuera.Utils;
+using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.GameView;
 
@@ -292,7 +292,7 @@ internal static class HtmlManager
 	{
 		if (lines == null || lines.Length == 0)
 			return "";
-		StringBuilder b = new ();
+		StringBuilder b = new();
 		if (needPandN)
 		{
 			switch (lines[0].Align)
@@ -657,7 +657,7 @@ internal static class HtmlManager
 				break;
 			}
 			if (found > index)//間に非エスケープ文字があるなら追加しておく
-				b.Append(str[index..found]); 
+				b.Append(str[index..found]);
 			string repnew = repDic[str[found]];
 			b.Append(repnew);
 			index = found + 1;
@@ -1378,7 +1378,7 @@ internal static class HtmlManager
 				{
 					if (wc == null)
 						throw new CodeEE(string.Format(trerror.TagHasNotAttribute.Text, tag));
-					HtmlAnalzeStateFontTag font = new ();
+					HtmlAnalzeStateFontTag font = new();
 					while (!wc.EOL)
 					{
 						word = wc.Current as IdentifierWord;
@@ -1426,7 +1426,7 @@ internal static class HtmlManager
 					//他のfontタグの内側であるなら未設定項目については外側のfontタグの設定を受け継ぐ(posは除く)
 					if (state.FonttagList.Count > 0)
 					{
-						HtmlAnalzeStateFontTag oldFont = state.FonttagList[^1]; 
+						HtmlAnalzeStateFontTag oldFont = state.FonttagList[^1];
 						if (font.Color < 0)
 							font.Color = oldFont.Color;
 						if (font.BColor < 0)

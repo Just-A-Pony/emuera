@@ -1,13 +1,13 @@
-﻿using System;
+﻿using MinorShift.Emuera.GameData.Expression;
+using MinorShift.Emuera.GameData.Variable;
+using MinorShift.Emuera.GameProc.Function;
+using MinorShift.Emuera.GameView;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Sub;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.GameView;
-using MinorShift.Emuera.GameProc.Function;
 using trerror = EvilMask.Emuera.Lang.Error;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -790,7 +790,7 @@ internal sealed partial class Process
 					console.MesSkip = iValue != 0;
 					break;
 				}
-			#endregion
+				#endregion
 #if DEBUG
 			default:
 				throw new ExeEE(trerror.UndefinedFunc.Text);

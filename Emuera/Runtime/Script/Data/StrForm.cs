@@ -1,14 +1,13 @@
-﻿using System;
-using System.Text;
+﻿using MinorShift._Library;
 using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.Sub;
-using MinorShift._Library;
 using MinorShift.Emuera.GameData.Function;
-using System.Collections.Generic;
-using EvilMask.Emuera;
-using trerror = EvilMask.Emuera.Lang.Error;
+using MinorShift.Emuera.GameData.Variable;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Sub;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.GameData;
 
@@ -214,7 +213,7 @@ internal sealed class StrForm
 		StringBuilder builder = new(100);
 		for (int i = 0; i < strs.Length - 1; i++)
 		{
-			builder.Append(strs[i]); 
+			builder.Append(strs[i]);
 			builder.Append(terms[i].GetStrValue(exm));
 		}
 		builder.Append(strs[^1]);

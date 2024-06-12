@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using MinorShift.Emuera.GameData.Expression;
+﻿using MinorShift.Emuera.GameData.Expression;
+using System.Collections.Generic;
 
 namespace MinorShift.Emuera.GameData.Function;
 
@@ -32,7 +32,7 @@ internal sealed class FunctionMethodTerm : AExpression
 	{
 		if (method.HasUniqueRestructure)
 		{
-			if (method.UniqueRestructure(exm, [..arguments]) && method.CanRestructure)
+			if (method.UniqueRestructure(exm, [.. arguments]) && method.CanRestructure)
 				return GetValue(exm);
 			return this;
 		}

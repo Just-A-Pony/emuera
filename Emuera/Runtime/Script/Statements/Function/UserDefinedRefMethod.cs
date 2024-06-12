@@ -1,6 +1,6 @@
-﻿using System;
+﻿using MinorShift.Emuera.GameData.Variable;
 using MinorShift.Emuera.GameProc;
-using MinorShift.Emuera.GameData.Variable;
+using System;
 
 namespace MinorShift.Emuera.GameData.Function;
 

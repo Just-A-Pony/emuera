@@ -1,22 +1,17 @@
-﻿using System;
-using System.Drawing;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using MinorShift._Library;
-using System.IO;
+﻿using DotnetEmuera;
 using EvilMask.Emuera;
+using MinorShift._Library;
 using MinorShift.Emuera.GameProc.Function;
+using MinorShift.Emuera.Runtime.Config;
+using System;
+using System.Collections.Generic;
 using System.CommandLine;
 using System.CommandLine.Parsing;
-using System.Threading.Tasks;
-using Windows.Win32;
-using System.CommandLine.Builder;
-using System.Reflection;
-using DotnetEmuera;
 using System.Diagnostics.CodeAnalysis;
-using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.GameProc.PluginSystem;
+using System.Drawing;
+using System.IO;
 using System.Runtime;
+using System.Windows.Forms;
 
 namespace MinorShift.Emuera;
 #nullable enable
@@ -104,7 +99,7 @@ static partial class Program
 			if (FunctionIdentifier.sound[i] != null) FunctionIdentifier.sound[i].close();
 		}
 
-		var debugMode = result.GetValueForOption(debugModeOption); 
+		var debugMode = result.GetValueForOption(debugModeOption);
 		DebugMode = debugMode;
 
 		var genLang = result.GetValueForOption(genLangOption);
@@ -115,7 +110,7 @@ static partial class Program
 		List<string> otherArgs = [];
 
 		//引数の後ろにある他のフラグにマッチしなかった文字列を解析指定されたファイルとみなす
-		var fileArgs = result.GetValueForArgument(filesArg); 
+		var fileArgs = result.GetValueForArgument(filesArg);
 		var analysisRequestPaths = fileArgs;
 		if (analysisRequestPaths.Length > 0)
 		{
@@ -257,7 +252,7 @@ static partial class Program
 		ApplicationConfiguration.Initialize();
 
 		using var win = new Forms.MainWindow(args);
-		{ 
+		{
 			#region EM_私家版_Emuera多言語化改造
 			win.TranslateUI();
 			#endregion

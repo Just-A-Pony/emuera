@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData.Expression;
+﻿using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameData.Variable;
 using MinorShift.Emuera.GameProc.Function;
 using MinorShift.Emuera.Runtime.Config;
-using System.IO;
+using MinorShift.Emuera.Sub;
+using System;
+using System.Collections.Generic;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -282,7 +281,7 @@ internal class FunctionLabelLine : LogicalLine, IComparable<FunctionLabelLine>
 	}
 	#endregion
 	#region private変数
-	readonly Dictionary<string, UserDefinedVariableToken> privateVar = new(Config.StrComper); 
+	readonly Dictionary<string, UserDefinedVariableToken> privateVar = new(Config.StrComper);
 	internal bool AddPrivateVariable(UserDefinedVariableData data)
 	{
 		if (privateVar.ContainsKey(data.Name))

@@ -1,7 +1,7 @@
-﻿using System;
+﻿using MinorShift.Emuera.Runtime.Config;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.GameView;
 
@@ -17,7 +17,7 @@ internal sealed class StringMeasure : IDisposable
 		layoutSize = new Size(Config.WindowX * 2, Config.LineHeight);
 		layoutRect = new RectangleF(0, 0, Config.WindowX * 2, Config.LineHeight);
 		fontDisplaySize = Config.DefaultFont.Size / 2 * 1.04f;//実際には指定したフォントより若干幅をとる？
-													   //bmp = new Bitmap(Config.WindowX, Config.LineHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+															  //bmp = new Bitmap(Config.WindowX, Config.LineHeight, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 		bmp = new Bitmap(16, 16, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 		graph = Graphics.FromImage(bmp);
 	}
@@ -63,7 +63,7 @@ internal sealed class StringMeasure : IDisposable
 		}
 		else if (textDrawingMode == TextDrawingMode.TEXTRENDERER)
 		{
-			Size size = TextRenderer.MeasureText(graph, s.AsSpan(), font, layoutSize, TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);            
+			Size size = TextRenderer.MeasureText(graph, s.AsSpan(), font, layoutSize, TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix);
 			//Size size = TextRenderer.MeasureText(g, s, StaticConfig.Font);
 			return size.Width;
 		}

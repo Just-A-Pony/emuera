@@ -308,7 +308,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 			set => Set(key, value, idx);
 		}
 
-		internal CharUserdefinedInt1dWrapper(Int64 charId, Dictionary<string,VariableToken> tokens, ExpressionMediator exm, VariableCode variableCode)
+		internal CharUserdefinedInt1dWrapper(Int64 charId, Dictionary<string, VariableToken> tokens, ExpressionMediator exm, VariableCode variableCode)
 		{
 			this.charId = charId;
 			this.tokens = tokens;

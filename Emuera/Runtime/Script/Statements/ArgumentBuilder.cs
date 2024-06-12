@@ -1,13 +1,12 @@
-﻿using System;
+﻿using MinorShift.Emuera.GameData.Expression;
+using MinorShift.Emuera.GameData.Function;
+using MinorShift.Emuera.GameData.Variable;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Sub;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.GameData.Function;
 using trerror = EvilMask.Emuera.Lang.Error;
-using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.GameProc.PluginSystem;
 
 
 namespace MinorShift.Emuera.GameProc.Function;
@@ -926,9 +925,9 @@ internal static partial class ArgumentParser
 		{
 			CharStream st = line.PopArgumentPrimitive();
 			AExpression funcname;
-				string str = LexicalAnalyzer.ReadString(st, StrEndWith.LeftParenthesis_Bracket_Comma_Semicolon);
-				str = str.Trim([' ', '\t']);
-				funcname = new SingleStrTerm(str);
+			string str = LexicalAnalyzer.ReadString(st, StrEndWith.LeftParenthesis_Bracket_Comma_Semicolon);
+			str = str.Trim([' ', '\t']);
+			funcname = new SingleStrTerm(str);
 			char cur = st.Current;
 			WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
 			wc.ShiftNext();
@@ -965,7 +964,7 @@ internal static partial class ArgumentParser
 				if (args[i] != null)
 					args[i] = args[i].Restructure(exm);
 			Argument ret;
-				ret = new SpCallSharpArgment(funcname, subNames, args);
+			ret = new SpCallSharpArgment(funcname, subNames, args);
 			if (funcname is SingleTerm)
 			{
 				ret.IsConst = true;

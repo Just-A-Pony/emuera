@@ -1,8 +1,8 @@
-﻿using System;
+﻿using MinorShift.Emuera.Runtime.Config;
+using System;
 using System.Drawing;
 using System.Text;
 using static EvilMask.Emuera.Utils;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.GameView;
 

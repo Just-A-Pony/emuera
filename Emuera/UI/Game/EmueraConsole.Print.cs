@@ -1,21 +1,20 @@
-﻿using MinorShift._Library;
+﻿using EvilMask.Emuera;
+using MinorShift._Library;
+using MinorShift.Emuera.GameProc.Function;
+using MinorShift.Emuera.Runtime.Config;
 using MinorShift.Emuera.Sub;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using MinorShift.Emuera.GameProc.Function;
-using trmb = EvilMask.Emuera.Lang.MessageBox;
-using trerror = EvilMask.Emuera.Lang.Error;
-using trsl = EvilMask.Emuera.Lang.SystemLine;
-using EvilMask.Emuera;
 using static EvilMask.Emuera.Utils;
-using System.Diagnostics;
-using Emuera.UI;
-using MinorShift.Emuera.Runtime.Config;
+using trerror = EvilMask.Emuera.Lang.Error;
+using trmb = EvilMask.Emuera.Lang.MessageBox;
+using trsl = EvilMask.Emuera.Lang.SystemLine;
 
 namespace MinorShift.Emuera.GameView;
 
@@ -143,7 +142,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	#endregion
 	public long LineCount { get { return logicalLineCount; } }
 	#region GETDISPLAYLINE修正
-	public long DeletedLines { get{ return deletedLines; } }
+	public long DeletedLines { get { return deletedLines; } }
 	#endregion
 	private void addRangeDisplayLine(ConsoleDisplayLine[] lineList)
 	{
@@ -559,7 +558,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			width = stringMeasure.GetDisplayLength(str, font);
 			while (width > printCWidthL)
 			{
-				if (str[^1] != ' ') 
+				if (str[^1] != ' ')
 					break;
 				str = str.Remove(str.Length - 1, 1);
 				width = stringMeasure.GetDisplayLength(str, font);

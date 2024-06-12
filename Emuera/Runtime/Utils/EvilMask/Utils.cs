@@ -1,16 +1,13 @@
-﻿using MinorShift.Emuera;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameView;
+﻿using MinorShift.Emuera.GameView;
+using MinorShift.Emuera.Runtime.Config;
 using MinorShift.Emuera.Sub;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Text;
 using WebPWrapper;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace EvilMask.Emuera;
 

@@ -45,7 +45,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 				var key = userCharVar.Name;
 				_UserDefinedVars.Add(key, userCharVar);
 			}
-			
+
 			PluginAPICharContext.exm = exm;
 		}
 
@@ -87,7 +87,8 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 		static Dictionary<string, VariableToken> _UserDefinedVars = new Dictionary<string, VariableToken>();
 
 		static ExpressionMediator exm;
-		internal PluginAPICharContext(Int64 charId) { 
+		internal PluginAPICharContext(Int64 charId)
+		{
 			this.charId = charId;
 			BASE = new CharInt1dWrapper(charId, _BASE, exm, VariableCode.BASE);
 			MAXBASE = new CharInt1dWrapper(charId, _MAXBASE, exm, VariableCode.MAXBASE);

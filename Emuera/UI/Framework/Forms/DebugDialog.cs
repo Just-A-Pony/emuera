@@ -1,14 +1,14 @@
-﻿using System;
+﻿using EvilMask.Emuera;
+using MinorShift.Emuera.GameData.Expression;
+using MinorShift.Emuera.GameProc;
+using MinorShift.Emuera.GameView;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Sub;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameProc;
 using System.IO;
-using MinorShift.Emuera.GameView;
-using EvilMask.Emuera;
-using MinorShift.Emuera.Runtime.Config;
+using System.Windows.Forms;
 
 namespace MinorShift.Emuera.Forms
 {
@@ -129,7 +129,7 @@ namespace MinorShift.Emuera.Forms
 			}
 			if ((listViewWatch.Items.Count == 0) || (!string.IsNullOrEmpty(listViewWatch.Items[^1].Text)))
 			{
-				ListViewItem newLVI = new ("");
+				ListViewItem newLVI = new("");
 				newLVI.SubItems.Add(new ListViewItem.ListViewSubItem(newLVI, ""));
 				listViewWatch.Items.Add(newLVI);
 			}
@@ -150,7 +150,7 @@ namespace MinorShift.Emuera.Forms
 			mainConsole.RunERBFromMemory = true;
 			try
 			{
-				CharStream st = new (str);
+				CharStream st = new(str);
 				WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
 				AExpression term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
 				SingleTerm value = term.GetValue(GlobalStatic.EMediator);
@@ -182,7 +182,7 @@ namespace MinorShift.Emuera.Forms
 				listViewWatch.Items[e.Item].SubItems[1].Text = getValueString(e.Label);
 				if (e.Item == listViewWatch.Items.Count - 1)
 				{
-					ListViewItem newLVI = new ("");
+					ListViewItem newLVI = new("");
 					newLVI.SubItems.Add(new ListViewItem.ListViewSubItem(newLVI, ""));
 					listViewWatch.Items.Add(newLVI);
 				}
@@ -311,7 +311,7 @@ namespace MinorShift.Emuera.Forms
 			{
 				if (!string.IsNullOrEmpty(str))
 				{
-					ListViewItem newLVI = new (str);
+					ListViewItem newLVI = new(str);
 					newLVI.SubItems.Add(new ListViewItem.ListViewSubItem(newLVI, ""));
 					listViewWatch.Items.Add(newLVI);
 				}

@@ -1,9 +1,9 @@
-﻿using System;
+﻿using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameProc;
-using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.Sub;
-using trerror = EvilMask.Emuera.Lang.Error;
+using System;
 using System.Collections.Generic;
+using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.GameData.Function;
 

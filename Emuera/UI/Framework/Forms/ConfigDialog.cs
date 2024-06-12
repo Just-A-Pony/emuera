@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Drawing.Text;
+﻿using DotnetEmuera;
 using EvilMask.Emuera;
-using trmb = EvilMask.Emuera.Lang.MessageBox;
-using System.IO;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using DotnetEmuera;
 using MinorShift.Emuera.Runtime.Config;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Text;
+using System.IO;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using trmb = EvilMask.Emuera.Lang.MessageBox;
 
 namespace MinorShift.Emuera.Forms
 {

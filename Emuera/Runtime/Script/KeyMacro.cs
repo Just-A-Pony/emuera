@@ -1,8 +1,8 @@
-﻿using System.IO;
+﻿using MinorShift.Emuera.Runtime.Config;
 using MinorShift.Emuera.Sub;
 using System;
+using System.IO;
 using trmk = EvilMask.Emuera.Lang.KeyMacro;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera;
 
@@ -106,7 +106,7 @@ internal static class KeyMacro
 				{
 					if (line.StartsWith(macroName[i]))
 					{
-						macro[i] = line[macroName[i].Length..]; 
+						macro[i] = line[macroName[i].Length..];
 						break;
 					}
 				}

@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MinorShift.Emuera.GameData;
 using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameData;
-using trerror = EvilMask.Emuera.Lang.Error;
-using System.Text.RegularExpressions;
-using System.Runtime.CompilerServices;
-using System.Buffers;
 using MinorShift.Emuera.Runtime.Config;
+using System;
+using System.Buffers;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Text;
+using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.Sub;
 
@@ -390,7 +389,7 @@ internal static partial class LexicalAnalyzer
 		var span = ReadSingleIdentifierROS(st);
 		return span.ToString(); ;
 	}
-	static readonly SearchValues<char> _searchValues = SearchValues.Create(""" 　.+-*/%=!<>|&^~?#)}],:({[$\'"@;""" + "\t"); 
+	static readonly SearchValues<char> _searchValues = SearchValues.Create(""" 　.+-*/%=!<>|&^~?#)}],:({[$\'"@;""" + "\t");
 	public static ReadOnlySpan<char> ReadSingleIdentifierROS(CharStream st)
 	{
 		var row = st.RowString.AsSpan()[st.CurrentPosition..];
@@ -769,7 +768,7 @@ internal static partial class LexicalAnalyzer
 		//int nestBracketM = 0;
 		int nestBracketL = 0;
 
-		[MethodImpl(MethodImplOptions.AggressiveOptimization)] 
+		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
 		void local()
 		{
 			while (true)

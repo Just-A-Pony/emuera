@@ -1,10 +1,10 @@
-﻿using System;
+﻿using MinorShift.Emuera.Runtime.Config;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
-using System.Drawing.Drawing2D;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.Content;
 
@@ -405,7 +405,7 @@ internal sealed class GraphicsImage : AbstractImage
 			}
 
 			// Bitmapへコピー
-		Marshal.Copy(pixels, 0, ptr, pixels.Length);
+			Marshal.Copy(pixels, 0, ptr, pixels.Length);
 		}
 		finally
 		{
@@ -668,7 +668,7 @@ internal sealed class GraphicsImage : AbstractImage
 		int h = Bitmap.Height;
 		if (xstart + w > array.GetLength(0) || ystart + h > array.GetLength(1))
 			return false;
-		Rectangle rect = new (0, 0, w, h);
+		Rectangle rect = new(0, 0, w, h);
 		BitmapData bmpData =
 			Bitmap.LockBits(rect, ImageLockMode.ReadOnly,
 			PixelFormat.Format32bppArgb);
@@ -718,7 +718,7 @@ internal sealed class GraphicsImage : AbstractImage
 				rgbValues[i++] = (byte)((c >> 24) & 0xFF);//A
 			}
 		}
-		Rectangle rect = new (0, 0, w, h);
+		Rectangle rect = new(0, 0, w, h);
 		BitmapData bmpData =
 			Bitmap.LockBits(rect, ImageLockMode.WriteOnly,
 			PixelFormat.Format32bppArgb);

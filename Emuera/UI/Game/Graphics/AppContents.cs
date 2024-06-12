@@ -1,13 +1,13 @@
 ﻿using EvilMask.Emuera;
+using MinorShift.Emuera.Runtime.Config;
 using MinorShift.Emuera.Sub;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using trerror = EvilMask.Emuera.Lang.Error;
 using System.Linq;
-using MinorShift.Emuera.Runtime.Config;
+using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.Content;
 
@@ -56,7 +56,7 @@ static class AppContents
 		if (name == null)
 			return;
 		name = name.ToUpper();
-		if (!imageDictionary.TryGetValue(name, out ASprite value)) 
+		if (!imageDictionary.TryGetValue(name, out ASprite value))
 			return;
 		value.Dispose();
 		imageDictionary.TryRemove(name, out _);
@@ -145,7 +145,7 @@ static class AppContents
 								currentAnime = item as SpriteAnime;
 								if (reload)
 									imageDictionary.Remove(item.Name, out _);
-								
+
 								if (!imageDictionary.TryAdd(item.Name, item))
 								{
 									ParserMediator.Warn(string.Format(trerror.SpriteNameAlreadyUsed.Text, item.Name), sp, 0);

@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using System.IO;
+﻿using EvilMask.Emuera;
+using MinorShift._Library;
 using MinorShift.Emuera.GameProc.Function;
 using MinorShift.Emuera.GameView;
-using EvilMask.Emuera;
-using trmb = EvilMask.Emuera.Lang.MessageBox;
-using Emuera;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using MinorShift.Emuera.Runtime.Config;
-using MinorShift._Library;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using trmb = EvilMask.Emuera.Lang.MessageBox;
 
 namespace MinorShift.Emuera.Forms
 {
@@ -593,11 +592,11 @@ namespace MinorShift.Emuera.Forms
 				if (isBacklog)
 					return;
 				if (console.IsError)
-					{
+				{
 					if (e.Button == MouseButtons.Left)
 					{
 						PressEnterKey(false, true);
-					return;
+						return;
 						return;
 					}
 				}
@@ -931,7 +930,7 @@ namespace MinorShift.Emuera.Forms
 		{
 			try
 			{
-				ClipBoardDialog dialog = new ();
+				ClipBoardDialog dialog = new();
 				dialog.Text = Lang.UI.ClipBoardDialog.Text;
 				dialog.Setup(console);
 				dialog.ShowDialog();

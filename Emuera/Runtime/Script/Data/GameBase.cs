@@ -1,10 +1,10 @@
-﻿using System;
+﻿using MinorShift._Library;
+using MinorShift.Emuera.Sub;
+using System;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.IO;
-using MinorShift.Emuera.Sub;
 using trerror = EvilMask.Emuera.Lang.Error;
-using MinorShift._Library;
 
 
 namespace MinorShift.Emuera.GameData;
@@ -152,7 +152,7 @@ internal sealed class GameBase
 							ParserMediator.Warn(trerror.CanNotReadVersion.Text, pos, 0);
 							break;
 						}
-						Version curerntVersion = AssemblyData.emueraVer; 
+						Version curerntVersion = AssemblyData.emueraVer;
 						Version targetVersoin = new(Compatible_EmueraVer);
 						if (curerntVersion < targetVersoin)
 						{

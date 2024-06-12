@@ -1,9 +1,5 @@
 ﻿using MinorShift.Emuera.GameData.Expression;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MinorShift.Emuera.GameProc.PluginSystem
 {
@@ -33,7 +29,8 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 			if (term.IsString)
 			{
 				return new PluginMethodParameter(term.GetStrValue(exm));
-			} else
+			}
+			else
 			{
 				return new PluginMethodParameter(term.GetIntValue(exm));
 

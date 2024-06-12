@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using MinorShift.Emuera;
+﻿using MinorShift.Emuera;
 using MinorShift.Emuera.Runtime.Config;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace Emuera.UI;
 

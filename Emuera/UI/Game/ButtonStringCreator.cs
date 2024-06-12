@@ -1,9 +1,8 @@
-﻿using System;
+﻿using MinorShift.Emuera.Sub;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.GameView;
 
@@ -194,7 +193,7 @@ internal static class ButtonStringCreator
 	/// <returns></returns>
 	private static bool isButtonCore(string str, ref long input)
 	{
-		if ((str == null) || (str.Length < 3) || (str[0] != '[') || (str[^1] != ']')) 
+		if ((str == null) || (str.Length < 3) || (str[0] != '[') || (str[^1] != ']'))
 			return false;
 		if (!isNumericWord(str))
 			return false;

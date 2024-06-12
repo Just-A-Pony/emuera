@@ -248,7 +248,7 @@ internal sealed class SpriteAnime : ASprite
 		if (DateTime.Now == lastFrameTime && lastFrame >= 0)
 			return FrameList[lastFrame];
 		//StartTimeからの経過時間をtotaltimeで剰余計算
-		var elapsedTime = (DateTime.Now - StartTime).Milliseconds % totaltime; 
+		var elapsedTime = (DateTime.Now - StartTime).Milliseconds % totaltime;
 		foreach (AnimeFrame frame in FrameList)
 		{
 			elapsedTime -= frame.DelayTimeMs;

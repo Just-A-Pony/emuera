@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
-using System.Drawing;
+﻿using MinorShift.Emuera.Runtime.Config;
 using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.Runtime.Config;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Text;
 
 namespace MinorShift.Emuera.GameView;
 

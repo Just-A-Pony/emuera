@@ -1,33 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameView;
+﻿using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameProc.Function;
-using trerror = EvilMask.Emuera.Lang.Error;
+using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Sub;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.GameProc;
 
 internal static class LogicalLineParser
 {
-    public static bool ParseSharpLine(FunctionLabelLine label, CharStream st, ScriptPosition? position, List<string> OnlyLabel)
-    {
-        st.ShiftNext();//'#'を飛ばす
-        var token = LexicalAnalyzer.ReadSingleIdentifier(st);//#～自体にはマクロ非適用
-                                                             //#行として不正な行でもAnalyzeに行って引っかかることがあるので、先に存在しない#～は弾いてしまう
-        if (string.IsNullOrEmpty(token))
-        {
+	public static bool ParseSharpLine(FunctionLabelLine label, CharStream st, ScriptPosition? position, List<string> OnlyLabel)
+	{
+		st.ShiftNext();//'#'を飛ばす
+		var token = LexicalAnalyzer.ReadSingleIdentifier(st);//#～自体にはマクロ非適用
+															 //#行として不正な行でもAnalyzeに行って引っかかることがあるので、先に存在しない#～は弾いてしまう
+		if (string.IsNullOrEmpty(token))
+		{
 			ParserMediator.Warn(trerror.CanNotInterpretSharpLine.Text, position, 1);
 			return false;
-        }
-        try
-        {
+		}
+		try
+		{
 			switch (token)
 			{
-                case var s when s.Equals("SINGLE", Config.StringComparison):
-                    if (label.IsMethod)
+				case var s when s.Equals("SINGLE", Config.StringComparison):
+					if (label.IsMethod)
 					{
 						ParserMediator.Warn(trerror.UseSingleUserFunc.Text, position, 1);
 						break;
@@ -49,8 +49,8 @@ internal static class LogicalLineParser
 					}
 					label.IsSingle = true;
 					break;
-                case var s when s.Equals("LATER", Config.StringComparison):
-                    if (label.IsMethod)
+				case var s when s.Equals("LATER", Config.StringComparison):
+					if (label.IsMethod)
 					{
 						ParserMediator.Warn(trerror.UseLaterUserFunc.Text, position, 1);
 						break;
@@ -74,8 +74,8 @@ internal static class LogicalLineParser
 						ParserMediator.Warn(trerror.PriWithLater.Text, position, 1);
 					label.IsLater = true;
 					break;
-                case var s when s.Equals("PRI", Config.StringComparison):
-                    if (label.IsMethod)
+				case var s when s.Equals("PRI", Config.StringComparison):
+					if (label.IsMethod)
 					{
 						ParserMediator.Warn(trerror.UsePriUserFunc.Text, position, 1);
 						break;
@@ -99,8 +99,8 @@ internal static class LogicalLineParser
 						ParserMediator.Warn(trerror.PriWithLater.Text, position, 1);
 					label.IsPri = true;
 					break;
-                case var s when s.Equals("ONLY", Config.StringComparison):
-                    if (label.IsMethod)
+				case var s when s.Equals("ONLY", Config.StringComparison):
+					if (label.IsMethod)
 					{
 						ParserMediator.Warn(trerror.UseOnlyUserFunc.Text, position, 1);
 						break;
@@ -135,9 +135,9 @@ internal static class LogicalLineParser
 						label.IsSingle = false;
 					}
 					break;
-                case var s when s.Equals("FUNCTION", Config.StringComparison) ||
-                                s.Equals("FUNCTIONS", Config.StringComparison):
-                    if (!string.IsNullOrEmpty(label.LabelName) && char.IsDigit(label.LabelName[0]))
+				case var s when s.Equals("FUNCTION", Config.StringComparison) ||
+								s.Equals("FUNCTIONS", Config.StringComparison):
+					if (!string.IsNullOrEmpty(label.LabelName) && char.IsDigit(label.LabelName[0]))
 					{
 						ParserMediator.Warn(string.Format(trerror.CanNotDeclaredBeginNumberFunction.Text, token.ToString()), position, 1);
 						label.IsError = true;
@@ -151,9 +151,9 @@ internal static class LogicalLineParser
 							ParserMediator.Warn(string.Format(trerror.AlreadySharpDeclared.Text, label.LabelName, token.ToString()), position, 1);
 							return false;
 						}
-						if (label.MethodType == typeof(Int64) && token.SequenceEqual("FUNCTIONS")) 
+						if (label.MethodType == typeof(Int64) && token.SequenceEqual("FUNCTIONS"))
 							ParserMediator.Warn(string.Format(trerror.AlreadyDeclaredSharpFunction.Text, label.LabelName), position, 2);
-						else if (label.MethodType == typeof(string) && token.SequenceEqual("FUNCTION")) 
+						else if (label.MethodType == typeof(string) && token.SequenceEqual("FUNCTION"))
 							ParserMediator.Warn(string.Format(trerror.AlreadyDeclaredSharpFunctions.Text, label.LabelName), position, 2);
 						return false;
 					}
@@ -164,10 +164,10 @@ internal static class LogicalLineParser
 					}
 					label.IsMethod = true;
 					label.Depth = 0;
-                    if (token.Equals("FUNCTIONS", Config.StringComparison))
-                        label.MethodType = typeof(string);
+					if (token.Equals("FUNCTIONS", Config.StringComparison))
+						label.MethodType = typeof(string);
 					else
-	                    label.MethodType = typeof(Int64);
+						label.MethodType = typeof(Int64);
 					if (label.IsPri)
 					{
 						ParserMediator.Warn(trerror.UsePriUserFunc.Text, position, 1);
@@ -189,11 +189,11 @@ internal static class LogicalLineParser
 						label.IsOnly = false;
 					}
 					break;
-                case var s when s.Equals("LOCALSIZE", Config.StringComparison) ||
-                                s.Equals("LOCALSSIZE", Config.StringComparison):
-                    {
-                        WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AllowAssignment);
-                        if (wc.EOL)
+				case var s when s.Equals("LOCALSIZE", Config.StringComparison) ||
+								s.Equals("LOCALSSIZE", Config.StringComparison):
+					{
+						WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AllowAssignment);
+						if (wc.EOL)
 						{
 							ParserMediator.Warn(string.Format(trerror.SharpHasNotValidValue.Text, token.ToString()), position, 2);
 							break;
@@ -245,12 +245,12 @@ internal static class LogicalLineParser
 						}
 					}
 					break;
-                case var s when s.Equals("DIM", Config.StringComparison) ||
-                                s.Equals("DIMS", Config.StringComparison):
-                    {
-                        var wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AllowAssignment);
+				case var s when s.Equals("DIM", Config.StringComparison) ||
+								s.Equals("DIMS", Config.StringComparison):
+					{
+						var wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AllowAssignment);
 
-                        UserDefinedVariableData data = UserDefinedVariableData.Create(wc, token.SequenceEqual("DIMS"), true, position); 
+						UserDefinedVariableData data = UserDefinedVariableData.Create(wc, token.SequenceEqual("DIMS"), true, position);
 						if (!label.AddPrivateVariable(data))
 						{
 							ParserMediator.Warn(string.Format(trerror.VarNameAlreadyUsed.Text, data.Name), position, 2);
@@ -268,9 +268,9 @@ internal static class LogicalLineParser
 		catch (Exception e)
 		{
 			ParserMediator.Warn(e.Message, position, 2);
-            return false;
-        }
-        return true;
+			return false;
+		}
+		return true;
 	}
 
 	public static LogicalLine ParseLine(string str, EmueraConsole console)
@@ -295,13 +295,13 @@ internal static class LogicalLineParser
 			{
 				return err(position, isFunction, ref labelName, trerror.InvalidFunc.Text);
 			}
-			labelName = iw.Code; 
+			labelName = iw.Code;
 			wc.ShiftNext();
-			GlobalStatic.IdentifierDictionary.CheckUserLabelName(out errMes, ref warnLevel, isFunction, labelName); 
+			GlobalStatic.IdentifierDictionary.CheckUserLabelName(out errMes, ref warnLevel, isFunction, labelName);
 			if (warnLevel >= 0)
 			{
 				if (warnLevel >= 2)
-					return err(position, isFunction, ref labelName, errMes); 
+					return err(position, isFunction, ref labelName, errMes);
 				ParserMediator.Warn(errMes, position, warnLevel);
 			}
 			if (!isFunction)//$ならこの時点で終了
@@ -423,7 +423,7 @@ internal static class LogicalLineParser
 					var current = stream.Current;
 					if ((current != ';') && (current != ' ') && (current != '\t') && (!Config.SystemAllowFullSpace || (current != '　')))
 					{
-						if (current == '　') 
+						if (current == '　')
 							errMes = string.Format(trerror.InvalidCharacterAfterInstruction1.Text, Config.GetConfigName(ConfigCode.SystemAllowFullSpace));
 						else
 							errMes = trerror.InvalidCharacterAfterInstruction2.Text;

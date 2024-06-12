@@ -1,7 +1,7 @@
-﻿using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData.Expression;
-using trerror = EvilMask.Emuera.Lang.Error;
+﻿using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Sub;
+using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.GameData.Variable;
 
@@ -173,7 +173,7 @@ internal static class VariableParser
 			throw new CodeEE(string.Format(trerror.ZeroDVarHasArg.Text, id.Name));
 		}
 		else
-			terms = []; 
+			terms = [];
 		for (int i = 0; i < terms.Length; i++)
 			if (terms[i].IsString)
 				#region EE_ERD

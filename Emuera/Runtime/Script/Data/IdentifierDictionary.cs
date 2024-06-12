@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
+﻿using MinorShift._Library;
 using MinorShift.Emuera.GameData;
-using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.GameData.Function;
-using MinorShift.Emuera.GameProc;
-using System.Text.RegularExpressions;
-using MinorShift.Emuera.GameProc.Function;
 using MinorShift.Emuera.GameData.Expression;
-using MinorShift._Library;
-using System.Linq;
-using treer = EvilMask.Emuera.Lang.Error;
+using MinorShift.Emuera.GameData.Function;
+using MinorShift.Emuera.GameData.Variable;
+using MinorShift.Emuera.GameProc;
+using MinorShift.Emuera.GameProc.Function;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Sub;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using treer = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera;
 
@@ -466,7 +466,7 @@ internal partial class IdentifierDictionary
 
 	public DefineMacro GetMacro(string key)
 	{
-		int hash; 
+		int hash;
 		if (Config.IgnoreCase)
 		{
 			hash = key.GetHashCode(StringComparison.OrdinalIgnoreCase);

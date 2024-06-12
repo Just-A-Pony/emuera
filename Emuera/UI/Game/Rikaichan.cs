@@ -1,22 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System.Drawing;
-
-using MinorShift.Emuera.Forms;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameProc;
-using MinorShift.Emuera.GameProc.Function;
-using MinorShift.Emuera.Content;
-using MinorShift.Emuera.Sub;
-using MinorShift._Library;
-
-using System.Windows.Forms; //for TextRenderer
-using System.IO; //for File
+﻿using MinorShift.Emuera.Forms;
 using MinorShift.Emuera.Runtime.Config;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO; //for File
+using System.Text;
+using System.Windows.Forms; //for TextRenderer
 
 namespace MinorShift.Emuera.GameView;
 

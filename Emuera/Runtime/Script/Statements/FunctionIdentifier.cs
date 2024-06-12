@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using MinorShift.Emuera.GameData.Function;
+﻿using MinorShift.Emuera.GameData.Function;
 using MinorShift.Emuera.Runtime.Config;
+using System;
+using System.Collections.Generic;
 
 namespace MinorShift.Emuera.GameProc.Function;
 
@@ -40,7 +37,7 @@ internal sealed partial class FunctionIdentifier
 
 	#region static
 	//元BuiltInFunctionManager部分
-	readonly static Dictionary<string, FunctionIdentifier> funcDic = Config.IgnoreCase ? new(StringComparer.OrdinalIgnoreCase) : new(); 
+	readonly static Dictionary<string, FunctionIdentifier> funcDic = Config.IgnoreCase ? new(StringComparer.OrdinalIgnoreCase) : new();
 	readonly static Dictionary<FunctionCode, string> funcMatch = [];
 	readonly static Dictionary<FunctionCode, FunctionCode> funcParent = [];
 	readonly static AInstruction methodInstruction;

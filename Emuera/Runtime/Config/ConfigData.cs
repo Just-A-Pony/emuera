@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Drawing;
+﻿using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData.Expression;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.Runtime.Config;
@@ -21,7 +21,7 @@ internal sealed class ConfigData
 	readonly static string configdebugPath = Program.DebugDir + "debug.config";
 
 	static ConfigData() { }
-	private static ConfigData instance = new(); 
+	private static ConfigData instance = new();
 	public static ConfigData Instance { get { return instance; } }
 
 	private ConfigData() { setDefault(); }
@@ -722,7 +722,7 @@ internal sealed class ConfigData
 				if ((line.Length == 0) || (line[0] == ';'))
 					continue;
 				pos = new ScriptPosition(eReader.Filename, eReader.LineNo);
-				string[] tokens = line.Split([':']); 
+				string[] tokens = line.Split([':']);
 				if (tokens.Length < 2)
 					continue;
 				#region EM_私家版_Emuera多言語化改造
@@ -792,7 +792,7 @@ internal sealed class ConfigData
 	// 1.52a改変部分　（単位の差し替えおよび前置、後置のためのコンフィグ処理）
 	public void LoadReplaceFile(string filename)
 	{
-		using var eReader = new EraStreamReader(false); 
+		using var eReader = new EraStreamReader(false);
 		if (!eReader.Open(filename))
 			return;
 		ScriptPosition? pos = null;
@@ -807,7 +807,7 @@ internal sealed class ConfigData
 				if (line[0] == ';')
 					continue;
 				pos = new ScriptPosition(eReader.Filename, eReader.LineNo);
-				string[] tokens = line.Split(',', ':' );
+				string[] tokens = line.Split(',', ':');
 				if (tokens.Length < 2)
 					continue;
 				string itemName = tokens[0].Trim();

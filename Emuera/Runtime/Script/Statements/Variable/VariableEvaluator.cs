@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameView;
+﻿using DotnetEmuera;
+using MinorShift._Library;
 using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameProc.Function;
+using MinorShift.Emuera.GameView;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Sub;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using trerror = EvilMask.Emuera.Lang.Error;
-using MinorShift.Emuera.Runtime.Config;
-using MinorShift._Library;
-using DotnetEmuera;
 
 namespace MinorShift.Emuera.GameData.Variable;
 
@@ -139,7 +139,7 @@ internal sealed class VariableEvaluator : IDisposable
 				if (start != 0 || end != p.Identifier.GetLength())
 					p.IsArrayRangeValid((Int64)start, (Int64)end, "VARSET", 3L, 4L);
 				else if (p.Identifier.IsCharacterData)
-					p.Identifier.CheckElement([p.Index1, p.Index2 ]);
+					p.Identifier.CheckElement([p.Index1, p.Index2]);
 			}
 			else if (p.Identifier.IsCharacterData)
 			{
@@ -178,7 +178,7 @@ internal sealed class VariableEvaluator : IDisposable
 
 		for (int i = start; i < end; i++)
 		{
-			p.Identifier.SetValue(srcValue, [i, indexNum ]);
+			p.Identifier.SetValue(srcValue, [i, indexNum]);
 		}
 	}
 
@@ -216,7 +216,7 @@ internal sealed class VariableEvaluator : IDisposable
 
 		for (int i = start; i < end; i++)
 		{
-			p.Identifier.SetValue(srcValue, [i, indexNum ]);
+			p.Identifier.SetValue(srcValue, [i, indexNum]);
 		}
 	}
 
@@ -329,7 +329,7 @@ internal sealed class VariableEvaluator : IDisposable
 		bool targetIsNullOrEmpty = string.IsNullOrEmpty(target);
 
 		for (int i = (int)start; i < (int)end; i++)
-			if ((p.Identifier.GetStrValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? [p.Index1, i] : [i]) == target) || (targetIsNullOrEmpty && string.IsNullOrEmpty(p.Identifier.GetStrValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? [p.Index1, i] :[i]))))
+			if ((p.Identifier.GetStrValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? [p.Index1, i] : [i]) == target) || (targetIsNullOrEmpty && string.IsNullOrEmpty(p.Identifier.GetStrValue(GlobalStatic.EMediator, p.Identifier.IsCharacterData ? [p.Index1, i] : [i]))))
 				ret++;
 
 		return ret;

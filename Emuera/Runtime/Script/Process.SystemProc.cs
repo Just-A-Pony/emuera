@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MinorShift.Emuera.Runtime.Config;
 using MinorShift.Emuera.Sub;
+using System;
+using System.Collections.Generic;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.GameProc;
 

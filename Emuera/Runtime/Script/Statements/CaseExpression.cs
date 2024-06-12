@@ -1,5 +1,5 @@
-﻿using System;
-using MinorShift.Emuera.Runtime.Config;
+﻿using MinorShift.Emuera.Runtime.Config;
+using System;
 
 namespace MinorShift.Emuera.GameData.Expression;
 

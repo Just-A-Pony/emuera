@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameView;
+﻿using EvilMask.Emuera;
 using MinorShift.Emuera.GameData.Variable;
-using EvilMask.Emuera;
+using MinorShift.Emuera.GameView;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Sub;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trsl = EvilMask.Emuera.Lang.SystemLine;
-using System.Linq;
-using System.Globalization;
-using System.Diagnostics;
-using System.Linq;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.GameData;
 
@@ -1291,7 +1289,7 @@ internal sealed class ConstantData
 		StaticXmls.Clear();
 		foreach (var path in Directory.GetFiles(csvPath, "VarExt*.csv", SearchOption.AllDirectories))
 		{
-			using var eReader = new EraStreamReader(false); 
+			using var eReader = new EraStreamReader(false);
 			if (!eReader.Open(path))
 			{
 				output.PrintError(string.Format(trerror.FailedOpenFile.Text, eReader.Filename));
@@ -1481,7 +1479,7 @@ internal sealed class ConstantData
 		p = -1;
 		if (string.IsNullOrEmpty(str))
 			return false;
-		CharStream st = new (str);
+		CharStream st = new(str);
 		int sign = 1;
 		if (st.Current == '+')
 			st.ShiftNext();
@@ -1713,7 +1711,7 @@ internal sealed class ConstantData
 		try
 		{
 			CharStream st = null;
-			Span<Range> dest = stackalloc Range[5]; 
+			Span<Range> dest = stackalloc Range[5];
 			while ((st = eReader.ReadEnabledLine()) != null)
 			{
 				position = new ScriptPosition(eReader.Filename, eReader.LineNo);

@@ -1,5 +1,4 @@
-﻿using MinorShift._Library;
-using System;
+﻿using System;
 using System.Drawing;
 
 namespace MinorShift.Emuera.Content;

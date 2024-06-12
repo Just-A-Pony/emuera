@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.Sub;

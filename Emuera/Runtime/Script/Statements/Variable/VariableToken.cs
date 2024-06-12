@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using EnumsNET;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameProc;
-using MinorShift.Emuera.GameData.Expression;
-using trerror = EvilMask.Emuera.Lang.Error;
+﻿using EnumsNET;
 using MinorShift._Library;
+using MinorShift.Emuera.GameData.Expression;
+using MinorShift.Emuera.GameProc;
 using MinorShift.Emuera.Runtime.Config;
-using System.Collections;
-using System.Drawing;
-using System.Security.Policy;
+using MinorShift.Emuera.Sub;
+using System;
+using System.Collections.Generic;
+using trerror = EvilMask.Emuera.Lang.Error;
 
 namespace MinorShift.Emuera.GameData.Variable;
 

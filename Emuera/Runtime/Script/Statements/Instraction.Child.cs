@@ -1,26 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.GameData;
+﻿using DotnetEmuera;
+using EvilMask.Emuera;
 using MinorShift._Library;
+using MinorShift.Emuera.GameData;
+using MinorShift.Emuera.GameData.Expression;
 using MinorShift.Emuera.GameData.Function;
+using MinorShift.Emuera.GameData.Variable;
+using MinorShift.Emuera.GameProc.PluginSystem;
+using MinorShift.Emuera.GameView;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Sub;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Text;
 using System.Windows.Forms;
-using MinorShift.Emuera.GameView;
+using static EvilMask.Emuera.Utils;
 using trerror = EvilMask.Emuera.Lang.Error;
 using trmb = EvilMask.Emuera.Lang.MessageBox;
-using EvilMask.Emuera;
-using static EvilMask.Emuera.Utils;
-using System.Linq;
-using MinorShift.Emuera.Runtime.Config;
-using System.Diagnostics;
-using DotnetEmuera;
-using MinorShift.Emuera.GameProc.PluginSystem;
 
 namespace MinorShift.Emuera.GameProc.Function;
 
@@ -437,7 +436,7 @@ internal sealed partial class FunctionIdentifier
 		{
 			if (GlobalStatic.Process.SkipPrint)
 				return;
-			GlobalStatic.Console.printCustomBar(func.Argument.ConstStr, true); 
+			GlobalStatic.Console.printCustomBar(func.Argument.ConstStr, true);
 			exm.Console.NewLine();
 		}
 	}
@@ -1169,9 +1168,11 @@ internal sealed partial class FunctionIdentifier
 				if (rowArg is VariableTerm)
 				{
 					var varTerm = (VariableTerm)rowArg;
-					if (varTerm.IsString) {
+					if (varTerm.IsString)
+					{
 						varTerm.SetValue(pluginArgs[i].strValue, exm);
-					} else
+					}
+					else
 					{
 						varTerm.SetValue(pluginArgs[i].intValue, exm);
 					}

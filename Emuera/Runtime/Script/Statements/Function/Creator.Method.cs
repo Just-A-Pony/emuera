@@ -1,24 +1,23 @@
-﻿using System;
+﻿using EvilMask.Emuera;
+using MinorShift._Library;
+using MinorShift.Emuera.Content;
+using MinorShift.Emuera.GameData.Expression;
+using MinorShift.Emuera.GameData.Variable;
+using MinorShift.Emuera.GameProc;
+using MinorShift.Emuera.GameView;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Sub;
+using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameProc;
-using MinorShift._Library;
-using MinorShift.Emuera.GameData.Variable;
-using System.Drawing;
 using System.Windows.Forms;
-using MinorShift.Emuera.GameView;
-using MinorShift.Emuera.Content;
-using System.Linq;
 using System.Xml;
-using System.IO;
-using EvilMask.Emuera;
 using trerror = EvilMask.Emuera.Lang.Error;
-using System.Data;
-using MinorShift.Emuera.Runtime.Config;
-using System.Diagnostics;
 
 namespace MinorShift.Emuera.GameData.Function;
 
@@ -136,7 +135,7 @@ internal static partial class FunctionMethodCreator
 		public IsDefinedMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
 
@@ -260,7 +259,7 @@ internal static partial class FunctionMethodCreator
 		public GetVarMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
 
@@ -289,7 +288,7 @@ internal static partial class FunctionMethodCreator
 		public GetVarsMethod()
 		{
 			ReturnType = typeof(string);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -317,7 +316,7 @@ internal static partial class FunctionMethodCreator
 		public ExistVarMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
 
@@ -1250,7 +1249,7 @@ internal static partial class FunctionMethodCreator
 		public ExistFileMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -1269,7 +1268,7 @@ internal static partial class FunctionMethodCreator
 			if (type == Operation.Case)
 				argumentTypeArray = [typeof(string), typeof(Int64)];
 			else
-				 argumentTypeArray = [typeof(string)];
+				argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 			op = type;
 		}
@@ -1506,7 +1505,7 @@ internal static partial class FunctionMethodCreator
 		public DataTableLengthMethod(Operation type)
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 			op = type;
 		}
@@ -1774,7 +1773,7 @@ internal static partial class FunctionMethodCreator
 		public MapManagementMethod(Operation type)
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 			op = type;
 		}
@@ -1808,7 +1807,7 @@ internal static partial class FunctionMethodCreator
 				case Operation.Remove:
 					argumentTypeArray = [typeof(string), typeof(string)]; break;
 				default:
-					 argumentTypeArray = [typeof(string)]; break;
+					argumentTypeArray = [typeof(string)]; break;
 			}
 			CanRestructure = false;
 			op = type;
@@ -1846,7 +1845,7 @@ internal static partial class FunctionMethodCreator
 				case Operation.Get:
 					argumentTypeArray = [typeof(string), typeof(string)]; break;
 				case Operation.ToXml:
-					 argumentTypeArray = [typeof(string)]; break;
+					argumentTypeArray = [typeof(string)]; break;
 				case Operation.GetKeys:
 					argumentTypeArrayEx = [
 							new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int }, OmitStart = 1 },
@@ -2039,7 +2038,7 @@ internal static partial class FunctionMethodCreator
 		public GetspcharaMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -2392,7 +2391,7 @@ internal static partial class FunctionMethodCreator
 		public CheckfontMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = true;//起動中に変わることもそうそうないはず……
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -2430,7 +2429,7 @@ internal static partial class FunctionMethodCreator
 		public CheckdataMethod(EraSaveFileType type)
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 			this.type = type;
 		}
@@ -2459,7 +2458,7 @@ internal static partial class FunctionMethodCreator
 		public CheckdataStrMethod(EraSaveFileType type)
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 			this.type = type;
 		}
@@ -2705,7 +2704,7 @@ internal static partial class FunctionMethodCreator
 		public ColorFromNameMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
 		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -3062,7 +3061,7 @@ internal static partial class FunctionMethodCreator
 		public AbsMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			CanRestructure = true;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -3106,7 +3105,7 @@ internal static partial class FunctionMethodCreator
 		public SqrtMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			CanRestructure = true;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -3124,7 +3123,7 @@ internal static partial class FunctionMethodCreator
 		public CbrtMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			CanRestructure = true;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -3143,14 +3142,14 @@ internal static partial class FunctionMethodCreator
 		public LogMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			Base = Math.E;
 			CanRestructure = true;
 		}
 		public LogMethod(double b)
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			Base = b;
 			CanRestructure = true;
 		}
@@ -3186,7 +3185,7 @@ internal static partial class FunctionMethodCreator
 		public ExpMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			CanRestructure = true;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -3213,7 +3212,7 @@ internal static partial class FunctionMethodCreator
 		public SignMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			CanRestructure = true;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -4221,7 +4220,7 @@ internal static partial class FunctionMethodCreator
 		public StrlenMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -4236,7 +4235,7 @@ internal static partial class FunctionMethodCreator
 		public StrlenuMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -4489,7 +4488,7 @@ internal static partial class FunctionMethodCreator
 		public ToIntMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
 
@@ -4541,14 +4540,14 @@ internal static partial class FunctionMethodCreator
 		public StrChangeStyleMethod()
 		{
 			ReturnType = typeof(string);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			strType = StrFormType.Upper;
 			CanRestructure = true;
 		}
 		public StrChangeStyleMethod(StrFormType type)
 		{
 			ReturnType = typeof(string);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			strType = type;
 			CanRestructure = true;
 		}
@@ -4673,7 +4672,7 @@ internal static partial class FunctionMethodCreator
 		public UnicodeMethod()
 		{
 			ReturnType = typeof(string);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			CanRestructure = true;
 		}
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -4709,7 +4708,7 @@ internal static partial class FunctionMethodCreator
 		public UnicodeByteMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -4747,7 +4746,7 @@ internal static partial class FunctionMethodCreator
 		public IsNumericMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
 		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -4787,7 +4786,7 @@ internal static partial class FunctionMethodCreator
 		public EscapeMethod()
 		{
 			ReturnType = typeof(string);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -4861,7 +4860,7 @@ internal static partial class FunctionMethodCreator
 		public GetLineStrMethod()
 		{
 			ReturnType = typeof(string);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -4879,7 +4878,7 @@ internal static partial class FunctionMethodCreator
 		public StrFormMethod()
 		{
 			ReturnType = typeof(string);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			HasUniqueRestructure = true;
 			CanRestructure = true;
 		}
@@ -5016,7 +5015,7 @@ internal static partial class FunctionMethodCreator
 				funcname = "GETCONFIGS";
 				ReturnType = typeof(string);
 			}
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = true;
 		}
 		private readonly string funcname;
@@ -5119,7 +5118,7 @@ internal static partial class FunctionMethodCreator
 		public HtmlToPlainTextMethod()
 		{
 			ReturnType = typeof(string);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -5132,7 +5131,7 @@ internal static partial class FunctionMethodCreator
 		public HtmlEscapeMethod()
 		{
 			ReturnType = typeof(string);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -5297,7 +5296,7 @@ internal static partial class FunctionMethodCreator
 		public GraphicsStateMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -5339,7 +5338,7 @@ internal static partial class FunctionMethodCreator
 		public GraphicsStateStrMethod()
 		{
 			ReturnType = typeof(string);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -5822,7 +5821,7 @@ internal static partial class FunctionMethodCreator
 		public SpriteStateMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -6029,7 +6028,7 @@ internal static partial class FunctionMethodCreator
 		public GraphicsDisposeMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -6126,7 +6125,7 @@ internal static partial class FunctionMethodCreator
 		public SpriteDisposeMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -6145,7 +6144,7 @@ internal static partial class FunctionMethodCreator
 		public SpriteDisposeAllMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -6656,7 +6655,7 @@ internal static partial class FunctionMethodCreator
 		public CBGSetBMapGMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -6775,7 +6774,7 @@ internal static partial class FunctionMethodCreator
 		public GetKeyStateMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -6867,7 +6866,7 @@ internal static partial class FunctionMethodCreator
 		public SetAnimeTimerMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(Int64)];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -7188,7 +7187,7 @@ internal static partial class FunctionMethodCreator
 		public ExistSoundMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -7322,7 +7321,7 @@ internal static partial class FunctionMethodCreator
 		public ChangeTextBoxMethod()
 		{
 			ReturnType = typeof(Int64);
-			 argumentTypeArray = [typeof(string)];
+			argumentTypeArray = [typeof(string)];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)

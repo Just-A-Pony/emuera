@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using System.Drawing.Text;
-using EvilMask.Emuera;
+﻿using EvilMask.Emuera;
 using MinorShift.Emuera.Runtime.Config;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace MinorShift.Emuera.Forms
 {

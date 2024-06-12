@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Drawing;
+﻿using MinorShift.Emuera.Runtime.Config;
 using MinorShift.Emuera.Sub;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Text;
 using trerror = EvilMask.Emuera.Lang.Error;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.GameView;
 
@@ -566,7 +566,7 @@ internal sealed class PrintStringBuffer
 		string test;
 		while ((highLength - lowLength) > 1)//差が一文字以下になるまで繰り返す。
 		{
-			test = str[..i]; 
+			test = str[..i];
 			if (sm.GetDisplayLength(test, font) <= widthLimit)//サイズ内ならlowLengthを更新。文字数を増やす。
 			{
 				lowLength = i;

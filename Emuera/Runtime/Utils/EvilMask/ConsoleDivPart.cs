@@ -1,16 +1,11 @@
 ﻿using EvilMask.Emuera;
+using MinorShift.Emuera.Runtime.Config;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using static EvilMask.Emuera.Shape;
 using static EvilMask.Emuera.Utils;
-using MinorShift.Emuera.Forms;
-using System.Windows;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.GameView;
 

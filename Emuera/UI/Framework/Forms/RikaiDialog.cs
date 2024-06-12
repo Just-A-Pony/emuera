@@ -1,15 +1,10 @@
-﻿using MinorShift.Emuera.GameView;
+﻿using MinorShift.Emuera.Runtime.Config;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.Forms
 {
