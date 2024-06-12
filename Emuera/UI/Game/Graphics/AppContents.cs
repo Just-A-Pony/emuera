@@ -97,10 +97,10 @@ static class AppContents
 		imageDictionary[imgName] = newCImg;
 	}
 
-	static public bool LoadContents(bool reload)
+	static public Exception LoadContents(bool reload)
 	{
 		if (!Directory.Exists(Program.ContentDir))
-			return true;
+			return null;
 		try
 		{
 			//resourcesフォルダ内の全てのcsvファイルを探索する
@@ -156,12 +156,12 @@ static class AppContents
 					});
 			}
 		}
-		catch
+		catch (Exception e)
 		{
-			return false;
+			return e;
 			//throw new CodeEE("リソースファイルのロード中にエラーが発生しました");
 		}
-		return true;
+		return null;
 	}
 
 	static public void UnloadContents()

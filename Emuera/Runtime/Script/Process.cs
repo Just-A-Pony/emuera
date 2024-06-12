@@ -76,12 +76,14 @@ internal sealed partial class Process(EmueraConsole view)
             Debug.WriteLine("Proc:Init:Parser:End " + stopWatch.ElapsedMilliseconds + "ms");
 
             Debug.WriteLine("Proc:Init:Image:Start " + stopWatch.ElapsedMilliseconds + "ms");
-            //リソースフォルダ読み込み
-            if (!await Task.Run(() => Content.AppContents.LoadContents(false)))
-            {
-                ParserMediator.FlushWarningList();
+			//リソースフォルダ読み込み
+			var err = await Task.Run(() => Content.AppContents.LoadContents(false));
+			if (err != null)
+			{
+				ParserMediator.FlushWarningList();
                 console.PrintSystemLine(trsl.ResourceReadError.Text);
-                return false;
+				console.Print(err.Message);
+				return false;
             }
             ParserMediator.FlushWarningList();
             Debug.WriteLine("Proc:Init:Image:End " + stopWatch.ElapsedMilliseconds + "ms");
