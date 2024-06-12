@@ -1263,21 +1263,28 @@ internal sealed partial class EmueraConsole : IDisposable
 					throw new ExeEE("");
 #endif
 				if (KillMacro)
-					goto endMacro;
+				{
+					endMacro();
+					return;
+				}
 			}
 		}
 		finally
 		{
 			inProcess = false;
 		}
-	endMacro:
-		if (state == ConsoleState.WaitInput && inputReq.NeedValue)
+		endMacro();
+
+		void endMacro()
 		{
-			Point point = window.MainPicBox.PointToClient(Control.MousePosition);
-			if (window.MainPicBox.ClientRectangle.Contains(point))
-				MoveMouse(point);
+			if (state == ConsoleState.WaitInput && inputReq.NeedValue)
+			{
+				Point point = window.MainPicBox.PointToClient(Control.MousePosition);
+				if (window.MainPicBox.ClientRectangle.Contains(point))
+					MoveMouse(point);
+			}
+			RefreshStrings(true);
 		}
-		RefreshStrings(true);
 	}
 
 	private void OpenErrorFile(ScriptPosition? pos)

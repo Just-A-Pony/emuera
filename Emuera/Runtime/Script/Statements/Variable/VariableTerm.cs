@@ -150,7 +150,7 @@ internal class VariableTerm : AExpression
 		}
 	}
 
-	public virtual Int64 PlusValue(Int64 value, ExpressionMediator exm)
+	public virtual Int64 ChangeValue(Int64 value, ExpressionMediator exm)
 	{
 		try
 		{
@@ -371,7 +371,7 @@ internal sealed class FixedVariableTerm : VariableTerm
 		}
 	}
 
-	public override Int64 PlusValue(Int64 value, ExpressionMediator exm)
+	public override Int64 ChangeValue(Int64 value, ExpressionMediator exm)
 	{
 		try
 		{
@@ -422,7 +422,7 @@ internal sealed class VariableNoArgTerm : VariableTerm
 	{ throw new CodeEE(string.Format(trerror.MissingVarArg.Text, Identifier.Name)); }
 	public override void SetValue(string[] array, ExpressionMediator exm)
 	{ throw new CodeEE(string.Format(trerror.MissingVarArg.Text, Identifier.Name)); }
-	public override Int64 PlusValue(Int64 value, ExpressionMediator exm)
+	public override Int64 ChangeValue(Int64 value, ExpressionMediator exm)
 	{ throw new CodeEE(string.Format(trerror.MissingVarArg.Text, Identifier.Name)); }
 	public override SingleTerm GetValue(ExpressionMediator exm)
 	{ throw new CodeEE(string.Format(trerror.MissingVarArg.Text, Identifier.Name)); }

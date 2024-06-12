@@ -742,7 +742,7 @@ internal static class OperatorMethodManager
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm var = (VariableTerm)arguments[0];
-			return var.PlusValue(1L, exm);
+			return var.ChangeValue(1L, exm);
 		}
 	}
 	private sealed class DecrementInt : OperatorMethod
@@ -756,7 +756,7 @@ internal static class OperatorMethodManager
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm var = (VariableTerm)arguments[0];
-			return var.PlusValue(-1L, exm);
+			return var.ChangeValue(-1L, exm);
 		}
 	}
 	private sealed class IncrementAfterInt : OperatorMethod
@@ -770,7 +770,7 @@ internal static class OperatorMethodManager
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm var = (VariableTerm)arguments[0];
-			return var.PlusValue(1L, exm) - 1;
+			return var.ChangeValue(1L, exm) - 1;
 		}
 	}
 
@@ -785,7 +785,7 @@ internal static class OperatorMethodManager
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm var = (VariableTerm)arguments[0];
-			return var.PlusValue(-1L, exm) + 1;
+			return var.ChangeValue(-1L, exm) + 1;
 		}
 	}
 

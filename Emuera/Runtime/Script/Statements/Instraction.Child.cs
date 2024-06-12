@@ -550,7 +550,7 @@ internal sealed partial class FunctionIdentifier
 			{
 				Int64 src = spsetarg.IsConst ? spsetarg.ConstInt : spsetarg.Term.GetIntValue(exm);
 				if (spsetarg.AddConst)
-					spsetarg.VariableDest.PlusValue(src, exm);
+					spsetarg.VariableDest.ChangeValue(src, exm);
 				else
 					spsetarg.VariableDest.SetValue(src, exm);
 			}
@@ -3138,7 +3138,7 @@ internal sealed partial class FunctionIdentifier
 			{
 				unchecked
 				{//eramakerではBREAK時にCOUNTが回る
-					jumpTo.LoopCounter.PlusValue(jumpTo.LoopStep, exm);
+					jumpTo.LoopCounter.ChangeValue(jumpTo.LoopStep, exm);
 				}
 			}
 			state.JumpTo(iLine);
@@ -3165,7 +3165,7 @@ internal sealed partial class FunctionIdentifier
 				}
 				unchecked
 				{
-					jumpTo.LoopCounter.PlusValue(jumpTo.LoopStep, exm);
+					jumpTo.LoopCounter.ChangeValue(jumpTo.LoopStep, exm);
 				}
 				Int64 counter = jumpTo.LoopCounter.GetIntValue(exm);
 				//まだ回数が残っているなら、
@@ -3219,7 +3219,7 @@ internal sealed partial class FunctionIdentifier
 			}
 			unchecked
 			{
-				jumpTo.LoopCounter.PlusValue(jumpTo.LoopStep, exm);
+				jumpTo.LoopCounter.ChangeValue(jumpTo.LoopStep, exm);
 			}
 			Int64 counter = jumpTo.LoopCounter.GetIntValue(exm);
 			//まだ回数が残っているなら、
