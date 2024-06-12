@@ -15,6 +15,8 @@ public static class AssemblyData
 		ExeDir = Path.GetDirectoryName(ExePath) + "\\";
 		ExeName = Path.GetFileName(ExePath);
 		emueraVer = typeof(AssemblyData).Assembly.GetName().Version;
+
+		EmueraVersionText = ".NET Emuera" + Application.ProductVersion;
 	}
 
 	/// <summary>
@@ -23,6 +25,8 @@ public static class AssemblyData
 	public static readonly string ExePath;
 
 	public readonly static Version emueraVer;
+
+	public readonly static string EmueraVersionText;
 
 	/// <summary>
 	/// 実行ファイルのディレクトリ。最後に\を付けたstring

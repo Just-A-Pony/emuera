@@ -11,6 +11,7 @@ using Emuera;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift._Library;
 
 namespace MinorShift.Emuera.Forms
 {
@@ -43,7 +44,7 @@ namespace MinorShift.Emuera.Forms
 			openFileDialog.FileName = "";
 			openFileDialog.Multiselect = true;
 			openFileDialog.RestoreDirectory = true;
-			string Emuera_verInfo = "Emuera " + Application.ProductVersion;
+			string Emuera_verInfo = AssemblyData.EmueraVersionText;
 			EmuVerToolStripTextBox.Text = Emuera_verInfo;
 
 			console = new EmueraConsole(this);

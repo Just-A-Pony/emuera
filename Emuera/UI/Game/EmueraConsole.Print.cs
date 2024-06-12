@@ -794,7 +794,7 @@ internal sealed partial class EmueraConsole : IDisposable
 
 
 		builder.AppendLine(trsl.EnvironmentInformation.Text);
-		builder.AppendLine($".NET Emuera {AssemblyData.emueraVer}");
+		builder.AppendLine(AssemblyData.EmueraVersionText);
 
 		var patchVersionsPath = Path.Combine(Program.ExeDir, "patch_versions");
 		if (Directory.Exists(patchVersionsPath))
