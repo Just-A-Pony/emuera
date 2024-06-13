@@ -388,7 +388,7 @@ enum FunctionCode
 	#endregion
 
 	#region Emuera.NET
-	VAR,
+	VARI,
 	VARS
 	#endregion
 

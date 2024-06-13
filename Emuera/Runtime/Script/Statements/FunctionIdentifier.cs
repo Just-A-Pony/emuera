@@ -428,7 +428,7 @@ internal sealed partial class FunctionIdentifier
 		addFunction(FunctionCode.DT_COLUMN_OPTIONS, new DT_COLUMN_OPTIONS_Instruction());
 		#endregion
 		#region Emuera.NET
-		addFunction(FunctionCode.VAR, new VAR_Instruction());
+		addFunction(FunctionCode.VARI, new VARI_Instruction());
 		addFunction(FunctionCode.VARS, new VARS_Instruction());
 
 		#endregion
