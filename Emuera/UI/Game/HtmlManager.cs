@@ -1,17 +1,19 @@
-﻿using EvilMask.Emuera;
-using MinorShift.Emuera.GameData.Expression;
+﻿using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
+using MinorShift.Emuera.Runtime.Script.Parser;
+using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
-using static EvilMask.Emuera.Shape;
-using static EvilMask.Emuera.Utils;
-using trerror = EvilMask.Emuera.Lang.Error;
+using static MinorShift.Emuera.Runtime.Utils.EvilMask.Shape;
+using static MinorShift.Emuera.Runtime.Utils.EvilMask.Utils;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.GameView;
+namespace MinorShift.Emuera.UI.Game;
 
 //TODO:1810～
 /* Emuera用Htmlもどきが実装すべき要素
@@ -44,7 +46,7 @@ internal static class HtmlManager
 	#region EM_私家版_HtmlManager機能拡張
 	public static int HtmlLength(string s)
 	{
-		ConsoleDisplayLine[] lines = HtmlManager.Html2DisplayLine(s, GlobalStatic.Console.StrMeasure, null);
+		ConsoleDisplayLine[] lines = Html2DisplayLine(s, GlobalStatic.Console.StrMeasure, null);
 		int len = 0;
 		if (lines.Length <= 0) return 0;
 		foreach (var btn in lines[0].Buttons) len += btn.Width;
@@ -74,8 +76,8 @@ internal static class HtmlManager
 
 		public HTMLI(string v1, bool v2) : this()
 		{
-			this.tag = v1;
-			this.isStyleTag = v2;
+			tag = v1;
+			isStyleTag = v2;
 		}
 	};
 	public static string[] HtmlSubString(string str, int length)
@@ -138,7 +140,7 @@ internal static class HtmlManager
 	public static void ParseParam4IntNum(ref int[] nums, string tag, string word, string attrValue)
 	{
 		if (nums == null) nums = new int[4];
-		else throw new CodeEE(string.Format(Lang.Error.DuplicateAttribute.Text, tag, word));
+		else throw new CodeEE(string.Format(trerror.DuplicateAttribute.Text, tag, word));
 		string[] tokens = attrValue.Split(',');
 		switch (tokens.Length)
 		{
@@ -165,7 +167,7 @@ internal static class HtmlManager
 					nums[i] = stringToColorInt32(tokens[i].Trim());
 				break;
 			default:
-				throw new CodeEE(string.Format(Lang.Error.CanNotInterpretAttribute.Text, attrValue));
+				throw new CodeEE(string.Format(trerror.CanNotInterpretAttribute.Text, attrValue));
 		}
 	}
 	#endregion
@@ -217,7 +219,7 @@ internal static class HtmlManager
 	{
 		public bool IsButton = true;
 		public bool IsButtonTag = true;
-		public Int64 ButtonValueInt;
+		public long ButtonValueInt;
 		public string ButtonValueStr;
 		public string ButtonTitle;
 		public bool ButtonIsInteger;
@@ -272,11 +274,11 @@ internal static class HtmlManager
 				if (font.Color >= 0)
 				{
 					colorChanged = true;
-					c = Color.FromArgb(font.Color >> 16, (font.Color >> 8) & 0xFF, font.Color & 0xFF);
+					c = Color.FromArgb(font.Color >> 16, font.Color >> 8 & 0xFF, font.Color & 0xFF);
 				}
 				if (font.BColor >= 0)
 				{
-					b = Color.FromArgb(font.BColor >> 16, (font.BColor >> 8) & 0xFF, font.BColor & 0xFF);
+					b = Color.FromArgb(font.BColor >> 16, font.BColor >> 8 & 0xFF, font.BColor & 0xFF);
 				}
 			}
 			return new StringStyle(c, colorChanged, b, FontStyle, fontname);
@@ -784,7 +786,7 @@ internal static class HtmlManager
 	}
 	private static string getStringStyleStartingTag(StringStyle style)
 	{
-		bool fontChanged = !((style.Fontname == null || style.Fontname == Config.FontName) && !style.ColorChanged && (style.ButtonColor == Config.FocusColor));
+		bool fontChanged = !((style.Fontname == null || style.Fontname == Config.FontName) && !style.ColorChanged && style.ButtonColor == Config.FocusColor);
 		if (!fontChanged && style.FontStyle == FontStyle.Regular)
 			return "";
 		StringBuilder b = new();
@@ -794,7 +796,7 @@ internal static class HtmlManager
 			if (style.Fontname != null && style.Fontname != Config.FontName)
 			{
 				b.Append(" face='");
-				b.Append(HtmlManager.Escape(style.Fontname));
+				b.Append(Escape(style.Fontname));
 				b.Append("'");
 			}
 			if (style.ColorChanged)
@@ -830,7 +832,7 @@ internal static class HtmlManager
 
 	private static string getClosingStyleStartingTag(StringStyle style)
 	{
-		bool fontChanged = !((style.Fontname == null || style.Fontname == Config.FontName) && !style.ColorChanged && (style.ButtonColor == Config.FocusColor));
+		bool fontChanged = !((style.Fontname == null || style.Fontname == Config.FontName) && !style.ColorChanged && style.ButtonColor == Config.FocusColor);
 		if (!fontChanged && style.FontStyle == FontStyle.Regular)
 			return "";
 		StringBuilder b = new();
@@ -877,12 +879,12 @@ internal static class HtmlManager
 					state.FontStyle ^= endStyle;
 					return null;
 				case "p":
-					if ((!state.FlagP) || state.FlagPClosed)
+					if (!state.FlagP || state.FlagPClosed)
 						throw new CodeEE(string.Format(trerror.UnexpectedCloseTag.Text, "p"));
 					state.FlagPClosed = true;
 					return null;
 				case "nobr":
-					if ((!state.FlagNobr) || state.FlagNobrClosed)
+					if (!state.FlagNobr || state.FlagNobrClosed)
 						throw new CodeEE(string.Format(trerror.UnexpectedCloseTag.Text, "nobr"));
 					state.FlagNobrClosed = true;
 					return null;
@@ -1051,15 +1053,15 @@ internal static class HtmlManager
 						}
 						else if (word.Code.Equals("height", StringComparison.OrdinalIgnoreCase))
 						{
-							Utils.ParseMixedNum(ref height, tag, word.Code, attrValue);
+							ParseMixedNum(ref height, tag, word.Code, attrValue);
 						}
 						else if (word.Code.Equals("width", StringComparison.OrdinalIgnoreCase))
 						{
-							Utils.ParseMixedNum(ref width, tag, word.Code, attrValue);
+							ParseMixedNum(ref width, tag, word.Code, attrValue);
 						}
 						else if (word.Code.Equals("ypos", StringComparison.OrdinalIgnoreCase))
 						{
-							Utils.ParseMixedNum(ref ypos, tag, word.Code, attrValue);
+							ParseMixedNum(ref ypos, tag, word.Code, attrValue);
 						}
 						else
 							throw new CodeEE(string.Format(trerror.CanNotInterpretAttributeName.Text, tag, word.Code));
@@ -1096,26 +1098,26 @@ internal static class HtmlManager
 						attrValue = Unescape(attr.Str);
 						if (word.Code.Equals("height", StringComparison.OrdinalIgnoreCase))
 						{
-							Utils.ParseMixedNum(ref height, tag, word.Code, attrValue);
+							ParseMixedNum(ref height, tag, word.Code, attrValue);
 						}
 						else if (word.Code.Equals("width", StringComparison.OrdinalIgnoreCase))
 						{
-							Utils.ParseMixedNum(ref width, tag, word.Code, attrValue);
+							ParseMixedNum(ref width, tag, word.Code, attrValue);
 						}
 						else if (word.Code.Equals("ypos", StringComparison.OrdinalIgnoreCase))
 						{
-							Utils.ParseMixedNum(ref y, tag, word.Code, attrValue);
+							ParseMixedNum(ref y, tag, word.Code, attrValue);
 						}
 						else if (word.Code.Equals("xpos", StringComparison.OrdinalIgnoreCase))
 						{
-							Utils.ParseMixedNum(ref x, tag, word.Code, attrValue);
+							ParseMixedNum(ref x, tag, word.Code, attrValue);
 						}
 						else if (word.Code.Equals("depth", StringComparison.OrdinalIgnoreCase))
 						{
 							if (depth != 0)
-								throw new CodeEE(string.Format(Lang.Error.AttributeCanNotInterpretNum.Text, tag, attr));
+								throw new CodeEE(string.Format(trerror.AttributeCanNotInterpretNum.Text, tag, attr));
 							if (!int.TryParse(attrValue, out depth))
-								throw new CodeEE(string.Format(Lang.Error.AttributeCanNotInterpretNum.Text, tag, attr));
+								throw new CodeEE(string.Format(trerror.AttributeCanNotInterpretNum.Text, tag, attr));
 						}
 						else if (word.Code.Equals("color", StringComparison.OrdinalIgnoreCase))
 						{
@@ -1133,8 +1135,8 @@ internal static class HtmlManager
 								tokens[i] = tokens[i].Trim();
 								switch (i)
 								{
-									case 0: Utils.ParseMixedNum(ref width, tag, "width", tokens[i]); break;
-									case 1: Utils.ParseMixedNum(ref height, tag, "height", tokens[i]); break;
+									case 0: ParseMixedNum(ref width, tag, "width", tokens[i]); break;
+									case 1: ParseMixedNum(ref height, tag, "height", tokens[i]); break;
 								}
 							}
 						}
@@ -1148,24 +1150,24 @@ internal static class HtmlManager
 								tokens[i] = tokens[i].Trim();
 								switch (i)
 								{
-									case 0: Utils.ParseMixedNum(ref x, tag, "xpos", tokens[i]); break;
-									case 1: Utils.ParseMixedNum(ref y, tag, "ypos", tokens[i]); break;
-									case 2: Utils.ParseMixedNum(ref width, tag, "width", tokens[i]); break;
-									case 3: Utils.ParseMixedNum(ref height, tag, "height", tokens[i]); break;
+									case 0: ParseMixedNum(ref x, tag, "xpos", tokens[i]); break;
+									case 1: ParseMixedNum(ref y, tag, "ypos", tokens[i]); break;
+									case 2: ParseMixedNum(ref width, tag, "width", tokens[i]); break;
+									case 3: ParseMixedNum(ref height, tag, "height", tokens[i]); break;
 								}
 							}
 						}
 						else if (word.Code.Equals("bcolor", StringComparison.OrdinalIgnoreCase))
 						{
-							ParseParam4IntNum(ref Utils.CreateIfNull(ref box).color, tag, word.Code, attrValue);
+							ParseParam4IntNum(ref CreateIfNull(ref box).color, tag, word.Code, attrValue);
 						}
 						else if (word.Code.Equals("display", StringComparison.OrdinalIgnoreCase))
 						{
 							if (attrValue.Equals("absolute", StringComparison.OrdinalIgnoreCase)) isRelative = false;
 							else if (attrValue.Equals("relative", StringComparison.OrdinalIgnoreCase)) isRelative = true;
-							else throw new CodeEE(string.Format(Lang.Error.CanNotInterpretAttribute.Text, attrValue));
+							else throw new CodeEE(string.Format(trerror.CanNotInterpretAttribute.Text, attrValue));
 						}
-						else if (!Utils.TryParseStyledBoxModel(ref box, tag, word.Code, attrValue))
+						else if (!TryParseStyledBoxModel(ref box, tag, word.Code, attrValue))
 							throw new CodeEE(string.Format(trerror.CanNotInterpretAttributeName.Text, tag, word.Code));
 					}
 					if (width == null)
@@ -1251,11 +1253,11 @@ internal static class HtmlManager
 					Color b = Config.FocusColor;
 					if (color >= 0)
 					{
-						c = Color.FromArgb(color >> 16, (color >> 8) & 0xFF, color & 0xFF);
+						c = Color.FromArgb(color >> 16, color >> 8 & 0xFF, color & 0xFF);
 					}
 					if (bcolor >= 0)
 					{
-						b = Color.FromArgb(bcolor >> 16, (bcolor >> 8) & 0xFF, bcolor & 0xFF);
+						b = Color.FromArgb(bcolor >> 16, bcolor >> 8 & 0xFF, bcolor & 0xFF);
 					}
 					return ConsoleShapePart.CreateShape(type, param, c, b, color >= 0);
 					#endregion
@@ -1325,7 +1327,7 @@ internal static class HtmlManager
 						{
 							//if (value == null)
 							//	throw new CodeEE("<" + tag + ">タグにvalue属性が設定されていません");
-							buttonTag.ButtonIsInteger = Int64.TryParse(value, out long intValue);
+							buttonTag.ButtonIsInteger = long.TryParse(value, out long intValue);
 							buttonTag.ButtonValueInt = intValue;
 							buttonTag.ButtonValueStr = value;
 						}

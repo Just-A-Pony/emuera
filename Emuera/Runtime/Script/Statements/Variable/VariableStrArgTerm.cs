@@ -1,10 +1,9 @@
-﻿using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.Sub;
-using System;
+﻿using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Utils;
 using System.Collections.Generic;
-using trerror = EvilMask.Emuera.Lang.Error;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.GameData.Variable;
+namespace MinorShift.Emuera.Runtime.Script.Statements.Variable;
 
 //変数の引数のうち文字列型のもの。
 internal sealed class VariableStrArgTerm : AExpression
@@ -13,7 +12,7 @@ internal sealed class VariableStrArgTerm : AExpression
 	// public VariableStrArgTerm(VariableCode code, IOperandTerm strTerm, int index)
 	public VariableStrArgTerm(VariableCode code, AExpression strTerm, int index, string varname)
 	#endregion
-		: base(typeof(Int64))
+		: base(typeof(long))
 	{
 		this.strTerm = strTerm;
 		parentCode = code;
@@ -32,7 +31,7 @@ internal sealed class VariableStrArgTerm : AExpression
 	Dictionary<string, int> dic;
 	string errPos;
 
-	public override Int64 GetIntValue(ExpressionMediator exm)
+	public override long GetIntValue(ExpressionMediator exm)
 	{
 		if (dic == null)
 			#region EE_ERD
@@ -68,6 +67,6 @@ internal sealed class VariableStrArgTerm : AExpression
 		strTerm = strTerm.Restructure(exm);
 		if (!(strTerm is SingleTerm))
 			return this;
-		return new SingleLongTerm(this.GetIntValue(exm));
+		return new SingleLongTerm(GetIntValue(exm));
 	}
 }

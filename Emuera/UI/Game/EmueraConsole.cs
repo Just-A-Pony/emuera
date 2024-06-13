@@ -1,17 +1,20 @@
-﻿using Emuera;
-using EvilMask.Emuera;
-using MinorShift.Emuera.Content;
-//using System.Drawing.Imaging;
+﻿//using System.Drawing.Imaging;
 using MinorShift.Emuera.Forms;
-using MinorShift.Emuera.GameData.Expression;
 //using MinorShift.Emuera.GameData;
-using MinorShift.Emuera.GameProc;
 using MinorShift.Emuera.GameProc.Function;
+using MinorShift.Emuera.Runtime;
+
 //using System.Diagnostics.Eventing.Reader;
 //using System.Linq.Expressions;
 //using System.Windows;
 using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
+using MinorShift.Emuera.Runtime.Script.Parser;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
+using MinorShift.Emuera.UI.Game;
+using MinorShift.Emuera.UI.Game.Image;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,9 +25,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using trerror = EvilMask.Emuera.Lang.Error;
-using trmb = EvilMask.Emuera.Lang.MessageBox;
-using trsl = EvilMask.Emuera.Lang.SystemLine;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
+using trmb = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.MessageBox;
+using trsl = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.SystemLine;
 
 
 namespace MinorShift.Emuera.GameView;
@@ -2256,7 +2259,7 @@ internal sealed partial class EmueraConsole : IDisposable
 							continue;
 						if ((button.PointX <= pointX) && (button.PointX + button.Width >= pointX))
 						{
-							//if (relPointY >= 0 && relPointY <= Config.FontSize)
+							//if (relPointY >= 0 && relPointY <= Config.Config.FontSize)
 							//{
 							//	pointing = button;
 							//	if(pointing.IsButton)

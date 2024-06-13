@@ -1,12 +1,13 @@
-﻿using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
-using System;
+﻿using MinorShift.Emuera.GameView;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 
-namespace MinorShift.Emuera.GameView;
+namespace MinorShift.Emuera.UI.Game;
 
 /// <summary>
 /// ボタン。1つ以上の装飾付文字列（ConsoleStyledString）からなる。
@@ -27,17 +28,17 @@ internal sealed class ConsoleButtonString
 	}
 	public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs)
 	{
-		this.parent = console;
-		this.strArray = strs;
+		parent = console;
+		strArray = strs;
 		IsButton = false;
 		PointX = -1;
 		Width = -1;
 		ErrPos = null;
 	}
-	public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, Int64 input)
+	public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, long input)
 		: this(console, strs)
 	{
-		this.Input = input;
+		Input = input;
 		Inputs = input.ToString();
 		IsButton = true;
 		IsInteger = true;
@@ -52,7 +53,7 @@ internal sealed class ConsoleButtonString
 	public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, string inputs)
 		: this(console, strs)
 	{
-		this.Inputs = inputs;
+		Inputs = inputs;
 		IsButton = true;
 		IsInteger = false;
 		getLastImg();
@@ -64,11 +65,11 @@ internal sealed class ConsoleButtonString
 		ErrPos = null;
 	}
 
-	public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, Int64 input, string inputs)
+	public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, long input, string inputs)
 		: this(console, strs)
 	{
-		this.Input = input;
-		this.Inputs = inputs;
+		Input = input;
+		Inputs = inputs;
 		IsButton = true;
 		IsInteger = true;
 		getLastImg();
@@ -82,7 +83,7 @@ internal sealed class ConsoleButtonString
 	public ConsoleButtonString(EmueraConsole console, AConsoleDisplayPart[] strs, string inputs, ScriptPosition? pos)
 		: this(console, strs)
 	{
-		this.Inputs = inputs;
+		Inputs = inputs;
 		IsButton = true;
 		IsInteger = false;
 		getLastImg();
@@ -93,13 +94,13 @@ internal sealed class ConsoleButtonString
 		}
 		ErrPos = pos;
 	}
-	public Int64 GetMappedColor(int pointX, int pointY)
+	public long GetMappedColor(int pointX, int pointY)
 	{
 		if (mask != null)
 		{
 			var offsetX = pointX - PointX - mask.PointX - Config.DrawingParam_ShapePositionShift;
 			var offsetY = pointY - parent.GetLinePointY(ParentLine.LineNo) - mask.Top;
-			if (offsetX > 0 && offsetX < mask.Width && offsetY > 0 && offsetY < (mask.Bottom - mask.Top))
+			if (offsetX > 0 && offsetX < mask.Width && offsetY > 0 && offsetY < mask.Bottom - mask.Top)
 				return mask.GetMappingColor(offsetX, offsetY);
 		}
 		return 0;
@@ -118,13 +119,13 @@ internal sealed class ConsoleButtonString
 	public ConsoleDisplayLine ParentLine { get; set; }
 	public bool IsButton { get; private set; }
 	public bool IsInteger { get; private set; }
-	public Int64 Input { get; private set; }
+	public long Input { get; private set; }
 	public string Inputs { get; private set; }
 	public int PointX { get; set; }
 	public bool PointXisLocked { get; set; }
 	public int Width { get; set; }
 	public float XsubPixel { get; set; }
-	public Int64 Generation { get; private set; }
+	public long Generation { get; private set; }
 	public ScriptPosition? ErrPos { get; set; }
 	public string Title { get; set; }
 
@@ -133,7 +134,7 @@ internal sealed class ConsoleButtonString
 	public void LockPointX(int rel_px)
 	{
 		PointX = rel_px * Config.FontSize / 100;
-		XsubPixel = (rel_px * Config.FontSize / 100.0f) - PointX;
+		XsubPixel = rel_px * Config.FontSize / 100.0f - PointX;
 		PointXisLocked = true;
 		RelativePointX = rel_px;
 	}
@@ -194,34 +195,34 @@ internal sealed class ConsoleButtonString
 			index += length;
 			cssListA.Add(strArray[cssIndex]);
 		}
-		if ((cssIndex >= strArray.Length) && (cssListB.Count == 0))
+		if (cssIndex >= strArray.Length && cssListB.Count == 0)
 			return null;
 		AConsoleDisplayPart[] cssArrayA = new AConsoleDisplayPart[cssListA.Count];
 		AConsoleDisplayPart[] cssArrayB = new AConsoleDisplayPart[cssListB.Count];
 		cssListA.CopyTo(cssArrayA);
 		cssListB.CopyTo(cssArrayB);
-		this.strArray = cssArrayA;
+		strArray = cssArrayA;
 		ConsoleButtonString ret = new(null, cssArrayB);
-		this.CalcWidth(sm, XsubPixel);
+		CalcWidth(sm, XsubPixel);
 		ret.CalcWidth(sm, 0);
-		this.CalcPointX(this.PointX);
-		ret.CalcPointX(this.PointX + this.Width);
-		ret.parent = this.parent;
-		ret.ParentLine = this.ParentLine;
-		ret.IsButton = this.IsButton;
-		ret.IsInteger = this.IsInteger;
-		ret.Input = this.Input;
-		ret.Inputs = this.Inputs;
-		ret.Generation = this.Generation;
-		ret.ErrPos = this.ErrPos;
-		ret.Title = this.Title;
+		CalcPointX(PointX);
+		ret.CalcPointX(PointX + Width);
+		ret.parent = parent;
+		ret.ParentLine = ParentLine;
+		ret.IsButton = IsButton;
+		ret.IsInteger = IsInteger;
+		ret.Input = Input;
+		ret.Inputs = Inputs;
+		ret.Generation = Generation;
+		ret.ErrPos = ErrPos;
+		ret.Title = Title;
 		return ret;
 	}
 
 	public void CalcWidth(StringMeasure sm, float subpixel)
 	{
 		Width = -1;
-		if ((strArray != null) && (strArray.Length > 0))
+		if (strArray != null && strArray.Length > 0)
 		{
 			Width = 0;
 			foreach (AConsoleDisplayPart css in strArray)
@@ -259,7 +260,7 @@ internal sealed class ConsoleButtonString
 		if (strArray.Length > 0)
 		{
 			PointX = strArray[0].PointX;
-			Width = strArray[^1].PointX + strArray[^1].Width - this.PointX;
+			Width = strArray[^1].PointX + strArray[^1].Width - PointX;
 			//if (Width < 0)
 			//	Width = -1;
 		}
@@ -280,11 +281,11 @@ internal sealed class ConsoleButtonString
 		//	css.DrawTo(graph, pointY, isSelecting, isBackLog, mode);
 
 		//Bitmap Cache
-		if (this.ParentLine.bitmapCacheEnabled && strArray.Length > 1)
+		if (ParentLine.bitmapCacheEnabled && strArray.Length > 1)
 		{
 			if (bitmapCache == null)
 			{
-				int width = this.Width + 1;
+				int width = Width + 1;
 				//^ Without +1, some things get cropped. I don't know why, probably a bug somewhere.
 				//TODO
 				int height = Config.FontSize;

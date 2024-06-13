@@ -1,8 +1,8 @@
-﻿using DotnetEmuera;
-using EvilMask.Emuera;
-using MinorShift._Library;
-using MinorShift.Emuera.GameProc.Function;
+﻿using MinorShift.Emuera.GameProc.Function;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Config.JSON;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
 using System;
 using System.Collections.Generic;
 using System.CommandLine;
@@ -227,7 +227,7 @@ static partial class Program
 				//if ((File.GetAttributes(args[i]) & FileAttributes.Directory) == FileAttributes.Directory)
 				if ((File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory)
 				{
-					//List<KeyValuePair<string, string>> fnames = Config.GetFiles(args[i] + "\\", "*.ERB");
+					//List<KeyValuePair<string, string>> fnames = Config.Config.GetFiles(args[i] + "\\", "*.ERB");
 					List<KeyValuePair<string, string>> fnames = Config.GetFiles(path + "\\", "*.ERB");
 					for (int j = 0; j < fnames.Count; j++)
 					{

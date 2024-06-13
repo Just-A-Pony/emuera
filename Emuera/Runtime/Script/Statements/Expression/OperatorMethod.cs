@@ -1,14 +1,12 @@
-﻿using EvilMask.Emuera;
-using MinorShift.Emuera.GameData.Function;
-using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
-using System;
+﻿using MinorShift.Emuera.Runtime.Script.Statements.Function;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
 using System.Collections.Generic;
 using System.Text;
-using trerror = EvilMask.Emuera.Lang.Error;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.GameData.Expression;
+namespace MinorShift.Emuera.Runtime.Script.Statements.Expression;
 
 /// <summary>
 /// 引数のチェック、戻り値の型チェック等は全て呼び出し元が責任を負うこと。
@@ -91,7 +89,7 @@ internal static class OperatorMethodManager
 			if (var.Identifier.IsConst)
 				throw new CodeEE(trerror.IncrementConst.Text);
 		}
-		if (o1.GetOperandType() == typeof(Int64))
+		if (o1.GetOperandType() == typeof(long))
 		{
 			if (op == OperatorCode.Plus)
 				return o1;
@@ -101,7 +99,7 @@ internal static class OperatorMethodManager
 		if (method != null)
 			return new FunctionMethodTerm(method, [o1]);
 		string errMes;
-		if (o1.GetOperandType() == typeof(Int64))
+		if (o1.GetOperandType() == typeof(long))
 			errMes = trerror.NumericType.Text;
 		else if (o1.GetOperandType() == typeof(string))
 			errMes = trerror.StringType.Text;
@@ -121,7 +119,7 @@ internal static class OperatorMethodManager
 			if (var.Identifier.IsConst)
 				throw new CodeEE(trerror.IncrementConst.Text);
 		}
-		if (o1.GetOperandType() == typeof(Int64))
+		if (o1.GetOperandType() == typeof(long))
 		{
 			if (unaryAfterDic.TryGetValue(op, out OperatorMethod value))
 				method = value;
@@ -129,7 +127,7 @@ internal static class OperatorMethodManager
 		if (method != null)
 			return new FunctionMethodTerm(method, [o1]);
 		string errMes;
-		if (o1.GetOperandType() == typeof(Int64))
+		if (o1.GetOperandType() == typeof(long))
 			errMes = trerror.NumericType.Text;
 		else if (o1.GetOperandType() == typeof(string))
 			errMes = trerror.StringType.Text;
@@ -142,18 +140,18 @@ internal static class OperatorMethodManager
 	public static AExpression ReduceBinaryTerm(OperatorCode op, AExpression left, AExpression right)
 	{
 		OperatorMethod method = null;
-		if ((left.GetOperandType() == typeof(Int64)) && (right.GetOperandType() == typeof(Int64)))
+		if (left.GetOperandType() == typeof(long) && right.GetOperandType() == typeof(long))
 		{
 			if (binaryIntIntDic.TryGetValue(op, out OperatorMethod value))
 				method = value;
 		}
-		else if ((left.GetOperandType() == typeof(string)) && (right.GetOperandType() == typeof(string)))
+		else if (left.GetOperandType() == typeof(string) && right.GetOperandType() == typeof(string))
 		{
 			if (binaryStrStrDic.TryGetValue(op, out OperatorMethod value))
 				method = value;
 		}
-		else if (((left.GetOperandType() == typeof(Int64)) && (right.GetOperandType() == typeof(string)))
-			 || ((left.GetOperandType() == typeof(string)) && (right.GetOperandType() == typeof(Int64))))
+		else if (left.GetOperandType() == typeof(long) && right.GetOperandType() == typeof(string)
+			 || left.GetOperandType() == typeof(string) && right.GetOperandType() == typeof(long))
 		{
 			if (op == OperatorCode.Mult)
 				method = binaryMultIntStr;
@@ -161,13 +159,13 @@ internal static class OperatorMethodManager
 		if (method != null)
 			return new FunctionMethodTerm(method, [left, right]);
 		string typeName1, typeName2, errMes;
-		if (left.GetOperandType() == typeof(Int64))
+		if (left.GetOperandType() == typeof(long))
 			typeName1 = trerror.NumericType.Text;
 		else if (left.GetOperandType() == typeof(string))
 			typeName1 = trerror.StringType.Text;
 		else
 			typeName1 = trerror.UnknownType.Text;
-		if (right.GetOperandType() == typeof(Int64))
+		if (right.GetOperandType() == typeof(long))
 			typeName2 = trerror.NumericType.Text;
 		else if (right.GetOperandType() == typeof(string))
 			typeName2 = trerror.StringType.Text;
@@ -180,9 +178,9 @@ internal static class OperatorMethodManager
 	public static AExpression ReduceTernaryTerm(AExpression o1, AExpression o2, AExpression o3)
 	{
 		OperatorMethod method = null;
-		if ((o1.GetOperandType() == typeof(Int64)) && (o2.GetOperandType() == typeof(Int64)) && (o3.GetOperandType() == typeof(Int64)))
+		if (o1.GetOperandType() == typeof(long) && o2.GetOperandType() == typeof(long) && o3.GetOperandType() == typeof(long))
 			method = ternaryIntIntInt;
-		else if ((o1.GetOperandType() == typeof(Int64)) && (o2.GetOperandType() == typeof(string)) && (o3.GetOperandType() == typeof(string)))
+		else if (o1.GetOperandType() == typeof(long) && o2.GetOperandType() == typeof(string) && o3.GetOperandType() == typeof(string))
 			method = ternaryIntStrStr;
 		if (method != null)
 			return new FunctionMethodTerm(method, [o1, o2, o3]);
@@ -197,10 +195,10 @@ internal static class OperatorMethodManager
 		public PlusIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return arguments[0].GetIntValue(exm) + arguments[1].GetIntValue(exm);
 		}
@@ -226,10 +224,10 @@ internal static class OperatorMethodManager
 		public MinusIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return arguments[0].GetIntValue(exm) - arguments[1].GetIntValue(exm);
 		}
@@ -240,10 +238,10 @@ internal static class OperatorMethodManager
 		public MultIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return arguments[0].GetIntValue(exm) * arguments[1].GetIntValue(exm);
 		}
@@ -260,7 +258,7 @@ internal static class OperatorMethodManager
 		{
 			string str;
 			long value;
-			if (arguments[0].GetOperandType() == typeof(Int64))
+			if (arguments[0].GetOperandType() == typeof(long))
 			{
 				value = arguments[0].GetIntValue(exm);
 				str = arguments[1].GetStrValue(exm);
@@ -274,7 +272,7 @@ internal static class OperatorMethodManager
 				throw new CodeEE(string.Format(trerror.MultiplyNegativeToStr.Text, value.ToString()));
 			if (value >= 10000)
 				throw new CodeEE(string.Format(trerror.Multiply10kToStr.Text, value.ToString()));
-			if (string.IsNullOrEmpty(str) || (value == 0))
+			if (string.IsNullOrEmpty(str) || value == 0)
 				return "";
 			StringBuilder builder = new()
 			{
@@ -293,12 +291,12 @@ internal static class OperatorMethodManager
 		public DivIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			Int64 right = arguments[1].GetIntValue(exm);
+			long right = arguments[1].GetIntValue(exm);
 			if (right == 0)
 				throw new CodeEE(trerror.DivideByZero.Text);
 			return arguments[0].GetIntValue(exm) / right;
@@ -310,12 +308,12 @@ internal static class OperatorMethodManager
 		public ModIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			Int64 right = arguments[1].GetIntValue(exm);
+			long right = arguments[1].GetIntValue(exm);
 			if (right == 0)
 				throw new CodeEE(trerror.DivideByZero.Text);
 			return arguments[0].GetIntValue(exm) % right;
@@ -328,10 +326,10 @@ internal static class OperatorMethodManager
 		public EqualIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (arguments[0].GetIntValue(exm) == arguments[1].GetIntValue(exm))
 				return 1L;
@@ -345,10 +343,10 @@ internal static class OperatorMethodManager
 		public EqualStrStr()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (arguments[0].GetStrValue(exm) == arguments[1].GetStrValue(exm))
 				return 1L;
@@ -361,10 +359,10 @@ internal static class OperatorMethodManager
 		public NotEqualIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (arguments[0].GetIntValue(exm) != arguments[1].GetIntValue(exm))
 				return 1L;
@@ -377,9 +375,9 @@ internal static class OperatorMethodManager
 		public NotEqualStrStr()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (arguments[0].GetStrValue(exm) != arguments[1].GetStrValue(exm))
 				return 1L;
@@ -393,10 +391,10 @@ internal static class OperatorMethodManager
 		public GreaterIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (arguments[0].GetIntValue(exm) > arguments[1].GetIntValue(exm))
 				return 1L;
@@ -409,11 +407,11 @@ internal static class OperatorMethodManager
 		public GreaterStrStr()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			int c = string.Compare(arguments[0].GetStrValue(exm), arguments[1].GetStrValue(exm), Config.SCExpression);
+			int c = string.Compare(arguments[0].GetStrValue(exm), arguments[1].GetStrValue(exm), Config.Config.SCExpression);
 			if (c > 0)
 				return 1L;
 			return 0L;
@@ -424,10 +422,10 @@ internal static class OperatorMethodManager
 		public LessIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (arguments[0].GetIntValue(exm) < arguments[1].GetIntValue(exm))
 				return 1L;
@@ -439,11 +437,11 @@ internal static class OperatorMethodManager
 		public LessStrStr()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			int c = string.Compare(arguments[0].GetStrValue(exm), arguments[1].GetStrValue(exm), Config.SCExpression);
+			int c = string.Compare(arguments[0].GetStrValue(exm), arguments[1].GetStrValue(exm), Config.Config.SCExpression);
 			if (c < 0)
 				return 1L;
 			return 0L;
@@ -456,10 +454,10 @@ internal static class OperatorMethodManager
 		public GreaterEqualIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (arguments[0].GetIntValue(exm) >= arguments[1].GetIntValue(exm))
 				return 1L;
@@ -472,11 +470,11 @@ internal static class OperatorMethodManager
 		public GreaterEqualStrStr()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			int c = string.Compare(arguments[0].GetStrValue(exm), arguments[1].GetStrValue(exm), Config.SCExpression);
+			int c = string.Compare(arguments[0].GetStrValue(exm), arguments[1].GetStrValue(exm), Config.Config.SCExpression);
 			if (c < 0)
 				return 1L;
 			return 0L;
@@ -487,10 +485,10 @@ internal static class OperatorMethodManager
 		public LessEqualIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (arguments[0].GetIntValue(exm) <= arguments[1].GetIntValue(exm))
 				return 1L;
@@ -503,11 +501,11 @@ internal static class OperatorMethodManager
 		public LessEqualStrStr()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			int c = string.Compare(arguments[0].GetStrValue(exm), arguments[1].GetStrValue(exm), Config.SCExpression);
+			int c = string.Compare(arguments[0].GetStrValue(exm), arguments[1].GetStrValue(exm), Config.Config.SCExpression);
 			if (c < 0)
 				return 1L;
 			return 0L;
@@ -519,12 +517,12 @@ internal static class OperatorMethodManager
 		public AndIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			if ((arguments[0].GetIntValue(exm) != 0) && (arguments[1].GetIntValue(exm) != 0))
+			if (arguments[0].GetIntValue(exm) != 0 && arguments[1].GetIntValue(exm) != 0)
 				return 1L;
 			return 0L;
 		}
@@ -536,12 +534,12 @@ internal static class OperatorMethodManager
 		public OrIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			if ((arguments[0].GetIntValue(exm) != 0) || (arguments[1].GetIntValue(exm) != 0))
+			if (arguments[0].GetIntValue(exm) != 0 || arguments[1].GetIntValue(exm) != 0)
 				return 1L;
 			return 0L;
 		}
@@ -552,14 +550,14 @@ internal static class OperatorMethodManager
 		public XorIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			Int64 i1 = arguments[0].GetIntValue(exm);
-			Int64 i2 = arguments[1].GetIntValue(exm);
-			if (((i1 == 0) && (i2 != 0)) || ((i1 != 0) && (i2 == 0)))
+			long i1 = arguments[0].GetIntValue(exm);
+			long i2 = arguments[1].GetIntValue(exm);
+			if (i1 == 0 && i2 != 0 || i1 != 0 && i2 == 0)
 				return 1L;
 			return 0L;
 		}
@@ -571,12 +569,12 @@ internal static class OperatorMethodManager
 		public NandIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			if ((arguments[0].GetIntValue(exm) == 0) || (arguments[1].GetIntValue(exm) == 0))
+			if (arguments[0].GetIntValue(exm) == 0 || arguments[1].GetIntValue(exm) == 0)
 				return 1L;
 			return 0L;
 		}
@@ -588,12 +586,12 @@ internal static class OperatorMethodManager
 		public NorIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			if ((arguments[0].GetIntValue(exm) == 0) && (arguments[1].GetIntValue(exm) == 0))
+			if (arguments[0].GetIntValue(exm) == 0 && arguments[1].GetIntValue(exm) == 0)
 				return 1L;
 			return 0L;
 		}
@@ -604,10 +602,10 @@ internal static class OperatorMethodManager
 		public BitAndIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return arguments[0].GetIntValue(exm) & arguments[1].GetIntValue(exm);
 		}
@@ -618,10 +616,10 @@ internal static class OperatorMethodManager
 		public BitOrIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return arguments[0].GetIntValue(exm) | arguments[1].GetIntValue(exm);
 		}
@@ -632,10 +630,10 @@ internal static class OperatorMethodManager
 		public BitXorIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return arguments[0].GetIntValue(exm) ^ arguments[1].GetIntValue(exm);
 		}
@@ -646,12 +644,12 @@ internal static class OperatorMethodManager
 		public RightShiftIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			return arguments[0].GetIntValue(exm) >> (Int32)arguments[1].GetIntValue(exm);
+			return arguments[0].GetIntValue(exm) >> (int)arguments[1].GetIntValue(exm);
 		}
 	}
 
@@ -660,12 +658,12 @@ internal static class OperatorMethodManager
 		public LeftShiftIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			return arguments[0].GetIntValue(exm) << (Int32)arguments[1].GetIntValue(exm);
+			return arguments[0].GetIntValue(exm) << (int)arguments[1].GetIntValue(exm);
 		}
 	}
 
@@ -674,10 +672,10 @@ internal static class OperatorMethodManager
 		public PlusInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return arguments[0].GetIntValue(exm);
 		}
@@ -688,10 +686,10 @@ internal static class OperatorMethodManager
 		public MinusInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			long ret = arguments[0].GetIntValue(exm);
 			if (ret == long.MinValue)
@@ -707,10 +705,10 @@ internal static class OperatorMethodManager
 		public NotInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			if (arguments[0].GetIntValue(exm) == 0)
 				return 1L;
@@ -722,10 +720,10 @@ internal static class OperatorMethodManager
 		public BitNotInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			return ~arguments[0].GetIntValue(exm);
 		}
@@ -736,10 +734,10 @@ internal static class OperatorMethodManager
 		public IncrementInt()
 		{
 			CanRestructure = false;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm var = (VariableTerm)arguments[0];
 			return var.ChangeValue(1L, exm);
@@ -750,10 +748,10 @@ internal static class OperatorMethodManager
 		public DecrementInt()
 		{
 			CanRestructure = false;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm var = (VariableTerm)arguments[0];
 			return var.ChangeValue(-1L, exm);
@@ -764,10 +762,10 @@ internal static class OperatorMethodManager
 		public IncrementAfterInt()
 		{
 			CanRestructure = false;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm var = (VariableTerm)arguments[0];
 			return var.ChangeValue(1L, exm) - 1;
@@ -779,10 +777,10 @@ internal static class OperatorMethodManager
 		public DecrementAfterInt()
 		{
 			CanRestructure = false;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			VariableTerm var = (VariableTerm)arguments[0];
 			return var.ChangeValue(-1L, exm) + 1;
@@ -795,12 +793,12 @@ internal static class OperatorMethodManager
 		public TernaryIntIntInt()
 		{
 			CanRestructure = true;
-			ReturnType = typeof(Int64);
+			ReturnType = typeof(long);
 		}
 
-		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		public override long GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			return (arguments[0].GetIntValue(exm) != 0) ? arguments[1].GetIntValue(exm) : arguments[2].GetIntValue(exm);
+			return arguments[0].GetIntValue(exm) != 0 ? arguments[1].GetIntValue(exm) : arguments[2].GetIntValue(exm);
 		}
 	}
 
@@ -814,7 +812,7 @@ internal static class OperatorMethodManager
 
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			return (arguments[0].GetIntValue(exm) != 0) ? arguments[1].GetStrValue(exm) : arguments[2].GetStrValue(exm);
+			return arguments[0].GetIntValue(exm) != 0 ? arguments[1].GetStrValue(exm) : arguments[2].GetStrValue(exm);
 		}
 	}
 

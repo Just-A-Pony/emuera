@@ -1,4 +1,4 @@
-﻿namespace MinorShift.Emuera.GameProc.PluginSystem
+﻿namespace MinorShift.Emuera.Runtime.Utils.PluginSystem
 {
 	public interface IPluginMethod
 	{

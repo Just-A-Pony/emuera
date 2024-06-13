@@ -1,9 +1,13 @@
-﻿using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
+﻿using MinorShift.Emuera.Runtime;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Script;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.UI.Game;
+using MinorShift.Emuera.UI.Game.Image;
 using System;
 using System.Collections.Generic;
-using trerror = EvilMask.Emuera.Lang.Error;
-using trsl = EvilMask.Emuera.Lang.SystemLine;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
+using trsl = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.SystemLine;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -191,7 +195,7 @@ internal sealed partial class Process
 		//標準のタイトル画面
 		console.PrintBar();
 		console.NewLine();
-		console.Alignment = GameView.DisplayLineAlignment.CENTER;
+		console.Alignment = DisplayLineAlignment.CENTER;
 		console.PrintSingleLine(gamebase.ScriptTitle);
 		if (gamebase.ScriptVersion != 0)
 			console.PrintSingleLine(gamebase.ScriptVersionText);
@@ -199,7 +203,7 @@ internal sealed partial class Process
 		console.PrintSingleLine("(" + gamebase.ScriptYear + ")");
 		console.NewLine();
 		console.PrintSingleLine(gamebase.ScriptDetail);
-		console.Alignment = GameView.DisplayLineAlignment.LEFT;
+		console.Alignment = DisplayLineAlignment.LEFT;
 
 		console.PrintBar();
 		console.NewLine();
@@ -785,8 +789,8 @@ internal sealed partial class Process
 	}
 	void endSystemLoad()
 	{
-		Content.AppContents.UnloadTempLoadedConstImageNames();
-		Content.AppContents.UnloadTempLoadedGraphicsImageNames();
+		AppContents.UnloadTempLoadedConstImageNames();
+		AppContents.UnloadTempLoadedGraphicsImageNames();
 		state.SystemState = SystemStateCode.LoadData_CallEventLoad;
 		//EVENTLOADを呼び出してLoadData_CallEventLoadへ移行。
 		if (!callFunction("EVENTLOAD", false, true))

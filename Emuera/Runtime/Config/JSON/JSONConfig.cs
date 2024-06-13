@@ -1,10 +1,9 @@
 ﻿//新設したコンフィグ設定のロード、セーブ、公開を担当する。
-using MinorShift.Emuera;
 using System.IO;
 using System.Text.Json;
 
 
-namespace DotnetEmuera;
+namespace MinorShift.Emuera.Runtime.Config.JSON;
 static class JSONConfig
 {
 	public static JSONConfigData Data;

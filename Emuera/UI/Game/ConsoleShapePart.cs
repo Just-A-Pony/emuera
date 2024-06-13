@@ -2,9 +2,9 @@
 using System;
 using System.Drawing;
 using System.Text;
-using static EvilMask.Emuera.Utils;
+using static MinorShift.Emuera.Runtime.Utils.EvilMask.Utils;
 
-namespace MinorShift.Emuera.GameView;
+namespace MinorShift.Emuera.UI.Game;
 
 abstract class ConsoleShapePart : AConsoleColoredPart
 {
@@ -141,7 +141,7 @@ internal sealed class ConsoleRectangleShapePart : ConsoleShapePart
 	readonly RectangleF originalRectF;
 	bool visible;
 	Rectangle rect;
-	public override void DrawTo(System.Drawing.Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
+	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
 	{
 		if (!visible)
 			return;
@@ -160,7 +160,7 @@ internal sealed class ConsoleRectangleShapePart : ConsoleShapePart
 		rect.X = (int)(subPixel + originalRectF.X);
 		rect.Width = Width - rect.X;
 		rect.X += Config.DrawingParam_ShapePositionShift;
-		visible = rect.X >= 0 && rect.Width > 0;// && rect.Y >= 0 && (rect.Y + rect.Height) <= Config.FontSize);
+		visible = rect.X >= 0 && rect.Width > 0;// && rect.Y >= 0 && (rect.Y + rect.Height) <= Config.Config.FontSize);
 	}
 }
 
@@ -173,7 +173,7 @@ internal sealed class ConsoleSpacePart : ConsoleShapePart
 		//Width = width;
 	}
 
-	public override void DrawTo(System.Drawing.Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false) { }
+	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false) { }
 
 	public override void SetWidth(StringMeasure sm, float subPixel)
 	{
@@ -191,7 +191,7 @@ internal sealed class ConsoleErrorShapePart : ConsoleShapePart
 		AltText = errMes;
 	}
 
-	public override void DrawTo(System.Drawing.Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
+	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
 	{
 		if (mode == TextDrawingMode.GRAPHICS)
 			graph.DrawString(Str, Config.DefaultFont, new SolidBrush(Config.ForeColor), new Point(PointX, pointY));
@@ -200,7 +200,7 @@ internal sealed class ConsoleErrorShapePart : ConsoleShapePart
 	}
 	public override void SetWidth(StringMeasure sm, float subPixel)
 	{
-		if (this.Error)
+		if (Error)
 		{
 			Width = 0;
 			return;

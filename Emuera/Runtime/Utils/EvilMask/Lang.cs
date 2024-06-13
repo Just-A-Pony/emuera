@@ -1,12 +1,9 @@
-﻿
-using MinorShift.Emuera;
-using MinorShift.Emuera.Runtime.Config;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
-namespace EvilMask.Emuera;
+namespace MinorShift.Emuera.Runtime.Utils.EvilMask;
 
 internal sealed class Lang
 {
@@ -15,7 +12,7 @@ internal sealed class Lang
 		public TranslatableString(string text)
 		{
 			this.text = text;
-			this.tr = null;
+			tr = null;
 		}
 
 		public void Clear()
@@ -1322,7 +1319,7 @@ internal sealed class Lang
 					{
 						langList.Add(langName, path);
 						var fontName = node.InnerText.Trim();
-						if (Config.EmueraLang == langName)
+						if (Config.Config.EmueraLang == langName)
 							loadLangXML(xml);
 					}
 				}
@@ -1348,14 +1345,14 @@ internal sealed class Lang
 	}
 	static public void ReloadLang()
 	{
-		if (Config.EmueraLang == string.Empty)
+		if (Config.Config.EmueraLang == string.Empty)
 		{
 			foreach (var item in trItems) item.Value.Clear();
 			return;
 		}
-		if (langList.ContainsKey(Config.EmueraLang))
+		if (langList.ContainsKey(Config.Config.EmueraLang))
 		{
-			var path = langList[Config.EmueraLang];
+			var path = langList[Config.Config.EmueraLang];
 			XmlDocument xml = new XmlDocument();
 			try
 			{

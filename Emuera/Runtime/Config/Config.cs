@@ -1,13 +1,12 @@
-﻿using Emuera.UI;
-using MinorShift._Library;
-using MinorShift.Emuera.Sub;
+﻿using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.UI;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using trmb = EvilMask.Emuera.Lang.MessageBox;
+using trmb = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.MessageBox;
 
 namespace MinorShift.Emuera.Runtime.Config;
 

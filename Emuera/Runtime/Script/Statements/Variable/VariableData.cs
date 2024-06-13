@@ -1,11 +1,12 @@
-﻿using MinorShift.Emuera.GameProc;
-using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
+﻿using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Script.Data;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
+using MinorShift.Emuera.Runtime.Utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Xml;
-using trerror = EvilMask.Emuera.Lang.Error;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
 namespace MinorShift.Emuera.GameData.Variable;
 

@@ -1,8 +1,9 @@
-﻿using MinorShift.Emuera.Sub;
+﻿using MinorShift.Emuera.Runtime.Script.Parser;
+using MinorShift.Emuera.Runtime.Utils;
 using System.Collections.Generic;
-using trerror = EvilMask.Emuera.Lang.Error;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.GameProc;
+namespace MinorShift.Emuera.Runtime.Script.Data;
 
 internal enum UserDifinedFunctionDataArgType
 {
@@ -91,7 +92,7 @@ internal sealed class UserDefinedFunctionData
 						goto argend;
 					if (state == 4 || state == 5)
 					{
-						if ((int)(argType & UserDifinedFunctionDataArgType.__Dimention) == 0)
+						if ((argType & UserDifinedFunctionDataArgType.__Dimention) == 0)
 							throw new CodeEE(trerror.RefArgIsNotArray.Text, sc);
 						//state = 2;
 						argList.Add(argType);
@@ -124,7 +125,7 @@ internal sealed class UserDefinedFunctionData
 					}
 					if (state == 4 || state == 5)
 					{
-						if ((int)(argType & UserDifinedFunctionDataArgType.__Dimention) == 0)
+						if ((argType & UserDifinedFunctionDataArgType.__Dimention) == 0)
 							throw new CodeEE(trerror.RefArgIsNotArray.Text, sc);
 						state = 2;
 						argList.Add(argType);

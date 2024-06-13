@@ -1,12 +1,14 @@
 ﻿using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
+using MinorShift.Emuera.Runtime.Script.Data;
+using MinorShift.Emuera.Runtime.Script.Parser;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
+using MinorShift.Emuera.Runtime.Utils;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using trerror = EvilMask.Emuera.Lang.Error;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.GameData.Expression;
+namespace MinorShift.Emuera.Runtime.Script.Statements.Expression;
 
 internal enum ArgsEndWith
 {
@@ -115,7 +117,7 @@ internal static class ExpressionParser
 					}
 					else
 					{
-						if (terms[terms.Count - 1].GetOperandType() == typeof(Int64))
+						if (terms[terms.Count - 1].GetOperandType() == typeof(long))
 							terms.Add(new NullTerm(0));
 						else
 							terms.Add(new NullTerm(""));
@@ -163,7 +165,7 @@ internal static class ExpressionParser
 		AExpression term = reduceTerm(wc, false, endwith, VariableCode.__NULL__);
 		if (term == null)
 			throw new CodeEE(trerror.CanNotInterpretedExpression.Text);
-		if (term.GetOperandType() != typeof(Int64))
+		if (term.GetOperandType() != typeof(long))
 			throw new CodeEE(trerror.ExpressionResultIsNotNumeric.Text);
 		return term;
 	}
@@ -324,7 +326,7 @@ internal static class ExpressionParser
 	{
 		CaseExpression ret = new();
 		IdentifierWord id = wc.Current as IdentifierWord;
-		if ((id != null) && id.Code.Equals("IS", Config.StringComparison))
+		if (id != null && id.Code.Equals("IS", Config.Config.StringComparison))
 		{
 			wc.ShiftNext();
 			ret.CaseType = CaseExpressionType.Is;
@@ -347,7 +349,7 @@ internal static class ExpressionParser
 		if (ret.LeftTerm == null)
 			throw new CodeEE(trerror.CanNotOmitCaseArg.Text);
 		id = wc.Current as IdentifierWord;
-		if ((id != null) && id.Code.Equals("TO", Config.StringComparison))
+		if (id != null && id.Code.Equals("TO", Config.Config.StringComparison))
 		{
 			ret.CaseType = CaseExpressionType.To;
 			wc.ShiftNext();
@@ -355,7 +357,7 @@ internal static class ExpressionParser
 			if (ret.RightTerm == null)
 				throw new CodeEE(trerror.NoExpressionAfterTo.Text);
 			id = wc.Current as IdentifierWord;
-			if ((id != null) && id.Code.Equals("TO", Config.StringComparison))
+			if (id != null && id.Code.Equals("TO", Config.Config.StringComparison))
 				throw new CodeEE(trerror.DuplicateTo.Text);
 			if (ret.LeftTerm.GetOperandType() != ret.RightTerm.GetOperandType())
 				throw new CodeEE(trerror.DoesNotMatchTo.Text);
@@ -403,14 +405,14 @@ internal static class ExpressionParser
 				case 'A'://IdentifierWT
 					{
 						string idStr = (token as IdentifierWord).Code;
-						if (idStr.Equals("TO", Config.StringComparison))
+						if (idStr.Equals("TO", Config.Config.StringComparison))
 						{
 							if (allowKeywordTo)
 								return end(stack, ternaryCount);
 							else
 								throw new CodeEE(trerror.InvalidTo.Text);
 						}
-						else if (idStr.Equals("IS", Config.StringComparison))
+						else if (idStr.Equals("IS", Config.Config.StringComparison))
 							throw new CodeEE(trerror.InvalidIs.Text);
 
 						#region EM_私家版_HTMLパラメータ拡張
@@ -516,7 +518,7 @@ internal static class ExpressionParser
 		bool hasBefore;
 		bool hasAfter;
 		bool waitAfter;
-		Stack<Object> stack = new(5);
+		Stack<object> stack = new(5);
 		public void Add(OperatorCode op)
 		{
 			if (state == 2 || state == 3)
@@ -566,7 +568,7 @@ internal static class ExpressionParser
 				//直前の計算の優先度が同じか高いなら還元。
 				while (lastPriority() >= priority)
 				{
-					this.reduceLastThree();
+					reduceLastThree();
 				}
 				stack.Push(op);
 				state = 0;
@@ -577,7 +579,7 @@ internal static class ExpressionParser
 			}
 			throw new CodeEE(trerror.UnrecognizedSyntax.Text);
 		}
-		public void Add(Int64 i) { Add(new SingleLongTerm(i)); }
+		public void Add(long i) { Add(new SingleLongTerm(i)); }
 		public void Add(string s) { Add(new SingleStrTerm(s)); }
 		public void Add(AExpression term)
 		{
@@ -600,7 +602,7 @@ internal static class ExpressionParser
 		{
 			if (stack.Count < 3)
 				return -1;
-			object temp = (object)stack.Pop();
+			object temp = stack.Pop();
 			OperatorCode opCode = (OperatorCode)stack.Peek();
 			int priority = OperatorManager.GetPriority(opCode);
 			stack.Push(temp);

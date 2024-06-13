@@ -1,5 +1,5 @@
-﻿using EvilMask.Emuera;
-using MinorShift.Emuera.Runtime.Config;
+﻿using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
 using System;
 using System.Drawing;
 using System.Windows.Forms;

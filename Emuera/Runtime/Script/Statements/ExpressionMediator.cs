@@ -1,15 +1,13 @@
 ﻿using Microsoft.VisualBasic;
-using MinorShift.Emuera.GameData.Variable;
 using MinorShift.Emuera.GameProc;
 using MinorShift.Emuera.GameProc.Function;
 using MinorShift.Emuera.GameView;
-using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
-using System;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
+using MinorShift.Emuera.Runtime.Utils;
 using System.Text;
-using trerror = EvilMask.Emuera.Lang.Error;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.GameData.Expression;
+namespace MinorShift.Emuera.Runtime.Script.Statements;
 
 //1756 元ExpressionEvaluator。GetValueの仕事はなくなったので改名。
 //IOperandTerm間での通信や共通の処理に使う。
@@ -32,13 +30,13 @@ internal sealed class ExpressionMediator
 	private bool forceKatakana;
 	private bool halftoFull;
 
-	public void ForceKana(Int64 flag)
+	public void ForceKana(long flag)
 	{
 		if (flag < 0 || flag > 3)
 			throw new CodeEE(trerror.OoRForcekanaArg.Text);
-		forceKatakana = (flag == 1) ? true : false;
-		forceHiragana = (flag > 1) ? true : false;
-		halftoFull = (flag == 3) ? true : false;
+		forceKatakana = flag == 1 ? true : false;
+		forceHiragana = flag > 1 ? true : false;
+		halftoFull = flag == 3 ? true : false;
 	}
 
 	public bool ForceKana()
@@ -117,7 +115,7 @@ internal sealed class ExpressionMediator
 		return buffer.ToString();
 	}
 
-	public static string CreateBar(Int64 var, Int64 max, Int64 length)
+	public static string CreateBar(long var, long max, long length)
 	{
 		if (max <= 0)
 			throw new CodeEE(trerror.MaxBarNotPositive.Text);
@@ -136,8 +134,8 @@ internal sealed class ExpressionMediator
 			count = 0;
 		if (count > length)
 			count = (int)length;
-		builder.Append(Config.BarChar1, count);
-		builder.Append(Config.BarChar2, (int)length - count);
+		builder.Append(Config.Config.BarChar1, count);
+		builder.Append(Config.Config.BarChar2, (int)length - count);
 		builder.Append(']');
 		return builder.ToString();
 	}

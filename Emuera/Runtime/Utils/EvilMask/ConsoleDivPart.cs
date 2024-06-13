@@ -1,13 +1,13 @@
-﻿using EvilMask.Emuera;
-using MinorShift.Emuera.Runtime.Config;
+﻿using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.UI.Game;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Text;
-using static EvilMask.Emuera.Shape;
-using static EvilMask.Emuera.Utils;
+using static MinorShift.Emuera.Runtime.Utils.EvilMask.Shape;
+using static MinorShift.Emuera.Runtime.Utils.EvilMask.Utils;
 
-namespace MinorShift.Emuera.GameView;
+namespace MinorShift.Emuera.Runtime.Utils.EvilMask;
 
 class ConsoleDivPart : AConsoleDisplayPart
 {
@@ -18,27 +18,27 @@ class ConsoleDivPart : AConsoleDisplayPart
 		width.num = Math.Abs(width.num);
 		height.num = Math.Abs(height.num);
 		sb.Append("<div");
-		Utils.AddTagMixedNumArg(sb, "xpos", xPos);
-		Utils.AddTagMixedNumArg(sb, "ypos", yPos);
-		Utils.AddTagMixedNumArg(sb, "width", width);
-		Utils.AddColorParam(sb, "color", backgroundColor);
-		Utils.AddTagMixedNumArg(sb, "height", height);
+		AddTagMixedNumArg(sb, "xpos", xPos);
+		AddTagMixedNumArg(sb, "ypos", yPos);
+		AddTagMixedNumArg(sb, "width", width);
+		AddColorParam(sb, "color", backgroundColor);
+		AddTagMixedNumArg(sb, "height", height);
 		if (box != null)
 		{
-			Utils.AddTagMixedParam(sb, "margin", box.margin);
-			Utils.MixedNum4ToInt4(box.margin, ref margin);
-			Utils.AddTagMixedParam(sb, "padding", box.padding);
-			Utils.MixedNum4ToInt4(box.padding, ref padding);
-			Utils.AddTagMixedParam(sb, "border", box.border);
-			Utils.MixedNum4ToInt4(box.border, ref border);
-			Utils.AddTagMixedParam(sb, "radius", box.radius);
-			Utils.MixedNum4ToInt4(box.radius, ref radius);
+			AddTagMixedParam(sb, "margin", box.margin);
+			MixedNum4ToInt4(box.margin, ref margin);
+			AddTagMixedParam(sb, "padding", box.padding);
+			MixedNum4ToInt4(box.padding, ref padding);
+			AddTagMixedParam(sb, "border", box.border);
+			MixedNum4ToInt4(box.border, ref border);
+			AddTagMixedParam(sb, "radius", box.radius);
+			MixedNum4ToInt4(box.radius, ref radius);
 			if (box.color != null)
 			{
 				borderColors = new Color[4];
 				for (int i = 0; i < 4; i++)
 					borderColors[i] = box.color[i] >= 0 ? Color.FromArgb((int)(box.color[i] | 0xff000000)) : Color.Transparent;
-				Utils.AddColorParam4(sb, "bcolor", borderColors);
+				AddColorParam4(sb, "bcolor", borderColors);
 			}
 		}
 		sb.Append(">");
@@ -112,9 +112,9 @@ class ConsoleDivPart : AConsoleDisplayPart
 				ConsoleButtonString button = line.Buttons[line.Buttons.Length - b - 1];
 				if (button == null || button.StrArray == null)
 					continue;
-				if ((button.PointX <= pointX) && (button.PointX + button.Width >= pointX))
+				if (button.PointX <= pointX && button.PointX + button.Width >= pointX)
 				{
-					//if (relPointY >= 0 && relPointY <= Config.FontSize)
+					//if (relPointY >= 0 && relPointY <= Config.Config.FontSize)
 					//{
 					//	pointing = button;
 					//	if(pointing.IsButton)
@@ -124,8 +124,8 @@ class ConsoleDivPart : AConsoleDisplayPart
 					{
 						if (part == null)
 							continue;
-						if ((part.PointX <= pointX) && (part.PointX + part.Width >= pointX)
-							&& (relPointY + part.Top <= pointY) && (relPointY + part.Bottom >= pointY))
+						if (part.PointX <= pointX && part.PointX + part.Width >= pointX
+							&& relPointY + part.Top <= pointY && relPointY + part.Bottom >= pointY)
 						{
 							pointing = button;
 							if (pointing.IsButton)
@@ -134,7 +134,7 @@ class ConsoleDivPart : AConsoleDisplayPart
 					}
 				}
 			}
-			relPointY += Config.LineHeight;
+			relPointY += Config.Config.LineHeight;
 		}
 		return pointing;
 	}
@@ -151,7 +151,7 @@ class ConsoleDivPart : AConsoleDisplayPart
 
 		var pxMode = graph.PixelOffsetMode;
 		graph.PixelOffsetMode = PixelOffsetMode.HighQuality; // ここを高品質にしておく、全体的高品質してもいいかな？
-		Shape.BoxBorder.DrawBorder(graph, rect, border, radius, borderColors, backgroundColor);
+		BoxBorder.DrawBorder(graph, rect, border, radius, borderColors, backgroundColor);
 		graph.PixelOffsetMode = pxMode;
 
 		if (border != null)
@@ -168,7 +168,7 @@ class ConsoleDivPart : AConsoleDisplayPart
 		foreach (var child in children)
 		{
 			child.DrawTo(graph, pointY, isBackLog, true, mode);
-			pointY += Config.LineHeight;
+			pointY += Config.Config.LineHeight;
 		}
 		graph.ResetClip();
 	}

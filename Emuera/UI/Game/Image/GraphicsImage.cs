@@ -6,7 +6,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 
-namespace MinorShift.Emuera.Content;
+namespace MinorShift.Emuera.UI.Game.Image;
 
 internal sealed class GraphicsImage : AbstractImage
 {
@@ -80,8 +80,8 @@ internal sealed class GraphicsImage : AbstractImage
 	{
 		if (useGDI)
 			throw new NotImplementedException();
-		this.GDispose();
-		RealBitmap = new Bitmap(x, y, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+		GDispose();
+		RealBitmap = new Bitmap(x, y, PixelFormat.Format32bppArgb);
 		size = new Size(x, y);
 		g = Graphics.FromImage(RealBitmap);
 		drawImgList = new List<Tuple<ASprite, Rectangle>>();
@@ -91,8 +91,8 @@ internal sealed class GraphicsImage : AbstractImage
 	{
 		if (useGDI)
 			throw new NotImplementedException();
-		this.GDispose();
-		RealBitmap = new Bitmap(bmp.Width, bmp.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+		GDispose();
+		RealBitmap = new Bitmap(bmp.Width, bmp.Height, PixelFormat.Format32bppArgb);
 		size = new Size(bmp.Width, bmp.Height);
 		g = Graphics.FromImage(RealBitmap);
 		g.DrawImage(bmp, 0, 0, bmp.Width, bmp.Height);
@@ -115,7 +115,7 @@ internal sealed class GraphicsImage : AbstractImage
 		Load();
 		if (g == null)
 			throw new NullReferenceException();
-		g.SetClip(new Rectangle(x, y, w, h), System.Drawing.Drawing2D.CombineMode.Replace);
+		g.SetClip(new Rectangle(x, y, w, h), CombineMode.Replace);
 		g.Clear(c);
 		g.ResetClip();
 		drawImgList = null;
@@ -139,12 +139,12 @@ internal sealed class GraphicsImage : AbstractImage
 		var format = new StringFormat(StringFormat.GenericTypographic);
 		if (usingFont == null)
 			usingFont = new(Config.FontName, 100, GlobalStatic.Console.StringStyle.FontStyle, GraphicsUnit.Pixel);
-		System.Drawing.Drawing2D.GraphicsPath gp =
-			new System.Drawing.Drawing2D.GraphicsPath();
+		GraphicsPath gp =
+			new GraphicsPath();
 		//一部のフォントで描画がずれる問題修正
 		float emSize = (float)usingFont.Height * usingFont.FontFamily.GetEmHeight(usingFont.Style) / usingFont.FontFamily.GetLineSpacing(usingFont.Style);
 		gp.AddString(text, usingFont.FontFamily, (int)usingFont.Style, emSize, new Point(x, y), format);
-		g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+		g.SmoothingMode = SmoothingMode.AntiAlias;
 		if (brush != null)
 			g.FillPath(brush, gp);
 		else
@@ -358,7 +358,7 @@ internal sealed class GraphicsImage : AbstractImage
 
 		drawImgList = null;
 
-		Bitmap destImg = this.GetBitmap();
+		Bitmap destImg = GetBitmap();
 		byte[] srcBytes = BytesFromBitmap(srcGra.GetBitmap());
 		byte[] srcMaskBytes = BytesFromBitmap(maskGra.GetBitmap());
 		Rectangle destRect = new Rectangle(destPoint.X, destPoint.Y, srcGra.Width, srcGra.Height);
@@ -369,7 +369,7 @@ internal sealed class GraphicsImage : AbstractImage
 			PixelFormat.Format32bppArgb);
 		try
 		{
-			IntPtr ptr = bmpData.Scan0;
+			nint ptr = bmpData.Scan0;
 			byte[] pixels = new byte[bmpData.Stride * destImg.Height];
 			Marshal.Copy(ptr, pixels, 0, pixels.Length);
 
@@ -396,10 +396,10 @@ internal sealed class GraphicsImage : AbstractImage
 					else//半透明 alpha/255ではなく（alpha+1）/256で計算しているがたぶん誤差
 					{
 						int mask = srcMaskBytes[srcIndex]; mask++;
-						pixels[destIndex] = (byte)((srcBytes[srcIndex] * mask + pixels[destIndex] * (256 - mask)) >> 8); srcIndex++; destIndex++;
-						pixels[destIndex] = (byte)((srcBytes[srcIndex] * mask + pixels[destIndex] * (256 - mask)) >> 8); srcIndex++; destIndex++;
-						pixels[destIndex] = (byte)((srcBytes[srcIndex] * mask + pixels[destIndex] * (256 - mask)) >> 8); srcIndex++; destIndex++;
-						pixels[destIndex] = (byte)((srcBytes[srcIndex] * mask + pixels[destIndex] * (256 - mask)) >> 8); srcIndex++; destIndex++;
+						pixels[destIndex] = (byte)(srcBytes[srcIndex] * mask + pixels[destIndex] * (256 - mask) >> 8); srcIndex++; destIndex++;
+						pixels[destIndex] = (byte)(srcBytes[srcIndex] * mask + pixels[destIndex] * (256 - mask) >> 8); srcIndex++; destIndex++;
+						pixels[destIndex] = (byte)(srcBytes[srcIndex] * mask + pixels[destIndex] * (256 - mask) >> 8); srcIndex++; destIndex++;
+						pixels[destIndex] = (byte)(srcBytes[srcIndex] * mask + pixels[destIndex] * (256 - mask) >> 8); srcIndex++; destIndex++;
 					}
 				}
 			}
@@ -417,14 +417,14 @@ internal sealed class GraphicsImage : AbstractImage
 	/// <summary>
 	/// GROTATE(int ID, int angle, int x, int y)
 	/// </summary>
-	public void GRotate(Int64 a, int x, int y)
+	public void GRotate(long a, int x, int y)
 	{
 		if (g == null)
 			throw new NullReferenceException();
 		float angle = a;
-		g.TranslateTransform(-x, -y, System.Drawing.Drawing2D.MatrixOrder.Append);
-		g.RotateTransform(angle, System.Drawing.Drawing2D.MatrixOrder.Append);
-		g.TranslateTransform(x, y, System.Drawing.Drawing2D.MatrixOrder.Append);
+		g.TranslateTransform(-x, -y, MatrixOrder.Append);
+		g.RotateTransform(angle, MatrixOrder.Append);
+		g.TranslateTransform(x, y, MatrixOrder.Append);
 
 		g.DrawImageUnscaled(Bitmap, 0, 0);
 		//g.DrawImage(Bitmap, new Rectangle(Bitmap.Width, Bitmap.Height, Bitmap.Width, Bitmap.Height));
@@ -432,14 +432,14 @@ internal sealed class GraphicsImage : AbstractImage
 	/// <summary>
 	/// GDRAWGWITHROTATE
 	/// </summary>
-	public void GDrawGWithRotate(GraphicsImage srcGra, Int64 a, int x, int y)
+	public void GDrawGWithRotate(GraphicsImage srcGra, long a, int x, int y)
 	{
 		if (g == null || srcGra == null)
 			throw new NullReferenceException();
 		float angle = a;
-		g.TranslateTransform(-x, -y, System.Drawing.Drawing2D.MatrixOrder.Append);
-		g.RotateTransform(angle, System.Drawing.Drawing2D.MatrixOrder.Append);
-		g.TranslateTransform(x, y, System.Drawing.Drawing2D.MatrixOrder.Append);
+		g.TranslateTransform(-x, -y, MatrixOrder.Append);
+		g.RotateTransform(angle, MatrixOrder.Append);
+		g.TranslateTransform(x, y, MatrixOrder.Append);
 		Bitmap src = srcGra.GetBitmap();
 		g.DrawImage(src, 0, 0);
 	}
@@ -470,8 +470,8 @@ internal sealed class GraphicsImage : AbstractImage
 		if (pen == null)
 			pen = new Pen(Config.ForeColor);
 
-		pen.DashStyle = (System.Drawing.Drawing2D.DashStyle)style;
-		pen.DashCap = (System.Drawing.Drawing2D.DashCap)cap;
+		pen.DashStyle = (DashStyle)style;
+		pen.DashCap = (DashCap)cap;
 	}
 	#endregion
 
@@ -583,7 +583,7 @@ internal sealed class GraphicsImage : AbstractImage
 
 	public override void Dispose()
 	{
-		this.GDispose();
+		GDispose();
 		GC.SuppressFinalize(this);
 	}
 
@@ -645,7 +645,7 @@ internal sealed class GraphicsImage : AbstractImage
 		byte[] pixels = new byte[bmpData.Stride * bmp.Height];
 		try
 		{
-			IntPtr ptr = bmpData.Scan0;
+			nint ptr = bmpData.Scan0;
 			Marshal.Copy(ptr, pixels, 0, pixels.Length);
 		}
 		finally
@@ -660,7 +660,7 @@ internal sealed class GraphicsImage : AbstractImage
 	/// GTOARRAY int ID, var array
 	/// エラーチェックは呼び出し元でのみ行う
 	/// <returns></returns>
-	public bool GBitmapToInt64Array(Int64[,] array, int xstart, int ystart)
+	public bool GBitmapToInt64Array(long[,] array, int xstart, int ystart)
 	{
 		if (g == null || Bitmap == null)
 			throw new NullReferenceException();
@@ -672,7 +672,7 @@ internal sealed class GraphicsImage : AbstractImage
 		BitmapData bmpData =
 			Bitmap.LockBits(rect, ImageLockMode.ReadOnly,
 			PixelFormat.Format32bppArgb);
-		IntPtr ptr = bmpData.Scan0;
+		nint ptr = bmpData.Scan0;
 		byte[] rgbValues = new byte[w * h * 4];
 		Marshal.Copy(ptr, rgbValues, 0, rgbValues.Length);
 		Bitmap.UnlockBits(bmpData);
@@ -683,9 +683,9 @@ internal sealed class GraphicsImage : AbstractImage
 			{
 				array[x + xstart, y + ystart] =
 				rgbValues[i++] + //B
-				(((Int64)rgbValues[i++]) << 8) + //G
-				(((Int64)rgbValues[i++]) << 16) + //R
-				(((Int64)rgbValues[i++]) << 24);  //A
+				((long)rgbValues[i++] << 8) + //G
+				((long)rgbValues[i++] << 16) + //R
+				((long)rgbValues[i++] << 24);  //A
 			}
 		}
 		return true;
@@ -696,7 +696,7 @@ internal sealed class GraphicsImage : AbstractImage
 	/// GFROMARRAY int ID, var array
 	/// エラーチェックは呼び出し元でのみ行う
 	/// <returns></returns>
-	public bool GByteArrayToBitmap(Int64[,] array, int xstart, int ystart)
+	public bool GByteArrayToBitmap(long[,] array, int xstart, int ystart)
 	{
 		if (g == null || Bitmap == null)
 			throw new NullReferenceException();
@@ -711,18 +711,18 @@ internal sealed class GraphicsImage : AbstractImage
 		{
 			for (int x = 0; x < w; x++)
 			{
-				Int64 c = array[x + xstart, y + ystart];
+				long c = array[x + xstart, y + ystart];
 				rgbValues[i++] = (byte)(c & 0xFF);//B
-				rgbValues[i++] = (byte)((c >> 8) & 0xFF);//G
-				rgbValues[i++] = (byte)((c >> 16) & 0xFF);//R
-				rgbValues[i++] = (byte)((c >> 24) & 0xFF);//A
+				rgbValues[i++] = (byte)(c >> 8 & 0xFF);//G
+				rgbValues[i++] = (byte)(c >> 16 & 0xFF);//R
+				rgbValues[i++] = (byte)(c >> 24 & 0xFF);//A
 			}
 		}
 		Rectangle rect = new(0, 0, w, h);
 		BitmapData bmpData =
 			Bitmap.LockBits(rect, ImageLockMode.WriteOnly,
 			PixelFormat.Format32bppArgb);
-		IntPtr ptr = bmpData.Scan0;
+		nint ptr = bmpData.Scan0;
 		Marshal.Copy(rgbValues, 0, ptr, rgbValues.Length);
 		Bitmap.UnlockBits(bmpData);
 		return true;
@@ -737,7 +737,7 @@ internal sealed class GraphicsImage : AbstractImage
 		if (drawImgList == null)
 			return;
 
-		RealBitmap = new Bitmap(size.Width, size.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+		RealBitmap = new Bitmap(size.Width, size.Height, PixelFormat.Format32bppArgb);
 		g = Graphics.FromImage(RealBitmap);
 
 		foreach (Tuple<ASprite, Rectangle> tuple in drawImgList)

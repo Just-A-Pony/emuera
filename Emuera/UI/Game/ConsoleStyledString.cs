@@ -1,11 +1,10 @@
-﻿using DotnetEmuera;
-using Emuera.UI;
-using MinorShift.Emuera.Runtime.Config;
+﻿using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Config.JSON;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace MinorShift.Emuera.GameView;
+namespace MinorShift.Emuera.UI.Game;
 
 /// <summary>
 /// 装飾付文字列。stringとStringStyleからなる。
@@ -17,8 +16,8 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 	{
 		//if ((StaticConfig.TextDrawingMode != TextDrawingMode.GRAPHICS) && (str.IndexOf('\t') >= 0))
 		//    str = str.Replace("\t", "");
-		this.Str = str;
-		this.StringStyle = style;
+		Str = str;
+		StringStyle = style;
 		Font = FontFactory.GetFont(style.Fontname, style.FontStyle);
 		if (Font == null)
 		{
@@ -49,30 +48,30 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 		ConsoleStyledString ret = DivideAt(index);
 		if (ret == null)
 			return null;
-		this.SetWidth(sm, XsubPixel);
+		SetWidth(sm, XsubPixel);
 		ret.SetWidth(sm, XsubPixel);
 		return ret;
 	}
 	public ConsoleStyledString DivideAt(int index)
 	{
-		if ((index <= 0) || (index > Str.Length) || this.Error)
+		if (index <= 0 || index > Str.Length || Error)
 			return null;
 		string str = Str[index..];
-		this.Str = Str[..index];
+		Str = Str[..index];
 		ConsoleStyledString ret = new ConsoleStyledString();
-		ret.Font = this.Font;
+		ret.Font = Font;
 		ret.Str = str;
-		ret.Color = this.Color;
-		ret.ButtonColor = this.ButtonColor;
-		ret.colorChanged = this.colorChanged;
-		ret.StringStyle = this.StringStyle;
-		ret.XsubPixel = this.XsubPixel;
+		ret.Color = Color;
+		ret.ButtonColor = ButtonColor;
+		ret.colorChanged = colorChanged;
+		ret.StringStyle = StringStyle;
+		ret.XsubPixel = XsubPixel;
 		return ret;
 	}
 
 	public override void SetWidth(StringMeasure sm, float subPixel)
 	{
-		if (this.Error)
+		if (Error)
 		{
 			Width = 0;
 			return;
@@ -88,7 +87,7 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 			Ends = new int[len];
 			for (int i = 0; i < len; i++)
 			{
-				String temp = Str.Substring(0, i + 1);
+				string temp = Str.Substring(0, i + 1);
 				Ends[i] = sm.GetDisplayLength(temp, Font);
 			}
 
@@ -98,9 +97,9 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 
 	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
 	{
-		if (this.Error)
+		if (Error)
 			return;
-		Color color = this.Color;
+		Color color = Color;
 		Color? backcolor = null;
 		if (isSelecting)
 		{
@@ -114,7 +113,7 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 					backcolor = Color.Gray;
 				}
 			}
-			color = this.ButtonColor;
+			color = ButtonColor;
 		}
 		else if (isBackLog && !colorChanged)
 		{
@@ -156,11 +155,11 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 	//Bitmap Cache
 	public void DrawToBitmap(Graphics graph, bool isSelecting, bool isBackLog, TextDrawingMode mode, int xOffset)
 	{
-		if (this.Error)
+		if (Error)
 			return;
-		Color color = this.Color;
+		Color color = Color;
 		if (isSelecting)
-			color = this.ButtonColor;
+			color = ButtonColor;
 		else if (isBackLog && !colorChanged)
 			color = Config.LogColor;
 

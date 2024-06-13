@@ -1,9 +1,9 @@
-﻿using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameData.Variable;
-using System;
+﻿using MinorShift.Emuera.GameData.Variable;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
 using System.Collections.Generic;
 
-namespace MinorShift.Emuera.GameProc.PluginSystem
+namespace MinorShift.Emuera.Runtime.Utils.PluginSystem
 {
 	//Wrapper for easier character data access
 	public class PluginAPICharContext
@@ -87,7 +87,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 		static Dictionary<string, VariableToken> _UserDefinedVars = new Dictionary<string, VariableToken>();
 
 		static ExpressionMediator exm;
-		internal PluginAPICharContext(Int64 charId)
+		internal PluginAPICharContext(long charId)
 		{
 			this.charId = charId;
 			BASE = new CharInt1dWrapper(charId, _BASE, exm, VariableCode.BASE);
@@ -156,6 +156,6 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 
 		public CharInt2dWrapper CDFLAG;
 
-		Int64 charId;
+		long charId;
 	}
 }

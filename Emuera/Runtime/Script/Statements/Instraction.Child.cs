@@ -1,14 +1,18 @@
-﻿using DotnetEmuera;
-using EvilMask.Emuera;
-using MinorShift._Library;
-using MinorShift.Emuera.GameData;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameData.Function;
-using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.GameProc.PluginSystem;
-using MinorShift.Emuera.GameView;
+﻿using MinorShift.Emuera.GameData.Variable;
+using MinorShift.Emuera.Runtime;
 using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
+using MinorShift.Emuera.Runtime.Config.JSON;
+using MinorShift.Emuera.Runtime.Script;
+using MinorShift.Emuera.Runtime.Script.Data;
+using MinorShift.Emuera.Runtime.Script.Parser;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Script.Statements.Function;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
+using MinorShift.Emuera.Runtime.Utils.PluginSystem;
+using MinorShift.Emuera.UI.Game;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -17,9 +21,9 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
-using static EvilMask.Emuera.Utils;
-using trerror = EvilMask.Emuera.Lang.Error;
-using trmb = EvilMask.Emuera.Lang.MessageBox;
+using static MinorShift.Emuera.Runtime.Utils.EvilMask.Utils;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
+using trmb = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.MessageBox;
 
 namespace MinorShift.Emuera.GameProc.Function;
 
@@ -286,7 +290,7 @@ internal sealed partial class FunctionIdentifier
 		{
 			SpHtmlSplitArgument spSplitArg = (SpHtmlSplitArgument)func.Argument;
 			string str = spSplitArg.TargetStr.GetStrValue(exm);
-			string[] strs = MinorShift.Emuera.GameView.HtmlManager.HtmlTagSplit(str);
+			string[] strs = HtmlManager.HtmlTagSplit(str);
 
 			if (strs == null)
 			{
@@ -1201,7 +1205,7 @@ internal sealed partial class FunctionIdentifier
 				return;
 			}
 			SpCallFArgment callfArg = (SpCallFArgment)func.Argument;
-			//if (Config.IgnoreCase)
+			//if (Config.Config.IgnoreCase)
 			//	callfArg.ConstStr = callfArg.ConstStr.ToUpper();
 			try
 			{
@@ -2745,7 +2749,7 @@ internal sealed partial class FunctionIdentifier
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
 			string keyword = func.Argument.ConstStr;
-			//if (Config.IgnoreCase)//1756 BEGINのキーワードは関数扱いらしい
+			//if (Config.Config.IgnoreCase)//1756 BEGINのキーワードは関数扱いらしい
 			//	keyword = keyword.ToUpper();
 			state.SetBegin(keyword, true);
 			state.Return(0);

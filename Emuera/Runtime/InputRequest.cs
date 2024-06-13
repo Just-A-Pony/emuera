@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MinorShift.Emuera.GameProc;
+﻿namespace MinorShift.Emuera.Runtime;
 
 enum InputType
 {
@@ -33,7 +31,7 @@ internal sealed class InputRequest
 	{
 		ID = LastRequestID++;
 	}
-	public readonly Int64 ID;
+	public readonly long ID;
 	public InputType InputType;
 	public bool NeedValue
 	{
@@ -61,5 +59,5 @@ internal sealed class InputRequest
 	public bool DisplayTime;
 	public string TimeUpMes;
 
-	static Int64 LastRequestID;
+	static long LastRequestID;
 }

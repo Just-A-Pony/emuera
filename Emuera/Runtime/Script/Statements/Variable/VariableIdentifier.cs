@@ -1,9 +1,9 @@
-﻿using MinorShift.Emuera.Sub;
+﻿using MinorShift.Emuera.Runtime.Utils;
 using System;
 using System.Collections.Generic;
-using trerror = EvilMask.Emuera.Lang.Error;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.GameData.Variable;
+namespace MinorShift.Emuera.Runtime.Script.Statements.Variable;
 
 //1756 全ての機能をVariableTokenとManagerに委譲、消滅
 //……しようと思ったがConstantDataから参照されているので捨て切れなかった。
@@ -139,7 +139,7 @@ internal sealed class VariableIdentifier
 		foreach (var code in array)
 		{
 			var key = Enum.GetName(code);
-			if ((key == null) || (key.StartsWith("__") && key.EndsWith("__")))
+			if (key == null || key.StartsWith("__") && key.EndsWith("__"))
 				continue;
 			if (nameDic.ContainsKey(key))
 				continue;

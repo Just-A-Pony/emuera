@@ -1,12 +1,15 @@
-﻿using EvilMask.Emuera;
-using MinorShift._Library;
-using MinorShift.Emuera.Content;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.GameProc;
-using MinorShift.Emuera.GameView;
+﻿using MinorShift.Emuera.GameData.Variable;
 using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
+using MinorShift.Emuera.Runtime.Script.Data;
+using MinorShift.Emuera.Runtime.Script.Parser;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Script.Statements.Function;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
+using MinorShift.Emuera.UI.Game;
+using MinorShift.Emuera.UI.Game.Image;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,7 +20,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-using trerror = EvilMask.Emuera.Lang.Error;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
 namespace MinorShift.Emuera.GameData.Function;
 
@@ -648,7 +651,7 @@ internal static partial class FunctionMethodCreator
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 			string str = arguments[0].GetStrValue(exm);
-			string[] strs = MinorShift.Emuera.GameView.HtmlManager.HtmlSubString(str, (int)arguments[1].GetIntValue(exm));
+			string[] strs = HtmlManager.HtmlSubString(str, (int)arguments[1].GetIntValue(exm));
 			string[] output = GlobalStatic.Process.VEvaluator.RESULTS_ARRAY;
 			int outputlength = Math.Min(output.Length, strs.Length);
 			Array.Copy(strs, output, outputlength);
@@ -671,7 +674,7 @@ internal static partial class FunctionMethodCreator
 			var ret = 0;
 			do
 			{
-				string[] strs = MinorShift.Emuera.GameView.HtmlManager.HtmlSubString(str, (int)arguments[1].GetIntValue(exm));
+				string[] strs = HtmlManager.HtmlSubString(str, (int)arguments[1].GetIntValue(exm));
 				str = strs[1];
 				ret++;
 			} while (!string.IsNullOrEmpty(str));
@@ -2676,9 +2679,9 @@ internal static partial class FunctionMethodCreator
 		}
 		public override string GetStrValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
-			if (exm.Console.Alignment == GameView.DisplayLineAlignment.LEFT)
+			if (exm.Console.Alignment == DisplayLineAlignment.LEFT)
 				return "LEFT";
-			else if (exm.Console.Alignment == GameView.DisplayLineAlignment.CENTER)
+			else if (exm.Console.Alignment == DisplayLineAlignment.CENTER)
 				return "CENTER";
 			else
 				return "RIGHT";
@@ -6934,7 +6937,7 @@ internal static partial class FunctionMethodCreator
 			//	if (forceSavdir)
 			//		Config.ForceCreateSavDir();
 			//	else
-			//		Config.CreateSavDir();
+			//		Config.Config.CreateSavDir();
 			//	System.IO.File.WriteAllText(filepath, savText, encoding);
 			//}
 			//catch { return 0; }

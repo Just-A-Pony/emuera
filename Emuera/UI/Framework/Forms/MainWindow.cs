@@ -1,8 +1,9 @@
-﻿using EvilMask.Emuera;
-using MinorShift._Library;
-using MinorShift.Emuera.GameProc.Function;
-using MinorShift.Emuera.GameView;
+﻿using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Script;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,7 +11,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using trmb = EvilMask.Emuera.Lang.MessageBox;
+using trmb = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.MessageBox;
 
 namespace MinorShift.Emuera.Forms
 {
@@ -596,7 +597,6 @@ namespace MinorShift.Emuera.Forms
 					if (e.Button == MouseButtons.Left)
 					{
 						PressEnterKey(false, true);
-						return;
 						return;
 					}
 				}

@@ -1,11 +1,11 @@
-﻿using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameProc;
-using MinorShift.Emuera.Sub;
+﻿using MinorShift.Emuera.Runtime.Script.Data;
+using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Utils;
 using System;
 using System.Collections.Generic;
-using trerror = EvilMask.Emuera.Lang.Error;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.GameData.Function;
+namespace MinorShift.Emuera.Runtime.Script.Statements.Function;
 
 internal abstract class SuperUserDefinedMethodTerm : AExpression
 {
@@ -32,7 +32,7 @@ internal abstract class SuperUserDefinedMethodTerm : AExpression
 		SingleTerm term = exm.Process.GetValue(this);
 		if (term == null)
 		{
-			if (GetOperandType() == typeof(Int64))
+			if (GetOperandType() == typeof(long))
 				return new SingleLongTerm(0);
 			else
 				return new SingleStrTerm("");

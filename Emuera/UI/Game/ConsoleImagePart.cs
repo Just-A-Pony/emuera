@@ -1,12 +1,11 @@
-﻿using EvilMask.Emuera;
-using MinorShift.Emuera.Content;
-using MinorShift.Emuera.Runtime.Config;
+﻿using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.UI.Game.Image;
 using System;
 using System.Drawing;
 using System.Text;
-using static EvilMask.Emuera.Utils;
+using static MinorShift.Emuera.Runtime.Utils.EvilMask.Utils;
 
-namespace MinorShift.Emuera.GameView;
+namespace MinorShift.Emuera.UI.Game;
 
 sealed class ConsoleImagePart : AConsoleDisplayPart
 {
@@ -23,16 +22,16 @@ sealed class ConsoleImagePart : AConsoleDisplayPart
 		StringBuilder sb = new();
 		sb.Append("<img src='").Append(ResourceName).Append('\'');
 		if (ButtonResourceName != null)
-			Utils.AddTagArg(sb, "srcb", ButtonResourceName);
+			AddTagArg(sb, "srcb", ButtonResourceName);
 		//{
 		//	sb.Append("' srcb='");
 		//	sb.Append(ButtonResourceName);
 		//}
 		if (!string.IsNullOrEmpty(MappingGraphName))
-			Utils.AddTagArg(sb, "srcm", MappingGraphName);
-		Utils.AddTagMixedNumArg(sb, "height", raw_height);
-		Utils.AddTagMixedNumArg(sb, "width", raw_width);
-		Utils.AddTagMixedNumArg(sb, "ypos", raw_ypos);
+			AddTagArg(sb, "srcm", MappingGraphName);
+		AddTagMixedNumArg(sb, "height", raw_height);
+		AddTagMixedNumArg(sb, "width", raw_width);
+		AddTagMixedNumArg(sb, "ypos", raw_ypos);
 		//{
 		//	sb.Append("' srcm='");
 		//	sb.Append(MappingGraphName);
@@ -74,7 +73,7 @@ sealed class ConsoleImagePart : AConsoleDisplayPart
 		if (raw_height == null || raw_height.num == 0)//HTMLで高さが指定されていない又は0が指定された場合、フォントサイズをそのまま高さ(px単位)として使用する。
 			height = Config.FontSize;
 		// else//HTMLで高さが指定された場合、フォントサイズの100分率と解釈する。
-		//	height = Config.FontSize * raw_height / 100;
+		//	height = Config.Config.FontSize * raw_height / 100;
 		else if (raw_height.isPx)//HTMLで高さがpx指定された場合、そのまま使う。
 			height = raw_height.num;
 		else // フォントサイズの100分率と解釈する。
@@ -93,13 +92,13 @@ sealed class ConsoleImagePart : AConsoleDisplayPart
 		}
 		else
 		{
-			// Width = Config.FontSize * raw_width / 100;
-			// XsubPixel = ((float)Config.FontSize * raw_width / 100f) - Width;
+			// Width = Config.Config.FontSize * raw_width / 100;
+			// XsubPixel = ((float)Config.Config.FontSize * raw_width / 100f) - Width;
 			Width = Config.FontSize * raw_width.num / 100;
-			XsubPixel = ((float)Config.FontSize * raw_width.num / 100f) - Width;
+			XsubPixel = (float)Config.FontSize * raw_width.num / 100f - Width;
 		}
-		//top = raw_ypos * Config.FontSize / 100;
-		top = raw_ypos != null ? (raw_ypos.isPx ? raw_ypos.num : raw_ypos.num * Config.FontSize / 100) : 0;
+		//top = raw_ypos * Config.Config.FontSize / 100;
+		top = raw_ypos != null ? raw_ypos.isPx ? raw_ypos.num : raw_ypos.num * Config.FontSize / 100 : 0;
 		destRect = new Rectangle(0, top, Width, height);
 		if (destRect.Width < 0)
 		{
@@ -114,8 +113,8 @@ sealed class ConsoleImagePart : AConsoleDisplayPart
 		bottom = top + height;
 		//if(top > 0)
 		//	top = 0;
-		//if(bottom < Config.FontSize)
-		//	bottom = Config.FontSize;
+		//if(bottom < Config.Config.FontSize)
+		//	bottom = Config.Config.FontSize;
 		if (ButtonResourceName != null)
 		{
 			cImageB = AppContents.GetSprite(ButtonResourceName);
@@ -146,7 +145,7 @@ sealed class ConsoleImagePart : AConsoleDisplayPart
 	public override bool CanDivide { get { return false; } }
 	public override void SetWidth(StringMeasure sm, float subPixel)
 	{
-		if (this.Error)
+		if (Error)
 		{
 			Width = 0;
 			return;
@@ -171,7 +170,7 @@ sealed class ConsoleImagePart : AConsoleDisplayPart
 	}
 	#endregion
 	#region EM_私家版_imgマースク
-	public Int64 GetMappingColor(int pointX, int pointY)
+	public long GetMappingColor(int pointX, int pointY)
 	{
 		if (cImageM != null && cImageM.IsCreated)
 		{
@@ -195,7 +194,7 @@ sealed class ConsoleImagePart : AConsoleDisplayPart
 	#endregion
 	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
 	{
-		if (this.Error)
+		if (Error)
 			return;
 		ASprite img = cImage;
 		if (isSelecting && cImageB != null)

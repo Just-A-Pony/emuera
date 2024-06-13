@@ -1,17 +1,18 @@
-﻿using MinorShift._Library;
-using MinorShift.Emuera.GameData;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameData.Function;
+﻿using MinorShift.Emuera.GameData.Function;
 using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.GameProc;
 using MinorShift.Emuera.GameProc.Function;
 using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
+using MinorShift.Emuera.Runtime.Script.Data;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Script.Statements.Function;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
+using MinorShift.Emuera.Runtime.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using treer = EvilMask.Emuera.Lang.Error;
+using treer = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
 namespace MinorShift.Emuera;
 
@@ -249,7 +250,6 @@ internal partial class IdentifierDictionary
 					errMes = string.Format(treer.LabelNameAlreadyUsedInternalInstruction.Text, labelName);
 					warnLevel = 1;
 					break;
-					break;
 				case DefinedNameType.UserMacro:
 					//字句解析がうまくいっていれば本来あり得ないはず
 					errMes = string.Format(treer.LabelNameAlreadyUsedMacro.Text, labelName);
@@ -483,7 +483,7 @@ internal partial class IdentifierDictionary
 	public VariableToken GetVariableToken(string key, string subKey, bool allowPrivate)
 	{
 		VariableToken ret;
-		//if (Config.IgnoreCase)
+		//if (Config.Config.IgnoreCase)
 		//	key = key.ToUpper();
 		if (allowPrivate)
 		{
@@ -578,7 +578,7 @@ internal partial class IdentifierDictionary
 
 	public AExpression GetFunctionMethod(LabelDictionary labelDic, string codeStr, List<AExpression> arguments, bool userDefinedOnly)
 	{
-		//if (Config.IgnoreCase)
+		//if (Config.Config.IgnoreCase)
 		//	codeStr = codeStr.ToUpper();
 		if (arguments == null)//引数なし、名前のみの探索
 		{
@@ -626,7 +626,7 @@ internal partial class IdentifierDictionary
 	public void ThrowException(string str, bool isFunc)
 	{
 		string idStr = str;
-		//if (Config.IgnoreCase || Config.IgnoreCase) //片方だけなのは互換性用オプションなのでレアケースのはず。対応しない。
+		//if (Config.Config.IgnoreCase || Config.Config.IgnoreCase) //片方だけなのは互換性用オプションなのでレアケースのはず。対応しない。
 		//	idStr = idStr.ToUpper();
 		if (!isFunc && privateDimList.Contains(idStr))
 			throw new IdentifierNotFoundCodeEE(string.Format(treer.VarNotDefinedThisFunc.Text, str));

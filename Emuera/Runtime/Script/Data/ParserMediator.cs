@@ -1,7 +1,7 @@
-﻿using MinorShift.Emuera.GameProc;
-using MinorShift.Emuera.GameView;
+﻿using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Utils;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +25,7 @@ internal partial class ParserMediator
 	/// <param name="?"></param>
 	public static void ConfigWarn(string str, ScriptPosition? pos, int level, string stack)
 	{
-		if (level < Config.DisplayWarningLevel && !Program.AnalysisMode)
+		if (level <Config.DisplayWarningLevel && !Program.AnalysisMode)
 			return;
 		warningList.Add(new ParserWarning(str, pos, level, stack));
 	}

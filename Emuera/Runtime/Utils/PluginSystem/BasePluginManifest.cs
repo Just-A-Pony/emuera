@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace MinorShift.Emuera.GameProc.PluginSystem
+namespace MinorShift.Emuera.Runtime.Utils.PluginSystem
 {
 	public abstract class PluginManifestAbstract
 	{

@@ -1,7 +1,7 @@
 ﻿using System;
-using trerror = EvilMask.Emuera.Lang.Error;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.Sub;
+namespace MinorShift.Emuera.Runtime.Utils;
 
 internal abstract class EmueraException : ApplicationException
 {

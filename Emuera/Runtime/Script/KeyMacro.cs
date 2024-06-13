@@ -1,10 +1,9 @@
-﻿using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
+﻿using MinorShift.Emuera.Sub;
 using System;
 using System.IO;
-using trmk = EvilMask.Emuera.Lang.KeyMacro;
+using trmk = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.KeyMacro;
 
-namespace MinorShift.Emuera;
+namespace MinorShift.Emuera.Runtime.Script;
 
 internal static class KeyMacro
 {
@@ -57,7 +56,7 @@ internal static class KeyMacro
 
 		try
 		{
-			writer = new StreamWriter(macroPath, false, Config.Encode);
+			writer = new StreamWriter(macroPath, false, Config.Config.Encode);
 			for (int g = 0; g < MaxGroup; g++)
 			{
 				writer.WriteLine(gID + g.ToString() + ":" + groupName[g]);
@@ -89,7 +88,7 @@ internal static class KeyMacro
 			string line = null;
 			while ((line = eReader.ReadLine()) != null)
 			{
-				if ((line.Length == 0) || (line[0] == ';'))
+				if (line.Length == 0 || line[0] == ';')
 					continue;
 				if (line.StartsWith(gID))
 				{

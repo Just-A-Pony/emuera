@@ -1,8 +1,8 @@
-﻿using EvilMask.Emuera;
-using MinorShift._Library;
-using MinorShift.Emuera.GameProc.Function;
-using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
+﻿using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
+using MinorShift.Emuera.UI.Game;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,10 +11,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using static EvilMask.Emuera.Utils;
-using trerror = EvilMask.Emuera.Lang.Error;
-using trmb = EvilMask.Emuera.Lang.MessageBox;
-using trsl = EvilMask.Emuera.Lang.SystemLine;
+using static MinorShift.Emuera.Runtime.Utils.EvilMask.Utils;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
+using trmb = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.MessageBox;
+using trsl = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.SystemLine;
 
 namespace MinorShift.Emuera.GameView;
 

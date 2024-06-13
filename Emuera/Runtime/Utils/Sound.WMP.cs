@@ -1,6 +1,6 @@
 ﻿using WMPLib;
 
-namespace MinorShift._Library;
+namespace MinorShift.Emuera.Runtime.Utils;
 
 internal class Sound
 {
