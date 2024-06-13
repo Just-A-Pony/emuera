@@ -389,7 +389,13 @@ enum FunctionCode
 
 	#region Emuera.NET
 	VARI,
-	VARS
+	VARS,
+
+	PRINTN,//改行をしないで入力待ち
+	PRINTVN,
+	PRINTSN,
+	PRINTFORMN,
+	PRINTFORMSN,
 	#endregion
 
 }

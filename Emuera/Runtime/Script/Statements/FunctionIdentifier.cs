@@ -83,18 +83,23 @@ internal sealed partial class FunctionIdentifier
 		addPrintFunction(FunctionCode.PRINT);
 		addPrintFunction(FunctionCode.PRINTL);
 		addPrintFunction(FunctionCode.PRINTW);
+
 		addPrintFunction(FunctionCode.PRINTV);
 		addPrintFunction(FunctionCode.PRINTVL);
 		addPrintFunction(FunctionCode.PRINTVW);
+
 		addPrintFunction(FunctionCode.PRINTS);
 		addPrintFunction(FunctionCode.PRINTSL);
 		addPrintFunction(FunctionCode.PRINTSW);
+
 		addPrintFunction(FunctionCode.PRINTFORM);
 		addPrintFunction(FunctionCode.PRINTFORML);
 		addPrintFunction(FunctionCode.PRINTFORMW);
+
 		addPrintFunction(FunctionCode.PRINTFORMS);
 		addPrintFunction(FunctionCode.PRINTFORMSL);
 		addPrintFunction(FunctionCode.PRINTFORMSW);
+
 		addPrintFunction(FunctionCode.PRINTK);
 		addPrintFunction(FunctionCode.PRINTKL);
 		addPrintFunction(FunctionCode.PRINTKW);
@@ -431,6 +436,10 @@ internal sealed partial class FunctionIdentifier
 		addFunction(FunctionCode.VARI, new VARI_Instruction());
 		addFunction(FunctionCode.VARS, new VARS_Instruction());
 
+		addPrintFunction(FunctionCode.PRINTN);
+		addPrintFunction(FunctionCode.PRINTSN);
+		addPrintFunction(FunctionCode.PRINTFORMN);
+		addPrintFunction(FunctionCode.PRINTFORMSN);
 		#endregion
 
 		Dictionary<string, FunctionMethod> methodList = FunctionMethodCreator.GetMethodList();

@@ -146,6 +146,7 @@ internal sealed partial class FunctionIdentifier
 	#region normalFunction
 	private sealed class PRINT_Instruction : AInstruction
 	{
+		bool isLineEnd = true;
 		public PRINT_Instruction(string name)
 		{
 			//PRINT(|V|S|FORM|FORMS)(|K)(|D)(|L|W) コレと
@@ -208,6 +209,12 @@ internal sealed partial class FunctionIdentifier
 			if (st.CurrentEqualTo("D"))
 			{
 				flag |= ISPRINTDFUNC | EXTENDED;
+				st.Jump(1);
+			}
+			if (st.CurrentEqualTo("N"))
+			{
+				isLineEnd = false;
+				flag |= PRINT_WAITINPUT;
 				st.Jump(1);
 			}
 			if (st.CurrentEqualTo("L"))
@@ -273,7 +280,7 @@ internal sealed partial class FunctionIdentifier
 			else if (isLC)
 				exm.Console.PrintC(str, false);
 			else
-				exm.OutputToConsole(str, func.Function);
+				exm.OutputToConsole(str, func.Function, isLineEnd);
 			exm.Console.UseSetColorStyle = true;
 		}
 	}
