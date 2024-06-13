@@ -82,7 +82,7 @@ internal sealed partial class Process(EmueraConsole view)
 			{
 				ParserMediator.FlushWarningList();
 				console.PrintSystemLine(trsl.ResourceReadError.Text);
-				console.Print(err.Message);
+				console.Print(err.ToString());
 				return false;
 			}
 			ParserMediator.FlushWarningList();
