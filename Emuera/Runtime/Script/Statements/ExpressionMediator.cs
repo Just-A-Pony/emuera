@@ -34,9 +34,9 @@ internal sealed class ExpressionMediator
 	{
 		if (flag < 0 || flag > 3)
 			throw new CodeEE(trerror.OoRForcekanaArg.Text);
-		forceKatakana = flag == 1 ? true : false;
-		forceHiragana = flag > 1 ? true : false;
-		halftoFull = flag == 3 ? true : false;
+		forceKatakana = flag == 1;
+		forceHiragana = flag > 1;
+		halftoFull = flag == 3;
 	}
 
 	public bool ForceKana()

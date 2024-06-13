@@ -1194,9 +1194,7 @@ internal sealed class VariableEvaluator : IDisposable
 			throw new CodeEE(trerror.OoRSwapChara.Text);
 		if (x == y)
 			return;
-		CharacterData data = varData.CharacterList[(int)y];
-		varData.CharacterList[(int)y] = varData.CharacterList[(int)x];
-		varData.CharacterList[(int)x] = data;
+		(varData.CharacterList[(int)x], varData.CharacterList[(int)y]) = (varData.CharacterList[(int)y], varData.CharacterList[(int)x]);
 	}
 
 	public void SortChara(VariableToken sortkey, long elem, SortOrder sortorder, bool fixMaster)
