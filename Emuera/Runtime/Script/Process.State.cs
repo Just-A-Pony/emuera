@@ -469,7 +469,12 @@ internal sealed class ProcessState
 				if (call.IsJump)
 					console.DebugAddTraceLog(string.Format(trsl.DebugTraceJump.Text, label.LabelName, label.Position.Value.Filename, label.Position.Value.LineNo));
 				else
-					console.DebugAddTraceLog(string.Format(trsl.DebugTraceCall.Text, label.LabelName, label.Position.Value.Filename, label.Position.Value.LineNo));
+				{
+					string trace = $"CALL @{label.LabelName}:{label.Position.Value.Filename}:{label.Position.Value.LineNo}";
+					if (call.ReturnAddress != null)
+						trace += $" at @{call.ReturnAddress.ParentLabelLine.LabelName}:{call.ReturnAddress.ParentLabelLine.Position.Value.Filename}:{call.ReturnAddress.Position.Value.LineNo}";
+					console.DebugAddTraceLog(trace);
+				}
 			}
 		}
 		if (srcArgs != null)

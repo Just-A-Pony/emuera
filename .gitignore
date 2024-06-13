@@ -20,3 +20,4 @@ Properties/launchSettings.json
 */Emuera.csproj.user
 
 artifacts/*
+*.diff
