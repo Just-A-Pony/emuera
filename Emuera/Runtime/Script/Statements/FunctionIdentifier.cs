@@ -4,6 +4,7 @@ using MinorShift.Emuera.Runtime.Script.Statements;
 using MinorShift.Emuera.Runtime.Script.Statements.Function;
 using System;
 using System.Collections.Generic;
+using MinorShift.Emuera.Runtime.Config.JSON;
 
 namespace MinorShift.Emuera.GameProc.Function;
 
@@ -433,8 +434,11 @@ internal sealed partial class FunctionIdentifier
 		addFunction(FunctionCode.DT_COLUMN_OPTIONS, new DT_COLUMN_OPTIONS_Instruction());
 		#endregion
 		#region Emuera.NET
-		addFunction(FunctionCode.VARI, new VARI_Instruction());
-		addFunction(FunctionCode.VARS, new VARS_Instruction());
+		if (JSONConfig.Data != null && JSONConfig.Data.UseScopedVariableInstruction)
+		{
+			addFunction(FunctionCode.VARI, new VARI_Instruction());
+			addFunction(FunctionCode.VARS, new VARS_Instruction());
+		}
 
 		addPrintFunction(FunctionCode.PRINTN);
 		addPrintFunction(FunctionCode.PRINTSN);
