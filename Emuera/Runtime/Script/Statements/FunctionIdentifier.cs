@@ -427,6 +427,11 @@ internal sealed partial class FunctionIdentifier
 		#region EM
 		addFunction(FunctionCode.DT_COLUMN_OPTIONS, new DT_COLUMN_OPTIONS_Instruction());
 		#endregion
+		#region Emuera.NET
+		addFunction(FunctionCode.VAR, new VAR_Instruction());
+		addFunction(FunctionCode.VARS, new VARS_Instruction());
+
+		#endregion
 
 		Dictionary<string, FunctionMethod> methodList = FunctionMethodCreator.GetMethodList();
 		foreach (KeyValuePair<string, FunctionMethod> pair in methodList)

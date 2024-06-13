@@ -386,4 +386,10 @@ enum FunctionCode
 	#region EM
 	DT_COLUMN_OPTIONS,
 	#endregion
+
+	#region Emuera.NET
+	VAR,
+	VARS
+	#endregion
+
 }

@@ -624,3 +624,33 @@ internal sealed class SpSetArrayArgument : Argument
 	readonly public string[] ConstStrList;
 }
 #endregion
+
+#region Emuera.NET VAR命令
+internal sealed class IntAsignArgument : Argument
+{
+	public IntAsignArgument(string str)
+	{
+		ConstStr = str;
+	}
+	public AExpression Exp;
+	public IntAsignArgument(string str, AExpression exp)
+	{
+		ConstStr = str;
+		Exp = exp;
+	}
+}
+
+internal sealed class StrAsignArgument : Argument
+{
+	public StrAsignArgument(string str)
+	{
+		ConstStr = str;
+	}
+	public string Value;
+	public StrAsignArgument(string str, string value)
+	{
+		ConstStr = str;
+		Value = value;
+	}
+}
+#endregion
