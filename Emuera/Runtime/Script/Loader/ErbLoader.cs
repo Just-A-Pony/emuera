@@ -906,8 +906,8 @@ internal sealed class ErbLoader
 		//PRINTDATA系もここでチェック
 		LogicalLine nextLine = label;
 		List<InstructionLine> tempLineList = [];
-		Stack<InstructionLine> nestStack = new();
-		Stack<InstructionLine> SelectcaseStack = new();
+		var nestStack = new LinkedList<InstructionLine>();
+		var selectCaseStack = new LinkedList<InstructionLine>();
 		InstructionLine pairLine = null;
 		while (true)
 		{
@@ -919,7 +919,7 @@ internal sealed class ErbLoader
 			{
 				if (nextLine is GotoLabelLine)
 				{
-					InstructionLine currentBaseFunc = nestStack.Count == 0 ? null : nestStack.Peek();
+					InstructionLine currentBaseFunc = nestStack.Count == 0 ? null : nestStack.Last.Value;
 					if (currentBaseFunc != null)
 					{
 						if (currentBaseFunc.FunctionCode == FunctionCode.PRINTDATA
@@ -945,7 +945,7 @@ internal sealed class ErbLoader
 				continue;
 			}
 			var func = nextLine as InstructionLine;
-			var baseFunc = nestStack.Count == 0 ? null : nestStack.Peek();
+			var baseFunc = nestStack.Count == 0 ? null : nestStack.Last.Value;
 			if (baseFunc != null)
 			{
 				if (baseFunc.Function.IsPrintData() || baseFunc.FunctionCode == FunctionCode.STRDATA)
@@ -1002,19 +1002,19 @@ internal sealed class ErbLoader
 					}
 					if (func.IsError)
 						break;
-					nestStack.Push(func);
+					nestStack.AddLast(func);
 					break;
 				case FunctionCode.IF:
-					nestStack.Push(func);
+					nestStack.AddLast(func);
 					func.IfCaseList =
 					[
 						func
 					];
 					break;
 				case FunctionCode.SELECTCASE:
-					nestStack.Push(func);
+					nestStack.AddLast(func);
 					func.IfCaseList = [];
-					SelectcaseStack.Push(func);
+					selectCaseStack.AddLast(func);
 					break;
 				case FunctionCode.FOR:
 					//ネストエラーチェックのためにコストはかかるが、ここでチェックする
@@ -1046,7 +1046,7 @@ internal sealed class ErbLoader
 					}
 					if (func.IsError)
 						break;
-					nestStack.Push(func);
+					nestStack.AddLast(func);
 					break;
 				case FunctionCode.WHILE:
 				case FunctionCode.TRYCGOTO:
@@ -1056,7 +1056,7 @@ internal sealed class ErbLoader
 				case FunctionCode.TRYCJUMPFORM:
 				case FunctionCode.TRYCCALLFORM:
 				case FunctionCode.DO:
-					nestStack.Push(func);
+					nestStack.AddLast(func);
 					break;
 				case FunctionCode.BREAK:
 				case FunctionCode.CONTINUE:
@@ -1083,8 +1083,8 @@ internal sealed class ErbLoader
 				case FunctionCode.ELSEIF:
 				case FunctionCode.ELSE:
 					{
-						//1.725 Stack<T>.Peek()はStackが空の時はnullを返す仕様だと思いこんでおりました。
-						InstructionLine ifLine = nestStack.Count == 0 ? null : nestStack.Peek();
+						//1.725 Stack<T>.Last.Value()はStackが空の時はnullを返す仕様だと思いこんでおりました。
+						InstructionLine ifLine = nestStack.Count == 0 ? null : nestStack.Last.Value;
 						if (ifLine == null || ifLine.FunctionCode != FunctionCode.IF)
 						{
 							ParserMediator.Warn(string.Format(trerror.InvalidElse.Text, func.Function.Name), func, 2, true, false);
@@ -1097,7 +1097,7 @@ internal sealed class ErbLoader
 					break;
 				case FunctionCode.ENDIF:
 					{
-						var ifLine = nestStack.Count == 0 ? null : nestStack.Peek();
+						var ifLine = nestStack.Count == 0 ? null : nestStack.Last.Value;
 						if (ifLine == null || ifLine.FunctionCode != FunctionCode.IF)
 						{
 							ParserMediator.Warn(trerror.UnexpectedEndif.Text, func, 2, true, false);
@@ -1107,27 +1107,27 @@ internal sealed class ErbLoader
 						{
 							ifelseifLine.JumpTo = func;
 						}
-						nestStack.Pop();
+						nestStack.RemoveLast();
 					}
 					break;
 				case FunctionCode.CASE:
 				case FunctionCode.CASEELSE:
 					{
-						InstructionLine selectLine = nestStack.Count == 0 ? null : nestStack.Peek();
-						if (selectLine == null || selectLine.FunctionCode != FunctionCode.SELECTCASE && SelectcaseStack.Count == 0)
+						InstructionLine selectLine = nestStack.Count == 0 ? null : nestStack.Last.Value;
+						if (selectLine == null || selectLine.FunctionCode != FunctionCode.SELECTCASE && selectCaseStack.Count == 0)
 						{
 							ParserMediator.Warn(string.Format(trerror.OutsideSelectcase.Text, func.Function.Name), func, 2, true, false);
 							break;
 						}
-						else if (selectLine.FunctionCode != FunctionCode.SELECTCASE && SelectcaseStack.Count > 0)
+						else if (selectLine.FunctionCode != FunctionCode.SELECTCASE && selectCaseStack.Count > 0)
 						{
 							do
 							{
 								ParserMediator.Warn(string.Format(trerror.InstructionNotClosed.Text, selectLine.Function.Name, FunctionIdentifier.getMatchFunction(selectLine.FunctionCode), func.Function.Name), func, 2, true, false);
 								//これを跨いでIF等が閉じられることがないようにする。
-								nestStack.Pop();
+								nestStack.RemoveLast();
 								//if (nestStack.Count > 0)　//空になってるかは下で判定できるので、これを見る必要がない
-								selectLine = nestStack.Count == 0 ? null : nestStack.Peek(); //ちなみにnullになることはない（SELECTCASEがない場合は上で弾けるから）
+								selectLine = nestStack.Count == 0 ? null : nestStack.Last.Value; //ちなみにnullになることはない（SELECTCASEがない場合は上で弾けるから）
 							} while (selectLine != null && selectLine.FunctionCode != FunctionCode.SELECTCASE);
 							break;
 						}
@@ -1139,30 +1139,30 @@ internal sealed class ErbLoader
 					break;
 				case FunctionCode.ENDSELECT:
 					{
-						InstructionLine selectLine = nestStack.Count == 0 ? null : nestStack.Peek();
-						if (selectLine == null || selectLine.FunctionCode != FunctionCode.SELECTCASE && SelectcaseStack.Count == 0)
+						InstructionLine selectLine = nestStack.Count == 0 ? null : nestStack.Last.Value;
+						if (selectLine == null || selectLine.FunctionCode != FunctionCode.SELECTCASE && selectCaseStack.Count == 0)
 						{
 							ParserMediator.Warn(trerror.UnexpectedEndselect.Text, func, 2, true, false);
 							break;
 						}
-						else if (selectLine.FunctionCode != FunctionCode.SELECTCASE && SelectcaseStack.Count > 0)
+						else if (selectLine.FunctionCode != FunctionCode.SELECTCASE && selectCaseStack.Count > 0)
 						{
 							do
 							{
 								ParserMediator.Warn(string.Format(trerror.InstructionNotClosed.Text, selectLine.Function.Name, FunctionIdentifier.getMatchFunction(selectLine.FunctionCode), func.Function.Name), func, 2, true, false);
 								//これを跨いでIF等が閉じられることがないようにする。
-								nestStack.Pop();
+								nestStack.RemoveLast();
 								//if (nestStack.Count > 0)　//空になってるかは下で判定できるので、これを見る必要がない
-								selectLine = nestStack.Count == 0 ? null : nestStack.Peek(); //ちなみにnullになることはない（SELECTCASEがない場合は上で弾けるから）
+								selectLine = nestStack.Count == 0 ? null : nestStack.Last.Value; //ちなみにnullになることはない（SELECTCASEがない場合は上で弾けるから）
 							} while (selectLine != null && selectLine.FunctionCode != FunctionCode.SELECTCASE);
 							//とりあえず、対応するSELECTCASE跨ぎは閉じる
-							SelectcaseStack.Pop();
+							selectCaseStack.RemoveLast();
 							//こっちでも抜かないとSELECTCASEが2つのENDSELECTに対応してしまう
-							nestStack.Pop();
+							nestStack.RemoveLast();
 							break;
 						}
-						nestStack.Pop();
-						SelectcaseStack.Pop();
+						nestStack.RemoveLast();
+						selectCaseStack.RemoveLast();
 						selectLine.JumpTo = func;
 						if (selectLine.IsError)
 							break;
@@ -1200,17 +1200,18 @@ internal sealed class ErbLoader
 					//if (parentFunc == FunctionCode.__NULL__)
 					//    throw new ExeEE("何か変？");
 					if (nestStack.Count == 0
-						|| nestStack.Peek().FunctionCode != parentFunc)
+						|| nestStack.Last.Value.FunctionCode != parentFunc)
 					{
 						ParserMediator.Warn(string.Format(trerror.MissingCorresponding.Text, parentFunc.ToString(), func.Function.Name), func, 2, true, false);
 						break;
 					}
-					pairLine = nestStack.Pop();//REPEAT
+					pairLine = nestStack.Last.Value;//REPEAT
+					nestStack.RemoveLast();
 					func.JumpTo = pairLine;
 					pairLine.JumpTo = func;
 					break;
 				case FunctionCode.CATCH:
-					pairLine = nestStack.Count == 0 ? null : nestStack.Peek();
+					pairLine = nestStack.Count == 0 ? null : nestStack.Last.Value;
 					if (pairLine == null
 						|| pairLine.FunctionCode != FunctionCode.TRYCGOTO
 						&& pairLine.FunctionCode != FunctionCode.TRYCCALL
@@ -1222,18 +1223,19 @@ internal sealed class ErbLoader
 						ParserMediator.Warn(trerror.MissingTryc.Text, func, 2, true, false);
 						break;
 					}
-					pairLine = nestStack.Pop();//TRYC
+					pairLine = nestStack.Last.Value;
+					nestStack.RemoveLast();//TRYC
 					pairLine.JumpToEndCatch = func;//TRYCにCATCHの位置を教える
-					nestStack.Push(func);
 					break;
 				case FunctionCode.ENDCATCH:
 					if (nestStack.Count == 0
-						|| nestStack.Peek().FunctionCode != FunctionCode.CATCH)
+						|| nestStack.Last.Value.FunctionCode != FunctionCode.CATCH)
 					{
 						ParserMediator.Warn(trerror.UnexpectedEndcatch.Text, func, 2, true, false);
 						break;
 					}
-					pairLine = nestStack.Pop();//CATCH
+					pairLine = nestStack.Last.Value;
+					nestStack.RemoveLast();//CATCH
 					pairLine.JumpToEndCatch = func;//CATCHにENDCATCHの位置を教える
 					break;
 				case FunctionCode.PRINTDATA:
@@ -1262,7 +1264,7 @@ internal sealed class ErbLoader
 						if (func.IsError)
 							break;
 						func.dataList = [];
-						nestStack.Push(func);
+						nestStack.AddLast(func);
 						break;
 					}
 				case FunctionCode.STRDATA:
@@ -1283,39 +1285,39 @@ internal sealed class ErbLoader
 						if (func.IsError)
 							break;
 						func.dataList = [];
-						nestStack.Push(func);
+						nestStack.AddLast(func);
 						break;
 					}
 				case FunctionCode.DATALIST:
 					{
-						var pline = nestStack.Count == 0 ? null : nestStack.Peek();
+						var pline = nestStack.Count == 0 ? null : nestStack.Last.Value;
 						if (pline == null || !pline.Function.IsPrintData() && pline.FunctionCode != FunctionCode.STRDATA)
 						{
 							ParserMediator.Warn(trerror.UnexpectedDatalist.Text, func, 2, true, false);
 							break;
 						}
 						tempLineList = [];
-						nestStack.Push(func);
+						nestStack.AddLast(func);
 
 						break;
 					}
 				case FunctionCode.ENDLIST:
 					{
-						if (nestStack.Count == 0 || nestStack.Peek().FunctionCode != FunctionCode.DATALIST)
+						if (nestStack.Count == 0 || nestStack.Last.Value.FunctionCode != FunctionCode.DATALIST)
 						{
 							ParserMediator.Warn(trerror.UnexpectedEndlist.Text, func, 2, true, false);
 							break;
 						}
 						if (tempLineList.Count == 0)
 							ParserMediator.Warn(trerror.DatalistDataIsMissing.Text, func, 1, false, false);
-						nestStack.Pop();
-						nestStack.Peek().dataList.Add(tempLineList);
+						nestStack.RemoveLast();
+						nestStack.Last.Value.dataList.Add(tempLineList);
 						break;
 					}
 				case FunctionCode.DATA:
 				case FunctionCode.DATAFORM:
 					{
-						InstructionLine pdata = nestStack.Count == 0 ? null : nestStack.Peek();
+						InstructionLine pdata = nestStack.Count == 0 ? null : nestStack.Last.Value;
 						if (pdata == null || !pdata.Function.IsPrintData() && pdata.FunctionCode != FunctionCode.DATALIST && pdata.FunctionCode != FunctionCode.STRDATA)
 						{
 							ParserMediator.Warn(string.Format(trerror.MissingPrintdata.Text, func.Function.Name), func, 2, true, false);
@@ -1333,7 +1335,7 @@ internal sealed class ErbLoader
 					}
 				case FunctionCode.ENDDATA:
 					{
-						InstructionLine pline = nestStack.Count == 0 ? null : nestStack.Peek();
+						InstructionLine pline = nestStack.Count == 0 ? null : nestStack.Last.Value;
 						if (pline == null || !pline.Function.IsPrintData() && pline.FunctionCode != FunctionCode.STRDATA)
 						{
 							ParserMediator.Warn(string.Format(trerror.MissingPrintdataStrdata.Text, func.Function.Name), func, 2, true, false);
@@ -1344,7 +1346,7 @@ internal sealed class ErbLoader
 						if (pline.dataList.Count == 0)
 							ParserMediator.Warn(string.Format(trerror.InstructionDataIsMissing.Text, pline.Function.Name), func, 1, false, false);
 						pline.JumpTo = func;
-						nestStack.Pop();
+						nestStack.RemoveLast();
 						break;
 					}
 				case FunctionCode.TRYCALLLIST:
@@ -1361,11 +1363,11 @@ internal sealed class ErbLoader
 					if (func.IsError)
 						break;
 					func.callList = [];
-					nestStack.Push(func);
+					nestStack.AddLast(func);
 					break;
 				case FunctionCode.FUNC:
 					{
-						InstructionLine pFunc = nestStack.Count == 0 ? null : nestStack.Peek();
+						InstructionLine pFunc = nestStack.Count == 0 ? null : nestStack.Last.Value;
 						if (pFunc == null ||
 							pFunc.FunctionCode != FunctionCode.TRYCALLLIST && pFunc.FunctionCode != FunctionCode.TRYJUMPLIST && pFunc.FunctionCode != FunctionCode.TRYGOTOLIST)
 						{
@@ -1395,7 +1397,7 @@ internal sealed class ErbLoader
 						break;
 					}
 				case FunctionCode.ENDFUNC:
-					var pf = nestStack.Count == 0 ? null : nestStack.Peek();
+					var pf = nestStack.Count == 0 ? null : nestStack.Last.Value;
 					if (pf == null ||
 						pf.FunctionCode != FunctionCode.TRYCALLLIST && pf.FunctionCode != FunctionCode.TRYJUMPLIST && pf.FunctionCode != FunctionCode.TRYGOTOLIST)
 					{
@@ -1403,7 +1405,7 @@ internal sealed class ErbLoader
 						break;
 					}
 					pf.JumpTo = func;
-					nestStack.Pop();
+					nestStack.RemoveLast();
 					break;
 				case FunctionCode.NOSKIP:
 					foreach (var iLine in nestStack)
@@ -1416,10 +1418,10 @@ internal sealed class ErbLoader
 					}
 					if (func.IsError)
 						break;
-					nestStack.Push(func);
+					nestStack.AddLast(func);
 					break;
 				case FunctionCode.ENDNOSKIP:
-					var pfunc = nestStack.Count == 0 ? null : nestStack.Peek();
+					var pfunc = nestStack.Count == 0 ? null : nestStack.Last.Value;
 					if (pfunc == null ||
 						pfunc.FunctionCode != FunctionCode.NOSKIP)
 					{
@@ -1429,7 +1431,7 @@ internal sealed class ErbLoader
 					//エラーハンドリング用
 					pfunc.JumpTo = func;
 					func.JumpTo = pfunc;
-					nestStack.Pop();
+					nestStack.RemoveLast();
 					break;
 			}
 
@@ -1437,7 +1439,8 @@ internal sealed class ErbLoader
 
 		while (nestStack.Count != 0)
 		{
-			var func = nestStack.Pop();
+			var func = nestStack.Last.Value;
+			nestStack.RemoveLast();
 			string funcName = func.Function.Name;
 			string funcMatch = FunctionIdentifier.getMatchFunction(func.FunctionCode);
 			if (func != null)
@@ -1446,7 +1449,7 @@ internal sealed class ErbLoader
 				ParserMediator.Warn(trerror.DefaultError.Text, func, 2, true, false);
 		}
 		//使ったスタックをクリア
-		SelectcaseStack.Clear();
+		selectCaseStack.Clear();
 	}
 
 	private void setJumpTo(FunctionLabelLine label)
