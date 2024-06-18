@@ -190,15 +190,13 @@ internal static class ExpressionParser
 	/// <returns></returns>
 	public static CaseExpression[] ReduceCaseExpressions(WordCollection wc)
 	{
-		List<CaseExpression> terms = [];
+		LinkedList<CaseExpression> terms = [];
 		while (!wc.EOL)
 		{
-			terms.Add(reduceCaseExpression(wc));
+			terms.AddLast(reduceCaseExpression(wc));
 			wc.ShiftNext();
 		}
-		CaseExpression[] ret = new CaseExpression[terms.Count];
-		terms.CopyTo(ret);
-		return ret;
+		return [.. terms];
 	}
 	#region EE_ERD
 	// public static IOperandTerm ReduceVariableArgument(WordCollection wc, VariableCode varCode)
