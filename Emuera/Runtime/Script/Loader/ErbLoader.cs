@@ -1006,10 +1006,8 @@ internal sealed class ErbLoader
 					break;
 				case FunctionCode.IF:
 					nestStack.AddLast(func);
-					func.IfCaseList =
-					[
-						func
-					];
+					func.IfCaseList = [];
+					func.IfCaseList.AddLast(func);
 					break;
 				case FunctionCode.SELECTCASE:
 					nestStack.AddLast(func);
@@ -1090,9 +1088,9 @@ internal sealed class ErbLoader
 							ParserMediator.Warn(string.Format(trerror.InvalidElse.Text, func.Function.Name), func, 2, true, false);
 							break;
 						}
-						if (ifLine.IfCaseList[^1].FunctionCode == FunctionCode.ELSE)
+						if (ifLine.IfCaseList.Last.Value.FunctionCode == FunctionCode.ELSE)
 							ParserMediator.Warn(string.Format(trerror.InvalidElseAfterElse.Text, func.Function.Name), func, 1, false, false);
-						ifLine.IfCaseList.Add(func);
+						ifLine.IfCaseList.AddLast(func);
 					}
 					break;
 				case FunctionCode.ENDIF:
@@ -1132,9 +1130,9 @@ internal sealed class ErbLoader
 							break;
 						}
 						if (selectLine.IfCaseList.Count > 0 &&
-							selectLine.IfCaseList[^1].FunctionCode == FunctionCode.CASEELSE)
+							selectLine.IfCaseList.Last.Value.FunctionCode == FunctionCode.CASEELSE)
 							ParserMediator.Warn(string.Format(trerror.InvalidCaseAfterCaseelse.Text, func.Function.Name), func, 1, false, false);
-						selectLine.IfCaseList.Add(func);
+						selectLine.IfCaseList.AddLast(func);
 					}
 					break;
 				case FunctionCode.ENDSELECT:
