@@ -460,6 +460,8 @@ internal sealed class ErbLoader
 					}
 				}
 			}
+			nextLine.ParentLabelLine = lastLabelLine;
+
 			lastLine = addLine(nextLine, lastLine);
 		}
 		addLine(new NullLine(), lastLine);

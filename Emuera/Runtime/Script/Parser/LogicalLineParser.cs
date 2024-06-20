@@ -401,10 +401,7 @@ internal static class LogicalLineParser
 						errMes = trerror.StartedPlusButNotIncrement.Text;
 					else
 						errMes = trerror.StartedMinusButNotDecrement.Text;
-					return new InvalidLine(position, errMes)
-					{
-						ParentLabelLine = parentLine
-					};
+					return new InvalidLine(position, errMes);
 				}
 				wc.ShiftNext();
 				//token = EpressionParser.単語一個分取得(wc)
@@ -413,10 +410,7 @@ internal static class LogicalLineParser
 				//token変更不可能
 				//if (wc != EOS)
 				//
-				return new InstructionLine(position, FunctionIdentifier.SETFunction, opWT.Code, wc, null)
-				{
-					ParentLabelLine = parentLine
-				};
+				return new InstructionLine(position, FunctionIdentifier.SETFunction, opWT.Code, wc, null);
 			}
 			#endregion
 			IdentifierWord idWT = LexicalAnalyzer.ReadFirstIdentifierWord(stream);
@@ -428,10 +422,7 @@ internal static class LogicalLineParser
 				{
 					if (func.Code == FunctionCode.VARI)
 					{
-						var line = new InstructionLine(position, func, stream)
-						{
-							ParentLabelLine = parentLine
-						};
+						var line = new InstructionLine(position, func, stream);
 						var statementsStr = line.PopArgumentPrimitive().Substring();
 						var commentIndex = statementsStr.IndexOf(';');
 						if (commentIndex != -1)
@@ -486,10 +477,7 @@ internal static class LogicalLineParser
 					}
 					else if (func.Code == FunctionCode.VARS)
 					{
-						var line = new InstructionLine(position, func, stream)
-						{
-							ParentLabelLine = parentLine
-						};
+						var line = new InstructionLine(position, func, stream);
 						var statementsStr = line.PopArgumentPrimitive().Substring();
 						var commentIndex = statementsStr.IndexOf(';', StringComparison.Ordinal);
 						if (commentIndex != -1)
@@ -539,10 +527,7 @@ internal static class LogicalLineParser
 					}
 
 					if (stream.EOS) //引数の無い関数
-						return new InstructionLine(position, func, stream)
-						{
-							ParentLabelLine = parentLine
-						};
+						return new InstructionLine(position, func, stream);
 					var current = stream.Current;
 					if (current != ';' && current != ' ' && current != '\t' && (!Config.Config.SystemAllowFullSpace || current != '　'))
 					{
@@ -556,10 +541,7 @@ internal static class LogicalLineParser
 						};
 					}
 					stream.ShiftNext();
-					return new InstructionLine(position, func, stream)
-					{
-						ParentLabelLine = parentLine,
-					};
+					return new InstructionLine(position, func, stream);
 				}
 			}
 			LexicalAnalyzer.SkipWhiteSpace(stream);
