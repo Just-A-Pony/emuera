@@ -441,6 +441,7 @@ internal sealed partial class FunctionIdentifier
 		}
 
 		addPrintFunction(FunctionCode.PRINTN);
+		addPrintFunction(FunctionCode.PRINTVN);
 		addPrintFunction(FunctionCode.PRINTSN);
 		addPrintFunction(FunctionCode.PRINTFORMN);
 		addPrintFunction(FunctionCode.PRINTFORMSN);
