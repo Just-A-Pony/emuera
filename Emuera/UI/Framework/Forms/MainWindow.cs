@@ -4,6 +4,7 @@ using MinorShift.Emuera.Runtime.Script;
 using MinorShift.Emuera.Runtime.Script.Statements;
 using MinorShift.Emuera.Runtime.Utils;
 using MinorShift.Emuera.Runtime.Utils.EvilMask;
+using MinorShift.Emuera.UI;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -1391,19 +1392,22 @@ namespace MinorShift.Emuera.Forms
 			labelMacroGroupChanged.Visible = true;
 		}
 
+		Font _tooltipFont;
+
 		private void toolTipButton_Draw(object sender, DrawToolTipEventArgs e)
 		{
 			e.DrawBackground();
 			e.DrawBorder();
 
-			e.Graphics.DrawString(e.ToolTipText, Config.DefaultFont, SystemBrushes.InfoText, e.Bounds);
-
+			e.Graphics.DrawString(e.ToolTipText, _tooltipFont, SystemBrushes.InfoText, e.Bounds);
 		}
 
 		private void toolTipButton_Popup(object sender, PopupEventArgs e)
 		{
+			_tooltipFont ??= new Font(Config.DefaultFont.FontFamily, Config.DefaultFont.Size * 0.6f);
+
 			var toolTip = (ToolTip)sender;
-			e.ToolTipSize = TextRenderer.MeasureText(toolTip.GetToolTip(e.AssociatedControl), Config.DefaultFont);
+			e.ToolTipSize = TextRenderer.MeasureText(toolTip.GetToolTip(e.AssociatedControl), _tooltipFont);
 		}
 	}
 }
