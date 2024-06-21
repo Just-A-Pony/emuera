@@ -2,6 +2,7 @@
 using MinorShift.Emuera.GameData.Variable;
 using MinorShift.Emuera.GameProc.Function;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Config.JSON;
 using MinorShift.Emuera.Runtime.Script.Data;
 using MinorShift.Emuera.Runtime.Script.Statements;
 using MinorShift.Emuera.Runtime.Script.Statements.Expression;
@@ -657,6 +658,12 @@ internal partial class IdentifierDictionary
 
 			}
 		}
+		if (!JSONConfig.Data.UseScopedVariableInstruction &&
+			(idStr == "VARS" || idStr == "VARI"))
+		{
+			throw new CodeEE($"{idStr}命令は現在の設定では使用できません");
+		}
+
 		throw new IdentifierNotFoundCodeEE(string.Format(treer.CanNotInterpreted.Text, idStr));
 	}
 	[GeneratedRegex("^COM[0-9]+$")]
