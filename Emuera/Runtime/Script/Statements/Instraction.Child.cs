@@ -39,7 +39,14 @@ internal sealed partial class FunctionIdentifier
 	
 			var privateVar = func.ParentLabelLine.GetPrivateVariable(varName);
 			privateVar.ScopeIn();
-			privateVar.SetValue(arg.Exp.GetIntValue(exm), [0]);
+			if (privateVar.GetLength(0) == 1)
+			{
+				privateVar.SetValue(arg.Exp.GetIntValue(exm), [0]);
+			}
+			else
+			{
+
+			}
 		}
 
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -56,7 +63,14 @@ internal sealed partial class FunctionIdentifier
 
 			var privateVar = func.ParentLabelLine.GetPrivateVariable(varName);
 			privateVar.ScopeIn();
-			privateVar.SetValue(arg.Value, [0]);
+			if (privateVar.GetLength(0) == 1)
+			{
+				privateVar.SetValue(arg.Value, [0]);
+			}
+			else
+			{
+
+			}
 		}
 
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
