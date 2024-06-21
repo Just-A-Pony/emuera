@@ -390,6 +390,7 @@ enum FunctionCode
 	#region Emuera.NET
 	VARI,
 	VARS,
+	HTML_PRINT_ISLAND,
 
 	PRINTN,//改行をしないで入力待ち
 	PRINTVN,

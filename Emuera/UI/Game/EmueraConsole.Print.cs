@@ -47,6 +47,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		CBProc.ClearScreen();
 		#endregion
 		displayLineList.Clear();
+		_htmlElementList.Clear();
 		#region EM_私家版_描画拡張
 		ConsoleEscapedParts.Clear();
 		#endregion
@@ -128,6 +129,12 @@ internal sealed partial class EmueraConsole : IDisposable
 		}
 		RefreshStrings(true);
 		_drawStopwatch.Restart();
+	}
+
+	//完全に独立したHTML
+	public void PrintHTMLIsland(string html)
+	{
+		_htmlElementList.AddRange(HtmlManager.Html2DisplayLine(html, stringMeasure, this));
 	}
 
 	/// <summary>

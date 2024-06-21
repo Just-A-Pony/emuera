@@ -658,3 +658,14 @@ internal sealed class StrAsignArgument : Argument
 	}
 }
 #endregion
+
+internal sealed class HTML_PRINTArgument : Argument
+{
+	public HTML_PRINTArgument(AExpression termSrc, AExpression lineEnd)
+	{
+		Term = termSrc;
+		LineEnd = lineEnd;
+	}
+	readonly public AExpression LineEnd;
+	readonly public AExpression Term;
+}

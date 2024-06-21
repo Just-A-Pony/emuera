@@ -1535,7 +1535,6 @@ internal sealed partial class EmueraConsole : IDisposable
 		return window.Text;
 	}
 
-
 	/// <summary>
 	/// 1818以前のRefreshStringsからselectingButton部分を抽出
 	/// ここでOnPaintを発行
@@ -1614,6 +1613,9 @@ internal sealed partial class EmueraConsole : IDisposable
 		return pointY;
 	}
 	#endregion
+
+	List<ConsoleDisplayLine> _htmlElementList = new(10);
+
 	/// <summary>
 	/// 1818以前のRefreshStringsの後半とm_RefreshStringsを融合
 	/// 全面Clear法のみにしたのでさっぱりした。ダブルバッファリングはOnPaintが勝手にやるはず
@@ -1734,6 +1736,15 @@ internal sealed partial class EmueraConsole : IDisposable
 		if (Config.RikaiEnabled)
 			rikaichan.OnPaint(graph, stringMeasure, window.MainPicBox.Width);
 		#endregion
+
+		//真のHTML描画
+		var y = 0;
+		foreach (var element in _htmlElementList)
+		{
+			element.DrawTo(graph, y, false, false, Config.TextDrawingMode);
+			y += Config.LineHeight;
+		}
+
 		//ToolTip描画
 		if (lastPointingString != pointingString || lastSelectingCBGButtonInt != selectingCBGButtonInt)
 		{
