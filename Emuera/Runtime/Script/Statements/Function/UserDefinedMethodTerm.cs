@@ -1,11 +1,11 @@
-﻿using System;
-using MinorShift.Emuera.GameProc;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.Sub;
-using trerror = EvilMask.Emuera.Lang.Error;
+﻿using MinorShift.Emuera.Runtime.Script.Data;
+using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Utils;
+using System;
 using System.Collections.Generic;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.GameData.Function;
+namespace MinorShift.Emuera.Runtime.Script.Statements.Function;
 
 internal abstract class SuperUserDefinedMethodTerm : AExpression
 {
@@ -17,15 +17,13 @@ internal abstract class SuperUserDefinedMethodTerm : AExpression
 	public abstract CalledFunction Call { get; }
 	public override long GetIntValue(ExpressionMediator exm)
 	{
-		SingleTerm term = exm.Process.GetValue(this);
-		if (term == null)
+		if (exm.Process.GetValue(this) is not SingleLongTerm term)
 			return 0;
 		return term.Int;
 	}
 	public override string GetStrValue(ExpressionMediator exm)
 	{
-		SingleTerm term = exm.Process.GetValue(this);
-		if (term == null)
+		if (exm.Process.GetValue(this) is not SingleStrTerm term)
 			return "";
 		return term.Str;
 	}
@@ -34,10 +32,10 @@ internal abstract class SuperUserDefinedMethodTerm : AExpression
 		SingleTerm term = exm.Process.GetValue(this);
 		if (term == null)
 		{
-			if (GetOperandType() == typeof(Int64))
-				return new SingleTerm(0);
+			if (GetOperandType() == typeof(long))
+				return new SingleLongTerm(0);
 			else
-				return new SingleTerm("");
+				return new SingleStrTerm("");
 		}
 		return term;
 	}
@@ -86,8 +84,8 @@ internal sealed class UserDefinedRefMethodTerm : SuperUserDefinedMethodTerm
 		this.srcArgs = srcArgs;
 		this.reffunc = reffunc;
 	}
-	List<AExpression> srcArgs = null;
-	readonly UserDefinedRefMethod reffunc = null;
+	List<AExpression> srcArgs;
+	readonly UserDefinedRefMethod reffunc;
 	public override UserDefinedFunctionArgument Argument
 	{
 		get
@@ -132,7 +130,7 @@ internal sealed class UserDefinedRefMethodNoArgTerm : SuperUserDefinedMethodTerm
 	{
 		this.reffunc = reffunc;
 	}
-	readonly UserDefinedRefMethod reffunc = null;
+	readonly UserDefinedRefMethod reffunc;
 	public override UserDefinedFunctionArgument Argument
 	{ get { throw new CodeEE(string.Format(trerror.RefFuncHasNotArg.Text, reffunc.Name)); } }
 	public override CalledFunction Call

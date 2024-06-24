@@ -1,14 +1,15 @@
-﻿using System;
+﻿using MinorShift.Emuera.GameData.Variable;
+using MinorShift.Emuera.Runtime.Script.Data;
+using MinorShift.Emuera.Runtime.Script.Parser;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
+using MinorShift.Emuera.Runtime.Utils;
+using System;
 using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.GameData.Function;
-using System.Windows.Forms;
-using trerror = EvilMask.Emuera.Lang.Error;
-using MinorShift.Emuera.Runtime.Config;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.GameData.Expression;
+namespace MinorShift.Emuera.Runtime.Script.Statements.Expression;
 
 internal enum ArgsEndWith
 {
@@ -53,7 +54,7 @@ internal static class ExpressionParser
 	{
 		if (wc == null)
 			throw new ExeEE(trerror.EmptyStream.Text);
-		List<AExpression> terms = [];
+		var terms = new LinkedList<AExpression>();
 		TermEndWith termEndWith = TermEndWith.EoL;
 		switch (endWith)
 		{
@@ -98,12 +99,12 @@ internal static class ExpressionParser
 
 				}
 				if (!isDefine)
-					terms.Add(ReduceExpressionTerm(wc, termEndWith));
+					terms.AddLast(ReduceExpressionTerm(wc, termEndWith));
 
 				else
 				{
-					terms.Add(ReduceExpressionTerm(wc, termEndWith_Assignment));
-					if (terms[terms.Count - 1] == null)
+					terms.AddLast(ReduceExpressionTerm(wc, termEndWith_Assignment));
+					if (terms.Last == null)
 						throw new CodeEE("関数定義の引数は省略できません");
 					if (wc.Current is OperatorWord)
 					{//=がある
@@ -111,16 +112,16 @@ internal static class ExpressionParser
 						AExpression term = reduceTerm(wc, false, termEndWith, VariableCode.__NULL__);
 						if (term == null)
 							throw new CodeEE("'='の後に式がありません");
-						if (term.GetOperandType() != terms[terms.Count - 1].GetOperandType())
+						if (term.GetOperandType() != terms.Last.Value.GetOperandType())
 							throw new CodeEE("'='の前後で型が一致しません");
-						terms.Add(term);
+						terms.AddLast(term);
 					}
 					else
 					{
-						if (terms[terms.Count - 1].GetOperandType() == typeof(Int64))
-							terms.Add(new NullTerm(0));
+						if (terms.Last.Value.GetOperandType() == typeof(long))
+							terms.AddLast(new NullTerm(0));
 						else
-							terms.Add(new NullTerm(""));
+							terms.AddLast(new NullTerm(""));
 					}
 				}
 				if (wc.Current.Type == ',')
@@ -129,7 +130,7 @@ internal static class ExpressionParser
 			}
 		}
 		local();
-		return terms;
+		return [.. terms];
 	}
 
 
@@ -165,7 +166,7 @@ internal static class ExpressionParser
 		AExpression term = reduceTerm(wc, false, endwith, VariableCode.__NULL__);
 		if (term == null)
 			throw new CodeEE(trerror.CanNotInterpretedExpression.Text);
-		if (term.GetOperandType() != typeof(Int64))
+		if (term.GetOperandType() != typeof(long))
 			throw new CodeEE(trerror.ExpressionResultIsNotNumeric.Text);
 		return term;
 	}
@@ -179,7 +180,7 @@ internal static class ExpressionParser
 	{
 		StrForm strf = StrForm.FromWordToken(sfw);
 		if (strf.IsConst)
-			return new SingleTerm(strf.GetString(null));
+			return new SingleStrTerm(strf.GetString(null));
 		return new StrFormTerm(strf);
 	}
 
@@ -190,15 +191,13 @@ internal static class ExpressionParser
 	/// <returns></returns>
 	public static CaseExpression[] ReduceCaseExpressions(WordCollection wc)
 	{
-		List<CaseExpression> terms = [];
+		LinkedList<CaseExpression> terms = [];
 		while (!wc.EOL)
 		{
-			terms.Add(reduceCaseExpression(wc));
+			terms.AddLast(reduceCaseExpression(wc));
 			wc.ShiftNext();
 		}
-		CaseExpression[] ret = new CaseExpression[terms.Count];
-		terms.CopyTo(ret);
-		return ret;
+		return [.. terms];
 	}
 	#region EE_ERD
 	// public static IOperandTerm ReduceVariableArgument(WordCollection wc, VariableCode varCode)
@@ -261,8 +260,8 @@ internal static class ExpressionParser
 					GlobalStatic.IdentifierDictionary.ThrowException(idStr, true);
 				else
 				{
-					if (GlobalStatic.tempDic.ContainsKey(idStr))
-						GlobalStatic.tempDic[idStr]++;
+					if (GlobalStatic.tempDic.TryGetValue(idStr, out long value))
+						GlobalStatic.tempDic[idStr] = ++value;
 					else
 						GlobalStatic.tempDic.Add(idStr, 1);
 					return new NullTerm(0);
@@ -285,7 +284,7 @@ internal static class ExpressionParser
 			if (refToken != null)//関数参照と名前が一致したらそれを返す。実際に使うとエラー
 				return refToken;
 			if (varCode != VariableCode.__NULL__ && GlobalStatic.ConstantData.isDefined(varCode, idStr))//連想配列的な可能性アリ
-				return new SingleTerm(idStr);
+				return new SingleStrTerm(idStr);
 			#region EE_ERD
 			else if (varId != null)
 			{
@@ -296,19 +295,19 @@ internal static class ExpressionParser
 					case VariableCode.CVAR:
 					case VariableCode.CVARS:
 						if (GlobalStatic.ConstantData.isUserDefined(varId.Name, idStr, 1))//ユーザー定義変数は名前付けられるようになったので通す
-							return new SingleTerm(idStr);
+							return new SingleStrTerm(idStr);
 						break;
 					case VariableCode.VAR2D:
 					case VariableCode.VARS2D:
 					case VariableCode.CVAR2D:
 					case VariableCode.CVARS2D:
 						if (GlobalStatic.ConstantData.isUserDefined(varId.Name, idStr, 2))//ユーザー定義変数は名前付けられるようになったので通す
-							return new SingleTerm(idStr);
+							return new SingleStrTerm(idStr);
 						break;
 					case VariableCode.VAR3D:
 					case VariableCode.VARS3D:
 						if (GlobalStatic.ConstantData.isUserDefined(varId.Name, idStr, 3))//ユーザー定義変数は名前付けられるようになったので通す
-							return new SingleTerm(idStr);
+							return new SingleStrTerm(idStr);
 						break;
 				}
 			}
@@ -326,7 +325,7 @@ internal static class ExpressionParser
 	{
 		CaseExpression ret = new();
 		IdentifierWord id = wc.Current as IdentifierWord;
-		if ((id != null) && id.Code.Equals("IS", Config.StringComparison))
+		if (id != null && id.Code.Equals("IS", Config.Config.StringComparison))
 		{
 			wc.ShiftNext();
 			ret.CaseType = CaseExpressionType.Is;
@@ -349,7 +348,7 @@ internal static class ExpressionParser
 		if (ret.LeftTerm == null)
 			throw new CodeEE(trerror.CanNotOmitCaseArg.Text);
 		id = wc.Current as IdentifierWord;
-		if ((id != null) && id.Code.Equals("TO", Config.StringComparison))
+		if (id != null && id.Code.Equals("TO", Config.Config.StringComparison))
 		{
 			ret.CaseType = CaseExpressionType.To;
 			wc.ShiftNext();
@@ -357,7 +356,7 @@ internal static class ExpressionParser
 			if (ret.RightTerm == null)
 				throw new CodeEE(trerror.NoExpressionAfterTo.Text);
 			id = wc.Current as IdentifierWord;
-			if ((id != null) && (id.Code.Equals("TO", Config.StringComparison)))
+			if (id != null && id.Code.Equals("TO", Config.Config.StringComparison))
 				throw new CodeEE(trerror.DuplicateTo.Text);
 			if (ret.LeftTerm.GetOperandType() != ret.RightTerm.GetOperandType())
 				throw new CodeEE(trerror.DoesNotMatchTo.Text);
@@ -394,7 +393,7 @@ internal static class ExpressionParser
 				case '\0':
 					return end(stack, ternaryCount);
 				case '"'://LiteralStringWT
-					stack.Add((token as LiteralStringWord).Str); 
+					stack.Add((token as LiteralStringWord).Str);
 					break;
 				case '0'://LiteralIntegerWT
 					stack.Add((token as LiteralIntegerWord).Int);
@@ -405,14 +404,14 @@ internal static class ExpressionParser
 				case 'A'://IdentifierWT
 					{
 						string idStr = (token as IdentifierWord).Code;
-						if (idStr.Equals("TO", Config.StringComparison))
+						if (idStr.Equals("TO", Config.Config.StringComparison))
 						{
 							if (allowKeywordTo)
 								return end(stack, ternaryCount);
 							else
 								throw new CodeEE(trerror.InvalidTo.Text);
 						}
-						else if (idStr.Equals("IS", Config.StringComparison))
+						else if (idStr.Equals("IS", Config.Config.StringComparison))
 							throw new CodeEE(trerror.InvalidIs.Text);
 
 						#region EM_私家版_HTMLパラメータ拡張
@@ -436,7 +435,7 @@ internal static class ExpressionParser
 						if (op == OperatorCode.Assignment)
 						{
 							if ((endWith & TermEndWith.Assignment) == TermEndWith.Assignment)
-								return end(stack, ternaryCount); 
+								return end(stack, ternaryCount);
 							throw new CodeEE(trerror.EqualInExpression.Text);
 						}
 
@@ -508,17 +507,17 @@ internal static class ExpressionParser
 	/// <summary>
 	/// 式解決用クラス
 	/// </summary>
-	private class TermStack
+	private sealed class TermStack
 	{
 		/// <summary>
 		/// 次に来るべきものの種類。
 		/// (前置)単項演算子か値待ちなら0、二項・三項演算子待ちなら1、値待ちなら2、++、--、!に対応する値待ちの場合は3。
 		/// </summary>
-		int state = 0;
-		bool hasBefore = false;
-		bool hasAfter = false;
-		bool waitAfter = false;
-		Stack<Object> stack = new(5);
+		int state;
+		bool hasBefore;
+		bool hasAfter;
+		bool waitAfter;
+		Stack<object> stack = new(5);
 		public void Add(OperatorCode op)
 		{
 			if (state == 2 || state == 3)
@@ -568,7 +567,7 @@ internal static class ExpressionParser
 				//直前の計算の優先度が同じか高いなら還元。
 				while (lastPriority() >= priority)
 				{
-					this.reduceLastThree();
+					reduceLastThree();
 				}
 				stack.Push(op);
 				state = 0;
@@ -579,8 +578,8 @@ internal static class ExpressionParser
 			}
 			throw new CodeEE(trerror.UnrecognizedSyntax.Text);
 		}
-		public void Add(Int64 i) { Add(new SingleTerm(i)); }
-		public void Add(string s) { Add(new SingleTerm(s)); }
+		public void Add(long i) { Add(new SingleLongTerm(i)); }
+		public void Add(string s) { Add(new SingleStrTerm(s)); }
 		public void Add(AExpression term)
 		{
 			stack.Push(term);
@@ -602,7 +601,7 @@ internal static class ExpressionParser
 		{
 			if (stack.Count < 3)
 				return -1;
-			object temp = (object)stack.Pop();
+			object temp = stack.Pop();
 			OperatorCode opCode = (OperatorCode)stack.Peek();
 			int priority = OperatorManager.GetPriority(opCode);
 			stack.Push(temp);

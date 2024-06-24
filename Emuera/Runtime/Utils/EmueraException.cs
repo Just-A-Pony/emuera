@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using trerror = EvilMask.Emuera.Lang.Error;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.Sub;
+namespace MinorShift.Emuera.Runtime.Utils;
 
-[Serializable]
 internal abstract class EmueraException : ApplicationException
 {
 	protected EmueraException(string errormes, ScriptPosition? position)
@@ -23,7 +21,7 @@ internal abstract class EmueraException : ApplicationException
 /// <summary>
 /// emuera本体に起因すると思われるエラー
 /// </summary>
-[Serializable]
+
 internal sealed class ExeEE : EmueraException
 {
 	public ExeEE(string errormes)
@@ -39,7 +37,7 @@ internal sealed class ExeEE : EmueraException
 /// <summary>
 /// スクリプト側に起因すると思われるエラー
 /// </summary>
-[Serializable]
+
 internal class CodeEE : EmueraException
 {
 	public CodeEE(string errormes, ScriptPosition? position)
@@ -55,8 +53,8 @@ internal class CodeEE : EmueraException
 /// <summary>
 /// スクリプト側に起因すると思われるエラーのうち、未定義の識別子に関連するもの
 /// </summary>
-[Serializable]
-internal class IdentifierNotFoundCodeEE : CodeEE
+
+internal sealed class IdentifierNotFoundCodeEE : CodeEE
 {
 	public IdentifierNotFoundCodeEE(string errormes, ScriptPosition? position)
 		: base(errormes, position)
@@ -71,7 +69,7 @@ internal class IdentifierNotFoundCodeEE : CodeEE
 /// <summary>
 /// 未実装エラー
 /// </summary>
-[Serializable]
+
 internal sealed class NotImplCodeEE : CodeEE
 {
 	public NotImplCodeEE(ScriptPosition? position)
@@ -87,7 +85,7 @@ internal sealed class NotImplCodeEE : CodeEE
 /// <summary>
 /// Save, Load中のエラー
 /// </summary>
-[Serializable]
+
 internal sealed class FileEE : EmueraException
 {
 	public FileEE(string errormes)

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Text;
 
-namespace MinorShift.Emuera.Sub;
+namespace MinorShift.Emuera.Runtime.Utils;
 
 public static class EncodingHandler
 {

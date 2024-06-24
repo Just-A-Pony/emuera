@@ -1,35 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using System.IO;
-using MinorShift.Emuera.GameProc.Function;
-using MinorShift.Emuera.GameView;
-using EvilMask.Emuera;
-using trmb = EvilMask.Emuera.Lang.MessageBox;
-using Emuera;
-using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Script;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
+using MinorShift.Emuera.UI;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using trmb = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.MessageBox;
 
 namespace MinorShift.Emuera.Forms
 {
 	internal sealed partial class MainWindow : Form
 	{
-		readonly FormWindowState _rebootWinState;
-		Action<MainWindow> _rebootCallback;
-
-		public MainWindow(FormWindowState formWindowState, Point windowLocation, int windowHeight, Action<MainWindow> rebootCallback)
+		public MainWindow(string[] args)
 		{
 			InitializeComponent();
-			_rebootWinState = formWindowState;
-			_rebootCallback = rebootCallback;
+			this._args = args;
 
 			if (Program.DebugMode)
 				デバッグToolStripMenuItem.Visible = true;
 
 			mainPicBox.SetStyle();
-			initControlSizeAndLocation(windowLocation, windowHeight);
+			initControlSizeAndLocation();
 			richTextBox1.ForeColor = Config.ForeColor;
 			richTextBox1.BackColor = Config.BackColor;
 			mainPicBox.BackColor = Config.BackColor;//これは実際には使用されないはず
@@ -47,7 +45,7 @@ namespace MinorShift.Emuera.Forms
 			openFileDialog.FileName = "";
 			openFileDialog.Multiselect = true;
 			openFileDialog.RestoreDirectory = true;
-			string Emuera_verInfo = "Emuera " + Application.ProductVersion;
+			string Emuera_verInfo = AssemblyData.EmueraVersionText;
 			EmuVerToolStripTextBox.Text = Emuera_verInfo;
 
 			console = new EmueraConsole(this);
@@ -97,7 +95,7 @@ namespace MinorShift.Emuera.Forms
 		public VScrollBar ScrollBar { get { return vScrollBar; } }
 		public RichTextBox TextBox { get { return richTextBox1; } }
 		public ToolTip ToolTip { get { return toolTipButton; } }
-		private EmueraConsole console = null;
+		private EmueraConsole console;
 
 		#region EM_私家版_Icon指定機能
 		public void SetupIcon(Icon icon)
@@ -225,7 +223,7 @@ namespace MinorShift.Emuera.Forms
 					break;
 				case Keys.C when (keyData & Keys.Modifiers & Keys.Control) == Keys.Control:
 				case Keys.Insert when (keyData & Keys.Modifiers & Keys.Control) == Keys.Control:
-					if (TextBox.SelectedText == "")
+					if (string.IsNullOrEmpty(TextBox.SelectedText))
 					{
 						var dialog = new ClipBoardDialog { StartPosition = FormStartPosition.CenterParent };
 						dialog.Setup(console);
@@ -361,7 +359,7 @@ namespace MinorShift.Emuera.Forms
 							int macroNum = keyCode - (int)Keys.F1;
 							if (shiftPressed)
 							{
-								if (richTextBox1.Text != "")
+								if (!string.IsNullOrEmpty(richTextBox1.Text))
 									KeyMacro.SetMacro(macroNum, macroGroup, richTextBox1.Text);
 								return true;
 							}
@@ -466,21 +464,14 @@ namespace MinorShift.Emuera.Forms
 
 		private async void Init(object sender, EventArgs e)
 		{
-			try
-			{
-				await console.Initialize();
-			}
-			catch (OperationCanceledException)
-			{
-
-			}
+			await console.Initialize();
 		}
 
 		/// <summary>
 		/// 1819 リサイズ時の処理を全廃しAnchor&Dock処理にマルナゲ
 		/// 初期設定のみここで行う。ついでに再起動時の位置・サイズ処理も追加
 		/// </summary>
-		private void initControlSizeAndLocation(Point windowLocation, int windowHeight)
+		private void initControlSizeAndLocation()
 		{
 			//Windowのサイズ設定
 			int winWidth = Config.WindowX + vScrollBar.Width;
@@ -490,7 +481,7 @@ namespace MinorShift.Emuera.Forms
 			{
 				FormBorderStyle = FormBorderStyle.Sizable;
 				MaximizeBox = true;
-				winMaximize = Config.WindowMaximixed || _rebootWinState == FormWindowState.Maximized;
+				winMaximize = Config.WindowMaximixed;
 			}
 			else
 			{
@@ -518,14 +509,10 @@ namespace MinorShift.Emuera.Forms
 				StartPosition = FormStartPosition.Manual;
 				Location = new Point(Config.WindowPosX, Config.WindowPosY);
 			}
-			else if (!winMaximize && windowLocation != new Point())
+			else if (!winMaximize)
 			{
 				StartPosition = FormStartPosition.Manual;
-				Location = windowLocation;
 			}
-			//Windowのサイズ設定・再起動時
-			if (!winMaximize && (windowHeight > 0))
-				winHeight = windowHeight;
 			ClientSize = new Size(winWidth, winHeight);
 
 			//EmuVerToolStripTextBox.Location = new Point(Config.WindowX - vScrollBar.Width - EmuVerToolStripTextBox.Width, 3);
@@ -576,7 +563,7 @@ namespace MinorShift.Emuera.Forms
 			if (Config.CBUseClipboard && e.Button == MouseButtons.Left) console.CBProc.Check(ClipboardProcessor.CBTriggers.DoubleLeftClick);
 		}
 		#endregion
-		bool changeTextbyMouse = false;
+		bool changeTextbyMouse;
 		private void mainPicBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
 		{
 			if (!Config.UseMouse)
@@ -607,11 +594,10 @@ namespace MinorShift.Emuera.Forms
 				if (isBacklog)
 					return;
 				if (console.IsError)
-					{
+				{
 					if (e.Button == MouseButtons.Left)
 					{
 						PressEnterKey(false, true);
-					return;
 						return;
 					}
 				}
@@ -623,7 +609,7 @@ namespace MinorShift.Emuera.Forms
 				return;
 			}
 			#region EM_私家版_INPUT系機能拡張
-			else if (console.IsWaintingInputWithMouse && (!console.IsError && str != null))
+			else if (console.IsWaintingInputWithMouse && !console.IsError && str != null)
 			{
 				if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
 				{
@@ -816,13 +802,14 @@ namespace MinorShift.Emuera.Forms
 		//    }
 		//}
 
+		readonly string[] _args = [];
 		public void Reboot()
 		{
-			console.forceStopTimer();
-			console.InitializeCancel();
-			_rebootCallback(this);
-			Program.rebootFlag = true;
-			Close();
+			//新たにアプリケーションを起動する
+			Process.Start(Application.ExecutablePath, _args);
+
+			//現在のアプリケーションを終了する
+			Application.ExitThread();
 		}
 
 		public void GotoTitle()
@@ -861,9 +848,7 @@ namespace MinorShift.Emuera.Forms
 			dialog.ShowDialog();
 			if (dialog.Result == ConfigDialogResult.SaveReboot)
 			{
-				console.forceStopTimer();
-				_rebootCallback(this);
-				Close();
+				Reboot();
 			}
 			if (Config.EmueraLang != lang)
 			{
@@ -946,7 +931,7 @@ namespace MinorShift.Emuera.Forms
 		{
 			try
 			{
-				ClipBoardDialog dialog = new ();
+				ClipBoardDialog dialog = new();
 				dialog.Text = Lang.UI.ClipBoardDialog.Text;
 				dialog.Setup(console);
 				dialog.ShowDialog();
@@ -1130,7 +1115,7 @@ namespace MinorShift.Emuera.Forms
 			textBox_flag = true;
 		}
 		#region EM_私家版_INPUT系機能拡張
-		Keys? modifiersWhileWaintingInputWithMouse = null;
+		Keys? modifiersWhileWaintingInputWithMouse;
 		private void richTextBox1_ModifierRecorder_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
 		{
 			if (console == null || !console.IsWaintingInputWithMouse)
@@ -1247,13 +1232,13 @@ namespace MinorShift.Emuera.Forms
 		{
 			if (!Program.DebugMode)
 				return;
-			if ((console.DebugDialog != null) && (console.DebugDialog.Created))
+			if ((console.DebugDialog != null) && console.DebugDialog.Created)
 				console.DebugDialog.UpdateData();
 		}
 
 		private void AutoVerbMenu_Opened(object sender, EventArgs e)
 		{
-			if ((console == null) || (console.IsInProcess))
+			if ((console == null) || console.IsInProcess)
 			{
 				切り取り.Enabled = false;
 				コピー.Enabled = false;
@@ -1345,7 +1330,7 @@ namespace MinorShift.Emuera.Forms
 			PressEnterKey(false, false);
 		}
 
-		int macroGroup = 0;
+		int macroGroup;
 		private void マクロToolStripMenuItem_Click(object? sender, EventArgs e)
 		{
 			if ((console == null) || console.IsInProcess)
@@ -1394,7 +1379,7 @@ namespace MinorShift.Emuera.Forms
 			}
 		}
 
-		int labelTimerCount = 0;
+		int labelTimerCount;
 		private void setNewMacroGroup(int group)
 		{
 			labelTimerCount = 0;
@@ -1407,5 +1392,22 @@ namespace MinorShift.Emuera.Forms
 			labelMacroGroupChanged.Visible = true;
 		}
 
+		Font? _tooltipFont;
+
+		private void toolTipButton_Draw(object sender, DrawToolTipEventArgs e)
+		{
+			e.DrawBackground();
+			e.DrawBorder();
+
+			TextRenderer.DrawText(e.Graphics, e.ToolTipText, _tooltipFont, new Point(0, 0), Color.Black);
+		}
+
+		private void toolTipButton_Popup(object sender, PopupEventArgs e)
+		{
+			_tooltipFont ??= new Font(Config.DefaultFont.FontFamily, Config.DefaultFont.Size * 0.6f);
+
+			var toolTip = (ToolTip)sender;
+			e.ToolTipSize = TextRenderer.MeasureText(toolTip.GetToolTip(e.AssociatedControl), _tooltipFont);
+		}
 	}
 }

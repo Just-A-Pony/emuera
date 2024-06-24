@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
-using trerror = EvilMask.Emuera.Lang.Error;
-using MinorShift.Emuera.Runtime.Config;
+﻿using MinorShift.Emuera.Runtime.Script.Parser;
+using MinorShift.Emuera.Runtime.Utils;
+using System.Collections.Generic;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.GameProc;
+namespace MinorShift.Emuera.Runtime.Script.Data;
 
 internal enum UserDifinedFunctionDataArgType
 {
@@ -26,8 +26,8 @@ internal sealed class UserDefinedFunctionData
 	private UserDefinedFunctionData()
 	{
 	}
-	public string Name = null;
-	public bool TypeIsStr = false;
+	public string Name;
+	public bool TypeIsStr;
 	public UserDifinedFunctionDataArgType[] ArgList;
 
 	public static UserDefinedFunctionData Create(WordCollection wc, bool dims, ScriptPosition? sc)
@@ -92,7 +92,7 @@ internal sealed class UserDefinedFunctionData
 						goto argend;
 					if (state == 4 || state == 5)
 					{
-						if ((int)(argType & UserDifinedFunctionDataArgType.__Dimention) == 0)
+						if ((argType & UserDifinedFunctionDataArgType.__Dimention) == 0)
 							throw new CodeEE(trerror.RefArgIsNotArray.Text, sc);
 						//state = 2;
 						argList.Add(argType);
@@ -125,7 +125,7 @@ internal sealed class UserDefinedFunctionData
 					}
 					if (state == 4 || state == 5)
 					{
-						if ((int)(argType & UserDifinedFunctionDataArgType.__Dimention) == 0)
+						if ((argType & UserDifinedFunctionDataArgType.__Dimention) == 0)
 							throw new CodeEE(trerror.RefArgIsNotArray.Text, sc);
 						state = 2;
 						argList.Add(argType);

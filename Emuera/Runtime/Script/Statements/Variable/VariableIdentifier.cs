@@ -1,10 +1,9 @@
-﻿using System;
+﻿using MinorShift.Emuera.Runtime.Utils;
+using System;
 using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
-using trerror = EvilMask.Emuera.Lang.Error;
-using MinorShift.Emuera.Runtime.Config;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.GameData.Variable;
+namespace MinorShift.Emuera.Runtime.Script.Statements.Variable;
 
 //1756 全ての機能をVariableTokenとManagerに委譲、消滅
 //……しようと思ったがConstantDataから参照されているので捨て切れなかった。
@@ -130,24 +129,17 @@ internal sealed class VariableIdentifier
 	readonly static Dictionary<string, VariableCode> localvarNameDic = [];
 	readonly static Dictionary<VariableCode, List<VariableCode>> extSaveListDic = [];
 
-	public static Dictionary<string, VariableCode> GetVarNameDic()
-	{
-		return nameDic;
-	}
-
-
 	static VariableIdentifier()
 	{
-		Array array = Enum.GetValues(typeof(VariableCode));
+		var array = Enum.GetValues<VariableCode>();
 
-		nameDic.Add(VariableCode.__FILE__.ToString(), VariableCode.__FILE__);
-		nameDic.Add(VariableCode.__LINE__.ToString(), VariableCode.__LINE__);
-		nameDic.Add(VariableCode.__FUNCTION__.ToString(), VariableCode.__FUNCTION__);
-		foreach (object name in array)
+		nameDic.Add(Enum.GetName(VariableCode.__FILE__), VariableCode.__FILE__);
+		nameDic.Add(Enum.GetName(VariableCode.__LINE__), VariableCode.__LINE__);
+		nameDic.Add(Enum.GetName(VariableCode.__FUNCTION__), VariableCode.__FUNCTION__);
+		foreach (var code in array)
 		{
-			VariableCode code = (VariableCode)name;
-			string key = code.ToString();
-			if ((key == null) || (key.StartsWith("__") && key.EndsWith("__")))
+			var key = Enum.GetName(code);
+			if (key == null || key.StartsWith("__") && key.EndsWith("__"))
 				continue;
 			if (nameDic.ContainsKey(key))
 				continue;
@@ -260,9 +252,9 @@ internal sealed class VariableIdentifier
 	{
 		VariableCode gFlag = flag &
 			(VariableCode.__ARRAY_1D__ | VariableCode.__ARRAY_2D__ | VariableCode.__ARRAY_3D__ | VariableCode.__CHARACTER_DATA__ | VariableCode.__STRING__ | VariableCode.__INTEGER__);
-		if (!extSaveListDic.ContainsKey(gFlag))
+		if (!extSaveListDic.TryGetValue(gFlag, out List<VariableCode> value))
 			return [];
-		return extSaveListDic[gFlag];
+		return value;
 	}
 
 	public static VariableIdentifier GetVariableId(VariableCode code)

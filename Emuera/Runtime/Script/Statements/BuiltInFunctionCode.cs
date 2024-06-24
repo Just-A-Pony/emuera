@@ -1,4 +1,4 @@
-﻿namespace MinorShift.Emuera.GameProc.Function;
+﻿namespace MinorShift.Emuera.Runtime.Script.Statements;
 
 /// <summary>
 /// 命令コード
@@ -386,4 +386,18 @@ enum FunctionCode
 	#region EM
 	DT_COLUMN_OPTIONS,
 	#endregion
+
+	#region Emuera.NET
+	VARI,
+	VARS,
+	HTML_PRINT_ISLAND,
+	HTML_PRINT_ISLAND_CLEAR,
+
+	PRINTN,//改行をしないで入力待ち
+	PRINTVN,
+	PRINTSN,
+	PRINTFORMN,
+	PRINTFORMSN,
+	#endregion
+
 }

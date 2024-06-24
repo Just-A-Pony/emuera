@@ -1,11 +1,11 @@
-﻿using System;
+﻿using MinorShift.Emuera.GameView;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Utils;
+using System;
 using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameProc;
-using MinorShift.Emuera.GameView;
 using System.IO;
 using System.Text.RegularExpressions;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera;
 
@@ -25,7 +25,7 @@ internal partial class ParserMediator
 	/// <param name="?"></param>
 	public static void ConfigWarn(string str, ScriptPosition? pos, int level, string stack)
 	{
-		if (level < Config.DisplayWarningLevel && !Program.AnalysisMode)
+		if (level <Config.DisplayWarningLevel && !Program.AnalysisMode)
 			return;
 		warningList.Add(new ParserWarning(str, pos, level, stack));
 	}
@@ -77,6 +77,7 @@ internal partial class ParserMediator
 	}
 	#endregion
 
+	static object warningListLock = new();
 
 	public static void Warn(string str, ScriptPosition? pos, int level)
 	{
@@ -88,7 +89,12 @@ internal partial class ParserMediator
 		if (level < Config.DisplayWarningLevel && !Program.AnalysisMode)
 			return;
 		if (console != null && !console.RunERBFromMemory)
-			warningList.Add(new ParserWarning(str, pos, level, stack));
+		{
+			lock (warningListLock)
+			{
+				warningList.Add(new ParserWarning(str, pos, level, stack));
+			}
+		}
 	}
 
 	/// <summary>
@@ -144,7 +150,7 @@ internal partial class ParserMediator
 		warningList.Clear();
 	}
 
-	private class ParserWarning
+	private sealed class ParserWarning
 	{
 		public ParserWarning(string mes, ScriptPosition? pos, int level, string stackTrace)
 		{

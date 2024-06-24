@@ -1,10 +1,10 @@
-﻿using System;
+﻿using MinorShift.Emuera.Runtime.Config;
+using System;
 using System.Drawing;
 using System.Text;
-using static EvilMask.Emuera.Utils;
-using MinorShift.Emuera.Runtime.Config;
+using static MinorShift.Emuera.Runtime.Utils.EvilMask.Utils;
 
-namespace MinorShift.Emuera.GameView;
+namespace MinorShift.Emuera.UI.Game;
 
 abstract class ConsoleShapePart : AConsoleColoredPart
 {
@@ -58,7 +58,7 @@ abstract class ConsoleShapePart : AConsoleColoredPart
 				if (param.Length == 1)
 				{
 					//rectF = new RectangleF(0, 0, paramPixel[0], lineHeight);
-					var rectF = new RectangleF(0, 0, param[0].isPx ? param[0].num : ((float)param[0].num * lineHeight) / 100f, lineHeight);
+					var rectF = new RectangleF(0, 0, param[0].isPx ? param[0].num : (float)param[0].num * lineHeight / 100f, lineHeight);
 					ret = new ConsoleSpacePart(rectF);
 				}
 				break;
@@ -67,7 +67,7 @@ abstract class ConsoleShapePart : AConsoleColoredPart
 				if (param.Length == 1 && param[0].num > 0)
 				{
 					//rectF = new RectangleF(0, 0, paramPixel[0], lineHeight);
-					var rectF = new RectangleF(0, 0, param[0].isPx ? param[0].num : ((float)param[0].num * lineHeight) / 100f, lineHeight);
+					var rectF = new RectangleF(0, 0, param[0].isPx ? param[0].num : (float)param[0].num * lineHeight / 100f, lineHeight);
 					ret = new ConsoleRectangleShapePart(rectF);
 				}
 				// else if (paramPixel.Length == 4)
@@ -122,7 +122,7 @@ internal sealed class ConsoleRectangleShapePart : ConsoleShapePart
 {
 	public ConsoleRectangleShapePart(RectangleF theRect)
 	{
-		Str = "";
+		Text = "";
 		originalRectF = theRect;
 		WidthF = theRect.X + theRect.Width;
 		rect.Y = (int)theRect.Y;
@@ -139,9 +139,9 @@ internal sealed class ConsoleRectangleShapePart : ConsoleShapePart
 	public override int Top { get { return top; } }
 	public override int Bottom { get { return bottom; } }
 	readonly RectangleF originalRectF;
-	bool visible = false;
+	bool visible;
 	Rectangle rect;
-	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)
+	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
 	{
 		if (!visible)
 			return;
@@ -160,7 +160,7 @@ internal sealed class ConsoleRectangleShapePart : ConsoleShapePart
 		rect.X = (int)(subPixel + originalRectF.X);
 		rect.Width = Width - rect.X;
 		rect.X += Config.DrawingParam_ShapePositionShift;
-		visible = rect.X >= 0 && rect.Width > 0;// && rect.Y >= 0 && (rect.Y + rect.Height) <= Config.FontSize);
+		visible = rect.X >= 0 && rect.Width > 0;// && rect.Y >= 0 && (rect.Y + rect.Height) <= Config.Config.FontSize);
 	}
 }
 
@@ -168,12 +168,12 @@ internal sealed class ConsoleSpacePart : ConsoleShapePart
 {
 	public ConsoleSpacePart(RectangleF theRect)
 	{
-		Str = "";
+		Text = "";
 		WidthF = theRect.Width;
 		//Width = width;
 	}
 
-	public override void DrawTo(System.Drawing.Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode) { }
+	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false) { }
 
 	public override void SetWidth(StringMeasure sm, float subPixel)
 	{
@@ -187,25 +187,25 @@ internal sealed class ConsoleErrorShapePart : ConsoleShapePart
 {
 	public ConsoleErrorShapePart(string errMes)
 	{
-		Str = errMes;
+		Text = errMes;
 		AltText = errMes;
 	}
 
-	public override void DrawTo(System.Drawing.Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)
+	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
 	{
 		if (mode == TextDrawingMode.GRAPHICS)
-			graph.DrawString(Str, Config.DefaultFont, new SolidBrush(Config.ForeColor), new Point(PointX, pointY));
+			graph.DrawString(Text, Config.DefaultFont, new SolidBrush(Config.ForeColor), new Point(PointX, pointY));
 		else
-			System.Windows.Forms.TextRenderer.DrawText(graph, Str.AsSpan(), Config.DefaultFont, new Point(PointX, pointY), Config.ForeColor, System.Windows.Forms.TextFormatFlags.NoPrefix);
+			System.Windows.Forms.TextRenderer.DrawText(graph, Text.AsSpan(), Config.DefaultFont, new Point(PointX, pointY), Config.ForeColor, System.Windows.Forms.TextFormatFlags.NoPrefix);
 	}
 	public override void SetWidth(StringMeasure sm, float subPixel)
 	{
-		if (this.Error)
+		if (Error)
 		{
 			Width = 0;
 			return;
 		}
-		Width = sm.GetDisplayLength(Str, Config.DefaultFont);
+		Width = sm.GetDisplayLength(Text, Config.DefaultFont);
 		XsubPixel = subPixel;
 	}
 }

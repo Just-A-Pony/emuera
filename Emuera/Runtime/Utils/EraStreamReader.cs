@@ -1,11 +1,12 @@
-﻿using System;
-using System.Text;
+﻿using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Script.Parser;
+using MinorShift.Emuera.Runtime.Utils;
+using System;
 using System.IO;
-using trerror = EvilMask.Emuera.Lang.Error;
-using Emuera;
-using System.Text.RegularExpressions;
 using System.Linq;
-using MinorShift.Emuera.Runtime.Config;
+using System.Text;
+using System.Text.RegularExpressions;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
 namespace MinorShift.Emuera.Sub;
 
@@ -18,8 +19,8 @@ internal sealed partial class EraStreamReader : IDisposable
 
 	string filepath;
 	string filename;
-	readonly bool useRename = false;
-	int curNo = 0;
+	readonly bool useRename;
+	int curNo;
 	int nextNo = 1;
 	string[] _fileLines;
 	public bool Open(string path)
@@ -61,7 +62,7 @@ internal sealed partial class EraStreamReader : IDisposable
 		filename = name.ToString();
 		curNo = 0;
 		nextNo = 0;
-		_fileLines = Preload.GetFileLines(path); 
+		_fileLines = Preload.GetFileLines(path);
 		return true;
 	}
 
@@ -90,7 +91,7 @@ internal sealed partial class EraStreamReader : IDisposable
 		CharStream st;
 		while (true)
 		{
-			line = ReadLine(); 
+			line = ReadLine();
 			if (line == null)
 				return null;
 			if (line.Length == 0)
@@ -155,12 +156,12 @@ internal sealed partial class EraStreamReader : IDisposable
 					match = match.NextMatch();
 				}
 			}
-			var test = line.AsSpan().TrimStart(); 
+			var test = line.AsSpan().TrimStart();
 			if (test.Length > 0)
 			{
 				if (test[0] == '}')
 				{
-					if (!test.TrimEnd().SequenceEqual("}")) 
+					if (!test.TrimEnd().SequenceEqual("}"))
 						throw new CodeEE(trerror.CharacterAfterContinuationEnd.Text, new ScriptPosition(filename, curNo));
 					break;
 				}
@@ -168,10 +169,11 @@ internal sealed partial class EraStreamReader : IDisposable
 				//{
 				//A}
 				//みたいなどうしようもないコードは知ったこっちゃない
-				if (test.SequenceEqual("{")) 
+				if (test.SequenceEqual("{"))
 					throw new CodeEE(trerror.UnexpectedContinuation.Text, new ScriptPosition(filename, curNo));
 			}
-			b.Append($"{line} ");
+			b.Append(line);
+			b.Append(' ');
 		}
 		st = new CharStream(b.ToString());
 		LexicalAnalyzer.SkipWhiteSpace(st);
@@ -199,7 +201,7 @@ internal sealed partial class EraStreamReader : IDisposable
 	//}
 
 	public void Close() { this.Dispose(); }
-	bool disposed = false;
+	bool disposed;
 	#region IDisposable メンバ
 
 	public void Dispose()

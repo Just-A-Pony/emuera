@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
 
-namespace Emuera;
+namespace MinorShift.Emuera.Runtime.Utils;
 static partial class Preload
 {
 	static Dictionary<string, string[]> files = new(StringComparer.OrdinalIgnoreCase);
@@ -27,18 +24,23 @@ static partial class Preload
 		{
 			await Task.Run(() =>
 			{
-				Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories)
-				.Where(x =>
-				{
-					var ext = Path.GetExtension(x);
-					return ext.Equals(".csv", StringComparison.OrdinalIgnoreCase) ||
-							ext.Equals(".erb", StringComparison.OrdinalIgnoreCase) ||
-							ext.Equals(".erh", StringComparison.OrdinalIgnoreCase);
-				})
-				.AsParallel().ForAll((childPath) =>
+				Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories).AsParallel().ForAll((childPath) =>
 				{
 					var key = childPath;
-					var value = File.ReadAllLines(childPath, EncodingHandler.DetectEncoding(childPath));
+					if (false)
+					{
+						using var file = File.Open(childPath, FileMode.Open);
+						Span<byte> bom = stackalloc byte[3];
+						_ = file.Read(bom);
+						file.Close();
+						if (!bom.SequenceEqual<byte>([0xEF, 0xBB, 0xBF]))
+						{
+
+						}
+					}
+
+
+					var value = File.ReadAllLines(childPath, Config.Config.Encode);
 					lock (files)
 					{
 						files[key] = value;
@@ -49,7 +51,7 @@ static partial class Preload
 		else
 		{
 			var key = path;
-			var value = File.ReadAllLines(path, Config.Encode);
+			var value = File.ReadAllLines(path, Config.Config.Encode);
 			files[key] = value;
 		};
 

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using MinorShift.Emuera.Runtime.Script.Statements;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.IO;
-using MinorShift.Emuera.Runtime.Config;
 
-namespace MinorShift.Emuera.GameProc;
+namespace MinorShift.Emuera.Runtime.Script.Data;
 
 //1.713 LogicalLine.csから分割
 /// <summary>
@@ -23,14 +21,14 @@ internal sealed class LabelDictionary
 	/// <summary>
 	/// 本体。全てのFunctionLabelLineを記録
 	/// </summary>
-	ConcurrentDictionary<string, List<FunctionLabelLine>> labelAtDic = new(Config.StrComper); 
+	Dictionary<string, List<FunctionLabelLine>> labelAtDic = new(Config.Config.StrComper);
 	List<FunctionLabelLine> invalidList = [];
-	ConcurrentDictionary<string, Dictionary<FunctionLabelLine, GotoLabelLine>> labelDollarList = new(Config.StrComper); 
+	Dictionary<string, Dictionary<FunctionLabelLine, GotoLabelLine>> labelDollarList = new(Config.Config.StrComper);
 	int count;
 
-	ConcurrentDictionary<string, int> loadedFileDic = [];
-	int currentFileCount = 0;
-	int totalFileCount = 0;
+	HashSet<string> loadedFileSet = [];
+	int currentFileCount;
+	int totalFileCount;
 
 	public int Count { get { return count; } }
 
@@ -43,19 +41,19 @@ internal sealed class LabelDictionary
 	public FunctionLabelLine GetSameNameLabel(FunctionLabelLine point)
 	{
 		string id = point.LabelName;
-		if (!labelAtDic.ContainsKey(id))
+		if (!labelAtDic.TryGetValue(id, out List<FunctionLabelLine> value))
 			return null;
 		if (point.IsError)
 			return null;
-		List<FunctionLabelLine> labelList = labelAtDic[id];
+		List<FunctionLabelLine> labelList = value;
 		if (labelList.Count <= 1)
 			return null;
 		return labelList[0];
 	}
 
 
-	Dictionary<string, List<FunctionLabelLine>[]> eventLabelDic = new(Config.StrComper);
-	Dictionary<string, FunctionLabelLine> noneventLabelDic = new(Config.StrComper);
+	Dictionary<string, List<FunctionLabelLine>[]> eventLabelDic = new(Config.Config.StrComper);
+	Dictionary<string, FunctionLabelLine> noneventLabelDic = new(Config.Config.StrComper);
 
 	public void SortLabels()
 	{
@@ -79,7 +77,7 @@ internal sealed class LabelDictionary
 			}
 			//1810alpha010 オプションによりイベント関数をイベント関数でないかのように呼び出すことを許可
 			//eramaker仕様 - #PRI #LATER #SINGLE等を無視し、最先に定義された関数1つのみを呼び出す
-			if (Config.CompatiCallEvent)
+			if (Config.Config.CompatiCallEvent)
 				noneventLabelDic.Add(key, list[0]);
 			List<FunctionLabelLine>[] eventLabels = new List<FunctionLabelLine>[4];
 			List<FunctionLabelLine> onlylist = [];
@@ -100,7 +98,7 @@ internal sealed class LabelDictionary
 					prilist.Add(list[i]);
 				if (list[i].IsLater)
 					laterlist.Add(list[i]);//#PRIかつ#LATERなら二重に登録する。eramakerの仕様
-				if ((!list[i].IsPri) && (!list[i].IsLater))
+				if (!list[i].IsPri && !list[i].IsLater)
 					normallist.Add(list[i]);
 			}
 			if (localMax < GlobalStatic.IdentifierDictionary.getLocalDefaultSize("LOCAL"))
@@ -139,7 +137,7 @@ internal sealed class LabelDictionary
 		foreach ((_, var value) in labelDollarList)
 			value.Clear();
 		labelDollarList.Clear();
-		loadedFileDic.Clear();
+		loadedFileSet.Clear();
 		invalidList.Clear();
 		currentFileCount = 0;
 		totalFileCount = 0;
@@ -148,41 +146,27 @@ internal sealed class LabelDictionary
 	//ファイル名に基づき、そのファイルに紐づくラベルを削除する
 	public void RemoveLabelWithPath(string fname)
 	{
-		List<FunctionLabelLine> labelLines;
-		List<FunctionLabelLine> removeLine = [];
-		List<string> removeKey = [];
-		foreach (KeyValuePair<string, List<FunctionLabelLine>> pair in labelAtDic)
+		List<string> removeFunctions = [];
+		foreach (var (functionName, functions) in labelAtDic)
 		{
-			string key = pair.Key;
-			labelLines = pair.Value;
-			foreach (FunctionLabelLine labelLine in labelLines)
-			{
-				if (string.Equals(labelLine.Position.Value.Filename, fname, Config.SCIgnoreCase))
-					removeLine.Add(labelLine);
-			}
-			foreach (FunctionLabelLine remove in removeLine)
-			{
-				labelLines.Remove(remove);
-				if (labelLines.Count == 0)
-					removeKey.Add(key);
-			}
-			removeLine.Clear();
+			var removeCount = functions.RemoveAll(line => IsMatch(fname, line));
+
+			count -= removeCount;
+
+			if (functions.Count == 0)
+				removeFunctions.Add(functionName);
 		}
-		foreach (string rKey in removeKey)
+
+		foreach (var rKey in removeFunctions)
 		{
-			labelAtDic.Remove(rKey, out var value);
-			if (value == null)
-			{
-				throw new Exception($"{value}");
-			}
+			labelAtDic.Remove(rKey);
 		}
-		for (int i = 0; i < invalidList.Count; i++)
+
+		invalidList.RemoveAll(line => IsMatch(fname, line));
+
+		static bool IsMatch(string fname, FunctionLabelLine line)
 		{
-			if (string.Equals(invalidList[i].Position.Value.Filename, fname, Config.SCIgnoreCase))
-			{
-				invalidList.RemoveAt(i);
-				i--;
-			}
+			return string.Equals(line.Position.Value.Filename, fname, Config.Config.SCIgnoreCase);
 		}
 	}
 
@@ -192,15 +176,15 @@ internal sealed class LabelDictionary
 	/// </summary>
 	public void IfFileLoadClearLabelWithPath(string filename)
 	{
-		if (loadedFileDic.TryGetValue(filename, out int curCount))
+		if (loadedFileSet.Contains(filename))
 		{
-			currentFileCount = curCount;
+			currentFileCount = loadedFileSet.Count;
 			RemoveLabelWithPath(filename);
 			return;
 		}
 		totalFileCount++;
 		currentFileCount = totalFileCount;
-		loadedFileDic[filename] = totalFileCount;
+		loadedFileSet.Add(filename);
 	}
 	public void AddLabel(FunctionLabelLine point)
 	{

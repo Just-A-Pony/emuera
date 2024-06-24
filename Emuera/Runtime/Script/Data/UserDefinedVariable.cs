@@ -1,27 +1,27 @@
-﻿using System;
+﻿using MinorShift.Emuera.Runtime.Script.Parser;
+using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Utils;
+using System;
 using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData.Expression;
-using trerror = EvilMask.Emuera.Lang.Error;
-using MinorShift.Emuera.Runtime.Config;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.GameProc;
+namespace MinorShift.Emuera.Runtime.Script.Data;
 
 internal sealed class UserDefinedVariableData
 {
-	public string Name = null;
-	public bool TypeIsStr = false;
-	public bool Reference = false;
+	public string Name;
+	public bool TypeIsStr;
+	public bool Reference;
 	public int Dimension = 1;
-	public int[] Lengths = null;
-	public Int64[] DefaultInt = null;
-	public string[] DefaultStr = null;
-	public bool Global = false;
-	public bool Save = false;
+	public int[] Lengths;
+	public long[] DefaultInt;
+	public string[] DefaultStr;
+	public bool Global;
+	public bool Save;
 	public bool Static = true;
-	public bool Private = false;
-	public bool CharaData = false;
-	public bool Const = false;
+	public bool Private;
+	public bool CharaData;
+	public bool Const;
 
 	//1822 Privateの方もDIMだけ遅延させようとしたけどちょっと課題がおおいのでやめとく
 	public static UserDefinedVariableData Create(DimLineWC dimline)
@@ -46,7 +46,7 @@ internal sealed class UserDefinedVariableData
 		{
 			wc.ShiftNext();
 			keyword = idw.Code;
-			var cmp = Config.StringComparison;
+			var cmp = Config.Config.StringComparison;
 			//TODO ifの数があたまわるい なんとかしたい
 			switch (keyword)
 			{
@@ -172,7 +172,7 @@ internal sealed class UserDefinedVariableData
 	whilebreak:
 		if (ret.Name == null)
 			throw new CodeEE(string.Format(trerror.NotVarAfterKeyword.Text, keyword), sc);
-		if (Config.UseERD && Config.CheckDuplicateIdentifier)
+		if (Config.Config.UseERD && Config.Config.CheckDuplicateIdentifier)
 			GlobalStatic.ConstantData.isDefinedErd(ret.Name, sc);
 		string errMes = "";
 		int errLevel = -1;
@@ -215,8 +215,7 @@ internal sealed class UserDefinedVariableData
 				if (wc.EOL)
 					throw new CodeEE(trerror.HasNotExpressionAfterComma.Text, sc);
 				AExpression arg = ExpressionParser.ReduceIntegerTerm(wc, TermEndWith.Comma_Assignment);
-				SingleTerm sizeTerm = arg.Restructure(null) as SingleTerm;
-				if ((sizeTerm == null) || (sizeTerm.GetOperandType() != typeof(Int64)))
+				if (arg.Restructure(null) is not SingleLongTerm sizeTerm)
 					throw new CodeEE(trerror.HasNotExpressionAfterComma.Text, sc);
 				if (ret.Reference)//参照型には要素数指定不可(0にするか書かないかどっちか
 				{
@@ -225,7 +224,7 @@ internal sealed class UserDefinedVariableData
 
 					continue;
 				}
-				else if ((sizeTerm.Int <= 0) || (sizeTerm.Int > 1000000))
+				else if (sizeTerm.Int <= 0 || sizeTerm.Int > 1000000)
 					throw new CodeEE(trerror.OoRDefinable.Text, sc);
 				sizeNum.Add((int)sizeTerm.Int);
 			}
@@ -264,22 +263,21 @@ internal sealed class UserDefinedVariableData
 			if (dims)
 				ret.DefaultStr = new string[terms.Count];
 			else
-				ret.DefaultInt = new Int64[terms.Count];
+				ret.DefaultInt = new long[terms.Count];
 
 			for (int i = 0; i < terms.Count; i++)
 			{
 				if (terms[i] == null)
 					throw new CodeEE(trerror.ArrayVarCanNotOmitInitialValue.Text);
 				terms[i] = terms[i].Restructure(GlobalStatic.EMediator);
-				SingleTerm sTerm = terms[i] as SingleTerm;
-				if (sTerm == null)
+				if (terms[i] is not SingleTerm sTerm)
 					throw new CodeEE(trerror.InitialValueOnlyConst.Text);
 				if (dims != sTerm.IsString)
 					throw new CodeEE(trerror.NotMatchVarTypeAndInitialValue.Text);
 				if (dims)
-					ret.DefaultStr[i] = sTerm.Str;
+					ret.DefaultStr[i] = ((SingleStrTerm)sTerm).Str;
 				else
-					ret.DefaultInt[i] = sTerm.Int;
+					ret.DefaultInt[i] = ((SingleLongTerm)sTerm).Int;
 			}
 			if (sizeNum.Count == 0)
 				sizeNum.Add(terms.Count);
@@ -301,15 +299,15 @@ internal sealed class UserDefinedVariableData
 		ret.Lengths = new int[sizeNum.Count];
 		if (ret.Reference)
 			return ret;
-		Int64 totalBytes = 1;
+		long totalBytes = 1;
 		for (int i = 0; i < sizeNum.Count; i++)
 		{
 			ret.Lengths[i] = sizeNum[i];
 			totalBytes *= ret.Lengths[i];
 		}
-		if ((totalBytes <= 0) || (totalBytes > 1000000))
+		if (totalBytes <= 0 || totalBytes > 1000000)
 			throw new CodeEE(trerror.OoRDefinable.Text, sc);
-		if (!isPrivate && ret.Save && !Config.SystemSaveInBinary)
+		if (!isPrivate && ret.Save && !Config.Config.SystemSaveInBinary)
 		{
 			if (dims && ret.Dimension > 1)
 				throw new CodeEE(trerror.StrVarrRequiredBinaryOption.Text, sc);

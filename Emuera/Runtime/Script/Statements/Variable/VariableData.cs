@@ -1,11 +1,12 @@
-﻿using System;
+﻿using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Script.Data;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
+using MinorShift.Emuera.Runtime.Utils;
+using System;
 using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameProc;
-using System.Xml;
-using trerror = EvilMask.Emuera.Lang.Error;
 using System.Data;
-using MinorShift.Emuera.Runtime.Config;
+using System.Xml;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
 namespace MinorShift.Emuera.GameData.Variable;
 
@@ -87,7 +88,7 @@ internal sealed partial class VariableData : IDisposable
 		//localString = new VariableLocal<string, StringCalculator>(constant.VariableStrArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.LOCALS)]);
 		//argVars = new VariableLocal<Int64, Int64Calculator>(constant.VariableIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.ARG)]);
 		//argString = new VariableLocal<string, StringCalculator>(constant.VariableStrArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.ARGS)]);
-		dataInteger = new Int64[(int)VariableCode.__COUNT_INTEGER__];
+		dataInteger = [];
 
 		dataIntegerArray = new Int64[(int)VariableCode.__COUNT_INTEGER_ARRAY__][];
 		for (int i = 0; i < dataIntegerArray.Length; i++)
@@ -109,7 +110,7 @@ internal sealed partial class VariableData : IDisposable
 			int length2 = (int)(length64 & 0x7FFFFFFF);
 			dataIntegerArray2D[i] = new Int64[length, length2];
 		}
-		dataStringArray2D = new string[(int)VariableCode.__COUNT_STRING_ARRAY_2D__][,];
+		dataStringArray2D = [];
 		for (int i = 0; i < dataStringArray2D.Length; i++)
 		{
 			Int64 length64 = constant.VariableStrArray2DLength[i];
@@ -126,7 +127,7 @@ internal sealed partial class VariableData : IDisposable
 			int length3 = (int)(length64 & 0xFFFFF);
 			dataIntegerArray3D[i] = new Int64[length, length2, length3];
 		}
-		dataStringArray3D = new string[(int)VariableCode.__COUNT_STRING_ARRAY_3D__][,,];
+		dataStringArray3D = [];
 		for (int i = 0; i < dataStringArray3D.Length; i++)
 		{
 			Int64 length64 = constant.VariableStrArray3DLength[i];
@@ -351,11 +352,11 @@ internal sealed partial class VariableData : IDisposable
 
 	}
 
-	private LocalVariableToken CreateLocalInt(VariableCode varCode, string subKey, int size)
+	private LocalInt1DVariableToken CreateLocalInt(VariableCode varCode, string subKey, int size)
 	{
 		return new LocalInt1DVariableToken(varCode, this, subKey, size);
 	}
-	private LocalVariableToken CreateLocalStr(VariableCode varCode, string subKey, int size)
+	private LocalStr1DVariableToken CreateLocalStr(VariableCode varCode, string subKey, int size)
 	{
 		return new LocalStr1DVariableToken(varCode, this, subKey, size);
 	}
@@ -844,36 +845,36 @@ internal sealed partial class VariableData : IDisposable
 		int i = 0;
 		varList = userDefinedSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
-			if (strListDic.ContainsKey(var.Name))
-				copyListToArray(strListDic[var.Name], (string[])var.GetArray());
+			if (strListDic.TryGetValue(var.Name, out List<string> value))
+				copyListToArray(value, (string[])var.GetArray());
 
 		varList = userDefinedSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
-			if (intListDic.ContainsKey(var.Name))
-				copyListToArray(intListDic[var.Name], (Int64[])var.GetArray());
+			if (intListDic.TryGetValue(var.Name, out List<long> value))
+				copyListToArray(value, (Int64[])var.GetArray());
 
 		varList = userDefinedSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
-			if (str2DListDic.ContainsKey(var.Name))
-				copyListToArray2D(str2DListDic[var.Name], (string[,])var.GetArray());
+			if (str2DListDic.TryGetValue(var.Name, out List<string[]> value))
+				copyListToArray2D(value, (string[,])var.GetArray());
 
 		varList = userDefinedSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
-			if (int2DListDic.ContainsKey(var.Name))
-				copyListToArray2D(int2DListDic[var.Name], (Int64[,])var.GetArray());
+			if (int2DListDic.TryGetValue(var.Name, out List<long[]> value))
+				copyListToArray2D(value, (Int64[,])var.GetArray());
 
 		varList = userDefinedSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
-			if (str3DListDic.ContainsKey(var.Name))
-				copyListToArray3D(str3DListDic[var.Name], (string[,,])var.GetArray());
+			if (str3DListDic.TryGetValue(var.Name, out List<List<string[]>> value))
+				copyListToArray3D(value, (string[,,])var.GetArray());
 
 		varList = userDefinedSaveVarList[i];// i++;
 		foreach (UserDefinedVariableToken var in varList)
-			if (int3DListDic.ContainsKey(var.Name))
-				copyListToArray3D(int3DListDic[var.Name], (Int64[,,])var.GetArray());
+			if (int3DListDic.TryGetValue(var.Name, out List<List<long[]>> value))
+				copyListToArray3D(value, (Int64[,,])var.GetArray());
 	}
 
-	private void copyListToArray<T>(List<T> srcList, T[] destArray)
+	private static void copyListToArray<T>(List<T> srcList, T[] destArray)
 	{
 		int count = Math.Min(srcList.Count, destArray.Length);
 		for (int i = 0; i < count; i++)
@@ -882,7 +883,7 @@ internal sealed partial class VariableData : IDisposable
 		}
 	}
 
-	private void copyListToArray2D<T>(List<T[]> srcList, T[,] destArray)
+	private static void copyListToArray2D<T>(List<T[]> srcList, T[,] destArray)
 	{
 		int countX = Math.Min(srcList.Count, destArray.GetLength(0));
 		int dLength = destArray.GetLength(1);
@@ -896,7 +897,7 @@ internal sealed partial class VariableData : IDisposable
 			}
 		}
 	}
-	private void copyListToArray3D<T>(List<List<T[]>> srcList, T[,,] destArray)
+	private static void copyListToArray3D<T>(List<List<T[]>> srcList, T[,,] destArray)
 	{
 		int countX = Math.Min(srcList.Count, destArray.GetLength(0));
 		int dLength1 = destArray.GetLength(1);
@@ -965,33 +966,33 @@ internal sealed partial class VariableData : IDisposable
 		int i = 0;
 		varList = userDefinedGlobalSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
-			if (strListDic.ContainsKey(var.Name))
-				copyListToArray(strListDic[var.Name], (string[])var.GetArray());
+			if (strListDic.TryGetValue(var.Name, out List<string> value))
+				copyListToArray(value, (string[])var.GetArray());
 
 		varList = userDefinedGlobalSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
-			if (intListDic.ContainsKey(var.Name))
-				copyListToArray(intListDic[var.Name], (Int64[])var.GetArray());
+			if (intListDic.TryGetValue(var.Name, out List<long> value))
+				copyListToArray(value, (Int64[])var.GetArray());
 
 		varList = userDefinedGlobalSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
-			if (str2DListDic.ContainsKey(var.Name))
-				copyListToArray2D(str2DListDic[var.Name], (string[,])var.GetArray());
+			if (str2DListDic.TryGetValue(var.Name, out List<string[]> value))
+				copyListToArray2D(value, (string[,])var.GetArray());
 
 		varList = userDefinedGlobalSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
-			if (int2DListDic.ContainsKey(var.Name))
-				copyListToArray2D(int2DListDic[var.Name], (Int64[,])var.GetArray());
+			if (int2DListDic.TryGetValue(var.Name, out List<long[]> value))
+				copyListToArray2D(value, (Int64[,])var.GetArray());
 
 		varList = userDefinedGlobalSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
-			if (str3DListDic.ContainsKey(var.Name))
-				copyListToArray3D(str3DListDic[var.Name], (string[,,])var.GetArray());
+			if (str3DListDic.TryGetValue(var.Name, out List<List<string[]>> value))
+				copyListToArray3D(value, (string[,,])var.GetArray());
 
 		varList = userDefinedGlobalSaveVarList[i];// i++;
 		foreach (UserDefinedVariableToken var in varList)
-			if (int3DListDic.ContainsKey(var.Name))
-				copyListToArray3D(int3DListDic[var.Name], (Int64[,,])var.GetArray());
+			if (int3DListDic.TryGetValue(var.Name, out List<List<long[]>> value))
+				copyListToArray3D(value, (Int64[,,])var.GetArray());
 	}
 
 	#region EM_私家版_セーブ拡張

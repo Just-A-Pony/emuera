@@ -1,34 +1,88 @@
-﻿using System;
+﻿using MinorShift.Emuera.GameData.Variable;
+using MinorShift.Emuera.Runtime;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Config.JSON;
+using MinorShift.Emuera.Runtime.Script;
+using MinorShift.Emuera.Runtime.Script.Data;
+using MinorShift.Emuera.Runtime.Script.Parser;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Script.Statements.Function;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
+using MinorShift.Emuera.Runtime.Utils.PluginSystem;
+using MinorShift.Emuera.UI.Game;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.GameData;
-using MinorShift._Library;
-using MinorShift.Emuera.GameData.Function;
 using System.Drawing;
 using System.IO;
-using System.Net;
-using System.Windows.Forms;
-using MinorShift.Emuera.GameView;
-using trerror = EvilMask.Emuera.Lang.Error;
-using trmb = EvilMask.Emuera.Lang.MessageBox;
-using EvilMask.Emuera;
-using static EvilMask.Emuera.Utils;
 using System.Linq;
-using MinorShift.Emuera.Runtime.Config;
-using System.Diagnostics;
-using DotnetEmuera;
-using MinorShift.Emuera.GameProc.PluginSystem;
+using System.Net;
+using System.Text;
+using System.Windows.Forms;
+using static MinorShift.Emuera.Runtime.Utils.EvilMask.Utils;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
+using trmb = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.MessageBox;
 
 namespace MinorShift.Emuera.GameProc.Function;
 
 internal sealed partial class FunctionIdentifier
 {
+	#region Emuera.NET VAR命令
+	private sealed class VARI_Instruction : AInstruction
+	{
+		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+		{
+			var arg = (IntAsignArgument)func.Argument;
+			var varName = arg.ConstStr;
+	
+			var privateVar = func.ParentLabelLine.GetPrivateVariable(varName);
+			privateVar.ScopeIn();
+			if (privateVar.GetLength(0) == 1)
+			{
+				privateVar.SetValue(arg.Exp.GetIntValue(exm), [0]);
+			}
+			else
+			{
+
+			}
+		}
+
+		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
+		{
+			return null;
+		}
+	}
+	private sealed class VARS_Instruction : AInstruction
+	{
+		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+		{
+			var arg = (StrAsignArgument)func.Argument;
+			var varName = arg.ConstStr;
+
+			var privateVar = func.ParentLabelLine.GetPrivateVariable(varName);
+			privateVar.ScopeIn();
+			if (privateVar.GetLength(0) == 1)
+			{
+				privateVar.SetValue(arg.Value, [0]);
+			}
+			else
+			{
+
+			}
+		}
+
+		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
+		{
+			return null;
+		}
+	}
+	#endregion
 	#region normalFunction
 	private sealed class PRINT_Instruction : AInstruction
 	{
+		bool isLineEnd = true;
 		public PRINT_Instruction(string name)
 		{
 			//PRINT(|V|S|FORM|FORMS)(|K)(|D)(|L|W) コレと
@@ -93,6 +147,12 @@ internal sealed partial class FunctionIdentifier
 				flag |= ISPRINTDFUNC | EXTENDED;
 				st.Jump(1);
 			}
+			if (st.CurrentEqualTo("N"))
+			{
+				isLineEnd = false;
+				flag |= PRINT_WAITINPUT;
+				st.Jump(1);
+			}
 			if (st.CurrentEqualTo("L"))
 			{
 				flag |= PRINT_NEWLINE;
@@ -132,7 +192,7 @@ internal sealed partial class FunctionIdentifier
 				foreach (AExpression termV in terms)
 				{
 					if (termV.GetOperandType() == typeof(Int64))
-						builder.Append(termV.GetIntValue(exm).ToString());
+						builder.Append(termV.GetIntValue(exm));
 					else
 						builder.Append(termV.GetStrValue(exm));
 				}
@@ -143,7 +203,7 @@ internal sealed partial class FunctionIdentifier
 				str = ((ExpressionArgument)func.Argument).Term.GetStrValue(exm);
 				if (isForms)
 				{
-					str = exm.CheckEscape(str);
+					str = ExpressionMediator.CheckEscape(str);
 					StrFormWord wt = LexicalAnalyzer.AnalyseFormattedString(new CharStream(str), FormStrEndWith.EoL, false);
 					StrForm strForm = StrForm.FromWordToken(wt);
 					str = strForm.GetString(exm);
@@ -156,7 +216,7 @@ internal sealed partial class FunctionIdentifier
 			else if (isLC)
 				exm.Console.PrintC(str, false);
 			else
-				exm.OutputToConsole(str, func.Function);
+				exm.OutputToConsole(str, func.Function, isLineEnd);
 			exm.Console.UseSetColorStyle = true;
 		}
 	}
@@ -287,7 +347,7 @@ internal sealed partial class FunctionIdentifier
 		{
 			SpHtmlSplitArgument spSplitArg = (SpHtmlSplitArgument)func.Argument;
 			string str = spSplitArg.TargetStr.GetStrValue(exm);
-			string[] strs = MinorShift.Emuera.GameView.HtmlManager.HtmlTagSplit(str);
+			string[] strs = HtmlManager.HtmlTagSplit(str);
 
 			if (strs == null)
 			{
@@ -302,6 +362,40 @@ internal sealed partial class FunctionIdentifier
 		}
 	}
 
+	private sealed class HTML_PRINT_ISLAND_Instruction : AInstruction
+	{
+		public HTML_PRINT_ISLAND_Instruction()
+		{
+			flag = EXTENDED | METHOD_SAFE;
+			ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_HTML_PRINT);
+		}
+
+		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+		{
+			if (GlobalStatic.Process.SkipPrint)
+				return;
+			string str;
+			if (func.Argument.IsConst)
+				str = func.Argument.ConstStr;
+			else
+				str = ((HTML_PRINTArgument)func.Argument).Term.GetStrValue(exm);
+			exm.Console.PrintHTMLIsland(str);
+		}
+	}
+
+	private sealed class HTML_PRINT_ISLAND_CLEAR_Instruction : AInstruction
+	{
+		public HTML_PRINT_ISLAND_CLEAR_Instruction()
+		{
+			flag = EXTENDED | METHOD_SAFE;
+			ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.VOID);
+		}
+
+		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
+		{
+			exm.Console.ClearHTMLIsland();
+		}
+	}
 
 	private sealed class PRINT_IMG_Instruction : AInstruction
 	{
@@ -325,7 +419,7 @@ internal sealed partial class FunctionIdentifier
 			//else
 			//	str = ((ExpressionArgument)func.Argument).Term.GetStrValue(exm);
 			//exm.Console.PrintImg(str);
-			var arg = ((SpPrintImgArgument)func.Argument);
+			var arg = (SpPrintImgArgument)func.Argument;
 			if (arg == null)
 				throw new CodeEE(trerror.InvalidArg.Text);
 			var strb = arg.Nameb != null ? arg.Nameb.GetStrValue(exm) : null;
@@ -364,7 +458,7 @@ internal sealed partial class FunctionIdentifier
 			//	param[i] = FunctionIdentifier.toUInt32inArg(intExpArg.TermList[i].GetIntValue(exm), "PRINT_RECT", i + 1);
 
 			//exm.Console.PrintShape("rect", param);
-			var arg = ((SpPrintShapeArgument)func.Argument);
+			var arg = (SpPrintShapeArgument)func.Argument;
 			if (arg == null)
 				throw new CodeEE(trerror.InvalidArg.Text);
 			var param = new MixedNum[arg.Param.Length];
@@ -398,7 +492,7 @@ internal sealed partial class FunctionIdentifier
 			//	param = ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
 			//int param32 = FunctionIdentifier.toUInt32inArg(param, "PRINT_SPACE", 1);
 			// exm.Console.PrintShape("space", new int[] { param32 });
-			var arg = ((SpPrintShapeArgument)func.Argument);
+			var arg = (SpPrintShapeArgument)func.Argument;
 			if (arg == null)
 				throw new CodeEE(trerror.InvalidArg.Text);
 			var param = new MixedNum[arg.Param.Length];
@@ -425,7 +519,7 @@ internal sealed partial class FunctionIdentifier
 			else
 				rowStr = st.Substring();
 			rowStr = GlobalStatic.Console.getStBar(rowStr);
-			Argument ret = new ExpressionArgument(new SingleTerm(rowStr))
+			Argument ret = new ExpressionArgument(new SingleStrTerm(rowStr))
 			{
 				ConstStr = rowStr,
 				IsConst = true
@@ -437,7 +531,7 @@ internal sealed partial class FunctionIdentifier
 		{
 			if (GlobalStatic.Process.SkipPrint)
 				return;
-			GlobalStatic.Console.printCustomBar(func.Argument.ConstStr, true); 
+			GlobalStatic.Console.printCustomBar(func.Argument.ConstStr, true);
 			exm.Console.NewLine();
 		}
 	}
@@ -550,7 +644,7 @@ internal sealed partial class FunctionIdentifier
 			{
 				Int64 src = spsetarg.IsConst ? spsetarg.ConstInt : spsetarg.Term.GetIntValue(exm);
 				if (spsetarg.AddConst)
-					spsetarg.VariableDest.PlusValue(src, exm);
+					spsetarg.VariableDest.ChangeValue(src, exm);
 				else
 					spsetarg.VariableDest.SetValue(src, exm);
 			}
@@ -1094,7 +1188,7 @@ internal sealed partial class FunctionIdentifier
 		{
 			AExpression mToken;
 			string labelName;
-			if ((!func.Argument.IsConst) || (exm.Console.RunERBFromMemory))
+			if ((!func.Argument.IsConst) || exm.Console.RunERBFromMemory)
 			{
 				SpCallFArgment spCallformArg = (SpCallFArgment)func.Argument;
 				labelName = spCallformArg.FuncnameTerm.GetStrValue(exm);
@@ -1128,7 +1222,7 @@ internal sealed partial class FunctionIdentifier
 			else
 				rowStr = st.Substring();
 			rowStr = GlobalStatic.Console.getStBar(rowStr);
-			Argument ret = new ExpressionArgument(new SingleTerm(rowStr))
+			Argument ret = new ExpressionArgument(new SingleStrTerm(rowStr))
 			{
 				ConstStr = rowStr,
 				IsConst = true
@@ -1169,9 +1263,11 @@ internal sealed partial class FunctionIdentifier
 				if (rowArg is VariableTerm)
 				{
 					var varTerm = (VariableTerm)rowArg;
-					if (varTerm.IsString) {
+					if (varTerm.IsString)
+					{
 						varTerm.SetValue(pluginArgs[i].strValue, exm);
-					} else
+					}
+					else
 					{
 						varTerm.SetValue(pluginArgs[i].intValue, exm);
 					}
@@ -1200,7 +1296,7 @@ internal sealed partial class FunctionIdentifier
 				return;
 			}
 			SpCallFArgment callfArg = (SpCallFArgment)func.Argument;
-			//if (Config.IgnoreCase)
+			//if (Config.Config.IgnoreCase)
 			//	callfArg.ConstStr = callfArg.ConstStr.ToUpper();
 			try
 			{
@@ -1220,7 +1316,7 @@ internal sealed partial class FunctionIdentifier
 		{
 			AExpression mToken;
 			string labelName;
-			if ((!func.Argument.IsConst) || (exm.Console.RunERBFromMemory))
+			if ((!func.Argument.IsConst) || exm.Console.RunERBFromMemory)
 			{
 				SpCallFArgment spCallformArg = (SpCallFArgment)func.Argument;
 				labelName = spCallformArg.FuncnameTerm.GetStrValue(exm);
@@ -1254,7 +1350,7 @@ internal sealed partial class FunctionIdentifier
 			Int64 var = barArg.Terms[0].GetIntValue(exm);
 			Int64 max = barArg.Terms[1].GetIntValue(exm);
 			Int64 length = barArg.Terms[2].GetIntValue(exm);
-			exm.Console.Print(exm.CreateBar(var, max, length));
+			exm.Console.Print(ExpressionMediator.CreateBar(var, max, length));
 			if (newline)
 				exm.Console.NewLine();
 		}
@@ -1587,20 +1683,18 @@ internal sealed partial class FunctionIdentifier
 				start = (int)spvarsetarg.Start.GetIntValue(exm);
 				if (start > end)
 				{
-					int temp = start;
-					start = end;
-					end = temp;
+					(end, start) = (start, end);
 				}
 			}
 			if (var.IsString)
 			{
 				string src = spvarsetarg.Term.GetStrValue(exm);
-				exm.VEvaluator.SetValueAll(p, src, start, end);
+				VariableEvaluator.SetValueAll(p, src, start, end);
 			}
 			else
 			{
 				long src = spvarsetarg.Term.GetIntValue(exm);
-				exm.VEvaluator.SetValueAll(p, src, start, end);
+				VariableEvaluator.SetValueAll(p, src, start, end);
 			}
 		}
 	}
@@ -1643,10 +1737,10 @@ internal sealed partial class FunctionIdentifier
 			}
 			if (!p.Identifier.IsCharacterData)
 				throw new CodeEE(string.Format(trerror.CvarsetArgIsNotCharaVar.Text, p.Identifier.Name));
-			if (index.GetOperandType() == typeof(string) && p.Identifier.IsArray1D)
+			if (index is SingleStrTerm singleStrTerm && p.Identifier.IsArray1D)
 			{
-				if (!GlobalStatic.ConstantData.isDefined(p.Identifier.Code, index.Str))
-					throw new CodeEE(string.Format(trerror.NotDefinedKey.Text, p.Identifier.Name, index.Str));
+				if (!GlobalStatic.ConstantData.isDefined(p.Identifier.Code, singleStrTerm.Str))
+					throw new CodeEE(string.Format(trerror.NotDefinedKey.Text, p.Identifier.Name, singleStrTerm.Str));
 			}
 			if (p.Identifier.IsString)
 			{
@@ -1827,7 +1921,7 @@ internal sealed partial class FunctionIdentifier
 				for (int j = 0; j < i; j++)
 				{
 					if (savCharaList[i] == savCharaList[j])
-						throw new CodeEE(string.Format(trerror.DuplicateCharaNo.Text, (savCharaList[i]).ToString()));
+						throw new CodeEE(string.Format(trerror.DuplicateCharaNo.Text, savCharaList[i].ToString()));
 				}
 			}
 			exm.VEvaluator.SaveChara(datFilename, savMes, savCharaList);
@@ -1912,7 +2006,7 @@ internal sealed partial class FunctionIdentifier
 				target = ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
 
 			int target32 = FunctionIdentifier.toUInt32inArg(target, "DELDATA", 1);
-			exm.VEvaluator.DelData(target32);
+			VariableEvaluator.DelData(target32);
 		}
 	}
 
@@ -2173,7 +2267,7 @@ internal sealed partial class FunctionIdentifier
 					}
 				}
 			loopep:
-				List<AConsoleDisplayPart> ep;
+				List<AConsoleDisplayNode> ep;
 				foreach (var value in exm.Console.EscapedParts)
 				{
 					ep = value.Value;
@@ -2274,7 +2368,7 @@ internal sealed partial class FunctionIdentifier
 					}
 				}
 			loopep:
-				List<AConsoleDisplayPart> ep;
+				List<AConsoleDisplayNode> ep;
 				foreach (var value in exm.Console.EscapedParts)
 				{
 					ep = value.Value;
@@ -2746,7 +2840,7 @@ internal sealed partial class FunctionIdentifier
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
 			string keyword = func.Argument.ConstStr;
-			//if (Config.IgnoreCase)//1756 BEGINのキーワードは関数扱いらしい
+			//if (Config.Config.IgnoreCase)//1756 BEGINのキーワードは関数扱いらしい
 			//	keyword = keyword.ToUpper();
 			state.SetBegin(keyword, true);
 			state.Return(0);
@@ -2973,10 +3067,8 @@ internal sealed partial class FunctionIdentifier
 			//	throw new ExeEE("SELECTCASEのCASEリストが適正に作成されていない");
 			//if (func.JumpTo == null)
 			//	throw new ExeEE("SELECTCASEに対応するENDSELECTが設定されていない");
-			InstructionLine line;
-			for (int i = 0; i < func.IfCaseList.Count; i++)
+			foreach (var line in func.IfCaseList)
 			{
-				line = func.IfCaseList[i];
 				if (line.IsError)
 					continue;
 				if (line.FunctionCode == FunctionCode.CASEELSE)
@@ -2984,7 +3076,7 @@ internal sealed partial class FunctionIdentifier
 					caseJumpto = line;
 					break;
 				}
-				CaseArgument caseArg = (CaseArgument)(line.Argument);
+				CaseArgument caseArg = (CaseArgument)line.Argument;
 				//チェック済み
 				//if (caseArg == null)
 				//	throw new ExeEE("CASEチェック中。引数が解析されていない。", func.IfCaseList[i].Position);
@@ -3140,7 +3232,7 @@ internal sealed partial class FunctionIdentifier
 			{
 				unchecked
 				{//eramakerではBREAK時にCOUNTが回る
-					jumpTo.LoopCounter.PlusValue(jumpTo.LoopStep, exm);
+					jumpTo.LoopCounter.ChangeValue(jumpTo.LoopStep, exm);
 				}
 			}
 			state.JumpTo(iLine);
@@ -3167,7 +3259,7 @@ internal sealed partial class FunctionIdentifier
 				}
 				unchecked
 				{
-					jumpTo.LoopCounter.PlusValue(jumpTo.LoopStep, exm);
+					jumpTo.LoopCounter.ChangeValue(jumpTo.LoopStep, exm);
 				}
 				Int64 counter = jumpTo.LoopCounter.GetIntValue(exm);
 				//まだ回数が残っているなら、
@@ -3221,7 +3313,7 @@ internal sealed partial class FunctionIdentifier
 			}
 			unchecked
 			{
-				jumpTo.LoopCounter.PlusValue(jumpTo.LoopStep, exm);
+				jumpTo.LoopCounter.ChangeValue(jumpTo.LoopStep, exm);
 			}
 			Int64 counter = jumpTo.LoopCounter.GetIntValue(exm);
 			//まだ回数が残っているなら、

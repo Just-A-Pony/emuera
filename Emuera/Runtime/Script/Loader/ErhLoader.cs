@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
+﻿using MinorShift.Emuera.GameData.Variable;
+using MinorShift.Emuera.GameProc;
 using MinorShift.Emuera.GameView;
-using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.GameData;
+using MinorShift.Emuera.Runtime.Script.Data;
+using MinorShift.Emuera.Runtime.Script.Parser;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.Sub;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using trsl = EvilMask.Emuera.Lang.SystemLine;
-using trerror = EvilMask.Emuera.Lang.Error;
-using MinorShift.Emuera.Runtime.Config;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
+using trsl = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.SystemLine;
 
-namespace MinorShift.Emuera.GameProc;
+namespace MinorShift.Emuera.Runtime.Script.Loader;
 
 internal sealed class ErhLoader
 {
@@ -33,14 +35,14 @@ internal sealed class ErhLoader
 	/// <returns></returns>
 	public bool LoadHeaderFiles(string headerDir, bool displayReport)
 	{
-		List<KeyValuePair<string, string>> headerFiles = Config.GetFiles(headerDir, "*.ERH");
+		List<KeyValuePair<string, string>> headerFiles = Config.Config.GetFiles(headerDir, "*.ERH");
 		bool noError = true;
 
 
 		dimlines = new Queue<DimLineWC>();
 		#region EE_ERD
 		//ERD読み込み
-		if (Config.UseERD)
+		if (Config.Config.UseERD)
 			PrepareERDFileNames();
 		#endregion
 		try
@@ -104,24 +106,18 @@ internal sealed class ErhLoader
 					ParserMediator.Warn(trerror.CanNotInterpretSharpLine.Text, position, 1);
 					return false;
 				}
-				if (Config.IgnoreCase)
-				{
-					Span<char> dest = new char[sharpID.Length];
-					sharpID.ToUpperInvariant(dest);
-					sharpID = dest;
-				}
 				LexicalAnalyzer.SkipWhiteSpace(st);
 				switch (sharpID)
 				{
-					case "DEFINE":
+					case var s when s.Equals("DEFINE", Config.Config.StringComparison):
 						analyzeSharpDefine(st, position);
 						break;
-					case "FUNCTION":
-					case "FUNCTIONS":
+					case var s when s.Equals("FUNCTION", Config.Config.StringComparison) ||
+									s.Equals("FUNCTIONS", Config.Config.StringComparison):
 						analyzeSharpFunction(st, position, sharpID == "FUNCTIONS");
 						break;
-					case "DIM":
-					case "DIMS":
+					case var s when s.Equals("DIM", Config.Config.StringComparison) ||
+									s.Equals("DIMS", Config.Config.StringComparison):
 						//1822 #DIMは保留しておいて後でまとめてやる
 						{
 							WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AllowAssignment);
@@ -239,7 +235,7 @@ internal sealed class ErhLoader
 				}
 				for (int i = 0; i < argID.Count; i++)
 				{
-					if (string.Equals(word.Code, argID[i], Config.StringComparison))
+					if (string.Equals(word.Code, argID[i], Config.Config.StringComparison))
 					{
 						destWc.Remove();
 						destWc.Insert(new MacroWord(i));
@@ -248,7 +244,7 @@ internal sealed class ErhLoader
 				}
 				destWc.ShiftNext();
 			}
-			destWc.Pointer = 0;
+			destWc.PointerReset();;
 		}
 		if (hasArg)//1808a3 関数型マクロの封印
 			throw new CodeEE(trerror.CanNotDeclaredFuncMacro.Text, position);
@@ -293,7 +289,7 @@ internal sealed class ErhLoader
 						var = parentProcess.VEvaluator.VariableData.CreateUserDefVariable(data, dimline);
 					idDic.AddUseDefinedVariable(var);
 					#region EE_ERD
-					if (Config.UseERD)
+					if (Config.Config.UseERD)
 					{
 						string key;
 						if (data.Dimension == 1)
@@ -302,7 +298,7 @@ internal sealed class ErhLoader
 							if (erdFileNames.ContainsKey(key))
 							{
 								var info = erdFileNames[key];
-								GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name, data.Lengths[0], Config.DisplayReport, dimline.SC);
+								GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name, data.Lengths[0], Config.Config.DisplayReport, dimline.SC);
 							}
 							System.Windows.Forms.Application.DoEvents();
 						}
@@ -314,7 +310,7 @@ internal sealed class ErhLoader
 								if (erdFileNames.ContainsKey(key))
 								{
 									var info = erdFileNames[key];
-									GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name + "@" + dim, data.Lengths[dim - 1], Config.DisplayReport, dimline.SC);
+									GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name + "@" + dim, data.Lengths[dim - 1], Config.Config.DisplayReport, dimline.SC);
 								}
 								System.Windows.Forms.Application.DoEvents();
 							}
@@ -327,7 +323,7 @@ internal sealed class ErhLoader
 								if (erdFileNames.ContainsKey(key))
 								{
 									var info = erdFileNames[key];
-									GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name + "@" + dim, data.Lengths[dim - 1], Config.DisplayReport, dimline.SC);
+									GlobalStatic.ConstantData.UserDefineLoadData(info, data.Name + "@" + dim, data.Lengths[dim - 1], Config.Config.DisplayReport, dimline.SC);
 								}
 								System.Windows.Forms.Application.DoEvents();
 							}
@@ -341,7 +337,7 @@ internal sealed class ErhLoader
 					//繰り返すことで解決する見込みがあるならキューの最後に追加
 					if (tryAgain)
 					{
-						dimline.WC.Pointer = 0;
+						dimline.WC.PointerReset();;
 						dimlines.Enqueue(dimline);
 					}
 					else
@@ -386,7 +382,7 @@ internal sealed class ErhLoader
 		}
 	}
 	#endregion
-	private void analyzeSharpFunction(CharStream st, ScriptPosition? position, bool funcs)
+	private static void analyzeSharpFunction(CharStream st, ScriptPosition? position, bool funcs)
 	{
 		throw new NotImplCodeEE();
 		//WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.AllowAssignment);

@@ -1,12 +1,11 @@
-﻿using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using MinorShift.Emuera.GameView;
+﻿using MinorShift.Emuera.GameView;
 using MinorShift.Emuera.Runtime.Config;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace MinorShift.Emuera.Forms
 {
-	internal partial class ClipBoardDialog : Form
+	internal sealed partial class ClipBoardDialog : Form
 	{
 		public ClipBoardDialog()
 		{

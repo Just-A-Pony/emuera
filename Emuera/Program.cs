@@ -1,21 +1,17 @@
-﻿using System;
-using System.Drawing;
+﻿using MinorShift.Emuera.GameProc.Function;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Config.JSON;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
+using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
-using MinorShift._Library;
-using System.IO;
-using EvilMask.Emuera;
-using MinorShift.Emuera.GameProc.Function;
 using System.CommandLine;
 using System.CommandLine.Parsing;
-using System.Threading.Tasks;
-using Windows.Win32;
-using System.CommandLine.Builder;
-using System.Reflection;
-using DotnetEmuera;
 using System.Diagnostics.CodeAnalysis;
-using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.GameProc.PluginSystem;
+using System.Drawing;
+using System.IO;
+using System.Runtime;
+using System.Windows.Forms;
 
 namespace MinorShift.Emuera;
 #nullable enable
@@ -103,7 +99,7 @@ static partial class Program
 			if (FunctionIdentifier.sound[i] != null) FunctionIdentifier.sound[i].close();
 		}
 
-		var debugMode = result.GetValueForOption(debugModeOption); 
+		var debugMode = result.GetValueForOption(debugModeOption);
 		DebugMode = debugMode;
 
 		var genLang = result.GetValueForOption(genLangOption);
@@ -114,7 +110,7 @@ static partial class Program
 		List<string> otherArgs = [];
 
 		//引数の後ろにある他のフラグにマッチしなかった文字列を解析指定されたファイルとみなす
-		var fileArgs = result.GetValueForArgument(filesArg); 
+		var fileArgs = result.GetValueForArgument(filesArg);
 		var analysisRequestPaths = fileArgs;
 		if (analysisRequestPaths.Length > 0)
 		{
@@ -145,6 +141,10 @@ static partial class Program
 		#endregion
 
 		Application.SetCompatibleTextRenderingDefault(false);
+
+		ProfileOptimization.SetProfileRoot(exeDir ?? ExeDir);
+		ProfileOptimization.StartProfile("profile");
+
 		ConfigData.Instance.LoadConfig();
 		JSONConfig.Load();
 
@@ -227,7 +227,7 @@ static partial class Program
 				//if ((File.GetAttributes(args[i]) & FileAttributes.Directory) == FileAttributes.Directory)
 				if ((File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory)
 				{
-					//List<KeyValuePair<string, string>> fnames = Config.GetFiles(args[i] + "\\", "*.ERB");
+					//List<KeyValuePair<string, string>> fnames = Config.Config.GetFiles(args[i] + "\\", "*.ERB");
 					List<KeyValuePair<string, string>> fnames = Config.GetFiles(path + "\\", "*.ERB");
 					for (int j = 0; j < fnames.Count; j++)
 					{
@@ -251,18 +251,8 @@ static partial class Program
 
 		ApplicationConfiguration.Initialize();
 
-		var winState = FormWindowState.Normal;
-		var rebootClientHeight = 0;
-		var rebootLocation = Point.Empty;
-
-		while (true)
+		using var win = new Forms.MainWindow(args);
 		{
-			var rebootFlag = false;
-
-			using var win = new Forms.MainWindow(winState, rebootLocation, rebootClientHeight, (_) =>
-			{
-				rebootFlag = true;
-			});
 			#region EM_私家版_Emuera多言語化改造
 			win.TranslateUI();
 			#endregion
@@ -272,23 +262,6 @@ static partial class Program
 			#endregion
 
 			Application.Run(win);
-
-			Content.AppContents.UnloadContents();
-			if (!rebootFlag)
-				break;
-
-			RebootWinState = win.WindowState;
-			if (win.WindowState == FormWindowState.Normal)
-			{
-				rebootClientHeight = win.ClientSize.Height;
-				rebootLocation = win.Location;
-			}
-			else
-			{
-				rebootClientHeight = 0;
-				rebootLocation = new Point();
-			}
-
 			/* VVII版マージ前の起動処理
 			MainWindow win = null;
 			StartTime = WinmmTimer.TickCount;
@@ -317,7 +290,6 @@ static partial class Program
 					RebootLocation = new Point();
 				}
 			}
-			*/
 			//条件次第ではParserMediatorが空でない状態で再起動になる場合がある
 			ParserMediator.ClearWarningList();
 			ParserMediator.Initialize(null);
@@ -327,10 +299,13 @@ static partial class Program
 			ConfigData.Instance.ReLoadConfig();
 
 			break;
+			*/
 		}
+		/*
 		if (rebootFlag)
 			Application.Restart();
 		#endregion
+		*/
 	}
 
 	[MemberNotNull(nameof(ExeDir))]
@@ -387,14 +362,14 @@ static partial class Program
 	#endregion
 
 
-	public static bool rebootFlag = false;
+	public static bool rebootFlag;
 	//public static int RebootClientX = 0;
 	//public static int RebootClientY = 0;
 	public static FormWindowState RebootWinState = FormWindowState.Normal;
 	//public static Point RebootLocation;
 
-	public static bool AnalysisMode = false;
-	public static List<string> AnalysisFiles = null;
+	public static bool AnalysisMode;
+	public static List<string> AnalysisFiles;
 
 	//public static bool debugMode = false;
 	//public static bool DebugMode { get { return debugMode; } }
@@ -402,6 +377,11 @@ static partial class Program
 
 	static Program()
 	{
-		SetDirPaths(AppContext.BaseDirectory);
+		var baseDirectory = AppContext.BaseDirectory;
+		if (Directory.Exists(Path.Combine(baseDirectory, "Data", "erb")))
+		{
+			baseDirectory = Path.Combine(baseDirectory, "Data");
+		}
+		SetDirPaths(baseDirectory);
 	}
 }

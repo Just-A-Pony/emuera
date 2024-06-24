@@ -1,17 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData;
+﻿using MinorShift.Emuera.GameData.Function;
 using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.GameData.Function;
-using MinorShift.Emuera.GameProc;
-using System.Text.RegularExpressions;
 using MinorShift.Emuera.GameProc.Function;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift._Library;
-using System.Linq;
-using treer = EvilMask.Emuera.Lang.Error;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Config.JSON;
+using MinorShift.Emuera.Runtime.Script.Data;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Script.Statements.Function;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
+using MinorShift.Emuera.Runtime.Utils;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using treer = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
 namespace MinorShift.Emuera;
 
@@ -169,8 +171,7 @@ internal partial class IdentifierDictionary
 			//RANDが衝突している
 			//1808a3 GLOBAL、PRIVATEも
 			//1808beta009 REFも
-			if (!nameDic.ContainsKey(pair.Key))
-				nameDic.Add(pair.Key, DefinedNameType.SystemVariable);
+			nameDic.TryAdd(pair.Key, DefinedNameType.SystemVariable);
 		}
 
 		foreach (KeyValuePair<string, VariableLocal> pair in localvarTokenDic)
@@ -182,8 +183,7 @@ internal partial class IdentifierDictionary
 		{
 			//Methodと被る
 			//1808a3 SAVEDATAも
-			if (!nameDic.ContainsKey(pair.Key))
-				nameDic.Add(pair.Key, DefinedNameType.SystemInstrument);
+			nameDic.TryAdd(pair.Key, DefinedNameType.SystemInstrument);
 		}
 	}
 
@@ -251,7 +251,6 @@ internal partial class IdentifierDictionary
 					errMes = string.Format(treer.LabelNameAlreadyUsedInternalInstruction.Text, labelName);
 					warnLevel = 1;
 					break;
-					break;
 				case DefinedNameType.UserMacro:
 					//字句解析がうまくいっていれば本来あり得ないはず
 					errMes = string.Format(treer.LabelNameAlreadyUsedMacro.Text, labelName);
@@ -288,9 +287,9 @@ internal partial class IdentifierDictionary
 		//    return;
 		//}
 
-		if (nameDic.ContainsKey(varName))
+		if (nameDic.TryGetValue(varName, out DefinedNameType value))
 		{
-			switch (nameDic[varName])
+			switch (value)
 			{
 				case DefinedNameType.Reserved:
 					errMes = string.Format(treer.VarConflictReservedWord.Text, varName);
@@ -386,9 +385,9 @@ internal partial class IdentifierDictionary
 			warnLevel = 2;
 			return;
 		}
-		if (nameDic.ContainsKey(varName))
+		if (nameDic.TryGetValue(varName, out DefinedNameType value))
 		{
-			switch (nameDic[varName])
+			switch (value)
 			{
 				case DefinedNameType.Reserved:
 					errMes = string.Format(treer.VarConflictReservedWord.Text, varName);
@@ -468,7 +467,7 @@ internal partial class IdentifierDictionary
 
 	public DefineMacro GetMacro(string key)
 	{
-		int hash; 
+		int hash;
 		if (Config.IgnoreCase)
 		{
 			hash = key.GetHashCode(StringComparison.OrdinalIgnoreCase);
@@ -485,7 +484,7 @@ internal partial class IdentifierDictionary
 	public VariableToken GetVariableToken(string key, string subKey, bool allowPrivate)
 	{
 		VariableToken ret;
-		//if (Config.IgnoreCase)
+		//if (Config.Config.IgnoreCase)
 		//	key = key.ToUpper();
 		if (allowPrivate)
 		{
@@ -573,25 +572,25 @@ internal partial class IdentifierDictionary
 
 	public UserDefinedRefMethod GetRefMethod(string codeStr)
 	{
-		if (refmethodDic.ContainsKey(codeStr))
-			return refmethodDic[codeStr];
+		if (refmethodDic.TryGetValue(codeStr, out UserDefinedRefMethod value))
+			return value;
 		return null;
 	}
 
 	public AExpression GetFunctionMethod(LabelDictionary labelDic, string codeStr, List<AExpression> arguments, bool userDefinedOnly)
 	{
-		//if (Config.IgnoreCase)
+		//if (Config.Config.IgnoreCase)
 		//	codeStr = codeStr.ToUpper();
 		if (arguments == null)//引数なし、名前のみの探索
 		{
-			if (refmethodDic.ContainsKey(codeStr))
-				return new UserDefinedRefMethodNoArgTerm(refmethodDic[codeStr]);
+			if (refmethodDic.TryGetValue(codeStr, out UserDefinedRefMethod value))
+				return new UserDefinedRefMethodNoArgTerm(value);
 			return null;
 		}
 		if ((labelDic != null) && labelDic.Initialized)
 		{
-			if (refmethodDic.ContainsKey(codeStr))
-				return new UserDefinedRefMethodTerm(refmethodDic[codeStr], arguments);
+			if (refmethodDic.TryGetValue(codeStr, out UserDefinedRefMethod value))
+				return new UserDefinedRefMethodTerm(value, arguments);
 			FunctionLabelLine func = labelDic.GetNonEventLabel(codeStr);
 			if (func != null)
 			{
@@ -628,13 +627,13 @@ internal partial class IdentifierDictionary
 	public void ThrowException(string str, bool isFunc)
 	{
 		string idStr = str;
-		//if (Config.IgnoreCase || Config.IgnoreCase) //片方だけなのは互換性用オプションなのでレアケースのはず。対応しない。
+		//if (Config.Config.IgnoreCase || Config.Config.IgnoreCase) //片方だけなのは互換性用オプションなのでレアケースのはず。対応しない。
 		//	idStr = idStr.ToUpper();
 		if (!isFunc && privateDimList.Contains(idStr))
 			throw new IdentifierNotFoundCodeEE(string.Format(treer.VarNotDefinedThisFunc.Text, str));
-		if (nameDic.ContainsKey(idStr))
+		if (nameDic.TryGetValue(idStr, out DefinedNameType value))
 		{
-			DefinedNameType type = nameDic[idStr];
+			DefinedNameType type = value;
 			switch (type)
 			{
 				case DefinedNameType.Reserved:
@@ -659,6 +658,12 @@ internal partial class IdentifierDictionary
 
 			}
 		}
+		if (!JSONConfig.Data.UseScopedVariableInstruction &&
+			(idStr == "VARS" || idStr == "VARI"))
+		{
+			throw new CodeEE($"{idStr}命令は現在の設定では使用できません");
+		}
+
 		throw new IdentifierNotFoundCodeEE(string.Format(treer.CanNotInterpreted.Text, idStr));
 	}
 	[GeneratedRegex("^COM[0-9]+$")]
@@ -668,8 +673,6 @@ internal partial class IdentifierDictionary
 	[GeneratedRegex("^ABLUP[0-9]+$")]
 	private static partial Regex preCompiledAblupRegex();
 
-	[GeneratedRegex("COM.*")]
-	private static partial Regex preCompiledCOMRegex();
 	#endregion
 
 	#region util
@@ -689,8 +692,8 @@ internal partial class IdentifierDictionary
 	}
 	public bool getVarTokenIsForbid(string key)
 	{
-		if (localvarTokenDic.ContainsKey(key))
-			return localvarTokenDic[key].IsForbid;
+		if (localvarTokenDic.TryGetValue(key, out VariableLocal value))
+			return value.IsForbid;
 		varTokenDic.TryGetValue(key, out VariableToken var);
 		if (var != null)
 			return var.IsForbid;

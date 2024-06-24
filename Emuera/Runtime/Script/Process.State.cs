@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameView;
-using MinorShift.Emuera.GameData.Variable;
-using trerror = EvilMask.Emuera.Lang.Error;
-using trsl = EvilMask.Emuera.Lang.SystemLine;
+﻿using MinorShift.Emuera.GameData.Variable;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
+using trsl = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.SystemLine;
 using System.Diagnostics;
 using System.Drawing;
+using MinorShift.Emuera.GameView;
+using System.Collections.Generic;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.UI.Game.Image;
 
-namespace MinorShift.Emuera.GameProc;
+namespace MinorShift.Emuera.Runtime.Script;
 
 //1756 インナークラス解除して一般に開放
 
@@ -95,12 +96,12 @@ internal sealed class ProcessState
 		if (Program.DebugMode)//DebugModeでなければ知らなくて良い
 			this.console = console;
 	}
-	readonly EmueraConsole console = null;
+	readonly EmueraConsole console;
 	readonly List<CalledFunction> functionList = [];
 	private LogicalLine currentLine;
 	//private LogicalLine nextLine;
-	public int lineCount = 0;
-	public int currentMin = 0;
+	public int lineCount;
+	public int currentMin;
 	//private bool sequential;
 
 	public bool ScriptEnd
@@ -121,7 +122,7 @@ internal sealed class ProcessState
 
 	SystemStateCode sysStateCode = SystemStateCode.Title_Begin;
 	BeginType begintype = BeginType.NULL;
-	public bool isBegun { get { return (begintype != BeginType.NULL) ? true : false; } }
+	public bool isBegun { get { return begintype != BeginType.NULL; } }
 
 	public LogicalLine CurrentLine { get { return currentLine; } set { currentLine = value; } }
 	public LogicalLine ErrorLine
@@ -182,8 +183,8 @@ internal sealed class ProcessState
 		switch (keyword)
 		{
 			case "SHOP":
-				Content.AppContents.UnloadTempLoadedConstImageNames();
-				Content.AppContents.UnloadTempLoadedGraphicsImageNames();
+				AppContents.UnloadTempLoadedConstImageNames();
+				AppContents.UnloadTempLoadedGraphicsImageNames();
 				SetBegin(BeginType.SHOP, force); return;
 			case "TRAIN":
 				SetBegin(BeginType.TRAIN, force); return;
@@ -194,8 +195,8 @@ internal sealed class ProcessState
 			case "TURNEND":
 				SetBegin(BeginType.TURNEND, force); return;
 			case "FIRST":
-				Content.AppContents.UnloadTempLoadedConstImageNames();
-				Content.AppContents.UnloadTempLoadedGraphicsImageNames();
+				AppContents.UnloadTempLoadedConstImageNames();
+				AppContents.UnloadTempLoadedGraphicsImageNames();
 				SetBegin(BeginType.FIRST, force); return;
 			case "TITLE":
 				SetBegin(BeginType.TITLE, force); return;
@@ -255,7 +256,7 @@ internal sealed class ProcessState
 			console.DebugClearTraceLog();
 		foreach (CalledFunction called in functionList)
 			if (called.CurrentLabel.hasPrivDynamicVar)
-				called.CurrentLabel.Out();
+				called.CurrentLabel.ScopeOut();
 		functionList.Clear();
 		begintype = BeginType.NULL;
 	}
@@ -310,7 +311,7 @@ internal sealed class ProcessState
 		}
 		foreach (CalledFunction called in functionList)
 			if (called.CurrentLabel.hasPrivDynamicVar)
-				called.CurrentLabel.Out();
+				called.CurrentLabel.ScopeOut();
 		functionList.Clear();
 		begintype = BeginType.NULL;
 		return;
@@ -359,7 +360,7 @@ internal sealed class ProcessState
 		}
 	}
 
-	public void Return(Int64 ret)
+	public void Return(long ret)
 	{
 		if (IsFunctionMethod)
 		{
@@ -376,7 +377,7 @@ internal sealed class ProcessState
 		if (called.IsJump)
 		{//JUMPした場合。即座にRETURN RESULTする。
 			if (called.TopLabel.hasPrivDynamicVar)
-				called.TopLabel.Out();
+				called.TopLabel.ScopeOut();
 			functionList.Remove(called);
 			if (Program.DebugMode)
 				console.DebugRemoveTraceLog();
@@ -386,19 +387,19 @@ internal sealed class ProcessState
 		if (!called.IsEvent)
 		{
 			if (called.TopLabel.hasPrivDynamicVar)
-				called.TopLabel.Out();
+				called.TopLabel.ScopeOut();
 			currentLine = null;
 		}
 		else
 		{
 			if (called.CurrentLabel.hasPrivDynamicVar)
-				called.CurrentLabel.Out();
+				called.CurrentLabel.ScopeOut();
 			//#Singleフラグ付き関数で1が返された。
 			//1752 非0ではなく1と等価であることを見るように修正
 			//1756 全てを終了ではなく#PRIや#LATERのグループごとに修正
 			if (called.IsOnly)
 				called.FinishEvent();
-			else if (called.HasSingleFlag && (ret == 1))
+			else if (called.HasSingleFlag && ret == 1)
 				called.ShiftNextGroup();
 			else
 				called.ShiftNext();//次の同名関数に進む。
@@ -407,7 +408,7 @@ internal sealed class ProcessState
 			{
 				lineCount++;
 				if (called.CurrentLabel.hasPrivDynamicVar)
-					called.CurrentLabel.In();
+					called.CurrentLabel.ScopeIn();
 			}
 		}
 		if (Program.DebugMode)
@@ -483,15 +484,15 @@ internal sealed class ProcessState
 			srcArgs.SetTransporter(exm);
 			//プライベート変数更新
 			if (call.TopLabel.hasPrivDynamicVar)
-				call.TopLabel.In();
+				call.TopLabel.ScopeIn();
 			//更新した変数へ引数を代入
 			for (int i = 0; i < call.TopLabel.Arg.Length; i++)
 			{
 				if (srcArgs.Arguments[i] != null)
 				{
 					if (call.TopLabel.Arg[i].Identifier.IsReference)
-						((ReferenceToken)(call.TopLabel.Arg[i].Identifier)).SetRef(srcArgs.TransporterRef[i]);
-					else if (srcArgs.Arguments[i].GetOperandType() == typeof(Int64))
+						((ReferenceToken)call.TopLabel.Arg[i].Identifier).SetRef(srcArgs.TransporterRef[i]);
+					else if (srcArgs.Arguments[i].GetOperandType() == typeof(long))
 						call.TopLabel.Arg[i].SetValue(srcArgs.TransporterInt[i], exm);
 					else
 						call.TopLabel.Arg[i].SetValue(srcArgs.TransporterStr[i], exm);
@@ -502,7 +503,7 @@ internal sealed class ProcessState
 		{
 			//プライベート変数更新
 			if (call.TopLabel.hasPrivDynamicVar)
-				call.TopLabel.In();
+				call.TopLabel.ScopeIn();
 		}
 		functionList.Add(call);
 		//sequential = false;
@@ -520,7 +521,7 @@ internal sealed class ProcessState
 		}
 	}
 
-	public SingleTerm MethodReturnValue = null;
+	public SingleTerm MethodReturnValue;
 
 	public void ReturnF(SingleTerm ret)
 	{
@@ -549,7 +550,7 @@ internal sealed class ProcessState
 
 	#endregion
 
-	bool isClone = false;
+	bool isClone;
 	public bool IsClone { get { return isClone; } set { isClone = value; } }
 
 	// functionListのコピーを必要とする呼び出し元が無かったのでコピーしないことにする。
@@ -560,11 +561,11 @@ internal sealed class ProcessState
 		//どうせ消すからコピー不要
 		//foreach (CalledFunction func in functionList)
 		//	ret.functionList.Add(func.Clone());
-		ret.currentLine = this.currentLine;
+		ret.currentLine = currentLine;
 		//ret.nextLine = this.nextLine;
 		//ret.sequential = this.sequential;
-		ret.sysStateCode = this.sysStateCode;
-		ret.begintype = this.begintype;
+		ret.sysStateCode = sysStateCode;
+		ret.begintype = begintype;
 		//ret.MethodReturnValue = this.MethodReturnValue;
 		return ret;
 

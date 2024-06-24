@@ -1,8 +1,9 @@
-﻿using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameData.Variable;
+﻿using MinorShift.Emuera.GameProc;
 using MinorShift.Emuera.GameProc.Function;
-using MinorShift.Emuera.Runtime.Config;
-using MinorShift.Emuera.Sub;
+using MinorShift.Emuera.Runtime.Script;
+using MinorShift.Emuera.Runtime.Script.Parser;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -10,9 +11,9 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using static EvilMask.Emuera.Utils;
+using static MinorShift.Emuera.Runtime.Utils.EvilMask.Utils;
 
-namespace MinorShift.Emuera.GameProc.PluginSystem
+namespace MinorShift.Emuera.Runtime.Utils.PluginSystem
 {
 	public class PluginManager
 	{
@@ -32,7 +33,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 
 		}
 
-		static private PluginManager instance = null;
+		static private PluginManager instance;
 
 		/// <summary>
 		/// Unsafe rudimentary method to execute ERB line of code from Plugin.
@@ -92,7 +93,8 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 			if (text == "")
 			{
 				expressionMediator.Console.PrintBar();
-			} else
+			}
+			else
 			{
 				expressionMediator.Console.printCustomBar(text, isConst);
 			}
@@ -168,13 +170,14 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 			if (force)
 			{
 				expressionMediator.Console.ForceQuit();
-			}  else
+			}
+			else
 			{
 				expressionMediator.Console.Quit();
 			}
 		}
 
-		public Int64[] GetCharacterIDs()
+		public long[] GetCharacterIDs()
 		{
 			return expressionMediator.VEvaluator.VariableData.CharacterList.Select(v => v.NO).ToArray();
 		}
@@ -195,24 +198,24 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 			expressionMediator.VEvaluator.VariableData.GetVarTokenDic()[name].SetValue(val, [index]);
 		}
 
-		public void SetCharVar(string name, Int64 charId, string key, Int64 value)
+		public void SetCharVar(string name, long charId, string key, long value)
 		{
 			var variable = expressionMediator.VEvaluator.VariableData.GetVarTokenDic()[name];
 			var errPos = "";
 			var dict = expressionMediator.VEvaluator.Constant.GetKeywordDictionary(out errPos, VariableCode.CFLAG, 1, key);
 			variable.SetValue(value, [charId, dict[key]]);
 		}
-		public void SetCharVar(string name, Int64 charId, Int64 key, Int64 value)
+		public void SetCharVar(string name, long charId, long key, long value)
 		{
 			var variable = expressionMediator.VEvaluator.VariableData.GetVarTokenDic()[name];
 			variable.SetValue(value, [charId, key]);
 		}
-		public Int64 GetCharVar(string name, Int64 charId, Int64 key)
+		public long GetCharVar(string name, long charId, long key)
 		{
 			var variable = expressionMediator.VEvaluator.VariableData.GetVarTokenDic()[name];
 			return variable.GetIntValue(expressionMediator, [charId, key]);
 		}
-		public Int64 GetCharVar(string name, Int64 charId, string key)
+		public long GetCharVar(string name, long charId, string key)
 		{
 			var variable = expressionMediator.VEvaluator.VariableData.GetVarTokenDic()[name];
 			var errPos = "";
@@ -225,7 +228,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 			return expressionMediator.VEvaluator.VariableData.DataDataTables[name];
 		}
 
-		public PluginAPICharContext CreateCharContext(long charId)
+		public static PluginAPICharContext CreateCharContext(long charId)
 		{
 			return new PluginAPICharContext(charId);
 		}
@@ -276,7 +279,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 		public IPluginMethod GetMethod(string name)
 		{
 			var key = name;
-			if (Config.IgnoreCase)
+			if (Config.Config.IgnoreCase)
 			{
 				key = key.ToUpper();
 			}
@@ -286,7 +289,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 		public bool HasMethod(string name)
 		{
 			var key = name;
-			if (Config.IgnoreCase)
+			if (Config.Config.IgnoreCase)
 			{
 				key = key.ToUpper();
 			}
@@ -378,7 +381,7 @@ namespace MinorShift.Emuera.GameProc.PluginSystem
 		private void AddMethod(IPluginMethod method)
 		{
 			var key = method.Name;
-			if (Config.IgnoreCase)
+			if (Config.Config.IgnoreCase)
 			{
 				key = key.ToUpper();
 			}

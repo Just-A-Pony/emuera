@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
-using trerror = EvilMask.Emuera.Lang.Error;
-using trsl = EvilMask.Emuera.Lang.SystemLine;
+﻿using MinorShift.Emuera.Runtime;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Script;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.UI.Game;
+using MinorShift.Emuera.UI.Game.Image;
+using System;
+using System.Collections.Generic;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
+using trsl = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.SystemLine;
 
 namespace MinorShift.Emuera.GameProc;
 
 internal sealed partial class Process
 {
-	private string[] TrainName = null;
+	private string[] TrainName;
 	delegate void SystemProcess();
 	Dictionary<SystemStateCode, SystemProcess> systemProcessDictionary = [];
 	private void initSystemProcess()
@@ -75,7 +79,7 @@ internal sealed partial class Process
 
 
 
-	Int64 systemResult = 0;
+	Int64 systemResult;
 	int lastCalledComable = -1;
 	int lastAddCom = -1;
 	//(Train.csv中の値・定義されていなければ-1) == comAble[(表示されている値)];
@@ -100,9 +104,9 @@ internal sealed partial class Process
 	{
 		console.ReadAnyKey();
 	}
-	long flowinputdef = 0;
-	bool flowinput = false;
-	bool flowinputcanskip = false;
+	long flowinputdef;
+	bool flowinput;
+	bool flowinputcanskip;
 
 	void setWaitInput()
 	{
@@ -191,7 +195,7 @@ internal sealed partial class Process
 		//標準のタイトル画面
 		console.PrintBar();
 		console.NewLine();
-		console.Alignment = GameView.DisplayLineAlignment.CENTER;
+		console.Alignment = DisplayLineAlignment.CENTER;
 		console.PrintSingleLine(gamebase.ScriptTitle);
 		if (gamebase.ScriptVersion != 0)
 			console.PrintSingleLine(gamebase.ScriptVersionText);
@@ -199,7 +203,7 @@ internal sealed partial class Process
 		console.PrintSingleLine("(" + gamebase.ScriptYear + ")");
 		console.NewLine();
 		console.PrintSingleLine(gamebase.ScriptDetail);
-		console.Alignment = GameView.DisplayLineAlignment.LEFT;
+		console.Alignment = DisplayLineAlignment.LEFT;
 
 		console.PrintBar();
 		console.NewLine();
@@ -281,9 +285,9 @@ internal sealed partial class Process
 	}
 
 	List<Int64> coms = [];
-	bool isCTrain = false;
-	int count = 0;
-	bool skipPrint = false;
+	bool isCTrain;
+	int count;
+	bool skipPrint;
 	public bool SkipPrint { get { return skipPrint; } set { skipPrint = value; } }
 	void endCallEventTrain()
 	{
@@ -332,7 +336,7 @@ internal sealed partial class Process
 		return string.Format("{0}[{1,3}]", trainName, comNo);
 	}
 
-	int printComCount = 0;
+	int printComCount;
 	void endCallComAbleXX()
 	{
 		//選択肢追加。RESULTが0の場合は選択肢の番号のみ増やして追加はしない。
@@ -502,7 +506,7 @@ internal sealed partial class Process
 			endCallEventComEnd();
 		}
 	}
-	public bool NeedWaitToEventComEnd = false;
+	public bool NeedWaitToEventComEnd;
 	bool needCheck = true;
 	void endCallEventComEnd()
 	{
@@ -785,8 +789,8 @@ internal sealed partial class Process
 	}
 	void endSystemLoad()
 	{
-		Content.AppContents.UnloadTempLoadedConstImageNames();
-		Content.AppContents.UnloadTempLoadedGraphicsImageNames();
+		AppContents.UnloadTempLoadedConstImageNames();
+		AppContents.UnloadTempLoadedGraphicsImageNames();
 		state.SystemState = SystemStateCode.LoadData_CallEventLoad;
 		//EVENTLOADを呼び出してLoadData_CallEventLoadへ移行。
 		if (!callFunction("EVENTLOAD", false, true))
@@ -827,7 +831,7 @@ internal sealed partial class Process
 	bool[] dataIsAvailable = new bool[21];
 	bool isFirstTime = true;
 	const int AutoSaveIndex = 99;
-	int page = 0;
+	int page;
 	void printSaveDataText()
 	{
 		if (isFirstTime)

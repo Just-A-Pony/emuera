@@ -1,4 +1,4 @@
-﻿namespace MinorShift.Emuera.Sub;
+﻿namespace MinorShift.Emuera.Runtime.Script.Parser;
 
 /// <summary>
 /// FormattedStringWTの中身用のトークン
@@ -8,7 +8,7 @@ internal abstract class SubWord
 	protected SubWord(WordCollection w) { words = w; }
 	readonly WordCollection words;
 	public WordCollection Words { get { return words; } }
-	public bool IsMacro = false;
+	public bool IsMacro;
 	public virtual void SetIsMacro()
 	{
 		IsMacro = true;

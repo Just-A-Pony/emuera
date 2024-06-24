@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using trerror = EvilMask.Emuera.Lang.Error;
-using MinorShift.Emuera.Runtime.Config;
+using System.Text;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.Sub;
+namespace MinorShift.Emuera.Runtime.Utils;
 
 internal enum EraDataState
 {
@@ -59,20 +58,20 @@ internal sealed class EraDataReader : IDisposable
 		return str;
 	}
 
-	public Int64 ReadInt64()
+	public long ReadInt64()
 	{
 		if (reader == null)
 			throw new FileEE(trerror.InvalidStream.Text);
 		string str = reader.ReadLine();
 		if (str == null)
 			throw new FileEE(trerror.NoNumToRead.Text);
-		if (!Int64.TryParse(str, out long ret))
+		if (!long.TryParse(str, out long ret))
 			throw new FileEE(trerror.CanNotInterpretNum.Text);
 		return ret;
 	}
 
 
-	public void ReadInt64Array(Int64[] array)
+	public void ReadInt64Array(long[] array)
 	{
 		if (reader == null)
 			throw new FileEE(trerror.InvalidStream.Text);
@@ -90,7 +89,7 @@ internal sealed class EraDataReader : IDisposable
 				break;
 			if (i >= array.Length)//配列を超えて保存されていても動じないで読み飛ばす。
 				continue;
-			if (!Int64.TryParse(str, out long integer))
+			if (!long.TryParse(str, out long integer))
 				throw new FileEE(trerror.InvalidArray.Text);
 			array[i] = integer;
 		}
@@ -185,16 +184,15 @@ internal sealed class EraDataReader : IDisposable
 				throw new FileEE(trerror.InvalidSaveDataFormat.Text);
 			string key = str[..index];
 			string value = str.Substring(index + 1, str.Length - index - 1);
-			if (!strList.ContainsKey(key))
-				strList.Add(key, value);
+			strList.TryAdd(key, value);
 		}
 		return strList;
 	}
-	public Dictionary<string, Int64> ReadInt64Extended()
+	public Dictionary<string, long> ReadInt64Extended()
 	{
 		if (reader == null)
 			throw new FileEE(trerror.InvalidStream.Text);
-		Dictionary<string, Int64> intList = [];
+		Dictionary<string, long> intList = [];
 		string str;
 		while (true)
 		{
@@ -210,19 +208,18 @@ internal sealed class EraDataReader : IDisposable
 				throw new FileEE(trerror.InvalidSaveDataFormat.Text);
 			string key = str[..index];
 			string valueStr = str.Substring(index + 1, str.Length - index - 1);
-			if (!Int64.TryParse(valueStr, out long value))
+			if (!long.TryParse(valueStr, out long value))
 				throw new FileEE(trerror.InvalidArray.Text);
-			if (!intList.ContainsKey(key))
-				intList.Add(key, value);
+			intList.TryAdd(key, value);
 		}
 		return intList;
 	}
 
-	public Dictionary<string, List<Int64>> ReadInt64ArrayExtended()
+	public Dictionary<string, List<long>> ReadInt64ArrayExtended()
 	{
 		if (reader == null)
 			throw new FileEE(trerror.InvalidStream.Text);
-		Dictionary<string, List<Int64>> ret = [];
+		Dictionary<string, List<long>> ret = [];
 		string str;
 		while (true)
 		{
@@ -234,7 +231,7 @@ internal sealed class EraDataReader : IDisposable
 			if (str.Equals(EMU_SEPARATOR, StringComparison.Ordinal))
 				break;
 			string key = str;
-			List<Int64> valueList = [];
+			List<long> valueList = [];
 			while (true)
 			{
 				str = reader.ReadLine();
@@ -244,12 +241,11 @@ internal sealed class EraDataReader : IDisposable
 					throw new FileEE(trerror.InvalidSaveDataFormat.Text);
 				if (str.Equals(FINISHER, StringComparison.Ordinal))
 					break;
-				if (!Int64.TryParse(str, out long value))
+				if (!long.TryParse(str, out long value))
 					throw new FileEE(trerror.InvalidArray.Text);
 				valueList.Add(value);
 			}
-			if (!ret.ContainsKey(key))
-				ret.Add(key, valueList);
+			ret.TryAdd(key, valueList);
 		}
 		return ret;
 	}
@@ -282,17 +278,16 @@ internal sealed class EraDataReader : IDisposable
 					break;
 				valueList.Add(str);
 			}
-			if (!ret.ContainsKey(key))
-				ret.Add(key, valueList);
+			ret.TryAdd(key, valueList);
 		}
 		return ret;
 	}
 
-	public Dictionary<string, List<Int64[]>> ReadInt64Array2DExtended()
+	public Dictionary<string, List<long[]>> ReadInt64Array2DExtended()
 	{
 		if (reader == null)
 			throw new FileEE(trerror.InvalidStream.Text);
-		Dictionary<string, List<Int64[]>> ret = [];
+		Dictionary<string, List<long[]>> ret = [];
 		if (emu_version < 1708)
 			return ret;
 		string str;
@@ -306,7 +301,7 @@ internal sealed class EraDataReader : IDisposable
 			if (str.Equals(EMU_SEPARATOR, StringComparison.Ordinal))
 				break;
 			string key = str;
-			List<Int64[]> valueList = [];
+			List<long[]> valueList = [];
 			while (true)
 			{
 				str = reader.ReadLine();
@@ -318,19 +313,18 @@ internal sealed class EraDataReader : IDisposable
 					break;
 				if (str.Length == 0)
 				{
-					valueList.Add(new Int64[0]);
+					valueList.Add([]);
 					continue;
 				}
 				string[] tokens = str.Split(',');
-				Int64[] intTokens = new Int64[tokens.Length];
+				long[] intTokens = new long[tokens.Length];
 
 				for (int x = 0; x < tokens.Length; x++)
-					if (!Int64.TryParse(tokens[x], out intTokens[x]))
+					if (!long.TryParse(tokens[x], out intTokens[x]))
 						throw new FileEE(string.Format(trerror.CanNotInterpretNumValue.Text, tokens[x]));
 				valueList.Add(intTokens);
 			}
-			if (!ret.ContainsKey(key))
-				ret.Add(key, valueList);
+			ret.TryAdd(key, valueList);
 		}
 		return ret;
 	}
@@ -357,11 +351,11 @@ internal sealed class EraDataReader : IDisposable
 		return ret;
 	}
 
-	public Dictionary<string, List<List<Int64[]>>> ReadInt64Array3DExtended()
+	public Dictionary<string, List<List<long[]>>> ReadInt64Array3DExtended()
 	{
 		if (reader == null)
 			throw new FileEE(trerror.InvalidStream.Text);
-		Dictionary<string, List<List<Int64[]>>> ret = [];
+		Dictionary<string, List<List<long[]>>> ret = [];
 		if (emu_version < 1729)
 			return ret;
 		string str;
@@ -375,7 +369,7 @@ internal sealed class EraDataReader : IDisposable
 			if (str.Equals(EMU_SEPARATOR, StringComparison.Ordinal))
 				break;
 			string key = str;
-			List<List<Int64[]>> valueList = [];
+			List<List<long[]>> valueList = [];
 			while (true)
 			{
 				str = reader.ReadLine();
@@ -385,9 +379,9 @@ internal sealed class EraDataReader : IDisposable
 					throw new FileEE(trerror.InvalidSaveDataFormat.Text);
 				if (str.Equals(FINISHER, StringComparison.Ordinal))
 					break;
-				if (str.Contains("{"))
+				if (str.Contains('{'))
 				{
-					List<Int64[]> tokenList = [];
+					List<long[]> tokenList = [];
 					while (true)
 					{
 						str = reader.ReadLine();
@@ -395,22 +389,21 @@ internal sealed class EraDataReader : IDisposable
 							break;
 						if (str.Length == 0)
 						{
-							tokenList.Add(new Int64[0]);
+							tokenList.Add([]);
 							continue;
 						}
 						string[] tokens = str.Split(',');
-						Int64[] intTokens = new Int64[tokens.Length];
+						long[] intTokens = new long[tokens.Length];
 
 						for (int x = 0; x < tokens.Length; x++)
-							if (!Int64.TryParse(tokens[x], out intTokens[x]))
+							if (!long.TryParse(tokens[x], out intTokens[x]))
 								throw new FileEE(string.Format(trerror.CanNotInterpretNumValue.Text, tokens[x]));
 						tokenList.Add(intTokens);
 					}
 					valueList.Add(tokenList);
 				}
 			}
-			if (!ret.ContainsKey(key))
-				ret.Add(key, valueList);
+			ret.TryAdd(key, valueList);
 		}
 		return ret;
 	}
@@ -453,7 +446,7 @@ internal sealed class EraDataReader : IDisposable
 	#endregion
 	public void Close()
 	{
-		this.Dispose();
+		Dispose();
 	}
 
 }
@@ -472,7 +465,7 @@ internal sealed class EraDataWriter : IDisposable
 	public EraDataWriter(FileStream file)
 	{
 		this.file = file;
-		writer = new StreamWriter(file, Config.SaveEncode);
+		writer = new StreamWriter(file, Config.Config.SaveEncode);
 	}
 
 	public const string FINISHER = EraDataReader.FINISHER;
@@ -481,7 +474,7 @@ internal sealed class EraDataWriter : IDisposable
 	FileStream file;
 	StreamWriter writer;
 	#region eramaker
-	public void Write(Int64 integer)
+	public void Write(long integer)
 	{
 		if (writer == null)
 			throw new FileEE(trerror.InvalidStream.Text);
@@ -499,7 +492,7 @@ internal sealed class EraDataWriter : IDisposable
 			writer.WriteLine(str);
 	}
 
-	public void Write(Int64[] array)
+	public void Write(long[] array)
 	{
 		if (writer == null)
 			throw new FileEE(trerror.InvalidStream.Text);
@@ -550,7 +543,7 @@ internal sealed class EraDataWriter : IDisposable
 		writer.WriteLine(EMU_SEPARATOR);
 	}
 
-	public void WriteExtended(string key, Int64 value)
+	public void WriteExtended(string key, long value)
 	{
 		if (writer == null)
 			throw new FileEE(trerror.InvalidStream.Text);
@@ -569,7 +562,7 @@ internal sealed class EraDataWriter : IDisposable
 	}
 
 
-	public void WriteExtended(string key, Int64[] array)
+	public void WriteExtended(string key, long[] array)
 	{
 		if (writer == null)
 			throw new FileEE(trerror.InvalidStream.Text);
@@ -611,7 +604,7 @@ internal sealed class EraDataWriter : IDisposable
 		writer.WriteLine(FINISHER);
 	}
 
-	public void WriteExtended(string key, Int64[,] array2D)
+	public void WriteExtended(string key, long[,] array2D)
 	{
 		if (writer == null)
 			throw new FileEE(trerror.InvalidStream.Text);
@@ -645,9 +638,9 @@ internal sealed class EraDataWriter : IDisposable
 			StringBuilder builder = new("");
 			for (int y = 0; y < countY[x]; y++)
 			{
-				builder.Append(array2D[x, y].ToString());
+				builder.Append(array2D[x, y]);
 				if (y != countY[x] - 1)
-					builder.Append(",");
+					builder.Append(',');
 			}
 			writer.WriteLine(builder.ToString());
 		}
@@ -659,7 +652,7 @@ internal sealed class EraDataWriter : IDisposable
 		throw new NotImplementedException(trerror.NotImplement.Text);
 	}
 
-	public void WriteExtended(string key, Int64[,,] array3D)
+	public void WriteExtended(string key, long[,,] array3D)
 	{
 		if (writer == null)
 			throw new FileEE(trerror.InvalidStream.Text);
@@ -707,9 +700,9 @@ internal sealed class EraDataWriter : IDisposable
 				}
 				for (int z = 0; z < countZ[x, y]; z++)
 				{
-					builder.Append(array3D[x, y, z].ToString());
+					builder.Append(array3D[x, y, z]);
 					if (z != countZ[x, y] - 1)
-						builder.Append(",");
+						builder.Append(',');
 				}
 				writer.WriteLine(builder.ToString());
 			}
@@ -739,6 +732,6 @@ internal sealed class EraDataWriter : IDisposable
 	#endregion
 	public void Close()
 	{
-		this.Dispose();
+		Dispose();
 	}
 }

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using MinorShift.Emuera.GameData.Variable;
+using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Script.Statements.Function;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
+using MinorShift.Emuera.Runtime.Utils.PluginSystem;
+using System;
 using System.Collections.Generic;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.GameData.Function;
-using MinorShift.Emuera.GameProc.PluginSystem;
 
-namespace MinorShift.Emuera.GameProc.Function;
+namespace MinorShift.Emuera.Runtime.Script.Statements;
 
 #region EM_私家版_INPUT系機能拡張
 internal sealed class SpInputsArgument : Argument
@@ -24,8 +25,8 @@ internal sealed class SpInputsArgument : Argument
 #region EM_私家版_HTMLパラメータ拡張
 internal sealed class MixedIntegerExprTerm
 {
-	public AExpression num = null;
-	public bool isPx = false;
+	public AExpression num;
+	public bool isPx;
 }
 internal sealed class SpPrintShapeArgument : Argument
 {
@@ -86,7 +87,7 @@ internal abstract class Argument
 {
 	public bool IsConst;
 	public string ConstStr;
-	public Int64 ConstInt;
+	public long ConstInt;
 }
 
 /// <summary>
@@ -109,15 +110,6 @@ internal sealed class ExpressionsArgument : Argument
 internal sealed class VoidArgument : Argument
 {
 	public VoidArgument() { }
-}
-
-internal sealed class ErrorArgument : Argument
-{
-	public ErrorArgument(string errorMes)
-	{
-		this.errorMes = errorMes;
-	}
-	readonly string errorMes;
 }
 
 internal sealed class ExpressionArgument : Argument
@@ -311,10 +303,10 @@ internal sealed class SpForNextArgment : Argument
 {
 	public SpForNextArgment(VariableTerm var, AExpression start, AExpression end, AExpression step)
 	{
-		this.Cnt = var;
-		this.Start = start;
-		this.End = end;
-		this.Step = step;
+		Cnt = var;
+		Start = start;
+		End = end;
+		Step = step;
 	}
 	readonly public VariableTerm Cnt;
 	readonly public AExpression Start;
@@ -578,35 +570,13 @@ internal sealed class RefArgument : Argument
 		RefVarToken = vt;
 		SrcTerm = src;
 	}
-	readonly public UserDefinedRefMethod RefMethodToken = null;
-	readonly public UserDefinedRefMethod SrcRefMethodToken = null;
-	readonly public CalledFunction SrcCalledFunction = null;
+	readonly public UserDefinedRefMethod RefMethodToken;
+	readonly public UserDefinedRefMethod SrcRefMethodToken;
+	readonly public CalledFunction SrcCalledFunction;
 
-	readonly public ReferenceToken RefVarToken = null;
-	readonly public VariableToken SrcVarToken = null;
-	readonly public AExpression SrcTerm = null;
-}
-
-internal sealed class OneInputArgument : Argument
-{
-	public OneInputArgument(AExpression term, AExpression flag)
-	{
-		Term = term;
-		Flag = flag;
-	}
-	readonly public AExpression Term;
-	readonly public AExpression Flag;
-}
-
-internal sealed class OneInputsArgument : Argument
-{
-	public OneInputsArgument(AExpression term, AExpression flag)
-	{
-		Term = term;
-		Flag = flag;
-	}
-	readonly public AExpression Term;
-	readonly public AExpression Flag;
+	readonly public ReferenceToken RefVarToken;
+	readonly public VariableToken SrcVarToken;
+	readonly public AExpression SrcTerm;
 }
 #region EE
 internal sealed class StrDoubleArgument : Argument
@@ -631,12 +601,12 @@ internal sealed class SpSetArgument : Argument
 	}
 	readonly public VariableTerm VariableDest;
 	readonly public AExpression Term;
-	public bool AddConst = false;
+	public bool AddConst;
 }
 
 internal sealed class SpSetArrayArgument : Argument
 {
-	public SpSetArrayArgument(VariableTerm var, List<AExpression> termList, Int64[] constList)
+	public SpSetArrayArgument(VariableTerm var, List<AExpression> termList, long[] constList)
 	{
 		VariableDest = var;
 		TermList = termList;
@@ -650,7 +620,52 @@ internal sealed class SpSetArrayArgument : Argument
 	}
 	readonly public VariableTerm VariableDest;
 	readonly public List<AExpression> TermList;
-	readonly public Int64[] ConstIntList;
+	readonly public long[] ConstIntList;
 	readonly public string[] ConstStrList;
 }
 #endregion
+
+#region Emuera.NET VAR命令
+internal sealed class IntAsignArgument : Argument
+{
+	public int[] Lengths;
+	public IntAsignArgument(string str, int[] lengths)
+	{
+		ConstStr = str;
+	}
+	public AExpression Exp;
+	public IntAsignArgument(string name, int[] lengths, AExpression exp)
+	{
+		ConstStr = name;
+		Lengths = lengths;
+		Exp = exp;
+	}
+}
+
+internal sealed class StrAsignArgument : Argument
+{
+	public int[] Lengths;
+	public StrAsignArgument(string str)
+	{
+		ConstStr = str;
+	}
+	public string Value;
+	public StrAsignArgument(string str, int[] lengths, string value)
+	{
+		ConstStr = str;
+		Lengths = lengths;
+		Value = value;
+	}
+}
+#endregion
+
+internal sealed class HTML_PRINTArgument : Argument
+{
+	public HTML_PRINTArgument(AExpression termSrc, AExpression lineEnd)
+	{
+		Term = termSrc;
+		LineEnd = lineEnd;
+	}
+	readonly public AExpression LineEnd;
+	readonly public AExpression Term;
+}

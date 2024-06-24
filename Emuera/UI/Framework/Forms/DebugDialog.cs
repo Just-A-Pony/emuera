@@ -1,14 +1,15 @@
-﻿using System;
+﻿using MinorShift.Emuera.GameProc;
+using MinorShift.Emuera.GameView;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Script.Parser;
+using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Windows.Forms;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameProc;
 using System.IO;
-using MinorShift.Emuera.GameView;
-using EvilMask.Emuera;
-using MinorShift.Emuera.Runtime.Config;
+using System.Windows.Forms;
 
 namespace MinorShift.Emuera.Forms
 {
@@ -32,8 +33,8 @@ namespace MinorShift.Emuera.Forms
 			checkBoxTopMost.Checked = this.TopMost;
 			loadWatchList();
 		}
-		private Process emuera = null;
-		private EmueraConsole mainConsole = null;
+		private Process emuera;
+		private EmueraConsole mainConsole;
 
 		internal void SetParent(EmueraConsole console, Process process)
 		{
@@ -129,7 +130,7 @@ namespace MinorShift.Emuera.Forms
 			}
 			if ((listViewWatch.Items.Count == 0) || (!string.IsNullOrEmpty(listViewWatch.Items[^1].Text)))
 			{
-				ListViewItem newLVI = new ("");
+				ListViewItem newLVI = new("");
 				newLVI.SubItems.Add(new ListViewItem.ListViewSubItem(newLVI, ""));
 				listViewWatch.Items.Add(newLVI);
 			}
@@ -150,7 +151,7 @@ namespace MinorShift.Emuera.Forms
 			mainConsole.RunERBFromMemory = true;
 			try
 			{
-				CharStream st = new (str);
+				CharStream st = new(str);
 				WordCollection wc = LexicalAnalyzer.Analyse(st, LexEndWith.EoL, LexAnalyzeFlag.None);
 				AExpression term = ExpressionParser.ReduceExpressionTerm(wc, TermEndWith.EoL);
 				SingleTerm value = term.GetValue(GlobalStatic.EMediator);
@@ -182,7 +183,7 @@ namespace MinorShift.Emuera.Forms
 				listViewWatch.Items[e.Item].SubItems[1].Text = getValueString(e.Label);
 				if (e.Item == listViewWatch.Items.Count - 1)
 				{
-					ListViewItem newLVI = new ("");
+					ListViewItem newLVI = new("");
 					newLVI.SubItems.Add(new ListViewItem.ListViewSubItem(newLVI, ""));
 					listViewWatch.Items.Add(newLVI);
 				}
@@ -217,7 +218,6 @@ namespace MinorShift.Emuera.Forms
 
 
 		private readonly string watchFilepath = Program.DebugDir + "watchlist.csv";
-		private readonly string traceFilepath = Program.DebugDir + "trace.log";
 		private readonly string consoleFilepath = Program.DebugDir + "console.log";
 
 		private void saveData()
@@ -312,7 +312,7 @@ namespace MinorShift.Emuera.Forms
 			{
 				if (!string.IsNullOrEmpty(str))
 				{
-					ListViewItem newLVI = new (str);
+					ListViewItem newLVI = new(str);
 					newLVI.SubItems.Add(new ListViewItem.ListViewSubItem(newLVI, ""));
 					listViewWatch.Items.Add(newLVI);
 				}
@@ -417,58 +417,35 @@ namespace MinorShift.Emuera.Forms
 			}
 		}
 
-		//1750 MainWindowからほぼコピペ
-		string[] prevInputs = new string[100];
-		int selectedInputs = 100;
-		int lastSelected = 100;
+		List<string> history = [];
+		int selectedIndex;
 		void updateInputs()
 		{
-			string cur = textBoxCommand.Text;
-			if (string.IsNullOrEmpty(cur))
+			var input = textBoxCommand.Text;
+			if (string.IsNullOrEmpty(input))
 				return;
-			for (int i = 0; i < prevInputs.Length - 1; i++)
-			{
-				prevInputs[i] = prevInputs[i + 1];
-			}
-			prevInputs[^1] = cur;           
-			//entered = console.IsWaintingOnePhrase;
+			history.Add(input);
+			selectedIndex++;
 			textBoxCommand.Text = "";
-			//1729a eramakerと同じ処理系に変更 1730a 再修正
-			if (selectedInputs > 0 && selectedInputs != prevInputs.Length && cur == prevInputs[selectedInputs - 1])
-				lastSelected = --selectedInputs;
-			else
-				lastSelected = 100;
-			selectedInputs = prevInputs.Length;
 		}
 		void movePrev(int move)
 		{
-			if (move == 0)
-				return;
-			//if((selectedInputs != prevInputs.Length) &&(prevInputs[selectedInputs] != richTextBox1.Text))
-			//	selectedInputs =  prevInputs.Length;
-			int next;
-			if (lastSelected != prevInputs.Length && selectedInputs == prevInputs.Length)
+			selectedIndex += move;
+			if (selectedIndex < 0)
 			{
-				if (move == -1)
-					move = 0;
-				next = lastSelected + move;
+				selectedIndex = 0;
+			}
+
+			if (selectedIndex < history.Count)
+			{
+				textBoxCommand.Text = history[selectedIndex];
 			}
 			else
-				next = selectedInputs + move;
-			if ((next < 0) || (next > prevInputs.Length))
-				return;
-			if (next == prevInputs.Length)
 			{
-				selectedInputs = next;
+				selectedIndex = history.Count;
 				textBoxCommand.Text = "";
 				return;
 			}
-			if (string.IsNullOrEmpty(prevInputs[next]))
-				if (++next == prevInputs.Length)
-					return;
-
-			selectedInputs = next;
-			textBoxCommand.Text = prevInputs[next];
 			textBoxCommand.SelectionStart = 0;
 			textBoxCommand.SelectionLength = textBoxCommand.Text.Length;
 			return;

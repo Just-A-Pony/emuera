@@ -1,9 +1,8 @@
-﻿using System;
+﻿using MinorShift.Emuera.Runtime.Utils;
 using System.Drawing;
 using System.IO;
-using WebPWrapper;
 
-namespace MinorShift.Emuera.Content;
+namespace MinorShift.Emuera.UI.Game.Image;
 
 static class ImgUtils
 {

@@ -1,15 +1,9 @@
-﻿
-using MinorShift.Emuera;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Xml;
-using MinorShift.Emuera.Runtime.Config;
 
-namespace EvilMask.Emuera;
+namespace MinorShift.Emuera.Runtime.Utils.EvilMask;
 
 internal sealed class Lang
 {
@@ -18,7 +12,7 @@ internal sealed class Lang
 		public TranslatableString(string text)
 		{
 			this.text = text;
-			this.tr = null;
+			tr = null;
 		}
 
 		public void Clear()
@@ -1173,7 +1167,7 @@ internal sealed class Lang
 		[Managed] public static TranslatableString CanNotParseStringToIntTooltipImg { get; } = new TranslatableString("\"{0}\"を数値型に変換できません（文字列型として使う場合はTOOLTIP_IMGをオフにしてください）");
 		[Managed] public static TranslatableString ImcompatibleSoundFile { get; } = new TranslatableString("非対応のサウンドファイルが指定されました");
 		[Managed] public static TranslatableString IgnoreRandomize { get; } = new TranslatableString("新しい乱数アルゴリズムではRANDOMIZEは無視されます");
-		[Managed] public static TranslatableString CanNotUseInitrand{ get; } = new TranslatableString("新しい乱数アルゴリズムではINITRANDは機能しません");
+		[Managed] public static TranslatableString CanNotUseInitrand { get; } = new TranslatableString("新しい乱数アルゴリズムではINITRANDは機能しません");
 		[Managed] public static TranslatableString CanNotUseDumprand { get; } = new TranslatableString("新しい乱数アルゴリズムではDUMPRANDは機能しません");
 		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
 		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
@@ -1327,7 +1321,7 @@ internal sealed class Lang
 					{
 						langList.Add(langName, path);
 						var fontName = node.InnerText.Trim();
-						if (Config.EmueraLang == langName)
+						if (Config.Config.EmueraLang == langName)
 							loadLangXML(xml);
 					}
 				}
@@ -1353,14 +1347,14 @@ internal sealed class Lang
 	}
 	static public void ReloadLang()
 	{
-		if (Config.EmueraLang == string.Empty)
+		if (Config.Config.EmueraLang == string.Empty)
 		{
 			foreach (var item in trItems) item.Value.Clear();
 			return;
 		}
-		if (langList.ContainsKey(Config.EmueraLang))
+		if (langList.ContainsKey(Config.Config.EmueraLang))
 		{
-			var path = langList[Config.EmueraLang];
+			var path = langList[Config.Config.EmueraLang];
 			XmlDocument xml = new XmlDocument();
 			try
 			{

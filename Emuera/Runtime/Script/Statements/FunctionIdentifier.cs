@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using MinorShift.Emuera.GameData.Function;
+﻿using MinorShift.Emuera.GameData.Function;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Script.Statements.Function;
+using System;
+using System.Collections.Generic;
+using MinorShift.Emuera.Runtime.Config.JSON;
 
 namespace MinorShift.Emuera.GameProc.Function;
 
@@ -40,10 +40,10 @@ internal sealed partial class FunctionIdentifier
 
 	#region static
 	//元BuiltInFunctionManager部分
-	readonly static Dictionary<string, FunctionIdentifier> funcDic = Config.IgnoreCase ? new(StringComparer.OrdinalIgnoreCase) : new(); 
+	readonly static Dictionary<string, FunctionIdentifier> funcDic = Config.IgnoreCase ? new(StringComparer.OrdinalIgnoreCase) : new();
 	readonly static Dictionary<FunctionCode, string> funcMatch = [];
 	readonly static Dictionary<FunctionCode, FunctionCode> funcParent = [];
-	readonly static AInstruction methodInstruction = null;
+	readonly static AInstruction methodInstruction;
 
 	private static void addFunction(FunctionCode code, AInstruction inst)
 	{ addFunction(code, inst, 0); }
@@ -84,18 +84,23 @@ internal sealed partial class FunctionIdentifier
 		addPrintFunction(FunctionCode.PRINT);
 		addPrintFunction(FunctionCode.PRINTL);
 		addPrintFunction(FunctionCode.PRINTW);
+
 		addPrintFunction(FunctionCode.PRINTV);
 		addPrintFunction(FunctionCode.PRINTVL);
 		addPrintFunction(FunctionCode.PRINTVW);
+
 		addPrintFunction(FunctionCode.PRINTS);
 		addPrintFunction(FunctionCode.PRINTSL);
 		addPrintFunction(FunctionCode.PRINTSW);
+
 		addPrintFunction(FunctionCode.PRINTFORM);
 		addPrintFunction(FunctionCode.PRINTFORML);
 		addPrintFunction(FunctionCode.PRINTFORMW);
+
 		addPrintFunction(FunctionCode.PRINTFORMS);
 		addPrintFunction(FunctionCode.PRINTFORMSL);
 		addPrintFunction(FunctionCode.PRINTFORMSW);
+
 		addPrintFunction(FunctionCode.PRINTK);
 		addPrintFunction(FunctionCode.PRINTKL);
 		addPrintFunction(FunctionCode.PRINTKW);
@@ -428,6 +433,21 @@ internal sealed partial class FunctionIdentifier
 		#region EM
 		addFunction(FunctionCode.DT_COLUMN_OPTIONS, new DT_COLUMN_OPTIONS_Instruction());
 		#endregion
+		#region Emuera.NET
+		if (JSONConfig.Data != null && JSONConfig.Data.UseScopedVariableInstruction)
+		{
+			addFunction(FunctionCode.VARI, new VARI_Instruction());
+			addFunction(FunctionCode.VARS, new VARS_Instruction());
+		}
+		addFunction(FunctionCode.HTML_PRINT_ISLAND, new HTML_PRINT_ISLAND_Instruction());
+		addFunction(FunctionCode.HTML_PRINT_ISLAND_CLEAR, new HTML_PRINT_ISLAND_CLEAR_Instruction());
+
+		addPrintFunction(FunctionCode.PRINTN);
+		addPrintFunction(FunctionCode.PRINTVN);
+		addPrintFunction(FunctionCode.PRINTSN);
+		addPrintFunction(FunctionCode.PRINTFORMN);
+		addPrintFunction(FunctionCode.PRINTFORMSN);
+		#endregion
 
 		Dictionary<string, FunctionMethod> methodList = FunctionMethodCreator.GetMethodList();
 		foreach (KeyValuePair<string, FunctionMethod> pair in methodList)
@@ -541,7 +561,7 @@ internal sealed partial class FunctionIdentifier
 	private FunctionCode code;
 	private ArgumentBuilder arg;
 	private int flag;
-	private FunctionMethod method = null;
+	private FunctionMethod method;
 	public FunctionCode Code { get { return code; } }
 	public ArgumentBuilder ArgBuilder { get { return arg; } }
 	public FunctionMethod Method { get { return method; } }
@@ -549,7 +569,7 @@ internal sealed partial class FunctionIdentifier
 	public string Name { get; private set; }
 	internal bool IsFlowContorol()
 	{
-		return ((flag & FLOW_CONTROL) == FLOW_CONTROL);
+		return (flag & FLOW_CONTROL) == FLOW_CONTROL;
 	}
 
 	internal bool IsExtended()

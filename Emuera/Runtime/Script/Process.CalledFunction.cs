@@ -1,20 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameData.Function;
+﻿using MinorShift.Emuera.GameData.Function;
 using MinorShift.Emuera.GameData.Variable;
-using trerror = EvilMask.Emuera.Lang.Error;
+using MinorShift.Emuera.GameProc;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Script.Statements.Function;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
+using MinorShift.Emuera.Runtime.Utils;
+using System;
+using System.Collections.Generic;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
-namespace MinorShift.Emuera.GameProc;
+namespace MinorShift.Emuera.Runtime.Script;
 
 internal sealed class UserDefinedFunctionArgument
 {
 	public UserDefinedFunctionArgument(AExpression[] srcArgs, VariableTerm[] destArgs)
 	{
 		Arguments = srcArgs;
-		TransporterInt = new Int64[Arguments.Length];
+		TransporterInt = new long[Arguments.Length];
 		TransporterStr = new string[Arguments.Length];
 		TransporterRef = new Array[Arguments.Length];
 		isRef = new bool[Arguments.Length];
@@ -24,7 +28,7 @@ internal sealed class UserDefinedFunctionArgument
 		}
 	}
 	public readonly AExpression[] Arguments;
-	public readonly Int64[] TransporterInt;
+	public readonly long[] TransporterInt;
 	public readonly string[] TransporterStr;
 	public readonly Array[] TransporterRef;
 	public readonly bool[] isRef;
@@ -39,8 +43,8 @@ internal sealed class UserDefinedFunctionArgument
 				VariableTerm vTerm = (VariableTerm)Arguments[i];
 				if (vTerm.Identifier.IsCharacterData)
 				{
-					Int64 charaNo = vTerm.GetElementInt(0, exm);
-					if ((charaNo < 0) || (charaNo >= GlobalStatic.VariableData.CharacterList.Count))
+					long charaNo = vTerm.GetElementInt(0, exm);
+					if (charaNo < 0 || charaNo >= GlobalStatic.VariableData.CharacterList.Count)
 						throw new CodeEE(string.Format(trerror.OoRCharaVarArg.Text, vTerm.Identifier.Name, "1", charaNo.ToString()));
 					TransporterRef[i] = (Array)vTerm.Identifier.GetArrayChara((int)charaNo);
 				}
@@ -48,7 +52,7 @@ internal sealed class UserDefinedFunctionArgument
 					TransporterRef[i] = (Array)vTerm.Identifier.GetArray();
 
 			}
-			else if (Arguments[i].GetOperandType() == typeof(Int64))
+			else if (Arguments[i].GetOperandType() == typeof(long))
 				TransporterInt[i] = Arguments[i].GetIntValue(exm);
 			else
 				TransporterStr[i] = Arguments[i].GetStrValue(exm);
@@ -109,7 +113,7 @@ internal sealed class CalledFunction
 		{
 			if (parent.LabelDictionary.GetEventLabels(label) != null)
 			{
-				throw new CodeEE(string.Format(trerror.CallToEventFunc.Text, label, Config.GetConfigName(ConfigCode.CompatiCallEvent)));
+				throw new CodeEE(string.Format(trerror.CallToEventFunc.Text, label, Config.Config.GetConfigName(ConfigCode.CompatiCallEvent)));
 			}
 			return null;
 		}
@@ -135,7 +139,7 @@ internal sealed class CalledFunction
 	}
 
 
-	static FunctionMethod tostrMethod = null;
+	static FunctionMethod tostrMethod;
 	/// <summary>
 	/// 1803beta005 予め引数の数を合わせて規定値を代入しておく
 	/// 1806+v6.99 式中関数の引数に無効な#DIM変数を与えている場合に例外になるのを修正
@@ -161,7 +165,7 @@ internal sealed class CalledFunction
 		//bool isString = false;
 		for (int i = 0; i < func.Arg.Length; i++)
 		{
-			term = (i < srcArgs.Count) ? srcArgs[i] : null;
+			term = i < srcArgs.Count ? srcArgs[i] : null;
 			destArg = func.Arg[i];
 			//isString = destArg.IsString;
 			if (destArg.Identifier.IsReference)//参照渡しの場合
@@ -190,9 +194,9 @@ internal sealed class CalledFunction
 				term = func.Def[i];//デフォルト値を代入
 								   //1808beta001 デフォルト値がない場合はエラーにする
 								   //一応逃がす
-				if (term == null && !Config.CompatiFuncArgOptional)
+				if (term == null && !Config.Config.CompatiFuncArgOptional)
 				{
-					errMes = string.Format(trerror.CanNotOmitArgWithMessage.Text, func.LabelName, (i + 1).ToString(), Config.GetConfigName(ConfigCode.CompatiFuncArgOptional));
+					errMes = string.Format(trerror.CanNotOmitArgWithMessage.Text, func.LabelName, (i + 1).ToString(), Config.Config.GetConfigName(ConfigCode.CompatiFuncArgOptional));
 					return null;
 				}
 			}
@@ -205,9 +209,9 @@ internal sealed class CalledFunction
 				}
 				else
 				{
-					if (!Config.CompatiFuncArgAutoConvert)
+					if (!Config.Config.CompatiFuncArgAutoConvert)
 					{
-						errMes = string.Format(trerror.CanNotConvertIntToStr.Text, func.LabelName, (i + 1).ToString(), Config.GetConfigName(ConfigCode.CompatiFuncArgAutoConvert));
+						errMes = string.Format(trerror.CanNotConvertIntToStr.Text, func.LabelName, (i + 1).ToString(), Config.Config.GetConfigName(ConfigCode.CompatiFuncArgAutoConvert));
 						return null;
 					}
 					if (tostrMethod == null)
@@ -222,7 +226,7 @@ internal sealed class CalledFunction
 
 	public LogicalLine CallLabel(Process parent, string label)
 	{
-		return parent.LabelDictionary.GetLabelDollar(label, this.CurrentLabel);
+		return parent.LabelDictionary.GetLabelDollar(label, CurrentLabel);
 	}
 
 	public void updateRetAddress(LogicalLine line)
@@ -232,15 +236,15 @@ internal sealed class CalledFunction
 
 	public CalledFunction Clone()
 	{
-		CalledFunction called = new CalledFunction(this.FunctionName);
-		called.eventLabelList = this.eventLabelList;
-		called.CurrentLabel = this.CurrentLabel;
-		called.TopLabel = this.TopLabel;
-		called.group = this.group;
-		called.IsEvent = this.IsEvent;
+		CalledFunction called = new CalledFunction(FunctionName);
+		called.eventLabelList = eventLabelList;
+		called.CurrentLabel = CurrentLabel;
+		called.TopLabel = TopLabel;
+		called.group = group;
+		called.IsEvent = IsEvent;
 
-		called.counter = this.counter;
-		called.returnAddress = this.returnAddress;
+		called.counter = counter;
+		called.returnAddress = returnAddress;
 		return called;
 	}
 
@@ -248,7 +252,7 @@ internal sealed class CalledFunction
 	public FunctionLabelLine CurrentLabel { get; private set; }
 	public FunctionLabelLine TopLabel { get; private set; }
 	int counter = -1;
-	int group = 0;
+	int group;
 	LogicalLine returnAddress;
 	public readonly string FunctionName = "";
 	public bool IsJump { get; set; }

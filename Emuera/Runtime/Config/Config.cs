@@ -1,14 +1,12 @@
-﻿using System.Text;
-using System.Drawing;
-using System.Collections.Generic;
-using System.IO;
+﻿using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.UI;
 using System;
-using MinorShift._Library;
-using MinorShift.Emuera.Sub;
-using trmb = EvilMask.Emuera.Lang.MessageBox;
-using Emuera;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
-using Emuera.UI;
+using trmb = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.MessageBox;
 
 namespace MinorShift.Emuera.Runtime.Config;
 
@@ -18,7 +16,7 @@ internal static class Config
 	#region config
 	public static Encoding Encode = EncodingHandler.UTF8BOMEncoding;
 	public static Encoding SaveEncode = EncodingHandler.UTF8BOMEncoding;
-	private static Dictionary<ConfigCode, string> nameDic = null;
+	private static Dictionary<ConfigCode, string> nameDic;
 	public static string GetConfigName(ConfigCode code)
 	{
 		return nameDic[code];
@@ -377,7 +375,7 @@ internal static class Config
 				RelativePath = dir;
 			else
 				RelativePath = dir[rootdir.Length..];//前方が検索ルートパスと一致するならその部分を切り取る
-			if (!RelativePath.EndsWith("\\") && !RelativePath.EndsWith("/"))
+			if (!RelativePath.EndsWith('\\') && !RelativePath.EndsWith('/'))
 				RelativePath += "\\";//末尾が\又は/で終わるように。後でFile名を直接加算できるようにしておく
 		}
 		//filepathsは完全パスである

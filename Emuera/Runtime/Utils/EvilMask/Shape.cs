@@ -1,14 +1,7 @@
-﻿using MinorShift.Emuera;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using MinorShift.Emuera.Runtime.Config;
 
-namespace EvilMask.Emuera;
+namespace MinorShift.Emuera.Runtime.Utils.EvilMask;
 
 internal sealed class Shape
 {
@@ -61,7 +54,7 @@ internal sealed class Shape
 			if (border[flipX ? Direction.Right : Direction.Left] > 0)
 			{
 				// 左枠の半分
-				Color color = colors == null ? Config.ForeColor : colors[flipX ? Direction.Right : Direction.Left];
+				Color color = colors == null ? Config.Config.ForeColor : colors[flipX ? Direction.Right : Direction.Left];
 				if (color != Color.Transparent)
 					using (var path = new GraphicsPath())
 					{
@@ -84,7 +77,7 @@ internal sealed class Shape
 			if (border[flipY ? Direction.Bottom : Direction.Top] > 0)
 			{
 				// 上枠の半分
-				Color color = colors == null ? Config.ForeColor : colors[flipY ? Direction.Bottom : Direction.Top];
+				Color color = colors == null ? Config.Config.ForeColor : colors[flipY ? Direction.Bottom : Direction.Top];
 				if (color != Color.Transparent)
 					using (var path = new GraphicsPath())
 					{
@@ -111,7 +104,7 @@ internal sealed class Shape
 			var backUp = graph.SmoothingMode;
 			graph.SmoothingMode = SmoothingMode.AntiAlias;
 			GraphicsPath innerEllipse = null;
-			int corner = flipX ? (flipY ? Corner.RightBottom : Corner.RightTop) : (flipY ? Corner.LeftBottom : Corner.LeftTop);
+			int corner = flipX ? flipY ? Corner.RightBottom : Corner.RightTop : flipY ? Corner.LeftBottom : Corner.LeftTop;
 			Rectangle cornerRect = new Rectangle(
 				flipX ? rect.X + rect.Width - radius[corner] : rect.X,
 				flipY ? rect.Y + rect.Height - radius[corner] : rect.Y,
@@ -174,7 +167,7 @@ internal sealed class Shape
 					if (border[flipX ? Direction.Right : Direction.Left] > 0)
 					{
 						// 左枠の半分
-						Color color = colors == null ? Config.ForeColor : colors[flipX ? Direction.Right : Direction.Left];
+						Color color = colors == null ? Config.Config.ForeColor : colors[flipX ? Direction.Right : Direction.Left];
 						if (color != Color.Transparent)
 							using (var path = new GraphicsPath())
 							using (var brush = new SolidBrush(color))
@@ -201,7 +194,7 @@ internal sealed class Shape
 					if (border[flipY ? Direction.Bottom : Direction.Top] > 0)
 					{
 						// 上枠の半分
-						Color color = colors == null ? Config.ForeColor : colors[flipY ? Direction.Bottom : Direction.Top];
+						Color color = colors == null ? Config.Config.ForeColor : colors[flipY ? Direction.Bottom : Direction.Top];
 						if (color != Color.Transparent)
 							using (var path = new GraphicsPath())
 							using (var brush = new SolidBrush(color))

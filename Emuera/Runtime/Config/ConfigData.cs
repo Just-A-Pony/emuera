@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Drawing;
+﻿using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Utils;
 using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData.Expression;
-using trerror = EvilMask.Emuera.Lang.Error;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
 namespace MinorShift.Emuera.Runtime.Config;
 
@@ -21,7 +22,7 @@ internal sealed class ConfigData
 	readonly static string configdebugPath = Program.DebugDir + "debug.config";
 
 	static ConfigData() { }
-	private static ConfigData instance = new(); 
+	private static ConfigData instance = new();
 	public static ConfigData Instance { get { return instance; } }
 
 	private ConfigData() { setDefault(); }
@@ -472,7 +473,7 @@ internal sealed class ConfigData
 		#endregion
 	}
 
-	public SingleTerm GetConfigValueInERB(string text, ref string errMes)
+	public static SingleTerm GetConfigValueInERB(string text, ref string errMes)
 	{
 		AConfigItem item = ConfigData.Instance.GetItem(text);
 		if (item == null)
@@ -487,9 +488,9 @@ internal sealed class ConfigData
 			case ConfigCode.AutoSave://"オートセーブを行なう"
 			case ConfigCode.MoneyFirst://"単位の位置"
 				if (item.GetValue<bool>())
-					term = new SingleTerm(1);
+					term = new SingleLongTerm(1);
 				else
-					term = new SingleTerm(0);
+					term = new SingleLongTerm(0);
 				break;
 			//<int>
 			case ConfigCode.WindowX:// "ウィンドウ幅"
@@ -500,7 +501,7 @@ internal sealed class ConfigData
 			case ConfigCode.SaveDataNos:// "表示するセーブデータ数"
 			case ConfigCode.MaxShopItem:// "販売アイテム数"
 			case ConfigCode.ComAbleDefault:// "COM_ABLE初期値"
-				term = new SingleTerm(item.GetValue<int>());
+				term = new SingleLongTerm(item.GetValue<int>());
 				break;
 			//<Color>
 			case ConfigCode.ForeColor://"文字色"
@@ -509,14 +510,14 @@ internal sealed class ConfigData
 			case ConfigCode.LogColor://"履歴文字色"
 				{
 					Color color = item.GetValue<Color>();
-					term = new SingleTerm(((color.R * 256) + color.G) * 256 + color.B);
+					term = new SingleLongTerm(((color.R * 256) + color.G) * 256 + color.B);
 				}
 				break;
 
 			//<Int64>
 			case ConfigCode.pbandDef:// "PBANDの初期値"
 			case ConfigCode.RelationDef:// "RELATIONの初期値"
-				term = new SingleTerm(item.GetValue<Int64>());
+				term = new SingleLongTerm(item.GetValue<Int64>());
 				break;
 
 			//<string>
@@ -527,17 +528,17 @@ internal sealed class ConfigData
 			case ConfigCode.TitleMenuString0:// "システムメニュー0"
 			case ConfigCode.TitleMenuString1:// "システムメニュー1"
 			case ConfigCode.TimeupLabel:// "時間切れ表示"
-				term = new SingleTerm(item.GetValue<string>());
+				term = new SingleStrTerm(item.GetValue<string>());
 				break;
 
 			//<char>
 			case ConfigCode.BarChar1:// "BAR文字1"
 			case ConfigCode.BarChar2:// "BAR文字2"
-				term = new SingleTerm(item.GetValue<char>().ToString());
+				term = new SingleStrTerm(item.GetValue<char>().ToString());
 				break;
 			//<TextDrawingMode>
 			case ConfigCode.TextDrawingMode:// "描画インターフェース"
-				term = new SingleTerm(item.GetValue<TextDrawingMode>().ToString());
+				term = new SingleStrTerm(item.GetValue<TextDrawingMode>().ToString());
 				break;
 			default:
 				{
@@ -546,17 +547,17 @@ internal sealed class ConfigData
 						switch (item.ValueToString())
 						{
 							case "YES":
-								term = new SingleTerm(1);
+								term = new SingleLongTerm(1);
 								break;
 							case "NO":
-								term = new SingleTerm(0);
+								term = new SingleLongTerm(0);
 								break;
 							default:
 								string val = item.ValueToString();
 								if (long.TryParse(val, out long i))
-									term = new SingleTerm(i);
+									term = new SingleLongTerm(i);
 								else
-									term = new SingleTerm(val);
+									term = new SingleStrTerm(val);
 								break;
 						}
 					}
@@ -620,12 +621,12 @@ internal sealed class ConfigData
 				//1806beta001 CompatiDRAWLINEの廃止、CompatiLinefeedAs1739へ移行
 				if (item.Code == ConfigCode.CompatiDRAWLINE)
 					continue;
-				if ((item.Code == ConfigCode.ChangeMasterNameIfDebug) && (item.GetValue<bool>()))
+				if ((item.Code == ConfigCode.ChangeMasterNameIfDebug) && item.GetValue<bool>())
 					continue;
 				if ((item.Code == ConfigCode.LastKey) && (item.GetValue<long>() == 0))
 					continue;
 				#region EM_私家版_LoadText＆SaveText機能拡張
-				if ((item.Code == ConfigCode.ValidExtension))
+				if (item.Code == ConfigCode.ValidExtension)
 				{
 					var ex = (ConfigItem<List<string>>)item;
 					var sb = new System.Text.StringBuilder();
@@ -722,7 +723,7 @@ internal sealed class ConfigData
 				if ((line.Length == 0) || (line[0] == ';'))
 					continue;
 				pos = new ScriptPosition(eReader.Filename, eReader.LineNo);
-				string[] tokens = line.Split([':']); 
+				string[] tokens = line.Split([':']);
 				if (tokens.Length < 2)
 					continue;
 				#region EM_私家版_Emuera多言語化改造
@@ -771,13 +772,9 @@ internal sealed class ConfigData
 						//解析モード時はここを上書きして十分な長さを確保する
 						tokens[1] = "10000";
 					}
-					if ((item.TryParse(tokens[1])) && (fix))
+					if (item.TryParse(tokens[1]) && fix)
 						item.Fixed = true;
 				}
-#if DEBUG
-				//else
-				//	throw new Exception("コンフィグファイルが変");
-#endif
 			}
 		}
 		catch (EmueraException ee)
@@ -796,7 +793,7 @@ internal sealed class ConfigData
 	// 1.52a改変部分　（単位の差し替えおよび前置、後置のためのコンフィグ処理）
 	public void LoadReplaceFile(string filename)
 	{
-		using var eReader = new EraStreamReader(false); 
+		using var eReader = new EraStreamReader(false);
 		if (!eReader.Open(filename))
 			return;
 		ScriptPosition? pos = null;
@@ -811,7 +808,7 @@ internal sealed class ConfigData
 				if (line[0] == ';')
 					continue;
 				pos = new ScriptPosition(eReader.Filename, eReader.LineNo);
-				string[] tokens = line.Split(',', ':' );
+				string[] tokens = line.Split(',', ':');
 				if (tokens.Length < 2)
 					continue;
 				string itemName = tokens[0].Trim();

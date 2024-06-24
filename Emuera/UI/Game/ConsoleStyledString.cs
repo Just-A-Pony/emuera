@@ -1,11 +1,10 @@
-﻿using System;
+﻿using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Config.JSON;
+using System;
 using System.Drawing;
 using System.Windows.Forms;
-using DotnetEmuera;
-using Emuera.UI;
-using MinorShift.Emuera.Runtime.Config;
 
-namespace MinorShift.Emuera.GameView;
+namespace MinorShift.Emuera.UI.Game;
 
 /// <summary>
 /// 装飾付文字列。stringとStringStyleからなる。
@@ -17,8 +16,8 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 	{
 		//if ((StaticConfig.TextDrawingMode != TextDrawingMode.GRAPHICS) && (str.IndexOf('\t') >= 0))
 		//    str = str.Replace("\t", "");
-		this.Str = str;
-		this.StringStyle = style;
+		Text = str;
+		StringStyle = style;
 		Font = FontFactory.GetFont(style.Fontname, style.FontStyle);
 		if (Font == null)
 		{
@@ -44,51 +43,51 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 	//indexの文字数の前方文字列とindex以降の後方文字列に分割
 	public ConsoleStyledString DivideAt(int index, StringMeasure sm)
 	{
-		//if ((index <= 0)||(index > Str.Length)||this.Error)
+		//if ((index <= 0)||(index > Text.Length)||this.Error)
 		//	return null;
 		ConsoleStyledString ret = DivideAt(index);
 		if (ret == null)
 			return null;
-		this.SetWidth(sm, XsubPixel);
+		SetWidth(sm, XsubPixel);
 		ret.SetWidth(sm, XsubPixel);
 		return ret;
 	}
 	public ConsoleStyledString DivideAt(int index)
 	{
-		if ((index <= 0) || (index > Str.Length) || this.Error)
+		if (index <= 0 || index > Text.Length || Error)
 			return null;
-		string str = Str[index..];
-		this.Str = Str[..index];
+		string str = Text[index..];
+		Text = Text[..index];
 		ConsoleStyledString ret = new ConsoleStyledString();
-		ret.Font = this.Font;
-		ret.Str = str;
-		ret.Color = this.Color;
-		ret.ButtonColor = this.ButtonColor;
-		ret.colorChanged = this.colorChanged;
-		ret.StringStyle = this.StringStyle;
-		ret.XsubPixel = this.XsubPixel;
+		ret.Font = Font;
+		ret.Text = str;
+		ret.Color = Color;
+		ret.ButtonColor = ButtonColor;
+		ret.colorChanged = colorChanged;
+		ret.StringStyle = StringStyle;
+		ret.XsubPixel = XsubPixel;
 		return ret;
 	}
 
 	public override void SetWidth(StringMeasure sm, float subPixel)
 	{
-		if (this.Error)
+		if (Error)
 		{
 			Width = 0;
 			return;
 		}
-		Width = sm.GetDisplayLength(Str, Font);
+		Width = sm.GetDisplayLength(Text, Font);
 		XsubPixel = subPixel;
 
 		#region EmuEra-Rikaichan
 		if (!rikaichaned && Config.RikaiEnabled)
 		{
 			rikaichaned = true;
-			int len = Str.Length;
+			int len = Text.Length;
 			Ends = new int[len];
 			for (int i = 0; i < len; i++)
 			{
-				String temp = Str.Substring(0, i + 1);
+				string temp = Text.Substring(0, i + 1);
 				Ends[i] = sm.GetDisplayLength(temp, Font);
 			}
 
@@ -96,11 +95,11 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 		#endregion
 	}
 
-	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode)
+	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
 	{
-		if (this.Error)
+		if (Error)
 			return;
-		Color color = this.Color;
+		Color color = Color;
 		Color? backcolor = null;
 		if (isSelecting)
 		{
@@ -108,33 +107,45 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 			{
 				if (!(Color.Yellow.R == color.R &&
 					Color.Yellow.G == color.G &&
-					Color.Yellow.B == color.B) && 
-					!string.IsNullOrWhiteSpace(Str))
+					Color.Yellow.B == color.B) &&
+					!string.IsNullOrWhiteSpace(Text))
 				{
 					backcolor = Color.Gray;
 				}
 			}
-			color = this.ButtonColor;
+			color = ButtonColor;
 		}
 		else if (isBackLog && !colorChanged)
+		{
 			color = Config.LogColor;
+		}
 
 		#region EM_私家版_描画拡張
 		if (mode == TextDrawingMode.GRAPHICS)
 		{
-			graph.DrawString(Str, Font, new SolidBrush(color), new Point(PointX, pointY));
+			graph.DrawString(Text, Font, new SolidBrush(color), new Point(PointX, pointY));
 		}
 		else
-		// TextRenderer.DrawText(graph, Str, Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
+		// TextRenderer.DrawText(graph, Text, Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
 		{
-			//todo:これもオプション化したい
-			if (JSONConfig.Data.UseButtonFocusBackgroundColor && backcolor.HasValue)
+			if (JSONConfig.Data.UseButtonFocusBackgroundColor)
 			{
-				TextRenderer.DrawText(graph, Str.AsSpan(), Font, new Point(PointX, pointY), color, backColor: backcolor.Value, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
+				if (isButton && !isBackLog)
+				{
+					if (!backcolor.HasValue)
+					{
+						backcolor = Color.FromArgb(50, 50, 50);
+					}
+					TextRenderer.DrawText(graph, Text.AsSpan(), Font, new Point(PointX, pointY), color, backColor: backcolor.Value, TextFormatFlags.NoPrefix);
+				}
+				else
+				{
+					TextRenderer.DrawText(graph, Text.AsSpan(), Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
+				}
 			}
 			else
 			{
-				TextRenderer.DrawText(graph, Str.AsSpan(), Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
+				TextRenderer.DrawText(graph, Text.AsSpan(), Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
 			}
 		}
 
@@ -144,20 +155,20 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 	//Bitmap Cache
 	public void DrawToBitmap(Graphics graph, bool isSelecting, bool isBackLog, TextDrawingMode mode, int xOffset)
 	{
-		if (this.Error)
+		if (Error)
 			return;
-		Color color = this.Color;
+		Color color = Color;
 		if (isSelecting)
-			color = this.ButtonColor;
+			color = ButtonColor;
 		else if (isBackLog && !colorChanged)
 			color = Config.LogColor;
 
 		#region EM_私家版_描画拡張
 		if (mode == TextDrawingMode.GRAPHICS)
-			graph.DrawString(Str, Font, new SolidBrush(color), new Point(xOffset, 0));
+			graph.DrawString(Text, Font, new SolidBrush(color), new Point(xOffset, 0));
 		else
-			// TextRenderer.DrawText(graph, Str, Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
-			TextRenderer.DrawText(graph, Str.AsSpan(), Font, new Point(xOffset, 0), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
+			// TextRenderer.DrawText(graph, Text, Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
+			TextRenderer.DrawText(graph, Text.AsSpan(), Font, new Point(xOffset, 0), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
 		#endregion
 	}
 }

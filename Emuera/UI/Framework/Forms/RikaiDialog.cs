@@ -1,15 +1,10 @@
-﻿using MinorShift.Emuera.GameView;
+﻿using MinorShift.Emuera.Runtime.Config;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.Forms
 {
@@ -109,8 +104,8 @@ namespace MinorShift.Emuera.Forms
 		class EdictParser
 		{
 			public byte[] edict;
-			public int end = 0, start = 0;
-			public bool finished = false;
+			public int end, start;
+			public bool finished;
 			public const long tickDelta = 4000;
 			public long tickNext = DateTime.Now.Ticks + tickDelta;
 			public byte[] word;
@@ -206,8 +201,8 @@ namespace MinorShift.Emuera.Forms
 		{
 			public byte[] word;
 			public List<int> offsets;
-			public IndexEntry Next = null;
-			public IndexEntry Previous = null;
+			public IndexEntry Next;
+			public IndexEntry Previous;
 
 			public IndexEntry(byte[] a_word)
 			{
@@ -278,7 +273,7 @@ namespace MinorShift.Emuera.Forms
 
 		//In theory one of them will always stay in the kana area, while other will be all over the place.
 		//I will check if this is true or not once this thing actually works.
-		int WhichIsCloser(byte[] first, byte[] second, byte[] tothis)
+		static int WhichIsCloser(byte[] first, byte[] second, byte[] tothis)
 		{
 			if (first[0] == second[0] && second[0] == tothis[0]) return 0;
 			int s = second[0] - tothis[0];
@@ -290,7 +285,7 @@ namespace MinorShift.Emuera.Forms
 		}
 
 
-		private int Compare(byte[] first, byte[] second)
+		private static int Compare(byte[] first, byte[] second)
 		{
 			int i = 0;
 			while (true)

@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using EnumsNET;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameProc;
-using MinorShift.Emuera.GameData.Expression;
-using trerror = EvilMask.Emuera.Lang.Error;
-using MinorShift._Library;
+﻿using EnumsNET;
 using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Script.Data;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
+using MinorShift.Emuera.Runtime.Utils;
+using System;
+using System.Collections.Generic;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
 namespace MinorShift.Emuera.GameData.Variable;
 
@@ -316,7 +316,7 @@ internal abstract class UserDefinedVariableToken : VariableToken
 	}
 
 	public abstract void SetDefault();
-	protected bool isConst = false;
+	protected bool isConst;
 	protected int[] sizes;
 	protected int totalSize;
 	//public bool IsGlobal { get; protected set; }
@@ -362,8 +362,8 @@ internal abstract class UserDefinedVariableToken : VariableToken
 		if ((index2 < 0) || (index2 > sizes[Dimension - 1]))
 			throw new CodeEE(string.Format(trerror.OoRInstructionArg.Text, funcName, i2.ToString(), index2.ToString(), varName));
 	}
-	public abstract void In();
-	public abstract void Out();
+	public abstract void ScopeIn();
+	public abstract void ScopeOut();
 	public bool IsStatic { get; protected set; }
 }
 
@@ -418,8 +418,8 @@ internal abstract class ReferenceToken : UserDefinedVariableToken
 		arrayList = [];
 		IsForbid = false;
 	}
-	protected List<Array> arrayList = null;
-	protected Array array = null;
+	protected List<Array> arrayList;
+	protected Array array;
 
 	public override void SetDefault()
 	{//Defaultのセットは参照元がやるべき
@@ -452,17 +452,29 @@ internal abstract class ReferenceToken : UserDefinedVariableToken
 		if (Dimension >= 3 && ((arguments[2] < 0) || (arguments[2] >= array.GetLength(2))))
 			throw new CodeEE(string.Format(trerror.OoRVarArg.Text, varName, "3", arguments[2].ToString()));
 	}
+	void CheckBounds(long i1, long i2, long i3)
+	{
+		//if (array == null)
+		//	throw new ExeEE("プライベート変数" + varName + "の配列が用意されていない");
+
+		if ((i1 < 0) || (i1 >= sizes[0]))
+			throw new CodeEE(string.Format(trerror.OoRVarArg.Text, varName, "1", i1));
+		if (sizes.Length >= 2 && ((i2 < 0) || (i2 >= sizes[1])))
+			throw new CodeEE(string.Format(trerror.OoRVarArg.Text, varName, "2", i2));
+		if (sizes.Length >= 3 && ((i3 < 0) || (i3 >= sizes[2])))
+			throw new CodeEE(string.Format(trerror.OoRVarArg.Text, varName, "3", i3));
+	}
 	public override void IsArrayRangeValid(Int64[] arguments, Int64 index1, Int64 index2, string funcName, Int64 i1, Int64 i2)
 	{
-		CheckElement(arguments);
+		CheckBounds(arguments[0], arguments[1], arguments[2]);
 		if ((index1 < 0) || (index1 > array.GetLength(Dimension - 1)))
 			throw new CodeEE(string.Format(trerror.OoRInstructionArg.Text, funcName, i1.ToString(), index1.ToString(), varName));
 		if ((index2 < 0) || (index2 > array.GetLength(Dimension - 1)))
 			throw new CodeEE(string.Format(trerror.OoRInstructionArg.Text, funcName, i2.ToString(), index2.ToString(), varName));
 	}
 
-	int counter = 0;
-	public override void In()
+	int counter;
+	public override void ScopeIn()
 	{
 		if (counter > 0)
 			arrayList.Add(array);
@@ -470,7 +482,7 @@ internal abstract class ReferenceToken : UserDefinedVariableToken
 		array = null;
 	}
 
-	public override void Out()
+	public override void ScopeOut()
 	{
 		//arrayList.RemoveAt(arrayList.Count - 1);
 		if (arrayList.Count > 0)
@@ -573,37 +585,6 @@ internal abstract class LocalVariableToken : VariableToken
 internal sealed partial class VariableData
 {
 	#region 変数
-	private sealed class IntVariableToken : VariableToken
-	{
-		public IntVariableToken(VariableCode varCode, VariableData varData)
-			: base(varCode, varData)
-		{
-			CanRestructure = false;
-			array = varData.DataInteger;
-		}
-		Int64[] array;
-		public override Int64 GetIntValue(ExpressionMediator exm, Int64[] arguments)
-		{
-			return array[VarCodeInt];
-		}
-
-		public override void SetValue(Int64 value, Int64[] arguments)
-		{
-			array[VarCodeInt] = value;
-		}
-
-		public override void SetValueAll(long value, int start, int end, int charaPos)
-		{
-			array[VarCodeInt] = value;
-		}
-
-		public override Int64 PlusValue(Int64 value, Int64[] arguments)
-		{
-			array[VarCodeInt] += value;
-			return array[VarCodeInt];
-		}
-	}
-
 	private sealed class Int1DVariableToken : VariableToken
 	{
 		public Int1DVariableToken(VariableCode varCode, VariableData varData)
@@ -891,134 +872,6 @@ internal sealed partial class VariableData
 		}
 	}
 
-	private sealed class Str2DVariableToken : VariableToken
-	{
-		public Str2DVariableToken(VariableCode varCode, VariableData varData)
-			: base(varCode, varData)
-		{
-			CanRestructure = false;
-			array = varData.DataStringArray2D[VarCodeInt];
-			IsForbid = array.Length == 0;
-		}
-		string[,] array;
-		public override string GetStrValue(ExpressionMediator exm, Int64[] arguments)
-		{
-			return array[arguments[0], arguments[1]];
-		}
-
-		public override void SetValue(string value, Int64[] arguments)
-		{
-			array[arguments[0], arguments[1]] = value;
-		}
-
-		public override void SetValue(string[] values, Int64[] arguments)
-		{
-			int start = (int)arguments[1];
-			int end = start + values.Length;
-			for (int i = start; i < end; i++)
-				array[arguments[0], i] = values[i - start];
-		}
-		public override void SetValueAll(string value, int start, int end, int charaPos)
-		{
-			int a1 = array.GetLength(0);
-			int a2 = array.GetLength(1);
-			for (int i = 0; i < a1; i++)
-				for (int j = 0; j < a2; j++)
-					array[i, j] = value;
-		}
-		public override Int32 GetLength()
-		{ throw new CodeEE(string.Format(trerror.GetSizeDimError.Text, "2", varName)); }
-		public override Int32 GetLength(int dimension)
-		{
-			if ((dimension == 0) || (dimension == 1))
-				return array.GetLength(dimension);
-			throw new CodeEE(string.Format(trerror.GetSizeNonExistDim.Text, varName));
-		}
-		public override object GetArray() { return array; }
-
-		public override void CheckElement(Int64[] arguments, bool[] doCheck)
-		{
-			if (doCheck[0] && ((arguments[0] < 0) || (arguments[0] >= array.GetLength(0))))
-				throw new CodeEE(string.Format(trerror.OoRVarArg.Text, varName, "1", arguments[0].ToString()));
-			if (doCheck[1] && ((arguments[1] < 0) || (arguments[1] >= array.GetLength(1))))
-				throw new CodeEE(string.Format(trerror.OoRVarArg.Text, varName, "2", arguments[1].ToString()));
-		}
-		public override void IsArrayRangeValid(Int64[] arguments, Int64 index1, Int64 index2, string funcName, Int64 i1, Int64 i2)
-		{
-			CheckElement(arguments);
-			if ((index1 < 0) || (index1 > array.GetLength(1)))
-				throw new CodeEE(string.Format(trerror.OoRInstructionArg.Text, funcName, i1.ToString(), index1.ToString(), varName));
-			if ((index2 < 0) || (index2 > array.GetLength(1)))
-				throw new CodeEE(string.Format(trerror.OoRInstructionArg.Text, funcName, i2.ToString(), index2.ToString(), varName));
-		}
-	}
-
-	private sealed class Str3DVariableToken : VariableToken
-	{
-		public Str3DVariableToken(VariableCode varCode, VariableData varData)
-			: base(varCode, varData)
-		{
-			CanRestructure = false;
-			array = varData.DataStringArray3D[VarCodeInt];
-			IsForbid = array.Length == 0;
-		}
-		string[,,] array;
-		public override string GetStrValue(ExpressionMediator exm, Int64[] arguments)
-		{
-			return array[arguments[0], arguments[1], arguments[2]];
-		}
-
-		public override void SetValue(string value, Int64[] arguments)
-		{
-			array[arguments[0], arguments[1], arguments[2]] = value;
-		}
-
-		public override void SetValue(string[] values, Int64[] arguments)
-		{
-			int start = (int)arguments[2];
-			int end = start + values.Length;
-			for (int i = start; i < end; i++)
-				array[arguments[0], arguments[1], i] = values[i - start];
-		}
-		public override void SetValueAll(string value, int start, int end, int charaPos)
-		{
-			int a1 = array.GetLength(0);
-			int a2 = array.GetLength(1);
-			int a3 = array.GetLength(2);
-			for (int i = 0; i < a1; i++)
-				for (int j = 0; j < a2; j++)
-					for (int k = 0; k < a3; k++)
-						array[i, j, k] = value;
-		}
-		public override Int32 GetLength()
-		{ throw new CodeEE(string.Format(trerror.GetSizeDimError.Text, "3", varName)); }
-		public override Int32 GetLength(int dimension)
-		{
-			if ((dimension == 0) || (dimension == 1) || (dimension == 2))
-				return array.GetLength(dimension);
-			throw new CodeEE(string.Format(trerror.GetSizeNonExistDim.Text, varName));
-		}
-		public override object GetArray() { return array; }
-
-		public override void CheckElement(Int64[] arguments, bool[] doCheck)
-		{
-			if (doCheck[0] && ((arguments[0] < 0) || (arguments[0] >= array.GetLength(0))))
-				throw new CodeEE(string.Format(trerror.OoRVarArg.Text, varName, "1", arguments[0].ToString()));
-			if (doCheck[1] && ((arguments[1] < 0) || (arguments[1] >= array.GetLength(1))))
-				throw new CodeEE(string.Format(trerror.OoRVarArg.Text, varName, "2", arguments[1].ToString()));
-			if (doCheck[2] && ((arguments[2] < 0) || (arguments[2] >= array.GetLength(2))))
-				throw new CodeEE(string.Format(trerror.OoRVarArg.Text, varName, "3", arguments[2].ToString()));
-		}
-		public override void IsArrayRangeValid(Int64[] arguments, Int64 index1, Int64 index2, string funcName, Int64 i1, Int64 i2)
-		{
-			CheckElement(arguments);
-			if ((index1 < 0) || (index1 > array.GetLength(2)))
-				throw new CodeEE(string.Format(trerror.OoRInstructionArg.Text, funcName, i1.ToString(), index1.ToString(), varName));
-			if ((index2 < 0) || (index2 > array.GetLength(2)))
-				throw new CodeEE(string.Format(trerror.OoRInstructionArg.Text, funcName, i2.ToString(), index2.ToString(), varName));
-		}
-	}
-
 	private sealed class CharaIntVariableToken : CharaVariableToken
 	{
 		public CharaIntVariableToken(VariableCode varCode, VariableData varData)
@@ -1241,57 +1094,6 @@ internal sealed partial class VariableData
 
 	}
 
-	private sealed class CharaStr2DVariableToken : CharaVariableToken
-	{
-		public CharaStr2DVariableToken(VariableCode varCode, VariableData varData)
-			: base(varCode, varData)
-		{
-			CanRestructure = false;
-		}
-
-		public override string GetStrValue(ExpressionMediator exm, Int64[] arguments)
-		{
-			CharacterData chara = varData.CharacterList[(int)arguments[0]];
-			return chara.DataStringArray2D[VarCodeInt][arguments[1], arguments[2]];
-		}
-
-		public override void SetValue(string value, Int64[] arguments)
-		{
-			CharacterData chara = varData.CharacterList[(int)arguments[0]];
-			chara.DataStringArray2D[VarCodeInt][arguments[1], arguments[2]] = value;
-		}
-
-		public override void SetValue(string[] values, Int64[] arguments)
-		{
-			CharacterData chara = varData.CharacterList[(int)arguments[0]];
-			string[,] array = chara.DataStringArray2D[VarCodeInt];
-			int start = (int)arguments[2];
-			int end = start + values.Length;
-			int index1 = (int)arguments[1];
-			for (int i = start; i < end; i++)
-				array[index1, i] = values[i - start];
-		}
-
-		public override void SetValueAll(string value, int start, int end, int charaPos)
-		{
-			varData.characterList[charaPos].setValueAll2D(VarCodeInt, value);
-			//CharacterData chara = varData.CharacterList[charaPos];
-			//String[,] array = chara.DataStringArray2D[VarCodeInt];
-			//int a1 = array.GetLength(0);
-			//int a2 = array.GetLength(1);
-			//for (int i = 0; i < a1; i++)
-			//    for (int j = 0; j < a2; j++)
-			//        array[i, j] = value;
-		}
-
-
-		public override object GetArrayChara(int charano)
-		{
-			CharacterData chara = varData.CharacterList[charano];
-			return chara.DataStringArray2D[VarCodeInt];
-		}
-
-	}
 	#endregion
 	#region 定数
 	private abstract class ConstantToken : VariableToken
@@ -1347,7 +1149,7 @@ internal sealed partial class VariableData
 			this.array = array;
 			IsForbid = array.Length == 0;
 		}
-		Int64[] array = null;
+		Int64[] array;
 		public override Int64 GetIntValue(ExpressionMediator exm, Int64[] arguments)
 		{
 			return array[arguments[0]];
@@ -1392,7 +1194,7 @@ internal sealed partial class VariableData
 			IsForbid = array.Length == 0;
 		}
 
-		string[] array = null;
+		string[] array;
 		public override string GetStrValue(ExpressionMediator exm, Int64[] arguments)
 		{
 			return array[arguments[0]];
@@ -1718,7 +1520,7 @@ internal sealed partial class VariableData
 			: base(varCode, varData, subId, size)
 		{
 		}
-		Int64[] array = null;
+		Int64[] array;
 
 		public override void SetDefault()
 		{
@@ -1786,7 +1588,7 @@ internal sealed partial class VariableData
 			: base(varCode, varData, subId, size)
 		{
 		}
-		string[] array = null;
+		string[] array;
 		public override void SetDefault()
 		{
 			if (array != null)
@@ -1852,33 +1654,51 @@ internal sealed partial class VariableData
 		public StaticInt1DVariableToken(UserDefinedVariableData data)
 			: base(VariableCode.VAR, data)
 		{
-			int[] sizes = data.Lengths;
+			length = data.Lengths[0];
 			IsStatic = true;
-			array = new Int64[sizes[0]];
+			//array = new Int64[length[0]];
 			defArray = data.DefaultInt;
-			if (defArray != null)
-				Array.Copy(defArray, array, defArray.Length);
+			//if (defArray != null)
+			//	Array.Copy(defArray, array, defArray.Length);
 		}
-		Int64[] array = null;
-		Int64[] defArray = null;
+		int length;
+		Int64[] array;
+		Int64[] defArray;
+		void IfNullInitArray()
+		{
+			if (array == null)
+			{
+				array = new long[length];
+				if (defArray != null)
+				{
+					defArray.AsSpan().CopyTo(array.AsSpan());
+				}
+			}
+		}
+
 		public override void SetDefault()
 		{
-			Array.Clear(array, 0, totalSize);
+			IfNullInitArray();
+			var span = array.AsSpan();
+			span.Clear();
 			if (defArray != null)
-				Array.Copy(defArray, array, defArray.Length);
+				defArray.AsSpan().CopyTo(span);
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, Int64[] arguments)
 		{
+			IfNullInitArray();
 			return array[arguments[0]];
 		}
 
 		public override void SetValue(Int64 value, Int64[] arguments)
 		{
+			IfNullInitArray();
 			array[arguments[0]] = value;
 		}
 
 		public override void SetValue(Int64[] values, Int64[] arguments)
 		{
+			IfNullInitArray();
 			int start = (int)arguments[0];
 			int end = start + values.Length;
 			for (int i = start; i < end; i++)
@@ -1887,18 +1707,25 @@ internal sealed partial class VariableData
 
 		public override void SetValueAll(long value, int start, int end, int charaPos)
 		{
+			IfNullInitArray();
 			for (int i = start; i < end; i++)
 				array[i] = value;
 		}
 
 		public override Int64 PlusValue(Int64 value, Int64[] arguments)
 		{
+			IfNullInitArray();
 			array[arguments[0]] += value;
 			return array[arguments[0]];
 		}
-		public override object GetArray() { return array; }
-		public override void In() { }
-		public override void Out() { }
+		public override object GetArray()
+		{
+			IfNullInitArray();
+			return array;
+		}
+
+		public override void ScopeIn() { }
+		public override void ScopeOut() { }
 
 	}
 
@@ -1907,26 +1734,37 @@ internal sealed partial class VariableData
 		public StaticInt2DVariableToken(UserDefinedVariableData data)
 			: base(VariableCode.VAR2D, data)
 		{
-			int[] sizes = data.Lengths;
+			size.x = data.Lengths[0];
+			size.y = data.Lengths[1];
 			IsStatic = true;
-			array = new Int64[sizes[0], sizes[1]];
+			//array = new Int64[sizes[0], sizes[1]];
 		}
-		Int64[,] array = null;
+		(int x, int y) size = (0, 0);
+		long[,] array;
+
+		void IfNullInitArray()
+		{
+			array ??= new long[sizes[0], sizes[1]];
+		}
 		public override void SetDefault()
 		{
+			IfNullInitArray();
 			Array.Clear(array, 0, totalSize);
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, Int64[] arguments)
 		{
+			IfNullInitArray();
 			return array[arguments[0], arguments[1]];
 		}
 		public override void SetValue(Int64 value, Int64[] arguments)
 		{
+			IfNullInitArray();
 			array[arguments[0], arguments[1]] = value;
 		}
 
 		public override void SetValue(Int64[] values, Int64[] arguments)
 		{
+			IfNullInitArray();
 			int start = (int)arguments[1];
 			int end = start + values.Length;
 			for (int i = start; i < end; i++)
@@ -1935,6 +1773,7 @@ internal sealed partial class VariableData
 
 		public override void SetValueAll(long value, int start, int end, int charaPos)
 		{
+			IfNullInitArray();
 			int a1 = array.GetLength(0);
 			int a2 = array.GetLength(1);
 			for (int i = 0; i < a1; i++)
@@ -1943,12 +1782,18 @@ internal sealed partial class VariableData
 		}
 		public override Int64 PlusValue(Int64 value, Int64[] arguments)
 		{
+			IfNullInitArray();
 			array[arguments[0], arguments[1]] += value;
 			return array[arguments[0], arguments[1]];
 		}
-		public override object GetArray() { return array; }
-		public override void In() { }
-		public override void Out() { }
+		public override object GetArray()
+		{
+			IfNullInitArray();
+			return array;
+		}
+
+		public override void ScopeIn() { }
+		public override void ScopeOut() { }
 
 	}
 	private sealed class StaticInt3DVariableToken : UserDefinedVariableToken
@@ -1956,26 +1801,37 @@ internal sealed partial class VariableData
 		public StaticInt3DVariableToken(UserDefinedVariableData data)
 			: base(VariableCode.VAR3D, data)
 		{
-			int[] sizes = data.Lengths;
+			size.x = data.Lengths[0];
+			size.y = data.Lengths[1];
+			size.z = data.Lengths[2];
 			IsStatic = true;
-			array = new Int64[sizes[0], sizes[1], sizes[2]];
+			//array = new Int64[sizes[0], sizes[1], sizes[2]];
 		}
-		Int64[,,] array = null;
+		(int x, int y, int z) size = (0, 0, 0);
+		Int64[,,] array;
+		void IfNullInitArray()
+		{
+			array ??= new long[sizes[0], sizes[1], sizes[2]];
+		}
 		public override void SetDefault()
 		{
+			IfNullInitArray();
 			Array.Clear(array, 0, totalSize);
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, Int64[] arguments)
 		{
+			IfNullInitArray();
 			return array[arguments[0], arguments[1], arguments[2]];
 		}
 
 		public override void SetValue(Int64 value, Int64[] arguments)
 		{
+			IfNullInitArray();
 			array[arguments[0], arguments[1], arguments[2]] = value;
 		}
 		public override void SetValue(Int64[] values, Int64[] arguments)
 		{
+			IfNullInitArray();
 			int start = (int)arguments[2];
 			int end = start + values.Length;
 			for (int i = start; i < end; i++)
@@ -1984,6 +1840,7 @@ internal sealed partial class VariableData
 
 		public override void SetValueAll(long value, int start, int end, int charaPos)
 		{
+			IfNullInitArray();
 			int a1 = array.GetLength(0);
 			int a2 = array.GetLength(1);
 			int a3 = array.GetLength(2);
@@ -1995,12 +1852,17 @@ internal sealed partial class VariableData
 
 		public override Int64 PlusValue(Int64 value, Int64[] arguments)
 		{
+			IfNullInitArray();
 			array[arguments[0], arguments[1], arguments[2]] += value;
 			return array[arguments[0], arguments[1], arguments[2]];
 		}
-		public override object GetArray() { return array; }
-		public override void In() { }
-		public override void Out() { }
+		public override object GetArray()
+		{
+			IfNullInitArray();
+			return array;
+		}
+		public override void ScopeIn() { }
+		public override void ScopeOut() { }
 
 	}
 	private sealed class StaticStr1DVariableToken : UserDefinedVariableToken
@@ -2008,33 +1870,49 @@ internal sealed partial class VariableData
 		public StaticStr1DVariableToken(UserDefinedVariableData data)
 			: base(VariableCode.VARS, data)
 		{
-			int[] sizes = data.Lengths;
+			length = data.Lengths[0];
 			IsStatic = true;
-			array = new string[sizes[0]];
+			//array = new string[sizes[0]];
 			defArray = data.DefaultStr;
-			if (defArray != null)
-				Array.Copy(defArray, array, defArray.Length);
+			//if (defArray != null)
+			//	Array.Copy(defArray, array, defArray.Length);
 		}
-		string[] array = null;
-		string[] defArray = null;
+		int length;
+		string[] array;
+		string[] defArray;
+
+		void IfNullInitArray()
+		{
+			if (array == null)
+			{
+				array = new string[length];
+				if (defArray != null)
+					Array.Copy(defArray, array, defArray.Length);
+			}
+		}
+
 		public override void SetDefault()
 		{
+			IfNullInitArray();
 			Array.Clear(array, 0, totalSize);
-			if (defArray != null)
+			if (defArray == null)
 				Array.Copy(defArray, array, defArray.Length);
 		}
 		public override string GetStrValue(ExpressionMediator exm, Int64[] arguments)
 		{
+			IfNullInitArray();
 			return array[arguments[0]];
 		}
 
 		public override void SetValue(string value, Int64[] arguments)
 		{
+			IfNullInitArray();
 			array[arguments[0]] = value;
 		}
 
 		public override void SetValue(string[] values, Int64[] arguments)
 		{
+			IfNullInitArray();
 			int start = (int)arguments[0];
 			int end = start + values.Length;
 			for (int i = start; i < end; i++)
@@ -2042,39 +1920,60 @@ internal sealed partial class VariableData
 		}
 		public override void SetValueAll(string value, int start, int end, int charaPos)
 		{
+			IfNullInitArray();
 			for (int i = start; i < end; i++)
 				array[i] = value;
 		}
-		public override object GetArray() { return array; }
-		public override void In() { }
-		public override void Out() { }
+		public override object GetArray()
+		{
+			IfNullInitArray();
+			return array;
+		}
+
+		public override void ScopeIn() { }
+		public override void ScopeOut() { }
 	}
 	private sealed class StaticStr2DVariableToken : UserDefinedVariableToken
 	{
 		public StaticStr2DVariableToken(UserDefinedVariableData data)
 			: base(VariableCode.VARS2D, data)
 		{
-			int[] sizes = data.Lengths;
+			size.x = data.Lengths[0];
+			size.y = data.Lengths[1];
 			IsStatic = true;
-			array = new string[sizes[0], sizes[1]];
+			//array = new string[sizes[0], sizes[1]];
 		}
-		string[,] array = null;
+		string[,] array;
+		(int x, int y) size;
+
+		void IfNullInitArray()
+		{
+			if (array == null)
+			{
+				array = new string[size.x, size.y];
+			}
+		}
+
 		public override void SetDefault()
 		{
+			IfNullInitArray();
 			Array.Clear(array, 0, totalSize);
 		}
 		public override string GetStrValue(ExpressionMediator exm, Int64[] arguments)
 		{
+			IfNullInitArray();
 			return array[arguments[0], arguments[1]];
 		}
 
 		public override void SetValue(string value, Int64[] arguments)
 		{
+			IfNullInitArray();
 			array[arguments[0], arguments[1]] = value;
 		}
 
 		public override void SetValue(string[] values, Int64[] arguments)
 		{
+			IfNullInitArray();
 			int start = (int)arguments[1];
 			int end = start + values.Length;
 			for (int i = start; i < end; i++)
@@ -2082,15 +1981,20 @@ internal sealed partial class VariableData
 		}
 		public override void SetValueAll(string value, int start, int end, int charaPos)
 		{
+			IfNullInitArray();
 			int a1 = array.GetLength(0);
 			int a2 = array.GetLength(1);
 			for (int i = 0; i < a1; i++)
 				for (int j = 0; j < a2; j++)
 					array[i, j] = value;
 		}
-		public override object GetArray() { return array; }
-		public override void In() { }
-		public override void Out() { }
+		public override object GetArray()
+		{
+			IfNullInitArray();
+			return array;
+		}
+		public override void ScopeIn() { }
+		public override void ScopeOut() { }
 	}
 
 	private sealed class StaticStr3DVariableToken : UserDefinedVariableToken
@@ -2098,27 +2002,43 @@ internal sealed partial class VariableData
 		public StaticStr3DVariableToken(UserDefinedVariableData data)
 			: base(VariableCode.VARS3D, data)
 		{
-			int[] sizes = data.Lengths;
+			size.x = data.Lengths[0];
+			size.y = data.Lengths[1];
+			size.z = data.Lengths[2];
 			IsStatic = true;
-			array = new string[sizes[0], sizes[1], sizes[2]];
+			//array = new string[sizes[0], sizes[1], sizes[2]];
 		}
-		string[,,] array = null;
+		string[,,] array;
+		(int x, int y, int z) size;
+
+		void IfNullInitArray()
+		{
+			if (array == null)
+			{
+				array = new string[size.x, size.y, size.z];
+			}
+		}
+
 		public override void SetDefault()
 		{
+			IfNullInitArray();
 			Array.Clear(array, 0, totalSize);
 		}
 		public override string GetStrValue(ExpressionMediator exm, Int64[] arguments)
 		{
+			IfNullInitArray();
 			return array[arguments[0], arguments[1], arguments[2]];
 		}
 
 		public override void SetValue(string value, Int64[] arguments)
 		{
+			IfNullInitArray();
 			array[arguments[0], arguments[1], arguments[2]] = value;
 		}
 
 		public override void SetValue(string[] values, Int64[] arguments)
 		{
+			IfNullInitArray();
 			int start = (int)arguments[2];
 			int end = start + values.Length;
 			for (int i = start; i < end; i++)
@@ -2126,6 +2046,7 @@ internal sealed partial class VariableData
 		}
 		public override void SetValueAll(string value, int start, int end, int charaPos)
 		{
+			IfNullInitArray();
 			int a1 = array.GetLength(0);
 			int a2 = array.GetLength(1);
 			int a3 = array.GetLength(2);
@@ -2134,9 +2055,13 @@ internal sealed partial class VariableData
 					for (int k = 0; k < a3; k++)
 						array[i, j, k] = value;
 		}
-		public override object GetArray() { return array; }
-		public override void In() { }
-		public override void Out() { }
+		public override object GetArray()
+		{
+			IfNullInitArray();
+			return array;
+		}
+		public override void ScopeIn() { }
+		public override void ScopeOut() { }
 	}
 	#endregion
 	#region private dynamic
@@ -2146,14 +2071,13 @@ internal sealed partial class VariableData
 		public PrivateInt1DVariableToken(UserDefinedVariableData data)
 			: base(VariableCode.VAR, data)
 		{
-			int[] sizes = data.Lengths;
 			IsStatic = false;
-			arrayList = [];
+			arrayStack = [];
 			defArray = data.DefaultInt;
 		}
-		readonly List<Int64[]> arrayList = null;
-		Int64[] array = null;
-		Int64[] defArray = null;
+		readonly Stack<long[]> arrayStack;
+		Int64[] array;
+		Int64[] defArray;
 		//int counter = 0;
 		public override void SetDefault()
 		{
@@ -2178,8 +2102,8 @@ internal sealed partial class VariableData
 
 		public override void SetValueAll(long value, int start, int end, int charaPos)
 		{
-			for (int i = start; i < end; i++)
-				array[i] = value;
+			var span = array.AsSpan()[start..end];
+			span.Fill(value);
 		}
 
 		public override Int64 PlusValue(Int64 value, Int64[] arguments)
@@ -2189,24 +2113,21 @@ internal sealed partial class VariableData
 		}
 		public override object GetArray() { return array; }
 
-		public override void In()
+		public override void ScopeIn()
 		{
 			if (array != null)
-				arrayList.Add(array);
+				arrayStack.Push(array);
 			//counter++;
 			array = new Int64[sizes[0]];
 			if (defArray != null)
-				Array.Copy(defArray, array, defArray.Length);
+				defArray.AsSpan().CopyTo(array.AsSpan());
 		}
 
-		public override void Out()
+		public override void ScopeOut()
 		{
-			//counter--;
-			//arrayList.RemoveAt(arrayList.Count - 1);
-			if (arrayList.Count > 0)
+			if (arrayStack.Count > 0)
 			{
-				array = arrayList[^1];
-				arrayList.RemoveAt(arrayList.Count - 1);
+				array = arrayStack.Pop();
 			}
 			else
 				array = null;
@@ -2217,12 +2138,11 @@ internal sealed partial class VariableData
 		public PrivateInt2DVariableToken(UserDefinedVariableData data)
 			: base(VariableCode.VAR2D, data)
 		{
-			int[] sizes = data.Lengths;
 			IsStatic = false;
-			arrayList = [];
+			arrayStack = [];
 		}
-		readonly List<Int64[,]> arrayList = null;
-		Int64[,] array = null;
+		readonly Stack<long[,]> arrayStack;
+		Int64[,] array;
 		//int counter = 0;
 		public override void SetDefault() { }
 		public override Int64 GetIntValue(ExpressionMediator exm, Int64[] arguments)
@@ -2257,22 +2177,21 @@ internal sealed partial class VariableData
 		}
 		public override object GetArray() { return array; }
 
-		public override void In()
+		public override void ScopeIn()
 		{
 			if (array != null)
-				arrayList.Add(array);
+				arrayStack.Push(array);
 			//counter++;
 			array = new Int64[sizes[0], sizes[1]];
 		}
 
-		public override void Out()
+		public override void ScopeOut()
 		{
 			//counter--;
 			//arrayList.RemoveAt(arrayList.Count - 1);
-			if (arrayList.Count > 0)
+			if (arrayStack.Count > 0)
 			{
-				array = arrayList[^1];
-				arrayList.RemoveAt(arrayList.Count - 1);
+				array = arrayStack.Pop();
 			}
 			else
 				array = null;
@@ -2283,12 +2202,11 @@ internal sealed partial class VariableData
 		public PrivateInt3DVariableToken(UserDefinedVariableData data)
 			: base(VariableCode.VAR3D, data)
 		{
-			int[] sizes = data.Lengths;
 			IsStatic = false;
-			arrayList = [];
+			arrayStack = [];
 		}
-		readonly List<Int64[,,]> arrayList = null;
-		Int64[,,] array = null;
+		readonly Stack<long[,,]> arrayStack;
+		Int64[,,] array;
 		//int counter = 0;
 		public override void SetDefault() { }
 		public override Int64 GetIntValue(ExpressionMediator exm, Int64[] arguments)
@@ -2326,22 +2244,21 @@ internal sealed partial class VariableData
 		}
 		public override object GetArray() { return array; }
 
-		public override void In()
+		public override void ScopeIn()
 		{
 			if (array != null)
-				arrayList.Add(array);
+				arrayStack.Push(array);
 			//counter++;
 			array = new Int64[sizes[0], sizes[1], sizes[2]];
 		}
 
-		public override void Out()
+		public override void ScopeOut()
 		{
 			//counter--;
 			//arrayList.RemoveAt(arrayList.Count - 1);
-			if (arrayList.Count > 0)
+			if (arrayStack.Count > 0)
 			{
-				array = arrayList[^1];
-				arrayList.RemoveAt(arrayList.Count - 1);
+				array = arrayStack.Pop();
 			}
 			else
 				array = null;
@@ -2353,15 +2270,15 @@ internal sealed partial class VariableData
 		public PrivateStr1DVariableToken(UserDefinedVariableData data)
 			: base(VariableCode.VARS, data)
 		{
-			int[] sizes = data.Lengths;
+			sizes = data.Lengths;
 			IsStatic = false;
-			arrayList = [];
+			arrayStack = [];
 			defArray = data.DefaultStr;
 		}
 		//int counter = 0;
-		readonly List<string[]> arrayList = null;
-		string[] array = null;
-		string[] defArray = null;
+		readonly Stack<string[]> arrayStack;
+		string[] array;
+		string[] defArray;
 		public override void SetDefault()
 		{
 		}
@@ -2384,29 +2301,34 @@ internal sealed partial class VariableData
 		}
 		public override void SetValueAll(string value, int start, int end, int charaPos)
 		{
-			for (int i = start; i < end; i++)
-				array[i] = value;
+			if (value == default)
+			{
+				Array.Clear(array, start, end - start);
+			}
+			else
+			{
+				Array.Fill(array, value, start, end - start);
+			}
 		}
 		public override object GetArray() { return array; }
-		public override void In()
+		public override void ScopeIn()
 		{
 			//counter++;
 			if (array != null)
-				arrayList.Add(array);
+				arrayStack.Push(array);
 			array = new string[sizes[0]];
 			if (defArray != null)
 				Array.Copy(defArray, array, defArray.Length);
 			//arrayList.Add(array);
 		}
 
-		public override void Out()
+		public override void ScopeOut()
 		{
 			//counter--;
 			//arrayList.RemoveAt(arrayList.Count - 1);
-			if (arrayList.Count > 0)
+			if (arrayStack.Count > 0)
 			{
-				array = arrayList[^1];
-				arrayList.RemoveAt(arrayList.Count - 1);
+				array = arrayStack.Pop();
 			}
 			else
 				array = null;
@@ -2418,13 +2340,12 @@ internal sealed partial class VariableData
 		public PrivateStr2DVariableToken(UserDefinedVariableData data)
 			: base(VariableCode.VARS2D, data)
 		{
-			int[] sizes = data.Lengths;
 			IsStatic = false;
-			arrayList = [];
+			arrayStack = [];
 		}
 		//int counter = 0;
-		readonly List<string[,]> arrayList = null;
-		string[,] array = null;
+		readonly Stack<string[,]> arrayStack;
+		string[,] array;
 		public override void SetDefault()
 		{
 		}
@@ -2455,23 +2376,22 @@ internal sealed partial class VariableData
 					array[i, j] = value;
 		}
 		public override object GetArray() { return array; }
-		public override void In()
+		public override void ScopeIn()
 		{
 			//counter++;
 			if (array != null)
-				arrayList.Add(array);
+				arrayStack.Push(array);
 			array = new string[sizes[0], sizes[1]];
 			//arrayList.Add(array);
 		}
 
-		public override void Out()
+		public override void ScopeOut()
 		{
 			//counter--;
 			//arrayList.RemoveAt(arrayList.Count - 1);
-			if (arrayList.Count > 0)
+			if (arrayStack.Count > 0)
 			{
-				array = arrayList[^1];
-				arrayList.RemoveAt(arrayList.Count - 1);
+				array = arrayStack.Pop();
 			}
 			else
 				array = null;
@@ -2485,11 +2405,11 @@ internal sealed partial class VariableData
 		{
 			int[] sizes = data.Lengths;
 			IsStatic = false;
-			arrayList = [];
+			arrayStack = [];
 		}
 		//int counter = 0;
-		readonly List<string[,,]> arrayList = null;
-		string[,,] array = null;
+		readonly Stack<string[,,]> arrayStack;
+		string[,,] array;
 		public override void SetDefault() { }
 
 		public override string GetStrValue(ExpressionMediator exm, Int64[] arguments)
@@ -2520,23 +2440,22 @@ internal sealed partial class VariableData
 						array[i, j, k] = value;
 		}
 		public override object GetArray() { return array; }
-		public override void In()
+		public override void ScopeIn()
 		{
 			//counter++;
 			if (array != null)
-				arrayList.Add(array);
+				arrayStack.Push(array);
 			array = new string[sizes[0], sizes[1], sizes[2]];
 			//arrayList.Add(array);
 		}
 
-		public override void Out()
+		public override void ScopeOut()
 		{
 			//counter--;
 			//arrayList.RemoveAt(arrayList.Count - 1);
-			if (arrayList.Count > 0)
+			if (arrayStack.Count > 0)
 			{
-				array = arrayList[^1];
-				arrayList.RemoveAt(arrayList.Count - 1);
+				array = arrayStack.Pop();
 			}
 			else
 				array = null;

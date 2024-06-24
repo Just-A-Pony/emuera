@@ -1,11 +1,10 @@
-﻿using MinorShift.Emuera.GameView;
+﻿using MinorShift.Emuera.UI.Game;
 using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using MinorShift.Emuera.Runtime.Config;
 
-namespace MinorShift.Emuera.GameProc.Function;
+namespace MinorShift.Emuera.Runtime.Script.Statements;
 
 internal class ClipboardProcessor
 {
@@ -16,7 +15,7 @@ internal class ClipboardProcessor
 
 	private bool minTimePassed; //Has enough time passed since the last Clipboard update?
 	private bool postWaiting; //Is there text waiting to be sent to clipboard?
-	private static System.Timers.Timer minTimer = null; //Minimum timer for refrehsing the clipboard to prevent spam
+	private static System.Timers.Timer minTimer; //Minimum timer for refrehsing the clipboard to prevent spam
 
 	private readonly int MaxCB; //Max length in lines of the output to clipboard
 	private int ScrollPos; //Position of the clipboard output in the buffer
@@ -41,24 +40,24 @@ internal class ClipboardProcessor
 
 	public ClipboardProcessor(Forms.MainWindow parent)
 	{
-		useCB = Config.CBUseClipboard;
-		classicMode = Config.CBNewLinesOnly;
+		useCB = Config.Config.CBUseClipboard;
+		classicMode = Config.Config.CBNewLinesOnly;
 
 		mainWin = parent;
 
 		minTimePassed = true;
 		postWaiting = false;
 
-		MaxCB = Config.CBMaxCB;
+		MaxCB = Config.Config.CBMaxCB;
 		ScrollPos = 0; //FIXIT - Expand it, add a button, etc
-		ScrollCount = Config.CBScrollCount; //FIXIT - Actually use it
+		ScrollCount = Config.Config.CBScrollCount; //FIXIT - Actually use it
 		NewLineCount = 0;
 		OldNewLineCount = 0;
 
 		if (!useCB) return;
 
-		lineBuffer = new CircularBuffer<string>(Config.CBBufferSize);
-		minTimer = new System.Timers.Timer(Config.CBMinTimer) { AutoReset = false };
+		lineBuffer = new CircularBuffer<string>(Config.Config.CBBufferSize);
+		minTimer = new System.Timers.Timer(Config.Config.CBMinTimer) { AutoReset = false };
 		minTimer.Elapsed += MinTimerDone;
 		OldText = new StringBuilder();
 	}
@@ -129,7 +128,7 @@ internal class ClipboardProcessor
 	public void ClearScreen()
 	{
 		if (!useCB) return;
-		if (Config.CBClearBuffer)
+		if (Config.Config.CBClearBuffer)
 		{
 			lineBuffer.Clear();
 			ScrollPos = 0;
@@ -147,23 +146,23 @@ internal class ClipboardProcessor
 		switch (type)
 		{
 			case CBTriggers.LeftClick:
-				if (!Config.CBTriggerLeftClick) return;
+				if (!Config.Config.CBTriggerLeftClick) return;
 				break;
 
 			case CBTriggers.MiddleClick:
-				if (!Config.CBTriggerMiddleClick) return;
+				if (!Config.Config.CBTriggerMiddleClick) return;
 				break;
 
 			case CBTriggers.DoubleLeftClick:
-				if (!Config.CBTriggerDoubleLeftClick) return;
+				if (!Config.Config.CBTriggerDoubleLeftClick) return;
 				break;
 
 			case CBTriggers.AnyKeyWait:
-				if (!Config.CBTriggerAnyKeyWait) return;
+				if (!Config.Config.CBTriggerAnyKeyWait) return;
 				break;
 
 			case CBTriggers.InputWait:
-				if (!Config.CBTriggerInputWait) return;
+				if (!Config.Config.CBTriggerInputWait) return;
 				break;
 
 			default:
@@ -217,10 +216,10 @@ internal class ClipboardProcessor
 	public static string StripHTML(string input)
 	{
 		// still faster to use String.Contains to check if we need to do this at all first, supposedly
-		if (Config.CBIgnoreTags && input.Contains("<"))
+		if (Config.Config.CBIgnoreTags && input.Contains('<'))
 		{
 			// regex is faster and simpler than a for loop you nerds
-			return Regex.Replace(input, HTML_TAG_PATTERN, Config.CBReplaceTags);
+			return Regex.Replace(input, HTML_TAG_PATTERN, Config.Config.CBReplaceTags);
 		}
 		return input;
 	}

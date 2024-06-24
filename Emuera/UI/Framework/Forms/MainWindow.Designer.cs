@@ -1,4 +1,4 @@
-﻿using MinorShift.Emuera.Forms;
+﻿using MinorShift.Emuera.UI.Framework.Forms;
 
 namespace MinorShift.Emuera.Forms;
 
@@ -514,6 +514,13 @@ partial class MainWindow
 		実行.Text = "実行";
 		実行.Click += 実行_Click;
 		// 
+		// toolTipButton
+		// 
+		toolTipButton.BackColor = System.Drawing.Color.White;
+		toolTipButton.OwnerDraw = true;
+		toolTipButton.Draw += toolTipButton_Draw;
+		toolTipButton.Popup += toolTipButton_Popup;
+		//
 		// timerKeyMacroChanged
 		// 
 		timerKeyMacroChanged.Tick += timerKeyMacroChanged_Tick;

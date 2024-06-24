@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
+using System;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using System.Drawing.Text;
-using EvilMask.Emuera;
-using MinorShift.Emuera.Runtime.Config;
 
 namespace MinorShift.Emuera.Forms
 {
 
-	internal partial class DebugConfigDialog : Form
+	internal sealed partial class DebugConfigDialog : Form
 	{
 		public DebugConfigDialog()
 		{
@@ -68,13 +63,14 @@ namespace MinorShift.Emuera.Forms
 		}
 		public ConfigDialogResult Result = ConfigDialogResult.Cancel;
 
-		void setCheckBox(CheckBox checkbox, ConfigCode code)
+		static void setCheckBox(CheckBox checkbox, ConfigCode code)
 		{
 			ConfigItem<bool> item = (ConfigItem<bool>)ConfigData.Instance.GetDebugItem(code);
 			checkbox.Checked = item.Value;
 			checkbox.Enabled = !item.Fixed;
 		}
-		void setNumericUpDown(NumericUpDown updown, ConfigCode code)
+
+		static void setNumericUpDown(NumericUpDown updown, ConfigCode code)
 		{
 			ConfigItem<int> item = (ConfigItem<int>)ConfigData.Instance.GetDebugItem(code);
 			decimal value = item.Value;
@@ -84,19 +80,6 @@ namespace MinorShift.Emuera.Forms
 				updown.Minimum = value;
 			updown.Value = value;
 			updown.Enabled = !item.Fixed;
-		}
-
-		void setColorBox(ColorBox colorBox, ConfigCode code)
-		{
-			ConfigItem<Color> item = (ConfigItem<Color>)ConfigData.Instance.GetDebugItem(code);
-			colorBox.SelectingColor = item.Value;
-			colorBox.Enabled = !item.Fixed;
-		}
-		void setTextBox(TextBox textBox, ConfigCode code)
-		{
-			ConfigItem<string> item = (ConfigItem<string>)ConfigData.Instance.GetDebugItem(code);
-			textBox.Text = item.Value;
-			textBox.Enabled = !item.Fixed;
 		}
 
 		public void SetConfig(DebugDialog debugDialog)

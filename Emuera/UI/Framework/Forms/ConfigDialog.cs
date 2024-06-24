@@ -1,15 +1,15 @@
-﻿using System;
+﻿using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Config.JSON;
+using MinorShift.Emuera.Runtime.Utils.EvilMask;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Drawing.Text;
-using EvilMask.Emuera;
-using trmb = EvilMask.Emuera.Lang.MessageBox;
-using System.IO;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Text;
+using System.IO;
 using System.Runtime.InteropServices;
-using DotnetEmuera;
-using MinorShift.Emuera.Runtime.Config;
+using System.Windows.Forms;
+using trmb = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.MessageBox;
 
 namespace MinorShift.Emuera.Forms
 {
@@ -19,7 +19,7 @@ namespace MinorShift.Emuera.Forms
 		Save = 1,
 		SaveReboot = 2,
 	}
-	internal partial class ConfigDialog : Form
+	internal sealed partial class ConfigDialog : Form
 	{
 		FlowLayoutPanel[] pages;
 		public ConfigDialog()
@@ -61,7 +61,7 @@ namespace MinorShift.Emuera.Forms
 			numericUpDownCBMinTimer.Maximum = 60000;
 			#endregion
 
-			pages = new FlowLayoutPanel[] {
+			pages = [
 				flowLayoutPanel13,
 				flowLayoutPanel17,
 				flowLayoutPanel23,
@@ -72,7 +72,7 @@ namespace MinorShift.Emuera.Forms
 				flowLayoutPanel33,
 				flowLayoutPanel35,
 				rikaiFlowLayoutPanel,
-			};
+			];
 		}
 		internal void SetupLang(string[] langs)
 		{
@@ -298,13 +298,13 @@ namespace MinorShift.Emuera.Forms
 		}
 		public ConfigDialogResult Result = ConfigDialogResult.Cancel;
 
-		void setCheckBox(CheckBox checkbox, ConfigCode code)
+		static void setCheckBox(CheckBox checkbox, ConfigCode code)
 		{
 			ConfigItem<bool> item = (ConfigItem<bool>)ConfigData.Instance.GetConfigItem(code);
 			checkbox.Checked = item.Value;
 			checkbox.Enabled = !item.Fixed;
 		}
-		void setNumericUpDown(NumericUpDown updown, ConfigCode code)
+		static void setNumericUpDown(NumericUpDown updown, ConfigCode code)
 		{
 			ConfigItem<int> item = (ConfigItem<int>)ConfigData.Instance.GetConfigItem(code);
 			decimal value = item.Value;
@@ -316,7 +316,7 @@ namespace MinorShift.Emuera.Forms
 			updown.Enabled = !item.Fixed;
 		}
 
-		void setColorBox(ColorBox colorBox, ConfigCode code)
+		static void setColorBox(ColorBox colorBox, ConfigCode code)
 		{
 			ConfigItem<Color> item = (ConfigItem<Color>)ConfigData.Instance.GetConfigItem(code);
 			colorBox.SelectingColor = item.Value;
@@ -329,7 +329,7 @@ namespace MinorShift.Emuera.Forms
 					textBox.Enabled = !item.Fixed;
 				}
 		*/
-		MainWindow parent = null;
+		MainWindow parent;
 		public void SetConfig(MainWindow mainWindow)
 		{
 			parent = mainWindow;
@@ -868,7 +868,7 @@ namespace MinorShift.Emuera.Forms
 		}
 
 
-		int setCheckBoxChecked(CheckBox checkbox, bool flag)
+		static int setCheckBoxChecked(CheckBox checkbox, bool flag)
 		{
 			if (checkbox.Checked == flag)
 				return 0;//変更不要
@@ -878,7 +878,7 @@ namespace MinorShift.Emuera.Forms
 			return 1;//変更した
 		}
 
-		int setComboBoxChanged(ComboBox combobox, int value)
+		static int setComboBoxChanged(ComboBox combobox, int value)
 		{
 			if (combobox.SelectedIndex == value)
 				return 0;//変更不要

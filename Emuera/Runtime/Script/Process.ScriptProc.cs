@@ -1,13 +1,16 @@
-﻿using System;
+﻿using MinorShift.Emuera.GameData.Variable;
+using MinorShift.Emuera.GameProc.Function;
+using MinorShift.Emuera.Runtime.Config;
+using MinorShift.Emuera.Runtime.Script;
+using MinorShift.Emuera.Runtime.Script.Statements;
+using MinorShift.Emuera.Runtime.Script.Statements.Expression;
+using MinorShift.Emuera.Runtime.Script.Statements.Variable;
+using MinorShift.Emuera.Runtime.Utils;
+using MinorShift.Emuera.UI.Game;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using MinorShift.Emuera.Sub;
-using MinorShift.Emuera.GameData.Expression;
-using MinorShift.Emuera.GameData.Variable;
-using MinorShift.Emuera.GameView;
-using MinorShift.Emuera.GameProc.Function;
-using trerror = EvilMask.Emuera.Lang.Error;
-using MinorShift.Emuera.Runtime.Config;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
 namespace MinorShift.Emuera.GameProc;
 
@@ -132,7 +135,7 @@ internal sealed partial class Process
 					str = bArg.PrintStrTerm.GetStrValue(exm);
 					//ボタン処理に絡んで表示がおかしくなるため、PRINTBUTTONでの改行コードはオミット
 					str = str.Replace("\n", "");
-					bool isRight = (func.FunctionCode == FunctionCode.PRINTBUTTONC) ? true : false;
+					bool isRight = (func.FunctionCode == FunctionCode.PRINTBUTTONC);
 					if (bArg.ButtonWord.GetOperandType() == typeof(long))
 						exm.Console.PrintButtonC(str, bArg.ButtonWord.GetIntValue(exm), isRight);
 					else
@@ -326,7 +329,7 @@ internal sealed partial class Process
 					else if (target > int.MaxValue)
 						throw new CodeEE(string.Format(trerror.TooLargeSavedataArg.Text, target.ToString()));
 					string savemes = spSavedataArg.StrExpression.GetStrValue(exm);
-					if (savemes.Contains("\n"))
+					if (savemes.Contains('\n'))
 						throw new CodeEE(trerror.SavetextContainNewLineCharacter.Text);
 					if (!vEvaluator.SaveTo((int)target, savemes))
 					{
@@ -401,7 +404,7 @@ internal sealed partial class Process
 						Int64 colorRGB = colorArg.RGB.GetIntValue(exm);
 						colorR = (colorRGB & 0xFF0000) >> 16;
 						colorG = (colorRGB & 0x00FF00) >> 8;
-						colorB = (colorRGB & 0x0000FF);
+						colorB = colorRGB & 0x0000FF;
 					}
 					else
 					{
@@ -535,7 +538,7 @@ internal sealed partial class Process
 				{
 					SpSplitArgument spSplitArg = (SpSplitArgument)func.Argument;
 					string target = spSplitArg.TargetStr.GetStrValue(exm);
-					string[] split = new string[] { spSplitArg.Split.GetStrValue(exm) };
+					string[] split = [spSplitArg.Split.GetStrValue(exm)];
 					string[] retStr = target.Split(split, StringSplitOptions.None);
 					spSplitArg.Num.SetValue(retStr.Length, exm);
 					if (retStr.Length > spSplitArg.Var.GetLength(0))
@@ -545,7 +548,7 @@ internal sealed partial class Process
 						Array.Copy(temp, retStr, retStr.Length);
 						//throw new CodeEE("SPLITによる分割後の文字列の数が配列変数の要素数を超えています");
 					}
-					spSplitArg.Var.SetValue(retStr, new long[] { 0, 0, 0 });
+					spSplitArg.Var.SetValue(retStr, [0, 0, 0]);
 				}
 				break;
 			case FunctionCode.PRINTCPERLINE:
@@ -628,12 +631,12 @@ internal sealed partial class Process
 					if (dest.Identifier.IsInteger)
 					{
 						Int64 def = arrayArg.Num2.GetIntValue(exm);
-						vEvaluator.ShiftArray(dest, shift, def, start, num);
+						VariableEvaluator.ShiftArray(dest, shift, def, start, num);
 					}
 					else
 					{
 						string defs = arrayArg.Num2.GetStrValue(exm);
-						vEvaluator.ShiftArray(dest, shift, defs, start, num);
+						VariableEvaluator.ShiftArray(dest, shift, defs, start, num);
 					}
 					break;
 				}
@@ -651,7 +654,7 @@ internal sealed partial class Process
 					//	throw new CodeEE(string.Format(trerror.ArgIsNegative.Text, "ARRAYREMOVE", "3", start.ToString()));
 					//if (num <= 0)
 					//	break;
-					vEvaluator.RemoveArray(p, start, num);
+					VariableEvaluator.RemoveArray(p, start, num);
 					break;
 				}
 			case FunctionCode.ARRAYSORT:
@@ -674,7 +677,7 @@ internal sealed partial class Process
 					}
 					else
 						num = -1;
-					vEvaluator.SortArray(p, arrayArg.Order, start, num);
+					VariableEvaluator.SortArray(p, arrayArg.Order, start, num);
 					break;
 				}
 			case FunctionCode.ARRAYCOPY:
@@ -682,10 +685,10 @@ internal sealed partial class Process
 					SpCopyArrayArgument arrayArg = (SpCopyArrayArgument)func.Argument;
 					AExpression varName1 = arrayArg.VarName1;
 					AExpression varName2 = arrayArg.VarName2;
-					VariableToken[] vars = new VariableToken[2] { null, null };
+					VariableToken[] vars = [null, null];
 					if (!(varName1 is SingleTerm) || !(varName2 is SingleTerm))
 					{
-						string[] names = new string[2] { null, null };
+						string[] names = [null, null];
 						names[0] = varName1.GetStrValue(exm);
 						names[1] = varName2.GetStrValue(exm);
 						if ((vars[0] = GlobalStatic.IdentifierDictionary.GetVariableToken(names[0], null, true)) == null)
@@ -709,12 +712,12 @@ internal sealed partial class Process
 					}
 					else
 					{
-						vars[0] = GlobalStatic.IdentifierDictionary.GetVariableToken(((SingleTerm)varName1).Str, null, true);
-						vars[1] = GlobalStatic.IdentifierDictionary.GetVariableToken(((SingleTerm)varName2).Str, null, true);
+						vars[0] = GlobalStatic.IdentifierDictionary.GetVariableToken(((SingleStrTerm)varName1).Str, null, true);
+						vars[1] = GlobalStatic.IdentifierDictionary.GetVariableToken(((SingleStrTerm)varName2).Str, null, true);
 						if ((vars[0].IsInteger && vars[1].IsString) || (vars[0].IsString && vars[1].IsInteger))
 							throw new CodeEE(trerror.DifferentArraycopyArgsType.Text);
 					}
-					vEvaluator.CopyArray(vars[0], vars[1]);
+					VariableEvaluator.CopyArray(vars[0], vars[1]);
 				}
 				break;
 			case FunctionCode.ENCODETOUNI:
@@ -786,11 +789,11 @@ internal sealed partial class Process
 			#region EE_SKIPLOG
 			case FunctionCode.SKIPLOG:
 				{
-					iValue = (func.Argument.IsConst) ? func.Argument.ConstInt : ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
-					console.MesSkip = (iValue != 0);
+					iValue = func.Argument.IsConst ? func.Argument.ConstInt : ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
+					console.MesSkip = iValue != 0;
 					break;
 				}
-			#endregion
+				#endregion
 #if DEBUG
 			default:
 				throw new ExeEE(trerror.UndefinedFunc.Text);
@@ -799,8 +802,8 @@ internal sealed partial class Process
 		return;
 	}
 
-	bool saveSkip = false;
-	bool userDefinedSkip = false;
+	bool saveSkip;
+	bool userDefinedSkip;
 
 	#endregion
 
