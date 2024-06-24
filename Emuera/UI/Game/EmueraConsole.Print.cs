@@ -218,7 +218,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		}
 		displayLineList.Add(line);
 		lineNo++;
-		if (line.IsLogicalLine)
+		if (line.IsLogicalLine && displayLineList[^1].IsLineEnd)
 			logicalLineCount++;
 		if (lineNo == int.MaxValue)
 		{
@@ -265,7 +265,10 @@ internal sealed partial class EmueraConsole : IDisposable
 			if (line.IsLogicalLine)
 			{
 				delNum++;
-				logicalLineCount--;
+				if (line.IsLineEnd)
+				{
+					logicalLineCount--;
+				}
 			}
 			#region GETDISPLAYLINE修正
 			//MaxLog状態からのRemoveはdummylineの挿入が無いのでdeletedLineを加算
