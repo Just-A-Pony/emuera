@@ -1895,7 +1895,7 @@ internal sealed partial class VariableData
 		{
 			IfNullInitArray();
 			Array.Clear(array, 0, totalSize);
-			if (defArray != null)
+			if (defArray == null)
 				Array.Copy(defArray, array, defArray.Length);
 		}
 		public override string GetStrValue(ExpressionMediator exm, Int64[] arguments)
