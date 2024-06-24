@@ -172,7 +172,8 @@ internal sealed partial class EraStreamReader : IDisposable
 				if (test.SequenceEqual("{"))
 					throw new CodeEE(trerror.UnexpectedContinuation.Text, new ScriptPosition(filename, curNo));
 			}
-			b.Append($"{line} ");
+			b.Append(line);
+			b.Append(' ');
 		}
 		st = new CharStream(b.ToString());
 		LexicalAnalyzer.SkipWhiteSpace(st);

@@ -6,6 +6,7 @@ using MinorShift.Emuera.Runtime.Script.Statements.Expression;
 using MinorShift.Emuera.Runtime.Utils;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -1034,8 +1035,7 @@ internal sealed class VariableEvaluator : IDisposable
 			}
 		}
 		bar.Append(']');
-		return string.Format("{0}{1}{2,6}", paramName, bar.ToString(), param);
-
+		return string.Create(CultureInfo.InvariantCulture, $"{paramName}{bar}{param,6}");
 	}
 
 	public void AddCharacter(long charaTmplNo)
@@ -1765,8 +1765,8 @@ internal sealed class VariableEvaluator : IDisposable
 
 
 	private static string getSaveDataPathG() { return Config.Config.SavDir + "global.sav"; }
-	private static string getSaveDataPath(int index) { return string.Format("{0}save{1:00}.sav", Config.Config.SavDir, index); }
-	private static string getSaveDataPath(string s) { return string.Format("{0}save{1:00}.sav", Config.Config.SavDir, s); }
+	private static string getSaveDataPath(int index) { return string.Create(CultureInfo.InvariantCulture, $"{Config.Config.SavDir}save{index:00}.sav"); }
+	private static string getSaveDataPath(string s) { return $"{Config.Config.SavDir}save{s:00}.sav"; }
 
 	private static string getSaveDataPathV(int index) { return Program.DatDir + string.Format("var_{0:00}.dat", index); }
 	private static string getSaveDataPathC(int index) { return Program.DatDir + string.Format("chara_{0:00}.dat", index); }
