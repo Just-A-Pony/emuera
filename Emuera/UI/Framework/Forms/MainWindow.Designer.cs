@@ -31,7 +31,6 @@ partial class MainWindow
 	private void InitializeComponent()
 	{
 		components = new System.ComponentModel.Container();
-		//timer = new System.Windows.Forms.Timer(components);
 		vScrollBar = new System.Windows.Forms.VScrollBar();
 		menuStrip = new System.Windows.Forms.MenuStrip();
 		fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,6 +46,8 @@ partial class MainWindow
 		デバッグToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 		デバッグウインドウを開くToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 		デバッグ情報の更新ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+		ツールToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+		ウィンドウ幅のロックToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 		ヘルプHToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 		コンフィグCToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 		EmuVerToolStripTextBox = new System.Windows.Forms.ToolStripTextBox();
@@ -90,17 +91,11 @@ partial class MainWindow
 		timerKeyMacroChanged = new System.Windows.Forms.Timer(components);
 		labelMacroGroupChanged = new System.Windows.Forms.Label();
 		mainPicBox = new EraPictureBox();
+		デバッグモードで再起動ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 		menuStrip.SuspendLayout();
 		AutoVerbMenu.SuspendLayout();
 		((System.ComponentModel.ISupportInitialize)mainPicBox).BeginInit();
 		SuspendLayout();
-		// 
-		// timer
-		// 
-		//timer.Tick += timer_Tick;
-
-		//初期化処理
-		this.Shown += Init;
 		// 
 		// vScrollBar
 		// 
@@ -116,7 +111,7 @@ partial class MainWindow
 		// 
 		// menuStrip
 		// 
-		menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { fileToolStripMenuItem, デバッグToolStripMenuItem, ヘルプHToolStripMenuItem, EmuVerToolStripTextBox });
+		menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { fileToolStripMenuItem, デバッグToolStripMenuItem, ツールToolStripMenuItem, ヘルプHToolStripMenuItem, EmuVerToolStripTextBox });
 		menuStrip.Location = new System.Drawing.Point(0, 0);
 		menuStrip.Name = "menuStrip";
 		menuStrip.Size = new System.Drawing.Size(657, 24);
@@ -125,7 +120,7 @@ partial class MainWindow
 		// 
 		// fileToolStripMenuItem
 		// 
-		fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { rebootToolStripMenuItem, ログを保存するSToolStripMenuItem, ログをクリップボードにコピーToolStripMenuItem, タイトルへ戻るTToolStripMenuItem, コードを読み直すcToolStripMenuItem, フォルダを読み直すFToolStripMenuItem, ファイルを読み直すFToolStripMenuItem, リソースフォルダを読み直すToolStripMenuItem, exitToolStripMenuItem });
+		fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { rebootToolStripMenuItem, デバッグモードで再起動ToolStripMenuItem, ログを保存するSToolStripMenuItem, ログをクリップボードにコピーToolStripMenuItem, タイトルへ戻るTToolStripMenuItem, コードを読み直すcToolStripMenuItem, フォルダを読み直すFToolStripMenuItem, ファイルを読み直すFToolStripMenuItem, リソースフォルダを読み直すToolStripMenuItem, exitToolStripMenuItem });
 		fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 		fileToolStripMenuItem.Size = new System.Drawing.Size(67, 20);
 		fileToolStripMenuItem.Text = "ファイル(&F)";
@@ -216,6 +211,21 @@ partial class MainWindow
 		デバッグ情報の更新ToolStripMenuItem.Size = new System.Drawing.Size(223, 22);
 		デバッグ情報の更新ToolStripMenuItem.Text = "デバッグ情報の更新";
 		デバッグ情報の更新ToolStripMenuItem.Click += デバッグ情報の更新ToolStripMenuItem_Click;
+		// 
+		// ツールToolStripMenuItem
+		// 
+		ツールToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { ウィンドウ幅のロックToolStripMenuItem });
+		ツールToolStripMenuItem.ForeColor = System.Drawing.SystemColors.MenuText;
+		ツールToolStripMenuItem.Name = "ツールToolStripMenuItem";
+		ツールToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+		ツールToolStripMenuItem.Text = "ツール";
+		// 
+		// ウィンドウ幅のロックToolStripMenuItem
+		// 
+		ウィンドウ幅のロックToolStripMenuItem.Name = "ウィンドウ幅のロックToolStripMenuItem";
+		ウィンドウ幅のロックToolStripMenuItem.Size = new System.Drawing.Size(188, 22);
+		ウィンドウ幅のロックToolStripMenuItem.Text = "ウィンドウ幅のロック変更";
+		ウィンドウ幅のロックToolStripMenuItem.Click += ウィンドウ幅のロック変更ToolStripMenuItem_Click;
 		// 
 		// ヘルプHToolStripMenuItem
 		// 
@@ -520,7 +530,7 @@ partial class MainWindow
 		toolTipButton.OwnerDraw = true;
 		toolTipButton.Draw += toolTipButton_Draw;
 		toolTipButton.Popup += toolTipButton_Popup;
-		//
+		// 
 		// timerKeyMacroChanged
 		// 
 		timerKeyMacroChanged.Tick += timerKeyMacroChanged_Tick;
@@ -554,6 +564,13 @@ partial class MainWindow
 		mainPicBox.MouseLeave += mainPicBox_MouseLeave;
 		mainPicBox.MouseMove += mainPicBox_MouseMove;
 		// 
+		// デバッグモードで再起動ToolStripMenuItem
+		// 
+		デバッグモードで再起動ToolStripMenuItem.Name = "toolStripMenuItem1";
+		デバッグモードで再起動ToolStripMenuItem.Size = new System.Drawing.Size(212, 22);
+		デバッグモードで再起動ToolStripMenuItem.Text = "デバッグモードで再起動";
+		デバッグモードで再起動ToolStripMenuItem.Click += デバッグモードで再起動ToolStripMenuItem_Click;
+		// 
 		// MainWindow
 		// 
 		AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -571,6 +588,7 @@ partial class MainWindow
 		SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
 		Text = "Emuera";
 		FormClosing += MainWindow_FormClosing;
+		Shown += Init;
 		menuStrip.ResumeLayout(false);
 		menuStrip.PerformLayout();
 		AutoVerbMenu.ResumeLayout(false);
@@ -640,5 +658,8 @@ partial class MainWindow
 	private System.Windows.Forms.ToolStripMenuItem グループ9ToolStripMenuItem;
 	private System.Windows.Forms.ToolStripTextBox EmuVerToolStripTextBox;
 	private System.Windows.Forms.ToolStripMenuItem リソースフォルダを読み直すToolStripMenuItem;
+	private System.Windows.Forms.ToolStripMenuItem ツールToolStripMenuItem;
+	private System.Windows.Forms.ToolStripMenuItem ウィンドウ幅のロックToolStripMenuItem;
+	private System.Windows.Forms.ToolStripMenuItem デバッグモードで再起動ToolStripMenuItem;
 }
 

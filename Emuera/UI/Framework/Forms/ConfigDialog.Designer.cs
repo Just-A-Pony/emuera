@@ -79,6 +79,7 @@
 			numericUpDown9 = new System.Windows.Forms.NumericUpDown();
 			label1 = new System.Windows.Forms.Label();
 			checkBox14 = new System.Windows.Forms.CheckBox();
+			_useButtonFocusColor = new System.Windows.Forms.CheckBox();
 			label26 = new System.Windows.Forms.Label();
 			comboBox7 = new System.Windows.Forms.ComboBox();
 			tabPageWindow = new System.Windows.Forms.TabPage();
@@ -144,6 +145,7 @@
 			checkBox30 = new System.Windows.Forms.CheckBox();
 			checkBox31 = new System.Windows.Forms.CheckBox();
 			checkBox34 = new System.Windows.Forms.CheckBox();
+			_useNewRandom = new System.Windows.Forms.CheckBox();
 			label25 = new System.Windows.Forms.Label();
 			textBox3 = new System.Windows.Forms.TextBox();
 			tabPageCompati = new System.Windows.Forms.TabPage();
@@ -226,7 +228,7 @@
 			flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
 			flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-			_useButtonFocusColor = new System.Windows.Forms.CheckBox();
+			_useVAR = new System.Windows.Forms.CheckBox();
 			tabControl.SuspendLayout();
 			tabEnvironment.SuspendLayout();
 			flowLayoutPanel13.SuspendLayout();
@@ -540,18 +542,10 @@
 			// 
 			// tabPageView
 			// 
-			tabPageView.Controls.Add(_useButtonFocusColor);
 			tabPageView.Controls.Add(flowLayoutPanel17);
 			resources.ApplyResources(tabPageView, "tabPageView");
 			tabPageView.Name = "tabPageView";
 			tabPageView.UseVisualStyleBackColor = true;
-			//
-			// _useButtonFocusColor
-			// 
-			resources.ApplyResources(_useButtonFocusColor, "_useButtonFocusColor");
-			_useButtonFocusColor.Name = "_useButtonFocusColor";
-			_useButtonFocusColor.UseVisualStyleBackColor = true;
-			_useButtonFocusColor.CheckedChanged += UseButtonFocusColor_CheckedChanged;
 			// 
 			// flowLayoutPanel17
 			// 
@@ -562,6 +556,7 @@
 			flowLayoutPanel17.Controls.Add(flowLayoutPanel15);
 			flowLayoutPanel17.Controls.Add(flowLayoutPanel16);
 			flowLayoutPanel17.Controls.Add(checkBox14);
+			flowLayoutPanel17.Controls.Add(_useButtonFocusColor);
 			flowLayoutPanel17.Controls.Add(label26);
 			flowLayoutPanel17.Controls.Add(comboBox7);
 			flowLayoutPanel17.Name = "flowLayoutPanel17";
@@ -635,6 +630,13 @@
 			resources.ApplyResources(checkBox14, "checkBox14");
 			checkBox14.Name = "checkBox14";
 			checkBox14.UseVisualStyleBackColor = true;
+			// 
+			// _useButtonFocusColor
+			// 
+			resources.ApplyResources(_useButtonFocusColor, "_useButtonFocusColor");
+			_useButtonFocusColor.Name = "_useButtonFocusColor";
+			_useButtonFocusColor.UseVisualStyleBackColor = true;
+			_useButtonFocusColor.CheckedChanged += UseButtonFocusColor_CheckedChanged;
 			// 
 			// label26
 			// 
@@ -1014,6 +1016,8 @@
 			flowLayoutPanel30.Controls.Add(checkBox30);
 			flowLayoutPanel30.Controls.Add(checkBox31);
 			flowLayoutPanel30.Controls.Add(checkBox34);
+			flowLayoutPanel30.Controls.Add(_useNewRandom);
+			flowLayoutPanel30.Controls.Add(_useVAR);
 			flowLayoutPanel30.Controls.Add(label25);
 			flowLayoutPanel30.Controls.Add(textBox3);
 			flowLayoutPanel30.Name = "flowLayoutPanel30";
@@ -1064,6 +1068,13 @@
 			resources.ApplyResources(checkBox34, "checkBox34");
 			checkBox34.Name = "checkBox34";
 			checkBox34.UseVisualStyleBackColor = true;
+			// 
+			// _useNewRandom
+			// 
+			resources.ApplyResources(_useNewRandom, "_useNewRandom");
+			_useNewRandom.Name = "_useNewRandom";
+			_useNewRandom.UseVisualStyleBackColor = true;
+			_useNewRandom.CheckedChanged += UseNewRandom_CheckedChanged;
 			// 
 			// label25
 			// 
@@ -1633,6 +1644,13 @@
 			flowLayoutPanel2.Controls.Add(buttonCancel);
 			flowLayoutPanel2.Name = "flowLayoutPanel2";
 			// 
+			// _useVAR
+			// 
+			resources.ApplyResources(_useVAR, "_useVAR");
+			_useVAR.Name = "_useVAR";
+			_useVAR.UseVisualStyleBackColor = true;
+			_useVAR.CheckedChanged += _useVAR_CheckedChanged;
+			// 
 			// ConfigDialog
 			// 
 			AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1970,5 +1988,7 @@
 		private System.Windows.Forms.Label rikaiNote3;
 		private System.Windows.Forms.CheckBox checkBox35;
 		private System.Windows.Forms.CheckBox _useButtonFocusColor;
+		private System.Windows.Forms.CheckBox _useNewRandom;
+		private System.Windows.Forms.CheckBox _useVAR;
 	}
 }

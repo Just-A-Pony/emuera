@@ -513,6 +513,8 @@ namespace MinorShift.Emuera.Forms
 			textBox2.Enabled = itemET.Value == TextEditorType.USER_SETTING;
 
 			_useButtonFocusColor.Checked = JSONConfig.Data.UseButtonFocusBackgroundColor;
+			_useNewRandom.Checked = JSONConfig.Data.UseNewRandom;
+			_useVAR.Checked = JSONConfig.Data.UseScopedVariableInstruction;
 
 			#region EM_私家版_LoadText＆SaveText機能拡張
 			{
@@ -1002,5 +1004,14 @@ namespace MinorShift.Emuera.Forms
 			JSONConfig.Data.UseButtonFocusBackgroundColor = _useButtonFocusColor.Checked;
 		}
 
+		private void UseNewRandom_CheckedChanged(object sender, EventArgs e)
+		{
+			JSONConfig.Data.UseNewRandom = _useNewRandom.Checked;
+		}
+
+		private void _useVAR_CheckedChanged(object sender, EventArgs e)
+		{
+			JSONConfig.Data.UseScopedVariableInstruction = _useVAR.Checked;
+		}
 	}
 }
