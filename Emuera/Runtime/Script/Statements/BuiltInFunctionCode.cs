@@ -391,6 +391,7 @@ enum FunctionCode
 	VARI,
 	VARS,
 	HTML_PRINT_ISLAND,
+	HTML_PRINT_ISLAND_CLEAR,
 
 	PRINTN,//改行をしないで入力待ち
 	PRINTVN,
