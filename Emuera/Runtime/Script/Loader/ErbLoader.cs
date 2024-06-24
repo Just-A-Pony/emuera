@@ -1225,6 +1225,7 @@ internal sealed class ErbLoader
 					}
 					pairLine = nestStack.Pop();//TRYC
 					pairLine.JumpToEndCatch = func;//TRYCにCATCHの位置を教える
+					nestStack.Push(func);
 					break;
 				case FunctionCode.ENDCATCH:
 					if (nestStack.Count == 0

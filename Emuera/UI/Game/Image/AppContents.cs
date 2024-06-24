@@ -75,7 +75,7 @@ static class AppContents
 		}
 		else
 		{
-			imageDictionary = [];
+			imageDictionary = resourceImageDictionary;
 			return sprites - csprites;
 		}
 	}
@@ -152,6 +152,8 @@ static class AppContents
 									ParserMediator.Warn(string.Format(trerror.SpriteNameAlreadyUsed.Text, item.Name), sp, 0);
 									item.Dispose();
 								}
+								else
+									resourceImageDictionary.TryAdd(item.Name, item);
 							}
 						}
 					});
