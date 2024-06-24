@@ -16,7 +16,7 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 	{
 		//if ((StaticConfig.TextDrawingMode != TextDrawingMode.GRAPHICS) && (str.IndexOf('\t') >= 0))
 		//    str = str.Replace("\t", "");
-		Str = str;
+		Text = str;
 		StringStyle = style;
 		Font = FontFactory.GetFont(style.Fontname, style.FontStyle);
 		if (Font == null)
@@ -43,7 +43,7 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 	//indexの文字数の前方文字列とindex以降の後方文字列に分割
 	public ConsoleStyledString DivideAt(int index, StringMeasure sm)
 	{
-		//if ((index <= 0)||(index > Str.Length)||this.Error)
+		//if ((index <= 0)||(index > Text.Length)||this.Error)
 		//	return null;
 		ConsoleStyledString ret = DivideAt(index);
 		if (ret == null)
@@ -54,13 +54,13 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 	}
 	public ConsoleStyledString DivideAt(int index)
 	{
-		if (index <= 0 || index > Str.Length || Error)
+		if (index <= 0 || index > Text.Length || Error)
 			return null;
-		string str = Str[index..];
-		Str = Str[..index];
+		string str = Text[index..];
+		Text = Text[..index];
 		ConsoleStyledString ret = new ConsoleStyledString();
 		ret.Font = Font;
-		ret.Str = str;
+		ret.Text = str;
 		ret.Color = Color;
 		ret.ButtonColor = ButtonColor;
 		ret.colorChanged = colorChanged;
@@ -76,18 +76,18 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 			Width = 0;
 			return;
 		}
-		Width = sm.GetDisplayLength(Str, Font);
+		Width = sm.GetDisplayLength(Text, Font);
 		XsubPixel = subPixel;
 
 		#region EmuEra-Rikaichan
 		if (!rikaichaned && Config.RikaiEnabled)
 		{
 			rikaichaned = true;
-			int len = Str.Length;
+			int len = Text.Length;
 			Ends = new int[len];
 			for (int i = 0; i < len; i++)
 			{
-				string temp = Str.Substring(0, i + 1);
+				string temp = Text.Substring(0, i + 1);
 				Ends[i] = sm.GetDisplayLength(temp, Font);
 			}
 
@@ -108,7 +108,7 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 				if (!(Color.Yellow.R == color.R &&
 					Color.Yellow.G == color.G &&
 					Color.Yellow.B == color.B) &&
-					!string.IsNullOrWhiteSpace(Str))
+					!string.IsNullOrWhiteSpace(Text))
 				{
 					backcolor = Color.Gray;
 				}
@@ -123,10 +123,10 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 		#region EM_私家版_描画拡張
 		if (mode == TextDrawingMode.GRAPHICS)
 		{
-			graph.DrawString(Str, Font, new SolidBrush(color), new Point(PointX, pointY));
+			graph.DrawString(Text, Font, new SolidBrush(color), new Point(PointX, pointY));
 		}
 		else
-		// TextRenderer.DrawText(graph, Str, Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
+		// TextRenderer.DrawText(graph, Text, Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
 		{
 			if (JSONConfig.Data.UseButtonFocusBackgroundColor)
 			{
@@ -136,16 +136,16 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 					{
 						backcolor = Color.FromArgb(50, 50, 50);
 					}
-					TextRenderer.DrawText(graph, Str.AsSpan(), Font, new Point(PointX, pointY), color, backColor: backcolor.Value, TextFormatFlags.NoPrefix);
+					TextRenderer.DrawText(graph, Text.AsSpan(), Font, new Point(PointX, pointY), color, backColor: backcolor.Value, TextFormatFlags.NoPrefix);
 				}
 				else
 				{
-					TextRenderer.DrawText(graph, Str.AsSpan(), Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
+					TextRenderer.DrawText(graph, Text.AsSpan(), Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
 				}
 			}
 			else
 			{
-				TextRenderer.DrawText(graph, Str.AsSpan(), Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
+				TextRenderer.DrawText(graph, Text.AsSpan(), Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
 			}
 		}
 
@@ -165,10 +165,10 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 
 		#region EM_私家版_描画拡張
 		if (mode == TextDrawingMode.GRAPHICS)
-			graph.DrawString(Str, Font, new SolidBrush(color), new Point(xOffset, 0));
+			graph.DrawString(Text, Font, new SolidBrush(color), new Point(xOffset, 0));
 		else
-			// TextRenderer.DrawText(graph, Str, Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
-			TextRenderer.DrawText(graph, Str.AsSpan(), Font, new Point(xOffset, 0), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
+			// TextRenderer.DrawText(graph, Text, Font, new Point(PointX, pointY), color, TextFormatFlags.NoPrefix);
+			TextRenderer.DrawText(graph, Text.AsSpan(), Font, new Point(xOffset, 0), color, TextFormatFlags.NoPrefix | TextFormatFlags.PreserveGraphicsClipping);
 		#endregion
 	}
 }

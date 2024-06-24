@@ -7,11 +7,11 @@ namespace MinorShift.Emuera.UI.Game;
 /// <summary>
 /// 描画の最小単位
 /// </summary>
-abstract class AConsoleDisplayPart
+abstract class AConsoleDisplayNode
 {
 	public bool Error { get; protected set; }
 
-	public string Str { get; protected set; }
+	public string Text { get; protected set; }
 	public string AltText { get; protected set; }
 	#region EM_私家版_描画拡張
 	// public int PointX { get; set; }
@@ -29,9 +29,9 @@ abstract class AConsoleDisplayPart
 	public abstract void SetWidth(StringMeasure sm, float subPixel);
 	public override string ToString()
 	{
-		if (Str == null)
+		if (Text == null)
 			return "";
-		return Str;
+		return Text;
 	}
 
 	#region EM_私家版_描画拡張
@@ -39,7 +39,7 @@ abstract class AConsoleDisplayPart
 	public int Depth { get; set; }
 	public virtual StringBuilder BuildString(StringBuilder sb)
 	{
-		if (Str != null) sb.Append(Str);
+		if (Text != null) sb.Append(Text);
 		return sb;
 	}
 	#endregion
@@ -47,14 +47,14 @@ abstract class AConsoleDisplayPart
 	#region EmuEra-Rikaichan
 	public bool rikaichaned;
 	public int[] Ends;
-	public AConsoleDisplayPart NextLine;
+	public AConsoleDisplayNode NextLine;
 	#endregion
 }
 
 /// <summary>
 /// 色つき
 /// </summary>
-abstract class AConsoleColoredPart : AConsoleDisplayPart
+abstract class AConsoleColoredPart : AConsoleDisplayNode
 {
 	protected Color Color { get; set; }
 	protected Color ButtonColor { get; set; }

@@ -9,7 +9,7 @@ internal sealed class ConsoleEscapedParts
 {
 	const int ROW_LINE = 0, ROW_DEPTH = 1, ROW_TOP = 2, ROW_BOTTOM = 3, ROW_ID = 4, ROW_DIVTYPE = 5;
 	static readonly DataTable dt = new DataTable(); // divの情報を保存する場所
-	static readonly Dictionary<long, AConsoleDisplayPart> parts = new Dictionary<long, AConsoleDisplayPart>(); //　実際にdivデータを保存する場所
+	static readonly Dictionary<long, AConsoleDisplayNode> parts = new Dictionary<long, AConsoleDisplayNode>(); //　実際にdivデータを保存する場所
 	/// <summary>
 	/// 最近GetPartsInRangeを行ったか
 	/// </summary>
@@ -47,7 +47,7 @@ internal sealed class ConsoleEscapedParts
 		parts.Clear();
 		Changed = false;
 	}
-	public static void Add(AConsoleDisplayPart part, int line, int depth, int top, int bottom)
+	public static void Add(AConsoleDisplayNode part, int line, int depth, int top, int bottom)
 	{
 		var id = Utils.TimePoint();
 		var row = dt.NewRow();
@@ -92,7 +92,7 @@ internal sealed class ConsoleEscapedParts
 	/// top行からbottom行までの範囲内表示内容があったdivをrmapで保存。
 	/// genは今のbuttonGeneration，重複計算防止用。
 	/// </summary>
-	public static void GetPartsInRange(int top, int bottom, int gen, Dictionary<int, List<AConsoleDisplayPart>> rmap)
+	public static void GetPartsInRange(int top, int bottom, int gen, Dictionary<int, List<AConsoleDisplayNode>> rmap)
 	{
 		if (GlobalStatic.Console?.GetLineNo > Config.Config.MaxLog)
 		{
@@ -110,11 +110,11 @@ internal sealed class ConsoleEscapedParts
 			.Where(r => ((sbyte)r[ROW_DIVTYPE] & 2) != 0 || (int)r[ROW_TOP] <= bottom + 1 && (int)r[ROW_BOTTOM] >= top && r[ROW_LINE] is int line
 			&& ((sbyte)r[ROW_DIVTYPE] != 0 || top > line || line > bottom + 1)))
 		{
-			List<AConsoleDisplayPart> list = null;
+			List<AConsoleDisplayNode> list = null;
 			rmap.TryGetValue((int)row[ROW_DEPTH], out list);
 			if (list == null)
 			{
-				list = new List<AConsoleDisplayPart>();
+				list = new List<AConsoleDisplayNode>();
 				rmap.Add((int)row[ROW_DEPTH], list);
 			}
 			list.Add(parts[(long)row[ROW_ID]]);

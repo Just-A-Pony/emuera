@@ -7,7 +7,7 @@ using static MinorShift.Emuera.Runtime.Utils.EvilMask.Utils;
 
 namespace MinorShift.Emuera.UI.Game;
 
-sealed class ConsoleImagePart : AConsoleDisplayPart
+sealed class ConsoleImagePart : AConsoleDisplayNode
 {
 	#region EM_私家版_HTMLパラメータ拡張
 	//public ConsoleImagePart(string resName, string resNameb, int raw_height, int raw_width, int raw_ypos)
@@ -15,7 +15,7 @@ sealed class ConsoleImagePart : AConsoleDisplayPart
 	{
 		top = 0;
 		bottom = Config.FontSize;
-		Str = "";
+		Text = "";
 		ResourceName = resName ?? "";
 		ButtonResourceName = resNameb;
 		MappingGraphName = resNamem;
@@ -65,7 +65,7 @@ sealed class ConsoleImagePart : AConsoleDisplayPart
 		//	cImage = null;
 		if (cImage == null)
 		{
-			Str = AltText;
+			Text = AltText;
 			return;
 		}
 		int height;
@@ -152,7 +152,7 @@ sealed class ConsoleImagePart : AConsoleDisplayPart
 		}
 		if (cImage != null)
 			return;
-		Width = sm.GetDisplayLength(Str, Config.DefaultFont);
+		Width = sm.GetDisplayLength(Text, Config.DefaultFont);
 		XsubPixel = subPixel;
 	}
 

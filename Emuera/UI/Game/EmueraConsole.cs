@@ -910,7 +910,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		if (state == ConsoleState.WaitInput)
 		{
 			Int64 inputValue;
-			List<AConsoleDisplayPart> ep;
+			List<AConsoleDisplayNode> ep;
 
 			switch (inputReq.InputType)
 			{
@@ -1597,10 +1597,10 @@ internal sealed partial class EmueraConsole : IDisposable
 	}
 
 	#region EM_私家版_描画拡張
-	Dictionary<int, List<AConsoleDisplayPart>> escapedParts;
+	Dictionary<int, List<AConsoleDisplayNode>> escapedParts;
 	#endregion
 	#region EE_BINPUT
-	public Dictionary<int, List<AConsoleDisplayPart>> EscapedParts { get { return escapedParts; } }
+	public Dictionary<int, List<AConsoleDisplayNode>> EscapedParts { get { return escapedParts; } }
 	#endregion
 	#region EM_私家版_imgマースク
 	public int GetLinePointY(int lineNo)
@@ -1657,7 +1657,7 @@ internal sealed partial class EmueraConsole : IDisposable
 
 			//1823 cbg追加
 			#region EM_私家版_描画拡張
-			if (escapedParts == null) escapedParts = new Dictionary<int, List<AConsoleDisplayPart>>();
+			if (escapedParts == null) escapedParts = new Dictionary<int, List<AConsoleDisplayNode>>();
 			if (ConsoleEscapedParts.Changed || !ConsoleEscapedParts.TestedInRange(topLineNo, bottomLineNo, lastButtonGeneration))
 				ConsoleEscapedParts.GetPartsInRange(topLineNo, bottomLineNo, lastButtonGeneration, escapedParts);
 			var edepth = escapedParts.Keys.ToArray();
@@ -2234,7 +2234,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		#region EM_私家版_描画拡張
 		if (ConsoleEscapedParts.Changed || !ConsoleEscapedParts.TestedInRange(topLineNo, bottomLineNo, lastButtonGeneration))
 		{
-			if (escapedParts == null) escapedParts = new Dictionary<int, List<AConsoleDisplayPart>>();
+			if (escapedParts == null) escapedParts = new Dictionary<int, List<AConsoleDisplayNode>>();
 			ConsoleEscapedParts.GetPartsInRange(topLineNo, bottomLineNo, lastButtonGeneration, escapedParts);
 		}
 		var edepth = escapedParts == null || escapedParts.Keys.Count == 0 ? dummy : escapedParts.Keys.ToArray();
@@ -2268,7 +2268,7 @@ internal sealed partial class EmueraConsole : IDisposable
 							//	if(pointing.IsButton)
 							//		goto breakfor;
 							//}
-							foreach (AConsoleDisplayPart part in button.StrArray)
+							foreach (AConsoleDisplayNode part in button.StrArray)
 							{
 								if (part == null || part is ConsoleDivPart)
 									continue;
@@ -2365,7 +2365,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			//if (_pointingString != _lastPointingString && 
 			if (pointing == null || pointing.StrArray.Length == 0) goto rikaichan_not_found;
 
-			AConsoleDisplayPart cdp;
+			AConsoleDisplayNode cdp;
 			ConsoleStyledString css;
 			for (int first_subbutton_i = 0; first_subbutton_i < pointing.StrArray.Length; first_subbutton_i++)
 			{
@@ -2387,10 +2387,10 @@ internal sealed partial class EmueraConsole : IDisposable
 			//rikaichan.laststr_css = pointing; //LATER: do I even need this?
 			//rikaichan.laststr = rikaichan.laststr_css.ToString();
 
-			rikaichan.laststr = css.Str;
+			rikaichan.laststr = css.Text;
 			if (css.NextLine != null)
 			{
-				rikaichan.laststr += css.NextLine.Str;
+				rikaichan.laststr += css.NextLine.Text;
 			}
 
 			rikaichan.strpos = css.Ends.Length - 1;

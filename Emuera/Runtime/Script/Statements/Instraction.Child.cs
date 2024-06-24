@@ -2253,7 +2253,7 @@ internal sealed partial class FunctionIdentifier
 					}
 				}
 			loopep:
-				List<AConsoleDisplayPart> ep;
+				List<AConsoleDisplayNode> ep;
 				foreach (var value in exm.Console.EscapedParts)
 				{
 					ep = value.Value;
@@ -2354,7 +2354,7 @@ internal sealed partial class FunctionIdentifier
 					}
 				}
 			loopep:
-				List<AConsoleDisplayPart> ep;
+				List<AConsoleDisplayNode> ep;
 				foreach (var value in exm.Console.EscapedParts)
 				{
 					ep = value.Value;

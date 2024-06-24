@@ -2348,7 +2348,7 @@ internal static partial class FunctionMethodCreator
 		//		return name + "関数の1番目の引数が文字列ではありません";
 		//	if (arguments[0] is SingleTerm)
 		//	{
-		//		string varName = ((SingleTerm)arguments[0]).Str;
+		//		string varName = ((SingleTerm)arguments[0]).Text;
 		//		if (GlobalStatic.IdentifierDictionary.GetVariableToken(varName, null, true) == null)
 		//			return name + "関数の1番目の引数が変数名ではありません";
 		//	}
@@ -3785,7 +3785,7 @@ internal static partial class FunctionMethodCreator
 	//			return name + "関数の1番目の引数は省略できません";
 	//		if (arguments[0] is SingleTerm)
 	//		{
-	//			string varName = ((SingleTerm)arguments[0]).Str;
+	//			string varName = ((SingleTerm)arguments[0]).Text;
 	//			if (GlobalStatic.IdentifierDictionary.GetVariableToken(varName, null, true) == null)
 	//				return name + "関数の1番目の引数が変数名ではありません";
 	//		}

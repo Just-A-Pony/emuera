@@ -9,7 +9,7 @@ using static MinorShift.Emuera.Runtime.Utils.EvilMask.Utils;
 
 namespace MinorShift.Emuera.Runtime.Utils.EvilMask;
 
-class ConsoleDivPart : AConsoleDisplayPart
+class ConsoleDivPart : AConsoleDisplayNode
 {
 	public ConsoleDivPart(MixedNum xPos, MixedNum yPos, MixedNum width, MixedNum height, int depth, int color, StyledBoxModel box, bool isRelative, ConsoleDisplayLine[] childs)
 	{
@@ -43,7 +43,7 @@ class ConsoleDivPart : AConsoleDisplayPart
 		}
 		sb.Append(">");
 		altHeadTag = sb.ToString();
-		Str = string.Empty;
+		Text = string.Empty;
 		xOffset = MixedNum.ToPixel(xPos, 0);
 		#region EE_div各要素の修正
 		if (margin != null) divXOffset += margin[Direction.Left];
@@ -120,7 +120,7 @@ class ConsoleDivPart : AConsoleDisplayPart
 					//	if(pointing.IsButton)
 					//		goto breakfor;
 					//}
-					foreach (AConsoleDisplayPart part in button.StrArray)
+					foreach (AConsoleDisplayNode part in button.StrArray)
 					{
 						if (part == null)
 							continue;
