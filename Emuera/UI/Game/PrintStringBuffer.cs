@@ -26,7 +26,7 @@ internal sealed class PrintStringBuffer
 		this.parent = parent;
 	}
 	readonly EmueraConsole parent;
-	StringBuilder builder = new();
+	readonly StringBuilder builder = new(2000);
 	List<AConsoleDisplayNode> m_stringList = [];
 	StringStyle lastStringStyle;
 	List<ConsoleButtonString> m_buttonList = [];
@@ -54,7 +54,7 @@ internal sealed class PrintStringBuffer
 		if (builder.Length != 0)
 		{
 			m_stringList.Add(new ConsoleStyledString(builder.ToString(), lastStringStyle));
-			builder.Remove(0, builder.Length);
+			builder.Clear();
 		}
 		m_stringList.Add(part);
 	}
@@ -78,7 +78,7 @@ internal sealed class PrintStringBuffer
 		else
 		{
 			m_stringList.Add(new ConsoleStyledString(builder.ToString(), lastStringStyle));
-			builder.Remove(0, builder.Length);
+			builder.Clear();
 			builder.Append(str);
 			lastStringStyle = style;
 		}
@@ -160,9 +160,7 @@ internal sealed class PrintStringBuffer
 	{
 		fromCssToButton();
 		setWidthToButtonList(m_buttonList, stringMeasure, true);
-		ConsoleButtonString[] dispLineButtonArray = new ConsoleButtonString[m_buttonList.Count];
-		m_buttonList.CopyTo(dispLineButtonArray);
-		ConsoleDisplayLine line = new(dispLineButtonArray, true, temporary);
+		var line = new ConsoleDisplayLine([.. m_buttonList], true, temporary);
 		clearBuffer();
 		return line;
 	}
@@ -294,7 +292,7 @@ internal sealed class PrintStringBuffer
 
 	private void clearBuffer()
 	{
-		builder.Remove(0, builder.Length);
+		builder.Clear();
 		m_stringList.Clear();
 		m_buttonList.Clear();
 	}
@@ -308,7 +306,7 @@ internal sealed class PrintStringBuffer
 		if (builder.Length != 0)
 		{
 			m_stringList.Add(new ConsoleStyledString(builder.ToString(), lastStringStyle));
-			builder.Remove(0, builder.Length);
+			builder.Clear();
 		}
 		if (m_stringList.Count == 0)
 			return;
@@ -556,29 +554,27 @@ internal sealed class PrintStringBuffer
 		#endregion
 		string str = css.Text;
 		Font font = css.Font;
-		int highLength = str.Length;//widthLimitを超える最低の文字index(文字数-1)。
-		int lowLength = 0;//超えない最大の文字index。
-						  //int i = (int)(widthLimit / fontDisplaySize);//およその文字数を推定
-						  //if (i > str.Length - 1)//配列の外を参照しないように。
-						  //	i = str.Length - 1;
-		int i = lowLength;//およその文字数を推定←やめた
+		//最適なサイズを二分探索する
+		var window = str.Length / 2;
+		int i = window;
 
-		string test;
-		while (highLength - lowLength > 1)//差が一文字以下になるまで繰り返す。
+		var span = str.AsSpan();
+		ReadOnlySpan<char> test;
+		while (window > 1)
 		{
-			test = str[..i];
+			test = span[..i];
 			if (sm.GetDisplayLength(test, font) <= widthLimit)//サイズ内ならlowLengthを更新。文字数を増やす。
 			{
-				lowLength = i;
-				i++;
+				window /= 2;
+				i += window;
 			}
 			else//サイズ外ならhighLengthを更新。文字数を減らす。
 			{
-				highLength = i;
-				i--;
+				window /= 2;
+				i -= window;
 			}
 		}
-		return lowLength;
+		return i;
 	}
 	#endregion
 
