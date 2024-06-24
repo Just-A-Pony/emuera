@@ -1,6 +1,5 @@
 ﻿using MinorShift.Emuera.Runtime.Script.Statements;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,12 +21,12 @@ internal sealed class LabelDictionary
 	/// <summary>
 	/// 本体。全てのFunctionLabelLineを記録
 	/// </summary>
-	ConcurrentDictionary<string, List<FunctionLabelLine>> labelAtDic = new(Config.Config.StrComper);
+	Dictionary<string, List<FunctionLabelLine>> labelAtDic = new(Config.Config.StrComper);
 	List<FunctionLabelLine> invalidList = [];
-	ConcurrentDictionary<string, Dictionary<FunctionLabelLine, GotoLabelLine>> labelDollarList = new(Config.Config.StrComper);
+	Dictionary<string, Dictionary<FunctionLabelLine, GotoLabelLine>> labelDollarList = new(Config.Config.StrComper);
 	int count;
 
-	ConcurrentDictionary<string, int> loadedFileDic = [];
+	Dictionary<string, int> loadedFileDic = [];
 	int currentFileCount;
 	int totalFileCount;
 
