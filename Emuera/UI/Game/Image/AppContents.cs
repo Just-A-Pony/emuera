@@ -1,6 +1,7 @@
 ﻿using MinorShift.Emuera.Runtime.Config;
 using MinorShift.Emuera.Runtime.Utils;
 using MinorShift.Emuera.Runtime.Utils.EvilMask;
+using SkiaSharp;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -251,23 +252,18 @@ static class AppContents
 		{
 			string filepath = parentName;
 			Bitmap bmp;
-			try
-			{
-				#region EM_私家版_webp
-				// Bitmap bmp = new Bitmap(filepath);
-				bmp = Utils.LoadImage(filepath);
-				#endregion
-			}
-			catch (FileNotFoundException)
-			{
-				ParserMediator.Warn(string.Format(trerror.NotExistImageFile.Text, arg2), sp, 1);
-				return null;
-			}
-			if (bmp == null)
+			#region EM_私家版_webp
+			// Bitmap bmp = new Bitmap(filepath);
+			var webpbmp = Utils.LoadImage(filepath);
+			#endregion
+			if (webpbmp == null)
 			{
 				ParserMediator.Warn(string.Format(trerror.FailedLoadFile.Text, arg2), sp, 1);
 				return null;
 			}
+
+			bmp = webpbmp;
+
 			if (bmp.Width > AbstractImage.MAX_IMAGESIZE || bmp.Height > AbstractImage.MAX_IMAGESIZE)
 			{
 				//1824-2 すでに8192以上の幅を持つ画像を利用したバリアントが存在してしまっていたため、警告しつつ許容するように変更
