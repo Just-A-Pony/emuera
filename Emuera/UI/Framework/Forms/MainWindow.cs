@@ -1399,7 +1399,7 @@ namespace MinorShift.Emuera.Forms
 			e.DrawBackground();
 			e.DrawBorder();
 
-			e.Graphics.DrawString(e.ToolTipText, _tooltipFont, SystemBrushes.InfoText, e.Bounds);
+			TextRenderer.DrawText(e.Graphics, e.ToolTipText, _tooltipFont, new Point(0, 0), ForeColor);
 		}
 
 		private void toolTipButton_Popup(object sender, PopupEventArgs e)
