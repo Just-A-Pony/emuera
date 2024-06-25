@@ -1395,6 +1395,7 @@ namespace MinorShift.Emuera.Forms
 			labelMacroGroupChanged.Visible = true;
 		}
 
+		/* EMEEではツールチップ拡張が実装されてるからいらないと思う……
 		Font? _tooltipFont;
 
 		private void toolTipButton_Draw(object sender, DrawToolTipEventArgs e)
@@ -1412,6 +1413,7 @@ namespace MinorShift.Emuera.Forms
 			var toolTip = (ToolTip)sender;
 			e.ToolTipSize = TextRenderer.MeasureText(toolTip.GetToolTip(e.AssociatedControl), _tooltipFont);
 		}
+		*/
 
 		bool _isWidthLocked = true;
 		private void ウィンドウ幅のロック変更ToolStripMenuItem_Click(object sender, EventArgs e)

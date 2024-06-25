@@ -526,10 +526,10 @@ partial class MainWindow
 		// 
 		// toolTipButton
 		// 
-		toolTipButton.BackColor = System.Drawing.Color.White;
-		toolTipButton.OwnerDraw = true;
-		toolTipButton.Draw += toolTipButton_Draw;
-		toolTipButton.Popup += toolTipButton_Popup;
+		//toolTipButton.BackColor = System.Drawing.Color.White;
+		//toolTipButton.OwnerDraw = true;
+		//toolTipButton.Draw += toolTipButton_Draw;
+		//toolTipButton.Popup += toolTipButton_Popup;
 		// 
 		// timerKeyMacroChanged
 		// 
