@@ -51,7 +51,9 @@ partial class Rikaichan
 		enabled = Config.RikaiEnabled;
 		if (!enabled) return;
 
-		if (!File.Exists(Config.RikaiFilename))
+		var rikaiFilename = Program.ExeDir + Config.RikaiFilename;
+
+		if (!File.Exists(rikaiFilename))
 		{
 			MessageBox.Show($"{Config.RikaiFilename} not found, rikaichan can't work without that");
 			// You need jmdict in edict format, not edict2 or xml, just edict. For now.
@@ -59,20 +61,20 @@ partial class Rikaichan
 			return;
 		}
 
-		edict = File.ReadAllBytes(Config.RikaiFilename);
+		edict = File.ReadAllBytes(rikaiFilename);
 
 
 
 
-		if (File.Exists(Config.RikaiFilename + ".ind"))
+		if (File.Exists(rikaiFilename + ".ind"))
 		{
-			edictind = File.ReadAllBytes(Config.RikaiFilename + ".ind");
+			edictind = File.ReadAllBytes(rikaiFilename + ".ind");
 			return;
 		}
 		else
 		{
 			//var dialog = new ConfigDialog { StartPosition = FormStartPosition.CenterParent };
-			var dialog = new RikaiDialog(Config.RikaiFilename, edict, ReceiveIndex);
+			var dialog = new RikaiDialog(rikaiFilename, edict, ReceiveIndex);
 			//var dialogLines = new List<string>(16);
 			//dialogLines.Add($"{Config.RikaiFilename}.ind not found, generating. Should take a few minutes.");
 			//dialogLines.Add("Progress: 0/0");
