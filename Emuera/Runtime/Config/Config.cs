@@ -14,8 +14,11 @@ internal static class Config
 {
 
 	#region config
-	public static Encoding Encode = EncodingHandler.UTF8BOMEncoding;
-	public static Encoding SaveEncode = EncodingHandler.UTF8BOMEncoding;
+	//エラーが出たので暫定的に変えてみる
+	//public static Encoding Encode = EncodingHandler.UTF8BOMEncoding;
+	//public static Encoding SaveEncode = EncodingHandler.UTF8BOMEncoding;
+	public static Encoding Encode = Encoding.GetEncoding("SHIFT-JIS");
+	public static Encoding SaveEncode = Encoding.GetEncoding("SHIFT-JIS");
 	private static Dictionary<ConfigCode, string> nameDic;
 	public static string GetConfigName(ConfigCode code)
 	{
