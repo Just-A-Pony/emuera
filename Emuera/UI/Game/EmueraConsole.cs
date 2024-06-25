@@ -898,7 +898,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		#region EE_OUTPUTLOG
 		if (state == ConsoleState.Error && !noOutputLog)
 			//OutputLog(Program.ExeDir + "emuera.log");
-			OutputSystemLog(Program.WorkingDir + "emuera.log");
+			OutputSystemLog(Program.ExeDir + "emuera.log");
 		#endregion
 
 		PrintFlush(false);
@@ -1458,7 +1458,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		{
 			#region EE_OUTPUTLOG
 			// this.OutputLog(Program.ExeDir + "emuera.log");
-			this.OutputSystemLog(Program.WorkingDir + "emuera.log");
+			this.OutputSystemLog(Program.ExeDir + "emuera.log");
 			#endregion
 
 			return;
