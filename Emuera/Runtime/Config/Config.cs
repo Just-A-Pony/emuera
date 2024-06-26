@@ -14,11 +14,8 @@ internal static class Config
 {
 
 	#region config
-	//エラーが出たので暫定的に変えてみる
-	//public static Encoding Encode = EncodingHandler.UTF8BOMEncoding;
-	//public static Encoding SaveEncode = EncodingHandler.UTF8BOMEncoding;
-	public static Encoding Encode = Encoding.GetEncoding("SHIFT-JIS");
-	public static Encoding SaveEncode = Encoding.GetEncoding("SHIFT-JIS");
+	public static Encoding Encode = EncodingHandler.UTF8BOMEncoding;
+	public static Encoding SaveEncode = EncodingHandler.UTF8BOMEncoding;
 	private static Dictionary<ConfigCode, string> nameDic;
 	public static string GetConfigName(ConfigCode code)
 	{
@@ -223,13 +220,13 @@ internal static class Config
 		DrawableWidth = WindowX - DrawingParam_ShapePositionShift;
 		#region eee_カレントディレクトリー
 		// ForceSavDir = Program.ExeDir + "sav\\";
-		ForceSavDir = Program.WorkingDir + "sav" + Path.DirectorySeparatorChar;
+		ForceSavDir = Program.ExeDir + "sav" + Path.DirectorySeparatorChar;
 		if (UseSaveFolder)
 			// SavDir = Program.ExeDir + "sav\\";
-			SavDir = Program.WorkingDir + "sav" + Path.DirectorySeparatorChar;
+			SavDir = Program.ExeDir + "sav" + Path.DirectorySeparatorChar;
 		else
 			// SavDir = Program.ExeDir;
-			SavDir = Program.WorkingDir;
+			SavDir = Program.ExeDir;
 		#endregion
 		if (UseSaveFolder && !Directory.Exists(SavDir))
 			createSavDirAndMoveFiles();
@@ -281,8 +278,8 @@ internal static class Config
 		#region eee_カレントディレクトリー
 		// bool existGlobal = File.Exists(Program.ExeDir + "global.sav");
 		// string[] savFiles = Directory.GetFiles(Program.ExeDir, "save*.sav", SearchOption.TopDirectoryOnly);
-		bool existGlobal = File.Exists(Program.WorkingDir + "global.sav");
-		string[] savFiles = Directory.GetFiles(Program.WorkingDir, "save*.sav", SearchOption.TopDirectoryOnly);
+		bool existGlobal = File.Exists(Program.ExeDir + "global.sav");
+		string[] savFiles = Directory.GetFiles(Program.ExeDir, "save*.sav", SearchOption.TopDirectoryOnly);
 		#endregion
 		if (!existGlobal && savFiles.Length == 0)
 			return;
@@ -302,9 +299,9 @@ internal static class Config
 			//if (File.Exists(Program.ExeDir + "global.sav"))
 			//	File.Move(Program.ExeDir + "global.sav", SavDir + "global.sav");
 			//savFiles = Directory.GetFiles(Program.ExeDir, "save*.sav", SearchOption.TopDirectoryOnly);
-			if (File.Exists(Program.WorkingDir + "global.sav"))
-				File.Move(Program.WorkingDir + "global.sav", SavDir + "global.sav");
-			savFiles = Directory.GetFiles(Program.WorkingDir, "save*.sav", SearchOption.TopDirectoryOnly);
+			if (File.Exists(Program.ExeDir + "global.sav"))
+				File.Move(Program.ExeDir + "global.sav", SavDir + "global.sav");
+			savFiles = Directory.GetFiles(Program.ExeDir, "save*.sav", SearchOption.TopDirectoryOnly);
 			#endregion
 			foreach (string oldpath in savFiles)
 				File.Move(oldpath, SavDir + Path.GetFileName(oldpath));

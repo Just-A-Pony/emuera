@@ -1,4 +1,5 @@
-﻿using System;
+﻿using OpenTK.Input;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -15,6 +16,23 @@ static partial class Preload
 		return files[path];
 	}
 
+	// Opens as UTF8BOM if starts with BOM, else as SHIFT-JIS
+	private static string[] readAllLinesDetectEncoding(string path)
+	{
+		using var file = File.Open(path, FileMode.Open);
+		Span<byte> bom = stackalloc byte[3];
+		_ = file.Read(bom);
+		file.Close();
+		if (bom.SequenceEqual<byte>([0xEF, 0xBB, 0xBF]))
+		{
+			return File.ReadAllLines(path, EncodingHandler.UTF8BOMEncoding);
+		}
+		else
+		{
+			return File.ReadAllLines(path, System.Text.Encoding.GetEncoding("SHIFT-JIS"));
+		}
+	}
+
 	public static async Task Load(string path)
 	{
 		var startTime = DateTime.Now;
@@ -27,36 +45,24 @@ static partial class Preload
 				Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories).AsParallel().ForAll((childPath) =>
 				{
 					var key = childPath;
-					if (false)
-					{
-						using var file = File.Open(childPath, FileMode.Open);
-						Span<byte> bom = stackalloc byte[3];
-						_ = file.Read(bom);
-						file.Close();
-						if (!bom.SequenceEqual<byte>([0xEF, 0xBB, 0xBF]))
-						{
-
-						}
-					}
-
-
-					var value = File.ReadAllLines(childPath, Config.Config.Encode);
+					var value = readAllLinesDetectEncoding(childPath);
 					lock (files)
 					{
 						files[key] = value;
 					}
+
 				});
 			});
 		}
 		else
 		{
 			var key = path;
-			var value = File.ReadAllLines(path, Config.Config.Encode);
-			files[key] = value;
+			var value = readAllLinesDetectEncoding(path);
+			lock (files)
+			{
+				files[key] = value;
+			}
 		};
-
-
-
 
 		Debug.WriteLine($"Load: {path} : End in {(DateTime.Now - startTime).TotalMilliseconds}ms");
 	}
