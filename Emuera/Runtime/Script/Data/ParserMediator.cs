@@ -48,7 +48,7 @@ internal partial class ParserMediator
 		if (RenameDic.Count > 0)
 			RenameDic.Clear();
 
-		var fileLine = File.ReadAllLines(filepath, Config.Encode);
+		var fileLine = File.ReadAllLines(filepath, EncodingHandler.DetectEncoding(filepath));
 		ScriptPosition? pos = null;
 		Regex regex = unEscapedCommaRegex();
 		try

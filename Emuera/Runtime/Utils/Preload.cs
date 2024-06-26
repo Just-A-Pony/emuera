@@ -40,7 +40,7 @@ static partial class Preload
 					}
 
 
-					var value = File.ReadAllLines(childPath, Config.Config.Encode);
+					var value = File.ReadAllLines(childPath, EncodingHandler.DetectEncoding(childPath));
 					lock (files)
 					{
 						files[key] = value;
@@ -51,7 +51,7 @@ static partial class Preload
 		else
 		{
 			var key = path;
-			var value = File.ReadAllLines(path, Config.Config.Encode);
+			var value = File.ReadAllLines(path, EncodingHandler.DetectEncoding(path));
 			files[key] = value;
 		};
 

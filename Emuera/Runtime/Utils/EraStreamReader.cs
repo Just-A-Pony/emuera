@@ -41,7 +41,7 @@ internal sealed partial class EraStreamReader : IDisposable
 		nextNo = 0;
 		try
 		{
-			_fileLines = File.ReadAllLines(filepath, Config.Encode);
+			_fileLines = File.ReadAllLines(filepath, EncodingHandler.DetectEncoding(path));
 		}
 		catch
 		{
