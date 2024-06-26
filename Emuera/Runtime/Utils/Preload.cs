@@ -16,7 +16,7 @@ static partial class Preload
 		return files[path];
 	}
 
-	// Opens as UTF8BOM if starts with BOM, else as SHIFT-JIS
+	// Opens as UTF8BOM if starts with BOM, else use DetectEncoding
 	private static string[] readAllLinesDetectEncoding(string path)
 	{
 		using var file = File.Open(path, FileMode.Open);
@@ -29,7 +29,7 @@ static partial class Preload
 		}
 		else
 		{
-			return File.ReadAllLines(path, System.Text.Encoding.GetEncoding("SHIFT-JIS"));
+			return File.ReadAllLines(path, EncodingHandler.DetectEncoding(path));
 		}
 	}
 

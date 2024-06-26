@@ -289,7 +289,7 @@ static class AppContents
 			ParserMediator.Warn(string.Format(trerror.SpriteCreateFromFailedResource.Text, arg2), sp, 1);
 			return null;
 		}
-		Rectangle rect = new(new Point(0, 0), parentImage.Bitmap.Size);
+		Rectangle rect = new(0, 0, parentImage.Width, parentImage.Height);
 		Size size = rect.Size;
 		Point pos = new();
 		int delay = 1000;
