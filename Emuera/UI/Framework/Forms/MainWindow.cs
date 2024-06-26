@@ -913,7 +913,7 @@ namespace MinorShift.Emuera.Forms
 				return;
 			#region eee_カレントディレクトリー
 			//saveFileDialog.InitialDirectory = Program.ExeDir;
-			saveFileDialog.InitialDirectory = Program.WorkingDir;
+			saveFileDialog.InitialDirectory = Program.ExeDir;
 			#endregion
 			DateTime time = DateTime.Now;
 			string fname = time.ToString("yyyyMMdd-HHmmss");

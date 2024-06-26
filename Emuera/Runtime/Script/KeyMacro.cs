@@ -9,7 +9,7 @@ internal static class KeyMacro
 {
 	#region eee_カレントディレクトリー
 	//readonly static string macroPath = Program.ExeDir + "macro.txt";
-	readonly static string macroPath = Program.WorkingDir + "macro.txt";
+	readonly static string macroPath = Program.ExeDir + "macro.txt";
 	#endregion
 	public const string gID = "グループ";
 	public const int MaxGroup = 10;

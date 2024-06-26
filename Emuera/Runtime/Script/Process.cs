@@ -94,12 +94,12 @@ internal sealed partial class Process(EmueraConsole view)
 			if (Config.UseKeyMacro && !Program.AnalysisMode)
 			{
 				//if (File.Exists(Program.ExeDir + "macro.txt"))
-				if (File.Exists(Program.WorkingDir + "macro.txt"))
+				if (File.Exists(Program.ExeDir + "macro.txt"))
 				{
 					if (Config.DisplayReport)
 						console.PrintSystemLine(trsl.LoadingMacro.Text);
 					//KeyMacro.LoadMacroFile(Program.ExeDir + "macro.txt");
-					KeyMacro.LoadMacroFile(Program.WorkingDir + "macro.txt");
+					KeyMacro.LoadMacroFile(Program.ExeDir + "macro.txt");
 				}
 			}
 			#endregion

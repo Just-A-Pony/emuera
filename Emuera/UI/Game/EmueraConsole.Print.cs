@@ -760,15 +760,15 @@ internal sealed partial class EmueraConsole : IDisposable
 	{
 		// if (filename == null)
 		if (filename == "" || filename == null)
-			filename = Program.WorkingDir + "emuera.log";
+			filename = Program.ExeDir + "emuera.log";
 		else
-			filename = Program.WorkingDir + filename;
+			filename = Program.ExeDir + filename;
 		if (filename.IndexOf("../", StringComparison.Ordinal) >= 0)
 		{
 			Dialog.Show(trmb.FailedOutputLog.Text, trmb.CanNotOutputToParentDirectory.Text);
 			return false;
 		}
-		if (!filename.StartsWith(Program.WorkingDir, StringComparison.OrdinalIgnoreCase))
+		if (!filename.StartsWith(Program.ExeDir, StringComparison.OrdinalIgnoreCase))
 		{
 			Dialog.Show(trmb.FailedOutputLog.Text, trmb.CanOnlyOutputToSubDirectory.Text);
 			return false;
@@ -778,7 +778,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		{
 			if (window.Created)
 			{
-				PrintSystemLine(string.Format(trsl.LogFileHasBeenCreated.Text, filename.Replace(Program.WorkingDir, "")));
+				PrintSystemLine(string.Format(trsl.LogFileHasBeenCreated.Text, filename.Replace(Program.ExeDir, "")));
 				RefreshStrings(true);
 			}
 			return true;
@@ -790,9 +790,9 @@ internal sealed partial class EmueraConsole : IDisposable
 	public bool OutputSystemLog(string filename)
 	{
 		if (filename == "" || filename == null)
-			filename = Program.WorkingDir + "emuera.log";
+			filename = Program.ExeDir + "emuera.log";
 
-		if (!filename.StartsWith(Program.WorkingDir, StringComparison.OrdinalIgnoreCase))
+		if (!filename.StartsWith(Program.ExeDir, StringComparison.OrdinalIgnoreCase))
 		{
 			Dialog.Show(trmb.FailedOutputLog.Text, trmb.CanOnlyOutputToSubDirectory.Text);
 			return false;
@@ -802,7 +802,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		{
 			if (window.Created)
 			{
-				PrintSystemLine(string.Format(trsl.LogFileHasBeenCreated.Text, filename.Replace(Program.WorkingDir, "")));
+				PrintSystemLine(string.Format(trsl.LogFileHasBeenCreated.Text, filename.Replace(Program.ExeDir, "")));
 				RefreshStrings(true);
 			}
 			return true;

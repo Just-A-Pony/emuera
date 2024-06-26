@@ -17,7 +17,7 @@ namespace MinorShift.Emuera.Runtime.Config;
 internal sealed class ConfigData
 {
 	#region eee_カレントディレクトリー
-	readonly static string configPath = Program.WorkingDir + "emuera.config";
+	readonly static string configPath = Program.ExeDir + "emuera.config";
 	#endregion
 	readonly static string configdebugPath = Program.DebugDir + "debug.config";
 
