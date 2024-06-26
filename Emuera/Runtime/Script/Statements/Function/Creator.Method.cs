@@ -7407,7 +7407,6 @@ internal static partial class FunctionMethodCreator
 		}
 	}
 	#endregion
-	/** なぜここにあるのだろう
 	#region EE_SystemInput拡張
 	private sealed class FlowInputMethod : FunctionMethod
 	{
@@ -7452,7 +7451,6 @@ internal static partial class FunctionMethodCreator
 		}
 	}
 	#endregion
-	**/
 
 	//Bitmap Cache
 	#region Bitmap Cache

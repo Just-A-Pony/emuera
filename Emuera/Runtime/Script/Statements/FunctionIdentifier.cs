@@ -331,9 +331,6 @@ internal sealed partial class FunctionIdentifier
 		addFunction(FunctionCode.ARRAYSORT, argb[FunctionArgType.SP_SORTARRAY], METHOD_SAFE | EXTENDED);
 		addFunction(FunctionCode.ARRAYCOPY, argb[FunctionArgType.SP_COPY_ARRAY], METHOD_SAFE | EXTENDED);
 
-		#region EE_SystemInput拡張
-		addFunction(FunctionCode.FLOWINPUT, argb[FunctionArgType.SP_INPUT], METHOD_SAFE | EXTENDED);
-		#endregion
 		#region EE_SKIPLOG
 		addFunction(FunctionCode.SKIPLOG, argb[FunctionArgType.INT_EXPRESSION], METHOD_SAFE | EXTENDED);
 		#endregion

@@ -104,9 +104,14 @@ internal sealed partial class Process
 	{
 		console.ReadAnyKey();
 	}
-	long flowinputdef;
-	bool flowinput;
-	bool flowinputcanskip;
+	#region EE_SystemInput拡張
+	public long flowinputDef = 0;
+	public bool flowinput = false;
+	public bool flowinputCanSkip = false;
+	public string flowinputDefString = "";
+	public bool flowinputString = false;
+	public bool flowinputForceSkip = false;
+	#endregion
 
 	void setWaitInput()
 	{
@@ -115,17 +120,30 @@ internal sealed partial class Process
 		if (flowinput)
 		{
 			req.HasDefValue = true;
-			req.DefIntValue = flowinputdef;
+			req.DefIntValue = flowinputDef;
 			req.MouseInput = flowinput;
+			req.DefStrValue = flowinputDefString;
 		}
 		#endregion
-		req.InputType = InputType.IntValue;
+		if (flowinputString)
+			req.InputType = InputType.StrValue;
+		else
+			req.InputType = InputType.IntValue;
 		req.IsSystemInput = true;
 		#region EE_SystemInput拡張
-		if (flowinputcanskip && GlobalStatic.Console.MesSkip)
+		if (flowinputForceSkip)
+		{
 			systemResult = req.DefIntValue;
-		else
-			console.WaitInput(req);
+			if (flowinputString)
+				exm.VEvaluator.RESULTS = req.DefStrValue;
+		}
+		else if (flowinputCanSkip && GlobalStatic.Console.MesSkip)
+		{
+			systemResult = req.DefIntValue;
+			if (flowinputString)
+				exm.VEvaluator.RESULTS = req.DefStrValue;
+		}
+		console.WaitInput(req);
 		#endregion
 	}
 
