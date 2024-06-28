@@ -11,6 +11,7 @@ internal class FontFactory
 
 	public static Font GetFont(string requestFontName, FontStyle style)
 	{
+		/*
 		string fontname = requestFontName;
 		if (string.IsNullOrEmpty(requestFontName))
 			fontname = Config.FontName;
@@ -40,30 +41,35 @@ internal class FontFactory
 		}
 		#endregion
 		return fontDic[(fontname, Config.FontSize, style)];
+		*/
 
-		/**
-		string fn = theFontname;
-		if (string.IsNullOrEmpty(theFontname))
-			fn = FontName;
-		if (!fontDic.ContainsKey(fn))
-			fontDic.Add(fn, new Dictionary<FontStyle, Font>());
-		Dictionary<FontStyle, Font> fontStyleDic = fontDic[fn];
+		string fn = requestFontName;
+		if (string.IsNullOrEmpty(requestFontName))
+			fn = Config.FontName;
+		if (!fontDic.ContainsKey((fn, Config.FontSize, style)))
+		{
+			var font = new Font(fn, Config.FontSize, style, GraphicsUnit.Pixel);
+			if (font != null)
+				fontDic.Add((fn, Config.FontSize, style), font);
+
+		}
+		Dictionary<FontStyle, Font> fontStyleDic = [];
 		if (!fontStyleDic.ContainsKey(style))
-			{
-			int fontsize = FontSize;
+		{
+			int fontsize = Config.FontSize;
 			Font styledFont;
 			try
 			{
-			#region EE_フォントファイル対応
-			foreach (FontFamily ff in GlobalStatic.Pfc.Families)
-			{
-					if (ff.Name == fn)
+				#region EE_フォントファイル対応
+				foreach (FontFamily ff in GlobalStatic.Pfc.Families)
 				{
-					styledFont = new Font(ff, fontsize, style, GraphicsUnit.Pixel);
-					goto foundfont;
+					if (ff.Name == fn)
+					{
+						styledFont = new Font(ff, fontsize, style, GraphicsUnit.Pixel);
+						goto foundfont;
+					}
 				}
-			}
-			styledFont = new Font(fn, fontsize, style, GraphicsUnit.Pixel);
+				styledFont = new Font(fn, fontsize, style, GraphicsUnit.Pixel);
 			}
 			catch
 			{
@@ -72,8 +78,8 @@ internal class FontFactory
 		foundfont:
 			#endregion
 			fontStyleDic.Add(style, styledFont);
+		}
 		return fontStyleDic[style];
-		**/
 	}
 
 	public static void ClearFont()
