@@ -349,6 +349,10 @@ namespace MinorShift.Emuera.Forms
 					if (Config.CBUseClipboard && console.CBProc.ScrollDown(1)) return true;
 					break;
 				#endregion
+				//HOTKEY STATE
+				case Keys.D when (keyData & Keys.Modifiers & Keys.Control) == Keys.Control:
+					hotkeyState.Toggle();
+					break;
 				default:
 					//if ((keyData & Keys.Modifiers & Keys.Alt) == Keys.Alt) return true;
 					if (Config.UseKeyMacro)
@@ -1133,6 +1137,10 @@ namespace MinorShift.Emuera.Forms
 		}
 		#endregion
 
+
+		//HOTKEY STATE
+		public HotkeyState hotkeyState = new HotkeyState();
+
 		private void richTextBox1_KeyDown(object? sender, System.Windows.Forms.KeyEventArgs e)
 		{
 			if (console == null)
@@ -1144,6 +1152,21 @@ namespace MinorShift.Emuera.Forms
 				e.SuppressKeyPress = true;
 				console.PressPrimitiveKey(e.KeyCode, e.KeyData, e.Modifiers);
 				return;
+			}
+			//HOTKEY STATE
+			{
+				//int res = hotkeyState.keyToNumberHardcoded(e);
+				int res = hotkeyState.keyToNumberRunInterpreter(e);
+				if (res != -1)
+				{
+					richTextBox1.Clear();
+					richTextBox1.AppendText(res.ToString());
+					e.SuppressKeyPress = true;
+					if (!console.IsInProcess)
+						PressEnterKey(false, false);
+					richTextBox1.SelectAll();
+					return;
+				}
 			}
 			if ((int)e.KeyData == (int)Keys.PageUp || (int)e.KeyData == (int)Keys.PageDown)
 			{

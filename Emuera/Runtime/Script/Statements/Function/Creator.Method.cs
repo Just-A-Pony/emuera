@@ -7423,9 +7423,9 @@ internal static partial class FunctionMethodCreator
 
 			exm.Process.flowinputDef = arguments[0].GetIntValue(exm);
 			if (arguments.Count > 1)
-				exm.Process.flowinput = arguments[1].GetIntValue(exm) != 0 ? true : false ;
+				exm.Process.flowinput = arguments[1].GetIntValue(exm) != 0 ? true : false;
 			if (arguments.Count > 2)
-				exm.Process.flowinputCanSkip = arguments[2].GetIntValue(exm) != 0 ? true : false ;
+				exm.Process.flowinputCanSkip = arguments[2].GetIntValue(exm) != 0 ? true : false;
 			if (arguments.Count > 3)
 				exm.Process.flowinputForceSkip = arguments[3].GetIntValue(exm) != 0 ? true : false;
 			return 0;
@@ -7444,7 +7444,7 @@ internal static partial class FunctionMethodCreator
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
 		{
 
-			exm.Process.flowinputString = arguments[0].GetIntValue(exm) != 0 ? true : false ;
+			exm.Process.flowinputString = arguments[0].GetIntValue(exm) != 0 ? true : false;
 			if (arguments.Count > 1)
 				exm.Process.flowinputDefString = arguments[1].GetStrValue(exm);
 			return 0;
@@ -7473,4 +7473,45 @@ internal static partial class FunctionMethodCreator
 		}
 	}
 	#endregion
+
+	//HOTKEY STATE
+	private sealed class HotkeyStateMethod : FunctionMethod
+	{
+		public HotkeyStateMethod()
+		{
+			ReturnType = typeof(Int64);
+			// argumentTypeArray = null;
+			argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int}, OmitStart = 1 },
+				};
+			CanRestructure = false;
+		}
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		{
+			Int64 argument0 = arguments[0].GetIntValue(exm);
+			Int64 argument1 = arguments[1].GetIntValue(exm);
+			GlobalStatic.Console.Window.hotkeyState.HotkeyStateSet((nint)argument0, (nint)argument1);
+			return 0;
+		}
+	}
+
+	private sealed class HotkeyStateInitMethod : FunctionMethod
+	{
+		public HotkeyStateInitMethod()
+		{
+			ReturnType = typeof(Int64);
+			// argumentTypeArray = null;
+			argumentTypeArrayEx = new ArgTypeList[] {
+					new ArgTypeList{ ArgTypes = { ArgType.Int}, OmitStart = 1 },
+				};
+			CanRestructure = false;
+		}
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		{
+			Int64 argument0 = arguments[0].GetIntValue(exm);
+			GlobalStatic.Console.Window.hotkeyState.HotkeyStateInit((nint)argument0);
+			return 0;
+		}
+	}
+
 }
