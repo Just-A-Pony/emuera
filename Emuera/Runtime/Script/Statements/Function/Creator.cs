@@ -335,6 +335,10 @@ internal static partial class FunctionMethodCreator
 
 			//Bitmap Cache
 			["BITMAP_CACHE_ENABLE"] = new BitmapCacheEnableMethod(),
+
+			//HOTKEY STATE
+			["HOTKEY_STATE"] = new HotkeyStateMethod(),
+			["HOTKEY_STATE_INIT"] = new HotkeyStateInitMethod(),
 		};
 
 
