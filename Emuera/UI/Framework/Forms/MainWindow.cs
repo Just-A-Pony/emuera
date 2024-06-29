@@ -614,7 +614,7 @@ namespace MinorShift.Emuera.Forms
 			#region EM_私家版_INPUT系機能拡張
 			else if (console.IsWaintingInputWithMouse && !console.IsError && str != null)
 			{
-				if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right))
+				if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right) || (e.Button == MouseButtons.Middle))
 				{
 					if (!isBacklog)
 						GlobalStatic.Process.InputInteger(3, console.SelectingButton.GetMappedColor(e.X, e.Y));
@@ -638,7 +638,7 @@ namespace MinorShift.Emuera.Forms
 			}
 			#endregion
 			#region EE_INPUT第二引数修正
-			if (console.IsWaintingInputWithMouse && !console.IsError && (e.Button == MouseButtons.Left || e.Button == MouseButtons.Right))
+			if (console.IsWaintingInputWithMouse && !console.IsError && (e.Button == MouseButtons.Left || e.Button == MouseButtons.Right || e.Button == MouseButtons.Middle))
 			{
 				//念のため
 				if (console.IsWaintingOnePhrase)
@@ -651,6 +651,8 @@ namespace MinorShift.Emuera.Forms
 					GlobalStatic.VEvaluator.RESULT_ARRAY[1] = 1;
 				if (e.Button == MouseButtons.Right)
 					GlobalStatic.VEvaluator.RESULT_ARRAY[1] = 2;
+				if (e.Button == MouseButtons.Middle)
+					GlobalStatic.VEvaluator.RESULT_ARRAY[1] = 3;
 				long result2 = 0;
 				if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
 					result2 += (long)Math.Pow(2, 16);
@@ -666,13 +668,16 @@ namespace MinorShift.Emuera.Forms
 			}
 			#endregion
 			//左が押されたなら選択。
-			else if (str != null && ((e.Button & MouseButtons.Left) == MouseButtons.Left))
+			else if (str != null && ((e.Button & MouseButtons.Left) == MouseButtons.Left || (e.Button & MouseButtons.Middle) == MouseButtons.Middle))
 			{
 				changeTextbyMouse = console.IsWaintingOnePhrase;
 				richTextBox1.Text = str;
 				//念のため
 				if (console.IsWaintingOnePhrase)
 					last_inputed = "";
+				//ミドルクリックならRESULT:1を1にする
+				if ((e.Button & MouseButtons.Middle) == MouseButtons.Middle)
+					GlobalStatic.VEvaluator.RESULT_ARRAY[1] = 3;
 				//右が押しっぱなしならスキップ追加。
 				if ((Control.MouseButtons & MouseButtons.Right) == MouseButtons.Right)
 					PressEnterKey(true, true);
