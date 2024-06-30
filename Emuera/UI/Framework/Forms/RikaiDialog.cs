@@ -16,7 +16,7 @@ namespace MinorShift.Emuera.Forms
 		public delegate void RikaiSendIndex(byte[] edictind);
 		private RikaiSendIndex rikaiSendIndex;
 		public Encoding eucjp = Encoding.GetEncoding(20932);
-		private List<string> dialogLines = new List<string>(16);
+		private List<string> dialogLines = new(16);
 		DateTime start = DateTime.Now;
 
 		public RikaiDialog(string filename, byte[] edict, RikaiSendIndex rikaiSendIndex)
@@ -38,7 +38,7 @@ namespace MinorShift.Emuera.Forms
 			backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bwRunWorkerCompleted);
 			backgroundWorker.ProgressChanged += new ProgressChangedEventHandler(bwProgressChanged);
 
-			this.label.Text = "starting";
+			label.Text = "starting";
 
 			backgroundWorker.RunWorkerAsync();
 		}
@@ -96,7 +96,7 @@ namespace MinorShift.Emuera.Forms
 			//dialogLines.Add("Progress: 0/0");
 			//dialogLines[0] = $"{Config.RikaiFilename}.ind not found, generating. Should take a few minutes.";
 			//dialogLines[1] = "Progress 0/0";
-			this.label.Text = string.Join("\n", dialogLines);
+			label.Text = string.Join("\n", dialogLines);
 
 			//this.label.Text = "in progress: " + e.ProgressPercentage;
 		}
@@ -139,7 +139,7 @@ namespace MinorShift.Emuera.Forms
 
 				if (end >= edict.Length)
 				{
-					this.finished = true;
+					finished = true;
 					return;
 				}
 
@@ -221,7 +221,7 @@ namespace MinorShift.Emuera.Forms
 
 		List<string> s(IndexEntry first)
 		{
-			List<string> res = new List<string>(64);
+			List<string> res = new(64);
 			for (int i = 0; i < 63; i++)
 			{
 				var t = eucjp.GetString(first.word);
@@ -401,7 +401,7 @@ namespace MinorShift.Emuera.Forms
 					if (tickNew > edictParser.tickNext)
 					{
 						edictParser.tickNext = tickNew + EdictParser.tickDelta;
-						int percentage = (int)((float)edictParser.end / (float)edict.Length * 100);
+						int percentage = (int)(edictParser.end / (float)edict.Length * 100);
 						if (oldPercentage != percentage)
 						{
 							oldPercentage = percentage;

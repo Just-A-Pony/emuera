@@ -1304,7 +1304,7 @@ internal sealed class Lang
 		{
 			foreach (var path in Directory.EnumerateFiles(langDir, "emuera.*.xml", SearchOption.TopDirectoryOnly))
 			{
-				XmlDocument xml = new XmlDocument();
+				XmlDocument xml = new();
 				try
 				{
 					xml.Load(path);
@@ -1355,7 +1355,7 @@ internal sealed class Lang
 		if (langList.ContainsKey(Config.Config.EmueraLang))
 		{
 			var path = langList[Config.Config.EmueraLang];
-			XmlDocument xml = new XmlDocument();
+			XmlDocument xml = new();
 			try
 			{
 				xml.Load(path);
@@ -1376,12 +1376,14 @@ internal sealed class Lang
 	{
 		if (!Directory.Exists(langDir))
 			Directory.CreateDirectory(langDir);
-		FileStream fs = new FileStream(langDir + "emuera-default-lang.xml", FileMode.Create);
-		XmlWriterSettings settings = new XmlWriterSettings();
-		settings.Indent = true;
-		settings.IndentChars = "\t";
+		FileStream fs = new(langDir + "emuera-default-lang.xml", FileMode.Create);
+		XmlWriterSettings settings = new()
+		{
+			Indent = true,
+			IndentChars = "\t"
+		};
 		XmlWriter writer = XmlWriter.Create(fs, settings);
-		XmlDocument xml = new XmlDocument();
+		XmlDocument xml = new();
 		var root = xml.CreateElement("lang");
 		xml.AppendChild(root);
 		var name = xml.CreateElement("name");
@@ -1402,11 +1404,11 @@ internal sealed class Lang
 
 	static readonly string langDir = Path.Combine(Program.ExeDir, "lang") + Path.DirectorySeparatorChar;
 
-	static readonly Dictionary<string, string> langList = new Dictionary<string, string>();
+	static readonly Dictionary<string, string> langList = [];
 	public static string MFont { get; private set; }
 	static string[] langNames;
-	static readonly Dictionary<string, TranslatableString> trItems = new Dictionary<string, TranslatableString>();
-	static readonly Dictionary<Type, TranslatableString> trClass = new Dictionary<Type, TranslatableString>();
+	static readonly Dictionary<string, TranslatableString> trItems = [];
+	static readonly Dictionary<Type, TranslatableString> trClass = [];
 
 	static Lang()
 	{

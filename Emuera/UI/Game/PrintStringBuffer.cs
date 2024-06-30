@@ -353,7 +353,7 @@ internal sealed class PrintStringBuffer
 	/// <returns></returns>
 	private ConsoleButtonString[] createButtons(List<AConsoleDisplayNode> cssList)
 	{
-		StringBuilder buf = new StringBuilder();
+		StringBuilder buf = new();
 		for (int i = 0; i < cssList.Count; i++)
 		{
 			buf.Append(cssList[i].Text);

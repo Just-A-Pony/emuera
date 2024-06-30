@@ -21,21 +21,21 @@ namespace MinorShift.Emuera.Forms
 
 		public void TranslateUI()
 		{
-			this.Text = Lang.UI.DebugConfigDialog.Text;
-			this.tabPageDebug3.Text = Lang.UI.DebugConfigDialog.Name.Text;
-			this.label29.Text = Lang.UI.DebugConfigDialog.Warning.Text;
-			this.checkBoxShowDW.Text = Lang.UI.DebugConfigDialog.OpenDebugWindowOnStartup.Text;
-			this.checkBoxDWTM.Text = Lang.UI.DebugConfigDialog.AlwaysOnTop.Text;
-			this.label28.Text = Lang.UI.DebugConfigDialog.WindowWidth.Text;
-			this.label27.Text = Lang.UI.DebugConfigDialog.WindowHeight.Text;
-			this.button6.Text = Lang.UI.ConfigDialog.Window.GetWindowSize.Text;
-			this.checkBoxSetDWPos.Text = Lang.UI.DebugConfigDialog.SetWindowPos.Text;
-			this.label26.Text = Lang.UI.DebugConfigDialog.WindowX.Text;
-			this.label25.Text = Lang.UI.DebugConfigDialog.WindowY.Text;
-			this.button5.Text = Lang.UI.ConfigDialog.Window.GetWindowPos.Text;
-			this.label16.Text = Lang.UI.ConfigDialog.ChangeWontTakeEffectUntilRestart.Text;
-			this.buttonSave.Text = Lang.UI.ConfigDialog.Save.Text;
-			this.buttonCancel.Text = Lang.UI.ConfigDialog.Cancel.Text;
+			Text = Lang.UI.DebugConfigDialog.Text;
+			tabPageDebug3.Text = Lang.UI.DebugConfigDialog.Name.Text;
+			label29.Text = Lang.UI.DebugConfigDialog.Warning.Text;
+			checkBoxShowDW.Text = Lang.UI.DebugConfigDialog.OpenDebugWindowOnStartup.Text;
+			checkBoxDWTM.Text = Lang.UI.DebugConfigDialog.AlwaysOnTop.Text;
+			label28.Text = Lang.UI.DebugConfigDialog.WindowWidth.Text;
+			label27.Text = Lang.UI.DebugConfigDialog.WindowHeight.Text;
+			button6.Text = Lang.UI.ConfigDialog.Window.GetWindowSize.Text;
+			checkBoxSetDWPos.Text = Lang.UI.DebugConfigDialog.SetWindowPos.Text;
+			label26.Text = Lang.UI.DebugConfigDialog.WindowX.Text;
+			label25.Text = Lang.UI.DebugConfigDialog.WindowY.Text;
+			button5.Text = Lang.UI.ConfigDialog.Window.GetWindowPos.Text;
+			label16.Text = Lang.UI.ConfigDialog.ChangeWontTakeEffectUntilRestart.Text;
+			buttonSave.Text = Lang.UI.ConfigDialog.Save.Text;
+			buttonCancel.Text = Lang.UI.ConfigDialog.Cancel.Text;
 
 
 			var diff = tabControl.Size - tabControl.DisplayRectangle.Size + ((Size)tabControl.Padding);
@@ -53,13 +53,13 @@ namespace MinorShift.Emuera.Forms
 		{
 			SaveConfig();
 			Result = ConfigDialogResult.Save;
-			this.Close();
+			Close();
 		}
 
 		private void buttonCancel_Click(object sender, EventArgs e)
 		{
 			Result = ConfigDialogResult.Cancel;
-			this.Close();
+			Close();
 		}
 		public ConfigDialogResult Result = ConfigDialogResult.Cancel;
 
@@ -101,13 +101,13 @@ namespace MinorShift.Emuera.Forms
 
 			//ConfigData config = ConfigData.Instance.Copy();
 			ConfigData config = ConfigData.Instance;
-			config.GetDebugItem(ConfigCode.DebugShowWindow).SetValue<bool>(checkBoxShowDW.Checked);
-			config.GetDebugItem(ConfigCode.DebugWindowTopMost).SetValue<bool>(checkBoxDWTM.Checked);
-			config.GetDebugItem(ConfigCode.DebugSetWindowPos).SetValue<bool>(checkBoxSetDWPos.Checked);
-			config.GetDebugItem(ConfigCode.DebugWindowWidth).SetValue<int>((int)numericUpDownDWW.Value);
-			config.GetDebugItem(ConfigCode.DebugWindowHeight).SetValue<int>((int)numericUpDownDWH.Value);
-			config.GetDebugItem(ConfigCode.DebugWindowPosX).SetValue<int>((int)numericUpDownDWX.Value);
-			config.GetDebugItem(ConfigCode.DebugWindowPosY).SetValue<int>((int)numericUpDownDWY.Value);
+			config.GetDebugItem(ConfigCode.DebugShowWindow).SetValue(checkBoxShowDW.Checked);
+			config.GetDebugItem(ConfigCode.DebugWindowTopMost).SetValue(checkBoxDWTM.Checked);
+			config.GetDebugItem(ConfigCode.DebugSetWindowPos).SetValue(checkBoxSetDWPos.Checked);
+			config.GetDebugItem(ConfigCode.DebugWindowWidth).SetValue((int)numericUpDownDWW.Value);
+			config.GetDebugItem(ConfigCode.DebugWindowHeight).SetValue((int)numericUpDownDWH.Value);
+			config.GetDebugItem(ConfigCode.DebugWindowPosX).SetValue((int)numericUpDownDWX.Value);
+			config.GetDebugItem(ConfigCode.DebugWindowPosY).SetValue((int)numericUpDownDWY.Value);
 			config.SaveDebugConfig();
 		}
 

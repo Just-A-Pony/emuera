@@ -14,7 +14,7 @@ class ConsoleDivPart : AConsoleDisplayNode
 	public ConsoleDivPart(MixedNum xPos, MixedNum yPos, MixedNum width, MixedNum height, int depth, int color, StyledBoxModel box, bool isRelative, ConsoleDisplayLine[] childs)
 	{
 		backgroundColor = color >= 0 ? Color.FromArgb((int)(color | 0xff000000)) : Color.Transparent;
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new();
 		width.num = Math.Abs(width.num);
 		height.num = Math.Abs(height.num);
 		sb.Append("<div");

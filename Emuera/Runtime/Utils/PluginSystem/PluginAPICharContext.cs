@@ -84,7 +84,7 @@ namespace MinorShift.Emuera.Runtime.Utils.PluginSystem
 		//Cached int[][] variables
 		static VariableToken _CDFLAG;
 
-		static Dictionary<string, VariableToken> _UserDefinedVars = new Dictionary<string, VariableToken>();
+		static Dictionary<string, VariableToken> _UserDefinedVars = [];
 
 		static ExpressionMediator exm;
 		internal PluginAPICharContext(long charId)

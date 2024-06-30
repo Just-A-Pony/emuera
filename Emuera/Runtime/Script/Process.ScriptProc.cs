@@ -102,7 +102,7 @@ internal sealed partial class Process
 	#region normal
 	void doNormalFunction(InstructionLine func)
 	{
-		Int64 iValue = 0;
+		long iValue = 0;
 		string str = null;
 		AExpression term = null;
 		switch (func.FunctionCode)
@@ -181,7 +181,7 @@ internal sealed partial class Process
 					if (skipPrint)
 						break;
 					ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
-					Int64 target = intExpArg.Term.GetIntValue(exm);
+					long target = intExpArg.Term.GetIntValue(exm);
 					exm.Console.Print(vEvaluator.GetCharacterDataString(target, func.FunctionCode));
 					exm.Console.NewLine();
 				}
@@ -191,7 +191,7 @@ internal sealed partial class Process
 					if (skipPrint)
 						break;
 					ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
-					Int64 target = intExpArg.Term.GetIntValue(exm);
+					long target = intExpArg.Term.GetIntValue(exm);
 					int count = 0;
 					///100以降は否定の珠とかなので表示しない
 					for (int i = 0; i < 100; i++)
@@ -230,7 +230,7 @@ internal sealed partial class Process
 							string printStr = vEvaluator.ITEMNAME[i];
 							if (printStr == null)
 								printStr = "";
-							Int64 price = vEvaluator.ITEMPRICE[i];
+							long price = vEvaluator.ITEMPRICE[i];
 							// 1.52a改変部分　（単位の差し替えおよび前置、後置に対応）
 							if (Config.MoneyFirst)
 								exm.Console.PrintC(string.Format("[{2}] {0}({3}{1})", printStr, price, i, Config.MoneyLabel), false);
@@ -251,7 +251,7 @@ internal sealed partial class Process
 			case FunctionCode.CUPCHECK://パラメータの変動(任意キャラ版)
 				{
 					ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
-					Int64 target = intExpArg.Term.GetIntValue(exm);
+					long target = intExpArg.Term.GetIntValue(exm);
 					vEvaluator.CUpdateInUpcheck(exm.Console, target, skipPrint);
 				}
 				break;
@@ -263,8 +263,8 @@ internal sealed partial class Process
 			case FunctionCode.PICKUPCHARA:
 				{
 					ExpressionArrayArgument intExpArg = (ExpressionArrayArgument)func.Argument;
-					Int64[] NoList = new Int64[intExpArg.TermList.Length];
-					Int64 charaNum = vEvaluator.CHARANUM;
+					long[] NoList = new long[intExpArg.TermList.Length];
+					long charaNum = vEvaluator.CHARANUM;
 					for (int i = 0; i < intExpArg.TermList.Length; i++)
 					{
 						AExpression term_i = intExpArg.TermList[i];
@@ -323,7 +323,7 @@ internal sealed partial class Process
 			case FunctionCode.SAVEDATA:
 				{
 					SpSaveDataArgument spSavedataArg = (SpSaveDataArgument)func.Argument;
-					Int64 target = spSavedataArg.Target.GetIntValue(exm);
+					long target = spSavedataArg.Target.GetIntValue(exm);
 					if (target < 0)
 						throw new CodeEE(string.Format(trerror.SavedataArgIsNegative.Text, target.ToString()));
 					else if (target > int.MaxValue)
@@ -348,7 +348,7 @@ internal sealed partial class Process
 						throw new CodeEE(trerror.PowerResultNonNumeric.Text);
 					else if (double.IsInfinity(pow))
 						throw new CodeEE(trerror.PowerResultInfinite.Text);
-					else if ((pow >= Int64.MaxValue) || (pow <= Int64.MinValue))
+					else if ((pow >= long.MaxValue) || (pow <= long.MinValue))
 						throw new CodeEE(string.Format(trerror.PowerResultOverflow.Text, pow.ToString()));
 					powerArg.VariableDest.SetValue((long)pow, exm);
 					break;
@@ -362,9 +362,9 @@ internal sealed partial class Process
 					FixedVariableTerm vTerm2 = arg.var2.GetFixedVariableTerm(exm);
 					if (vTerm1.GetOperandType() != vTerm2.GetOperandType())
 						throw new CodeEE(trerror.VarsTypeDifferent.Text);
-					if (vTerm1.GetOperandType() == typeof(Int64))
+					if (vTerm1.GetOperandType() == typeof(long))
 					{
-						Int64 temp = vTerm1.GetIntValue(exm);
+						long temp = vTerm1.GetIntValue(exm);
 						vTerm1.SetValue(vTerm2.GetIntValue(exm), exm);
 						vTerm2.SetValue(temp, exm);
 					}
@@ -396,12 +396,12 @@ internal sealed partial class Process
 			case FunctionCode.SETCOLOR:
 				{
 					SpColorArgument colorArg = (SpColorArgument)func.Argument;
-					Int64 colorR;
-					Int64 colorG;
-					Int64 colorB;
+					long colorR;
+					long colorG;
+					long colorB;
 					if (colorArg.RGB != null)
 					{
-						Int64 colorRGB = colorArg.RGB.GetIntValue(exm);
+						long colorRGB = colorArg.RGB.GetIntValue(exm);
 						colorR = (colorRGB & 0xFF0000) >> 16;
 						colorG = (colorRGB & 0x00FF00) >> 8;
 						colorB = colorRGB & 0x0000FF;
@@ -416,7 +416,7 @@ internal sealed partial class Process
 						if ((colorR > 255) || (colorG > 255) || (colorB > 255))
 							throw new CodeEE(trerror.SetcolorArgOver255.Text);
 					}
-					Color c = Color.FromArgb((Int32)colorR, (Int32)colorG, (Int32)colorB);
+					Color c = Color.FromArgb((int)colorR, (int)colorG, (int)colorB);
 					exm.Console.SetStringStyle(c);
 				}
 				break;
@@ -436,19 +436,19 @@ internal sealed partial class Process
 			case FunctionCode.SETBGCOLOR:
 				{
 					SpColorArgument colorArg = (SpColorArgument)func.Argument;
-					Int64 colorR;
-					Int64 colorG;
-					Int64 colorB;
+					long colorR;
+					long colorG;
+					long colorB;
 					if (colorArg.IsConst)
 					{
-						Int64 colorRGB = colorArg.ConstInt;
+						long colorRGB = colorArg.ConstInt;
 						colorR = (colorRGB & 0xFF0000) >> 16;
 						colorG = (colorRGB & 0x00FF00) >> 8;
 						colorB = colorRGB & 0x0000FF;
 					}
 					else if (colorArg.RGB != null)
 					{
-						Int64 colorRGB = colorArg.RGB.GetIntValue(exm);
+						long colorRGB = colorArg.RGB.GetIntValue(exm);
 						colorR = (colorRGB & 0xFF0000) >> 16;
 						colorG = (colorRGB & 0x00FF00) >> 8;
 						colorB = colorRGB & 0x0000FF;
@@ -463,7 +463,7 @@ internal sealed partial class Process
 						if ((colorR > 255) || (colorG > 255) || (colorB > 255))
 							throw new CodeEE(trerror.SetcolorArgOver255.Text);
 					}
-					Color c = Color.FromArgb((Int32)colorR, (Int32)colorG, (Int32)colorB);
+					Color c = Color.FromArgb((int)colorR, (int)colorG, (int)colorB);
 					exm.Console.SetBgColor(c);
 				}
 				break;
@@ -554,13 +554,13 @@ internal sealed partial class Process
 			case FunctionCode.PRINTCPERLINE:
 				{
 					SpGetIntArgument spGetintArg = (SpGetIntArgument)func.Argument;
-					spGetintArg.VarToken.SetValue((Int64)Config.PrintCPerLine, exm);
+					spGetintArg.VarToken.SetValue(Config.PrintCPerLine, exm);
 				}
 				break;
 			case FunctionCode.SAVENOS:
 				{
 					SpGetIntArgument spGetintArg = (SpGetIntArgument)func.Argument;
-					spGetintArg.VarToken.SetValue((Int64)Config.SaveDataNos, exm);
+					spGetintArg.VarToken.SetValue(Config.SaveDataNos, exm);
 				}
 				break;
 			case FunctionCode.FORCEKANA:
@@ -630,7 +630,7 @@ internal sealed partial class Process
 						num = -1;
 					if (dest.Identifier.IsInteger)
 					{
-						Int64 def = arrayArg.Num2.GetIntValue(exm);
+						long def = arrayArg.Num2.GetIntValue(exm);
 						VariableEvaluator.ShiftArray(dest, shift, def, start, num);
 					}
 					else
@@ -732,7 +732,7 @@ internal sealed partial class Process
 					int length = vEvaluator.RESULT_ARRAY.Length;
 					// result:0には長さが入るのでその分-1
 					if (target.Length > length - 1)
-						throw new CodeEE(String.Format(trerror.tooLongEncodetouniArg.Text, target.Length, length - 1));
+						throw new CodeEE(string.Format(trerror.tooLongEncodetouniArg.Text, target.Length, length - 1));
 
 					int[] ary = new int[target.Length];
 					for (int i = 0; i < target.Length; i++)
@@ -768,7 +768,7 @@ internal sealed partial class Process
 							ArgumentParser.SetArgumentTo(selectedLine);
 						term = ((ExpressionArgument)selectedLine.Argument).Term;
 						str += term.GetStrValue(exm);
-						if (++i < (int)iList.Count)
+						if (++i < iList.Count)
 							str += "\n";
 					}
 					((StrDataArgument)func.Argument).Var.SetValue(str, exm);
@@ -806,7 +806,7 @@ internal sealed partial class Process
 			case FunctionCode.LOADDATA:
 				{
 					ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
-					Int64 target = intExpArg.Term.GetIntValue(exm);
+					long target = intExpArg.Term.GetIntValue(exm);
 					if (target < 0)
 						throw new CodeEE(string.Format(trerror.LoaddataArgIsNegative.Text, target.ToString()));
 					else if (target > int.MaxValue)
@@ -874,7 +874,7 @@ internal sealed partial class Process
 			case FunctionCode.CALLTRAIN:
 				{
 					ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
-					Int64 count = intExpArg.Term.GetIntValue(exm);
+					long count = intExpArg.Term.GetIntValue(exm);
 					SetCommnds(count);
 					return false;
 				}
@@ -908,9 +908,9 @@ internal sealed partial class Process
 					}
 					coms.Clear();
 					isCTrain = false;
-					this.count = 0;
+					count = 0;
 
-					Int64 train = ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
+					long train = ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
 					if (train < 0)
 						throw new CodeEE(trerror.DotrainArgLessThan0.Text);
 					if (train >= TrainName.Length)

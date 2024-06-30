@@ -84,7 +84,7 @@ internal sealed class GraphicsImage : AbstractImage
 		RealBitmap = new Bitmap(x, y, PixelFormat.Format32bppArgb);
 		size = new Size(x, y);
 		g = Graphics.FromImage(RealBitmap);
-		drawImgList = new List<Tuple<ASprite, Rectangle>>();
+		drawImgList = [];
 		AppContents.tempLoadedGraphicsImages.Add(this);
 	}
 	internal void GCreateFromF(Bitmap bmp, bool useGDI)
@@ -140,7 +140,7 @@ internal sealed class GraphicsImage : AbstractImage
 		if (usingFont == null)
 			usingFont = new(Config.FontName, 100, GlobalStatic.Console.StringStyle.FontStyle, GraphicsUnit.Pixel);
 		GraphicsPath gp =
-			new GraphicsPath();
+			new();
 		//一部のフォントで描画がずれる問題修正
 		float emSize = (float)usingFont.Height * usingFont.FontFamily.GetEmHeight(usingFont.Style) / usingFont.FontFamily.GetLineSpacing(usingFont.Style);
 		gp.AddString(text, usingFont.FontFamily, (int)usingFont.Style, emSize, new Point(x, y), format);
@@ -361,7 +361,7 @@ internal sealed class GraphicsImage : AbstractImage
 		Bitmap destImg = GetBitmap();
 		byte[] srcBytes = BytesFromBitmap(srcGra.GetBitmap());
 		byte[] srcMaskBytes = BytesFromBitmap(maskGra.GetBitmap());
-		Rectangle destRect = new Rectangle(destPoint.X, destPoint.Y, srcGra.Width, srcGra.Height);
+		Rectangle destRect = new(destPoint.X, destPoint.Y, srcGra.Width, srcGra.Height);
 
 		BitmapData bmpData =
 			destImg.LockBits(new Rectangle(0, 0, destImg.Width, destImg.Height),
@@ -456,7 +456,7 @@ internal sealed class GraphicsImage : AbstractImage
 		}
 		else
 		{
-			using (Pen p = new Pen(Config.ForeColor))
+			using (Pen p = new(Config.ForeColor))
 				g.DrawLine(p, fromX, fromY, forX, forY);
 		}
 	}

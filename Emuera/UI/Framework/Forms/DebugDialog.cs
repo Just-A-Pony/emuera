@@ -20,17 +20,17 @@ namespace MinorShift.Emuera.Forms
 			InitializeComponent();
 			listViewWatch.AfterLabelEdit += new LabelEditEventHandler(listViewWatch_AfterLabelEdit);
 
-			this.TopMost = Config.DebugWindowTopMost;
-			int width = Math.Max(this.MinimumSize.Width, Config.DebugWindowWidth);
-			int height = Math.Max(this.MinimumSize.Height, Config.DebugWindowHeight);
-			this.Size = new Size(width, height);
+			TopMost = Config.DebugWindowTopMost;
+			int width = Math.Max(MinimumSize.Width, Config.DebugWindowWidth);
+			int height = Math.Max(MinimumSize.Height, Config.DebugWindowHeight);
+			Size = new Size(width, height);
 			if (Config.DebugSetWindowPos)
 			{
-				this.StartPosition = FormStartPosition.Manual;
-				this.Location = new Point(Config.DebugWindowPosX, Config.DebugWindowPosY);
+				StartPosition = FormStartPosition.Manual;
+				Location = new Point(Config.DebugWindowPosX, Config.DebugWindowPosY);
 			}
 			updateSize();
-			checkBoxTopMost.Checked = this.TopMost;
+			checkBoxTopMost.Checked = TopMost;
 			loadWatchList();
 		}
 		private Process emuera;
@@ -44,26 +44,26 @@ namespace MinorShift.Emuera.Forms
 
 		public void TranslateUI()
 		{
-			this.Text = Lang.UI.DebugDialog.Text;
+			Text = Lang.UI.DebugDialog.Text;
 
-			this.toolStripMenuItem1.Text = Lang.UI.MainWindow.File.Text;
-			this.ウォッチリストの保存ToolStripMenuItem.Text = Lang.UI.DebugDialog.File.SaveWatchList.Text;
-			this.ウォッチリストの読込ToolStripMenuItem.Text = Lang.UI.DebugDialog.File.LoadWatchList.Text;
-			this.閉じるToolStripMenuItem.Text = Lang.UI.DebugDialog.Close.Text;
+			toolStripMenuItem1.Text = Lang.UI.MainWindow.File.Text;
+			ウォッチリストの保存ToolStripMenuItem.Text = Lang.UI.DebugDialog.File.SaveWatchList.Text;
+			ウォッチリストの読込ToolStripMenuItem.Text = Lang.UI.DebugDialog.File.LoadWatchList.Text;
+			閉じるToolStripMenuItem.Text = Lang.UI.DebugDialog.Close.Text;
 
-			this.設定ToolStripMenuItem.Text = Lang.UI.DebugDialog.Setting.Text;
-			this.設定ToolStripMenuItem1.Text = Lang.UI.DebugDialog.Setting.Config.Text;
+			設定ToolStripMenuItem.Text = Lang.UI.DebugDialog.Setting.Text;
+			設定ToolStripMenuItem1.Text = Lang.UI.DebugDialog.Setting.Config.Text;
 
-			this.tabPageWatch.Text = Lang.UI.DebugDialog.VariableWatch.Text;
-			this.columnHeader1.Text = Lang.UI.DebugDialog.VariableWatch.Object.Text;
-			this.columnHeader3.Text = Lang.UI.DebugDialog.VariableWatch.Value.Text;
+			tabPageWatch.Text = Lang.UI.DebugDialog.VariableWatch.Text;
+			columnHeader1.Text = Lang.UI.DebugDialog.VariableWatch.Object.Text;
+			columnHeader3.Text = Lang.UI.DebugDialog.VariableWatch.Value.Text;
 
-			this.tabPageTrace.Text = Lang.UI.DebugDialog.StackTrace.Text;
-			this.tabPageConsole.Text = Lang.UI.DebugDialog.Console.Text;
+			tabPageTrace.Text = Lang.UI.DebugDialog.StackTrace.Text;
+			tabPageConsole.Text = Lang.UI.DebugDialog.Console.Text;
 
-			this.checkBoxTopMost.Text = Lang.UI.DebugDialog.StayOnTop.Text;
-			this.button2.Text = Lang.UI.DebugDialog.UpdateData.Text;
-			this.button1.Text = Lang.UI.DebugDialog.Close.Text;
+			checkBoxTopMost.Text = Lang.UI.DebugDialog.StayOnTop.Text;
+			button2.Text = Lang.UI.DebugDialog.UpdateData.Text;
+			button1.Text = Lang.UI.DebugDialog.Close.Text;
 		}
 
 		public string ConsoleText
@@ -78,9 +78,9 @@ namespace MinorShift.Emuera.Forms
 		}
 		public void AddTraceText(string str)
 		{
-			this.SuspendLayout();
+			SuspendLayout();
 			textBoxTrace.Text += str;
-			this.ResumeLayout(false);
+			ResumeLayout(false);
 		}
 
 		public void UpdateData()
@@ -140,7 +140,7 @@ namespace MinorShift.Emuera.Forms
 			}
 			GlobalStatic.Process.clearMethodStack();
 			GlobalStatic.Process.loadPrevState();
-			this.Update();
+			Update();
 		}
 		private string getValueString(string str)
 		{
@@ -192,17 +192,17 @@ namespace MinorShift.Emuera.Forms
 
 		private void checkBoxTopMost_CheckedChanged(object sender, EventArgs e)
 		{
-			this.TopMost = checkBoxTopMost.Checked;
+			TopMost = checkBoxTopMost.Checked;
 		}
 
 		private void button1_Click(object sender, EventArgs e)
 		{
-			this.Close();
+			Close();
 		}
 
 		private void 閉じるToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			this.Close();
+			Close();
 		}
 
 		private void ウォッチリストの読込ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -327,7 +327,7 @@ namespace MinorShift.Emuera.Forms
 
 		private void updateSize()
 		{
-			if (this.WindowState == FormWindowState.Minimized)
+			if (WindowState == FormWindowState.Minimized)
 				return;
 
 			if (tabControlMain.SelectedTab == tabPageConsole)
@@ -339,10 +339,10 @@ namespace MinorShift.Emuera.Forms
 
 		private void DebugDialog_Resize(object sender, EventArgs e)
 		{
-			if (this.WindowState == FormWindowState.Minimized)
+			if (WindowState == FormWindowState.Minimized)
 				return;
 			//環境依存かもしれない。誰かに指摘されたら考えよう。
-			tabControlMain.Height = this.Size.Height - 103;
+			tabControlMain.Height = Size.Height - 103;
 			updateSize();
 
 		}
@@ -454,13 +454,13 @@ namespace MinorShift.Emuera.Forms
 		private void 設定ToolStripMenuItem1_Click(object sender, EventArgs e)
 		{
 			bool tempTopMost = TopMost;
-			this.TopMost = false;
-			DebugConfigDialog dialog = new DebugConfigDialog();
+			TopMost = false;
+			DebugConfigDialog dialog = new();
 			dialog.TranslateUI();
 			dialog.StartPosition = FormStartPosition.CenterParent;
 			dialog.SetConfig(this);
 			dialog.ShowDialog();
-			this.TopMost = tempTopMost;
+			TopMost = tempTopMost;
 		}
 
 	}

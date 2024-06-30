@@ -16,30 +16,30 @@ namespace MinorShift.Emuera.GameData.Variable;
 internal sealed partial class VariableData : IDisposable
 {
 	#region EM_私家版_XMLDocument_連想配列
-	public Dictionary<string, XmlDocument> DataXmlDocument { get; set; } = new Dictionary<string, XmlDocument>();
-	public Dictionary<string, Dictionary<string, string>> DataStringMaps { get; set; } = new Dictionary<string, Dictionary<string, string>>();
-	public Dictionary<string, DataTable> DataDataTables { get; set; } = new Dictionary<string, DataTable>();
+	public Dictionary<string, XmlDocument> DataXmlDocument { get; set; } = [];
+	public Dictionary<string, Dictionary<string, string>> DataStringMaps { get; set; } = [];
+	public Dictionary<string, DataTable> DataDataTables { get; set; } = [];
 	#endregion
-	readonly Int64[] dataInteger;
+	readonly long[] dataInteger;
 	readonly string[] dataString;
-	readonly Int64[][] dataIntegerArray;
+	readonly long[][] dataIntegerArray;
 	readonly string[][] dataStringArray;
-	readonly Int64[][,] dataIntegerArray2D;
+	readonly long[][,] dataIntegerArray2D;
 	readonly string[][,] dataStringArray2D;
-	readonly Int64[][,,] dataIntegerArray3D;
+	readonly long[][,,] dataIntegerArray3D;
 	readonly string[][,,] dataStringArray3D;
 	//readonly VariableLocal<Int64, Int64Calculator> localVars;
 	//readonly VariableLocal<string, StringCalculator> localString;
 	//readonly VariableLocal<Int64, Int64Calculator> argVars;
 	//readonly VariableLocal<string, StringCalculator> argString;
 	readonly List<CharacterData> characterList;
-	public Int64[] DataInteger { get { return dataInteger; } }
+	public long[] DataInteger { get { return dataInteger; } }
 	public string[] DataString { get { return dataString; } }
-	public Int64[][] DataIntegerArray { get { return dataIntegerArray; } }
+	public long[][] DataIntegerArray { get { return dataIntegerArray; } }
 	public string[][] DataStringArray { get { return dataStringArray; } }
-	public Int64[][,] DataIntegerArray2D { get { return dataIntegerArray2D; } }
+	public long[][,] DataIntegerArray2D { get { return dataIntegerArray2D; } }
 	public string[][,] DataStringArray2D { get { return dataStringArray2D; } }
-	public Int64[][,,] DataIntegerArray3D { get { return dataIntegerArray3D; } }
+	public long[][,,] DataIntegerArray3D { get { return dataIntegerArray3D; } }
 	public string[][,,] DataStringArray3D { get { return dataStringArray3D; } }
 	//public VariableLocal<Int64, Int64Calculator> LocalVars { get { return localVars; } }
 	//public VariableLocal<string, StringCalculator> LocalString { get { return localString; } }
@@ -51,8 +51,8 @@ internal sealed partial class VariableData : IDisposable
 	internal GameBase GameBase { get { return gamebase; } }
 	internal ConstantData Constant { get { return constant; } }
 
-	public Int64 LastLoadVersion = -1;
-	public Int64 LastLoadNo = -1;
+	public long LastLoadVersion = -1;
+	public long LastLoadNo = -1;
 	public string LastLoadText = "";
 
 	readonly Dictionary<string, VariableToken> varTokenDic = new(Config.StrComper);
@@ -77,22 +77,22 @@ internal sealed partial class VariableData : IDisposable
 	/// <summary>
 	/// ユーザー広域変数のうち、キャラクタ変数であるもの。初期化やセーブされるかどうかはCharacterDataの方で判断。
 	/// </summary>
-	public List<UserDefinedCharaVariableToken> UserDefinedCharaVarList = new List<UserDefinedCharaVariableToken>();
+	public List<UserDefinedCharaVariableToken> UserDefinedCharaVarList = [];
 
 	public VariableData(GameBase gamebase, ConstantData constant)
 	{
 		this.gamebase = gamebase;
 		this.constant = constant;
-		characterList = new List<CharacterData>();
+		characterList = [];
 		//localVars = new VariableLocal<Int64, Int64Calculator>(constant.VariableIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.LOCAL)]);
 		//localString = new VariableLocal<string, StringCalculator>(constant.VariableStrArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.LOCALS)]);
 		//argVars = new VariableLocal<Int64, Int64Calculator>(constant.VariableIntArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.ARG)]);
 		//argString = new VariableLocal<string, StringCalculator>(constant.VariableStrArrayLength[(int)(VariableCode.__LOWERCASE__ & VariableCode.ARGS)]);
 		dataInteger = [];
 
-		dataIntegerArray = new Int64[(int)VariableCode.__COUNT_INTEGER_ARRAY__][];
+		dataIntegerArray = new long[(int)VariableCode.__COUNT_INTEGER_ARRAY__][];
 		for (int i = 0; i < dataIntegerArray.Length; i++)
-			dataIntegerArray[i] = new Int64[constant.VariableIntArrayLength[i]];
+			dataIntegerArray[i] = new long[constant.VariableIntArrayLength[i]];
 
 		dataString = new string[(int)VariableCode.__COUNT_STRING__];
 
@@ -102,35 +102,35 @@ internal sealed partial class VariableData : IDisposable
 			dataStringArray[i] = new string[constant.VariableStrArrayLength[i]];
 
 
-		dataIntegerArray2D = new Int64[(int)VariableCode.__COUNT_INTEGER_ARRAY_2D__][,];
+		dataIntegerArray2D = new long[(int)VariableCode.__COUNT_INTEGER_ARRAY_2D__][,];
 		for (int i = 0; i < dataIntegerArray2D.Length; i++)
 		{
-			Int64 length64 = constant.VariableIntArray2DLength[i];
+			long length64 = constant.VariableIntArray2DLength[i];
 			int length = (int)(length64 >> 32);
 			int length2 = (int)(length64 & 0x7FFFFFFF);
-			dataIntegerArray2D[i] = new Int64[length, length2];
+			dataIntegerArray2D[i] = new long[length, length2];
 		}
 		dataStringArray2D = [];
 		for (int i = 0; i < dataStringArray2D.Length; i++)
 		{
-			Int64 length64 = constant.VariableStrArray2DLength[i];
+			long length64 = constant.VariableStrArray2DLength[i];
 			int length = (int)(length64 >> 32);
 			int length2 = (int)(length64 & 0x7FFFFFFF);
 			dataStringArray2D[i] = new string[length, length2];
 		}
-		dataIntegerArray3D = new Int64[(int)VariableCode.__COUNT_INTEGER_ARRAY_3D__][,,];
+		dataIntegerArray3D = new long[(int)VariableCode.__COUNT_INTEGER_ARRAY_3D__][,,];
 		for (int i = 0; i < dataIntegerArray3D.Length; i++)
 		{
-			Int64 length64 = constant.VariableIntArray3DLength[i];
+			long length64 = constant.VariableIntArray3DLength[i];
 			int length = (int)(length64 >> 40);
 			int length2 = (int)((length64 >> 20) & 0xFFFFF);
 			int length3 = (int)(length64 & 0xFFFFF);
-			dataIntegerArray3D[i] = new Int64[length, length2, length3];
+			dataIntegerArray3D[i] = new long[length, length2, length3];
 		}
 		dataStringArray3D = [];
 		for (int i = 0; i < dataStringArray3D.Length; i++)
 		{
-			Int64 length64 = constant.VariableStrArray3DLength[i];
+			long length64 = constant.VariableStrArray3DLength[i];
 			int length = (int)(length64 >> 40);
 			int length2 = (int)((length64 >> 20) & 0xFFFFF);
 			int length3 = (int)(length64 & 0xFFFFF);
@@ -519,7 +519,7 @@ internal sealed partial class VariableData : IDisposable
 	public void SetDefaultGlobalValue()
 	{
 
-		Int64[] globalInt = dataIntegerArray[(int)VariableCode.__LOWERCASE__ & (int)VariableCode.GLOBAL];
+		long[] globalInt = dataIntegerArray[(int)VariableCode.__LOWERCASE__ & (int)VariableCode.GLOBAL];
 		string[] globalStr = dataStringArray[(int)VariableCode.__LOWERCASE__ & (int)VariableCode.GLOBALS];
 		for (int i = 0; i < globalInt.Length; i++)
 			globalInt[i] = 0;
@@ -593,7 +593,7 @@ internal sealed partial class VariableData : IDisposable
 		}
 		for (int i = 0; i < dataIntegerArray2D.Length; i++)
 		{
-			Int64[,] array2D = dataIntegerArray2D[i];
+			long[,] array2D = dataIntegerArray2D[i];
 			int length0 = array2D.GetLength(0);
 			int length1 = array2D.GetLength(1);
 			for (int x = 0; x < length0; x++)
@@ -611,7 +611,7 @@ internal sealed partial class VariableData : IDisposable
 		}
 		for (int i = 0; i < dataIntegerArray3D.Length; i++)
 		{
-			Int64[,,] array3D = dataIntegerArray3D[i];
+			long[,,] array3D = dataIntegerArray3D[i];
 			int length0 = array3D.GetLength(0);
 			int length1 = array3D.GetLength(1);
 			int length2 = array3D.GetLength(2);
@@ -632,8 +632,8 @@ internal sealed partial class VariableData : IDisposable
 						array3D[x, y, z] = null;
 		}
 
-		Int64[] palamlv = dataIntegerArray[(int)VariableCode.__LOWERCASE__ & (int)VariableCode.PALAMLV];
-		List<Int64> defPalam = Config.PalamLvDef;
+		long[] palamlv = dataIntegerArray[(int)VariableCode.__LOWERCASE__ & (int)VariableCode.PALAMLV];
+		List<long> defPalam = Config.PalamLvDef;
 		defPalam.CopyTo(0, palamlv, 0, Math.Min(palamlv.Length, defPalam.Count));
 		//palamlv[0] = 0;
 		//palamlv[1] = 100;
@@ -646,8 +646,8 @@ internal sealed partial class VariableData : IDisposable
 		//palamlv[8] = 150000;
 		//palamlv[9] = 250000;
 
-		Int64[] explv = dataIntegerArray[(int)VariableCode.__LOWERCASE__ & (int)VariableCode.EXPLV];
-		List<Int64> defExpLv = Config.ExpLvDef;
+		long[] explv = dataIntegerArray[(int)VariableCode.__LOWERCASE__ & (int)VariableCode.EXPLV];
+		List<long> defExpLv = Config.ExpLvDef;
 		defExpLv.CopyTo(0, explv, 0, Math.Min(explv.Length, defExpLv.Count));
 		//explv[0] = 0;
 		//explv[1] = 1;
@@ -766,11 +766,11 @@ internal sealed partial class VariableData : IDisposable
 				switch (i)
 				{
 					case 0: writer.WriteExtended(var.Name, (string[])var.GetArray()); break;
-					case 1: writer.WriteExtended(var.Name, (Int64[])var.GetArray()); break;
+					case 1: writer.WriteExtended(var.Name, (long[])var.GetArray()); break;
 					case 2: writer.WriteExtended(var.Name, (string[,])var.GetArray()); break;
-					case 3: writer.WriteExtended(var.Name, (Int64[,])var.GetArray()); break;
+					case 3: writer.WriteExtended(var.Name, (long[,])var.GetArray()); break;
 					case 4: writer.WriteExtended(var.Name, (string[,,])var.GetArray()); break;
-					case 5: writer.WriteExtended(var.Name, (Int64[,,])var.GetArray()); break;
+					case 5: writer.WriteExtended(var.Name, (long[,,])var.GetArray()); break;
 				}
 			}
 			writer.EmuSeparete();
@@ -781,13 +781,13 @@ internal sealed partial class VariableData : IDisposable
 	public void LoadFromStreamExtended(EraDataReader reader, int version)
 	{
 		Dictionary<string, string> strDic = reader.ReadStringExtended();
-		Dictionary<string, Int64> intDic = reader.ReadInt64Extended();
+		Dictionary<string, long> intDic = reader.ReadInt64Extended();
 		Dictionary<string, List<string>> strListDic = reader.ReadStringArrayExtended();
-		Dictionary<string, List<Int64>> intListDic = reader.ReadInt64ArrayExtended();
+		Dictionary<string, List<long>> intListDic = reader.ReadInt64ArrayExtended();
 		Dictionary<string, List<string[]>> str2DListDic = reader.ReadStringArray2DExtended();
-		Dictionary<string, List<Int64[]>> int2DListDic = reader.ReadInt64Array2DExtended();
+		Dictionary<string, List<long[]>> int2DListDic = reader.ReadInt64Array2DExtended();
 		Dictionary<string, List<List<string[]>>> str3DListDic = reader.ReadStringArray3DExtended();
-		Dictionary<string, List<List<Int64[]>>> int3DListDic = reader.ReadInt64Array3DExtended();
+		Dictionary<string, List<List<long[]>>> int3DListDic = reader.ReadInt64Array3DExtended();
 		List<VariableCode> codeList;
 
 		codeList = VariableIdentifier.GetExtSaveList(VariableCode.__STRING__);
@@ -851,7 +851,7 @@ internal sealed partial class VariableData : IDisposable
 		varList = userDefinedSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
 			if (intListDic.TryGetValue(var.Name, out List<long> value))
-				copyListToArray(value, (Int64[])var.GetArray());
+				copyListToArray(value, (long[])var.GetArray());
 
 		varList = userDefinedSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
@@ -861,7 +861,7 @@ internal sealed partial class VariableData : IDisposable
 		varList = userDefinedSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
 			if (int2DListDic.TryGetValue(var.Name, out List<long[]> value))
-				copyListToArray2D(value, (Int64[,])var.GetArray());
+				copyListToArray2D(value, (long[,])var.GetArray());
 
 		varList = userDefinedSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
@@ -871,7 +871,7 @@ internal sealed partial class VariableData : IDisposable
 		varList = userDefinedSaveVarList[i];// i++;
 		foreach (UserDefinedVariableToken var in varList)
 			if (int3DListDic.TryGetValue(var.Name, out List<List<long[]>> value))
-				copyListToArray3D(value, (Int64[,,])var.GetArray());
+				copyListToArray3D(value, (long[,,])var.GetArray());
 	}
 
 	private static void copyListToArray<T>(List<T> srcList, T[] destArray)
@@ -941,11 +941,11 @@ internal sealed partial class VariableData : IDisposable
 				switch (i)
 				{
 					case 0: writer.WriteExtended(var.Name, (string[])var.GetArray()); break;
-					case 1: writer.WriteExtended(var.Name, (Int64[])var.GetArray()); break;
+					case 1: writer.WriteExtended(var.Name, (long[])var.GetArray()); break;
 					case 2: writer.WriteExtended(var.Name, (string[,])var.GetArray()); break;
-					case 3: writer.WriteExtended(var.Name, (Int64[,])var.GetArray()); break;
+					case 3: writer.WriteExtended(var.Name, (long[,])var.GetArray()); break;
 					case 4: writer.WriteExtended(var.Name, (string[,,])var.GetArray()); break;
-					case 5: writer.WriteExtended(var.Name, (Int64[,,])var.GetArray()); break;
+					case 5: writer.WriteExtended(var.Name, (long[,,])var.GetArray()); break;
 				}
 			}
 			writer.EmuSeparete();
@@ -955,11 +955,11 @@ internal sealed partial class VariableData : IDisposable
 	public void LoadGlobalFromStream1808(EraDataReader reader)
 	{
 		Dictionary<string, List<string>> strListDic = reader.ReadStringArrayExtended();
-		Dictionary<string, List<Int64>> intListDic = reader.ReadInt64ArrayExtended();
+		Dictionary<string, List<long>> intListDic = reader.ReadInt64ArrayExtended();
 		Dictionary<string, List<string[]>> str2DListDic = reader.ReadStringArray2DExtended();
-		Dictionary<string, List<Int64[]>> int2DListDic = reader.ReadInt64Array2DExtended();
+		Dictionary<string, List<long[]>> int2DListDic = reader.ReadInt64Array2DExtended();
 		Dictionary<string, List<List<string[]>>> str3DListDic = reader.ReadStringArray3DExtended();
-		Dictionary<string, List<List<Int64[]>>> int3DListDic = reader.ReadInt64Array3DExtended();
+		Dictionary<string, List<List<long[]>>> int3DListDic = reader.ReadInt64Array3DExtended();
 
 		List<UserDefinedVariableToken> varList;
 
@@ -972,7 +972,7 @@ internal sealed partial class VariableData : IDisposable
 		varList = userDefinedGlobalSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
 			if (intListDic.TryGetValue(var.Name, out List<long> value))
-				copyListToArray(value, (Int64[])var.GetArray());
+				copyListToArray(value, (long[])var.GetArray());
 
 		varList = userDefinedGlobalSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
@@ -982,7 +982,7 @@ internal sealed partial class VariableData : IDisposable
 		varList = userDefinedGlobalSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
 			if (int2DListDic.TryGetValue(var.Name, out List<long[]> value))
-				copyListToArray2D(value, (Int64[,])var.GetArray());
+				copyListToArray2D(value, (long[,])var.GetArray());
 
 		varList = userDefinedGlobalSaveVarList[i]; i++;
 		foreach (UserDefinedVariableToken var in varList)
@@ -992,7 +992,7 @@ internal sealed partial class VariableData : IDisposable
 		varList = userDefinedGlobalSaveVarList[i];// i++;
 		foreach (UserDefinedVariableToken var in varList)
 			if (int3DListDic.TryGetValue(var.Name, out List<List<long[]>> value))
-				copyListToArray3D(value, (Int64[,,])var.GetArray());
+				copyListToArray3D(value, (long[,,])var.GetArray());
 	}
 
 	#region EM_私家版_セーブ拡張

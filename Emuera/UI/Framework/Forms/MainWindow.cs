@@ -5,6 +5,7 @@ using MinorShift.Emuera.Runtime.Script.Statements;
 using MinorShift.Emuera.Runtime.Utils;
 using MinorShift.Emuera.Runtime.Utils.EvilMask;
 using MinorShift.Emuera.UI;
+using MinorShift.Emuera.UI.Game;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,7 +22,7 @@ namespace MinorShift.Emuera.Forms
 		public MainWindow(string[] args)
 		{
 			InitializeComponent();
-			this._args = args;
+			_args = args;
 
 			if (Program.DebugMode)
 			{
@@ -67,20 +68,20 @@ namespace MinorShift.Emuera.Forms
 			foreach (ToolStripMenuItem item in macroMenuItems)
 				item.Click += new EventHandler(マクロToolStripMenuItem_Click);
 
-			richTextBox1.MouseWheel += new System.Windows.Forms.MouseEventHandler(richTextBox1_MouseWheel);
-			mainPicBox.MouseWheel += new System.Windows.Forms.MouseEventHandler(richTextBox1_MouseWheel);
-			vScrollBar.MouseWheel += new System.Windows.Forms.MouseEventHandler(richTextBox1_MouseWheel);
+			richTextBox1.MouseWheel += new MouseEventHandler(richTextBox1_MouseWheel);
+			mainPicBox.MouseWheel += new MouseEventHandler(richTextBox1_MouseWheel);
+			vScrollBar.MouseWheel += new MouseEventHandler(richTextBox1_MouseWheel);
 
 
-			richTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(richTextBox1_KeyDown);
+			richTextBox1.KeyDown += new KeyEventHandler(richTextBox1_KeyDown);
 
 			#region EM_私家版_INPUT系機能拡張
-			richTextBox1.KeyUp += new System.Windows.Forms.KeyEventHandler(richTextBox1_ModifierRecorder_KeyUp);
-			richTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(richTextBox1_ModifierRecorder_KeyDown);
+			richTextBox1.KeyUp += new KeyEventHandler(richTextBox1_ModifierRecorder_KeyUp);
+			richTextBox1.KeyDown += new KeyEventHandler(richTextBox1_ModifierRecorder_KeyDown);
 			#endregion
 
 			#region EM_私家版_Emuera多言語化改造
-			labelMacroGroupChanged.Font = new Font(Lang.MFont, 24F, FontStyle.Regular, GraphicsUnit.Point, (byte)128);
+			labelMacroGroupChanged.Font = new Font(Lang.MFont, 24F, FontStyle.Regular, GraphicsUnit.Point, 128);
 			richTextBox1.Font = new Font(Config.DefaultFont.FontFamily, Config.FontSize, FontStyle.Regular, GraphicsUnit.Pixel);
 			#endregion
 
@@ -145,7 +146,7 @@ namespace MinorShift.Emuera.Forms
 		#endregion
 
 		#region EM_textbox位置指定拡張
-		void textBoxHandleScrollValueChanged(Object sender, EventArgs e)
+		void textBoxHandleScrollValueChanged(object sender, EventArgs e)
 		{
 			if (TextBoxIgnoreScrollBarChanges) return;
 			if (vScrollBar.Value < vScrollBar.Maximum && TextBoxPosChanged)
@@ -245,7 +246,7 @@ namespace MinorShift.Emuera.Forms
 						}
 						if (doit)
 						{
-							result = (DialogResult)openFileDialog.ShowDialog();
+							result = openFileDialog.ShowDialog();
 							var filepath = new List<string>();
 							if (result == DialogResult.OK)
 							{
@@ -546,7 +547,7 @@ namespace MinorShift.Emuera.Forms
 				WindowState = FormWindowState.Maximized;
 		}
 
-		private void mainPicBox_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
+		private void mainPicBox_MouseMove(object sender, MouseEventArgs e)
 		{
 			if (!Config.UseMouse)
 				return;
@@ -556,7 +557,7 @@ namespace MinorShift.Emuera.Forms
 				console.RefreshStrings(true);
 		}
 		#region EE_AnchorのCB機能移植
-		private void mainPicBox_MouseClickCBCheck(object sender, System.Windows.Forms.MouseEventArgs e)
+		private void mainPicBox_MouseClickCBCheck(object sender, MouseEventArgs e)
 		{
 			if (Config.CBUseClipboard)
 			{
@@ -565,13 +566,13 @@ namespace MinorShift.Emuera.Forms
 			}
 		}
 
-		private void mainPicBox_MouseDoubleClickCBCheck(object sender, System.Windows.Forms.MouseEventArgs e)
+		private void mainPicBox_MouseDoubleClickCBCheck(object sender, MouseEventArgs e)
 		{
 			if (Config.CBUseClipboard && e.Button == MouseButtons.Left) console.CBProc.Check(ClipboardProcessor.CBTriggers.DoubleLeftClick);
 		}
 		#endregion
 		bool changeTextbyMouse;
-		private void mainPicBox_MouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
+		private void mainPicBox_MouseDown(object sender, MouseEventArgs e)
 		{
 			if (!Config.UseMouse)
 				return;
@@ -658,11 +659,11 @@ namespace MinorShift.Emuera.Forms
 				if (e.Button == MouseButtons.Middle)
 					GlobalStatic.VEvaluator.RESULT_ARRAY[1] = 3;
 				long result2 = 0;
-				if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+				if ((ModifierKeys & Keys.Shift) == Keys.Shift)
 					result2 += (long)Math.Pow(2, 16);
-				if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
+				if ((ModifierKeys & Keys.Control) == Keys.Control)
 					result2 += (long)Math.Pow(2, 17);
-				if ((Control.ModifierKeys & Keys.Alt) == Keys.Alt)
+				if ((ModifierKeys & Keys.Alt) == Keys.Alt)
 					result2 += (long)Math.Pow(2, 18);
 				GlobalStatic.VEvaluator.RESULT_ARRAY[2] = result2;
 				console.inputReq.Timelimit = 0;
@@ -683,7 +684,7 @@ namespace MinorShift.Emuera.Forms
 				if ((e.Button & MouseButtons.Middle) == MouseButtons.Middle)
 					GlobalStatic.VEvaluator.RESULT_ARRAY[1] = 3;
 				//右が押しっぱなしならスキップ追加。
-				if ((Control.MouseButtons & MouseButtons.Right) == MouseButtons.Right)
+				if ((MouseButtons & MouseButtons.Right) == MouseButtons.Right)
 					PressEnterKey(true, true);
 				else
 					PressEnterKey(false, true);
@@ -852,7 +853,7 @@ namespace MinorShift.Emuera.Forms
 		public void ShowConfigDialog()
 		{
 			string lang = Config.EmueraLang;
-			ConfigDialog dialog = new ConfigDialog();
+			ConfigDialog dialog = new();
 			dialog.TranslateUI();
 			dialog.SetupLang(Lang.GetLangList());
 			dialog.StartPosition = FormStartPosition.CenterParent;
@@ -928,7 +929,7 @@ namespace MinorShift.Emuera.Forms
 			string fname = time.ToString("yyyyMMdd-HHmmss");
 			fname += ".log";
 			saveFileDialog.FileName = fname;
-			DialogResult result = (DialogResult)saveFileDialog.ShowDialog();
+			DialogResult result = saveFileDialog.ShowDialog();
 			if (result == DialogResult.OK)
 			{
 				#region EE_OUTPUTLOG
@@ -943,8 +944,10 @@ namespace MinorShift.Emuera.Forms
 		{
 			try
 			{
-				ClipBoardDialog dialog = new();
-				dialog.Text = Lang.UI.ClipBoardDialog.Text;
+				ClipBoardDialog dialog = new()
+				{
+					Text = Lang.UI.ClipBoardDialog.Text
+				};
 				dialog.Setup(console);
 				dialog.ShowDialog();
 			}
@@ -964,7 +967,7 @@ namespace MinorShift.Emuera.Forms
 				MessageBox.Show(trmb.NotAvailableDuringScript.Text);
 				return;
 			}
-			DialogResult result = (DialogResult)openFileDialog.ShowDialog();
+			DialogResult result = openFileDialog.ShowDialog();
 			List<string> filepath = [];
 			if (result == DialogResult.OK)
 			{
@@ -1028,13 +1031,13 @@ namespace MinorShift.Emuera.Forms
 				return;
 			}
 			//List<KeyValuePair<string, string>> filepath = new List<KeyValuePair<string, string>>();
-			if ((DialogResult)folderSelectDialog.ShowDialog() == DialogResult.OK)
+			if (folderSelectDialog.ShowDialog() == DialogResult.OK)
 			{
 				await console.ReloadFolder(folderSelectDialog.SelectedPath);
 			}
 		}
 
-		void richTextBox1_MouseWheel(object? sender, System.Windows.Forms.MouseEventArgs e)
+		void richTextBox1_MouseWheel(object? sender, MouseEventArgs e)
 		{
 			//if (!Config.UseMouse)
 			//	return;
@@ -1046,7 +1049,7 @@ namespace MinorShift.Emuera.Forms
 			if (console.IsWaitingPrimitive)
 			//			if (console.IsWaitingPrimitiveMouse)
 			{
-				console.MouseWheel(mainPicBox.PointToClient(Control.MousePosition), e.Delta);
+				console.MouseWheel(mainPicBox.PointToClient(MousePosition), e.Delta);
 				return;
 			}
 			//e.Deltaには大きな値が入っているので符号のみ採用する
@@ -1074,7 +1077,7 @@ namespace MinorShift.Emuera.Forms
 
 			//ボタンとの関係をチェック
 			if (Config.UseMouse)
-				force_refresh = console.MoveMouse(mainPicBox.PointToClient(Control.MousePosition)) || force_refresh;
+				force_refresh = console.MoveMouse(mainPicBox.PointToClient(MousePosition)) || force_refresh;
 			//上端でも下端でもなくボタン選択状態のアップデートも必要ないなら描画を控えめに。
 			console.RefreshStrings(force_refresh);
 		}
@@ -1085,10 +1088,10 @@ namespace MinorShift.Emuera.Forms
 		public void update_lastinput()
 		{
 			richTextBox1.TextChanged -= new EventHandler(richTextBox1_TextChanged);
-			richTextBox1.KeyDown -= new System.Windows.Forms.KeyEventHandler(richTextBox1_KeyDown);
-			System.Windows.Forms.Application.DoEvents();
+			richTextBox1.KeyDown -= new KeyEventHandler(richTextBox1_KeyDown);
+			Application.DoEvents();
 			richTextBox1.TextChanged += new EventHandler(richTextBox1_TextChanged);
-			richTextBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(richTextBox1_KeyDown);
+			richTextBox1.KeyDown += new KeyEventHandler(richTextBox1_KeyDown);
 			last_inputed = richTextBox1.Text;
 		}
 
@@ -1128,13 +1131,13 @@ namespace MinorShift.Emuera.Forms
 		}
 		#region EM_私家版_INPUT系機能拡張
 		Keys? modifiersWhileWaintingInputWithMouse;
-		private void richTextBox1_ModifierRecorder_KeyUp(object sender, System.Windows.Forms.KeyEventArgs e)
+		private void richTextBox1_ModifierRecorder_KeyUp(object sender, KeyEventArgs e)
 		{
 			if (console == null || !console.IsWaintingInputWithMouse)
 				return;
 			modifiersWhileWaintingInputWithMouse = null;
 		}
-		private void richTextBox1_ModifierRecorder_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+		private void richTextBox1_ModifierRecorder_KeyDown(object sender, KeyEventArgs e)
 		{
 			if (console == null || !console.IsWaintingInputWithMouse)
 				return;
@@ -1144,9 +1147,9 @@ namespace MinorShift.Emuera.Forms
 
 
 		//HOTKEY STATE
-		public HotkeyState hotkeyState = new HotkeyState();
+		public HotkeyState hotkeyState = new();
 
-		private void richTextBox1_KeyDown(object? sender, System.Windows.Forms.KeyEventArgs e)
+		private void richTextBox1_KeyDown(object? sender, KeyEventArgs e)
 		{
 			if (console == null)
 				return;

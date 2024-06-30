@@ -27,7 +27,7 @@ partial class Rikaichan
 
 	public bool hidden = true;
 
-	public List<int> searchResults = new List<int>(0x20);
+	public List<int> searchResults = new(0x20);
 	public int indexLast;
 
 	public int longestResult;

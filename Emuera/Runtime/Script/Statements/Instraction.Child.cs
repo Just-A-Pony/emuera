@@ -191,7 +191,7 @@ internal sealed partial class FunctionIdentifier
 				var terms = ((SpPrintVArgument)func.Argument).Terms;
 				foreach (AExpression termV in terms)
 				{
-					if (termV.GetOperandType() == typeof(Int64))
+					if (termV.GetOperandType() == typeof(long))
 						builder.Append(termV.GetIntValue(exm));
 					else
 						builder.Append(termV.GetStrValue(exm));
@@ -292,7 +292,7 @@ internal sealed partial class FunctionIdentifier
 				if (func.Function.IsPrintKFunction())
 					str = exm.ConvertStringType(str);
 				exm.Console.Print(str);
-				if (++i < (int)iList.Count)
+				if (++i < iList.Count)
 					exm.Console.NewLine();
 			}
 			if (func.Function.IsNewLine() || func.Function.IsWaitInput())
@@ -585,7 +585,7 @@ internal sealed partial class FunctionIdentifier
 		{
 			AExpression term = ((MethodArgument)func.Argument).MethodTerm;
 			//Type type = term.GetOperandType();
-			if (term.GetOperandType() == typeof(Int64))
+			if (term.GetOperandType() == typeof(long))
 				exm.VEvaluator.RESULT = term.GetIntValue(exm);
 			else// if (func.Argument.MethodTerm.GetOperandType() == typeof(string))
 				exm.VEvaluator.RESULTS = term.GetStrValue(exm);
@@ -615,7 +615,7 @@ internal sealed partial class FunctionIdentifier
 						arg.VariableDest.SetValue(arg.ConstIntList, exm);
 					else
 					{
-						Int64[] values = new Int64[arg.TermList.Count];
+						long[] values = new long[arg.TermList.Count];
 						for (int i = 0; i < values.Length; i++)
 						{
 							values[i] = arg.TermList[i].GetIntValue(exm);
@@ -642,7 +642,7 @@ internal sealed partial class FunctionIdentifier
 			SpSetArgument spsetarg = (SpSetArgument)func.Argument;
 			if (spsetarg.VariableDest.IsInteger)
 			{
-				Int64 src = spsetarg.IsConst ? spsetarg.ConstInt : spsetarg.Term.GetIntValue(exm);
+				long src = spsetarg.IsConst ? spsetarg.ConstInt : spsetarg.Term.GetIntValue(exm);
 				if (spsetarg.AddConst)
 					spsetarg.VariableDest.ChangeValue(src, exm);
 				else
@@ -681,7 +681,7 @@ internal sealed partial class FunctionIdentifier
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
 			ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
-			Int32 delNum = (Int32)intExpArg.Term.GetIntValue(exm);
+			int delNum = (int)intExpArg.Term.GetIntValue(exm);
 			exm.Console.deleteLine(delNum);
 			exm.Console.RefreshStrings(false);
 		}
@@ -729,11 +729,11 @@ internal sealed partial class FunctionIdentifier
 			var terms = spsetarg.Term;
 			for (int i = 0; i < terms.Length; i++)
 			{
-				Int64 x = terms[i].GetIntValue(exm);
+				long x = terms[i].GetIntValue(exm);
 				if ((x < 0) || (x > 63))
 					throw new CodeEE(string.Format(trerror.ArgIsOoRBit.Text, "2"));
-				Int64 baseValue = varTerm.GetIntValue(exm);
-				Int64 shift = 1L << (int)x;
+				long baseValue = varTerm.GetIntValue(exm);
+				long shift = 1L << (int)x;
 				if (op == 1)
 					baseValue |= shift;
 				else if (op == 0)
@@ -788,8 +788,8 @@ internal sealed partial class FunctionIdentifier
 		{
 			exm.Console.ReadAnyKey();
 			SpSwapCharaArgument arg = (SpSwapCharaArgument)func.Argument;
-			Int64 time = arg.X.GetIntValue(exm);
-			Int64 flag = arg.Y.GetIntValue(exm);
+			long time = arg.X.GetIntValue(exm);
+			long flag = arg.Y.GetIntValue(exm);
 			InputRequest req = new()
 			{
 				InputType = InputType.EnterKey
@@ -833,7 +833,7 @@ internal sealed partial class FunctionIdentifier
 
 			if (arg.Def != null)
 			{
-				Int64 def;
+				long def;
 				def = arg.Def.GetIntValue(exm);
 				req.HasDefValue = true;
 				req.DefIntValue = def;
@@ -953,7 +953,7 @@ internal sealed partial class FunctionIdentifier
 			};
 			if (arg.Def != null)
 			{
-				Int64 def;
+				long def;
 				def = arg.Def.GetIntValue(exm);
 				req.HasDefValue = true;
 				req.DefIntValue = def;
@@ -1047,7 +1047,7 @@ internal sealed partial class FunctionIdentifier
 		{
 			ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_TINPUT);
 			flag = IS_PRINT | IS_INPUT | EXTENDED;
-			this.isOne = oneInput;
+			isOne = oneInput;
 		}
 		bool isOne;
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
@@ -1060,8 +1060,8 @@ internal sealed partial class FunctionIdentifier
 				HasDefValue = true,
 				OneInput = isOne
 			};
-			Int64 x = tinputarg.Time.GetIntValue(exm);
-			Int64 y = tinputarg.Def.GetIntValue(exm);
+			long x = tinputarg.Time.GetIntValue(exm);
+			long y = tinputarg.Def.GetIntValue(exm);
 			//TODO:ONEINPUTと標準の値を統一
 			#region EM_私家版_INPUT系機能拡張
 			//if (isOne)
@@ -1076,7 +1076,7 @@ internal sealed partial class FunctionIdentifier
 				req.MouseInput = tinputarg.Mouse.GetIntValue(exm) == 1;
 			}
 			#endregion
-			Int64 z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
+			long z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
 			req.Timelimit = x;
 			req.DefIntValue = y;
 			req.DisplayTime = z != 0;
@@ -1104,17 +1104,19 @@ internal sealed partial class FunctionIdentifier
 		{
 			ArgBuilder = ArgumentParser.GetArgumentBuilder(FunctionArgType.SP_TINPUTS);
 			flag = IS_PRINT | IS_INPUT | EXTENDED;
-			this.isOne = oneInput;
+			isOne = oneInput;
 		}
 		bool isOne;
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
 			SpTInputsArgument tinputarg = (SpTInputsArgument)func.Argument;
-			InputRequest req = new InputRequest();
-			req.InputType = InputType.StrValue;
-			req.HasDefValue = true;
-			req.OneInput = isOne;
-			Int64 x = tinputarg.Time.GetIntValue(exm);
+			InputRequest req = new()
+			{
+				InputType = InputType.StrValue,
+				HasDefValue = true,
+				OneInput = isOne
+			};
+			long x = tinputarg.Time.GetIntValue(exm);
 			string strs = tinputarg.Def.GetStrValue(exm);
 			#region EM_私家版_INPUT系機能拡張
 			//if (isOne && strs.Length > 1)
@@ -1124,7 +1126,7 @@ internal sealed partial class FunctionIdentifier
 				req.MouseInput = tinputarg.Mouse.GetIntValue(exm) == 1;
 			}
 			#endregion
-			Int64 z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
+			long z = (tinputarg.Disp != null) ? tinputarg.Disp.GetIntValue(exm) : 1;
 			req.Timelimit = x;
 			req.DefStrValue = strs;
 			req.DisplayTime = z != 0;
@@ -1347,9 +1349,9 @@ internal sealed partial class FunctionIdentifier
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
 			SpBarArgument barArg = (SpBarArgument)func.Argument;
-			Int64 var = barArg.Terms[0].GetIntValue(exm);
-			Int64 max = barArg.Terms[1].GetIntValue(exm);
-			Int64 length = barArg.Terms[2].GetIntValue(exm);
+			long var = barArg.Terms[0].GetIntValue(exm);
+			long max = barArg.Terms[1].GetIntValue(exm);
+			long length = barArg.Terms[2].GetIntValue(exm);
 			exm.Console.Print(ExpressionMediator.CreateBar(var, max, length));
 			if (newline)
 				exm.Console.NewLine();
@@ -1370,10 +1372,10 @@ internal sealed partial class FunctionIdentifier
 			VariableTerm var = timesArg.VariableDest;
 			if (Config.TimesNotRigorousCalculation)
 			{
-				double d = (double)var.GetIntValue(exm) * timesArg.DoubleValue;
+				double d = var.GetIntValue(exm) * timesArg.DoubleValue;
 				unchecked
 				{
-					var.SetValue((Int64)d, exm);
+					var.SetValue((long)d, exm);
 				}
 			}
 			else
@@ -1383,10 +1385,10 @@ internal sealed partial class FunctionIdentifier
 				{
 					//decimal型は強制的にOverFlowExceptionを投げるので対策が必要
 					//OverFlowの場合は昔の挙動に近づけてみる
-					if (d <= Int64.MaxValue && d >= Int64.MinValue)
-						var.SetValue((Int64)d, exm);
+					if (d <= long.MaxValue && d >= long.MinValue)
+						var.SetValue((long)d, exm);
 					else
-						var.SetValue((Int64)(double)d, exm);
+						var.SetValue((long)(double)d, exm);
 				}
 			}
 		}
@@ -1410,8 +1412,8 @@ internal sealed partial class FunctionIdentifier
 			if (!Config.CompatiSPChara && isSp)
 				throw new CodeEE(trerror.SPCharaConfigIsOff.Text);
 			ExpressionArrayArgument intExpArg = (ExpressionArrayArgument)func.Argument;
-			Int64 integer;
-			Int64[] charaNoList = new Int64[intExpArg.TermList.Length];
+			long integer;
+			long[] charaNoList = new long[intExpArg.TermList.Length];
 			int i = 0;
 			foreach (AExpression int64Term in intExpArg.TermList)
 			{
@@ -1513,7 +1515,7 @@ internal sealed partial class FunctionIdentifier
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
 			SpSortcharaArgument spSortArg = (SpSortcharaArgument)func.Argument;
-			Int64 elem = 0;
+			long elem = 0;
 			VariableTerm sortKey = spSortArg.SortKey;
 			if (sortKey.Identifier.IsArray1D)
 				elem = sortKey.GetElementInt(1, exm);
@@ -1572,11 +1574,11 @@ internal sealed partial class FunctionIdentifier
 			float opacity = 1.0f;
 			if (arg.TermList.Count() >= 2)
 			{
-				bgDepth = Int64.Parse(arg.TermList[1].GetStrValue(exm));
+				bgDepth = long.Parse(arg.TermList[1].GetStrValue(exm));
 			}
 			if (arg.TermList.Count() >= 3)
 			{
-				opacity = Int64.Parse(arg.TermList[2].GetStrValue(exm)) / 255.0f;
+				opacity = long.Parse(arg.TermList[2].GetStrValue(exm)) / 255.0f;
 			}
 			exm.Console.AddBackgroundImage(bgName, bgDepth, opacity);
 		}
@@ -1677,7 +1679,7 @@ internal sealed partial class FunctionIdentifier
 			if (spvarsetarg.End != null)
 				end = (int)spvarsetarg.End.GetIntValue(exm);
 			else if (var.Identifier.IsArray1D)
-				end = (int)var.GetLength();
+				end = var.GetLength();
 			if (spvarsetarg.Start != null)
 			{
 				start = (int)spvarsetarg.Start.GetIntValue(exm);
@@ -1765,7 +1767,7 @@ internal sealed partial class FunctionIdentifier
 
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
-			Int64 iValue;
+			long iValue;
 			if (func.Argument.IsConst)
 				iValue = func.Argument.ConstInt;
 			else
@@ -1886,11 +1888,11 @@ internal sealed partial class FunctionIdentifier
 		}
 	}
 
-	private static int toUInt32inArg(Int64 value, string funcName, int argnum)
+	private static int toUInt32inArg(long value, string funcName, int argnum)
 	{
 		if (value < 0)
 			throw new CodeEE(string.Format(trerror.ArgIsNegative.Text, funcName, argnum.ToString(), value.ToString()));
-		else if (value > Int32.MaxValue)
+		else if (value > int.MaxValue)
 			throw new CodeEE(string.Format(trerror.ArgIsTooLarge.Text, funcName, argnum.ToString(), value.ToString()));
 
 		return (int)value;
@@ -1914,8 +1916,8 @@ internal sealed partial class FunctionIdentifier
 			int charanum = (int)exm.VEvaluator.CHARANUM;
 			for (int i = 0; i < savCharaList.Length; i++)
 			{
-				Int64 v = terms[i + 2].GetIntValue(exm);
-				savCharaList[i] = FunctionIdentifier.toUInt32inArg(v, "SAVECHARA", i + 3);
+				long v = terms[i + 2].GetIntValue(exm);
+				savCharaList[i] = toUInt32inArg(v, "SAVECHARA", i + 3);
 				if (savCharaList[i] >= charanum)
 					throw new CodeEE(string.Format(trerror.OoRSavecharaArg.Text, (i + 3).ToString()));
 				for (int j = 0; j < i; j++)
@@ -1999,13 +2001,13 @@ internal sealed partial class FunctionIdentifier
 
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
-			Int64 target;
+			long target;
 			if (func.Argument.IsConst)
 				target = func.Argument.ConstInt;
 			else
 				target = ((ExpressionArgument)func.Argument).Term.GetIntValue(exm);
 
-			int target32 = FunctionIdentifier.toUInt32inArg(target, "DELDATA", 1);
+			int target32 = toUInt32inArg(target, "DELDATA", 1);
 			VariableEvaluator.DelData(target32);
 		}
 	}
@@ -2188,11 +2190,13 @@ internal sealed partial class FunctionIdentifier
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
 			ExpressionsArgument arg = (ExpressionsArgument)func.Argument;
-			Int64 time = 0;
+			long time = 0;
 			if (arg.ArgumentArray.Count > 0)
 				time = arg.ArgumentArray[0].GetIntValue(exm);
-			InputRequest req = new InputRequest();
-			req.InputType = InputType.PrimitiveMouseKey;
+			InputRequest req = new()
+			{
+				InputType = InputType.PrimitiveMouseKey
+			};
 			if (time > 0)
 				req.Timelimit = (int)time;
 			exm.Console.WaitInput(req);
@@ -2210,8 +2214,10 @@ internal sealed partial class FunctionIdentifier
 		}
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
-			InputRequest req = new InputRequest();
-			req.InputType = InputType.AnyValue;
+			InputRequest req = new()
+			{
+				InputType = InputType.AnyValue
+			};
 			exm.Console.WaitInput(req);
 		}
 	}
@@ -2232,11 +2238,13 @@ internal sealed partial class FunctionIdentifier
 				exm.Console.NewLine();
 			exm.Console.RefreshStrings(true);
 			SpInputsArgument arg = (SpInputsArgument)func.Argument;
-			InputRequest req = new InputRequest();
-			req.InputType = InputType.IntButton;
+			InputRequest req = new()
+			{
+				InputType = InputType.IntButton
+			};
 			if (arg.Def != null)
 			{
-				Int64 def;
+				long def;
 				def = arg.Def.GetIntValue(exm);
 				req.HasDefValue = true;
 				req.DefIntValue = def;
@@ -2333,8 +2341,10 @@ internal sealed partial class FunctionIdentifier
 				exm.Console.NewLine();
 			exm.Console.RefreshStrings(true);
 			SpInputsArgument arg = (SpInputsArgument)func.Argument;
-			InputRequest req = new InputRequest();
-			req.InputType = InputType.StrButton;
+			InputRequest req = new()
+			{
+				InputType = InputType.StrButton
+			};
 			if (arg.Def != null)
 			{
 				string def;
@@ -2437,12 +2447,12 @@ internal sealed partial class FunctionIdentifier
 				switch (opt)
 				{
 					case SpDtColumnOptions.DTOptions.Default:
-						if (v.GetOperandType() != (isString ? typeof(string) : typeof(Int64)))
-							throw new CodeEE(string.Format(Lang.Error.DTInvalidDataType.Text, "DT_COLUMN_OPTIONS", key, cName));
+						if (v.GetOperandType() != (isString ? typeof(string) : typeof(long)))
+							throw new CodeEE(string.Format(trerror.DTInvalidDataType.Text, "DT_COLUMN_OPTIONS", key, cName));
 						if (isString)
 							column.DefaultValue = v.GetStrValue(exm);
 						else
-							column.DefaultValue = Utils.DataTable.ConvertInt(v.GetIntValue(exm), column.DataType);
+							column.DefaultValue = DataTable.ConvertInt(v.GetIntValue(exm), column.DataType);
 						break;
 				}
 				idx++;
@@ -2463,7 +2473,7 @@ internal sealed partial class FunctionIdentifier
 
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
-			Int64 waittime = -1;
+			long waittime = -1;
 			ExpressionArgument arg = func.Argument as ExpressionArgument;
 			if (arg != null && arg.Term != null)
 			{
@@ -2480,7 +2490,7 @@ internal sealed partial class FunctionIdentifier
 	//ここからEnter版
 	#region EE
 	public static Sound[] sound = new Sound[10];
-	public static Sound bgm = new Sound();
+	public static Sound bgm = new();
 	private sealed class PLAYSOUND_Instruction : AInstruction
 	{
 
@@ -2498,10 +2508,10 @@ internal sealed partial class FunctionIdentifier
 			else
 				datFilename = soundArg.Str.GetStrValue(exm);
 			int repeat = soundArg.Opt != null ? (int)Math.Max(soundArg.Opt.GetIntValue(exm), 1) : 1;
-			string filepath = System.IO.Path.GetFullPath(".\\sound\\" + datFilename);
+			string filepath = Path.GetFullPath(".\\sound\\" + datFilename);
 			try
 			{
-				if (System.IO.File.Exists(filepath))
+				if (File.Exists(filepath))
 				{
 					int i;
 					for (i = 0; i < sound.Length; i++)
@@ -2561,11 +2571,11 @@ internal sealed partial class FunctionIdentifier
 				datFilename = arg.ConstStr;
 			else
 				datFilename = arg.Term.GetStrValue(exm);
-			string filepath = System.IO.Path.GetFullPath(".\\sound\\" + datFilename);
+			string filepath = Path.GetFullPath(".\\sound\\" + datFilename);
 
 			try
 			{
-				if (System.IO.File.Exists(filepath))
+				if (File.Exists(filepath))
 					bgm.play(filepath, -1); // -1 means repeat indefinitely
 			}
 			catch
@@ -2598,7 +2608,7 @@ internal sealed partial class FunctionIdentifier
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
 			ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
-			Int32 vol = (Int32)intExpArg.Term.GetIntValue(exm);
+			int vol = (int)intExpArg.Term.GetIntValue(exm);
 			for (int i = 0; i < sound.Length; i++)
 			{
 				if (sound[i] == null)
@@ -2617,7 +2627,7 @@ internal sealed partial class FunctionIdentifier
 		public override void DoInstruction(ExpressionMediator exm, InstructionLine func, ProcessState state)
 		{
 			ExpressionArgument intExpArg = (ExpressionArgument)func.Argument;
-			Int32 vol = (Int32)intExpArg.Term.GetIntValue(exm);
+			int vol = (int)intExpArg.Term.GetIntValue(exm);
 			bgm.setVolume(vol);
 		}
 	}
@@ -2644,7 +2654,7 @@ internal sealed partial class FunctionIdentifier
 			}
 
 			string url = GlobalStatic.GameBaseData.UpdateCheckURL;
-			WebClient wc = new WebClient();
+			WebClient wc = new();
 			if (url == null || url == "")
 			{
 				exm.VEvaluator.RESULT = 3;
@@ -2653,7 +2663,7 @@ internal sealed partial class FunctionIdentifier
 			try
 			{
 				Stream st = wc.OpenRead(url);
-				StreamReader sr = new StreamReader(st);
+				StreamReader sr = new(st);
 				try
 				{
 					var version = sr.ReadLine();
@@ -3057,7 +3067,7 @@ internal sealed partial class FunctionIdentifier
 			LogicalLine caseJumpto = func.JumpTo;//ENDSELECT
 			AExpression selectValue = ((ExpressionArgument)func.Argument).Term;
 			string sValue = null;
-			Int64 iValue = 0;
+			long iValue = 0;
 			if (selectValue.IsInteger)
 				iValue = selectValue.GetIntValue(exm);
 			else
@@ -3084,7 +3094,7 @@ internal sealed partial class FunctionIdentifier
 				state.CurrentLine = line;
 				if (selectValue.IsInteger)
 				{
-					Int64 Is = iValue;
+					long Is = iValue;
 					foreach (CaseExpression caseExp in caseArg.CaseExps)
 					{
 						if (caseExp.GetBool(Is, exm))
@@ -3261,7 +3271,7 @@ internal sealed partial class FunctionIdentifier
 				{
 					jumpTo.LoopCounter.ChangeValue(jumpTo.LoopStep, exm);
 				}
-				Int64 counter = jumpTo.LoopCounter.GetIntValue(exm);
+				long counter = jumpTo.LoopCounter.GetIntValue(exm);
 				//まだ回数が残っているなら、
 				if (((jumpTo.LoopStep > 0) && (jumpTo.LoopEnd > counter))
 					|| ((jumpTo.LoopStep < 0) && (jumpTo.LoopEnd < counter)))
@@ -3315,7 +3325,7 @@ internal sealed partial class FunctionIdentifier
 			{
 				jumpTo.LoopCounter.ChangeValue(jumpTo.LoopStep, exm);
 			}
-			Int64 counter = jumpTo.LoopCounter.GetIntValue(exm);
+			long counter = jumpTo.LoopCounter.GetIntValue(exm);
 			//まだ回数が残っているなら、
 			if (((jumpTo.LoopStep > 0) && (jumpTo.LoopEnd > counter))
 				|| ((jumpTo.LoopStep < 0) && (jumpTo.LoopEnd < counter)))
@@ -3376,7 +3386,7 @@ internal sealed partial class FunctionIdentifier
 				{
 					if (label.MethodType != term.GetOperandType())
 					{
-						if (label.MethodType == typeof(Int64))
+						if (label.MethodType == typeof(long))
 							ParserMediator.Warn(trerror.ReturnfStrInIntFunc.Text, func, 2, true, false);
 						else if (label.MethodType == typeof(string))
 							ParserMediator.Warn(trerror.ReturnfIntInStrFunc.Text, func, 2, true, false);

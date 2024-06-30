@@ -91,16 +91,16 @@ internal sealed class ConstantData
 	public long[] CharacterStrArray2DLength;
 
 	#region EM_私家版_セーブ拡張
-	public HashSet<string> GlobalSaveMaps { get; private set; } = new HashSet<string>();
-	public HashSet<string> SaveMaps { get; private set; } = new HashSet<string>();
-	public HashSet<string> GlobalSaveXmls { get; private set; } = new HashSet<string>();
-	public HashSet<string> SaveXmls { get; private set; } = new HashSet<string>();
-	public HashSet<string> GlobalSaveDTs { get; private set; } = new HashSet<string>();
-	public HashSet<string> SaveDTs { get; private set; } = new HashSet<string>();
+	public HashSet<string> GlobalSaveMaps { get; private set; } = [];
+	public HashSet<string> SaveMaps { get; private set; } = [];
+	public HashSet<string> GlobalSaveXmls { get; private set; } = [];
+	public HashSet<string> SaveXmls { get; private set; } = [];
+	public HashSet<string> GlobalSaveDTs { get; private set; } = [];
+	public HashSet<string> SaveDTs { get; private set; } = [];
 
-	public HashSet<string> StaticMaps { get; private set; } = new HashSet<string>();
-	public HashSet<string> StaticXmls { get; private set; } = new HashSet<string>();
-	public HashSet<string> StaticDTs { get; private set; } = new HashSet<string>();
+	public HashSet<string> StaticMaps { get; private set; } = [];
+	public HashSet<string> StaticXmls { get; private set; } = [];
+	public HashSet<string> StaticDTs { get; private set; } = [];
 	#endregion
 
 	//private readonly GameBase gamebase;
@@ -109,7 +109,7 @@ internal sealed class ConstantData
 	private const int ERD_NAMES_INDEX = (int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__;
 	private readonly string[][] names = new string[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__ + 1][]; // 元より1増やす
 	private readonly Dictionary<string, int>[] aliases = new Dictionary<string, int>[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__ + 1];
-	private readonly Dictionary<string, Dictionary<string, int>> erdNameToIntDics = new Dictionary<string, Dictionary<string, int>>();
+	private readonly Dictionary<string, Dictionary<string, int>> erdNameToIntDics = [];
 	#endregion
 	private readonly Dictionary<string, int>[] nameToIntDics = new Dictionary<string, int>[(int)VariableCode.__COUNT_CSV_STRING_ARRAY_1D__];
 	private readonly Dictionary<string, int> relationDic = [];
@@ -719,7 +719,7 @@ internal sealed class ConstantData
 	public void UserDefineLoadData(List<string> filepaths, string varname, int varlength, bool disp, ScriptPosition? sc)
 	{
 
-		Dictionary<string, ErdDictInfo> preDict = new Dictionary<string, ErdDictInfo>();
+		Dictionary<string, ErdDictInfo> preDict = [];
 
 		foreach (var filepath in filepaths)
 		{
@@ -757,7 +757,7 @@ internal sealed class ConstantData
 	#region EE_重複定義の確認
 	public void isDefinedErd(string varname, ScriptPosition? sc)
 	{
-		List<string> erddic = new List<string>(erdNameToIntDics.Keys);
+		List<string> erddic = new(erdNameToIntDics.Keys);
 		foreach (var erdvarname in erddic)
 		{
 			foreach (string erdname in erdNameToIntDics[erdvarname].Keys)
@@ -1782,7 +1782,7 @@ internal sealed class ConstantData
 			return;
 		if (aliases[targetIndex] == null)
 		{
-			aliases[targetIndex] = new Dictionary<string, int>();
+			aliases[targetIndex] = [];
 		}
 		Dictionary<string, int> target = aliases[targetIndex];
 		HashSet<int> defined = [];

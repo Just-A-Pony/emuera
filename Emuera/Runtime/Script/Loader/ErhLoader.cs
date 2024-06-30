@@ -363,12 +363,12 @@ internal sealed class ErhLoader
 
 	private void PrepareERDFileNames()
 	{
-		if (erdFileNames == null) erdFileNames = new Dictionary<string, List<string>>();
+		if (erdFileNames == null) erdFileNames = [];
 		foreach (var path in Directory.GetFiles(Program.ErbDir, "*.erd", SearchOption.AllDirectories))
 		{
 			var key = Path.GetFileNameWithoutExtension(path).ToUpper();
 			if (!erdFileNames.ContainsKey(key))
-				erdFileNames[key] = new List<string> { path };
+				erdFileNames[key] = [path];
 			else
 				erdFileNames[key].Add(path);
 		}
@@ -376,7 +376,7 @@ internal sealed class ErhLoader
 		{
 			var key = Path.GetFileNameWithoutExtension(path).ToUpper();
 			if (!erdFileNames.ContainsKey(key))
-				erdFileNames[key] = new List<string> { path };
+				erdFileNames[key] = [path];
 			else
 				erdFileNames[key].Add(path);
 		}

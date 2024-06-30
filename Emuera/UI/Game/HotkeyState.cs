@@ -43,7 +43,7 @@ internal class HotkeyState
 	private bool availableStateArray = false;
 	private bool availableHotkeyFile = false;
 	private nint[] state;
-	private List<int> bytecode = new List<int>(0x200);
+	private List<int> bytecode = new(0x200);
 
 	public void HotkeyStateInit(nint size)
 	{
@@ -139,7 +139,7 @@ internal class HotkeyState
 			line = line.Substring("KEY == KEYS:".Length);
 			Keys keys;
 			//bool success = Enum.TryParse<Keys>("S", out keys);
-			bool success = Enum.TryParse<Keys>(line, out keys);
+			bool success = Enum.TryParse(line, out keys);
 			if (!success) return 1;
 			bytecode.Add((int)Eval.KEYCOMPARE);
 			bytecode.Add((int)keys);
@@ -154,18 +154,18 @@ internal class HotkeyState
 				var line1 = line.Substring(0, index);
 				var line2 = line.Substring(index + " == ".Length);
 				bytecode.Add((int)Eval.STATECOMPARE);
-				bytecode.Add(Int32.Parse(line1));
-				bytecode.Add(Int32.Parse(line2));
+				bytecode.Add(int.Parse(line1));
+				bytecode.Add(int.Parse(line2));
 				//throw new Exception("not implemented yet");
 				return 0;
 			}
 			bytecode.Add((int)Eval.STATEGET);
-			bytecode.Add(Int32.Parse(line));
+			bytecode.Add(int.Parse(line));
 			//throw new Exception("not implemented yet");
 			return 0;
 		}
 		bytecode.Add((int)Eval.NUMBER);
-		bytecode.Add(Int32.Parse(line));
+		bytecode.Add(int.Parse(line));
 		//throw new Exception("not implemented yet");
 		return 0;
 	}
@@ -310,7 +310,7 @@ internal class HotkeyState
 		throw new Exception("something is wrong");
 	}
 
-	public int keyToNumberRunInterpreter(System.Windows.Forms.KeyEventArgs e)
+	public int keyToNumberRunInterpreter(KeyEventArgs e)
 	{
 		if (!enabled) return -1;
 		if (!availableStateArray) return -1;

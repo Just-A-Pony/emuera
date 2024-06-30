@@ -30,12 +30,12 @@ internal sealed class ConfigData
 	//適当に大き目の配列を作っておく。
 	#region EE_configArrayの拡張
 	// private AConfigItem[] configArray = new AConfigItem[80];
-	private List<AConfigItem> configArray = new List<AConfigItem>();
+	private List<AConfigItem> configArray = [];
 	#endregion
 	//private AConfigItem[] replaceArray = new AConfigItem[50];
 	//private AConfigItem[] debugArray = new AConfigItem[20];
-	private List<AConfigItem> replaceArray = new List<AConfigItem>();
-	private List<AConfigItem> debugArray = new List<AConfigItem>();
+	private List<AConfigItem> replaceArray = [];
+	private List<AConfigItem> debugArray = [];
 	#endregion
 
 	#region EM_私家版_Emuera多言語化改造
@@ -130,7 +130,7 @@ internal sealed class ConfigData
 		configArray.Add(new ConfigItem<bool>(ConfigCode.CheckDuplicateIdentifier, "ERDで定義した識別子とローカル変数の重複を確認する", "Check duplicate ERD identifier and private variablea", false));
 		#endregion
 		#region EM_私家版_LoadText＆SaveText機能拡張
-		configArray.Add(new ConfigItem<List<string>>(ConfigCode.ValidExtension, "LOADTEXTとSAVETEXTで使える拡張子", "Valid extensions for LOADTEXT and SAVETEXT", new List<string> { "txt" }));
+		configArray.Add(new ConfigItem<List<string>>(ConfigCode.ValidExtension, "LOADTEXTとSAVETEXTで使える拡張子", "Valid extensions for LOADTEXT and SAVETEXT", ["txt"]));
 		#endregion
 		#region EM_私家版_セーブ圧縮
 		configArray.Add(new ConfigItem<bool>(ConfigCode.ZipSaveData, "セーブデータを圧縮して保存する", "Compress save data", false));
@@ -184,12 +184,12 @@ internal sealed class ConfigData
 		replaceArray.Add(new ConfigItem<string>(ConfigCode.TitleMenuString0, "システムメニュー0", "System menu 0", "最初からはじめる"));
 		replaceArray.Add(new ConfigItem<string>(ConfigCode.TitleMenuString1, "システムメニュー1", "System menu 1", "ロードしてはじめる"));
 		replaceArray.Add(new ConfigItem<int>(ConfigCode.ComAbleDefault, "COM_ABLE初期値", "Default COM_ABLE", 1));
-		replaceArray.Add(new ConfigItem<List<Int64>>(ConfigCode.StainDefault, "汚れの初期値", "Default Stain", new List<Int64>(new Int64[] { 0, 0, 2, 1, 8 })));
+		replaceArray.Add(new ConfigItem<List<long>>(ConfigCode.StainDefault, "汚れの初期値", "Default Stain", new List<long>(new long[] { 0, 0, 2, 1, 8 })));
 		replaceArray.Add(new ConfigItem<string>(ConfigCode.TimeupLabel, "時間切れ表示", "Time up message", "時間切れ"));
-		replaceArray.Add(new ConfigItem<List<Int64>>(ConfigCode.ExpLvDef, "EXPLVの初期値", "Default EXPLV", new List<long>(new Int64[] { 0, 1, 4, 20, 50, 200 })));
-		replaceArray.Add(new ConfigItem<List<Int64>>(ConfigCode.PalamLvDef, "PALAMLVの初期値", "Default PALAMLV", new List<long>(new Int64[] { 0, 100, 500, 3000, 10000, 30000, 60000, 100000, 150000, 250000 })));
-		replaceArray.Add(new ConfigItem<Int64>(ConfigCode.pbandDef, "PBANDの初期値", "Default PBAND", 4));
-		replaceArray.Add(new ConfigItem<Int64>(ConfigCode.RelationDef, "RELATIONの初期値", "Default RELATION", 0));
+		replaceArray.Add(new ConfigItem<List<long>>(ConfigCode.ExpLvDef, "EXPLVの初期値", "Default EXPLV", new List<long>(new long[] { 0, 1, 4, 20, 50, 200 })));
+		replaceArray.Add(new ConfigItem<List<long>>(ConfigCode.PalamLvDef, "PALAMLVの初期値", "Default PALAMLV", new List<long>(new long[] { 0, 100, 500, 3000, 10000, 30000, 60000, 100000, 150000, 250000 })));
+		replaceArray.Add(new ConfigItem<long>(ConfigCode.pbandDef, "PBANDの初期値", "Default PBAND", 4));
+		replaceArray.Add(new ConfigItem<long>(ConfigCode.RelationDef, "RELATIONの初期値", "Default RELATION", 0));
 	}
 	#endregion
 
@@ -323,16 +323,16 @@ internal sealed class ConfigData
 		ConfigData config = new();
 		// for (int i = 0; i < configArray.Length; i++)
 		for (int i = 0; i < configArray.Count; i++)
-			if ((this.configArray[i] != null) && (config.configArray[i] != null))
-				this.configArray[i].CopyTo(config.configArray[i]);
+			if ((configArray[i] != null) && (config.configArray[i] != null))
+				configArray[i].CopyTo(config.configArray[i]);
 		//for (int i = 0; i < configArray.Length; i++)
 		for (int i = 0; i < debugArray.Count; i++)
-			if ((this.debugArray[i] != null) && (config.debugArray[i] != null))
-				this.debugArray[i].CopyTo(config.debugArray[i]);
+			if ((debugArray[i] != null) && (config.debugArray[i] != null))
+				debugArray[i].CopyTo(config.debugArray[i]);
 		//for (int i = 0; i < replaceArray.Length; i++)
 		for (int i = 0; i < replaceArray.Count; i++)
-			if ((this.replaceArray[i] != null) && (config.replaceArray[i] != null))
-				this.replaceArray[i].CopyTo(config.replaceArray[i]);
+			if ((replaceArray[i] != null) && (config.replaceArray[i] != null))
+				replaceArray[i].CopyTo(config.replaceArray[i]);
 		return config;
 		#endregion
 	}
@@ -475,7 +475,7 @@ internal sealed class ConfigData
 
 	public static SingleTerm GetConfigValueInERB(string text, ref string errMes)
 	{
-		AConfigItem item = ConfigData.Instance.GetItem(text);
+		AConfigItem item = Instance.GetItem(text);
 		if (item == null)
 		{
 			errMes = string.Format(trerror.InvalidConfigName.Text, text);
@@ -517,7 +517,7 @@ internal sealed class ConfigData
 			//<Int64>
 			case ConfigCode.pbandDef:// "PBANDの初期値"
 			case ConfigCode.RelationDef:// "RELATIONの初期値"
-				term = new SingleLongTerm(item.GetValue<Int64>());
+				term = new SingleLongTerm(item.GetValue<long>());
 				break;
 
 			//<string>

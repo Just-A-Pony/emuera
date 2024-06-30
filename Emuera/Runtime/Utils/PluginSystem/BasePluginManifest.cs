@@ -17,6 +17,6 @@ namespace MinorShift.Emuera.Runtime.Utils.PluginSystem
 			return methods;
 		}
 
-		protected List<IPluginMethod> methods = new List<IPluginMethod>();
+		protected List<IPluginMethod> methods = [];
 	}
 }

@@ -82,7 +82,7 @@ internal static class HtmlManager
 	};
 	public static string[] HtmlSubString(string str, int length)
 	{
-		Stack<HTMLI> beginStack = new Stack<HTMLI>(), endStack = new Stack<HTMLI>();
+		Stack<HTMLI> beginStack = new(), endStack = new();
 
 		length = length * Config.FontSize / 2;
 
@@ -94,7 +94,7 @@ internal static class HtmlManager
 			{
 				string pref = "", suff = "";
 				foreach (HTMLI s in beginStack) if (s.isStyleTag) pref += s.tag;
-				Stack<HTMLI> arr = new Stack<HTMLI>(endStack);
+				Stack<HTMLI> arr = new(endStack);
 				while (arr.Count > 0)
 					if (arr.Peek().isStyleTag) suff += arr.Pop().tag;
 					else arr.Pop();

@@ -28,8 +28,10 @@ internal abstract class AConfigItem
 		if (other == null)
 			return null;
 		//ConfigItem<T> ret = new ConfigItem<T>(other.Code, other.Text, other.Value);
-		ConfigItem<T> ret = new ConfigItem<T>(other.Code, other.Text, other.EngText, other.Value);
-		ret.Fixed = other.Fixed;
+		ConfigItem<T> ret = new(other.Code, other.Text, other.EngText, other.Value)
+		{
+			Fixed = other.Fixed
+		};
 		return ret;
 	}
 	#endregion

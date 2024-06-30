@@ -109,7 +109,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	bool forceTextBoxColor;
 	public void SetBgColor(Color color)
 	{
-		this.bgColor = color;
+		bgColor = color;
 		forceTextBoxColor = true;
 		//REDRAWされない場合はTextBoxの色は変えずにフラグだけ立てる
 		//最初の再描画時に現在の背景色に合わせる
@@ -148,9 +148,9 @@ internal sealed partial class EmueraConsole : IDisposable
 	int lastDrawnLineNo = -1;
 	int lineNo;
 	public int GetLineNo { get { return lineNo; } }
-	Int64 logicalLineCount;
+	long logicalLineCount;
 	#region GETDISPLAYLINE修正
-	Int64 deletedLines;
+	long deletedLines;
 	#endregion
 	public long LineCount { get { return logicalLineCount; } }
 	#region GETDISPLAYLINE修正
@@ -203,7 +203,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		if (errorStr != null)
 		{
 			Dialog.Show(trmb.IllegalFontError.Text, trmb.IllegalFontError.Text);
-			this.Quit();
+			Quit();
 			return;
 		}
 		if (force_LEFT)
@@ -392,8 +392,8 @@ internal sealed partial class EmueraConsole : IDisposable
 			return;
 		if (Program.DebugMode)
 		{
-			this.DebugPrint(str);
-			this.DebugNewLine();
+			DebugPrint(str);
+			DebugNewLine();
 		}
 		PrintFlush(false);
 		UseUserStyle = false;
@@ -410,8 +410,8 @@ internal sealed partial class EmueraConsole : IDisposable
 			return;
 		if (Program.DebugMode)
 		{
-			this.DebugPrint(str);
-			this.DebugNewLine();
+			DebugPrint(str);
+			DebugNewLine();
 		}
 		UseUserStyle = false;
 		//todo:オプションで色を変えられるように
@@ -498,7 +498,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	{
 		if (string.IsNullOrEmpty(str))
 			return;
-		if (!this.Enabled)
+		if (!Enabled)
 			return;
 		if (toPrintBuffer)
 		{
@@ -632,7 +632,7 @@ internal sealed partial class EmueraConsole : IDisposable
 
 	public ConsoleDisplayLine BufferToSingleLine(bool force, bool temporary)
 	{
-		if (!this.Enabled)
+		if (!Enabled)
 			return null;
 		if (!force && printBuffer.IsEmpty)
 			return null;
@@ -648,7 +648,7 @@ internal sealed partial class EmueraConsole : IDisposable
 
 	internal ConsoleDisplayLine PrintPlainwithSingleLine(string str)
 	{
-		if (!this.Enabled)
+		if (!Enabled)
 			return null;
 		if (string.IsNullOrEmpty(str))
 			return null;
@@ -663,7 +663,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	/// <param name="force">バッファーが空でも改行する</param>
 	public void PrintFlush(bool force)
 	{
-		if (!this.Enabled)
+		if (!Enabled)
 			return;
 		if (!force && printBuffer.IsEmpty)
 			return;
@@ -844,7 +844,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		return builder.ToString();
 	}
 
-	public ConsoleDisplayLine[] GetDisplayLines(Int64 lineNo)
+	public ConsoleDisplayLine[] GetDisplayLines(long lineNo)
 	{
 		if (lineNo < 0 || lineNo > displayLineList.Count)
 			return null;
@@ -867,7 +867,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	}
 	public ConsoleDisplayLine[] PopDisplayingLines()
 	{
-		if (!this.Enabled)
+		if (!Enabled)
 			return null;
 		if (printBuffer.IsEmpty)
 			return null;

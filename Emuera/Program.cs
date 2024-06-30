@@ -186,10 +186,10 @@ static partial class Program
 		//フォントファイルを読み込む
 		if (Directory.Exists(FontDir))
 		{
-			foreach (string fontFile in Directory.GetFiles(Program.FontDir, "*.ttf", SearchOption.AllDirectories))
+			foreach (string fontFile in Directory.GetFiles(FontDir, "*.ttf", SearchOption.AllDirectories))
 				GlobalStatic.Pfc.AddFontFile(fontFile);
 
-			foreach (string fontFile in Directory.GetFiles(Program.FontDir, "*.otf", SearchOption.AllDirectories))
+			foreach (string fontFile in Directory.GetFiles(FontDir, "*.otf", SearchOption.AllDirectories))
 				GlobalStatic.Pfc.AddFontFile(fontFile);
 		}
 		#endregion
@@ -213,7 +213,7 @@ static partial class Program
 
 		if (AnalysisMode)
 		{
-			AnalysisFiles = new List<string>();
+			AnalysisFiles = [];
 			#region EM_私家版_Emuera多言語化改造
 			// for (int i = argsStart; i < args.Length; i++)
 			foreach (var path in analysisRequestPaths)

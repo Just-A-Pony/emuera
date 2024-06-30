@@ -105,7 +105,7 @@ public sealed class WebP : IDisposable
 		VP8StatusCode result;
 		try
 		{
-			WebPDecoderConfig config = new WebPDecoderConfig();
+			WebPDecoderConfig config = new();
 			if (UnsafeNativeMethods.WebPInitDecoderConfig(ref config) == 0)
 			{
 				throw new Exception("WebPInitDecoderConfig failed. Wrong version?");
@@ -207,7 +207,7 @@ public sealed class WebP : IDisposable
 
 		try
 		{
-			WebPDecoderConfig config = new WebPDecoderConfig();
+			WebPDecoderConfig config = new();
 			if (UnsafeNativeMethods.WebPInitDecoderConfig(ref config) == 0)
 				throw new Exception("WebPInitDecoderConfig failed. Wrong version?");
 
@@ -268,7 +268,7 @@ public sealed class WebP : IDisposable
 
 		try
 		{
-			WebPDecoderConfig config = new WebPDecoderConfig();
+			WebPDecoderConfig config = new();
 			if (UnsafeNativeMethods.WebPInitDecoderConfig(ref config) == 0)
 				throw new Exception("WebPInitDecoderConfig failed. Wrong version?");
 
@@ -408,7 +408,7 @@ public sealed class WebP : IDisposable
 	public byte[] EncodeLossy(Bitmap bmp, int quality, int speed, bool info = false)
 	{
 		//Initialize configuration structure
-		WebPConfig config = new WebPConfig();
+		WebPConfig config = new();
 
 		//Set compression parameters
 		if (UnsafeNativeMethods.WebPConfigInit(ref config, WebPPreset.WEBP_PRESET_DEFAULT, 75) == 0)
@@ -492,7 +492,7 @@ public sealed class WebP : IDisposable
 	public byte[] EncodeLossless(Bitmap bmp, int speed)
 	{
 		//Initialize configuration structure
-		WebPConfig config = new WebPConfig();
+		WebPConfig config = new();
 
 		//Set compression parameters
 		if (UnsafeNativeMethods.WebPConfigInit(ref config, WebPPreset.WEBP_PRESET_DEFAULT, (speed + 1) * 10) == 0)
@@ -533,7 +533,7 @@ public sealed class WebP : IDisposable
 			throw new Exception("This DLL version not support EncodeNearLossless");
 
 		//Inicialize config struct
-		WebPConfig config = new WebPConfig();
+		WebPConfig config = new();
 
 		//Set compression parameters
 		if (UnsafeNativeMethods.WebPConfigInit(ref config, WebPPreset.WEBP_PRESET_DEFAULT, (speed + 1) * 10) == 0)
@@ -583,7 +583,7 @@ public sealed class WebP : IDisposable
 		{
 			nint ptrRawWebP = pinnedWebP.AddrOfPinnedObject();
 
-			WebPBitstreamFeatures features = new WebPBitstreamFeatures();
+			WebPBitstreamFeatures features = new();
 			result = UnsafeNativeMethods.WebPGetFeatures(ptrRawWebP, rawWebP.Length, ref features);
 
 			if (result != 0)
@@ -622,8 +622,8 @@ public sealed class WebP : IDisposable
 	/// <returns>dB in the Y/U/V/Alpha/All order</returns>
 	public static float[] GetPictureDistortion(Bitmap source, Bitmap reference, int metric_type)
 	{
-		WebPPicture wpicSource = new WebPPicture();
-		WebPPicture wpicReference = new WebPPicture();
+		WebPPicture wpicSource = new();
+		WebPPicture wpicReference = new();
 		BitmapData sourceBmpData = null;
 		BitmapData referenceBmpData = null;
 		float[] result = new float[5];
@@ -722,11 +722,11 @@ public sealed class WebP : IDisposable
 	{
 		byte[] rawWebP = null;
 		byte[] dataWebp = null;
-		WebPPicture wpic = new WebPPicture();
+		WebPPicture wpic = new();
 		BitmapData bmpData = null;
-		WebPAuxStats stats = new WebPAuxStats();
+		WebPAuxStats stats = new();
 		nint ptrStats = nint.Zero;
-		GCHandle pinnedArrayHandle = new GCHandle();
+		GCHandle pinnedArrayHandle = new();
 		int dataWebpSize;
 		try
 		{

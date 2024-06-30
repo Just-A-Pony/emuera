@@ -49,7 +49,7 @@ internal sealed class Utils
 		public MixedNum[] border, margin, padding, radius;
 		public int[] color;
 	}
-	static Stopwatch stopwatch = new Stopwatch();
+	static Stopwatch stopwatch = new();
 	static long stopwatch_base = DateTime.Now.Ticks;
 	public static void ParseParam4MixedNum(ref MixedNum[] nums, string tag, string word, string attrValue)
 	{
@@ -262,7 +262,7 @@ internal sealed class Utils
 	{
 		Image img = bmp;
 
-		Bitmap bitmap = new Bitmap(256, 256, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+		Bitmap bitmap = new(256, 256, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 		Graphics g = Graphics.FromImage(bitmap);
 		g.DrawImage(img, new Rectangle(0, 0, 256, 256));
 		g.Dispose();
@@ -277,14 +277,16 @@ internal sealed class Utils
 	public sealed class DataTable
 	{
 		static Type[] builtInDTTypes = [typeof(sbyte), typeof(short), typeof(int), typeof(long), typeof(string)];
-		static Dictionary<Type, string> builtInDictDTTypeNames = new Dictionary<Type, string>{
+		static Dictionary<Type, string> builtInDictDTTypeNames = new()
+		{
 				{ typeof(sbyte), "int8" },
 				{ typeof(short), "int16" },
 				{ typeof(int), "int32" },
 				{ typeof(long), "int64" },
 				{ typeof(string), "string" },
 			};
-		static Dictionary<string, Type> builtInDictDTTypeNames_R = new Dictionary<string, Type>{
+		static Dictionary<string, Type> builtInDictDTTypeNames_R = new()
+		{
 				{ "int8", typeof(sbyte) },
 				{ "int16", typeof(short) },
 				{ "int32", typeof(int) },

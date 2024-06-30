@@ -105,15 +105,21 @@ namespace MinorShift.Emuera.Runtime.Utils.PluginSystem
 		}
 		public void PrintImage(string resourceName, int width, int height, int y, string buttonResourceName = null, string mapResourceName = null)
 		{
-			MixedNum widthNum = new MixedNum();
-			widthNum.isPx = true;
-			widthNum.num = width;
-			MixedNum heightNum = new MixedNum();
-			heightNum.isPx = true;
-			heightNum.num = height;
-			MixedNum yNum = new MixedNum();
-			yNum.isPx = true;
-			yNum.num = y;
+			MixedNum widthNum = new()
+			{
+				isPx = true,
+				num = width
+			};
+			MixedNum heightNum = new()
+			{
+				isPx = true,
+				num = height
+			};
+			MixedNum yNum = new()
+			{
+				isPx = true,
+				num = y
+			};
 			expressionMediator.Console.PrintImg(resourceName, buttonResourceName, mapResourceName, heightNum, widthNum, yNum);
 		}
 		public void PrintNewLine()
@@ -147,9 +153,11 @@ namespace MinorShift.Emuera.Runtime.Utils.PluginSystem
 		}
 		public void WaitInput(bool oneInput = true, int timelimit = -1)
 		{
-			InputRequest request = new InputRequest();
-			request.OneInput = oneInput;
-			request.Timelimit = timelimit;
+			InputRequest request = new()
+			{
+				OneInput = oneInput,
+				Timelimit = timelimit
+			};
 			expressionMediator.Console.WaitInput(request);
 		}
 		public void ReadAnyKey()
@@ -388,7 +396,7 @@ namespace MinorShift.Emuera.Runtime.Utils.PluginSystem
 			methods.Add(key, method);
 		}
 
-		private Dictionary<string, IPluginMethod> methods = new Dictionary<string, IPluginMethod>();
+		private Dictionary<string, IPluginMethod> methods = [];
 		private Process process;
 		private ProcessState processState;
 		private ExpressionMediator expressionMediator;

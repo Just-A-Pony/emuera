@@ -256,11 +256,11 @@ internal sealed partial class Process(EmueraConsole view)
 		console.ReadAnyKey();
 	}
 
-	public void SetCommnds(Int64 count)
+	public void SetCommnds(long count)
 	{
 		coms = new List<long>((int)count);
 		isCTrain = true;
-		Int64[] selectcom = vEvaluator.SELECTCOM_ARRAY;
+		long[] selectcom = vEvaluator.SELECTCOM_ARRAY;
 		if (count >= selectcom.Length)
 		{
 			throw new CodeEE(trerror.CalltrainArgMoreThanSelectcom.Text);
@@ -292,23 +292,23 @@ internal sealed partial class Process(EmueraConsole view)
 		result[5] = r5;
 	}
 	#endregion
-	public void InputInteger(Int64 i)
+	public void InputInteger(long i)
 	{
 		vEvaluator.RESULT = i;
 	}
 	#region EM_私家版_INPUT系機能拡張
-	public void InputInteger(Int64 idx, Int64 i)
+	public void InputInteger(long idx, long i)
 	{
 		if (idx < vEvaluator.RESULT_ARRAY.Length)
 			vEvaluator.RESULT_ARRAY[idx] = i;
 	}
-	public void InputString(Int64 idx, string i)
+	public void InputString(long idx, string i)
 	{
 		if (idx < vEvaluator.RESULT_ARRAY.Length)
 			vEvaluator.RESULTS_ARRAY[idx] = i;
 	}
 	#endregion
-	public void InputSystemInteger(Int64 i)
+	public void InputSystemInteger(long i)
 	{
 		systemResult = i;
 	}

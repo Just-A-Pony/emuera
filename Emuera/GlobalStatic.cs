@@ -39,7 +39,7 @@ internal static class GlobalStatic
 
 	//ERBloaderに引数解析の結果を渡すための橋渡し変数
 	//1756 Processから移動。Program.AnalysisMode用
-	public static Dictionary<string, Int64> tempDic = new(StringComparer.OrdinalIgnoreCase);
+	public static Dictionary<string, long> tempDic = new(StringComparer.OrdinalIgnoreCase);
 	#region EE_FORCE_QUIT_AND_RESTART
 	public static bool ForceQuitAndRestart;//連続実行を防ぐ
 	#endregion

@@ -89,7 +89,7 @@ partial class Rikaichan
 
 	void InitData()
 	{
-		List<DeinflectRule> list = new List<DeinflectRule>(0x40); //TODO: no idea how this c# thing works, there is probably a better way.
+		List<DeinflectRule> list = new(0x40); //TODO: no idea how this c# thing works, there is probably a better way.
 		DeinflectRule next;
 		next = new DeinflectRule()
 		{

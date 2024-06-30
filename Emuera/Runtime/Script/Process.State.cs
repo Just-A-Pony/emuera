@@ -556,16 +556,18 @@ internal sealed class ProcessState
 	// functionListのコピーを必要とする呼び出し元が無かったのでコピーしないことにする。
 	public ProcessState Clone()
 	{
-		ProcessState ret = new ProcessState(console);
-		ret.isClone = true;
-		//どうせ消すからコピー不要
-		//foreach (CalledFunction func in functionList)
-		//	ret.functionList.Add(func.Clone());
-		ret.currentLine = currentLine;
-		//ret.nextLine = this.nextLine;
-		//ret.sequential = this.sequential;
-		ret.sysStateCode = sysStateCode;
-		ret.begintype = begintype;
+		ProcessState ret = new(console)
+		{
+			isClone = true,
+			//どうせ消すからコピー不要
+			//foreach (CalledFunction func in functionList)
+			//	ret.functionList.Add(func.Clone());
+			currentLine = currentLine,
+			//ret.nextLine = this.nextLine;
+			//ret.sequential = this.sequential;
+			sysStateCode = sysStateCode,
+			begintype = begintype
+		};
 		//ret.MethodReturnValue = this.MethodReturnValue;
 		return ret;
 

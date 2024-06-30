@@ -12,7 +12,7 @@ namespace MinorShift.Emuera.Forms
 			InitializeComponent();
 			if (textBox1.Width != Config.WindowX)
 			{
-				this.ClientSize = new Size(Config.WindowX, 480);
+				ClientSize = new Size(Config.WindowX, 480);
 				textBox1.Width = Config.WindowX;
 			}
 			textBox1.Font = Config.DefaultFont;

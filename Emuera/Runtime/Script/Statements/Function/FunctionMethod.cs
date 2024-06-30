@@ -92,7 +92,7 @@ internal abstract class FunctionMethod
 	}
 	protected sealed class ArgTypeList
 	{
-		public List<_ArgType> ArgTypes { get; set; } = new List<_ArgType>();
+		public List<_ArgType> ArgTypes { get; set; } = [];
 		public int OmitStart { get; set; } = -1;
 		public bool MatchVariadicGroup { get; set; }
 
@@ -253,7 +253,7 @@ internal abstract class FunctionMethod
 		}
 		if (argumentTypeArrayEx.Length == 1) return errMsg[0];
 
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new();
 		for (int i = 0; i < errMsg.Length; i++)
 		{
 			sb.Append(string.Format(trerror.NotValidArgsReason.Text, i + 1, errMsg[i]));

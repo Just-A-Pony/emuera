@@ -16,7 +16,7 @@ static class ImgUtils
 
 		if (Path.GetExtension(filepath).ToUpperInvariant() == ".WEBP")
 		{
-			using (WebP webp = new WebP())
+			using (WebP webp = new())
 				bmp = webp.Load(filepath);
 
 			if (bmp == null)

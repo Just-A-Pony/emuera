@@ -45,7 +45,7 @@ internal sealed partial class EraStreamReader : IDisposable
 		}
 		catch
 		{
-			this.Dispose();
+			Dispose();
 			return false;
 		}
 		return true;
@@ -200,7 +200,7 @@ internal sealed partial class EraStreamReader : IDisposable
 	//    }
 	//}
 
-	public void Close() { this.Dispose(); }
+	public void Close() { Dispose(); }
 	bool disposed;
 	#region IDisposable メンバ
 

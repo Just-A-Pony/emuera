@@ -8,8 +8,8 @@ namespace MinorShift.Emuera.Runtime.Utils.EvilMask;
 internal sealed class ConsoleEscapedParts
 {
 	const int ROW_LINE = 0, ROW_DEPTH = 1, ROW_TOP = 2, ROW_BOTTOM = 3, ROW_ID = 4, ROW_DIVTYPE = 5;
-	static readonly DataTable dt = new DataTable(); // divの情報を保存する場所
-	static readonly Dictionary<long, AConsoleDisplayNode> parts = new Dictionary<long, AConsoleDisplayNode>(); //　実際にdivデータを保存する場所
+	static readonly DataTable dt = new(); // divの情報を保存する場所
+	static readonly Dictionary<long, AConsoleDisplayNode> parts = []; //　実際にdivデータを保存する場所
 	/// <summary>
 	/// 最近GetPartsInRangeを行ったか
 	/// </summary>
@@ -114,7 +114,7 @@ internal sealed class ConsoleEscapedParts
 			rmap.TryGetValue((int)row[ROW_DEPTH], out list);
 			if (list == null)
 			{
-				list = new List<AConsoleDisplayNode>();
+				list = [];
 				rmap.Add((int)row[ROW_DEPTH], list);
 			}
 			list.Add(parts[(long)row[ROW_ID]]);

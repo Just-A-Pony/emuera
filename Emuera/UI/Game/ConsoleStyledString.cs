@@ -58,14 +58,16 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 			return null;
 		string str = Text[index..];
 		Text = Text[..index];
-		ConsoleStyledString ret = new ConsoleStyledString();
-		ret.Font = Font;
-		ret.Text = str;
-		ret.Color = Color;
-		ret.ButtonColor = ButtonColor;
-		ret.colorChanged = colorChanged;
-		ret.StringStyle = StringStyle;
-		ret.XsubPixel = XsubPixel;
+		ConsoleStyledString ret = new()
+		{
+			Font = Font,
+			Text = str,
+			Color = Color,
+			ButtonColor = ButtonColor,
+			colorChanged = colorChanged,
+			StringStyle = StringStyle,
+			XsubPixel = XsubPixel
+		};
 		return ret;
 	}
 

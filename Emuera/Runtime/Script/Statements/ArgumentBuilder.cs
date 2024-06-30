@@ -165,7 +165,7 @@ internal static partial class ArgumentParser
 		for (int i = 0; i < argstr.Length; i++)
 		{
 			if (argstr[i] == 'I')
-				types[i] = typeof(Int64);
+				types[i] = typeof(long);
 			else if (argstr[i] == 'S')
 				types[i] = typeof(string);
 			else
@@ -313,15 +313,15 @@ internal static partial class ArgumentParser
 	{
 		public SP_PRINT_SHAPE_ArgumentBuilder(int max)
 		{
-			this.argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64)];
-			this.minArg = 1;
-			this.maxArg = max;
+			argumentTypeArray = [typeof(long), typeof(long), typeof(long), typeof(long)];
+			minArg = 1;
+			maxArg = max;
 		}
 		int maxArg;
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
 			var wc = popWords(line);
-			List<MixedIntegerExprTerm> param = new List<MixedIntegerExprTerm>();
+			List<MixedIntegerExprTerm> param = [];
 
 			while (!wc.EOL)
 			{
@@ -331,7 +331,7 @@ internal static partial class ArgumentParser
 				if (wc.Current.Type != '\0' && wc.Current.Type != ',') wc.ShiftNext();
 				wc.ShiftNext();
 
-				if (param.Count > this.maxArg)
+				if (param.Count > maxArg)
 				{
 					warn(trerror.TooManyArg.Text, line, 1, false);
 				}
@@ -356,7 +356,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_HTML_PRINT_ArgumentBuilder()
 		{
-			this.argumentTypeArray = null;// new Type[] { typeof(string), typeof(string), typeof(Int64), typeof(Int64), typeof(Int64) };
+			argumentTypeArray = null;// new Type[] { typeof(string), typeof(string), typeof(Int64), typeof(Int64), typeof(Int64) };
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
@@ -381,7 +381,7 @@ internal static partial class ArgumentParser
 
 				if (i == 0 && args[i].GetOperandType() != typeof(string))
 				{ warn(string.Format(trerror.IncorrectArg.Text, i + 1), line, 2, false); return null; }
-				if (i == 1 && args[i].GetOperandType() != typeof(Int64))
+				if (i == 1 && args[i].GetOperandType() != typeof(long))
 				{ warn(string.Format(trerror.IncorrectArg.Text, i + 1), line, 2, false); return null; }
 
 				args[i] = args[i].Restructure(exm);
@@ -403,7 +403,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_DT_COLUMN_OPTIONS_ArgumentBuilder()
 		{
-			this.argumentTypeArray = null;// new Type[] { typeof(string), typeof(string), typeof(Int64), typeof(Int64), typeof(Int64) };
+			argumentTypeArray = null;// new Type[] { typeof(string), typeof(string), typeof(Int64), typeof(Int64), typeof(Int64) };
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
@@ -441,7 +441,7 @@ internal static partial class ArgumentParser
 				warn(string.Format(trerror.CanNotOmitArg.Text, "1"), line, 2, false);
 				return null;
 			}
-			List<SpDtColumnOptions.DTOptions> opts = new List<SpDtColumnOptions.DTOptions>();
+			List<SpDtColumnOptions.DTOptions> opts = [];
 			List<AExpression> values = [];
 			int argCount = 3;
 			while (!wc.EOL)
@@ -1076,7 +1076,7 @@ internal static partial class ArgumentParser
 						return null;
 					}
 					bool allConst = true;
-					Int64[] constValues = new Int64[srcTerms.Count];
+					long[] constValues = new long[srcTerms.Count];
 					for (int i = 0; i < srcTerms.Count; i++)
 					{
 						if (srcTerms[i] == null)
@@ -1329,7 +1329,7 @@ internal static partial class ArgumentParser
 	{
 		public INT_EXPRESSION_ArgumentBuilder(bool nullable)
 		{
-			argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(long)];
 			//if (nullable)妥協
 			minArg = 0;
 			this.nullable = nullable;
@@ -1377,7 +1377,7 @@ internal static partial class ArgumentParser
 			ExpressionArgument ret = new(term);
 			if (term is SingleTerm)
 			{
-				Int64 i = term.GetIntValue(null);
+				long i = term.GetIntValue(null);
 				ret.ConstInt = i;
 				ret.IsConst = true;
 				if (line.FunctionCode == FunctionCode.CLEARLINE)
@@ -1399,7 +1399,7 @@ internal static partial class ArgumentParser
 	{
 		public INT_ANY_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(long)];
 			minArg = 0;
 			argAny = true;
 		}
@@ -1506,7 +1506,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_BAR_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64)];
+			argumentTypeArray = [typeof(long), typeof(long), typeof(long)];
 			//minArg = 3;
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -1523,7 +1523,7 @@ internal static partial class ArgumentParser
 		//emuera1803beta2+v1 第2引数省略型に対応
 		public SP_SWAP_ArgumentBuilder(bool nullable)
 		{
-			argumentTypeArray = [typeof(Int64), typeof(Int64)];
+			argumentTypeArray = [typeof(long), typeof(long)];
 			if (nullable)
 				minArg = 1;
 		}
@@ -1543,7 +1543,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_SAVEDATA_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(Int64), typeof(string)];
+			argumentTypeArray = [typeof(long), typeof(string)];
 		}
 
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -1560,7 +1560,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_TINPUT_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64), typeof(string), typeof(Int64), typeof(Int64)];
+			argumentTypeArray = [typeof(long), typeof(long), typeof(long), typeof(string), typeof(long), typeof(long)];
 			minArg = 2;
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -1586,7 +1586,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_TINPUTS_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(Int64), typeof(string), typeof(Int64), typeof(string), typeof(Int64), typeof(Int64)];
+			argumentTypeArray = [typeof(long), typeof(string), typeof(long), typeof(string), typeof(long), typeof(long)];
 			minArg = 2;
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -1654,7 +1654,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_FOR_NEXT_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(Int64), null, typeof(Int64), typeof(Int64)];
+			argumentTypeArray = [typeof(long), null, typeof(long), typeof(long)];
 			minArg = 3;
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -1687,7 +1687,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_POWER_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64)];
+			argumentTypeArray = [typeof(long), typeof(long), typeof(long)];
 			//minArg = 2;
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -1734,7 +1734,7 @@ internal static partial class ArgumentParser
 	{
 		public VAR_INT_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(long)];
 			minArg = 0;
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -1780,7 +1780,7 @@ internal static partial class ArgumentParser
 	{
 		public BIT_ARG_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(Int64), typeof(Int64)];
+			argumentTypeArray = [typeof(long), typeof(long)];
 			minArg = 2;
 			argAny = true;
 		}
@@ -1800,7 +1800,7 @@ internal static partial class ArgumentParser
 			{
 				if (termList[i] is SingleLongTerm term)
 				{
-					Int64 bit = term.Int;
+					long bit = term.Int;
 					if ((bit < 0) || (bit > 63))
 					{
 						warn(string.Format(trerror.ArgIsOoRBit.Text, i + 2, bit.ToString()), line, 2, false);
@@ -1816,7 +1816,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_VAR_SET_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(void), typeof(void), typeof(Int64), typeof(Int64)];
+			argumentTypeArray = [typeof(void), typeof(void), typeof(long), typeof(long)];
 			minArg = 1;
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -1871,7 +1871,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_CVAR_SET_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(void), typeof(void), typeof(void), typeof(Int64), typeof(Int64)];
+			argumentTypeArray = [typeof(void), typeof(void), typeof(void), typeof(long), typeof(long)];
 			minArg = 1;
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -1941,7 +1941,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_COLOR_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64)];
+			argumentTypeArray = [typeof(long), typeof(long), typeof(long)];
 			minArg = 1;
 		}
 
@@ -1979,7 +1979,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_SPLIT_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(string), typeof(string), typeof(string), typeof(Int64)];
+			argumentTypeArray = [typeof(string), typeof(string), typeof(string), typeof(long)];
 			minArg = 3;
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -2001,7 +2001,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_HTMLSPLIT_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(string), typeof(string), typeof(Int64)];
+			argumentTypeArray = [typeof(string), typeof(string), typeof(long)];
 			minArg = 1;
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -2035,7 +2035,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_GETINT_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(Int64)];
+			argumentTypeArray = [typeof(long)];
 			minArg = 0;
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -2059,7 +2059,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_CONTROL_ARRAY_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(void), typeof(Int64), typeof(Int64)];
+			argumentTypeArray = [typeof(void), typeof(long), typeof(long)];
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
 		{
@@ -2077,7 +2077,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_SHIFT_ARRAY_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(void), typeof(Int64), typeof(void), typeof(Int64), typeof(Int64)];
+			argumentTypeArray = [typeof(void), typeof(long), typeof(void), typeof(long), typeof(long)];
 			minArg = 3;
 		}
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)
@@ -2158,7 +2158,7 @@ internal static partial class ArgumentParser
 	{
 		public SP_SAVECHARA_ArgumentBuilder()
 		{
-			argumentTypeArray = [typeof(string), typeof(string), typeof(Int64)];
+			argumentTypeArray = [typeof(string), typeof(string), typeof(long)];
 			minArg = 3;
 			argAny = true;
 		}
@@ -2175,10 +2175,10 @@ internal static partial class ArgumentParser
 			{
 				if (!(termList[i] is SingleTerm))
 					continue;
-				Int64 iValue = termList[i].GetIntValue(null);
+				long iValue = termList[i].GetIntValue(null);
 				if (iValue < 0)
 				{ warn(trerror.NotPositiveCharaNo.Text, line, 2, false); return null; }
-				if (iValue > Int32.MaxValue)
+				if (iValue > int.MaxValue)
 				{ warn(trerror.CharaNoOverInt32.Text, line, 2, false); return null; }
 				for (int j = i + 1; j < termList.Count; j++)
 				{
@@ -2275,7 +2275,7 @@ internal static partial class ArgumentParser
 		public SP_INPUT_ArgumentBuilder()
 		{
 			#region EM_私家版_INPUT系機能拡張
-			argumentTypeArray = [typeof(Int64), typeof(Int64), typeof(Int64), typeof(Int64)];
+			argumentTypeArray = [typeof(long), typeof(long), typeof(long), typeof(long)];
 			#endregion
 			//if (nullable)妥協
 			minArg = 0;
@@ -2323,7 +2323,7 @@ internal static partial class ArgumentParser
 			var terms = popTerms(line);
 			for (int i = 0; i < terms.Count; i++)
 			{
-				if (terms[i] != null && terms[i].GetOperandType() != typeof(Int64))
+				if (terms[i] != null && terms[i].GetOperandType() != typeof(long))
 				{
 					warn(string.Format(trerror.DifferentArgType.Text, i + 1), line, 2, false);
 					return null;
@@ -2432,7 +2432,7 @@ internal static partial class ArgumentParser
 		public Expressions_ArgumentBuilder(Type[] types, int minArgs = -1)
 		{
 			argumentTypeArray = types;
-			this.minArg = minArgs;
+			minArg = minArgs;
 		}
 
 		public override Argument CreateArgument(InstructionLine line, ExpressionMediator exm)

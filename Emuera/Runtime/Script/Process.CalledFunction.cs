@@ -82,10 +82,12 @@ internal sealed class CalledFunction
 	private CalledFunction(string label) { FunctionName = label; }
 	public static CalledFunction CallEventFunction(Process parent, string label, LogicalLine retAddress)
 	{
-		CalledFunction called = new CalledFunction(label);
-		//List<FunctionLabelLine> newLabelList = new List<FunctionLabelLine>();
-		called.Finished = false;
-		called.eventLabelList = parent.LabelDictionary.GetEventLabels(label);
+		CalledFunction called = new(label)
+		{
+			//List<FunctionLabelLine> newLabelList = new List<FunctionLabelLine>();
+			Finished = false,
+			eventLabelList = parent.LabelDictionary.GetEventLabels(label)
+		};
 		if (called.eventLabelList == null)
 		{
 			FunctionLabelLine line = parent.LabelDictionary.GetNonEventLabel(label);
@@ -106,8 +108,10 @@ internal sealed class CalledFunction
 
 	public static CalledFunction CallFunction(Process parent, string label, LogicalLine retAddress)
 	{
-		CalledFunction called = new CalledFunction(label);
-		called.Finished = false;
+		CalledFunction called = new(label)
+		{
+			Finished = false
+		};
 		FunctionLabelLine labelline = parent.LabelDictionary.GetNonEventLabel(label);
 		if (labelline == null)
 		{
@@ -130,11 +134,13 @@ internal sealed class CalledFunction
 
 	public static CalledFunction CreateCalledFunctionMethod(FunctionLabelLine labelline, string label)
 	{
-		CalledFunction called = new CalledFunction(label);
-		called.TopLabel = labelline;
-		called.CurrentLabel = labelline;
-		called.returnAddress = null;
-		called.IsEvent = false;
+		CalledFunction called = new(label)
+		{
+			TopLabel = labelline,
+			CurrentLabel = labelline,
+			returnAddress = null,
+			IsEvent = false
+		};
 		return called;
 	}
 
@@ -236,15 +242,17 @@ internal sealed class CalledFunction
 
 	public CalledFunction Clone()
 	{
-		CalledFunction called = new CalledFunction(FunctionName);
-		called.eventLabelList = eventLabelList;
-		called.CurrentLabel = CurrentLabel;
-		called.TopLabel = TopLabel;
-		called.group = group;
-		called.IsEvent = IsEvent;
+		CalledFunction called = new(FunctionName)
+		{
+			eventLabelList = eventLabelList,
+			CurrentLabel = CurrentLabel,
+			TopLabel = TopLabel,
+			group = group,
+			IsEvent = IsEvent,
 
-		called.counter = counter;
-		called.returnAddress = returnAddress;
+			counter = counter,
+			returnAddress = returnAddress
+		};
 		return called;
 	}
 

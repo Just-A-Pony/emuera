@@ -340,10 +340,10 @@ internal static class Config
 		long[] writetimes = new long[erbFiles.Length + csvFiles.Length];
 		for (int i = 0; i < erbFiles.Length; i++)
 			if (Path.GetExtension(erbFiles[i]).Equals(".ERB", StringComparison.OrdinalIgnoreCase))
-				writetimes[i] = System.IO.File.GetLastWriteTime(erbFiles[i]).ToBinary();
+				writetimes[i] = File.GetLastWriteTime(erbFiles[i]).ToBinary();
 		for (int i = 0; i < csvFiles.Length; i++)
 			if (Path.GetExtension(csvFiles[i]).Equals(".CSV", StringComparison.OrdinalIgnoreCase))
-				writetimes[i + erbFiles.Length] = System.IO.File.GetLastWriteTime(csvFiles[i]).ToBinary();
+				writetimes[i + erbFiles.Length] = File.GetLastWriteTime(csvFiles[i]).ToBinary();
 		long key = 0;
 		for (int i = 0; i < writetimes.Length; i++)
 		{
@@ -364,7 +364,7 @@ internal static class Config
 	//KeyValuePair<相対パス, 完全パス>のリストを返す。
 	private static List<KeyValuePair<string, string>> getFiles(string dir, string rootdir, string pattern, bool toponly, bool sort)
 	{
-		List<KeyValuePair<string, string>> retList = new List<KeyValuePair<string, string>>();
+		List<KeyValuePair<string, string>> retList = [];
 
 		string RelativePath;//相対ディレクトリ名
 		if (string.Equals(dir, rootdir, StringComparison.OrdinalIgnoreCase))//現在のパスが検索ルートパスに等しい
@@ -555,12 +555,12 @@ internal static class Config
 		TitleMenuString0 = instance.GetConfigValue<string>(ConfigCode.TitleMenuString0);
 		TitleMenuString1 = instance.GetConfigValue<string>(ConfigCode.TitleMenuString1);
 		ComAbleDefault = instance.GetConfigValue<int>(ConfigCode.ComAbleDefault);
-		StainDefault = instance.GetConfigValue<List<Int64>>(ConfigCode.StainDefault);
+		StainDefault = instance.GetConfigValue<List<long>>(ConfigCode.StainDefault);
 		TimeupLabel = instance.GetConfigValue<string>(ConfigCode.TimeupLabel);
-		ExpLvDef = instance.GetConfigValue<List<Int64>>(ConfigCode.ExpLvDef);
-		PalamLvDef = instance.GetConfigValue<List<Int64>>(ConfigCode.PalamLvDef);
-		PbandDef = instance.GetConfigValue<Int64>(ConfigCode.pbandDef);
-		RelationDef = instance.GetConfigValue<Int64>(ConfigCode.RelationDef);
+		ExpLvDef = instance.GetConfigValue<List<long>>(ConfigCode.ExpLvDef);
+		PalamLvDef = instance.GetConfigValue<List<long>>(ConfigCode.PalamLvDef);
+		PbandDef = instance.GetConfigValue<long>(ConfigCode.pbandDef);
+		RelationDef = instance.GetConfigValue<long>(ConfigCode.RelationDef);
 	}
 
 	public static string MoneyLabel { get; private set; }
@@ -573,12 +573,12 @@ internal static class Config
 	public static string TitleMenuString0 { get; private set; }
 	public static string TitleMenuString1 { get; private set; }
 	public static int ComAbleDefault { get; private set; }
-	public static List<Int64> StainDefault { get; private set; }
+	public static List<long> StainDefault { get; private set; }
 	public static string TimeupLabel { get; private set; }
-	public static List<Int64> ExpLvDef { get; private set; }
-	public static List<Int64> PalamLvDef { get; private set; }
-	public static Int64 PbandDef { get; private set; }
-	public static Int64 RelationDef { get; private set; }
+	public static List<long> ExpLvDef { get; private set; }
+	public static List<long> PalamLvDef { get; private set; }
+	public static long PbandDef { get; private set; }
+	public static long RelationDef { get; private set; }
 	#endregion
 
 	public static StringComparer StrComper = StringComparer.OrdinalIgnoreCase;

@@ -17,11 +17,11 @@ static class AppContents
 	static ConcurrentDictionary<string, AbstractImage> resourceDic = new(Config.StrComper);
 	static ConcurrentDictionary<string, ASprite> imageDictionary = new(Config.StrComper);
 	static ConcurrentDictionary<int, GraphicsImage> gList = [];
-	static ConcurrentDictionary<string, ASprite> resourceImageDictionary = new ConcurrentDictionary<string, ASprite>();
+	static ConcurrentDictionary<string, ASprite> resourceImageDictionary = new();
 
 	// the ConstImages that has been loaded into memory. will free them in every SetBegin(BeginType.SHOP)
-	public static HashSet<ConstImage> tempLoadedConstImages = new HashSet<ConstImage>();
-	public static HashSet<GraphicsImage> tempLoadedGraphicsImages = new HashSet<GraphicsImage>();
+	public static HashSet<ConstImage> tempLoadedConstImages = [];
+	public static HashSet<GraphicsImage> tempLoadedGraphicsImages = [];
 
 
 	//static public T GetContent<T>(string name)where T :AContentItem
@@ -94,7 +94,7 @@ static class AppContents
 		if (string.IsNullOrEmpty(imgName))
 			throw new ArgumentOutOfRangeException();
 		imgName = imgName.ToUpper();
-		SpriteAnime newCImg = new SpriteAnime(imgName, new Size(w, h));
+		SpriteAnime newCImg = new(imgName, new Size(w, h));
 		imageDictionary[imgName] = newCImg;
 	}
 

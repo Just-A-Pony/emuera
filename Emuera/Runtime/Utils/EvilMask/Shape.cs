@@ -59,13 +59,13 @@ internal sealed class Shape
 					using (var path = new GraphicsPath())
 					{
 						path.AddPolygon(new Point[] {
-								new Point(flipX ? rect.X+rect.Width : rect.X,
+								new(flipX ? rect.X+rect.Width : rect.X,
 									flipY ? rect.Y+rect.Height : rect.Y),
-								new Point(flipX ? rect.X+rect.Width-border[Direction.Right] : rect.X+border[Direction.Left],
+								new(flipX ? rect.X+rect.Width-border[Direction.Right] : rect.X+border[Direction.Left],
 									flipY ? rect.Y+rect.Height-border[Direction.Bottom] : rect.Y+border[Direction.Top]),
-								new Point(flipX ? rect.X+rect.Width-border[Direction.Right] : rect.X+border[Direction.Left],
+								new(flipX ? rect.X+rect.Width-border[Direction.Right] : rect.X+border[Direction.Left],
 									rect.Y+rect.Height/2),
-								new Point(flipX ? rect.X+rect.Width : rect.X,
+								new(flipX ? rect.X+rect.Width : rect.X,
 									rect.Y+rect.Height/2)
 							});
 						using (var brush = new SolidBrush(color))
@@ -82,13 +82,13 @@ internal sealed class Shape
 					using (var path = new GraphicsPath())
 					{
 						path.AddPolygon(new Point[] {
-								new Point(flipX ? rect.X+rect.Width : rect.X,
+								new(flipX ? rect.X+rect.Width : rect.X,
 									flipY ? rect.Y+rect.Height : rect.Y),
-								new Point(flipX ? rect.X+rect.Width-border[Direction.Right] : rect.X+border[Direction.Left],
+								new(flipX ? rect.X+rect.Width-border[Direction.Right] : rect.X+border[Direction.Left],
 									flipY ? rect.Y+rect.Height-border[Direction.Bottom] : rect.Y+border[Direction.Top]),
-								new Point(rect.X+rect.Width/2,
+								new(rect.X+rect.Width/2,
 									flipY ? rect.Y+rect.Height-border[Direction.Bottom] : rect.Y+border[Direction.Top]),
-								new Point(rect.X+rect.Width/2,
+								new(rect.X+rect.Width/2,
 									flipY ? rect.Y+rect.Height : rect.Y)
 							});
 						using (var brush = new SolidBrush(color))
@@ -105,7 +105,7 @@ internal sealed class Shape
 			graph.SmoothingMode = SmoothingMode.AntiAlias;
 			GraphicsPath innerEllipse = null;
 			int corner = flipX ? flipY ? Corner.RightBottom : Corner.RightTop : flipY ? Corner.LeftBottom : Corner.LeftTop;
-			Rectangle cornerRect = new Rectangle(
+			Rectangle cornerRect = new(
 				flipX ? rect.X + rect.Width - radius[corner] : rect.X,
 				flipY ? rect.Y + rect.Height - radius[corner] : rect.Y,
 				radius[corner],
@@ -173,11 +173,11 @@ internal sealed class Shape
 							using (var brush = new SolidBrush(color))
 							{
 								path.AddPolygon(new Point[] {
-										new Point(flipX ? rect.X+rect.Width : rect.X,
+										new(flipX ? rect.X+rect.Width : rect.X,
 											flipY ? rect.Y+rect.Height : rect.Y),
-										new Point(flipX ? rect.X+rect.Width-cornerRect.Width : rect.X+cornerRect.Width,
+										new(flipX ? rect.X+rect.Width-cornerRect.Width : rect.X+cornerRect.Width,
 											flipY ? rect.Y+rect.Height-cornerRect.Height : rect.Y+cornerRect.Height),
-										new Point(flipX ? rect.X+rect.Width : rect.X,
+										new(flipX ? rect.X+rect.Width : rect.X,
 											flipY ? rect.Y+rect.Height-cornerRect.Height : rect.Y+cornerRect.Height)});
 								graph.SetClip(path, CombineMode.Intersect);
 								graph.FillPath(brush, cornerEllipse);
@@ -200,11 +200,11 @@ internal sealed class Shape
 							using (var brush = new SolidBrush(color))
 							{
 								path.AddPolygon(new Point[] {
-										new Point(flipX ? rect.X+rect.Width : rect.X,
+										new(flipX ? rect.X+rect.Width : rect.X,
 											flipY ? rect.Y+rect.Height : rect.Y),
-										new Point(flipX ? rect.X+rect.Width-cornerRect.Width : rect.X+cornerRect.Width,
+										new(flipX ? rect.X+rect.Width-cornerRect.Width : rect.X+cornerRect.Width,
 											flipY ? rect.Y+rect.Height-cornerRect.Height : rect.Y+cornerRect.Height),
-										new Point(flipX ? rect.X+rect.Width-cornerRect.Width : rect.X+cornerRect.Width,
+										new(flipX ? rect.X+rect.Width-cornerRect.Width : rect.X+cornerRect.Width,
 											flipY ? rect.Y+rect.Height : rect.Y)});
 								graph.SetClip(path, CombineMode.Intersect);
 								graph.FillPath(brush, cornerEllipse);
