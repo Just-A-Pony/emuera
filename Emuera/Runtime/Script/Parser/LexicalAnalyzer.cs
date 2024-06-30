@@ -727,7 +727,9 @@ internal static partial class LexicalAnalyzer
 						st.Jump(3);
 						continue;
 					}
-					else if (st.CurrentEqualTo(";!;"))
+					#region EMEEでのみ動作するコメント行を追加
+					else if (st.CurrentEqualTo(";!;") || st.CurrentEqualTo(";^;"))
+					#endregion
 					{
 						st.Jump(3);
 						continue;
