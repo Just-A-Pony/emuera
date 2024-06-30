@@ -515,7 +515,7 @@ internal sealed partial class FunctionIdentifier
 			CharStream st = line.PopArgumentPrimitive();
 			string rowStr;
 			if (st.EOS)
-				throw new CodeEE("引数が設定されていません");
+				throw new CodeEE(trerror.MissingArg.Text);
 			else
 				rowStr = st.Substring();
 			rowStr = GlobalStatic.Console.getStBar(rowStr);
@@ -1220,7 +1220,7 @@ internal sealed partial class FunctionIdentifier
 			CharStream st = line.PopArgumentPrimitive();
 			string rowStr;
 			if (st.EOS)
-				throw new CodeEE("引数が設定されていません");
+				throw new CodeEE(trerror.MissingArg.Text);
 			else
 				rowStr = st.Substring();
 			rowStr = GlobalStatic.Console.getStBar(rowStr);

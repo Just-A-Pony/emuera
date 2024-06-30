@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using trerror = MinorShift.Emuera.Runtime.Utils.EvilMask.Lang.Error;
 
 namespace MinorShift.Emuera.Runtime.Utils;
 static partial class Preload
@@ -35,7 +36,7 @@ static partial class Preload
 		}
 		catch
 		{
-			ParserMediator.Warn($"文字コード異常。文字コードを確認してください（SJIS,UTF-8推奨）", new ScriptPosition(path, 0), 0, "");
+			ParserMediator.Warn(trerror.AbnormalEncode.Text, new ScriptPosition(path, 0), 0, "");
 			return null;
 		}
 	}

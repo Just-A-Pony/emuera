@@ -242,6 +242,12 @@ namespace MinorShift.Emuera.Forms
 			buttonCancel.Text = Lang.UI.ConfigDialog.Cancel.Text;
 			label16.Text = Lang.UI.ConfigDialog.ChangeWontTakeEffectUntilRestart.Text;
 
+			#region Emuera.NET
+			_useButtonFocusColor.Text = Lang.UI.ConfigDialog.DotNet.UseButtonFocusColor.Text;
+			_useNewRandom.Text = Lang.UI.ConfigDialog.DotNet.UseNewRandom.Text;
+			_useVAR.Text = Lang.UI.ConfigDialog.DotNet.UseVAR.Text;
+			#endregion
+
 			var diff = tabControl.Size - tabControl.DisplayRectangle.Size + ((Size)tabControl.Padding);
 			var size = new Size(0, 0);
 			foreach (var page in pages)

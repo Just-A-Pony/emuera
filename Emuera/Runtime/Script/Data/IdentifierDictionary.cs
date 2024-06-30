@@ -661,7 +661,7 @@ internal partial class IdentifierDictionary
 		if (!JSONConfig.Data.UseScopedVariableInstruction &&
 			(idStr == "VARS" || idStr == "VARI"))
 		{
-			throw new CodeEE($"{idStr}命令は現在の設定では使用できません");
+			throw new CodeEE(string.Format(treer.CanNotUseVAR.Text, idStr));
 		}
 
 		throw new IdentifierNotFoundCodeEE(string.Format(treer.CanNotInterpreted.Text, idStr));

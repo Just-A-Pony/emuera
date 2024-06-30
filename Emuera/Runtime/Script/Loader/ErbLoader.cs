@@ -339,7 +339,7 @@ internal sealed class ErbLoader
 				LexicalAnalyzer.SkipWhiteSpace(st);
 				string token2 = LexicalAnalyzer.ReadSingleIdentifier(st);
 				if (string.IsNullOrEmpty(token) || st.Current != ']')
-					ParserMediator.Warn("[]の使い方が不正です", position, 1);
+					ParserMediator.Warn(trerror.InvalidSBrackets.Text, position, 1);
 				ppstate.AddKeyWord(token, token2, position);
 				st.ShiftNext();
 				if (!st.EOS)
@@ -893,7 +893,7 @@ internal sealed class ErbLoader
 			{
 				if (!func.Function.IsMethodSafe())
 				{
-					ParserMediator.Warn(func.Function.Name + "命令は#FUNCTION中で使うことはできません", nextLine, 2, true, false);
+					ParserMediator.Warn(string.Format(trerror.CanNotUseInUserFunc.Text, func.Function.Name), nextLine, 2, true, false);
 					continue;
 				}
 			}

@@ -319,6 +319,14 @@ internal sealed class Lang
 				[Managed] public static TranslatableString RikaiLink { get; } = new TranslatableString("Dictionaryファイルは下記リンクからDLできます");
 				[Managed] public static TranslatableString OtherEDICT1 { get; } = new TranslatableString("上記以外のEDICT1形式のファイルも使用可能です");
 			}
+			[Translate("DotNet"), Managed]
+			public sealed class DotNet
+			{
+				public static string Text { get { return trClass[typeof(DotNet)].Text; } }
+				[Managed] public static TranslatableString UseButtonFocusColor { get; } = new TranslatableString("ボタンにカーソルを合わせた時にボタンの背景色を変更する");
+				[Managed] public static TranslatableString UseNewRandom { get; } = new TranslatableString("新しい高速な乱数アルゴリズムを使う");
+				[Managed] public static TranslatableString UseVAR { get; } = new TranslatableString("VAR系命令を利用可能にする");
+			}
 			[Managed] public static TranslatableString ChangeWontTakeEffectUntilRestart { get; } = new TranslatableString("※変更は再起動するまで反映されません");
 			[Managed] public static TranslatableString Save { get; } = new TranslatableString("保存");
 			[Managed] public static TranslatableString SaveAndRestart { get; } = new TranslatableString("保存して再起動");
@@ -1169,6 +1177,8 @@ internal sealed class Lang
 		[Managed] public static TranslatableString IgnoreRandomize { get; } = new TranslatableString("新しい乱数アルゴリズムではRANDOMIZEは無視されます");
 		[Managed] public static TranslatableString CanNotUseInitrand { get; } = new TranslatableString("新しい乱数アルゴリズムではINITRANDは機能しません");
 		[Managed] public static TranslatableString CanNotUseDumprand { get; } = new TranslatableString("新しい乱数アルゴリズムではDUMPRANDは機能しません");
+		[Managed] public static TranslatableString CanNotUseVAR { get; } = new TranslatableString("{0}命令は現在の設定では使用できません");
+		[Managed] public static TranslatableString AbnormalEncode { get; } = new TranslatableString("文字コード異常。文字コードを確認してください（SJIS,UTF-8推奨）");
 		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
 		//[Managed] public static TranslatableString { get; } = new TranslatableString("");
 		//[Managed] public static TranslatableString { get; } = new TranslatableString("");

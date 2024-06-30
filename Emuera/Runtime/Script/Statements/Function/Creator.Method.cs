@@ -3676,7 +3676,7 @@ internal static partial class FunctionMethodCreator
 			{
 				long charaNum = exm.VEvaluator.CHARANUM;
 				if (start >= charaNum || start < 0 || end > charaNum || end < 0)
-					throw new CodeEE(funcName + "関数の範囲指定がキャラクタ配列の範囲を超えています(" + start.ToString() + "～" + end.ToString() + ")");
+					throw new CodeEE(string.Format(trerror.CharacterRangeInvalid.Text, funcName, start, end));
 				return VariableEvaluator.GetMaxArrayChara(p, start, end, isMax);
 			}
 		}

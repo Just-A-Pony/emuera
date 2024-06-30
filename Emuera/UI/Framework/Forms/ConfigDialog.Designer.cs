@@ -146,6 +146,7 @@
 			checkBox31 = new System.Windows.Forms.CheckBox();
 			checkBox34 = new System.Windows.Forms.CheckBox();
 			_useNewRandom = new System.Windows.Forms.CheckBox();
+			_useVAR = new System.Windows.Forms.CheckBox();
 			label25 = new System.Windows.Forms.Label();
 			textBox3 = new System.Windows.Forms.TextBox();
 			tabPageCompati = new System.Windows.Forms.TabPage();
@@ -213,8 +214,6 @@
 			tabPageRikai = new System.Windows.Forms.TabPage();
 			rikaiFlowLayoutPanel = new System.Windows.Forms.FlowLayoutPanel();
 			rikaiCheckBoxEnable = new System.Windows.Forms.CheckBox();
-			flowLayoutPanel42 = new System.Windows.Forms.FlowLayoutPanel();
-			rikaiDictFilenameLabel = new System.Windows.Forms.Label();
 			rikaiDictFilenameTextBox = new System.Windows.Forms.TextBox();
 			rikaiColorBoxBG = new ColorBox();
 			rikaiColorBoxText = new ColorBox();
@@ -228,7 +227,8 @@
 			flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
 			flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-			_useVAR = new System.Windows.Forms.CheckBox();
+			rikaiDictFilenameLabel = new System.Windows.Forms.Label();
+			flowLayoutPanel42 = new System.Windows.Forms.FlowLayoutPanel();
 			tabControl.SuspendLayout();
 			tabEnvironment.SuspendLayout();
 			flowLayoutPanel13.SuspendLayout();
@@ -296,10 +296,10 @@
 			((System.ComponentModel.ISupportInitialize)numericUpDownCBMinTimer).BeginInit();
 			tabPageRikai.SuspendLayout();
 			rikaiFlowLayoutPanel.SuspendLayout();
-			flowLayoutPanel42.SuspendLayout();
 			flowLayoutPanel1.SuspendLayout();
 			flowLayoutPanel3.SuspendLayout();
 			flowLayoutPanel2.SuspendLayout();
+			flowLayoutPanel42.SuspendLayout();
 			SuspendLayout();
 			// 
 			// buttonSave
@@ -1076,6 +1076,13 @@
 			_useNewRandom.UseVisualStyleBackColor = true;
 			_useNewRandom.CheckedChanged += UseNewRandom_CheckedChanged;
 			// 
+			// _useVAR
+			// 
+			resources.ApplyResources(_useVAR, "_useVAR");
+			_useVAR.Name = "_useVAR";
+			_useVAR.UseVisualStyleBackColor = true;
+			_useVAR.CheckedChanged += _useVAR_CheckedChanged;
+			// 
 			// label25
 			// 
 			resources.ApplyResources(label25, "label25");
@@ -1542,6 +1549,7 @@
 			// 
 			resources.ApplyResources(rikaiFlowLayoutPanel, "rikaiFlowLayoutPanel");
 			rikaiFlowLayoutPanel.Controls.Add(rikaiCheckBoxEnable);
+			rikaiFlowLayoutPanel.Controls.Add(rikaiDictFilenameLabel);
 			rikaiFlowLayoutPanel.Controls.Add(flowLayoutPanel42);
 			rikaiFlowLayoutPanel.Controls.Add(rikaiColorBoxBG);
 			rikaiFlowLayoutPanel.Controls.Add(rikaiColorBoxText);
@@ -1557,19 +1565,6 @@
 			resources.ApplyResources(rikaiCheckBoxEnable, "rikaiCheckBoxEnable");
 			rikaiCheckBoxEnable.Name = "rikaiCheckBoxEnable";
 			rikaiCheckBoxEnable.UseVisualStyleBackColor = true;
-			// 
-			// flowLayoutPanel42
-			// 
-			flowLayoutPanel42.Controls.Add(rikaiDictFilenameLabel);
-			flowLayoutPanel42.Controls.Add(rikaiDictFilenameTextBox);
-			resources.ApplyResources(flowLayoutPanel42, "flowLayoutPanel42");
-			flowLayoutPanel42.Name = "flowLayoutPanel42";
-			// 
-			// rikaiDictFilenameLabel
-			// 
-			resources.ApplyResources(rikaiDictFilenameLabel, "rikaiDictFilenameLabel");
-			rikaiDictFilenameLabel.Name = "rikaiDictFilenameLabel";
-			rikaiDictFilenameLabel.Click += rikaiDictFilenameLabel_Click;
 			// 
 			// rikaiDictFilenameTextBox
 			// 
@@ -1644,12 +1639,17 @@
 			flowLayoutPanel2.Controls.Add(buttonCancel);
 			flowLayoutPanel2.Name = "flowLayoutPanel2";
 			// 
-			// _useVAR
+			// rikaiDictFilenameLabel
 			// 
-			resources.ApplyResources(_useVAR, "_useVAR");
-			_useVAR.Name = "_useVAR";
-			_useVAR.UseVisualStyleBackColor = true;
-			_useVAR.CheckedChanged += _useVAR_CheckedChanged;
+			resources.ApplyResources(rikaiDictFilenameLabel, "rikaiDictFilenameLabel");
+			rikaiDictFilenameLabel.Name = "rikaiDictFilenameLabel";
+			rikaiDictFilenameLabel.Click += rikaiDictFilenameLabel_Click;
+			// 
+			// flowLayoutPanel42
+			// 
+			flowLayoutPanel42.Controls.Add(rikaiDictFilenameTextBox);
+			resources.ApplyResources(flowLayoutPanel42, "flowLayoutPanel42");
+			flowLayoutPanel42.Name = "flowLayoutPanel42";
 			// 
 			// ConfigDialog
 			// 
@@ -1777,14 +1777,14 @@
 			tabPageRikai.ResumeLayout(false);
 			rikaiFlowLayoutPanel.ResumeLayout(false);
 			rikaiFlowLayoutPanel.PerformLayout();
-			flowLayoutPanel42.ResumeLayout(false);
-			flowLayoutPanel42.PerformLayout();
 			flowLayoutPanel1.ResumeLayout(false);
 			flowLayoutPanel1.PerformLayout();
 			flowLayoutPanel3.ResumeLayout(false);
 			flowLayoutPanel3.PerformLayout();
 			flowLayoutPanel2.ResumeLayout(false);
 			flowLayoutPanel2.PerformLayout();
+			flowLayoutPanel42.ResumeLayout(false);
+			flowLayoutPanel42.PerformLayout();
 			ResumeLayout(false);
 			PerformLayout();
 		}

@@ -78,9 +78,9 @@ internal static class ExpressionParser
 				{
 					case '\0':
 						if (endWith == ArgsEndWith.RightBracket)
-							throw new CodeEE("'['に対応する']'が見つかりません");
+							throw new CodeEE(trerror.NotCloseSBrackets.Text);
 						if (endWith == ArgsEndWith.RightParenthesis)
-							throw new CodeEE("'('に対応する')'が見つかりません");
+							throw new CodeEE(trerror.NotCloseBrackets.Text);
 						return;
 					case ')':
 						if (endWith == ArgsEndWith.RightParenthesis)
@@ -88,14 +88,14 @@ internal static class ExpressionParser
 							wc.ShiftNext();
 							return;
 						}
-						throw new CodeEE("構文解析中に予期しない')'を発見しました");
+						throw new CodeEE(trerror.UnexpectedBrackets.Text);
 					case ']':
 						if (endWith == ArgsEndWith.RightBracket)
 						{
 							wc.ShiftNext();
 							return;
 						}
-						throw new CodeEE("構文解析中に予期しない']'を発見しました");
+						throw new CodeEE(trerror.UnexpectedSBrackets.Text);
 
 				}
 				if (!isDefine)
@@ -105,15 +105,15 @@ internal static class ExpressionParser
 				{
 					terms.AddLast(ReduceExpressionTerm(wc, termEndWith_Assignment));
 					if (terms.Last == null)
-						throw new CodeEE("関数定義の引数は省略できません");
+						throw new CodeEE(trerror.CannotOmitFuncArg.Text);
 					if (wc.Current is OperatorWord)
 					{//=がある
 						wc.ShiftNext();
 						AExpression term = reduceTerm(wc, false, termEndWith, VariableCode.__NULL__);
 						if (term == null)
-							throw new CodeEE("'='の後に式がありません");
+							throw new CodeEE(trerror.NoExpressionAfterEqual.Text);
 						if (term.GetOperandType() != terms.Last.Value.GetOperandType())
-							throw new CodeEE("'='の前後で型が一致しません");
+							throw new CodeEE(trerror.DoesNotMatchEqual.Text);
 						terms.AddLast(term);
 					}
 					else
