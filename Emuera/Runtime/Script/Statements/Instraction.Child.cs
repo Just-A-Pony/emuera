@@ -375,10 +375,11 @@ internal sealed partial class FunctionIdentifier
 			if (GlobalStatic.Process.SkipPrint)
 				return;
 			string str;
-			if (func.Argument.IsConst)
-				str = func.Argument.ConstStr;
+			var arg = (SpHtmlPrint)func.Argument;
+			if (arg.IsConst)
+				str = arg.ConstStr;
 			else
-				str = ((HTML_PRINTArgument)func.Argument).Term.GetStrValue(exm);
+				str = ((SpHtmlPrint)func.Argument).Str.GetStrValue(exm);
 			exm.Console.PrintHTMLIsland(str);
 		}
 	}

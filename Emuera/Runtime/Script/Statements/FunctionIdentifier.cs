@@ -431,7 +431,7 @@ internal sealed partial class FunctionIdentifier
 		addFunction(FunctionCode.DT_COLUMN_OPTIONS, new DT_COLUMN_OPTIONS_Instruction());
 		#endregion
 		#region Emuera.NET
-		if (JSONConfig.Data != null && JSONConfig.Data.UseScopedVariableInstruction)
+		if (JSONConfig.Data.UseScopedVariableInstruction)
 		{
 			addFunction(FunctionCode.VARI, new VARI_Instruction());
 			addFunction(FunctionCode.VARS, new VARS_Instruction());

@@ -92,12 +92,6 @@ static partial class Program
 		//1815 .exeが東方板のNGワードに引っかかるそうなので除去
 		ExeName = Path.GetFileNameWithoutExtension(AssemblyData.ExeName);
 
-		//WMPも終了しておく
-		FunctionIdentifier.bgm.close();
-		for (int i = 0; i < FunctionIdentifier.sound.Length; i++)
-		{
-			if (FunctionIdentifier.sound[i] != null) FunctionIdentifier.sound[i].close();
-		}
 
 		var debugMode = result.GetValueForOption(debugModeOption);
 		DebugMode = debugMode;
@@ -147,6 +141,13 @@ static partial class Program
 
 		ConfigData.Instance.LoadConfig();
 		JSONConfig.Load();
+
+		//WMPも終了しておく
+		FunctionIdentifier.bgm.close();
+		for (int i = 0; i < FunctionIdentifier.sound.Length; i++)
+		{
+			if (FunctionIdentifier.sound[i] != null) FunctionIdentifier.sound[i].close();
+		}
 
 		#region EM_私家版_Emuera多言語化改造
 		Lang.LoadLanguageFile();
