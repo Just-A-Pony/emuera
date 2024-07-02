@@ -619,7 +619,7 @@ namespace MinorShift.Emuera.Forms
 			#region EM_私家版_INPUT系機能拡張
 			else if (console.IsWaintingInputWithMouse && !console.IsError && str != null)
 			{
-				if ((e.Button == MouseButtons.Left) || (e.Button == MouseButtons.Right) || (e.Button == MouseButtons.Middle))
+				if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Right || e.Button == MouseButtons.Middle)
 				{
 					if (!isBacklog)
 						GlobalStatic.Process.InputInteger(3, console.SelectingButton.GetMappedColor(e.X, e.Y));
@@ -628,7 +628,12 @@ namespace MinorShift.Emuera.Forms
 						GlobalStatic.Process.InputInteger(2, (long)modifiersWhileWaintingInputWithMouse);
 					}
 					GlobalStatic.Process.InputString(1, str);
-					if (e.Button == MouseButtons.Right)
+					if (e.Button == MouseButtons.Middle)
+					{
+						GlobalStatic.Process.InputInteger(1, 3);
+						console.PressEnterKey(false, str, true);
+					}
+					else if (e.Button == MouseButtons.Right)
 					{
 						GlobalStatic.Process.InputInteger(1, 2);
 						console.PressEnterKey(true, str, true);
