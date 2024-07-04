@@ -1,13 +1,18 @@
+# IDE Files
 .vs/*
 .vscode/*
-*/PublishProfiles/*
-*/bin/*
-*/obj/*
+.idea/*
 
-*/Emuera.csproj.user
+# Emuera Project Files
+Emuera/artifacts/*
+Emuera/Emuera.csproj.user
+Emuera/Properties/PublishProfiles/*.pubxml.user
+Emuera/bin/*
 
-*/artifacts/*
-artifacts/*
+# Emuera Plugin Example Files
+EmueraPluginExample/obj/*
+EmueraPluginExample/bin/*
 
+# Diffs and patches
 *.diff
 *.patch

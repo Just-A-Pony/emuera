@@ -5,7 +5,7 @@ VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emuera", "Emuera\Emuera.csproj", "{6DF78E83-F428-4CD8-887A-F1B9CA0F0670}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmueraPluginExample", "EmueraPluginExample\EmueraPluginExample.csproj", "{15231603-A955-4AD7-8102-7F9C1B1BA3A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmueraPluginExample", "EmueraPluginExample\EmueraPluginExample.csproj", "{15231603-A955-4AD7-8102-7F9C1B1BA3A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,7 +36,6 @@ Global
 		{6DF78E83-F428-4CD8-887A-F1B9CA0F0670}.Release-NAudio|x86.ActiveCfg = Release-NAudio|x86
 		{6DF78E83-F428-4CD8-887A-F1B9CA0F0670}.Release-NAudio|x86.Build.0 = Release-NAudio|x86
 		{15231603-A955-4AD7-8102-7F9C1B1BA3A3}.Debug|x64.ActiveCfg = Debug|x64
-		{15231603-A955-4AD7-8102-7F9C1B1BA3A3}.Debug|x64.Build.0 = Debug|x64
 		{15231603-A955-4AD7-8102-7F9C1B1BA3A3}.Debug|x86.ActiveCfg = Debug|x86
 		{15231603-A955-4AD7-8102-7F9C1B1BA3A3}.Debug|x86.Build.0 = Debug|x86
 		{15231603-A955-4AD7-8102-7F9C1B1BA3A3}.Debug-NAudio|x64.ActiveCfg = Debug-NAudio|x64
