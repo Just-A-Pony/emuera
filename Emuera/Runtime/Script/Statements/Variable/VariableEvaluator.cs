@@ -2426,6 +2426,9 @@ internal sealed class VariableEvaluator : IDisposable
 
 		using var fs = new FileStream(filepath, FileMode.Open, FileAccess.Read);
 		using var bReader = EraBinaryDataReader.CreateReader(fs);
+		#region セーブデータ指定されているMap、Xml、DataTableをロード時に削除するように修正
+		VariableData.RemoveEMDataWhenLoad();
+		#endregion
 		if (bReader != null)
 		{
 			LoadFromStreamBinary(bReader);

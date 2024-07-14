@@ -1085,6 +1085,34 @@ internal sealed partial class VariableData : IDisposable
 		while (LoadVariableBinary(bReader)) { }
 	}
 
+	#region セーブデータ指定されているMap、Xml、DataTableをロード時に削除するように修正
+	public void RemoveEMDataWhenLoad()
+	{
+		foreach (var key in GlobalStatic.ConstantData.SaveMaps)
+		{
+			if (DataStringMaps.ContainsKey(key))
+			{
+				DataStringMaps[key].Clear();
+			}
+		}
+		foreach (var key in GlobalStatic.ConstantData.SaveXmls)
+		{
+			if (DataXmlDocument.ContainsKey(key))
+			{
+				DataXmlDocument.Remove(key);
+			}
+		}
+		foreach (var key in GlobalStatic.ConstantData.SaveDTs)
+		{
+			if (DataDataTables.ContainsKey(key))
+			{
+				DataDataTables[key].Clear();
+			}
+		}
+
+	}
+
+	#endregion
 	/// <summary>
 	/// 1808 キャラクタ型でない変数を一つ読む
 	/// ファイル終端の場合はfalseを返す
