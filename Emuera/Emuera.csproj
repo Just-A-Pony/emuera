@@ -86,6 +86,8 @@
       <EmbeddedResource Remove="artifacts\**" />
       <None Remove="artifacts\**" />
       <Page Remove="artifacts\**" />
+      <EmbeddedResource Include="Properties\lang\emuera-eng.xml" />
+      <EmbeddedResource Include="Properties\lang\emuera-zhs.xml" />
     </ItemGroup>
 
     <ItemGroup>

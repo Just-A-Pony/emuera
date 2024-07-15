@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Xml;
 
 namespace MinorShift.Emuera.Runtime.Utils.EvilMask;
 
-internal sealed class Lang
+internal sealed partial class Lang
 {
 	public sealed class TranslatableString
 	{
@@ -1306,8 +1308,10 @@ internal sealed class Lang
 
 	}
 
-
-	static public void LoadLanguageFile()
+	[GeneratedRegex(@".*emuera.*\.xml")]
+	private static partial Regex LangFileRegex();
+	
+	public static void LoadLanguageFile()
 	{
 		foreach (var pair in trItems) pair.Value.Clear();
 		if (Directory.Exists(langDir))
@@ -1323,22 +1327,45 @@ internal sealed class Lang
 				{
 					continue;
 				}
-				var node = xml.SelectSingleNode("/lang/name");
-				if (node != null)
-				{
-					var langName = node.InnerText.Trim();
-					if (langName.IndexOf('\n', StringComparison.Ordinal) < 0 && !langList.ContainsKey(langName))
-					{
-						langList.Add(langName, path);
-						var fontName = node.InnerText.Trim();
-						if (Config.Config.EmueraLang == langName)
-							loadLangXML(xml);
-					}
-				}
+				var langName = GetLanguage(xml);
+				if(langName != null && langList.TryAdd(langName, path) && Config.Config.EmueraLang == langName)
+					loadLangXML(xml);
 			}
+		}
+		
+		var assembly = Assembly.GetExecutingAssembly();
+		var resources = assembly.GetManifestResourceNames();
+		
+		foreach (var path in resources)
+		{
+			if(!LangFileRegex().IsMatch(path))
+				continue;
+			using var stream = assembly.GetManifestResourceStream(path);
+			if(stream == null)
+				continue;
+			XmlDocument xml = new();
+			try
+			{
+				xml.Load(stream);
+			}
+			catch
+			{
+				continue;
+			}
+			var langName = GetLanguage(xml);
+			if(langName != null && langList.TryAdd(langName, path) && Config.Config.EmueraLang == langName)
+				loadLangXML(xml);
 		}
 		langNames = new string[langList.Count];
 		langList.Keys.CopyTo(langNames, 0);
+		return;
+
+		string GetLanguage(XmlDocument xml)
+		{
+			var node = xml.SelectSingleNode("/lang/name");
+			var langName = node?.InnerText.Trim();
+			return langName;
+		}
 	}
 	static void loadLangXML(XmlDocument xml)
 	{
