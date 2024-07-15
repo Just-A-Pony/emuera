@@ -1,18 +1,13 @@
-# IDE Files
 .vs/*
 .vscode/*
 .idea/*
 
-# Emuera Project Files
 Emuera/artifacts/*
 Emuera/Emuera.csproj.user
 Emuera/Properties/PublishProfiles/*.pubxml.user
+Emuera/Properties/launchSettings.json
 Emuera/bin/*
+Emuera/obj/*
 
-# Emuera Plugin Example Files
-EmueraPluginExample/obj/*
-EmueraPluginExample/bin/*
-
-# Diffs and patches
 *.diff
 *.patch
