@@ -1085,8 +1085,8 @@ internal sealed partial class VariableData : IDisposable
 		while (LoadVariableBinary(bReader)) { }
 	}
 
-	#region セーブデータ指定されているMap、Xml、DataTableをロード時に削除するように修正
-	public void RemoveEMDataWhenLoad()
+	#region EE_RESETDATA、RESETGLOBAL、LOADDATA、LOADGLOBAL時にMap、Xml、DataTableを適切に削除するように
+	public void RemoveEMSaveData()
 	{
 		foreach (var key in GlobalStatic.ConstantData.SaveMaps)
 		{
@@ -1109,9 +1109,56 @@ internal sealed partial class VariableData : IDisposable
 				DataDataTables[key].Clear();
 			}
 		}
-
 	}
 
+	public void RemoveEMGlobalData()
+	{
+		foreach (var key in GlobalStatic.ConstantData.GlobalSaveMaps)
+		{
+			if (DataStringMaps.ContainsKey(key))
+			{
+				DataStringMaps[key].Clear();
+			}
+		}
+		foreach (var key in GlobalStatic.ConstantData.GlobalSaveXmls)
+		{
+			if (DataXmlDocument.ContainsKey(key))
+			{
+				DataXmlDocument.Remove(key);
+			}
+		}
+		foreach (var key in GlobalStatic.ConstantData.GlobalSaveDTs)
+		{
+			if (DataDataTables.ContainsKey(key))
+			{
+				DataDataTables[key].Clear();
+			}
+		}
+	}
+	public void RemoveEMStaticData()
+	{
+		foreach (var key in GlobalStatic.ConstantData.StaticMaps)
+		{
+			if (DataStringMaps.ContainsKey(key))
+			{
+				DataStringMaps[key].Clear();
+			}
+		}
+		foreach (var key in GlobalStatic.ConstantData.StaticXmls)
+		{
+			if (DataXmlDocument.ContainsKey(key))
+			{
+				DataXmlDocument.Remove(key);
+			}
+		}
+		foreach (var key in GlobalStatic.ConstantData.StaticDTs)
+		{
+			if (DataDataTables.ContainsKey(key))
+			{
+				DataDataTables[key].Clear();
+			}
+		}
+	}
 	#endregion
 	/// <summary>
 	/// 1808 キャラクタ型でない変数を一つ読む

@@ -1149,9 +1149,10 @@ internal sealed class VariableEvaluator : IDisposable
 		//グローバルは初期化しない方が都合がよい。
 		//varData.SetDefaultGlobalValue();
 		#region EM_私家版_XMLDocument_連想配列
-		varData.DataXmlDocument = varData.DataXmlDocument.Where(p => Constant.StaticXmls.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
-		varData.DataStringMaps = varData.DataStringMaps.Where(p => Constant.StaticMaps.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
-		varData.DataDataTables = varData.DataDataTables.Where(p => Constant.StaticDTs.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
+		varData.RemoveEMSaveData();
+		//varData.DataXmlDocument = varData.DataXmlDocument.Where(p => Constant.StaticXmls.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
+		//varData.DataStringMaps = varData.DataStringMaps.Where(p => Constant.StaticMaps.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
+		//varData.DataDataTables = varData.DataDataTables.Where(p => Constant.StaticDTs.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
 		#endregion
 		varData.SetDefaultLocalValue();
 		varData.SetDefaultValue(constant);
@@ -1165,8 +1166,10 @@ internal sealed class VariableEvaluator : IDisposable
 	public void ResetGlobalData()
 	{
 		#region EM_私家版_XMLDocument_連想配列
-		varData.DataXmlDocument = varData.DataXmlDocument.Where(p => !Constant.StaticXmls.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
-		varData.DataStringMaps = varData.DataStringMaps.Where(p => !Constant.StaticMaps.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
+		varData.RemoveEMGlobalData();
+		varData.RemoveEMStaticData();
+		//varData.DataXmlDocument = varData.DataXmlDocument.Where(p => !Constant.StaticXmls.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
+		//varData.DataStringMaps = varData.DataStringMaps.Where(p => !Constant.StaticMaps.Contains(p.Key)).ToDictionary(p => p.Key, p => p.Value);
 		#endregion
 		varData.SetDefaultGlobalValue();
 	}
@@ -2277,6 +2280,10 @@ internal sealed class VariableEvaluator : IDisposable
 		EraDataReader reader = null;
 		EraBinaryDataReader bReader = null;
 		FileStream fs = null;
+		#region EM_LOADDATA、LOADGLOBAL、LOADDATA、LOADGLOBAL時にMAP,XML,DataTableを適切に削除するように
+		//DIM GLOVAL SAVEDATAにあたるデータだけが上書きされるらしい？
+		varData.RemoveEMGlobalData();
+		#endregion
 		try
 		{
 			fs = new FileStream(filepath, FileMode.Open, FileAccess.Read);
@@ -2427,7 +2434,7 @@ internal sealed class VariableEvaluator : IDisposable
 		using var fs = new FileStream(filepath, FileMode.Open, FileAccess.Read);
 		using var bReader = EraBinaryDataReader.CreateReader(fs);
 		#region セーブデータ指定されているMap、Xml、DataTableをロード時に削除するように修正
-		VariableData.RemoveEMDataWhenLoad();
+		VariableData.RemoveEMSaveData();
 		#endregion
 		if (bReader != null)
 		{
