@@ -218,7 +218,7 @@ internal sealed partial class FunctionIdentifier
 		addFunction(FunctionCode.QUIT, argb[FunctionArgType.VOID]);//ゲームを終了
 		#region EE_OUTPUTLOG
 		// addFunction(FunctionCode.OUTPUTLOG, argb[FunctionArgType.VOID]);
-		addFunction(FunctionCode.OUTPUTLOG, argb[FunctionArgType.STR_EXPRESSION_NULLABLE]);
+		//addFunction(FunctionCode.OUTPUTLOG, argb[FunctionArgType.STR_EXPRESSION_NULLABLE]);
 		#endregion
 
 		addFunction(FunctionCode.BEGIN, new BEGIN_Instruction());//システム関数の実行。実行するとCALLの呼び出し元などを忘れてしまう。

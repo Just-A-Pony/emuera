@@ -76,7 +76,7 @@ enum FunctionCode
 
 	PUTFORM,//@SAVEINFO関数でのみ使用可能。PRINTFORMと同様の書式でセーブデータに概要をつける。
 	QUIT,//ゲームを終了
-	OUTPUTLOG,
+	//OUTPUTLOG,
 
 	BEGIN,//システム関数の実行。実行するとCALLの呼び出し元などを忘れてしまう。
 

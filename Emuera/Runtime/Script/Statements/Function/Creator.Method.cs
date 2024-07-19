@@ -16,6 +16,7 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -7484,9 +7485,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int, ArgType.Int}, OmitStart = 1 },
-				};
+				];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -7504,9 +7505,9 @@ internal static partial class FunctionMethodCreator
 		{
 			ReturnType = typeof(Int64);
 			// argumentTypeArray = null;
-			argumentTypeArrayEx = new ArgTypeList[] {
+			argumentTypeArrayEx = [
 					new ArgTypeList{ ArgTypes = { ArgType.Int}, OmitStart = 1 },
-				};
+				];
 			CanRestructure = false;
 		}
 		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
@@ -7516,4 +7517,32 @@ internal static partial class FunctionMethodCreator
 			return 0;
 		}
 	}
-}
+	#region EE_OUTPUTLOG拡張
+	private sealed class OutputlogMethod : FunctionMethod
+	{
+		public OutputlogMethod()
+		{
+			ReturnType = typeof(Int64);
+			// argumentTypeArray = null;
+			argumentTypeArrayEx = [
+					new ArgTypeList{ ArgTypes = { ArgType.String, ArgType.Int}, OmitStart = 0 },
+				];
+			CanRestructure = false;
+		}
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		{
+			string filename = "";
+			if (arguments.Count > 0)
+				filename = arguments[0].GetStrValue(exm);
+			bool hideInfo = false;
+			if (arguments.Count > 1)
+				hideInfo = arguments[1].GetIntValue(exm) == 1;
+
+	
+			exm.Console.OutputLog(filename, hideInfo);
+			return 1;
+		}
+
+	}
+		#endregion
+	}

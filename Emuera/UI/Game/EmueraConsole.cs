@@ -448,7 +448,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		if (!await process.Initialize(logWriter))
 		{
 			state = ConsoleState.Error;
-			OutputLog(null);
+			OutputLog(null, false);
 			PrintFlush(false);
 			RefreshStrings(true);
 			return;

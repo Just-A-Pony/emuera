@@ -20,7 +20,7 @@ namespace MinorShift.Emuera.Forms
 
 		public void Setup(EmueraConsole console)
 		{
-			textBox1.Text = console.GetLog();
+			textBox1.Text = console.GetLog(true);
 		}
 
 		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

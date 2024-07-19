@@ -739,12 +739,12 @@ internal sealed partial class EmueraConsole : IDisposable
 	#endregion
 
 
-	private bool outputLog(string fullpath)
+	private bool outputLog(string fullpath, bool hideInfo)
 	{
 		StreamWriter writer = null;
 		try
 		{
-			var log = GetLog();
+			var log = GetLog(hideInfo);
 			File.WriteAllText(fullpath, log);
 		}
 		catch (Exception)
@@ -756,7 +756,7 @@ internal sealed partial class EmueraConsole : IDisposable
 	}
 
 	#region EE_OUTPUTLOG
-	public bool OutputLog(string filename)
+	public bool OutputLog(string filename, bool hideInfo)
 	{
 		// if (filename == null)
 		if (filename == "" || filename == null)
@@ -774,7 +774,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			return false;
 		}
 
-		if (outputLog(filename))
+		if (outputLog(filename, hideInfo))
 		{
 			if (window.Created)
 			{
@@ -798,7 +798,7 @@ internal sealed partial class EmueraConsole : IDisposable
 			return false;
 		}
 
-		if (outputLog(filename))
+		if (outputLog(filename, false))
 		{
 			if (window.Created)
 			{
@@ -812,28 +812,31 @@ internal sealed partial class EmueraConsole : IDisposable
 	}
 
 	#endregion
-	public string GetLog()
+	public string GetLog(bool hideInfo)
 	{
 		var builder = new StringBuilder();
 
-
-		builder.AppendLine(trsl.EnvironmentInformation.Text);
-		builder.AppendLine(AssemblyData.EmueraVersionText);
-
-		var patchVersionsPath = Path.Combine(Program.ExeDir, "patch_versions");
-		if (Directory.Exists(patchVersionsPath))
+		if (!hideInfo)
 		{
-			builder.AppendLine(trsl.PatchVersion.Text);
-			var versionTexts = Directory.EnumerateFiles(patchVersionsPath, "*.txt")
-					.Where(x => Path.GetExtension(x) == ".txt")
-					.OrderBy(x => x, StringComparer.Ordinal)
-					.Select(x => File.ReadAllText(x).Trim());
-			var versionText = string.Join("+", versionTexts);
-			builder.AppendLine(versionText);
+			builder.AppendLine(trsl.EnvironmentInformation.Text);
+			builder.AppendLine(AssemblyData.EmueraVersionText);
+
+			var patchVersionsPath = Path.Combine(Program.ExeDir, "patch_versions");
+			if (Directory.Exists(patchVersionsPath))
+			{
+				builder.AppendLine(trsl.PatchVersion.Text);
+				var versionTexts = Directory.EnumerateFiles(patchVersionsPath, "*.txt")
+						.Where(x => Path.GetExtension(x) == ".txt")
+						.OrderBy(x => x, StringComparer.Ordinal)
+						.Select(x => File.ReadAllText(x).Trim());
+				var versionText = string.Join("+", versionTexts);
+				builder.AppendLine(versionText);
+			}
+			builder.AppendLine();
+			builder.AppendLine(trsl.Log.Text);
+			builder.AppendLine();
 		}
-		builder.AppendLine();
-		builder.AppendLine(trsl.Log.Text);
-		builder.AppendLine();
+		//builder.AppendLine();
 		for (int i = 0; i < displayLineList.Count; i++)
 		{
 			#region EE_AnchorのCB機能移植

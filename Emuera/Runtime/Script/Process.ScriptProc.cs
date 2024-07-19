@@ -595,6 +595,8 @@ internal sealed partial class Process
 						skipPrint = true;
 				}
 				break;
+			#region EE_OUTPUTLOG拡張
+			/*
 			case FunctionCode.OUTPUTLOG:
 				#region EE_OUTPUTLOG
 				if (func.Argument.IsConst)
@@ -605,6 +607,8 @@ internal sealed partial class Process
 				// exm.Console.OutputLog(null);
 				#endregion
 				break;
+			*/
+			#endregion
 			case FunctionCode.ARRAYSHIFT: //配列要素をずらす
 				{
 					SpArrayShiftArgument arrayArg = (SpArrayShiftArgument)func.Argument;

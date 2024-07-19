@@ -210,6 +210,10 @@ internal static partial class FunctionMethodCreator
 			["SPRITEANIMEADDFRAME"] = new SpriteAnimeAddFrameMethod(),
 			["SETANIMETIMER"] = new SetAnimeTimerMethod(),
 
+			#region EE_OUTPUTLOG拡張
+			["OUTPUTLOG"] = new OutputlogMethod(),
+			#endregion
+
 			#region EM_私家版_追加関数
 			["HTML_STRINGLEN"] = new HtmlStringLenMethod(),
 			["HTML_SUBSTRING"] = new HtmlSubStringMethod(),
