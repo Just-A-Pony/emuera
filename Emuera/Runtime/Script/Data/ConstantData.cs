@@ -1076,6 +1076,7 @@ internal sealed class ConstantData
 				allowIndex = 1;
 				break;
 			case VariableCode.NAME:
+			case VariableCode.CALLNAME:
 				ret = relationDic;
 				errPos = "chara*.csv";
 				allowIndex = -1;

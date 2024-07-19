@@ -3768,46 +3768,47 @@ internal static partial class FunctionMethodCreator
 		}
 	}
 
-	// 使われてない
-	//private sealed class GetnumBMethod : FunctionMethod
-	//{
-	//	public GetnumBMethod()
-	//	{
-	//		ReturnType = typeof(Int64);
-	//		argumentTypeArray = new Type[] { typeof(string), typeof(string) };
-	//		CanRestructure = true;
-	//	}
-	//	public override string CheckArgumentType(string name, IOperandTerm[] arguments)
-	//	{
-	//		string errStr = base.CheckArgumentType(name, arguments);
-	//		if (errStr != null)
-	//			return errStr;
-	//		if (arguments[0] == null)
-	//			return name + "関数の1番目の引数は省略できません";
-	//		if (arguments[0] is SingleTerm)
-	//		{
-	//			string varName = ((SingleTerm)arguments[0]).Text;
-	//			if (GlobalStatic.IdentifierDictionary.GetVariableToken(varName, null, true) == null)
-	//				return name + "関数の1番目の引数が変数名ではありません";
-	//		}
-	//		return null;
-	//	}
-	//	public override Int64 GetIntValue(ExpressionMediator exm, IOperandTerm[] arguments)
-	//	{
-	//		VariableToken var = GlobalStatic.IdentifierDictionary.GetVariableToken(arguments[0].GetStrValue(exm), null, true);
-	//		if (var == null)
-	//			throw new CodeEE("GETNUMBの1番目の引数(\"" + arguments[0].GetStrValue(exm) + "\")が変数名ではありません");
-	//		string key = arguments[1].GetStrValue(exm);
-	//		#region EE_ERD
-	//		//GETNUMBは使ってないのでテストしていない
-	//		// if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, var.Code, key, -1))
-	//		if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, var.Code, key, -1, arguments[0].GetStrValue(exm)))
-	//		#endregion
-	//			return ret;
-	//		else
-	//			return -1;
-	//	}
-	//}
+	private sealed class GetnumBMethod : FunctionMethod
+	{
+		public GetnumBMethod()
+		{
+			ReturnType = typeof(Int64);
+			argumentTypeArray = new Type[] { typeof(string), typeof(string) };
+			CanRestructure = true;
+		}
+		/*
+		public override string CheckArgumentType(string name, IOperandTerm[] arguments)
+		{
+			string errStr = base.CheckArgumentType(name, arguments);
+			if (errStr != null)
+				return errStr;
+			if (arguments[0] == null)
+				return name + "関数の1番目の引数は省略できません";
+			if (arguments[0] is SingleTerm)
+			{
+				string varName = ((SingleTerm)arguments[0]).Text;
+				if (GlobalStatic.IdentifierDictionary.GetVariableToken(varName, null, true) == null)
+					return name + "関数の1番目の引数が変数名ではありません";
+			}
+			return null;
+		}
+		*/
+		public override Int64 GetIntValue(ExpressionMediator exm, List<AExpression> arguments)
+		{
+			VariableToken var = GlobalStatic.IdentifierDictionary.GetVariableToken(arguments[0].GetStrValue(exm), null, true);
+			if (var == null)
+				throw new CodeEE("GETNUMBの1番目の引数(\"" + arguments[0].GetStrValue(exm) + "\")が変数名ではありません");
+			string key = arguments[1].GetStrValue(exm);
+			#region EE_ERD
+			//GETNUMBは使ってないのでテストしていない
+			// if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, var.Code, key, -1))
+			if (exm.VEvaluator.Constant.TryKeywordToInteger(out int ret, var.Code, key, -1, arguments[0].GetStrValue(exm)))
+			#endregion
+				return ret;
+			else
+				return -1;
+		}
+	}
 
 	private sealed class GetPalamLVMethod : FunctionMethod
 	{
