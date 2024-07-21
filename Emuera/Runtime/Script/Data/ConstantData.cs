@@ -1843,7 +1843,7 @@ internal sealed class CharacterTemplate
 	public string Callname;
 	public string Nickname;
 	public string Mastername;
-	public readonly long No;
+	public readonly long No = -1;
 	public readonly Dictionary<int, long> Maxbase = [];
 	public readonly Dictionary<int, long> Mark = [];
 	public readonly Dictionary<int, long> Exp = [];
