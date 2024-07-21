@@ -275,6 +275,7 @@ internal sealed class ConsoleButtonString
 
 	public void DrawTo(Graphics graph, int pointY, bool isBackLog, TextDrawingMode mode)
 	{
+		bool isFocus = IsButton && parent.ButtonIsSelected(this);
 		bool isSelecting = IsButton && parent.ButtonIsPointing(this);
 		#region EM_私家版_描画拡張
 		//foreach (AConsoleDisplayNode css in strArray)
@@ -321,7 +322,7 @@ internal sealed class ConsoleButtonString
 		foreach (AConsoleDisplayNode css in strArray)
 		{
 			if (css is ConsoleDivPart div) continue;
-			css.DrawTo(graph, pointY, isSelecting, isBackLog, mode, IsButton);
+			css.DrawTo(graph, pointY, isSelecting, isFocus, isBackLog, mode, IsButton);
 		}
 		#endregion
 	}
@@ -329,8 +330,9 @@ internal sealed class ConsoleButtonString
 	#region EM_私家版_描画拡張
 	public void DrawPartTo(Graphics graph, AConsoleDisplayNode css, int pointY, bool isBackLog, TextDrawingMode mode)
 	{
+		bool isFocus = IsButton && parent.ButtonIsSelected(this);
 		bool isSelecting = IsButton && parent.ButtonIsPointing(this);
-		css.DrawTo(graph, pointY, isSelecting, isBackLog, mode);
+		css.DrawTo(graph, pointY, isSelecting, isFocus, isBackLog, mode);
 	}
 	#endregion
 

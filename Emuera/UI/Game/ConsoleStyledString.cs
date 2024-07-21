@@ -97,13 +97,13 @@ internal sealed class ConsoleStyledString : AConsoleColoredPart
 		#endregion
 	}
 
-	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
+	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isFocus, bool isBackLog, TextDrawingMode mode, bool isButton = false)
 	{
 		if (Error)
 			return;
 		Color color = Color;
 		Color? backcolor = null;
-		if (isSelecting)
+		if (isFocus)
 		{
 			if (JSONConfig.Data.UseButtonFocusBackgroundColor)
 			{

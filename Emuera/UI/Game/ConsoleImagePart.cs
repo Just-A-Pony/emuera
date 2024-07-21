@@ -192,7 +192,7 @@ sealed class ConsoleImagePart : AConsoleDisplayNode
 		return 0;
 	}
 	#endregion
-	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isBackLog, TextDrawingMode mode, bool isButton = false)
+	public override void DrawTo(Graphics graph, int pointY, bool isSelecting, bool isFocus, bool isBackLog, TextDrawingMode mode, bool isButton = false)
 	{
 		if (Error)
 			return;
