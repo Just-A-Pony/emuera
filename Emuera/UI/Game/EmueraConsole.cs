@@ -422,10 +422,18 @@ internal sealed partial class EmueraConsole : IDisposable
 	public async Task Initialize()
 	{
 		var boottimeDebugStopwatch = Stopwatch.StartNew();
-		using var fs = new FileStream(Program.ExeDir + "time.log", FileMode.OpenOrCreate);
-		using var logWriter = new StreamWriter(fs);
-		logWriter.WriteLine("Init:Start");
-		logWriter.WriteLine("File:Preload:Start");
+		StreamWriter logWriter = null;
+		try
+		{
+			using var fs = new FileStream(Program.ExeDir + "time.log", FileMode.OpenOrCreate);
+			logWriter = new StreamWriter(fs);
+		}
+		catch
+		{
+			ParserMediator.Warn(trerror.TimeLogFileLocked.Text, null, 0);
+		}
+		logWriter?.WriteLine("Init:Start");
+		logWriter?.WriteLine("File:Preload:Start");
 		//必要なソースファイルを事前にメモリに一気に読み込む
 		_genericTimerStopwatch.Restart();
 
@@ -433,7 +441,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		await Preload.Load(Program.ErbDir);
 		await Preload.Load(Program.CsvDir);
 
-		logWriter.WriteLine("File:Preload:End " + boottimeDebugStopwatch.ElapsedMilliseconds + "ms");
+		logWriter?.WriteLine("File:Preload:End " + boottimeDebugStopwatch.ElapsedMilliseconds + "ms");
 
 		GlobalStatic.Console = this;
 		// GlobalStatic.MainWindow = window;
@@ -456,7 +464,7 @@ internal sealed partial class EmueraConsole : IDisposable
 		RunEmueraProgram("");
 		RefreshStrings(true);
 
-		logWriter.WriteLine("Init:End " + boottimeDebugStopwatch.ElapsedMilliseconds + "ms");
+		logWriter?.WriteLine("Init:End " + boottimeDebugStopwatch.ElapsedMilliseconds + "ms");
 	}
 
 

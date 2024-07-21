@@ -19,25 +19,33 @@ static partial class Preload
 	// Opens as UTF8BOM if starts with BOM, else use DetectEncoding
 	private static string[] readAllLinesDetectEncoding(string path)
 	{
-		using var file = File.Open(path, FileMode.Open);
-		Span<byte> bom = stackalloc byte[3];
-		_ = file.Read(bom);
-		file.Close();
 		try
 		{
-			if (bom.SequenceEqual<byte>([0xEF, 0xBB, 0xBF]))
+			using var file = File.Open(path, FileMode.Open);
+			Span<byte> bom = stackalloc byte[3];
+			_ = file.Read(bom);
+			file.Close();
+			try
 			{
-				return File.ReadAllLines(path, EncodingHandler.UTF8BOMEncoding);
+				if (bom.SequenceEqual<byte>([0xEF, 0xBB, 0xBF]))
+				{
+					return File.ReadAllLines(path, EncodingHandler.UTF8BOMEncoding);
+				}
+				else
+				{
+					return File.ReadAllLines(path, EncodingHandler.DetectEncoding(path));
+				}
 			}
-			else
+			catch
 			{
-				return File.ReadAllLines(path, EncodingHandler.DetectEncoding(path));
+				ParserMediator.Warn(trerror.AbnormalEncode.Text, new ScriptPosition(path, 0), 0, "");
+				return null;
 			}
 		}
-		catch
+		catch (IOException)
 		{
-			ParserMediator.Warn(trerror.AbnormalEncode.Text, new ScriptPosition(path, 0), 0, "");
-			return null;
+			ParserMediator.Warn(string.Format(trerror.FileUsingOtherProcess.Text, path), new ScriptPosition(path, 0), 0, "");
+			return File.ReadAllLines(path, EncodingHandler.UTF8BOMEncoding);
 		}
 	}
 
