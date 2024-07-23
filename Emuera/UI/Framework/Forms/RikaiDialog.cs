@@ -104,19 +104,24 @@ namespace MinorShift.Emuera.Forms
 		class EdictParser
 		{
 			public byte[] edict;
+			public ReadOnlyMemory<byte> edictMemory;
 			public int end, start;
 			public bool finished;
 			public const long tickDelta = 4000;
 			public long tickNext = DateTime.Now.Ticks + tickDelta;
-			public byte[] word;
-			public byte[] pronoun;
+			//public byte[] word;
+			//public byte[] pronoun;
+			public ReadOnlyMemory<byte> wordMemory;
+			public ReadOnlyMemory<byte> pronounMemory;
 
-			private Encoding eucjp;
+			private Encoding eucjp; //TODO
 
 			public EdictParser(byte[] a_edict)
 			{
 				edict = a_edict; //LATER: I hope it doesn't copy the entire array, and only copies the reference.
 
+				edictMemory = edict.AsMemory();
+				
 				eucjp = Encoding.GetEncoding(20932);
 
 				for (; end < edict.Length; ++end)
@@ -132,8 +137,8 @@ namespace MinorShift.Emuera.Forms
 
 			public void Step()
 			{
-				word = null;
-				pronoun = null;
+				wordMemory = null;
+				pronounMemory = null;
 				end += 2;
 				start = end;
 
@@ -165,24 +170,27 @@ namespace MinorShift.Emuera.Forms
 						int b = c;
 						//if (edict[b - 1] == ' ') b--;
 						b--;
-						word = new byte[b - start];
-						Array.Copy(edict, start, word, 0, b - start);
+						//word = new byte[b - start];
+						//Array.Copy(edict, start, word, 0, b - start);
+						wordMemory = edictMemory.Slice(start, b - start);
 						break;
 					}
 					else if (edict[c] == '[')
 					{
 						int b = c;
 						b--;
-						word = new byte[b - start];
-						Array.Copy(edict, start, word, 0, b - start);
+						//word = new byte[b - start];
+						//Array.Copy(edict, start, word, 0, b - start);
+						wordMemory = edictMemory.Slice(start, b - start);
 						c++;
 						int pronoun_start = c;
 						for (; c < end; c++)
 						{
 							if (edict[c] == ']')
 							{
-								pronoun = new byte[c - pronoun_start];
-								Array.Copy(edict, pronoun_start, pronoun, 0, c - pronoun_start);
+								//pronoun = new byte[c - pronoun_start];
+								//Array.Copy(edict, pronoun_start, pronoun, 0, c - pronoun_start);
+								pronounMemory = edictMemory.Slice(pronoun_start, c - pronoun_start);
 								c = end; //superbreak
 								break;
 							}
@@ -199,14 +207,21 @@ namespace MinorShift.Emuera.Forms
 
 		class IndexEntry
 		{
-			public byte[] word;
+			//public byte[] word;
+			public ReadOnlyMemory<byte> wordMemory;
 			public List<int> offsets;
 			public IndexEntry Next;
 			public IndexEntry Previous;
 
-			public IndexEntry(byte[] a_word)
+			//public IndexEntry(byte[] a_word)
+			//{
+			//	word = a_word;
+			//	offsets = new List<int>(4);
+			//}
+
+			public IndexEntry(ReadOnlyMemory<byte> a_word)
 			{
-				word = a_word;
+				wordMemory = a_word;
 				offsets = new List<int>(4);
 			}
 
@@ -219,65 +234,68 @@ namespace MinorShift.Emuera.Forms
 			}
 		}
 
-		List<string> s(IndexEntry first)
-		{
-			List<string> res = new(64);
-			for (int i = 0; i < 63; i++)
-			{
-				var t = eucjp.GetString(first.word);
-				t += " -- ";
-				t += BitConverter.ToString(first.word);
-				res.Add(t);
-				if (first.Next == null) break;
-				first = first.Next;
-			}
-			return res;
-		}
+		//List<string> s(IndexEntry first)
+		//{
+		//	List<string> res = new(64);
+		//	for (int i = 0; i < 63; i++)
+		//	{
+		//		var t = eucjp.GetString(first.word.Span);
+		//		t += " -- ";
+		//		t += BitConverter.ToString(first.word);
+		//		res.Add(t);
+		//		if (first.Next == null) break;
+		//		first = first.Next;
+		//	}
+		//	return res;
+		//}
 
-		string s(byte[] first)
-		{
-			var t = eucjp.GetString(first);
-			t += " -- ";
-			t += BitConverter.ToString(first);
-			return t;
-		}
+		//string s(byte[] first)
+		//{
+		//	var t = eucjp.GetString(first);
+		//	t += " -- ";
+		//	t += BitConverter.ToString(first);
+		//	return t;
+		//}
 
-		List<string> check(IndexEntry first)
-		{
-			while (true)
-			{
-				if (first.Next == null) break;
-				if (Compare(first.word, first.Next.word) >= 0)
-				{
-					var err = new List<string>(16);
-					for (int i = 0; i < 8; i++)
-					{
-						if (first.Previous == null) break;
-					}
-					for (int i = 0; i < 16; i++)
-					{
-						var t = eucjp.GetString(first.word);
-						t += " -- ";
-						t += BitConverter.ToString(first.word);
-						err.Add(t);
-						if (first.Next == null) break;
-						first = first.Next;
-					}
-					return err;
-				}
+		//List<string> check(IndexEntry first)
+		//{
+		//	while (true)
+		//	{
+		//		if (first.Next == null) break;
+		//		if (Compare(first.wordMemory, first.Next.wordMemory) >= 0)
+		//		{
+		//			var err = new List<string>(16);
+		//			for (int i = 0; i < 8; i++)
+		//			{
+		//				if (first.Previous == null) break;
+		//			}
+		//			for (int i = 0; i < 16; i++)
+		//			{
+		//				var t = eucjp.GetString(first.wordMemory.Span);
+		//				t += " -- ";
+		//				t += BitConverter.ToString(first.wordMemory);
+		//				err.Add(t);
+		//				if (first.Next == null) break;
+		//				first = first.Next;
+		//			}
+		//			return err;
+		//		}
 
-				first = first.Next;
-			}
-			return null;
-		}
+		//		first = first.Next;
+		//	}
+		//	return null;
+		//}
 
 		//In theory one of them will always stay in the kana area, while other will be all over the place.
 		//I will check if this is true or not once this thing actually works.
-		static int WhichIsCloser(byte[] first, byte[] second, byte[] tothis)
+		static int WhichIsCloser(ReadOnlyMemory<byte> first, ReadOnlyMemory<byte> second, ReadOnlyMemory<byte> tothis)
 		{
-			if (first[0] == second[0] && second[0] == tothis[0]) return 0;
-			int s = second[0] - tothis[0];
-			int f = first[0] - tothis[0];
+			var firstSpan = first.Span;
+			var secondSpan = second.Span;
+			var tothisSpan = tothis.Span;
+			if (firstSpan[0] == secondSpan[0] && secondSpan[0] == tothisSpan[0]) return 0;
+			int s = secondSpan[0] - tothisSpan[0];
+			int f = firstSpan[0] - tothisSpan[0];
 			if (s < 0) s *= -1;
 			if (f < 0) f *= -1;
 			if (s < f) return 1; //do swap
@@ -285,9 +303,11 @@ namespace MinorShift.Emuera.Forms
 		}
 
 
-		private static int Compare(byte[] first, byte[] second)
+		private static int Compare(ReadOnlyMemory<byte> first, ReadOnlyMemory<byte> second)
 		{
 			int i = 0;
+			var firstSpan = first.Span;
+			var secondSpan = second.Span;
 			while (true)
 			{
 				if (i >= first.Length)
@@ -298,8 +318,8 @@ namespace MinorShift.Emuera.Forms
 				if (i >= second.Length)
 					return 1;
 
-				if (first[i] > second[i]) return 1;
-				if (first[i] < second[i]) return -1;
+				if (firstSpan[i] > secondSpan[i]) return 1;
+				if (firstSpan[i] < secondSpan[i]) return -1;
 				i++;
 			}
 		}
@@ -322,6 +342,7 @@ namespace MinorShift.Emuera.Forms
 
 			// The whole point of this is, this index is sorted, so you do binary search with byte sequence.
 			// When you need to search for search_word, you search for 0x00 search_word 0x01, and it's guaranteed that there is only one such byte sequence in the index.
+
 
 			BackgroundWorker worker = sender as BackgroundWorker;
 
@@ -358,11 +379,11 @@ namespace MinorShift.Emuera.Forms
 			var edictParser = new EdictParser(edict);
 
 			edictParser.Step();
-			first = current = current2 = new IndexEntry(edictParser.word);
+			first = current = current2 = new IndexEntry(edictParser.wordMemory);
 			current.offsets.Add(edictParser.start);
 
 			edictParser.Step();
-			current = new IndexEntry(edictParser.word);
+			current = new IndexEntry(edictParser.wordMemory);
 			current.offsets.Add(edictParser.start);
 			first.Next = current;
 			current.Previous = first;
@@ -370,7 +391,7 @@ namespace MinorShift.Emuera.Forms
 			paranoid = false;
 			if (paranoid)
 			{
-				if (Compare(first.word, current.word) > 0) //if first.word > current.word
+				if (Compare(first.wordMemory, current.wordMemory) > 0) //if first.word > current.word
 				{
 					throw new Exception($"{Config.RikaiFilename} parsing error");
 				}
@@ -410,7 +431,7 @@ namespace MinorShift.Emuera.Forms
 					}
 				}
 
-				if (WhichIsCloser(current.word, current2.word, edictParser.word) != 0)
+				if (WhichIsCloser(current.wordMemory, current2.wordMemory, edictParser.wordMemory) != 0)
 				{
 					var temp = current;
 					current = current2;
@@ -419,7 +440,7 @@ namespace MinorShift.Emuera.Forms
 
 				//type s(first) in the immediate window to debug this thing
 
-				var word = edictParser.word;
+				var word = edictParser.wordMemory;
 				int cmp;
 
 				//if (iter == 0x00004a06)
@@ -434,7 +455,7 @@ namespace MinorShift.Emuera.Forms
 
 
 
-				cmp = Compare(current.word, word);
+				cmp = Compare(current.wordMemory, word);
 				if (cmp == 0)
 				{
 					current.offsets.Add(edictParser.start);
@@ -443,7 +464,7 @@ namespace MinorShift.Emuera.Forms
 				{
 					while (true)
 					{
-						cmp = Compare(current.word, word);
+						cmp = Compare(current.wordMemory, word);
 						if (cmp == 0)
 						{
 							current.offsets.Add(edictParser.start);
@@ -476,7 +497,7 @@ namespace MinorShift.Emuera.Forms
 				{
 					while (true)
 					{
-						cmp = Compare(current.word, word);
+						cmp = Compare(current.wordMemory, word);
 						if (cmp == 0)
 						{
 							current.offsets.Add(edictParser.start);
@@ -516,23 +537,23 @@ namespace MinorShift.Emuera.Forms
 				//	iter += 0;
 				//}
 
-				if (edictParser.pronoun == null) continue;
+				if (edictParser.pronounMemory.Equals(null)) continue;
 
 				//if (iter == 0x13)
 				//{
 				//	iter += 0;
 				//}
 
-				word = edictParser.pronoun;
+				word = edictParser.pronounMemory;
 
-				if (WhichIsCloser(current.word, current2.word, word) != 0)
+				if (WhichIsCloser(current.wordMemory, current2.wordMemory, word) != 0)
 				{
 					var temp = current;
 					current = current2;
 					current2 = temp;
 				}
 
-				cmp = Compare(current.word, word);
+				cmp = Compare(current.wordMemory, word);
 				if (cmp == 0)
 				{
 					current.offsets.Add(edictParser.start);
@@ -541,7 +562,7 @@ namespace MinorShift.Emuera.Forms
 				{
 					while (true)
 					{
-						cmp = Compare(current.word, word);
+						cmp = Compare(current.wordMemory, word);
 						if (cmp == 0)
 						{
 							current.offsets.Add(edictParser.start);
@@ -574,7 +595,7 @@ namespace MinorShift.Emuera.Forms
 				{
 					while (true)
 					{
-						cmp = Compare(current.word, word);
+						cmp = Compare(current.wordMemory, word);
 						if (cmp == 0)
 						{
 							current.offsets.Add(edictParser.start);
@@ -619,11 +640,11 @@ namespace MinorShift.Emuera.Forms
 				iter++; //max is 0x00041e0b
 			}
 
-			paranoid = false;
-			if (paranoid)
-			{
-				if (check(first) != null) throw new Exception("out of order");
-			}
+			//paranoid = false;
+			//if (paranoid)
+			//{
+			//	if (check(first) != null) throw new Exception("out of order");
+			//}
 
 			var memory = new MemoryStream(0x10000);
 			memory.WriteByte(0);
@@ -633,7 +654,7 @@ namespace MinorShift.Emuera.Forms
 			current = first;
 			while (true)
 			{
-				memory.Write(current.word, 0, current.word.Length);
+				memory.Write(current.wordMemory.Span);
 				foreach (var offset in current.offsets)
 				{
 					int num = offset;
@@ -679,52 +700,59 @@ namespace MinorShift.Emuera.Forms
 
 			edictind = memory.ToArray();
 
-			File.WriteAllBytes(Config.RikaiFilename + ".ind", memory.ToArray());
+			//File.WriteAllBytes(Program.ExeDir + Config.RikaiFilename + ".ind", memory.ToArray());
 
-			paranoid = false;
-			if (paranoid)
+			using (FileStream fileStream = new FileStream(Program.ExeDir + Config.RikaiFilename + ".ind", FileMode.Create, FileAccess.Write))
 			{
-				current = first;
-				if (edictind[0] != 0) throw new Exception();
-				int ind = 1;
-				while (true)
-				{
-					var word = new byte[current.word.Length];
-					Array.Copy(edictind, ind, word, 0, current.word.Length);
-					if (Compare(word, current.word) != 0) throw new Exception();
-					ind += current.word.Length;
+				memory.Position = 0;
+				memory.CopyTo(fileStream);
+			}
 
-					int offset_index = 0;
-					//current.offsets
+			//paranoid = false;
+			//if (paranoid)
+			//{
+			//	current = first;
+			//	if (edictind[0] != 0) throw new Exception();
+			//	int ind = 1;
+			//	while (true)
+			//	{
+			//		var word = new byte[current.word.Length];
+			//		Array.Copy(edictind, ind, word, 0, current.word.Length);
 
-					if (edictind[ind] != 1) throw new Exception();
-					ind++;
+				//		if (Compare(word, current.word) != 0) throw new Exception();
+				//		ind += current.word.Length;
 
-					if (edictind[ind] == 0 || edictind[ind] == 1) throw new Exception();
+				//		int offset_index = 0;
+				//		//current.offsets
 
-					int num;
-					int rem;
-					while (true)
-					{
-						num = 0;
-						while (true)
-						{
-							rem = edictind[ind++];
-							if (rem == 0 || rem == 1) break;
-							if ((rem >> 2) == 0) rem = edictind[ind++] >> 2;
-							num = num * 0x100 + rem;
-						} //end one offset
-						if (current.offsets[offset_index] != num) throw new Exception();
-						offset_index++;
-						if (rem == 0) break;
-					} //end all offsets
+				//		if (edictind[ind] != 1) throw new Exception();
+				//		ind++;
 
-					if (current.Next == null) break;
-					current = current.Next;
-				} //end IndexEntry
-			} //end paranoid
+				//		if (edictind[ind] == 0 || edictind[ind] == 1) throw new Exception();
 
-			//MessageBox.Show($"{Config.RikaiFilename}.ind generated!");
+				//		int num;
+				//		int rem;
+				//		while (true)
+				//		{
+				//			num = 0;
+				//			while (true)
+				//			{
+				//				rem = edictind[ind++];
+				//				if (rem == 0 || rem == 1) break;
+				//				if ((rem >> 2) == 0) rem = edictind[ind++] >> 2;
+				//				num = num * 0x100 + rem;
+				//			} //end one offset
+				//			if (current.offsets[offset_index] != num) throw new Exception();
+				//			offset_index++;
+				//			if (rem == 0) break;
+				//		} //end all offsets
+
+				//		if (current.Next == null) break;
+				//		current = current.Next;
+				//	} //end IndexEntry
+				//} //end paranoid
+
+				//MessageBox.Show($"{Config.RikaiFilename}.ind generated!");
 		}
 	}
 }
