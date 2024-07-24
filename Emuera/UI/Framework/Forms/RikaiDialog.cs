@@ -10,19 +10,17 @@ namespace MinorShift.Emuera.Forms;
 
 public partial class RikaiDialog : Form
 {
-	private string filename;
-	private byte[] edict;
-	private byte[] edictind;
+	private byte[] mEdict;
+	private byte[] mEdictIndex;
 	public delegate void RikaiSendIndex(byte[] edictind);
 	private RikaiSendIndex rikaiSendIndex;
 	public Encoding eucjp = Encoding.GetEncoding(20932);
 	private List<string> dialogLines = new(16);
 	DateTime start = DateTime.Now;
 
-	public RikaiDialog(string filename, byte[] edict, RikaiSendIndex rikaiSendIndex)
+	public RikaiDialog(byte[] edict, RikaiSendIndex rikaiSendIndex)
 	{
-		this.filename = filename;
-		this.edict = edict;
+		this.mEdict = edict;
 		this.rikaiSendIndex = rikaiSendIndex;
 
 		dialogLines.Add("");
@@ -43,25 +41,10 @@ public partial class RikaiDialog : Form
 		backgroundWorker.RunWorkerAsync();
 	}
 
-	//public string LabelText
-	//{
-	//	get
-	//	{
-	//		return this.label.Text;
-	//	}
-	//	set
-	//	{
-	//		this.label.Text = value;
-	//	}
-	//}
-
-
 	private void bwRunWorkerCompleted(
 		object sender, RunWorkerCompletedEventArgs e)
 	{
-		//this.label.Text = "completed";
-
-		rikaiSendIndex(edictind);
+		rikaiSendIndex(mEdictIndex);
 	}
 
 	private void bwProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -93,43 +76,32 @@ public partial class RikaiDialog : Form
 			var timeSpan = DateTime.Now - start;
 			dialogLines[5] = $"100% in {(int)timeSpan.TotalSeconds} seconds";
 		}
-		//dialogLines.Add("Progress: 0/0");
-		//dialogLines[0] = $"{Config.RikaiFilename}.ind not found, generating. Should take a few minutes.";
-		//dialogLines[1] = "Progress 0/0";
 		label.Text = string.Join("\n", dialogLines);
-
-		//this.label.Text = "in progress: " + e.ProgressPercentage;
 	}
 
 	class EdictParser
 	{
-		public byte[] edict;
-		public ReadOnlyMemory<byte> edictMemory;
-		public int end, start;
-		public bool finished;
-		public const long tickDelta = 4000;
-		public long tickNext = DateTime.Now.Ticks + tickDelta;
-		//public byte[] word;
-		//public byte[] pronoun;
-		public ReadOnlyMemory<byte> wordMemory;
-		public ReadOnlyMemory<byte> pronounMemory;
+		public byte[] mEdict;
+		public ReadOnlyMemory<byte> mEdictMemory;
+		public int mStart, mEnd;
+		public bool mFinished;
+		public const long mTickDelta = 4000;
+		public long mTickNext = DateTime.Now.Ticks + mTickDelta;
+		public ReadOnlyMemory<byte> mWord;
+		public ReadOnlyMemory<byte> mPronunciation;
 
-		private Encoding eucjp; //TODO
-
-		public EdictParser(byte[] a_edict)
+		public EdictParser(byte[] aEdict)
 		{
-			edict = a_edict; //LATER: I hope it doesn't copy the entire array, and only copies the reference.
+			mEdict = aEdict;
 
-			edictMemory = edict.AsMemory();
+			mEdictMemory = mEdict.AsMemory();
 
-			eucjp = Encoding.GetEncoding(20932);
-
-			for (; end < edict.Length; ++end)
+			for (; mEnd < mEdict.Length; ++mEnd)
 			{
-				if (edict[end] == '\n')
+				if (mEdict[mEnd] == '\n')
 				{
-					end--;
-					start = end;
+					mEnd--;
+					mStart = mEnd;
 					break;
 				}
 			}
@@ -137,66 +109,59 @@ public partial class RikaiDialog : Form
 
 		public void Step()
 		{
-			wordMemory = null;
-			pronounMemory = null;
-			end += 2;
-			start = end;
+			mWord = null;
+			mPronunciation = null;
+			mEnd += 2;
+			mStart = mEnd;
 
-			if (end >= edict.Length)
+			if (mEnd >= mEdict.Length)
 			{
-				finished = true;
+				mFinished = true;
 				return;
 			}
 
-			for (; end < edict.Length; ++end)
+			for (; mEnd < mEdict.Length; ++mEnd)
 			{
-				if (edict[end] == '\n')
+				if (mEdict[mEnd] == '\n')
 				{
 					break;
 				}
 			}
 
-			end--;
+			mEnd--;
 
-			int c = start;
-			for (; c < end; c++)
+			int c = mStart;
+			for (; c < mEnd; c++)
 			{
-				if (edict[c] == ',')
+				if (mEdict[c] == ',')
 				{
-					throw new Exception("',' is possible, huh");
+					throw new Exception();
 				}
-				else if (edict[c] == '/')
+				else if (mEdict[c] == '/')
 				{
 					int b = c;
-					//if (edict[b - 1] == ' ') b--;
 					b--;
-					//word = new byte[b - start];
-					//Array.Copy(edict, start, word, 0, b - start);
-					wordMemory = edictMemory.Slice(start, b - start);
+					mWord = mEdictMemory.Slice(mStart, b - mStart);
 					break;
 				}
-				else if (edict[c] == '[')
+				else if (mEdict[c] == '[')
 				{
 					int b = c;
 					b--;
-					//word = new byte[b - start];
-					//Array.Copy(edict, start, word, 0, b - start);
-					wordMemory = edictMemory.Slice(start, b - start);
+					mWord = mEdictMemory.Slice(mStart, b - mStart);
 					c++;
 					int pronoun_start = c;
-					for (; c < end; c++)
+					for (; c < mEnd; c++)
 					{
-						if (edict[c] == ']')
+						if (mEdict[c] == ']')
 						{
-							//pronoun = new byte[c - pronoun_start];
-							//Array.Copy(edict, pronoun_start, pronoun, 0, c - pronoun_start);
-							pronounMemory = edictMemory.Slice(pronoun_start, c - pronoun_start);
-							c = end; //superbreak
+							mPronunciation = mEdictMemory.Slice(pronoun_start, c - pronoun_start);
+							c = mEnd; //superbreak
 							break;
 						}
-						else if (edict[c] == ',')
+						else if (mEdict[c] == ',')
 						{
-							throw new Exception("',' is possible, take 2");
+							throw new Exception();
 						}
 					}
 				}
@@ -228,20 +193,7 @@ public partial class RikaiDialog : Form
 				ie.offsets.Add(offset);
 				mList.Insert(~index, ie);
 			}
-
-			//throw new NotImplementedException(); //TODO: add sorting
 		}
-
-		//returns true if found
-		//private bool BinarySearch(ReadOnlyMemory<byte> aWord, out int position)
-		//{
-		//	var lStart = 0;
-		//	var lEnd = mList.Count - 1;
-		//	var lMiddle = lEnd / 2; //probably bad idea.
-		//	if (Compare(mList[lStart].wordMemory, aWord))
-
-		//	throw new NotImplementedException();
-		//}
 
 		public void AddFirst(ReadOnlyMemory<byte> aWord, int offset)
 		{
@@ -255,147 +207,33 @@ public partial class RikaiDialog : Form
 		{
 			var indexEntry = new IndexEntry(aWord);
 			indexEntry.offsets.Add(offset);
-			//bool paranoia = true;
-			//if (paranoia)
-			//{
-			//	if (Compare(mList[0].wordMemory, aWord) != 1)
-			//	{
-			//		throw new Exception();
-			//	}
-			//}
 			//TODO: either modify constructor to accept offset, or do fancy {x = 1, y = 2} creation thing.
 			mList.Add(indexEntry);
-			//throw new NotImplementedException();
 		}
 	}
 
 	class IndexEntry : IComparable<IndexEntry>
 	{
-		//public byte[] word;
-		public ReadOnlyMemory<byte> wordMemory;
+		public ReadOnlyMemory<byte> mWord;
 		public List<int> offsets;
-		//public IndexEntry Next;
-		//public IndexEntry Previous;
 
-		//public IndexEntry(byte[] a_word)
-		//{
-		//	word = a_word;
-		//	offsets = new List<int>(4);
-		//}
-
-		public IndexEntry(ReadOnlyMemory<byte> a_word)
+		public IndexEntry(ReadOnlyMemory<byte> aWord)
 		{
-			wordMemory = a_word;
+			mWord = aWord;
 			offsets = new List<int>(4);
 		}
 
 		public int CompareTo(IndexEntry ie)
 		{
-			return Compare(this.wordMemory, ie.wordMemory);
+			return Compare(this.mWord, ie.mWord);
 		}
-
-
-
-		//public void InsertBetween(IndexEntry a_previous, IndexEntry a_next)
-		//{
-		//	a_previous.Next = this;
-		//	Previous = a_previous;
-		//	a_next.Previous = this;
-		//	Next = a_next;
-		//}
 	}
 
-	//List<string> s(IndexEntry first)
-	//{
-	//	List<string> res = new(64);
-	//	for (int i = 0; i < 63; i++)
-	//	{
-	//		var t = eucjp.GetString(first.word.Span);
-	//		t += " -- ";
-	//		t += BitConverter.ToString(first.word);
-	//		res.Add(t);
-	//		if (first.Next == null) break;
-	//		first = first.Next;
-	//	}
-	//	return res;
-	//}
-
-	//string s(byte[] first)
-	//{
-	//	var t = eucjp.GetString(first);
-	//	t += " -- ";
-	//	t += BitConverter.ToString(first);
-	//	return t;
-	//}
-
-	//List<string> check(IndexEntry first)
-	//{
-	//	while (true)
-	//	{
-	//		if (first.Next == null) break;
-	//		if (Compare(first.wordMemory, first.Next.wordMemory) >= 0)
-	//		{
-	//			var err = new List<string>(16);
-	//			for (int i = 0; i < 8; i++)
-	//			{
-	//				if (first.Previous == null) break;
-	//			}
-	//			for (int i = 0; i < 16; i++)
-	//			{
-	//				var t = eucjp.GetString(first.wordMemory.Span);
-	//				t += " -- ";
-	//				t += BitConverter.ToString(first.wordMemory);
-	//				err.Add(t);
-	//				if (first.Next == null) break;
-	//				first = first.Next;
-	//			}
-	//			return err;
-	//		}
-
-	//		first = first.Next;
-	//	}
-	//	return null;
-	//}
-
-	//In theory one of them will always stay in the kana area, while other will be all over the place.
-	//I will check if this is true or not once this thing actually works.
-	//static int WhichIsCloser(ReadOnlyMemory<byte> first, ReadOnlyMemory<byte> second, ReadOnlyMemory<byte> tothis)
-	//{
-	//	var firstSpan = first.Span;
-	//	var secondSpan = second.Span;
-	//	var tothisSpan = tothis.Span;
-	//	if (firstSpan[0] == secondSpan[0] && secondSpan[0] == tothisSpan[0]) return 0;
-	//	int s = secondSpan[0] - tothisSpan[0];
-	//	int f = firstSpan[0] - tothisSpan[0];
-	//	if (s < 0) s *= -1;
-	//	if (f < 0) f *= -1;
-	//	if (s < f) return 1; //do swap
-	//	return 0;
-	//}
-
-	//
 	// Returns 0 when equal, 1 when first bigger, -1 when first smaller
 	private static int Compare(ReadOnlyMemory<byte> first, ReadOnlyMemory<byte> second)
 	{
 		var res = first.Span.SequenceCompareTo(second.Span);
-		return res; //TODO
-		//int i = 0;
-		//var firstSpan = first.Span;
-		//var secondSpan = second.Span;
-		//while (true)
-		//{
-		//	if (i >= first.Length)
-		//	{
-		//		if (i >= second.Length) return 0;
-		//		return -1;
-		//	}
-		//	if (i >= second.Length)
-		//		return 1;
-
-		//	if (firstSpan[i] > secondSpan[i]) return 1;
-		//	if (firstSpan[i] < secondSpan[i]) return -1;
-		//	i++;
-		//}
+		return res;
 	}
 
 	private void bwDoWork(object sender, DoWorkEventArgs e)
@@ -420,80 +258,22 @@ public partial class RikaiDialog : Form
 
 		BackgroundWorker worker = sender as BackgroundWorker;
 
-		bool paranoid = false;
-		if (paranoid)
-		{
-			for (int i = 0, iend = edict.Length; i < iend; i++)
-			{
-				if (edict[i] == 0 || edict[i] == 1 || edict[i] == 2)
-				{
-					throw new Exception("My search index works under an assumption that you will never meet 0x00 or 0x01 or 0x02 in the dictionary text");
-				}
-			}
-		}
-
-		////var dialog = new ConfigDialog { StartPosition = FormStartPosition.CenterParent };
-		//var dialog = new RikaiDialog();
-		//var dialogLines = new List<string>(16);
-		//dialogLines.Add($"{Config.RikaiFilename}.ind not found, generating. Should take a few minutes.");
-		//dialogLines.Add("Progress: 0/0");
-		////dialogLines[0] = $"{Config.RikaiFilename}.ind not found, generating. Should take a few minutes.";
-		////dialogLines[1] = "Progress 0/0";
-		//dialog.LabelText = string.Join("\n", dialogLines);
-		//dialog.Show();
-		//MessageBox.Show($"{Config.RikaiFilename}.ind not found, generating. Should take a few minutes.");
-
-		//List<>
-		//List<IndexEntry> index = new List<IndexEntry>();
-		//var f = index.First();
-		//IndexEntry first, current, current2;
-
 		var indexEntryList = new IndexEntryList();
 
 		int oldPercentage = -1;
 
-		var edictParser = new EdictParser(edict);
+		var edictParser = new EdictParser(mEdict);
 
 		edictParser.Step();
-		//first = current = current2 = new IndexEntry(edictParser.wordMemory);
-		//current.offsets.Add(edictParser.start);
-		indexEntryList.AddFirst(edictParser.wordMemory, edictParser.start);
+		indexEntryList.AddFirst(edictParser.mWord, edictParser.mStart);
 
 		edictParser.Step();
-		indexEntryList.AddSecond(edictParser.wordMemory, edictParser.start);
-		//current = new IndexEntry(edictParser.wordMemory);
-		//current.offsets.Add(edictParser.start);
-		//first.Next = current;
-		//current.Previous = first;
+		indexEntryList.AddSecond(edictParser.mWord, edictParser.mStart);
 
-		//paranoid = false;
-		//if (paranoid)
-		//{
-		//	if (Compare(first.wordMemory, current.wordMemory) > 0) //if first.word > current.word
-		//	{
-		//		throw new Exception($"{Config.RikaiFilename} parsing error");
-		//	}
-		//}
-
-		//int itermax = 0;
-		//while (true)
-		//{
-		//	itermax++;
-		//	edictParser.Step();
-		//	if (edictParser.finished) break;
-
-		//}
-		//itermax += 0;
-
-		int iter = 0; //breaks at 0x13
 		while (true)
 		{
-			//if (check(first) != null)
-			//{
-			//	iter += 0;
-			//}
 			edictParser.Step();
-			if (edictParser.finished)
+			if (edictParser.mFinished)
 			{
 				worker.ReportProgress(100);
 				break;
@@ -501,10 +281,10 @@ public partial class RikaiDialog : Form
 			
 			{
 				long tickNew = DateTime.Now.Ticks;
-				if (tickNew > edictParser.tickNext)
+				if (tickNew > edictParser.mTickNext)
 				{
-					edictParser.tickNext = tickNew + EdictParser.tickDelta;
-					int percentage = (int)(edictParser.end / (float)edict.Length * 100);
+					edictParser.mTickNext = tickNew + EdictParser.mTickDelta;
+					int percentage = (int)(edictParser.mEnd / (float)mEdict.Length * 100);
 					if (oldPercentage != percentage)
 					{
 						oldPercentage = percentage;
@@ -513,231 +293,23 @@ public partial class RikaiDialog : Form
 				}
 			}
 
-			//if (WhichIsCloser(current.wordMemory, current2.wordMemory, edictParser.wordMemory) != 0)
-			//{
-			//	var temp = current;
-			//	current = current2;
-			//	current2 = temp;
-			//}
+			indexEntryList.Add(edictParser.mWord, edictParser.mStart);
 
-			//type s(first) in the immediate window to debug this thing
 
-			var word = edictParser.wordMemory;
-
-			//if (iter == 0x00004a06)
-			//{
-			//	iter = 0x00004a06;
-			//}
-
-			//if (Compare(word, eucjp.GetBytes("わじるし")) == 0)
-			//{
-			//	iter = iter;
-			//}
-
-			indexEntryList.Add(edictParser.wordMemory, edictParser.start);
-
-			//int cmp = Compare(current.wordMemory, word);
-			//if (cmp == 0)
-			//{
-			//	current.offsets.Add(edictParser.start);
-			//}
-			//else if (cmp < 0) // need to add somewhere after current.word
-			//{
-			//	while (true)
-			//	{
-			//		cmp = Compare(current.wordMemory, word);
-			//		if (cmp == 0)
-			//		{
-			//			current.offsets.Add(edictParser.start);
-			//			break;
-			//		}
-			//		else if (cmp > 0)
-			//		{
-			//			var temp = new IndexEntry(word);
-			//			temp.offsets.Add(edictParser.start);
-			//			temp.Previous = current.Previous;
-			//			temp.Next = current;
-			//			temp.Next.Previous = temp;
-			//			temp.Previous.Next = temp;
-			//			current = temp;
-			//			break;
-			//		}
-			//		if (current.Next == null)
-			//		{
-			//			var temp = new IndexEntry(word);
-			//			temp.offsets.Add(edictParser.start);
-			//			temp.Previous = current;
-			//			current.Next = temp;
-			//			current = temp;
-			//			break;
-			//		}
-			//		current = current.Next;
-			//	}
-			//}
-			//else if (cmp > 0)
-			//{
-			//	while (true)
-			//	{
-			//		cmp = Compare(current.wordMemory, word);
-			//		if (cmp == 0)
-			//		{
-			//			current.offsets.Add(edictParser.start);
-			//			break;
-			//		}
-			//		else if (cmp < 0)
-			//		{
-			//			var temp = new IndexEntry(word);
-			//			temp.offsets.Add(edictParser.start);
-			//			temp.Previous = current;
-			//			temp.Next = current.Next;
-			//			temp.Next.Previous = temp;
-			//			temp.Previous.Next = temp;
-			//			current = temp;
-			//			break;
-			//		}
-			//		if (current.Previous == null)
-			//		{
-			//			var temp = new IndexEntry(word);
-			//			temp.offsets.Add(edictParser.start);
-			//			temp.Next = current;
-			//			current.Previous = temp;
-			//			current = temp;
-			//			first = temp;
-			//			break;
-			//		}
-			//		current = current.Previous;
-			//	}
-			//}
-
-			//if (current.Previous != null && Compare(current.Previous.word, current.word) > 0)
-			//{
-			//	iter += 0;
-			//}
-			//if (current.Next != null && Compare(current.word, current.Next.word) > 0)
-			//{
-			//	iter += 0;
-			//}
-
-			if (edictParser.pronounMemory.Equals(null)) continue;
-
-			//if (iter == 0x13)
-			//{
-			//	iter += 0;
-			//}
-
-			word = edictParser.pronounMemory;
-			indexEntryList.Add(edictParser.pronounMemory, edictParser.start);
-
-			//if (WhichIsCloser(current.wordMemory, current2.wordMemory, word) != 0)
-			//{
-			//	var temp = current;
-			//	current = current2;
-			//	current2 = temp;
-			//}
-
-			//cmp = Compare(current.wordMemory, word);
-			//if (cmp == 0)
-			//{
-			//	current.offsets.Add(edictParser.start);
-			//}
-			//else if (cmp < 0) // need to add somewhere after current.word
-			//{
-			//	while (true)
-			//	{
-			//		cmp = Compare(current.wordMemory, word);
-			//		if (cmp == 0)
-			//		{
-			//			current.offsets.Add(edictParser.start);
-			//			break;
-			//		}
-			//		else if (cmp > 0)
-			//		{
-			//			var temp = new IndexEntry(word);
-			//			temp.offsets.Add(edictParser.start);
-			//			temp.Previous = current.Previous;
-			//			temp.Next = current;
-			//			temp.Next.Previous = temp;
-			//			temp.Previous.Next = temp;
-			//			current = temp;
-			//			break;
-			//		}
-			//		if (current.Next == null)
-			//		{
-			//			var temp = new IndexEntry(word);
-			//			temp.offsets.Add(edictParser.start);
-			//			temp.Previous = current;
-			//			current.Next = temp;
-			//			current = temp;
-			//			break;
-			//		}
-			//		current = current.Next;
-			//	}
-			//}
-			//else if (cmp > 0)
-			//{
-			//	while (true)
-			//	{
-			//		cmp = Compare(current.wordMemory, word);
-			//		if (cmp == 0)
-			//		{
-			//			current.offsets.Add(edictParser.start);
-			//			break;
-			//		}
-			//		else if (cmp < 0)
-			//		{
-			//			var temp = new IndexEntry(word);
-			//			temp.offsets.Add(edictParser.start);
-			//			temp.Next = current.Next;
-			//			temp.Previous = current;
-			//			temp.Next.Previous = temp;
-			//			temp.Previous.Next = temp;
-			//			current = temp;
-			//			break;
-			//		}
-			//		if (current.Previous == null)
-			//		{
-			//			var temp = new IndexEntry(word);
-			//			temp.offsets.Add(edictParser.start);
-			//			temp.Next = current;
-			//			current.Previous = temp;
-			//			current = temp;
-			//			first = temp;
-			//			break;
-			//		}
-			//		current = current.Previous;
-			//	}
-			//}
-
-			//if (current.Previous != null && Compare(current.Previous.word, current.word) > 0)
-			//{
-			//	iter += 0;
-			//}
-			//if (current.Next != null && Compare(current.word, current.Next.word) > 0)
-			//{
-			//	iter += 0;
-			//}
-
-			//if (iter == 0x100) break;
-
-			iter++; //max is 0x00041e0b
+			if (edictParser.mPronunciation.Equals(null)) continue;
+			
+			indexEntryList.Add(edictParser.mPronunciation, edictParser.mStart);
 		}
-
-		//paranoid = false;
-		//if (paranoid)
-		//{
-		//	if (check(first) != null) throw new Exception("out of order");
-		//}
 
 		var memory = new MemoryStream(0x10000);
 		memory.WriteByte(0);
 
 		var bytesToWrite = new List<byte>(64);
 
-		//current = first;
 		foreach (var ie in indexEntryList.mList)
-		//while (true)
+		
 		{
-			memory.Write(ie.wordMemory.Span);
+			memory.Write(ie.mWord.Span);
 			foreach (var offset in ie.offsets)
 			{
 				int num = offset;
@@ -747,7 +319,7 @@ public partial class RikaiDialog : Form
 
 				bytesToWrite.Clear();
 
-				while (true)
+				while (true) //single offset
 				{
 					num = Math.DivRem(num, 0x100, out rem);
 
@@ -772,67 +344,19 @@ public partial class RikaiDialog : Form
 					memory.WriteByte(b);
 				}
 
-			} //end all offsets
+			}
 
 			memory.WriteByte(0);
 
-		} //end all IndexEntry
+		}
 
-		edictind = memory.ToArray();
-
-		//File.WriteAllBytes(Program.ExeDir + Config.RikaiFilename + ".ind", memory.ToArray());
+		mEdictIndex = memory.ToArray();
 
 		using (FileStream fileStream = new FileStream(Program.ExeDir + Config.RikaiFilename + ".ind", FileMode.Create, FileAccess.Write))
 		{
 			memory.Position = 0;
 			memory.CopyTo(fileStream);
 		}
-
-		//paranoid = false;
-		//if (paranoid)
-		//{
-		//	current = first;
-		//	if (edictind[0] != 0) throw new Exception();
-		//	int ind = 1;
-		//	while (true)
-		//	{
-		//		var word = new byte[current.word.Length];
-		//		Array.Copy(edictind, ind, word, 0, current.word.Length);
-
-		//		if (Compare(word, current.word) != 0) throw new Exception();
-		//		ind += current.word.Length;
-
-		//		int offset_index = 0;
-		//		//current.offsets
-
-		//		if (edictind[ind] != 1) throw new Exception();
-		//		ind++;
-
-		//		if (edictind[ind] == 0 || edictind[ind] == 1) throw new Exception();
-
-		//		int num;
-		//		int rem;
-		//		while (true)
-		//		{
-		//			num = 0;
-		//			while (true)
-		//			{
-		//				rem = edictind[ind++];
-		//				if (rem == 0 || rem == 1) break;
-		//				if ((rem >> 2) == 0) rem = edictind[ind++] >> 2;
-		//				num = num * 0x100 + rem;
-		//			} //end one offset
-		//			if (current.offsets[offset_index] != num) throw new Exception();
-		//			offset_index++;
-		//			if (rem == 0) break;
-		//		} //end all offsets
-
-		//		if (current.Next == null) break;
-		//		current = current.Next;
-		//	} //end IndexEntry
-		//} //end paranoid
-
-		//MessageBox.Show($"{Config.RikaiFilename}.ind generated!");
 	}
 }
 
